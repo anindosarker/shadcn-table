@@ -60,7 +60,7 @@ publishes the section as the GitHub release notes.
 
 #### Spec 31 Examples copy
 
-- Every example page has a new description of 120 to 155 characters naming the feature and the option or component it uses, and an intro on what the example shows, which options it turns on and when to use it; the Material React Table wording and its typos ("show how use use") are gone, and the Examples index page has a description and an intro (D60).
+- Every example page has a new description of 120 to 155 characters naming the feature and the option or component it uses, and an intro on what the example shows, which options it turns on and when to use it; the Material React Table wording and its typos ("show how use use") are gone, and the Examples index page has a new description and an intro (D60).
 
 ## 0.9.2 - 2026-11-09
 
