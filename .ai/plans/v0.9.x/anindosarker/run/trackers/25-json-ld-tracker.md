@@ -13,6 +13,7 @@ Checks:
 - `pnpm test lint` at 778bfccb: pass (9 warnings)
 - `pnpm test validate-repo` at 778bfccb: pass
 - `pnpm test docs-e2e --base base` at 778bfccb: pass (107 pages, 939 examples, 0 FAIL)
+- Verifier at 3ab45bc5: every 2.2 local check and the 1.2 Acceptance already recorded; `git diff --name-only` from 778bfccb and c003c0ef to HEAD touches only the tracker and `CHANGELOG.md`, so nothing rerun. Rich Results test is owner-side after deploy (D54), not a local check.
 
 - Task 1 JsonLd component and builders: done (4116b792)
 - Task 2 page wiring: done (c003c0ef)
