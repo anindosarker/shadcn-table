@@ -1,6 +1,6 @@
 # 25: JSON-LD structured data, tracker
 
-Status: done
+Status: merged (3279cfe5)
 Branch `v0.9/json-ld`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 4116b792: pass
