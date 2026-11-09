@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'fumadocs-core/link';
+import type * as PageTree from 'fumadocs-core/page-tree';
 import { getBreadcrumbItemsFromPath } from 'fumadocs-core/breadcrumb';
 import { useTreeContext, useTreePath } from 'fumadocs-ui/contexts/tree';
 import type { BreadcrumbProps } from 'fumadocs-ui/layouts/notebook/page';
@@ -29,13 +30,18 @@ export function DocsBreadcrumb({
   ...props
 }: BreadcrumbProps) {
   const path = useTreePath();
-  const { root } = useTreeContext();
+  const { root, full } = useTreeContext();
   const items = useMemo(
     () => [
       { name: 'Docs', url: docsRoute },
-      ...getBreadcrumbItemsFromPath(root, path, { includePage: true }),
+      // Each section is a root folder, whose crumb fumadocs drops; name it
+      // and link its first page (Overview, or Introduction).
+      ...getBreadcrumbItemsFromPath(root, path, {
+        includePage: true,
+        includeRoot: root === full ? false : { url: firstPageUrl(root) ?? '' },
+      }),
     ],
-    [path, root],
+    [path, root, full],
   );
   const section = path[0];
   const current = path[path.length - 1];
@@ -74,4 +80,19 @@ export function DocsBreadcrumb({
       })}
     </div>
   );
+}
+
+/** URL of the first page under `node`, in tree order. */
+function firstPageUrl(
+  node: PageTree.Root | PageTree.Folder,
+): string | undefined {
+  if ('index' in node && node.index) return node.index.url;
+  for (const child of node.children) {
+    if (child.type === 'page') return child.url;
+    if (child.type === 'folder') {
+      const url = firstPageUrl(child);
+      if (url) return url;
+    }
+  }
+  return undefined;
 }
