@@ -22,7 +22,7 @@ const WholeApp = dynamic(
 );
 
 /**
- * The theming demo (/dev/theme/9) for the homepage. Its code, the mock app
+ * The theming demo for the homepage. Its code, the mock app
  * and the demo fonts load only once the section nears the viewport;
  * autoplay waits until it is on screen (useThemeCycle).
  */
