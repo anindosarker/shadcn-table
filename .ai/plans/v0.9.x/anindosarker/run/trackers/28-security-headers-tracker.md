@@ -1,8 +1,8 @@
 # 28: Security response headers, tracker
 
-Status: planned
-Branch `v0.9/security-headers`, worktree 04
+Status: running
+Branch `v0.9/security-headers`, worktree 04 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: docs lint, `pnpm --filter shadcn-table-docs lint` at Task 1 commit: pass (0 errors, 9 existing warnings)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 headers(): done
