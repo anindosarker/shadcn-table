@@ -1,4 +1,3 @@
-import withBundleAnalyzer from '@next/bundle-analyzer';
 import { createMDX } from 'fumadocs-mdx/next';
 
 const withMDX = createMDX({ agentRules: false });
@@ -114,7 +113,4 @@ const config = {
   ],
 };
 
-// `ANALYZE=1 pnpm build` writes the bundle reports to .next/analyze/.
-export default withBundleAnalyzer({ enabled: process.env.ANALYZE === '1' })(
-  withMDX(config),
-);
+export default withMDX(config);
