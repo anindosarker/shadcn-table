@@ -1,14 +1,20 @@
 # 28: Security response headers, tracker
 
-Status: running
+Status: done
 Branch `v0.9/security-headers`, worktree 04 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`)
 Checks:
 - Check: docs lint, `pnpm --filter shadcn-table-docs lint` at Task 1 commit: pass (0 errors, 9 existing warnings)
 - Check: production build, `NEXT_PUBLIC_SITE_URL=http://localhost:5347 pnpm --filter shadcn-table-docs build` at 9ab4b69f: pass
 - Check: Acceptance 1.2 curls on `next start -p 5347` at 9ab4b69f: pass (counts 4/4/4/4, CSP 0, registry 200, ingest 400); server stopped
+- Check: `pnpm format` at 47b8be18: pass (no changes)
+- Check: `pnpm test typecheck --base base` at 47b8be18: pass
+- Check: `pnpm test lint` at 47b8be18: pass (0 errors, 9 existing warnings)
+- Check: `pnpm test validate-repo` at 47b8be18: pass
+- Check: `pnpm test docs-e2e --base base` at 47b8be18: pass (107 pages, examples 939 passed, 0 failed)
 
 - Task 1 headers(): done (9ab4b69f)
-- Task 2 Acceptance proof: done
+- Task 2 Acceptance proof: done (477edfad)
+- Task 3 Cleanup and changelog: done (47b8be18)
 
 Notes:
 - Header count (`curl -sI localhost:5347<path> | grep -iE '^(x-content-type-options|referrer-policy|x-frame-options|permissions-policy):' | wc -l`): `/` 4, `/docs/getting-started/introduction` 4, `/sitemap.xml` 4, `/r/base/registry.json` 4. `/:path*` covers `/`; no second rule.
