@@ -289,6 +289,21 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
             aria-label="Open example"
             className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           >
+            {/* The selected base's Storybook at the example's story
+                (lib/storybook-map.ts). */}
+            <Button asChild variant="ghost" size="sm" className="px-2.5">
+              <a
+                href={storybookExampleUrl(base, exampleSlug)}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackStorybookOpened({ base, surface: 'example' })
+                }
+              >
+                <BookOpenIcon data-icon="inline-start" />
+                Storybook
+              </a>
+            </Button>
             <Button
               type="button"
               variant="ghost"
@@ -366,21 +381,6 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            {/* The selected base's Storybook at the example's story
-                (lib/storybook-map.ts). */}
-            <Button asChild variant="ghost" size="sm" className="px-2.5">
-              <a
-                href={storybookExampleUrl(base, exampleSlug)}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() =>
-                  trackStorybookOpened({ base, surface: 'example' })
-                }
-              >
-                <BookOpenIcon data-icon="inline-start" />
-                Storybook
-              </a>
-            </Button>
           </div>
           {/* Same button as the table toolbar's ST_ToggleFullScreenButton. */}
           <Tooltip open={tooltipOpen}>
