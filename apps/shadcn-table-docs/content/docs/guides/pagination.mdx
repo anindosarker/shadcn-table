@@ -1,10 +1,10 @@
 ---
 title: 'Pagination Guide'
-description: 'How to use, customize, or disable pagination features in Shadcn Table'
+description: 'Paginate shadcn-table client-side by default or on the server with manualPagination and rowCount, through ST_TablePagination on your shadcn/ui Pagination.'
 date: '2026-11-10'
 ---
 
-Client-side pagination is enabled by default in Shadcn Table. There are a number of ways to customize pagination, turn off pagination, or completely replace the built-in pagination with your own manual or server-side pagination logic.
+Client-side pagination is on by default in shadcn-table. The pager in the bottom toolbar is `ST_TablePagination`, built on your shadcn/ui `Pagination`, `Button` and `Select`. You can change the page sizes, turn pagination off with `enablePagination: false`, or page on your server with `manualPagination` and `rowCount`.
 
 ### Relevant Table Options
 
@@ -118,9 +118,9 @@ const table = useShadcnTable({
 
 #### Manual Pagination
 
-The default pagination features are client-side. This means you have to have all of your data fetched and stored in the table all at once. This may not be ideal for large datasets, but do not worry, Shadcn Table supports server-side pagination.
+The default pagination features are client-side. This means you have to have all of your data fetched and stored in the table all at once. This may not be ideal for large datasets, but do not worry, shadcn-table supports server-side pagination.
 
-When the `manualPagination` table option is set to `true`, Shadcn Table will assume that the `data` that is passed to the table already has had the pagination logic applied. Usually you would do this in your back-end logic.
+When the `manualPagination` table option is set to `true`, shadcn-table will assume that the `data` that is passed to the table already has had the pagination logic applied. Usually you would do this in your back-end logic.
 
 #### Override Page Count and Row Count
 

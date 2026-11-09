@@ -1,10 +1,10 @@
 ---
 title: 'Virtualization Guide'
-description: 'How to virtualize rows and columns in Shadcn Table to improve performance and user experience when there are a lot of rows or a lot of columns in the table.'
+description: 'Virtualize rows and columns in shadcn-table with enableRowVirtualization and enableColumnVirtualization, built on TanStack Virtual, for very large tables.'
 date: '2026-11-10'
 ---
 
-Virtualization is useful when you have a lot of data you want to display client-side all at once without having to use pagination. Shadcn Table makes this as simple as possible, thanks to [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3) with both [row virtualization](#enable-row-virtualization) and [column virtualization](#enable-column-virtualization) support.
+Virtualization is useful when you have a lot of data you want to display client-side all at once without having to use pagination. shadcn-table supports both [row virtualization](#enable-row-virtualization) and [column virtualization](#enable-column-virtualization) with one option each, built on [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3) through the `useST_RowVirtualizer` and `useST_ColumnVirtualizer` hooks.
 
 > NOTE: You should only enable row virtualization if you have a large number of rows. Depending on the size of the table, if you are rendering less than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have more than 50 rows or so at the same time with no pagination.
 

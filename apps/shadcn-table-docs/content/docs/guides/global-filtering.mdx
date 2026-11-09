@@ -1,10 +1,10 @@
 ---
 title: 'Global Filtering/Search Guide'
-description: 'How to use, customize, or disable the global filter and search features in Shadcn Table'
+description: 'Search every column of shadcn-table with the global filter: enableGlobalFilter, fuzzy ranking, globalFilterFn and the ST_GlobalFilterTextField input.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has a powerful built-in global filtering (search) feature that uses a fuzzy matching algorithm and ranks/sorts the results based on how closely rows match the search query. In this guide, we'll cover how to use, customize, or disable the global filter and search features to fit your needs.
+shadcn-table has a global search box, `ST_GlobalFilterTextField`, built on your shadcn/ui `InputGroup`. By default it uses fuzzy matching and ranks the rows by how closely they match the query. This guide covers how to change the filter function, turn off the ranking, move the search to your server, or turn the search off.
 
 ### Relevant Table Options
 

@@ -1,10 +1,10 @@
 ---
 title: 'Overflow Tooltip Guide'
-description: 'How Shadcn Table cuts long cell text with an ellipsis and shows the full value in a tooltip only when the text is cut off'
+description: 'How shadcn-table cuts long cell text with an ellipsis and shows the full value in a shadcn/ui Tooltip through ST_OverflowText, only when it is cut off.'
 date: '2026-11-10'
 ---
 
-Body cell text stays on one line by default and is cut with an ellipsis when it does not fit. When the text of a cell is actually cut off, hovering or focusing the cell shows a tooltip with the full value after the normal tooltip delay. A cell whose text fits shows no tooltip.
+Body cell text stays on one line by default and is cut with an ellipsis when it does not fit. When the text of a cell is actually cut off, hovering or focusing the cell shows a tooltip with the full value after the normal tooltip delay. A cell whose text fits shows no tooltip. The cell uses `ST_OverflowText`, built on your shadcn/ui `Tooltip`.
 
 ### Relevant Table Options
 

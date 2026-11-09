@@ -1,10 +1,10 @@
 ---
 title: 'Column Ordering/DnD Guide'
-description: 'How to use and customize the column ordering and drag and drop features of Shadcn Table'
+description: 'Reorder columns in shadcn-table by dragging a header cell, set a default columnOrder, or turn it off with enableColumnOrdering and enableColumnDragging.'
 date: '2026-11-10'
 ---
 
-Whether you just want to change the default column order in your table or let columns be reordered by dragging and dropping, Shadcn Table has a simple API for this. Column ordering is on by default: users drag a header cell to move its column.
+shadcn-table keeps the column order in TanStack Table's `columnOrder` state, so you can set a default order or let users drag columns around. Column ordering is on by default: users drag a header cell to move its column, and the `enableColumnOrdering` and `enableColumnDragging` options control it per table or per column.
 
 ### Relevant Table Options
 
@@ -35,7 +35,7 @@ Whether you just want to change the default column order in your table or let co
 
 ### Change the Default Column Order
 
-By Default, Shadcn Table will order the columns in the order they are defined in the `columns` table option. And Display Columns such as Actions, Selection, Expansion, etc., get added to either the beginning or the end of the table. You can customize all of this by defining your own `columnOrder` state and passing it either to the `initialState` or `state` table options.
+By Default, shadcn-table will order the columns in the order they are defined in the `columns` table option. And Display Columns such as Actions, Selection, Expansion, etc., get added to either the beginning or the end of the table. You can customize all of this by defining your own `columnOrder` state and passing it either to the `initialState` or `state` table options.
 
 The `columnOrder` state is an array of string column ids, that come from the ids or accessorKeys that you defined in your column definitions.
 
@@ -69,7 +69,7 @@ return <ShadcnTable table={table} />;
 
 If you need easier access to the `columnOrder` state, you can store the column order in your own state management, and then pass it back into the ST `state` table option and sync back up internal mutations with the `onColumnOrderChange` callback.
 
-You should also should initialize the `columnOrder` state yourself for the best results. Though, if you do not initialize the `columnOrder` state, as Shadcn Table will generate a default column order for you based on the order of the columns passed in the `columns` option, so you only need to properly initialize the column order state if there is a problem with the default order.
+You should also should initialize the `columnOrder` state yourself for the best results. Though, if you do not initialize the `columnOrder` state, as shadcn-table will generate a default column order for you based on the order of the columns passed in the `columns` option, so you only need to properly initialize the column order state if there is a problem with the default order.
 
 ```jsx
 const columns = [
