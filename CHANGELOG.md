@@ -29,6 +29,10 @@ publishes the section as the GitHub release notes.
 
 - The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
 
+#### Spec 27 Home title and hero tagline name the category
+
+- The home page title and `og:title` read `shadcn-table: data table for shadcn/ui, built on TanStack Table`; docs page titles keep `<page> | shadcn-table`. The hero eyebrow says "The batteries-included data table for shadcn/ui."; the H1 stays "shadcn-table" (D56).
+
 ### Fixed
 
 #### Spec 29 Markdown delivery and llms.txt shape
