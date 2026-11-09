@@ -535,3 +535,8 @@ index e1645117..e67a5482 100644
 
 ### D53 Canonical URLs and trailing-slash redirect
 
+- No page on www.shadcn-table.com carries `rel=canonical`, and every URL also answers with a trailing slash (`/docs/api/table-options/` returns 200, measured 2026-11-10), so Google sees two URLs per page with no signal which one counts (audit `reference/seo-audit-2026-11-10.md`).
+- `app/layout.tsx` adds `alternates: { canonical: './' }` to the root metadata; Next resolves it per page against the existing `metadataBase`, so the home page and every docs page get a canonical equal to their own slash-less URL. The docs `generateMetadata` keeps no canonical of its own.
+- `next.config.mjs` `redirects()` gains one permanent (308) entry from `/:path((?!ingest).*)/` to `/:path`; `skipTrailingSlashRedirect: true` stays so the PostHog proxy paths (`/ingest/e/`, `/ingest/batch/`) keep their slash.
+- Checks: `curl -sI /docs/api/table-options/` is 308 to `/docs/api/table-options`; `/ingest/e/` is not redirected; the head of `/` and of a docs page has exactly one `<link rel="canonical">` equal to its own URL on `siteUrl`.
+- Owner, 2026-11-10: "k" on the item.
