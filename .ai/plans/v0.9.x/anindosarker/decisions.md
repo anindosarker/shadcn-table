@@ -518,3 +518,5 @@ index e1645117..e67a5482 100644
 
 ### D51 Remove the /dev preview routes from the docs site
 
+### D52 Release 0.9.2 ships E9
+
