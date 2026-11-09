@@ -4,7 +4,7 @@ description: 'Show nested subRows as an expanding tree in shadcn-table with enab
 date: '2026-11-10'
 ---
 
-shadcn-table can show rows in an expanding tree structure. This example is the simplest version of the feature: each row of data may carry a `subRows` array with its children, which is where `getSubRows` looks by default. With `enableExpanding` on, rows with children get an expand button, and `enableExpandAll` adds one in the header.
+shadcn-table can show rows in an expanding tree structure. This example is the simplest version of the feature: each row of data may carry a `subRows` array with its children, which is where `getSubRows` looks by default. With `enableExpanding` on, rows with children get an expand button; the example sets `enableExpandAll: false` to hide the expand-all button in the header, which is on by default.
 
 The table starts fully open through `initialState: { expanded: true }`. `paginateExpandedRows: false` keeps sub-rows from counting towards the page size, so a page always shows the same number of top-level rows, and `filterFromLeafRows` makes a filter match deep rows and keep their parents visible.
 
