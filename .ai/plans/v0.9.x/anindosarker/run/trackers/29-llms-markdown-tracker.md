@@ -1,6 +1,6 @@
 # 29: Markdown delivery and llms.txt shape, tracker
 
-Status: done
+Status: merged (184056d29106ec59a0cc1150cd4c029136138f1f)
 Branch `v0.9/llms-markdown`, worktree 05 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/05`)
 Checks:
 - Unit check `toPlainMarkdown`: `node --experimental-strip-types <scratchpad>/check.ts` on a copy of `lib/llms.ts` with its three imports stubbed; fixture (frontmatter, single and multi-line import, `<ExampleSnippet />`, `<Callout>`, nested `<Cards>`/`<Card>`, `{/* */}`, fence holding `import` and `<Fake />`): fence intact, rest gone, Callout and Card prose kept, at c5cb3050: pass
