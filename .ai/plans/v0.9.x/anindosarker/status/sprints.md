@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-10 02:33
+Updated: 2026-11-10 02:35
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -40,12 +40,12 @@ Updated: 2026-11-10 02:33
 | E10 27 Home title |  |  |  |  |  |  |  |  |  | [ ] |  |
 | E10 28 Security headers |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 29 Markdown and llms | [x] |  |  |  |  |  |  |  |  |  |  |
-| E10 30 Home JavaScript |  |  |  |  |  |  |  |  | [!] |  |  |
+| E10 30 Home JavaScript |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 30 API page payload | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [ ] |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | · |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | · |
-| fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | · |  |
+| fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [ ] |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |  |  |  |  |

@@ -1,9 +1,9 @@
 # Bundle analyzer wrap (D63), tracker
 
 Status: planned
-Files owned: none
+Files owned: `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`
 Depends on: none
-Branch `[branch]`, worktree [name]
+Branch `v0.9/fix-bundle-analyzer-wrap`, worktree 06
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

@@ -1,6 +1,6 @@
 # 30: Home JavaScript, tracker
 
-Status: merged (D62)
+Status: merged (5735b0ee)
 Branch `v0.9/home-javascript`, worktree `shadcn-react-table.worktrees/05`
 Checks:
 - `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at e5f078cd: pass
@@ -56,3 +56,4 @@ Checks:
 - Acceptance's 450 KB is unreachable inside `components/dev-home/**` while visible behaviour stays unchanged: the `/` first load is 427 KB transfer, all but 19 KB of it the shared root layout (posthog-js alone 114 KB, react-dom 72 KB; `app/layout.tsx` is out of scope, 1.6.2), and the live demo table (167 KB transfer, @tanstack/table-core plus the ui-radix shadcn-table) is in view at 1350x940 and must load without input (docs-e2e `/` "icons: the pick survives a reload" waits for its rows after a reload with no input). Gating the table on intent reached 437 KB but failed that check, so it is reverted; the branch stands at 580 KB. Owner choice: defer posthog-js / the layout providers (another spec), accept intent loading of the demo table and change that docs-e2e check, or move the 450 KB target.
 - The nav and hero docs links prefetch on hover, touch or focus instead of on entering the viewport (saves the 131 KB docs route chunks per home visit). A click without a prior hover or focus navigates without a warm prefetch.
 - 1.6.2's "every client component below the hero through `next/dynamic` from `home-page.tsx`" is not applied: the home-only first-load JavaScript is two chunks, 19 KB transfer, and `SignalDemo`/`ThemeDemo` already lazy-load their heavy parts; a server-component `dynamic()` keeps SSR and saves nothing, and `ssr: false` would drop the tiles, install strip and footer text from the HTML. Starfield and Dune stay in the first load (source 1.2 KB and 5.2 KB plus 3.8 KB field).
+- Merged by the runner on D62 (A21 option a): target now under 600 KB script and 300 ms TBT, met at b2bcf60d (580 KB, 158 ms). The branch's `CHANGELOG.md` was corrupted (the Spec 30 block repeated 80139 times, 321530 lines); the merge kept the `claude/review` changelog and added the one block under `### Changed`.
