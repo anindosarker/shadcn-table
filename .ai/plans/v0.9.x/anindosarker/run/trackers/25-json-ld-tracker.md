@@ -1,6 +1,6 @@
 # 25: JSON-LD structured data, tracker
 
-Status: running
+Status: done
 Branch `v0.9/json-ld`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 4116b792: pass
@@ -8,10 +8,16 @@ Checks:
 - `pnpm --filter shadcn-table-docs lint` at c003c0ef: pass (0 errors, 9 warnings, none in the owned files)
 - `NEXT_PUBLIC_SITE_URL=http://localhost:5344 pnpm --filter shadcn-table-docs build` at c003c0ef: pass
 - Acceptance curls of 1.2 on `next start -p 5344` at c003c0ef: pass (Notes)
+- `pnpm format` at dcab4502: pass, no changes
+- `pnpm test typecheck --base base` at 778bfccb: pass
+- `pnpm test lint` at 778bfccb: pass (9 warnings)
+- `pnpm test validate-repo` at 778bfccb: pass
+- `pnpm test docs-e2e --base base` at 778bfccb: pass (107 pages, 939 examples, 0 FAIL)
 
 - Task 1 JsonLd component and builders: done (4116b792)
 - Task 2 page wiring: done (c003c0ef)
 - Task 3 Acceptance proof on port 5344: done (c003c0ef)
+- Task 4 format and changelog: done (778bfccb)
 
 ## Notes
 
