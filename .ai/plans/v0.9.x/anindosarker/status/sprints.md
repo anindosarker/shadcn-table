@@ -41,7 +41,7 @@ Updated: 2026-11-10 01:34
 | E10 28 Security headers |  |  |  |  |  |  |  |  | · |  |  |
 | E10 29 Markdown and llms | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 30 Home JavaScript |  |  |  |  |  |  |  |  | · |  |  |
-| E10 30 API page payload | [ ] |  |  |  |  |  |  |  |  |  |  |
+| E10 30 API page payload | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | · |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | · |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | · |
