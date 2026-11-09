@@ -1,10 +1,14 @@
 ---
 title: 'Customized Grouping Example'
-description: 'A Shadcn Table example demonstrating various ways to customize the grouping UI.'
+description: 'Customize the grouping UI of shadcn-table: displayColumnDefOptions restyles the st-row-expand column and groupedColumnMode: remove hides grouped columns.'
 date: '2026-11-10'
 ---
 
-Here is an advanced example showing off various ways in which the expand column can be customized with column grouping features. See the [Column Grouping Guide](/docs/guides/column-grouping) to learn more.
+This example shows how far the grouping UI can be customized. It sets `enableGrouping` with `groupedColumnMode: 'remove'`, so the grouped columns leave the table and only the group rows show their values. Through `displayColumnDefOptions` it then reshapes the `st-row-expand` display column: a custom header with `ST_ExpandAllButton`, a cell that shows the grouped value next to the expand button, and a different text color per grouping depth. The table starts compact, grouped by two columns and fully expanded through `initialState`.
+
+Use this approach when the default expand column does not fit your design, for example when the group label should read like a section title, or when you want the expand column wider than the default. Column resizing (`enableColumnResizing`) is on so you can try different widths for the expand column.
+
+The same `displayColumnDefOptions` key works for the other display columns, such as row actions and row selection. See the [Column Grouping Guide](/docs/guides/column-grouping) to learn more.
 
 <CustomizeRemoveColumnGroupingExample />
 

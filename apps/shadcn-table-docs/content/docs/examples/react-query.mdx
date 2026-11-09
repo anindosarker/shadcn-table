@@ -1,16 +1,14 @@
 ---
 title: 'React Query Example'
-description: 'An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query'
+description: 'Fetch, filter, sort and paginate shadcn-table data on the server with TanStack Query, manualPagination, manualFiltering, manualSorting and rowCount.'
 date: '2026-11-10'
 ---
 
-This is just like the [Remote Data Fetching Example](/docs/examples/remote), but react-query is used to simplify all the state management of the fetching and loading of data.
+This is the [Remote Data Fetching Example](/docs/examples/remote) with [React Query](https://tanstack.com/query/v4) (TanStack Query) handling the fetching and loading state. The table sets `manualFiltering`, `manualSorting` and `manualPagination`, keeps the column filters, global filter, sorting and pagination in React state through the `on...Change` callbacks, and puts that state in the query key, so every change triggers a new request. `rowCount` tells the footer the total number of rows on the server.
 
-For a step-by-step build of this pattern with a service, a query hook and a reusable state hook, read the [Building Production-Ready Tables](/docs/guides/production-ready-tables) guide.
+React Query adds caching, background refetching and loading flags that pair well with table state, and going back to a page you already visited shows it at once from the cache: the example shows a refresh button through `renderTopToolbarCustomActions` and an error banner through `stToolbarAlertBannerProps` when a request fails.
 
-[React Query](https://tanstack.com/query/v4) is by far the best way to fetch remote data in React. It has features like caching, refetching, polling, pagination, and more that work together very well with table logic as seen in this example.
-
-Also, be sure to check out the [Virtualized Example](/docs/examples/virtualized), which shows off the use of another TanStack library, [React Virtual](https://tanstack.com/virtual/v3), to render thousands of rows at once while still maintaining great performance.
+For a step-by-step build of this pattern with a service, a query hook and a reusable state hook, read the [Building Production-Ready Tables](/docs/guides/production-ready-tables) guide. Also check out the [Virtualized Example](/docs/examples/virtualized), which uses another TanStack library, [React Virtual](https://tanstack.com/virtual/v3), to render thousands of rows at once.
 
 <ReactQueryExample />
 

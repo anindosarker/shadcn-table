@@ -1,12 +1,14 @@
 ---
 title: 'CSV Export Example'
-description: 'An example of how to export data to CSV using Shadcn Table.'
+description: 'Export all, filtered, page or selected shadcn-table rows to a CSV file with export-to-csv, from buttons added through renderTopToolbarCustomActions.'
 date: '2026-11-10'
 ---
 
-Shadcn Table does not have a data exporting feature built in. However, you can easily integrate your own exporting feature, if desired.
+shadcn-table does not ship a data export feature, but the table instance gives you every row model you need to build one in a few lines. In this example, the [`export-to-csv`](https://www.npmjs.com/package/export-to-csv) package is wired to buttons placed in the top toolbar through `renderTopToolbarCustomActions`: export all data, all rows after filtering, the rows on the current page, or only the selected rows (`enableRowSelection` is on).
 
-In the example below, `export-to-csv` is connected to some export buttons in the top toolbar. If you need to export in Excel or PDF format, there are a variety of NPM packages that can be used to export in these formats.
+Each button reads a different row model from the table, such as `table.getPrePaginatedRowModel()` or `table.getSelectedRowModel()`, maps the rows to plain objects and hands them to `export-to-csv`. The footer uses `paginationDisplayMode: 'pages'`, and the selection banner sits at the bottom so it does not cover the toolbar.
+
+Use CSV when users want to open the data in Excel, Google Sheets or another tool. If you need native Excel files, a library such as SheetJS fits the same buttons; for a printable file see the [PDF Export Example](/docs/examples/export-pdf).
 
 <ExportToCsvExample />
 

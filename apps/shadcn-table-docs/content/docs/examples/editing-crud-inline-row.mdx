@@ -1,14 +1,14 @@
 ---
 title: 'Editing CRUD Inline Row Example'
-description: 'An example of Shadcn Table which shows how to use editing CRUD Inline Row features'
+description: 'Edit a whole row in place in shadcn-table with editDisplayMode: row, where built-in save and cancel buttons call onEditingRowSave and onEditingRowCancel.'
 date: '2026-11-10'
 ---
 
-Full CRUD (Create, Read, Update, Delete) functionality can be easily implemented with Shadcn Table, with a combination of editing, toolbar, and row action features.
+This example builds full CRUD (create, read, update, delete) with shadcn-table using the inline [`"row"`](/docs/guides/editing#row-editing-mode) editing mode: `editDisplayMode: 'row'` with `enableEditing` turns every cell of one row into inputs at once, and the row actions column shows save and cancel buttons while it is open. `onEditingRowSave` receives the new values and `onEditingRowCancel` drops them; new rows use `createDisplayMode: 'row'` and `onCreatingRowSave` in the same way.
 
-This example below uses the inline [`"row"`](/docs/guides/editing#row-editing-mode) editing mode, which allows you to edit a single row at a time with built-in save and cancel buttons.
+The edit and delete buttons come from `renderRowActions`, and the create button from `renderTopToolbarCustomActions`. TanStack Query mutations update the table optimistically, so the edit shows at once while the request runs; hook in your own API calls to save the data to your backend.
 
-Check out the other editing modes down below, and the [editing guide](/docs/guides/editing) for more information.
+Row editing suits records with a few related fields that should change together, such as a first and last name or a price and a currency, because the user saves them in one step. Check out the other editing modes below, and the [editing guide](/docs/guides/editing) for more information.
 
 <EditingCrudRowExample />
 

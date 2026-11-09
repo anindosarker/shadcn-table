@@ -1,10 +1,14 @@
 ---
 title: 'Persistent View Example'
-description: 'An example of Shadcn Table that saves the view to localStorage and restores it on reload.'
+description: 'Save a shadcn-table view to localStorage with persistViewSettings: column order, pinning, visibility, density and rows per page come back on reload.'
 date: '2026-11-10'
 ---
 
-With `persistViewSettings: true`, Shadcn Table stores the view in localStorage and restores it on reload. Change a few settings or drag a column header, then reload the page. Learn more in the [View Settings Guide](/docs/guides/view-settings).
+With `persistViewSettings: true`, shadcn-table stores the view in localStorage and restores it on reload. The view covers the column order, pinned columns, hidden columns, density, the view settings toggles and the rows-per-page choice; the optional `id` option names the storage key (otherwise it is a hash of the column ids), so two tables on one page do not share a view. This example starts at ten rows per page through `initialState.pagination`.
+
+Change a few settings, drag a column header or pick another page size, then reload the page: the table comes back the way you left it. A stored rows-per-page value that is not a positive whole number is ignored on load, so a damaged entry falls back to the initial page size.
+
+Use this for tables users visit again and again, such as dashboards or admin lists, where setting up the columns every time would be a chore. Filters and sorting are not part of the stored view. Learn more in the [View Settings Guide](/docs/guides/view-settings).
 
 <PersistentViewExample />
 

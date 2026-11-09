@@ -1,14 +1,14 @@
 ---
 title: 'Editing CRUD Inline Cell Example'
-description: 'An example of Shadcn Table which shows how to use editing CRUD Inline cell features'
+description: 'Edit one cell at a time in shadcn-table with editDisplayMode: cell and enableEditing, plus row actions and a create-row form for full CRUD.'
 date: '2026-11-10'
 ---
 
-Full CRUD (Create, Read, Update, Delete) functionality can be easily implemented with Shadcn Table, with a combination of editing, toolbar, and row action features.
+This example builds full CRUD (create, read, update, delete) with shadcn-table using `editDisplayMode: 'cell'`: with `enableEditing` on, a double-click turns one cell into an input, and leaving the cell saves it. New rows open inline at the top through `createDisplayMode: 'row'` and are saved with `onCreatingRowSave`, while `renderRowActions` adds a delete button per row. Cell actions (`enableCellActions`) and click-to-copy are turned on as well.
 
-This example below uses the inline [`"cell"`](/docs/guides/editing#row-editing-mode) editing mode, which allows you to edit a single cell at a time. Hook up your own event listeners to save the data to your backend.
+The example collects edited cells and saves them in one batch from a button in the bottom toolbar (`renderBottomToolbarCustomActions`), with TanStack Query mutations doing optimistic updates. Hook your own API calls into those mutations to save the data to your backend. Validation runs as each cell loses focus, and the error shows under the input until the value is fixed.
 
-Check out the other editing modes down below, and the [editing guide](/docs/guides/editing) for more information.
+The inline [`"cell"`](/docs/guides/editing#row-editing-mode) mode suits spreadsheet-like screens where users fix one value at a time. Check out the other editing modes below, and the [editing guide](/docs/guides/editing) for more information.
 
 <EditingCrudCellExample />
 

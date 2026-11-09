@@ -1,12 +1,14 @@
 ---
 title: 'Expanding Tree Example'
-description: 'A Shadcn Table example demonstrating expandable sub-rows in a tree structure'
+description: 'Show nested subRows as an expanding tree in shadcn-table with enableExpanding, every row open at start and sub-rows kept out of the page size count.'
 date: '2026-11-10'
 ---
 
-Shadcn Table supports showing rows in a expanding tree structure. This example is the **_simplest_** implementation of this feature where each row of data potentially has a special `subRows` property that contains an array of sub rows. You don't have to follow this exact structure, but this is how ST will expect to find your sub rows by default.
+shadcn-table can show rows in an expanding tree structure. This example is the simplest version of the feature: each row of data may carry a `subRows` array with its children, which is where `getSubRows` looks by default. With `enableExpanding` on, rows with children get an expand button; the example sets `enableExpandAll: false` to hide the expand-all button in the header, which is on by default.
 
-Learn more about how to customize this in the [expanding sub-rows feature guide](/docs/guides/expanding-sub-rows).
+The table starts fully open through `initialState: { expanded: true }`. `paginateExpandedRows: false` keeps sub-rows from counting towards the page size, so a page always shows the same number of top-level rows, and `filterFromLeafRows` makes a filter match deep rows and keep their parents visible.
+
+Use this when your data already arrives nested, such as a file tree or a JSON document. You do not have to follow this exact structure; for flat data with parent ids see the [Expanding Parsed Tree Example](/docs/examples/expanding-tree-flat-parse). Learn more about how to customize this in the [expanding sub-rows feature guide](/docs/guides/expanding-sub-rows).
 
 <ExpandingTreeExpandedExample />
 

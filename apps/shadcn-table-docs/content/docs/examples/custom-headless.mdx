@@ -1,12 +1,14 @@
 ---
 title: 'Custom Headless Example'
-description: 'A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components'
+description: 'Use useShadcnTable headless, write your own markup and place exported parts like ST_TablePagination, ST_GlobalFilterTextField and ST_TableBodyCellValue.'
 date: '2026-11-10'
 ---
 
-For advanced use cases where you want to be in 100% control of your UI components, you can use Shadcn Table in a more headless way, kind of like how you would use [stock TanStack Table](https://tanstack.com/table/latest/docs/framework/react/examples/basic-use-table).
+For advanced use cases where you want full control of the markup, you can use shadcn-table in a headless way, much like you would use [stock TanStack Table](https://tanstack.com/table/latest/docs/framework/react/examples/basic-use-table). This example calls `useShadcnTable` with `enableRowSelection` and `paginationDisplayMode: 'pages'`, then skips `<ShadcnTable />` and renders its own layout around the table instead. Sorting, filtering, pagination and selection still run inside the hook, so only the markup is yours to write.
 
-The power and flexibility here is almost limitless, as you can combine some already built-in Shadcn Table components alongside your own custom components. For the ST components to work properly, all you need to do is pass the `table` object returned from the `useShadcnTable` hook.
+Use this approach when your design does not match the default toolbars, for example when the search field belongs in a page header or the pagination in a sticky footer of your own.
+
+The power here is that you can mix exported shadcn-table parts with your own components. The example writes the table markup itself with the shadcn/ui `Table`, `TableHeader`, `TableRow`, `TableHead`, `TableBody` and `TableCell` parts and `flexRender`, places `ST_GlobalFilterTextField`, `ST_ToggleFullScreenButton`, `ST_ViewSettingsButton`, `ST_TablePagination` and `ST_ToolbarAlertBanner` around it, and renders cells with `ST_TableBodyCellValue`. `useST_FullScreenContainer` gives its own wrapper the full-screen behaviour. For the parts to work, pass them the `table` object returned from `useShadcnTable`, or wrap them in `ST_TableProvider`.
 
 To make your own wrapper the full-screen element, spread `containerProps` from [`useST_FullScreenContainer(table)`](/docs/api/st-hooks#usest_fullscreencontainer) on it: it adds the full-screen classes, and Esc leaves full screen.
 
