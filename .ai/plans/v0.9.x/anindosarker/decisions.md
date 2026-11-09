@@ -561,3 +561,5 @@ index e1645117..e67a5482 100644
 
 ### D57 Security response headers
 
+### D58 Markdown delivery and llms.txt shape
+
