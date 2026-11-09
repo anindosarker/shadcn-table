@@ -1,9 +1,9 @@
 /* Hallmark · dev-home tokens · genre: atmospheric · dark-only */
 
-/* Scoped design tokens for the experimental /dev homepages (app/dev).
+/* Scoped design tokens for the homepage parts in components/dev-home.
  * Everything lives under .dev-home so the docs site is untouched.
  * Variants pick their accent with data-variant="1..11", either on the .dev-home
- * element itself or on any element inside it (app/dev/layout.tsx is .dev-home). */
+ * element itself or on any element inside it. */
 
 .dev-home {
   /* surfaces + ink */
