@@ -481,7 +481,10 @@ index e1645117..e67a5482 100644
 
 - Source: A19; amends D45's label. PR 135 is relabelled `release:patch` (the `labeled` run rewrites Validate PR to "Ships as 0.9.1"), the runner approves Prepare Release (D47), 0.9.1 ships. Every v0.9.x release stays on the 0.9.x line: new public API in this release line takes a patch bump. Owner, 2026-11-09: "0.9.1. no 0.10x release."
 
+## Round 4: discussion, SEO, 2026-11-10
+
 ### D50 Sitemap and robots for the docs site
+[E9]
 
 - `https://www.shadcn-table.com/sitemap.xml` and `/robots.txt` both return 404 today; `apps/shadcn-table-docs` has no `sitemap.ts`, `robots.ts` or `next-sitemap` config, so Google finds pages only by following links.
 - Add `apps/shadcn-table-docs/app/sitemap.ts`: the home page at priority 1.0 plus every docs page from fumadocs `source.getPages()`, absolute URLs on `https://www.shadcn-table.com`; no `/dev/*` (already `noindex`, `app/dev/layout.tsx:7`), no `/r/*`, no `/ingest/*`; no `lastmod` (Vercel shallow clones make git dates unreliable).
