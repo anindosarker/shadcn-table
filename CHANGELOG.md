@@ -15,6 +15,10 @@ publishes the section as the GitHub release notes.
 
 - The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
 
+#### Spec 28 Security response headers
+
+- Every response of the docs site carries `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN` and `Permissions-Policy: camera=(), microphone=(), geolocation=()` (D57). No `Content-Security-Policy` yet.
+
 ### Changed
 
 #### Spec 30 API page payload
