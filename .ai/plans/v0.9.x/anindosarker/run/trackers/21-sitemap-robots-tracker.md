@@ -1,7 +1,7 @@
 # 21: Sitemap and robots for the docs site, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/sitemap-robots`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

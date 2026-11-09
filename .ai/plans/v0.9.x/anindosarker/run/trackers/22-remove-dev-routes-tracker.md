@@ -1,7 +1,7 @@
 # 22: Remove the /dev preview routes, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/remove-dev-routes`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
