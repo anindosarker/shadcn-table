@@ -4,6 +4,7 @@ import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
 import { SidebarRootHeading } from '@/components/sidebar-root-heading';
+import { SidebarSectionTabs } from '@/components/sidebar-section-tabs';
 import { SiteNav } from '@/components/site-nav';
 import { IconLibraryProvider } from '@/components/icon-library-selector';
 
@@ -22,8 +23,13 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
       tree={source.getPageTree()}
       sidebar={{
         collapsible: false,
-        // the current section's name above its pages
-        banner: <SidebarRootHeading />,
+        // the section switcher (L7), then the current section's name
+        banner: (
+          <>
+            <SidebarSectionTabs />
+            <SidebarRootHeading />
+          </>
+        ),
         components: { Folder: SidebarSection, Separator: SidebarSeparator },
       }}
     >

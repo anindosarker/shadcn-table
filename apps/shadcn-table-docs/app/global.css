@@ -463,10 +463,10 @@ html:has(#nd-notebook-layout) ::selection {
   color: var(--color-fd-foreground);
 }
 
-/* top bar (components/site-nav.tsx): the bar row (brand, actions) and the
- * section switcher row under it (2.25rem, Tailwind in the component) */
+/* top bar (components/site-nav.tsx): one row, brand and actions; the
+ * section links sit in the sidebar (components/sidebar-section-tabs.tsx) */
 #nd-notebook-layout:has(.site-nav) {
-  --fd-header-height: 5.75rem;
+  --fd-header-height: 3.5rem;
 }
 
 .site-nav {
@@ -575,7 +575,7 @@ html:has(#nd-notebook-layout) ::selection {
 
 @media (min-width: 1024px) {
   #nd-notebook-layout:has(.site-nav) {
-    --fd-header-height: 6rem;
+    --fd-header-height: 3.75rem;
   }
   .site-nav-row {
     height: 3.75rem;
