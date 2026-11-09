@@ -13,6 +13,7 @@ Checks:
 - `pnpm test validate-repo` at 6453cdc7: pass
 - `pnpm test docs-e2e --base base` at 6453cdc7: pass (107 pages, 939 example checks, 9 passed, 0 failed)
 - `next start -p 5353` on the 7912d34f build: `curl -s localhost:5353/docs/guides/column-size | grep -o 'Updated 20[0-9-]*</p>' | wc -l` prints 1; `/docs/api` meta description is the new one; "How to column width" count 0; server stopped
+- Verifier at e987dd2c: every Local CI, Task 1 and Task 2 check above stands; `git diff --name-only 7912d34f..e987dd2c` and `6453cdc7..e987dd2c` touch only `.ai/` and `CHANGELOG.md`, so none rerun. The 1.2 Acceptance lines of this milestone (per-folder script, docs-e2e, byline count) are recorded above; the 308, sitemap and topics lines belong to the frame milestone; the whole-tree script runs at the release spec's Integration; the fable review is not a local check
 
 - Task 1 Rewrite guides and API pages: done (7912d34f)
 - Task 2 Cleanup and changelog: done (6453cdc7)
