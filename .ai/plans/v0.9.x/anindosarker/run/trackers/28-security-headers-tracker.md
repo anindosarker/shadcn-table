@@ -4,5 +4,15 @@ Status: running
 Branch `v0.9/security-headers`, worktree 04 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`)
 Checks:
 - Check: docs lint, `pnpm --filter shadcn-table-docs lint` at Task 1 commit: pass (0 errors, 9 existing warnings)
+- Check: production build, `NEXT_PUBLIC_SITE_URL=http://localhost:5347 pnpm --filter shadcn-table-docs build` at 9ab4b69f: pass
+- Check: Acceptance 1.2 curls on `next start -p 5347` at 9ab4b69f: pass (counts 4/4/4/4, CSP 0, registry 200, ingest 400); server stopped
 
-- Task 1 headers(): done
+- Task 1 headers(): done (9ab4b69f)
+- Task 2 Acceptance proof: done
+
+Notes:
+- Header count (`curl -sI localhost:5347<path> | grep -iE '^(x-content-type-options|referrer-policy|x-frame-options|permissions-policy):' | wc -l`): `/` 4, `/docs/getting-started/introduction` 4, `/sitemap.xml` 4, `/r/base/registry.json` 4. `/:path*` covers `/`; no second rule.
+- `curl -sI localhost:5347/ | grep -ic '^content-security-policy'`: 0.
+- `/r/base/registry.json` status: 200.
+- `POST /ingest/e/` (`text/plain`, body `{}`): 400 from PostHog (envoy, upstream rejects the empty event): proxy works.
+- Under `next start` the `/ingest/*` responses (external rewrite, proxied) carry the upstream headers only, not the four from `headers()`: Next's local proxy does not add them. 1.2's Acceptance checks only the ingest status; whether Vercel's edge adds them to `/ingest/*` shows only on a deployed site (`curl -sI https://www.shadcn-table.com/ingest/static/array.js` after the 0.9.x release).
