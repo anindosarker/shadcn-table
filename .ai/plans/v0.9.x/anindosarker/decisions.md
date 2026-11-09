@@ -596,3 +596,6 @@ index e1645117..e67a5482 100644
 - This decision changes `content/docs/**`, the same files as the E8 docs restructuring; its epic is chosen with that in mind.
 - Checks: every page's description length in range (a script over `content/docs/**` frontmatter); no page under 150 words; the two new pages present in the sitemap; typecheck, lint, docs-e2e green.
 - Owner, 2026-11-10: "recommended on all".
+
+### D61 Release 0.9.3 ships E10
+
