@@ -18,6 +18,14 @@ Checks:
 - `pnpm test validate-repo` at 67afaff5: pass
 - `pnpm test docs-e2e --base base` at 67afaff5: pass (107 pages, 0 failed)
 - `pnpm test docs-e2e --base base /docs/getting-started/introduction /docs/getting-started/comparison /docs/guides/tanstack-table-with-shadcn-ui` at 67afaff5: pass (18 passed, 0 failed)
+- Review fixes, reruns at 4cb6f290:
+  - `pnpm --filter shadcn-table-docs types:check`: pass
+  - `NEXT_PUBLIC_SITE_URL=http://localhost:5351 pnpm --filter shadcn-table-docs build`: pass
+  - `node tools/docs/check-frontmatter.mjs` on the guide and the comparison page: pass (0 on every rule)
+  - `pnpm format`: pass (no change)
+  - `pnpm test validate-repo`: pass
+  - `pnpm test docs-e2e --base base /docs/getting-started/comparison /docs/guides/tanstack-table-with-shadcn-ui /docs/guides/click-to-copy`: pass (23 passed, 0 failed)
+  - curls on `next start -p 5351` (server stopped after): `/docs/guides/click-to-copy` has the Changelog URL only in the sidebar link, no footer card; byline `grep -o 'Updated 20[0-9-]*</p>' | wc -l` prints `1`; guide carries `table.state`; comparison carries `Data grid: RTL support`
 
 Tasks:
 
@@ -42,3 +50,7 @@ Notes:
 - Pages on `.mdx` are outside `pnpm format` (its glob is js, mjs, ts, tsx, md).
 
 ## Attention
+
+- Spec 1.2 Acceptance `curl -s localhost:5351/docs/getting-started/introduction | grep -c 'Updated 20'` prints `2` (byline HTML plus the RSC payload line), never `1`. The release Integration rerun uses `curl -s localhost:5351/docs/getting-started/introduction | grep -o 'Updated 20[0-9-]*</p>' | wc -l` (prints `1`) in its place.
+- Spec 2.2 expects docs-e2e to assert the byline and the two new pages; `test/docs-e2e/lib/*` (not owned here) has no check for `/docs/getting-started/comparison`, `/docs/guides/tanstack-table-with-shadcn-ui` or the byline, so CI does not guard them yet. A later milestone that owns `test/docs-e2e/**` adds them.
+- The sidebar Changelog entry in `content/docs/meta.json` carries the fumadocs `external:` prefix, so it stays out of the previous/next footer (the last docs page no longer gets a Next card pointing at GitHub). Revert by dropping the prefix.
