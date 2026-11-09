@@ -1,6 +1,6 @@
 # 24: Canonical and slash redirect, tracker
 
-Status: done
+Status: merged (65f3727a)
 Branch `v0.9/canonical-slash-redirect`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 4476e6e8: pass
