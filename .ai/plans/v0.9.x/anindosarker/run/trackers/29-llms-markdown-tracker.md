@@ -1,8 +1,9 @@
 # 29: Markdown delivery and llms.txt shape, tracker
 
-Status: planned
-Branch `v0.9/llms-markdown`, worktree 05
+Status: running
+Branch `v0.9/llms-markdown`, worktree 05 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/05`)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Unit check `toPlainMarkdown`: `node --experimental-strip-types <scratchpad>/check.ts` on a copy of `lib/llms.ts` with its three imports stubbed; fixture (frontmatter, single and multi-line import, `<ExampleSnippet />`, `<Callout>`, nested `<Cards>`/`<Card>`, `{/* */}`, fence holding `import` and `<Fake />`): fence intact, rest gone, Callout and Card prose kept at task 1 commit: pass
+- `pnpm --filter shadcn-table-docs types:check` at task 1 commit: pass
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 `lib/llms.ts`: done
