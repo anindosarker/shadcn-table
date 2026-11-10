@@ -77,3 +77,12 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9" sess
 
 - From 2026-11-10 agents never start a docs preview server (`next dev` or `next start`) after a build; they build, run the gates, commit, push, and report the branch head. The owner starts the server when they want to look.
 - Agents still may stop a server they started themselves earlier; never one they did not start.
+
+### L12 Storybook stories become docs example pages; Storybook links back
+
+- Roles: the docs carry description and the rendered table; Storybook carries the table with its interactions (plays); each links to the other.
+- One source for descriptions: a JSDoc comment above each story export and a one-line `description` in each story file's meta, in `packages/shadcn-table/stories`. Storybook autodocs and the docs build both read them.
+- Docs: three new groups at the end of the Examples section, "Features", "Fixed bugs", "Styling", one page per story file (79 files, 594 stories), generated at build time from the story files: title, description, the stories as tabs rendering the table in the example playground, the toolbar Storybook button deep-linking to that story. Native rendering through `composeStories` versus an iframe of the deployed story is settled in the plan after a lookup of how the stories import the library per base. The pages join the examples stack as lazy blocks after the 42 docs examples (L2, L6).
+- Storybook: a small toolbar addon reads three parameters set in each story file's meta (home URL, guide page, docs example page) and shows them as links in the Storybook header. The reverse mapping of `lib/storybook-map.ts`, generated.
+- The "View Extra Storybook Examples" line on example and guide pages goes away; the toolbar Storybook button (wt1 `0160f596`, `64f2cfb5`) replaces it.
+- Owner accepted 2026-11-10.
