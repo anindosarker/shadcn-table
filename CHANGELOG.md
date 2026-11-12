@@ -53,20 +53,13 @@ publishes the section as the GitHub release notes.
 
 #### Spec 31 Page frame and new pages
 
-- Every docs page shows `By anindosarker · Updated <date>` under its description, the name linking to the maintainer's GitHub profile; the date comes from a new required `date` frontmatter field (D60).
 - `/docs` redirects permanently (308) to the Introduction, and the sidebar's last entry links the changelog (D60).
-- New pages: "Comparison" (getting started), a feature matrix against tablecn, Material React Table and the shadcn/ui data-table recipe with its sources, and "TanStack Table with shadcn/ui" (first guide under Fundamentals) (D60).
-- The Introduction shows the install command and the basic example; the getting-started pages have new descriptions. `tools/docs/check-frontmatter.mjs` checks description length, dates, duplicates, word count and MRT typos (D60).
+- New guide: "TanStack Table with shadcn/ui", last under Fundamentals (D60, D72).
+- The Introduction shows the install command and the basic example; the getting-started pages have new descriptions (D60).
 
-#### Spec 31 Guides and API copy
+#### Spec 32 Docs wording
 
-- Every guide and API page has a new description of 120 to 155 characters naming its feature and the option or `ST_` component involved, and the product is "shadcn-table" in prose (D60).
-- The guide intros are rewritten around what is shadcn-specific (the option, the `ST_` component, the shadcn/ui parts it uses); the Full Screen Toggle guide gains an intro, and the Guides and API index pages gain prose (D60).
-- Each API page opens with a paragraph on what its table lists and how it relates to TanStack Table's options; the API index has a description (D60).
-
-#### Spec 31 Examples copy
-
-- Every example page has a new description of 120 to 155 characters naming the feature and the option or component it uses, and an intro on what the example shows, which options it turns on and when to use it; the Material React Table wording and its typos ("show how use use") are gone, and the Examples index page has a new description and an intro (D60).
+- Inherited typos fixed on six pages: the Detail Panel, Lazy Detail Panel and Lazy Sub Rows example descriptions, and the Column Ordering, Editing and Column Size guides (D74).
 
 ## 0.9.2 - 2026-11-09
 
