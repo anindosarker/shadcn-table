@@ -629,3 +629,5 @@ index e1645117..e67a5482 100644
 
 ### D64 Guides and API copy states what is shadcn/ui and drops the inherited typos
 
+### D65 Docs e2e checks cover the byline and the two new pages
+
