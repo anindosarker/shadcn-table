@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q64** The docs app still lists zod as a dependency although nothing imports it #run-E11
 	- `apps/shadcn-table-docs/package.json`: `zod` (added by spec 24) has no importer after spec 32 removed the `date` schema field; remove it or keep it.
+- [ ] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #run-E11
+	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
 
 ## Decided
 
