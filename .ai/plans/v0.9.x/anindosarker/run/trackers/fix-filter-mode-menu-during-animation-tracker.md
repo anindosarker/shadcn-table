@@ -17,6 +17,9 @@ Checks:
 - Check: storybook-tests base, `pnpm test storybook-tests --base base` at cd6f7ffe: pass (622 passed)
 - Check: storybook-tests radix, `pnpm test storybook-tests --base radix` at cd6f7ffe: pass (622 passed)
 - Check: storybook-tests aria, `pnpm test storybook-tests --base aria` at cd6f7ffe: pass (622 passed)
+- Check: verifier code review at d8ded09a: pass (`animationend` capture listener in `useST_MenuAnchor.ts` on base, radix, aria, removed in the effect cleanup on close and unmount; aria anchor portalled to `document.body` behind the `useSyncExternalStore` hydration guard; no delayed click, no disabled animation in the diff; changed files are the owned files, their docs copies, the changelog and the tracker; `#### Fix D80` block in CHANGELOG.md)
+- Check: verifier plays at d8ded09a, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx -t "Mode Menu Next To Button"` 3 runs each on aria, base, radix: pass (9 of 9 runs 2 passed: `Mode Menu Next To Button Popover` and `Mode Menu Next To Button During Popover Animation`)
+- Check: typecheck, lint, validate-repo, storybook-tests not rerun at d8ded09a: `git diff --name-only cd6f7ffe..HEAD` touches only .ai/ and CHANGELOG.md
 
 - Task 1 play first: done (bc01c1ef)
 - Task 2 fix per D80: done (cd6f7ffe)
