@@ -158,3 +158,6 @@
 ### F35 Example source read traces every examples file into the build
 
 - `apps/shadcn-table-docs/lib/example-source.ts:39` (`listExampleFiles`, October 2026, before E10): `fs.readFile(path.join(dir, rel))` with a dynamic `dir` makes Turbopack trace the whole `examples/` tree including the generated `examples/.<base>` copies (8 pattern alternatives times about 1321 files, reported as 10568 matches); builds and typecheck are slow. One-file literal paths made it worse (4 warnings, 13384 matches, reverted). Needs a change to how the example folders are read, across more than one file; a later decision.
+
+### F36 The generated examples registry was not regenerated with the spec 31 descriptions
+
