@@ -33,6 +33,10 @@ publishes the section as the GitHub release notes.
 
 - Docs builds no longer trace the whole examples tree: the example generator writes each base's code-view sources to one file, read from a fixed path, so the build's "file pattern matches 10568 files" warning is gone. The code view shows the same files (D69).
 
+#### Spec 34 posthog-js loads after hydration
+
+- Analytics load after the page is interactive: posthog-js is fetched in its own chunk on the first idle moment or interaction, and events raised before that are queued and sent on init. The home page's first script load drops from 421 KB to 317 KB (Lighthouse desktop, before the deferred loads) (D70).
+
 #### Spec 30 API page payload
 
 - The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.

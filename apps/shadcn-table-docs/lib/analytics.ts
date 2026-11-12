@@ -1,12 +1,12 @@
-import posthog from 'posthog-js';
 import type { Base, PackageManager } from '@/lib/install';
+import { capture } from '@/lib/posthog-client';
 
 /**
  * The docs app's PostHog events, one function per event with typed
  * properties. Components call these and never `posthog` directly, so renaming
- * an event is a change to this file alone. Every function is a no-op until
- * components/posthog-provider.tsx has initialised posthog-js, which it does
- * only with `NEXT_PUBLIC_POSTHOG_KEY` set.
+ * an event is a change to this file alone. Events go through
+ * lib/posthog-client.ts: sent once posthog-js has loaded after hydration,
+ * queued until then, and dropped without `NEXT_PUBLIC_POSTHOG_KEY`.
  */
 
 /** Where on the page the action happened. */
@@ -20,10 +20,6 @@ export type Surface =
   | 'mdx_link'
   | 'nav'
   | 'footer';
-
-const capture = (event: string, properties?: Record<string, string>) => {
-  if (posthog.__loaded) posthog.capture(event, properties);
-};
 
 /** The site-wide base changed through one of its controls. */
 export const trackBaseSwitched = (p: {
