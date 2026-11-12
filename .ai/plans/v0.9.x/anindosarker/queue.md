@@ -365,3 +365,7 @@
 - Options:
   - a) Recommended: keep
   - b) revert: drop the prefix (no icon, same tab, and the last docs page gets a Next card to the changelog on GitHub)
+
+### Q58 Docs pages go back to their previous wording for this release
+- Tags:
+- From: owner.
