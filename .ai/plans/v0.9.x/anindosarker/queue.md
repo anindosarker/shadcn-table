@@ -4,6 +4,7 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q62** Popover filters open in the wrong place #owner
 
 ## Decided
 
