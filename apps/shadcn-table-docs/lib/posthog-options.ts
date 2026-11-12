@@ -8,7 +8,7 @@ import type { PostHogConfig } from 'posthog-js';
  * autocapture: the custom events in lib/analytics.ts are the signal. Session
  * replay follows the PostHog project setting; nothing calls `identify`.
  */
-export const posthogOptions: Partial<PostHogConfig> = {
+export const initOptions: Partial<PostHogConfig> = {
   api_host: '/ingest',
   ui_host: 'https://us.posthog.com',
   capture_pageview: 'history_change',

@@ -27,11 +27,11 @@ const queue: Pending[] = [];
 
 const load = async () => {
   if (!POSTHOG_KEY) return;
-  const [{ default: posthog }, { posthogOptions }] = await Promise.all([
+  const [{ default: posthog }, { initOptions }] = await Promise.all([
     import('posthog-js'),
     import('./posthog-options'),
   ]);
-  if (!posthog.__loaded) posthog.init(POSTHOG_KEY, posthogOptions);
+  if (!posthog.__loaded) posthog.init(POSTHOG_KEY, initOptions);
   client = posthog;
   for (const call of queue.splice(0)) call(posthog);
 };
