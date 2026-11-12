@@ -64,6 +64,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - An `Acceptance:` line points at a reference that exists: a ui.shadcn.com page, a shadcn block, the previous release, a capture of `claude/review` before the change, or a demo the owner supplied.
 - A bug is reproduced in `/Users/anindosarker/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
+- A diagram, mockup or other visual aid the owner asks for is saved in the release's `reference/` folder (`.ai/plans/v0.9.x/anindosarker/reference/<q-or-d id>-<slug>.excalidraw` or `.png`) and committed, never left in a scratchpad or `/tmp`; the reply names that path.
 
 ## P11 Plays
 
