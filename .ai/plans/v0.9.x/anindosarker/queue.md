@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q66** The home page still downloads 586 KB of scripts in total although analytics now loads late #run-E11
+	- Spec 34: first-load script transfer on `/` fell from 421 KB to 317 KB and posthog-js is in no initial chunk (D70's check, met), but the spec's Lighthouse whole-trace sum stays 586 KB (target 450): posthog-js loads on idle inside the trace, and without it the sum is 482 KB because the home demo table loads on mount (D62). The run merges 34 on D70's check; keep, or gate the demo table.
 
 ## Decided
 
