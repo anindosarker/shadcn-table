@@ -24,7 +24,7 @@ Checks:
 
 - Task 1 before numbers: done (629d42de)
 - Task 2 loader, provider, events: done (201a0ceb)
-- Task 3 Acceptance: done except the 450 KB line (Attention)
+- Task 3 Acceptance: done; the 450 KB whole-trace line is recorded, not required (Q66)
 - Task 4 format, changelog: done (3b0ab641)
 
 ## Numbers
@@ -34,7 +34,7 @@ Checks:
 
 ## Attention
 
-- Acceptance's "under 450 KB" is unreachable inside this milestone: the Lighthouse line sums all scripts in the trace, posthog-js loads on the first idle moment (inside the trace, as 1.6.2 asks), and even with posthog-js absent the sum is 482 KB because the demo table still loads on mount (D62 kept that for the docs check). D70's own check, the first-load transfer under 450 KB with posthog-js out of the initial chunks, is met (317 KB). Owner choice: accept D70's first-load measure, or move the target, or gate the demo table (changes "icons: the pick survives a reload").
+- Filed as Q66, merged on D70's first-load check (344.8 KB). Acceptance's "under 450 KB" is unreachable inside this milestone: the Lighthouse line sums all scripts in the trace, posthog-js loads on the first idle moment (inside the trace, as 1.6.2 asks), and even with posthog-js absent the sum is 482 KB because the demo table still loads on mount (D62 kept that for the docs check). D70's own check, the first-load transfer under 450 KB with posthog-js out of the initial chunks, is met (317 KB). Owner choice: accept D70's first-load measure, or move the target, or gate the demo table (changes "icons: the pick survives a reload").
 - The init options live in a fourth file, `apps/shadcn-table-docs/lib/posthog-options.ts`, loaded by the same dynamic `import()` as posthog-js: kept in `lib/posthog-client.ts` the `ui_host` URL (`us.posthog.com`) stays in the first-load chunk and the Acceptance chunk loop prints it, while a static posthog-js import in a helper would fail the Task 2 grep.
 - The changelog block gives the measured first-load numbers (421 KB to 317 KB) instead of 1.6.1's "under 450 KB", which the Lighthouse line does not show.
 - The probe needs a non-webdriver browser: posthog-js treats `navigator.webdriver` as a bot and sends nothing, so a plain headless Playwright run sees no `/ingest/e/` request on any build, before or after.
