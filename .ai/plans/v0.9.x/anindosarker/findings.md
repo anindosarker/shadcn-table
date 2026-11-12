@@ -140,3 +140,6 @@
 
 
 - `apps/shadcn-table-docs/content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24`: the new copy (spec 31, merged edc04e01) says the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls are shadcn/ui. Typos and inherited phrasing left on edited lines: `guides/column-ordering-dnd.mdx:72` ("should also should"), `guides/editing.mdx:211` ("news rows"), `guides/column-size.mdx:88` ("ect."), `guides/detail-panel.mdx:163` ("as of version 2.6.0", a Material React Table version); `guides/sorting.mdx:3` says the sort arrow shows in each header cell (only sorted ones); four API pages keep an older sentence that restates the new lead. Review findings of the milestone, deferred by the script as minors.
+
+### F33 Vercel free tier function CPU at 75 percent
+
