@@ -25,6 +25,10 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### Spec 36 validate-repo fails on a stale generated registry
+
+- The repository check (`pnpm test validate-repo`, run by CI) regenerates the registries with `pnpm -w registry:build`, `registry:items` and `registry:hosted` and fails on a diff, naming each stale tracked file, such as `apps/shadcn-table-docs/registry.json` after an example description changed without a regeneration (D68).
+
 #### Spec 30 API page payload
 
 - The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
