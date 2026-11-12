@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q63** The first live demo visitors see only has text filters #owner
 	- Owner 2026-11-13, from a PostHog replay of /docs/getting-started/usage: the Live Example is a weak demo because every filter is a text box; select filters would show the library better.
+	- `content/docs/getting-started/usage.mdx:177` embeds `<BasicExample />` (`examples/<base>/basic/TS.tsx:76-103`): five string columns (First Name, Last Name, Address, City, State), five rows, no `filterVariant`, so all five filters are text. The Introduction page's demo is the same example. The Usage page's tutorial steps build exactly this data and these columns. Elsewhere the examples and stories use select 86 times, range 58, date 40, multi-select 34, text 30.
 
 ## Decided
 
