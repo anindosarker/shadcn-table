@@ -1,4 +1,5 @@
 # 33: Home title, hero line and one shared site description
+- Epic: E11
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
