@@ -1,6 +1,6 @@
 # 34: posthog-js loads after hydration, tracker
 
-Status: running
+Status: merged (ec360093)
 Branch `v0.9/posthog-after-hydration`, worktree `shadcn-react-table.worktrees/04`
 Checks:
 - `NEXT_PUBLIC_POSTHOG_KEY=phc_dummy NEXT_PUBLIC_SITE_URL=http://localhost:5346 pnpm --filter shadcn-table-docs build` at 59a003a9: pass
