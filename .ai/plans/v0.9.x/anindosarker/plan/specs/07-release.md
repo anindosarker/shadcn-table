@@ -11,7 +11,7 @@ E1 (filtering, pagination, resize animation), E2 (theme customizer, release appr
 
 ### 1.2 Goals
 
-- `dev` carries every E1, E2 and F3 commit and the suite is green on it before the PR opens (D15, P1).
+- `dev` carries every E1, E2 and Q3 commit and the suite is green on it before the PR opens (D15, P1).
 - One PR `dev` into `master`, title `release: 0.9.0`, label `release:minor`, auto-merge enabled at creation; the version 0.8.2 bumps to 0.9.0 (D15, P4).
 - The `prepare-release` deployment is approved by the runner once, for 0.9.0 only, under the owner's advance word (D15, D3).
 - `master` carries `v0.9.0`; www.shadcn-table.com and the three Storybook builds serve 0.9.0; the GitHub release exists with the 0.9.0 changelog section (D15).
@@ -21,7 +21,7 @@ E1 (filtering, pagination, resize animation), E2 (theme customizer, release appr
 ### 1.3 Current structure
 
 ```
-claude/review                         ← E1 (4a61e251, de4df68e, 54a51ee3), E2 (06 at 6c094612; 04 and 05 as they merge), F3 fix (f075a6d1), plan commits
+claude/review                         ← E1 (4a61e251, de4df68e, 54a51ee3), E2 (06 at 6c094612; 04 and 05 as they merge), Q3 fix (f075a6d1), plan commits
 dev, master                           ← 0.8.2 (v0.8.2 tagged), untouched since the 0.8.2 release
 CHANGELOG.md                          ← `## Unreleased`, `### Changed`, `#### Epic 01 Filtering` and the later spec blocks (P9)
 packages/shadcn-table/package.json    ← version 0.8.2
@@ -66,7 +66,7 @@ sequenceDiagram
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` or `#### Epic NN` block of E1 and E2 sits under one of `### Added`, `### Changed`, `### Fixed`, `### Docs` inside `## Unreleased`, and the F3 fix has one line under `### Fixed` (anchored menus keep their position while they close, `useST_MenuAnchor.ts`); no `### Breaking` or `### Removed` (the `'default'` to `'compact'` rename is under `### Changed`, D6). Prepare Release renames `## Unreleased` to `## 0.9.0 - <date>`; nothing else edits the file.
+- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` or `#### Epic NN` block of E1 and E2 sits under one of `### Added`, `### Changed`, `### Fixed`, `### Docs` inside `## Unreleased`, and the Q3 fix has one line under `### Fixed` (anchored menus keep their position while they close, `useST_MenuAnchor.ts`); no `### Breaking` or `### Removed` (the `'default'` to `'compact'` rename is under `### Changed`, D6). Prepare Release renames `## Unreleased` to `## 0.9.0 - <date>`; nothing else edits the file.
 - `packages/shadcn-table/package.json` and the root `package.json`: version `0.9.0` through Prepare Release only; never bumped by hand.
 - The tracker `trackers/07-release-tracker.md`: the check lines of the integration run, the PR number, the run id of the `pr.yml` run that waited, the `gh api` approval response, the `release.yml` run id, the final shas.
 

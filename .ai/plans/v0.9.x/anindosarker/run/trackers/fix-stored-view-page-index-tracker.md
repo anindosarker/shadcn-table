@@ -26,4 +26,4 @@ Checks:
 
 ## Attention
 
-- No play covers F22 (a stored rows per page with `initialState.pagination.pageIndex` above 0), so no P11 red line on the shipped code is recorded; the `Persistence` play of spec 12 stays green but does not exercise the page index. The verifier recorded the spec 12 checks only and did not add a play.
+- No play covers Q22 (a stored rows per page with `initialState.pagination.pageIndex` above 0), so no P11 red line on the shipped code is recorded; the `Persistence` play of spec 12 stays green but does not exercise the page index. The verifier recorded the spec 12 checks only and did not add a play.

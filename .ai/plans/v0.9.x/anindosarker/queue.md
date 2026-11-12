@@ -11,7 +11,7 @@
 - Owner, 2026-11-08, on the deployed Storybook (`https://storybook.shadcn-table.com/base/`): the filtering stories are not updated to the new format. Stories looked at: `Features/Filtering Examples` (`FilteringChangeModeEnabled`, `FilteringChangeModeEnabledFaceted`, `SubheaderRangeFieldsNarrow`, `FilterFnAndFilterVariants`, `packages/shadcn-table/stories/features/Filtering.stories.tsx:174-702`) and `Features/Filter Chips Examples` (`FilterModePickerTableLevel`, `FilterChips.stories.tsx:300`). Major. Screenshot 2026-11-08 of `FilteringChangeModeEnabled` (Base build): the subheader filter row with one input per column and a "Filter Mode: Fuzzy" helper line under each, no chips; the docs filtering examples moved to chips in v0.8.x (D51) while the stories did not.
 
 ### Q3 The filtering story's UI jumps
-- Tags:
+- Tags: Autofix
 - From: lead.
 - Owner, 2026-11-08, on `https://storybook.shadcn-table.com/base/?path=/story/features-filtering-examples--filtering-change-mode-enabled`: type a value in one subheader filter field, then close it (blur): the first filter field jumps (layout shift in the filter row). To be reproduced with a play before it is planned (v0.8.x P10, P11).
 - Resolved 2026-11-08: the jump is the filter mode menu's exit animation. `useST_MenuAnchor.ts` stored `anchorEl?.getBoundingClientRect()` on close, undefined once the anchor cleared, so the invisible trigger span moved to (0,0) and the Base UI and Radix positioners followed it while the menu faded; the hook now keeps the last measured box (three bases). Play `FilterModeMenuClosesInPlace`, red on base and radix before, green after; merged as a fix from the lead at the merge commit after `546bcabd`.
@@ -42,7 +42,7 @@
 - `stories/features/ClickToCopy.stories.tsx` "Click Copies Value" (base and radix) and `stories/features/RowOrdering.stories.tsx` "Drag Reorders Rows" (aria, 90 s timeout) failed once each in the E1 verifier runs at load average about 16 and passed on rerun and alone; neither is in the P5 known-flake list, so a loaded run reads them as red.
 
 ### Q9 Two doc comments name files spec 04 deleted or misstate their list
-- Tags:
+- Tags: Later
 - From: lead.
 - `apps/shadcn-table-docs/components/theme-demo/demo-themes.ts:42` still names `lib/theme-presets.ts` and `themes/*.css`, deleted by spec 04; `apps/shadcn-table-docs/lib/install.mjs:52` says `EXTRA_PARTS` holds "parts the examples import", but `sheet` is imported by the theme panel, not by an example.
 
@@ -103,7 +103,7 @@
 - v0.8.x D-addendum (decisions.md line 780): a milestone that changes the default look replaces the six PNGs from a `pr.yml` dispatch with `installation-e2e-only=true`; spec 02 did not. Fix milestone `refresh-installation-references`.
 
 ### Q21 Installation E2E capture diff cannot pass on macOS against the Linux references
-- Tags:
+- Tags: Autofix
 - From: run.
 - `test/installation-e2e/lib/browser.mjs:363`: the local capture on macOS differs from the Linux CI reference in every glyph (font rasterization), so the diff exceeds 500 pixels whatever the code; the v0.8.x local runs used `--no-diff` (v0.8.x tracker 08-test-runner-and-tests, line 22).
 - Local runs of the nextjs scenarios take `--no-diff`; the pixel diff is a CI check only. Recorded in process.md P5.
@@ -122,7 +122,7 @@
 ### Q24 The theme check's search dialog stays open after Escape on CI
 - Tags: Autofix
 - From: run.
-- `test/docs-e2e/lib/getting-started.mjs` (`/` theme checks, `dev` at ea276251 and `claude/review`): after "theme: r does nothing while the search dialog is open" the test presses Escape and swallows the 5 s detach timeout; on CI the dialog stays, so the next `button[aria-label="Customize theme"]` click (or the following `input.fill`) times out after 30 s. Release PR 134: run 42488458376 attempt 1 radix, run 42490873017 attempts 1 and 2 aria (the F23 hotkey waits pass there). Fix: close the dialog deterministically (second Escape, close control, reload as the last resort) before the edit check; test file only, D30 pattern.
+- `test/docs-e2e/lib/getting-started.mjs` (`/` theme checks, `dev` at ea276251 and `claude/review`): after "theme: r does nothing while the search dialog is open" the test presses Escape and swallows the 5 s detach timeout; on CI the dialog stays, so the next `button[aria-label="Customize theme"]` click (or the following `input.fill`) times out after 30 s. Release PR 134: run 42488458376 attempt 1 radix, run 42490873017 attempts 1 and 2 aria (the Q23 hotkey waits pass there). Fix: close the dialog deterministically (second Escape, close control, reload as the last resort) before the edit check; test file only, D30 pattern.
 
 ### Q25 The CRUD delete-dialog check counts rows before the example finishes loading
 - Tags: Autofix
@@ -130,9 +130,9 @@
 - `test/docs-e2e/lib/examples.mjs:85-111` (`deleteDialog`, v0.8.x F53): `before` is `tbody tr` counted as soon as the example panel is found, `after` the same count once the Cancel click closed the alert dialog. On CI the inline CRUD examples still show their loading rows at the first count (before=10 after=8 on `editing-crud-inline-row` and `-inline-cell`, before=20 after=10 on `editing-crud-tree`), so the check fails although Cancel kept every row. Release PR 134 on the bump 0a465c3e: run 42501252444 attempt 1 base and radix, attempt 2 radix; earlier once on aria at ea276251. Fix: wait for the example's rows to settle (the loading state gone, the count stable across two reads) before the first count; test file only, D30 pattern.
 
 ### Q26 Spec 15 comments still name app/layout.tsx as the style link owner
-- Tags:
+- Tags: Later
 - From: run.
-- `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the A14 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
+- `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the Q50 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
 
 ### Q27 The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path
 - Tags: D46
@@ -177,7 +177,7 @@
 - Choices for a later item: Vercel Pro (20 USD a month, pay-as-you-go above the included usage), or move per-request work off functions (static OG images at build, narrower `proxy.ts` matcher, cache headers on the Markdown routes) and re-measure on the Vercel usage page.
 
 ### Q34 Rank one for shadcn table and a keyword-led snippet
-- Tags:
+- Tags: Later
 - From: run.
 - Owner, 2026-11-12, Google query "shadcn table" (logged in, personalised): the result shown is `/docs/getting-started/introduction`, below shadcn.io's "Shadcn Table: Free Data Table Component for Next.js" (tablecn) and a shadcn-ui GitHub issue; the owner also reports finding the page only on the sixth page in another view. Goal: rank one for "shadcn table", with the home page as the landing result, not the introduction page.
 - The snippet Google shows is the introduction's description ("shadcn-table is a feature-rich data table for shadcn/ui. It covers everything from a simple list to a production data grid."); the owner wants it rewritten around the terms people search (shadcn table, shadcn data table, data table component, Next.js, TanStack Table), as the tablecn result does ("production-ready, feature-rich data table component. Built with Next.js, React, Tailwind and shadcn/ui").
@@ -294,7 +294,7 @@
   - a) Recommended: merge the fix branch `v0.9/refresh-installation-references` into `dev` directly (`dev` = df90bd27 plus the six PNGs), the one exception to P1 for this release; `claude/review` keeps everything.
   - b) fast-forward `dev` to `claude/review`: 0.9.0 ships E4 08 and 11 (and whatever else merges before the PR opens).
 
-### Q49 The F22 fix has no play that fails on the shipped code
+### Q49 The Q22 fix has no play that fails on the shipped code
 - Tags: D33
 - From: run.
 - Fix milestone `stored-view-page-index` (Q22, merged 811045dc) changed how a stored rows-per-page is restored so the page index stays, but no story play exercises a table with `initialState.pagination.pageIndex` above 0, so P11 (a fix's play fails on the shipped code first) has no red line; the spec 12 `Persistence` play stays green before and after.
@@ -359,7 +359,7 @@
   - b) keep the wrap as merged (inert until the app builds with webpack)
 
 ### Q57 The sidebar Changelog link is marked external
-- Tags:
+- Tags: Autofix
 - From: run.
 - Spec 31 added a Changelog link to the docs sidebar. As a plain entry it also became the "Next" card on the last docs page, pointing at GitHub. The review fix gave the entry the fumadocs `external:` prefix in `content/docs/meta.json`: the link stays in the sidebar, opens in a new tab, shows the external-link icon before its label, and no longer appears in the previous/next footer. Merged in 23e1cfa9.
 - Options:

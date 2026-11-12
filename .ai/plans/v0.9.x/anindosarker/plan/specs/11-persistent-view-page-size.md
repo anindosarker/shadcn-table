@@ -22,7 +22,7 @@ apps/shadcn-table-docs/
 ├── examples/base/persistent-view/TS.tsx:344    ← same
 ├── examples/aria/persistent-view/TS.tsx:344    ← same
 ├── content/docs/examples/persistent-view.mdx   ← the page prose
-└── test/docs-e2e/lib/examples.mjs:531-560      ← the page's check (pagination inside the bottom toolbar, F14 of v0.8.x)
+└── test/docs-e2e/lib/examples.mjs:531-560      ← the page's check (pagination inside the bottom toolbar, Q14 of v0.8.x)
 ```
 
 ### 1.4 Target structure

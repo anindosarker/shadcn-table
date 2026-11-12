@@ -23,11 +23,11 @@ E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) an
 ### 1.3 Current structure
 
 ```
-claude/review  2c268682              ← E4 (08 9d582dcd, 09, 10, 11 d7ee15f3, 12 117a81b5, 13), E5 (14, 15 5df252e9), E6 (16 to 19, a0677dfc), fixes F20 to F25, merge of master 566f56a6, plan commits
+claude/review  2c268682              ← E4 (08 9d582dcd, 09, 10, 11 d7ee15f3, 12 117a81b5, 13), E5 (14, 15 5df252e9), E6 (16 to 19, a0677dfc), fixes Q20 to Q25, merge of master 566f56a6, plan commits
 dev, master    2eeafde9              ← 0.9.0 (v0.9.0 tagged 2026-11-08)
 CHANGELOG.md:10-68                   ← `## Unreleased`: `### Added` (Spec 12), `### Changed` (Spec 19, 18, 16, 17), `### Docs` (Spec 11, 08, 13, 09, 10, 14, 15); `## 0.9.0 - 2026-11-08` below
 packages/shadcn-table/package.json:8 ← "version": "0.9.0"
-.gitignore:23                        ← `storybook-static` (matches test/storybook-static/ too, F10)
+.gitignore:23                        ← `storybook-static` (matches test/storybook-static/ too, Q10)
 tools/release/record-output.mjs:24-39 ← MAX_ERRORS 5, MAX_ERROR_LENGTH 400, capRecord (exported), outputLine; no test file
 tools/release/pr-summary.mjs:9-10    ← "else from test/.out/*.json (a local run, spec 18's act check)"
 test/validate-repo/lib/unit.mjs:13   ← node --test "tools/**/*.test.mjs"
@@ -74,7 +74,7 @@ sequenceDiagram
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes F20 to F25 whose merge is not yet in `master` each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did; Q20, Q23, Q24, F25 shipped in 0.9.0 and F21 has no fix commit, so 0.9.1 lists Fix F22 only); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
+- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes Q20 to Q25 whose merge is not yet in `master` each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did; Q20, Q23, Q24, Q25 shipped in 0.9.0 and Q21 has no fix commit, so 0.9.1 lists Fix F22 only); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
 - `packages/shadcn-table/package.json` and the root `package.json`: version `0.9.1` through Prepare Release only; never bumped by hand.
 - The trackers: `trackers/20-integration-0-9-1-tracker.md` (Integration), `trackers/20-release-pr-0-9-1-tracker.md`, `trackers/20-after-release-0-9-1-tracker.md`: check lines, the PR number, the run ids, the proof lines of 1.6.3, the final shas.
 

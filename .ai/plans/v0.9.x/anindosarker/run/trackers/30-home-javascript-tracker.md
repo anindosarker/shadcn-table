@@ -51,7 +51,7 @@ Checks:
 
 ## Attention
 
-- Stopped, not merged, not retried (runner 2026-11-10, Q30): the 450 KB script target on `/` is unreachable inside `components/dev-home/**`; 711 KB before, 580 KB on branch `v0.9/home-javascript` at b2bcf60d (kept for salvage, every check green). The owner's ruling on A21 decides merge, retry or drop.
+- Stopped, not merged, not retried (runner 2026-11-10, Q30): the 450 KB script target on `/` is unreachable inside `components/dev-home/**`; 711 KB before, 580 KB on branch `v0.9/home-javascript` at b2bcf60d (kept for salvage, every check green). The owner's ruling on Q30 decides merge, retry or drop.
 
 - Acceptance's 450 KB is unreachable inside `components/dev-home/**` while visible behaviour stays unchanged: the `/` first load is 427 KB transfer, all but 19 KB of it the shared root layout (posthog-js alone 114 KB, react-dom 72 KB; `app/layout.tsx` is out of scope, 1.6.2), and the live demo table (167 KB transfer, @tanstack/table-core plus the ui-radix shadcn-table) is in view at 1350x940 and must load without input (docs-e2e `/` "icons: the pick survives a reload" waits for its rows after a reload with no input). Gating the table on intent reached 437 KB but failed that check, so it is reverted; the branch stands at 580 KB. Owner choice: defer posthog-js / the layout providers (another spec), accept intent loading of the demo table and change that docs-e2e check, or move the 450 KB target.
 - The nav and hero docs links prefetch on hover, touch or focus instead of on entering the viewport (saves the 131 KB docs route chunks per home visit). A click without a prior hover or focus navigates without a warm prefetch.
