@@ -9,6 +9,7 @@ kanban-plugin: basic
 	- Reproduced on localhost:5351 and on live 0.9.2 with the same numbers, so this shipped and is not a claude/review regression: trigger 643,764 24x24, popover 523,692 264x68 (data-side=top, above the header row at y 756), mode button 542,706, mode menu 1093,994 224x404.
 	- Menu cause (Base UI and Radix only; React Aria menu sits beside its button at 574,488): useST_MenuAnchor.ts:124-131 places the invisible trigger span with position:fixed at the button's viewport box, but the popover positioner around it has transform matrix(1,0,0,1,523,692), so the span lands at 1065,1398 and the menu flips from there (ST_FilterOptionMenu.tsx:392-405 base, :399 radix).
 	- Popover above the header is by design: ST_TableHeadCellFilterLabel.tsx:176 base and :181 radix set side="top", mirroring MRT anchorOrigin top, from 2c38ea8e (2026-10-31); the fixed span came from d54340da (2026-10-31); no commit after 2026-11-09 (E10) touches these files.
+	- Smallest fix: render the anchored menu's invisible trigger span through createPortal to document.body in ST_FilterOptionMenu (base and radix), so no transformed ancestor offsets it; switching the popover to side="bottom" is a separate design call, not needed for the menu fix.
 
 ## Decided
 
