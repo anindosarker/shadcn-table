@@ -16,6 +16,7 @@ import {
   example,
   headerBaseLabel,
   headerBaseMenu,
+  liveDemoFilters,
 } from './helpers.mjs';
 
 // D29's 300 ms budget holds on a local machine, but GitHub runners took 342 to
@@ -1360,13 +1361,29 @@ const checks = {
       (await steps.count()) === 4,
       String(await steps.count()),
     );
-    const w = await example(page, 'basic', check);
-    await codeToggle(page, 'basic', 'useShadcnTable', check);
+    // The Live Example is the live-demo example (D78); the Basic Example
+    // stays on its own examples page.
+    check(
+      'no basic example',
+      (await page.locator('[id="example-basic"]').count()) === 0,
+    );
+    const w = await example(page, 'live-demo', check);
+    await liveDemoFilters(page, w, check);
+    await codeToggle(page, 'live-demo', 'useShadcnTable', check);
     // The header's base switch re-renders the example on Base UI and the
     // code view shows that variant's imports; Radix again afterwards.
-    await baseSwitch(page, 'basic', check);
+    await baseSwitch(page, 'live-demo', check);
     // The example toolbar's own base select drives the same switch.
-    await baseSwitch(page, 'basic', check, { via: 'toolbar' });
+    await baseSwitch(page, 'live-demo', check, { via: 'toolbar' });
+  },
+  '/docs/getting-started/introduction': async ({ page, check }) => {
+    // The See it demo is the live-demo example (D78).
+    check(
+      'no basic example',
+      (await page.locator('[id="example-basic"]').count()) === 0,
+    );
+    const w = await example(page, 'live-demo', check);
+    await liveDemoFilters(page, w, check);
   },
   '/docs': async ({ page, check }) => {
     check(

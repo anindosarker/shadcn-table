@@ -1030,6 +1030,19 @@ const checks = {
     const headings = await page.locator('main h4').count();
     check('event listener sections', headings > 3, `h4=${headings}`);
   },
+  '/docs/guides/tanstack-table-with-shadcn-ui': async ({ page, check }) => {
+    const title = (
+      (await page.locator('article h1').first().textContent()) ?? ''
+    ).trim();
+    check('title', title === 'TanStack Table with shadcn/ui', `h1=${title}`);
+    check(
+      'first section',
+      (await page
+        .locator('article h2', { hasText: 'What TanStack Table gives you' })
+        .count()) > 0,
+    );
+    check('headings', (await count(page, 'article :is(h2, h3)')) >= 3);
+  },
   '/docs/guides/toolbar-customization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, STATE, check);

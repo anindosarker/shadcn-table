@@ -1305,3 +1305,92 @@ export const ModePickerByDefaultPopover = {
     expect(items).toHaveLength(14);
   },
 };
+
+// D77: in the popover filter, the filter-mode menu opens next to its button,
+// not offset by the popover's own position.
+export const ModeMenuNextToButtonPopover = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="popover"
+      columns={scoreColumns}
+      data={scoreData}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Ada');
+    const trigger = filterHeaderCell(
+      canvasElement,
+      'Name',
+    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+    expect(trigger, 'the Name filter button').not.toBeNull();
+    await userEvent.click(trigger!);
+    await body.findByPlaceholderText('Filter by Name');
+    const modeButton = await body.findByRole('button', {
+      name: 'Change filter mode',
+    });
+    // The popover's enter animation transforms it; a person opens the menu
+    // after it has settled.
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished),
+    );
+    await userEvent.click(modeButton);
+    const menu = await body.findByRole('menu');
+    // The gap between the two boxes on each axis, 0 when they overlap; the
+    // menu's side offset is 4 px.
+    await waitFor(() => {
+      const a = modeButton.getBoundingClientRect();
+      const b = menu.getBoundingClientRect();
+      const gapX = Math.max(0, b.left - a.right, a.left - b.right);
+      const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
+      expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
+      expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
+    });
+  },
+};
+
+// D80: a click on the mode button while the popover still animates in opens
+// the menu next to the button once every animation has ended.
+export const ModeMenuNextToButtonDuringPopoverAnimation = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="popover"
+      columns={scoreColumns}
+      data={scoreData}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Ada');
+    const trigger = filterHeaderCell(
+      canvasElement,
+      'Name',
+    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+    expect(trigger, 'the Name filter button').not.toBeNull();
+    await userEvent.click(trigger!);
+    const modeButton = await body.findByRole('button', {
+      name: 'Change filter mode',
+    });
+    // No wait for the popover's enter animation: the click lands mid-way.
+    await userEvent.click(modeButton);
+    const menu = await body.findByRole('menu');
+    // Every animation, the popover's and the menu's, has ended.
+    while (document.getAnimations().some((a) => a.playState === 'running')) {
+      await Promise.all(
+        document.getAnimations().map((animation) => animation.finished),
+      );
+    }
+    // The gap between the two boxes on each axis, 0 when they overlap; the
+    // menu's side offset is 4 px.
+    await waitFor(() => {
+      const a = modeButton.getBoundingClientRect();
+      const b = menu.getBoundingClientRect();
+      const gapX = Math.max(0, b.left - a.right, a.left - b.right);
+      const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
+      expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
+      expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
+    });
+  },
+};

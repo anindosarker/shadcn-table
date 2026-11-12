@@ -932,7 +932,7 @@
       "name": "example-enable-detail-panel-conditionally-base",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/base/enable-detail-panel-conditionally/TS.tsx",
@@ -1441,7 +1441,7 @@
       "name": "example-lazy-detail-panel-base",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/base/lazy-detail-panel/TS.tsx",
@@ -1463,7 +1463,7 @@
       "name": "example-lazy-sub-rows-base",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "A Shadcn Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/base/lazy-sub-rows/TS.tsx",
@@ -1499,6 +1499,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo-base",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/base/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/base/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "lucide-react"
@@ -3728,7 +3752,7 @@
       "name": "example-enable-detail-panel-conditionally-radix",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/radix/enable-detail-panel-conditionally/TS.tsx",
@@ -4237,7 +4261,7 @@
       "name": "example-lazy-detail-panel-radix",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/radix/lazy-detail-panel/TS.tsx",
@@ -4259,7 +4283,7 @@
       "name": "example-lazy-sub-rows-radix",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "A Shadcn Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/radix/lazy-sub-rows/TS.tsx",
@@ -4295,6 +4319,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo-radix",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/radix/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/radix/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
         "lucide-react"
@@ -6525,7 +6573,7 @@
       "name": "example-enable-detail-panel-conditionally-aria",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/aria/enable-detail-panel-conditionally/TS.tsx",
@@ -7034,7 +7082,7 @@
       "name": "example-lazy-detail-panel-aria",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/aria/lazy-detail-panel/TS.tsx",
@@ -7056,7 +7104,7 @@
       "name": "example-lazy-sub-rows-aria",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "A Shadcn Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/aria/lazy-sub-rows/TS.tsx",
@@ -7092,6 +7140,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo-aria",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/aria/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/aria/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
         "lucide-react"
@@ -9888,6 +9960,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Alias of example-live-demo-base: the GitHub shorthand anindosarker/shadcn-table/example-live-demo installs the Base UI copy.",
+      "files": [
+        {
+          "path": "examples/base/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/base/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "lucide-react"

@@ -14,6 +14,9 @@ out/
 build
 # per-port docs dev tsconfig (apps/shadcn-table-docs/lib/dev-tsconfig.mjs)
 apps/shadcn-table-docs/tsconfig.*.json
+# committed: the build's and the preview build's tsconfig (next.config.mjs)
+!apps/shadcn-table-docs/tsconfig.build.json
+!apps/shadcn-table-docs/tsconfig.preview.json
 
 # build
 *.log

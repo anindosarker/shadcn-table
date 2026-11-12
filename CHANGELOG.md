@@ -7,6 +7,98 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.9.3 - 2026-11-12
+
+### Added
+
+#### Spec 26 Home page Open Graph image
+
+- The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
+
+#### Spec 28 Security response headers
+
+- Every response of the docs site carries `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN` and `Permissions-Policy: camera=(), microphone=(), geolocation=()` (D57). No `Content-Security-Policy` yet.
+
+#### Spec 25 JSON-LD structured data
+
+- The home page and every docs page carry Schema.org JSON-LD: `/` a `WebSite` and a `SoftwareSourceCode`, each docs page a `TechArticle` and a `BreadcrumbList` (Docs > section > page, absolute URLs), typed with `schema-dts` (D54).
+
+### Changed
+
+#### Spec 30 API page payload
+
+- The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
+
+#### Spec 30 Home JavaScript
+
+- The home page loads less JavaScript: the nav and hero links prefetch the docs on hover, touch or focus instead of as soon as they show, so the docs route's scripts no longer download with the home page. Lighthouse (desktop) script transfer for `/` drops from 711 KB to 580 KB; `jspdf`, `jspdf-autotable` and `recharts` stay out of the home load (D59, D62).
+
+#### Spec 33 Home title, hero line and description
+
+- The home page title and `og:title` read "shadcn-table: React Data Table for shadcn/ui and TanStack"; docs page titles keep `<page> | shadcn-table`. The hero line says "The open-source React data table for shadcn/ui, built on TanStack Table."; the H1 stays "shadcn-table" (D73).
+- The search description of `/` (`description`, `og:description`, `twitter:description`) reads "Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI." (D73). It is one shared `siteDescription`, read by the root layout, the home page metadata and JSON-LD, the OG image and the `llms.txt` summary (D76).
+
+#### Spec 34 posthog-js loads after hydration
+
+- Analytics load after the page is interactive: posthog-js is fetched in its own chunk on the first idle moment or interaction, and events raised before that are queued and sent on init. The home page's first script load drops from 421 KB to 317 KB (Lighthouse desktop, before the deferred loads) (D70).
+
+#### Spec 35 Example sources are read per example
+
+- Docs builds no longer trace the whole examples tree: the example generator writes each base's code-view sources to one file, read from a fixed path, so the build's "file pattern matches 10568 files" warning is gone. The code view shows the same files (D69).
+
+#### Spec 36 validate-repo fails on a stale generated registry
+
+- The repository check (`pnpm test validate-repo`, run by CI) regenerates the registries with `pnpm -w registry:build`, `registry:items` and `registry:hosted` and fails on a diff, naming each stale tracked file, such as `apps/shadcn-table-docs/registry.json` after an example description changed without a regeneration (D68).
+
+### Fixed
+
+#### Spec 29 Markdown delivery and llms.txt shape
+
+- A docs page served as Markdown (`Accept: text/markdown` or `/llms.mdx/docs/.../content.md`) now answers `Vary: Accept` and `text/markdown; charset=utf-8`, so a cache no longer hands Markdown to a browser or HTML to an agent (D58).
+- `/llms.txt` follows llmstxt.org: the `# shadcn-table` heading, a one-line summary, then one section per docs folder (Getting Started, API Reference, Quick Examples, Guides) with a link and description per page, on absolute URLs (D58).
+- `/llms-full.txt`, the per-page Markdown and the "Copy page" button carry plain Markdown: MDX imports, JSX components and frontmatter are gone; headings, prose, component prose (a callout body) and code blocks stay (D58).
+
+#### Spec 24 Canonical URLs and trailing-slash redirect
+
+- Every docs site page names its canonical URL: the root metadata sets `alternates.canonical` to `./`, so `/` and each docs page carry one `<link rel="canonical">` with their own slash-less URL on `NEXT_PUBLIC_SITE_URL`. A path with a trailing slash answers 308 to the slash-less path; the PostHog proxy under `/ingest` keeps its slash (D53).
+
+#### Fix D66 The docs proxy runs only on docs paths
+
+- The docs site's `proxy.ts` (Markdown delivery for `Accept: text/markdown`) runs only on docs paths instead of on every request, so pages, assets and the `/ingest` proxy no longer pass through it; a docs URL still answers Markdown to an agent (D66).
+
+#### Fix Docs build type check
+
+- The docs builds and `types:check` read `tsconfig.build.json` (the preview build `tsconfig.preview.json`), which exclude the other build folders, so a stale `.next` or `.next-preview` folder naming deleted routes can no longer fail them.
+
+#### Fix D77 Filter mode menu position in the popover filter
+
+- With `columnFilterDisplayMode: 'popover'` on Base UI and Radix, the filter mode menu opens next to its "Change filter mode" button instead of several hundred pixels away; the menu's anchor renders in `document.body`, out of the popover's transformed positioner. React Aria was already right (D77).
+
+#### Fix D79 Docs app drops the unused zod dependency
+
+- The docs app no longer lists `zod` as a dependency; nothing in it imports `zod` since spec 32 removed the page byline (D79).
+
+#### Fix D80 Filter mode menu opened during the popover animation
+
+- A click on "Change filter mode" while the filter popover still animates in now opens the menu next to the button: the menu's anchor is measured again when an animation around it ends, and on React Aria it renders in `document.body` like on Base UI and Radix (D80). React Aria showed the menu about 117 px off before.
+
+### Docs
+
+#### Spec 31 Page frame and new pages
+
+- `/docs` redirects permanently (308) to the Introduction, and the sidebar's last entry links the changelog (D60).
+- New guide: "TanStack Table with shadcn/ui", last under Fundamentals (D60, D72).
+- The Introduction shows the install command and the basic example; the getting-started pages have new descriptions (D60).
+
+#### Spec 32 Docs wording
+
+- Inherited typos fixed on six pages: the Detail Panel, Lazy Detail Panel and Lazy Sub Rows example descriptions, and the Column Ordering, Editing and Column Size guides (D74).
+
+#### Fix D78 Richer live demo on Usage and Introduction
+
+- New example `live-demo` (registry item `example-live-demo`, all three bases): 20 members with text filters on First Name and Last Name, a select filter on State, a range filter on Age, a date filter on Joined and a multi-select filter on Status (D78).
+- The Usage page's Live Example and the Introduction's demo show it in place of the Basic Example; the tutorial steps and the Basic Example itself are unchanged (D78).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added

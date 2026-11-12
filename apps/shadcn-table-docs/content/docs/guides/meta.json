@@ -10,6 +10,7 @@
     "table-event-listeners",
     "state-management",
     "accessibility",
+    "tanstack-table-with-shadcn-ui",
     "---Customization Guides---",
     "customize-components",
     "customize-icons",

@@ -261,7 +261,7 @@ html > body[data-scroll-locked] {
 
 /* ---------- sidebar ---------- */
 
-:is(#nd-sidebar, #nd-sidebar-mobile) a {
+:is(#nd-sidebar, #nd-sidebar-mobile) a:where(:not([data-external])) {
   padding-block: 0.25rem;
   font-size: 0.8125rem;
   color: var(--color-fd-foreground);
