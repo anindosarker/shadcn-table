@@ -14,6 +14,9 @@ Checks:
 - Check: lint, `pnpm test lint` at f7e3dff6: pass
 - Check: validate-repo, `pnpm test validate-repo` at f7e3dff6: pass
 - Check: docs-e2e, `pnpm test docs-e2e --base base --url http://localhost:5340` (same build) at f7e3dff6: pass (getting-started 205, api 109, guides 692, examples 939; 0 failed)
+- Check (verifier): Local CI and 2.2 lines above still valid (f7e3dff6..66f68c42 and 005b49f3..66f68c42 touch only .ai/ and CHANGELOG.md); not rerun
+- Check (verifier): comparison links, `grep -rn "getting-started/comparison" apps/shadcn-table-docs` (mdx, json, ts, tsx) at 66f68c42: pass (no output)
+- Check (verifier): Acceptance 1.2 rerun at 66f68c42: pass. Diff `--stat` 8 files changed, 59 insertions(+), 6 deletions(-) (tanstack guide, meta.json entry, six typo lines); byline grep no output; `pnpm -w registry:items && git diff --exit-code apps/shadcn-table-docs/registry.json` exit 0; `pnpm test validate-repo` pass; `pnpm --filter shadcn-table-docs build` then `next start -p 5340`: comparison 404, tanstack guide 200, sorting 'Updated 20' 0, sitemap `<loc>` 105; `pnpm test docs-e2e --base base --url http://localhost:5340` pass (4 sections, 107 pages, 1945 checks); server stopped
 
 - Task 1 Content restore, guide order, comparison page removal: done (1853327f)
 - Task 2 Byline, date field and script removal, registry: done (005b49f3)
