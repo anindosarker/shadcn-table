@@ -14,6 +14,11 @@ Checks:
 - Check: local CI, `pnpm test lint` at bb9018a4: pass (9 pre-existing warnings)
 - Check: local CI, `pnpm test validate-repo` at bb9018a4: pass, "bases identical, icon maps complete, tailwind valid, registry valid, registry fresh, 40 unit tests"
 - Check: `pnpm format` at bb9018a4: no change beyond the changelog block
+- Check: verifier, local CI lines at bb9018a4 still valid at d456fa16 (`git diff --name-only bb9018a4..d456fa16` touches only .ai/), not rerun
+- Check: verifier acceptance pass, `pnpm test validate-repo` twice at d456fa16: pass both, summary contains "registry fresh", `git status --short` empty after each
+- Check: verifier acceptance failing case, "The default" changed to "The plain" in the `description` of `apps/shadcn-table-docs/content/docs/examples/basic.mdx`, `pnpm test validate-repo` at d456fa16: fail (exit 1) as expected, `registry-fresh: apps/shadcn-table-docs/registry.json is stale: run pnpm -w registry:build && pnpm -w registry:items and commit the result`
+- Check: verifier acceptance restore, `git checkout -- apps/shadcn-table-docs` then `pnpm test validate-repo` at d456fa16: pass, `git status --short` empty
+- Check: verifier files, `git diff $(git merge-base origin/claude/review HEAD)..HEAD --stat` at d456fa16: the four owned files, CHANGELOG.md and this tracker; matches
 
 - Task 1 generators deterministic: done (59a003a9, no generator change needed)
 - Task 2 check and wiring: done (dd2c0585)
