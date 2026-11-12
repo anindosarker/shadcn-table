@@ -38,12 +38,10 @@ export function SidebarSection({
   const rendered = Children.toArray(children);
 
   return (
-    <Collapsible
-      open={open}
-      onOpenChange={setOpen}
-      className="mt-6 flex flex-col gap-1 first:mt-0"
-    >
-      <CollapsibleTrigger className="group/section mb-1 inline-flex min-h-6 w-full cursor-pointer items-center justify-between gap-2 px-2 font-mono text-[11px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground hover:text-fd-foreground">
+    <Collapsible open={open} onOpenChange={setOpen} className={SECTION_CLASS}>
+      <CollapsibleTrigger
+        className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS}`}
+      >
         {item.name}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>
@@ -78,6 +76,16 @@ export function SidebarSection({
     </Collapsible>
   );
 }
+
+/** A top-level section block: the gap above it and between its rows. */
+export const SECTION_CLASS = 'mt-6 flex flex-col gap-1 first:mt-0';
+
+/**
+ * The small muted label of a top-level row: the section triggers here and
+ * the external links beside them (components/sidebar-item.tsx).
+ */
+export const SECTION_LABEL_CLASS =
+  'inline-flex min-h-6 w-full items-center gap-2 px-2 font-mono text-[11px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground hover:text-fd-foreground';
 
 /** Same classes the notebook layout gives its page items (link variant). */
 export const ITEM_CLASS =
