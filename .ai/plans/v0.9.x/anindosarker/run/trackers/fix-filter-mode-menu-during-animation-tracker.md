@@ -1,6 +1,6 @@
 # Filter mode menu during popover animation (Q65, D80), tracker
 
-Status: running
+Status: merged (c69776a9)
 Files owned: `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx`, `packages/shadcn-table/stories/features/Filtering.stories.tsx`, `CHANGELOG.md`
 Depends on: none
 Branch `v0.9/fix-filter-mode-menu-during-animation`, worktree 08
