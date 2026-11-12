@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 02:21
+Updated: 2026-11-13 02:32
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -62,6 +62,7 @@ Updated: 2026-11-13 02:21
 | fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
 | fix Installation references refreshed (Q20) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| fix Richer live demo (Q63) | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Stored view page index (Q22) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Theme check closes the search dialog (Q24) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Theme hotkey checks wait for the change (Q23) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
