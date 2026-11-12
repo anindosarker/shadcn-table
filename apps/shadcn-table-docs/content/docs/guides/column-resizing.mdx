@@ -1,10 +1,9 @@
 ---
 title: 'Column Resizing Guide'
-description: 'Resize columns in shadcn-table with enableColumnResizing, columnResizeMode and columnResizeDirection, using the drag handle at the end of each header cell.'
-date: '2026-11-10'
+description: 'How to use and customize the column resizing features of Shadcn Table'
 ---
 
-shadcn-table draws a resize handle, `ST_TableHeadCellResizeHandle`, at the end of each header cell, and column resizing is on by default (`enableColumnResizing`). The widths live in TanStack Table's `columnSizing` state, so you can read or reset them like any other state.
+Shadcn Table has a built-in column resizing handle, and it is on by default.
 
 > The Column Size features was recently split into its own [Guide](/docs/guides/column-size). View that guide as a prerequisite to this one.
 
@@ -112,7 +111,7 @@ This is discussed in more detail in the [Column Size Guide](/docs/guides/column-
 
 If you are displaying your table in a RTL (right-to-left) language, you can set the `columnResizeDirection` table option to `"rtl"` to make the column resize handle appear on the left side of the column instead of the right side.
 
-shadcn-table does not read the document direction, so set this option explicitly when your table is rendered in an RTL layout.
+Shadcn Table does not read the document direction, so set this option explicitly when your table is rendered in an RTL layout.
 
 ```jsx
 const table = useShadcnTable({

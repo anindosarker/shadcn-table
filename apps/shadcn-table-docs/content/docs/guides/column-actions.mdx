@@ -1,10 +1,9 @@
 ---
 title: 'Column Actions Guide'
-description: 'Use, customize or turn off the column menu of shadcn-table with enableColumnActions and renderColumnActionsMenuItems, built on your shadcn/ui DropdownMenu.'
-date: '2026-11-10'
+description: 'How to use, customize, or disable column the action button and menu features of Shadcn Table'
 ---
 
-By default, shadcn-table renders a column menu for each column header: `ST_ColumnActionMenu`, built on your shadcn/ui `DropdownMenu`, so it follows your theme. A chevron button at the end of the header cell opens it, and so does a click on the header label. Every action in the menu can also be reached some other way (the sort editor, the filter chips, the view settings panel), so the menu is a shortcut that keeps the table's features close to the column they act on.
+By default, Shadcn Table renders a column menu for each column header. A chevron button at the end of the header cell opens it, and so does a click on the header label. Every action in the menu can also be reached some other way (the sort editor, the filter chips, the view settings panel), so the menu is a shortcut that keeps the table's features close to the column they act on.
 
 ### Relevant Table Options
 
@@ -72,7 +71,7 @@ In this demo, we disable the column actions button for the 'ID' column.
 
 ### Custom Column Actions Menu
 
-If you do not like the default column actions menu items that shadcn-table generates, you can provide your own custom menu items with the `renderColumnActionsMenuItems` table or column option. You can choose whether or not to include the internal menu items by using the `internalColumnMenuItems` parameter.
+If you do not like the default column actions menu items that Shadcn Table generates, you can provide your own custom menu items with the `renderColumnActionsMenuItems` table or column option. You can choose whether or not to include the internal menu items by using the `internalColumnMenuItems` parameter.
 
 ```jsx
 const table = useShadcnTable({

@@ -1,7 +1,6 @@
 ---
 title: 'ST Components'
-description: 'Reference for the ShadcnTable component and every ST_ sub-component you can compose into a custom table, each built on your own shadcn/ui components.'
-date: '2026-11-10'
+description: 'All the internal ST components that can be used to build your own custom table components'
 ---
 
 <OptionsSwitcher
@@ -19,7 +18,7 @@ date: '2026-11-10'
 
 <br />
 
-shadcn-table exports `<ShadcnTable />` and every internal `ST_*` component from `components/ui/shadcn-table/index.ts`, so you can render the whole table with one component or compose your own from the parts. Each `ST_*` component draws its part with your shadcn/ui components, such as `DropdownMenu`, `Popover` and `Button`, or with a plain element such as `<td>`, and reads the table instance from a `table` prop or from the `ST_TableProvider` context. Because the source is copied into your project, you can also edit any of these components directly.
+In previous versions of `shadcn-table`, you only had the option to use the `<ShadcnTable />` component. Now in version 2, all internal ST components are exported for you to optionally use to build up your own custom table components.
 
 ### \<ShadcnTable /\>
 
@@ -50,7 +49,7 @@ return <ShadcnTable columns={columns} data={data} enableRowPinning />; //passing
 
 ### ST\_\* Sub Components
 
-shadcn-table now exports all of its internal components. You can use them for your own use cases.
+Shadcn Table now exports all of its internal components. You can use them for your own use cases.
 
 #### \<ST_TableProvider /\>
 

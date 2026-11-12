@@ -1,14 +1,11 @@
 ---
 title: 'Chart Detail Panel Example'
-description: 'Render a Recharts line chart inside each expandable row with renderDetailPanel, so a shadcn-table row opens into a per-row chart of its history.'
-date: '2026-11-10'
+description: 'A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.'
 ---
 
-This example uses `renderDetailPanel` to draw a [Recharts](https://recharts.org/) `LineChart` under each row when the row expands. The chart reads its points from `row.original`, so every row gets its own series, and `stTableBodyRowProps` gives the detail panel row its own background so the chart reads as part of the row above it.
+The detail panel features can be used for a variety of purposes. In this example, we are integrating the new [Recharts](https://recharts.org/) library to display an expandable line chart for each row.
 
-Use this pattern when a row stands for something with a history, such as a player with points per game, a product with monthly sales or a service with response times, and a small chart says more than another column would. The panel is plain React, so any charting library works; Recharts is the library shadcn/ui charts are built on, so its look matches the rest of your shadcn/ui components and themes.
-
-The detail panel is the same feature the [Detail Panel Example](/docs/examples/detail-panel) shows with plain text. Keep the chart light: every expanded row mounts its own chart, so a table that opens many rows at once is better served by a lazy panel.
+You could, of course, use any charting library that you prefer, but using Recharts will give you a consistent look and feel with Shadcn Table and any other shadcn/ui components you may be using.
 
 <ChartDetailPanelExample />
 

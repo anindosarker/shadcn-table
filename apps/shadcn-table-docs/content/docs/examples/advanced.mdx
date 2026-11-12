@@ -1,14 +1,11 @@
 ---
 title: 'Advanced Example'
-description: 'A full shadcn-table with row selection, detail panels, column pinning and ordering, grouping, row actions and a custom top toolbar, all client-side.'
-date: '2026-11-10'
+description: 'Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more'
 ---
 
-This example turns on most of what shadcn-table offers in one client-side table. It sets `enableRowSelection`, `enableColumnOrdering`, `enableColumnPinning`, `enableGrouping`, `enableFacetedValues` and `enableRowActions`, renders a panel under each row with `renderDetailPanel`, and replaces the top toolbar through `renderTopToolbar` with a layout built from exported parts such as `ST_GlobalFilterTextField`, `ST_FilterChips`, `ST_SortPopover` and `ST_ViewSettingsButton`. The footer uses `paginationDisplayMode: 'pages'`, and the selection banner sits at the bottom with `positionToolbarAlertBanner`.
+Here is a more advanced example showcasing Shadcn Table's many features. Features such as row selection, expanding detail panels, header groups, column ordering, column pinning, column grouping, custom column and cell renders, etc., can be seen here.
 
-Use it as a reference for how the options combine, or as a starting point you trim down to what your screen needs: delete the options you do not want and the rest keeps working. Every part renders with the shadcn/ui components copied into your project, so a change to a button or an input in `components/ui` shows up here too.
-
-All data stays in the browser. For server-side sorting, filtering and pagination, see the [Remote&nbsp;Data&nbsp;Example](/docs/examples/remote) or the [React-Query Example](/docs/examples/react-query).
+This example is still only using client-side features. If you want to see an example of how to use Shadcn Table with server side logic and remote data, check out either the [Remote&nbsp;Data&nbsp;Example](/docs/examples/remote) or the [React-Query Example](/docs/examples/react-query).
 
 <AdvancedExample />
 

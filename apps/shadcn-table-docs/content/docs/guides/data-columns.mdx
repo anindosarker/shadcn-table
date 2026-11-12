@@ -1,10 +1,9 @@
 ---
 title: 'Data (Accessor) Columns'
-description: 'Define data columns in shadcn-table with accessorKey or accessorFn, type them with ST_ColumnDef or createSRTColumnHelper, and render them with Cell.'
-date: '2026-11-10'
+description: 'How to create data columns in Shadcn Table and use accessKeys and accessorFns the right way'
 ---
 
-Data columns display your data. A column with an `accessorKey` or `accessorFn` is a data column, typed as `ST_ColumnDef<TData>`: TanStack Table's column definition plus the shadcn-table column options such as `Cell`, `enableClickToCopy` or `icon`.
+Data columns are used to display data and are the default columns that are created when you create a column with an `accessorKey` or `accessorFn`.
 
 The table can perform processing on the data of a data column, such as sorting, filtering, grouping, etc.
 
