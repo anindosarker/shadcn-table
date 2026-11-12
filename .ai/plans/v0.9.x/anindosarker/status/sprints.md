@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 02:09
+Updated: 2026-11-13 02:10
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -45,11 +45,11 @@ Updated: 2026-11-13 02:09
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
-| E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
+| E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
 | E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
-| E11 34 PostHog after hydration | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| E11 35 Example sources per example | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| E11 36 Registry fresh check | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 34 PostHog after hydration | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 35 Example sources per example | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 36 Registry fresh check | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 37 Docs e2e TanStack guide |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
 | E11 38 Integration 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
 | E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |
