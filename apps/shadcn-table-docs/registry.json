@@ -1505,6 +1505,30 @@
       ]
     },
     {
+      "name": "example-live-demo-base",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/base/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/base/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
       "name": "example-loading-base",
       "type": "registry:block",
       "title": "Loading",
@@ -4295,6 +4319,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo-radix",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/radix/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/radix/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
         "lucide-react"
@@ -7098,6 +7146,30 @@
       ]
     },
     {
+      "name": "example-live-demo-aria",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Live Demo example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/aria/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/aria/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
       "name": "example-loading-aria",
       "type": "registry:block",
       "title": "Loading",
@@ -9888,6 +9960,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "example-live-demo",
+      "type": "registry:block",
+      "title": "Live Demo",
+      "description": "Alias of example-live-demo-base: the GitHub shorthand anindosarker/shadcn-table/example-live-demo installs the Base UI copy.",
+      "files": [
+        {
+          "path": "examples/base/live-demo/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/live-demo.tsx"
+        },
+        {
+          "path": "examples/base/live-demo/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/live-demo/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "lucide-react"
