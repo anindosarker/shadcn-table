@@ -675,3 +675,6 @@ index e1645117..e67a5482 100644
 - `components/posthog-provider.tsx` initialises posthog-js after hydration (dynamic import on an idle callback or first interaction, whichever is first), with the queue of events captured before init flushed on init, so the first pageview is not lost. Session replay (D67) starts on the same init. Nothing else in the root layout changes.
 - Checks: on a production build the `/` first-load script transfer is under 450 KB (the D59 original target) with posthog-js absent from the initial chunks; a pageview and the recorder still arrive at `/ingest/*`; the docs check "icons: the pick survives a reload" passes.
 - Settled by the lead 2026-11-13: technical, no visible change.
+
+### D71 Comparison page moves last in Getting Started and compares the searched names
+
