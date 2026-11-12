@@ -14,9 +14,6 @@ kanban-plugin: basic
 - [ ] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
 	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
 	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
-- [ ] **Q61** Keep PostHog session recordings from piling up #owner
-	- Owner idea 2026-11-13: auto-clean recordings to save storage. From memory, not checked against the owner's project: PostHog bills replay by recordings captured per month (5,000 free), not by storage, and deletes recordings by itself after the plan's retention period. The levers that lower usage are capture-side project settings: sample rate, minimum session duration, URL triggers. No repo change.
-	- Owner 2026-11-13: fine as long as it works on the free plan; nothing to change.
 
 ## Decided
 
@@ -242,6 +239,10 @@ kanban-plugin: basic
 	- Inputs for the item: Search Console query and page data once it fills (the property is 2 days old), the live home and introduction descriptions after E10 ships, a keyword check with the `/seo` tools. To discuss later, at the owner's call.
 
 ## Dropped
+
+- [x] **Q61** Keep PostHog session recordings from piling up #owner
+	- Owner idea 2026-11-13: auto-clean recordings to save storage. From memory, not checked against the owner's project: PostHog bills replay by recordings captured per month (5,000 free), not by storage, and deletes recordings by itself after the plan's retention period. The levers that lower usage are capture-side project settings: sample rate, minimum session duration, URL triggers. No repo change.
+	- Owner 2026-11-13: fine as long as it works on the free plan; nothing to change.
 
 ## Autofix
 
