@@ -650,3 +650,7 @@ index e1645117..e67a5482 100644
 
 ### D67 PostHog session replays on
 
+- Owner request 2026-11-12: watch how visitors use the site. `components/posthog-provider.tsx` initialises posthog-js with `api_host '/ingest'` (the reverse proxy in `next.config.mjs`); replays are off today.
+- Code: the init options enable session recording (`disable_session_recording: false`, inputs masked, the default), 100 percent sampling for now; the owner lowers the sample rate in the PostHog project settings if the free quota (5,000 replays a month) runs out. PostHog project: the owner turns on "Record user sessions" in Settings, Session replay. Both sides needed; the code side is a small fix that lands directly on `claude/review`.
+- Checks: on a production build the recorder script loads (network request to `/ingest/static/recorder` or the `$snapshot` events in `/ingest/e/`); a replay appears in the PostHog project after a visit on the deployed site.
+- Owner, 2026-11-12: "11. k".
