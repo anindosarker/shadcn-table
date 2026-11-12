@@ -1,6 +1,6 @@
 # Filter mode menu anchor (Q62), tracker
 
-Status: running
+Status: merged (cb670799)
 Files owned: packages/shadcn-table/stories/features/Filtering.stories.tsx (story ModeMenuNextToButtonPopover), packages/shadcn-table/registry/base/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx, packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx, apps/shadcn-table-docs/components/ui-base/shadcn-table/components/menus/ST_FilterOptionMenu.tsx (generated, `pnpm lib:install base`), apps/shadcn-table-docs/components/ui-radix/shadcn-table/components/menus/ST_FilterOptionMenu.tsx (generated, `pnpm lib:install radix`), CHANGELOG.md (`#### Fix D77` block)
 Depends on: none
 Branch `v0.9/fix-filter-mode-menu-anchor`, worktree 08
