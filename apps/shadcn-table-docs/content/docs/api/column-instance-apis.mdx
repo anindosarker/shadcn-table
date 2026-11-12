@@ -1,7 +1,6 @@
 ---
 title: 'Column Instance APIs'
-description: 'Every method and property of a column instance in shadcn-table, from TanStack Table: sorting, filtering, sizing, pinning and visibility for one column.'
-date: '2026-11-10'
+description: 'All the column instance methods and objects that can be accessed from a column instance in Shadcn Table'
 ---
 
 <OptionsSwitcher
@@ -25,9 +24,7 @@ date: '2026-11-10'
   ]}
 />
 
-This page lists the methods and properties of the `column` object that shadcn-table passes to callbacks such as `stTableHeadCellProps`, `Header` and `Filter`, and that `table.getColumn(id)` returns. A column instance is the live form of one column definition: `column.columnDef` holds the options you wrote, and the methods read or change that column's sorting, filters, size, pinning, grouping and visibility. These are TanStack Table's column APIs, so the TanStack Table column docs describe them too. Change a column through these methods rather than by editing its definition, so the table state stays the single source of truth.
-
-> NOTE: These are NOT [column options](/docs/api/column-options) for shadcn-table. These are just static methods on a column instance that you can use.
+> NOTE: These are NOT [column options](/docs/api/column-options) for Shadcn Table. These are just static methods on a column instance that you can use.
 
 Each column has a `column` instance object associated with it that can be accessed in callback props and other places in the table.
 

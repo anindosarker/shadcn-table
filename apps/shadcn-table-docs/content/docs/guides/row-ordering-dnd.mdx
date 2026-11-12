@@ -1,10 +1,9 @@
 ---
 title: 'Row Ordering/DnD Guide'
-description: 'Drag rows in shadcn-table with enableRowOrdering and enableRowDragging: reorder rows, drop them on another table, or drag them into other parts of your UI.'
-date: '2026-11-10'
+description: 'How to use and customize the row drag and drop and row ordering features of Shadcn Table'
 ---
 
-shadcn-table adds a drag handle column, `st-row-drag`, when `enableRowOrdering` or `enableRowDragging` is on, and tracks the dragged and hovered rows in its state. The table does not move your data: in your `onDragEnd` handler you reorder it, move rows to another table, or hand them to other UI in your application.
+Shadcn Table has exposed all the APIs necessary to enable rich row drag-and-drop features that you can easily build to meet your needs. This includes the ability to reorder rows, drag rows to other tables, or drag rows to other UI in your application.
 
 > This is not the [Sorting Guide](/docs/guides/sorting), which is a different feature.
 

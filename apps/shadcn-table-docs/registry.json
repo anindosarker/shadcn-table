@@ -7,7 +7,7 @@
       "name": "example-advanced-base",
       "type": "registry:block",
       "title": "Advanced Example",
-      "description": "A full shadcn-table with row selection, detail panels, column pinning and ordering, grouping, row actions and a custom top toolbar, all client-side.",
+      "description": "Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
       "files": [
         {
           "path": "examples/base/advanced/TS.tsx",
@@ -34,7 +34,7 @@
       "name": "example-aggregation-and-grouping-base",
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
-      "description": "Group rows by one or more columns with enableGrouping in shadcn-table and show the per-group maximum and average through aggregationFn and AggregatedCell.",
+      "description": "A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
       "files": [
         {
           "path": "examples/base/aggregation-and-grouping/TS.tsx",
@@ -82,7 +82,7 @@
       "name": "example-alternate-column-filtering-base",
       "type": "registry:block",
       "title": "Popover Filters Example",
-      "description": "Show shadcn-table column filters in a popover behind a filter icon in each header with columnFilterDisplayMode: popover, like the filters in a spreadsheet.",
+      "description": "An example of Shadcn Table which shows an excel-like column filters.",
       "files": [
         {
           "path": "examples/base/alternate-column-filtering/TS.tsx",
@@ -154,7 +154,7 @@
       "name": "example-basic-base",
       "type": "registry:block",
       "title": "Basic Example",
-      "description": "The default shadcn-table: one useShadcnTable call with data and columns gives sorting, filtering, global search, pagination and column hiding.",
+      "description": "A basic example of Shadcn Table which includes sorting, filtering, search, and pagination features by default",
       "files": [
         {
           "path": "examples/base/basic/TS.tsx",
@@ -173,7 +173,7 @@
       "name": "example-chart-detail-panel-base",
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
-      "description": "Render a Recharts line chart inside each expandable row with renderDetailPanel, so a shadcn-table row opens into a per-row chart of its history.",
+      "description": "A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.",
       "files": [
         {
           "path": "examples/base/chart-detail-panel/TS.tsx",
@@ -271,7 +271,7 @@
       "name": "example-custom-column-filtering-ui-base",
       "type": "registry:block",
       "title": "Custom Filter UI Example",
-      "description": "Move the column filters out of the table into your own sidebar with columnFilterDisplayMode: custom and the exported ST_TableHeadCellFilterContainer.",
+      "description": "An example of Shadcn Table which shows custom filter ui in a sidebar.",
       "files": [
         {
           "path": "examples/base/custom-column-filtering-ui/TS.tsx",
@@ -295,7 +295,7 @@
       "name": "example-custom-headless-base",
       "type": "registry:block",
       "title": "Custom Headless Example",
-      "description": "Use useShadcnTable headless, write your own markup and place exported parts like ST_TablePagination, ST_GlobalFilterTextField and ST_TableBodyCellValue.",
+      "description": "A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components",
       "files": [
         {
           "path": "examples/base/custom-headless/TS.tsx",
@@ -389,7 +389,7 @@
       "name": "example-customize-filter-modes-base",
       "type": "registry:block",
       "title": "Filter Switching Example",
-      "description": "Let users switch each column filter between modes such as contains, startsWith or between, limited per column with columnFilterModeOptions in shadcn-table.",
+      "description": "An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.",
       "files": [
         {
           "path": "examples/base/customize-filter-modes/TS.tsx",
@@ -414,7 +414,7 @@
       "name": "example-customize-filter-variants-base",
       "type": "registry:block",
       "title": "Filter Variants Example",
-      "description": "Nine built-in filterVariant values in one shadcn-table: text, select, multi-select, checkbox, range, range-slider, and date, time and datetime ranges.",
+      "description": "An example of Shadcn Table which shows all of the powerful built-in filter variants.",
       "files": [
         {
           "path": "examples/base/customize-filter-variants/TS.tsx",
@@ -462,7 +462,7 @@
       "name": "example-customize-remove-column-grouping-base",
       "type": "registry:block",
       "title": "Customized Grouping Example",
-      "description": "Customize the grouping UI of shadcn-table: displayColumnDefOptions restyles the st-row-expand column and groupedColumnMode: remove hides grouped columns.",
+      "description": "A Shadcn Table example demonstrating various ways to customize the grouping UI.",
       "files": [
         {
           "path": "examples/base/customize-remove-column-grouping/TS.tsx",
@@ -601,7 +601,7 @@
       "name": "example-dynamic-columns-base",
       "type": "registry:block",
       "title": "Dynamic Columns Example",
-      "description": "Build shadcn-table column definitions at runtime from the keys of fetched data, with server-side filtering, sorting and pagination via TanStack Query.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically",
       "files": [
         {
           "path": "examples/base/dynamic-columns/TS.tsx",
@@ -622,7 +622,7 @@
       "name": "example-editing-crud-cell-base",
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
-      "description": "Edit one cell at a time in shadcn-table with editDisplayMode: cell and enableEditing, plus row actions and a create-row form for full CRUD.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline cell features",
       "files": [
         {
           "path": "examples/base/editing-crud-cell/TS.tsx",
@@ -650,7 +650,7 @@
       "name": "example-editing-crud-modal-base",
       "type": "registry:block",
       "title": "Editing CRUD Example",
-      "description": "Create, edit and delete rows in a shadcn-table dialog with editDisplayMode: modal, enableEditing and custom content in renderEditRowDialogContent.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features",
       "files": [
         {
           "path": "examples/base/editing-crud-modal/TS.tsx",
@@ -678,7 +678,7 @@
       "name": "example-editing-crud-row-base",
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
-      "description": "Edit a whole row in place in shadcn-table with editDisplayMode: row, where built-in save and cancel buttons call onEditingRowSave and onEditingRowCancel.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
           "path": "examples/base/editing-crud-row/TS.tsx",
@@ -705,7 +705,7 @@
       "name": "example-editing-crud-table-base",
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
-      "description": "Keep every shadcn-table cell editable at once with editDisplayMode: table, then save the changed values together from a bottom toolbar button.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline table features",
       "files": [
         {
           "path": "examples/base/editing-crud-table/TS.tsx",
@@ -733,7 +733,7 @@
       "name": "example-editing-crud-tree-base",
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
-      "description": "Edit and create rows at any depth of an expanding tree in shadcn-table, placing new sub-rows under their parent with the positionCreatingRow option.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows",
       "files": [
         {
           "path": "examples/base/editing-crud-tree/TS.tsx",
@@ -809,7 +809,7 @@
       "name": "example-enable-column-grouping-base",
       "type": "registry:block",
       "title": "Column Grouping Example",
-      "description": "Group a shadcn-table by state and gender with enableGrouping and switch groupedColumnMode between reorder, remove and off to see where grouped columns go.",
+      "description": "A Shadcn Table example demonstrating different grouping UI modes.",
       "files": [
         {
           "path": "examples/base/enable-column-grouping/TS.tsx",
@@ -835,7 +835,7 @@
       "name": "example-enable-column-ordering-base",
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
-      "description": "Column ordering in shadcn-table is on by default: users drag a header cell onto another to move the column, and the order lives in columnOrder.",
+      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/base/enable-column-ordering/TS.tsx",
@@ -859,7 +859,7 @@
       "name": "example-enable-column-pinning-base",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "Freeze columns to the start or end of a wide shadcn-table with enableColumnPinning and initialState.columnPinning while the other columns scroll.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/base/enable-column-pinning/TS.tsx",
@@ -908,7 +908,7 @@
       "name": "example-enable-column-virtualization-base",
       "type": "registry:block",
       "title": "Column Virtualization Example",
-      "description": "Render 500 columns smoothly with enableColumnVirtualization, which mounts only the columns in view through TanStack Virtual and columnVirtualizerOptions.",
+      "description": "An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/base/enable-column-virtualization/TS.tsx",
@@ -932,7 +932,7 @@
       "name": "example-enable-detail-panel-conditionally-base",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "Expand a shadcn-table row into extra details with renderDetailPanel, open only rows that have data, and restyle the panel with stDetailPanelProps.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/base/enable-detail-panel-conditionally/TS.tsx",
@@ -999,7 +999,7 @@
       "name": "example-enable-filter-facet-values-base",
       "type": "registry:block",
       "title": "Faceted Values Example",
-      "description": "Fill shadcn-table filter suggestions, select options and slider ranges from the data itself by turning on enableFacetedValues, with no hard-coded lists.",
+      "description": "An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.",
       "files": [
         {
           "path": "examples/base/enable-filter-facet-values/TS.tsx",
@@ -1023,7 +1023,7 @@
       "name": "example-enable-row-dragging-base",
       "type": "registry:block",
       "title": "Row Dragging Example",
-      "description": "Drag rows from one shadcn-table into another with enableRowDragging, tracking draggingRow and the hovered table to move the row in onDragEnd.",
+      "description": "An example of Shadcn Table which shows how to drag and drop rows for various use cases.",
       "files": [
         {
           "path": "examples/base/enable-row-dragging/TS.tsx",
@@ -1095,7 +1095,7 @@
       "name": "example-enable-row-ordering-base",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "Reorder shadcn-table rows by dragging a handle with enableRowOrdering, then write the new order back to your data in the onDragEnd callback of the handle.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/base/enable-row-ordering/TS.tsx",
@@ -1119,7 +1119,7 @@
       "name": "example-enable-row-pinning-select-base",
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
-      "description": "Pin rows as users select them so the selection stays in view while scrolling, with enableRowSelection, enableRowPinning and select-sticky display mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-select/TS.tsx",
@@ -1143,7 +1143,7 @@
       "name": "example-enable-row-pinning-static-base",
       "type": "registry:block",
       "title": "Static Row Pinning Example",
-      "description": "Pin chosen rows to the top or bottom of a scrolling shadcn-table with enableRowPinning and rowPinningDisplayMode: top-and-bottom so they stay in view.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-static/TS.tsx",
@@ -1167,7 +1167,7 @@
       "name": "example-enable-row-pinning-sticky-base",
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
-      "description": "Pin rows that stay in place until scrolled past, then stick to the top or bottom of the table, with enableRowPinning and the default sticky mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-sticky/TS.tsx",
@@ -1210,7 +1210,7 @@
       "name": "example-enable-row-virtualization-base",
       "type": "registry:block",
       "title": "Row Virtualization Example",
-      "description": "Render 10,000 rows in one shadcn-table page with enableRowVirtualization, which mounts only the visible rows through TanStack Virtual, no pagination.",
+      "description": "An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/base/enable-row-virtualization/TS.tsx",
@@ -1234,7 +1234,7 @@
       "name": "example-enable-sticky-header-base",
       "type": "registry:block",
       "title": "Sticky Header Example",
-      "description": "Keep the header and footer of a scrolling shadcn-table on screen with enableStickyHeader and enableStickyFooter inside a fixed-height table container.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/base/enable-sticky-header/TS.tsx",
@@ -1258,7 +1258,7 @@
       "name": "example-expanding-tree-expanded-base",
       "type": "registry:block",
       "title": "Expanding Tree Example",
-      "description": "Show nested subRows as an expanding tree in shadcn-table with enableExpanding, every row open at start and sub-rows kept out of the page size count.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure",
       "files": [
         {
           "path": "examples/base/expanding-tree-expanded/TS.tsx",
@@ -1277,7 +1277,7 @@
       "name": "example-expanding-tree-flat-parse-base",
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
-      "description": "Turn a flat list with parent ids into an expandable tree in shadcn-table by passing a getSubRows function that finds each row's children in the data.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
       "files": [
         {
           "path": "examples/base/expanding-tree-flat-parse/TS.tsx",
@@ -1316,7 +1316,7 @@
       "name": "example-export-to-csv-base",
       "type": "registry:block",
       "title": "CSV Export Example",
-      "description": "Export all, filtered, page or selected shadcn-table rows to a CSV file with export-to-csv, from buttons added through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to CSV using Shadcn Table.",
       "files": [
         {
           "path": "examples/base/export-to-csv/TS.tsx",
@@ -1342,7 +1342,7 @@
       "name": "example-export-to-pdf-base",
       "type": "registry:block",
       "title": "PDF Export Example",
-      "description": "Download shadcn-table rows as a PDF with jsPDF and jspdf-autotable, from export buttons added to the top toolbar through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to PDF using Shadcn Table.",
       "files": [
         {
           "path": "examples/base/export-to-pdf/TS.tsx",
@@ -1421,7 +1421,7 @@
       "name": "example-infinite-scrolling-base",
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
-      "description": "Stream rows from a server as users scroll a shadcn-table, with useInfiniteQuery from TanStack Query, enableRowVirtualization and server-side sorting.",
+      "description": "An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
       "files": [
         {
           "path": "examples/base/infinite-scrolling/TS.tsx",
@@ -1441,7 +1441,7 @@
       "name": "example-lazy-detail-panel-base",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "Load a row detail panel only when the row expands, using renderDetailPanel with a TanStack Query fetch that caches the result for the next open.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/base/lazy-detail-panel/TS.tsx",
@@ -1463,7 +1463,7 @@
       "name": "example-lazy-sub-rows-base",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "Fetch a shadcn-table row's children only when it expands, with getRowCanExpand, onExpandedChange and a TanStack Query request per expanded row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/base/lazy-sub-rows/TS.tsx",
@@ -2487,7 +2487,7 @@
       "name": "example-minimal-base",
       "type": "registry:block",
       "title": "Minimal Example",
-      "description": "Strip shadcn-table down to a plain styled table: enableSorting, enablePagination, enableColumnFilters and enableColumnActions off, a caption on top.",
+      "description": "A minimal example of Shadcn Table which turns off most of the advanced features",
       "files": [
         {
           "path": "examples/base/minimal/TS.tsx",
@@ -2579,7 +2579,7 @@
       "name": "example-persistent-view-base",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "Save a shadcn-table view to localStorage with persistViewSettings: column order, pinning, visibility, density and rows per page come back on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/base/persistent-view/TS.tsx",
@@ -2604,7 +2604,7 @@
       "name": "example-react-query-base",
       "type": "registry:block",
       "title": "React Query Example",
-      "description": "Fetch, filter, sort and paginate shadcn-table data on the server with TanStack Query, manualPagination, manualFiltering, manualSorting and rowCount.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
           "path": "examples/base/react-query/TS.tsx",
@@ -2626,7 +2626,7 @@
       "name": "example-remote-base",
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
-      "description": "Run shadcn-table filtering, sorting and pagination on a server with manualFiltering, manualSorting and manualPagination and a fetch in useEffect.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server",
       "files": [
         {
           "path": "examples/base/remote/TS.tsx",
@@ -2755,7 +2755,7 @@
       "name": "example-subheader-filters-base",
       "type": "registry:block",
       "title": "Subheader Filters Example",
-      "description": "Show a filter input under every column header with columnFilterDisplayMode: subheader; each text filter keeps its mode picker since modes are on.",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
       "files": [
         {
           "path": "examples/base/subheader-filters/TS.tsx",
@@ -2779,7 +2779,7 @@
       "name": "example-virtualized-base",
       "type": "registry:block",
       "title": "Virtualized Example",
-      "description": "Combine row and column virtualization in shadcn-table to scroll 10,000 rows and wide columns smoothly with enableRowVirtualization and TanStack Virtual.",
+      "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/base/virtualized/TS.tsx",
@@ -2803,7 +2803,7 @@
       "name": "example-advanced-radix",
       "type": "registry:block",
       "title": "Advanced Example",
-      "description": "A full shadcn-table with row selection, detail panels, column pinning and ordering, grouping, row actions and a custom top toolbar, all client-side.",
+      "description": "Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
       "files": [
         {
           "path": "examples/radix/advanced/TS.tsx",
@@ -2830,7 +2830,7 @@
       "name": "example-aggregation-and-grouping-radix",
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
-      "description": "Group rows by one or more columns with enableGrouping in shadcn-table and show the per-group maximum and average through aggregationFn and AggregatedCell.",
+      "description": "A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
       "files": [
         {
           "path": "examples/radix/aggregation-and-grouping/TS.tsx",
@@ -2878,7 +2878,7 @@
       "name": "example-alternate-column-filtering-radix",
       "type": "registry:block",
       "title": "Popover Filters Example",
-      "description": "Show shadcn-table column filters in a popover behind a filter icon in each header with columnFilterDisplayMode: popover, like the filters in a spreadsheet.",
+      "description": "An example of Shadcn Table which shows an excel-like column filters.",
       "files": [
         {
           "path": "examples/radix/alternate-column-filtering/TS.tsx",
@@ -2950,7 +2950,7 @@
       "name": "example-basic-radix",
       "type": "registry:block",
       "title": "Basic Example",
-      "description": "The default shadcn-table: one useShadcnTable call with data and columns gives sorting, filtering, global search, pagination and column hiding.",
+      "description": "A basic example of Shadcn Table which includes sorting, filtering, search, and pagination features by default",
       "files": [
         {
           "path": "examples/radix/basic/TS.tsx",
@@ -2969,7 +2969,7 @@
       "name": "example-chart-detail-panel-radix",
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
-      "description": "Render a Recharts line chart inside each expandable row with renderDetailPanel, so a shadcn-table row opens into a per-row chart of its history.",
+      "description": "A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.",
       "files": [
         {
           "path": "examples/radix/chart-detail-panel/TS.tsx",
@@ -3067,7 +3067,7 @@
       "name": "example-custom-column-filtering-ui-radix",
       "type": "registry:block",
       "title": "Custom Filter UI Example",
-      "description": "Move the column filters out of the table into your own sidebar with columnFilterDisplayMode: custom and the exported ST_TableHeadCellFilterContainer.",
+      "description": "An example of Shadcn Table which shows custom filter ui in a sidebar.",
       "files": [
         {
           "path": "examples/radix/custom-column-filtering-ui/TS.tsx",
@@ -3091,7 +3091,7 @@
       "name": "example-custom-headless-radix",
       "type": "registry:block",
       "title": "Custom Headless Example",
-      "description": "Use useShadcnTable headless, write your own markup and place exported parts like ST_TablePagination, ST_GlobalFilterTextField and ST_TableBodyCellValue.",
+      "description": "A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components",
       "files": [
         {
           "path": "examples/radix/custom-headless/TS.tsx",
@@ -3185,7 +3185,7 @@
       "name": "example-customize-filter-modes-radix",
       "type": "registry:block",
       "title": "Filter Switching Example",
-      "description": "Let users switch each column filter between modes such as contains, startsWith or between, limited per column with columnFilterModeOptions in shadcn-table.",
+      "description": "An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.",
       "files": [
         {
           "path": "examples/radix/customize-filter-modes/TS.tsx",
@@ -3210,7 +3210,7 @@
       "name": "example-customize-filter-variants-radix",
       "type": "registry:block",
       "title": "Filter Variants Example",
-      "description": "Nine built-in filterVariant values in one shadcn-table: text, select, multi-select, checkbox, range, range-slider, and date, time and datetime ranges.",
+      "description": "An example of Shadcn Table which shows all of the powerful built-in filter variants.",
       "files": [
         {
           "path": "examples/radix/customize-filter-variants/TS.tsx",
@@ -3258,7 +3258,7 @@
       "name": "example-customize-remove-column-grouping-radix",
       "type": "registry:block",
       "title": "Customized Grouping Example",
-      "description": "Customize the grouping UI of shadcn-table: displayColumnDefOptions restyles the st-row-expand column and groupedColumnMode: remove hides grouped columns.",
+      "description": "A Shadcn Table example demonstrating various ways to customize the grouping UI.",
       "files": [
         {
           "path": "examples/radix/customize-remove-column-grouping/TS.tsx",
@@ -3397,7 +3397,7 @@
       "name": "example-dynamic-columns-radix",
       "type": "registry:block",
       "title": "Dynamic Columns Example",
-      "description": "Build shadcn-table column definitions at runtime from the keys of fetched data, with server-side filtering, sorting and pagination via TanStack Query.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically",
       "files": [
         {
           "path": "examples/radix/dynamic-columns/TS.tsx",
@@ -3418,7 +3418,7 @@
       "name": "example-editing-crud-cell-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
-      "description": "Edit one cell at a time in shadcn-table with editDisplayMode: cell and enableEditing, plus row actions and a create-row form for full CRUD.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline cell features",
       "files": [
         {
           "path": "examples/radix/editing-crud-cell/TS.tsx",
@@ -3446,7 +3446,7 @@
       "name": "example-editing-crud-modal-radix",
       "type": "registry:block",
       "title": "Editing CRUD Example",
-      "description": "Create, edit and delete rows in a shadcn-table dialog with editDisplayMode: modal, enableEditing and custom content in renderEditRowDialogContent.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features",
       "files": [
         {
           "path": "examples/radix/editing-crud-modal/TS.tsx",
@@ -3474,7 +3474,7 @@
       "name": "example-editing-crud-row-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
-      "description": "Edit a whole row in place in shadcn-table with editDisplayMode: row, where built-in save and cancel buttons call onEditingRowSave and onEditingRowCancel.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
           "path": "examples/radix/editing-crud-row/TS.tsx",
@@ -3501,7 +3501,7 @@
       "name": "example-editing-crud-table-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
-      "description": "Keep every shadcn-table cell editable at once with editDisplayMode: table, then save the changed values together from a bottom toolbar button.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline table features",
       "files": [
         {
           "path": "examples/radix/editing-crud-table/TS.tsx",
@@ -3529,7 +3529,7 @@
       "name": "example-editing-crud-tree-radix",
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
-      "description": "Edit and create rows at any depth of an expanding tree in shadcn-table, placing new sub-rows under their parent with the positionCreatingRow option.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows",
       "files": [
         {
           "path": "examples/radix/editing-crud-tree/TS.tsx",
@@ -3605,7 +3605,7 @@
       "name": "example-enable-column-grouping-radix",
       "type": "registry:block",
       "title": "Column Grouping Example",
-      "description": "Group a shadcn-table by state and gender with enableGrouping and switch groupedColumnMode between reorder, remove and off to see where grouped columns go.",
+      "description": "A Shadcn Table example demonstrating different grouping UI modes.",
       "files": [
         {
           "path": "examples/radix/enable-column-grouping/TS.tsx",
@@ -3631,7 +3631,7 @@
       "name": "example-enable-column-ordering-radix",
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
-      "description": "Column ordering in shadcn-table is on by default: users drag a header cell onto another to move the column, and the order lives in columnOrder.",
+      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/radix/enable-column-ordering/TS.tsx",
@@ -3655,7 +3655,7 @@
       "name": "example-enable-column-pinning-radix",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "Freeze columns to the start or end of a wide shadcn-table with enableColumnPinning and initialState.columnPinning while the other columns scroll.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/radix/enable-column-pinning/TS.tsx",
@@ -3704,7 +3704,7 @@
       "name": "example-enable-column-virtualization-radix",
       "type": "registry:block",
       "title": "Column Virtualization Example",
-      "description": "Render 500 columns smoothly with enableColumnVirtualization, which mounts only the columns in view through TanStack Virtual and columnVirtualizerOptions.",
+      "description": "An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/radix/enable-column-virtualization/TS.tsx",
@@ -3728,7 +3728,7 @@
       "name": "example-enable-detail-panel-conditionally-radix",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "Expand a shadcn-table row into extra details with renderDetailPanel, open only rows that have data, and restyle the panel with stDetailPanelProps.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/radix/enable-detail-panel-conditionally/TS.tsx",
@@ -3795,7 +3795,7 @@
       "name": "example-enable-filter-facet-values-radix",
       "type": "registry:block",
       "title": "Faceted Values Example",
-      "description": "Fill shadcn-table filter suggestions, select options and slider ranges from the data itself by turning on enableFacetedValues, with no hard-coded lists.",
+      "description": "An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.",
       "files": [
         {
           "path": "examples/radix/enable-filter-facet-values/TS.tsx",
@@ -3819,7 +3819,7 @@
       "name": "example-enable-row-dragging-radix",
       "type": "registry:block",
       "title": "Row Dragging Example",
-      "description": "Drag rows from one shadcn-table into another with enableRowDragging, tracking draggingRow and the hovered table to move the row in onDragEnd.",
+      "description": "An example of Shadcn Table which shows how to drag and drop rows for various use cases.",
       "files": [
         {
           "path": "examples/radix/enable-row-dragging/TS.tsx",
@@ -3891,7 +3891,7 @@
       "name": "example-enable-row-ordering-radix",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "Reorder shadcn-table rows by dragging a handle with enableRowOrdering, then write the new order back to your data in the onDragEnd callback of the handle.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/radix/enable-row-ordering/TS.tsx",
@@ -3915,7 +3915,7 @@
       "name": "example-enable-row-pinning-select-radix",
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
-      "description": "Pin rows as users select them so the selection stays in view while scrolling, with enableRowSelection, enableRowPinning and select-sticky display mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/radix/enable-row-pinning-select/TS.tsx",
@@ -3939,7 +3939,7 @@
       "name": "example-enable-row-pinning-static-radix",
       "type": "registry:block",
       "title": "Static Row Pinning Example",
-      "description": "Pin chosen rows to the top or bottom of a scrolling shadcn-table with enableRowPinning and rowPinningDisplayMode: top-and-bottom so they stay in view.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
       "files": [
         {
           "path": "examples/radix/enable-row-pinning-static/TS.tsx",
@@ -3963,7 +3963,7 @@
       "name": "example-enable-row-pinning-sticky-radix",
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
-      "description": "Pin rows that stay in place until scrolled past, then stick to the top or bottom of the table, with enableRowPinning and the default sticky mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/radix/enable-row-pinning-sticky/TS.tsx",
@@ -4006,7 +4006,7 @@
       "name": "example-enable-row-virtualization-radix",
       "type": "registry:block",
       "title": "Row Virtualization Example",
-      "description": "Render 10,000 rows in one shadcn-table page with enableRowVirtualization, which mounts only the visible rows through TanStack Virtual, no pagination.",
+      "description": "An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/radix/enable-row-virtualization/TS.tsx",
@@ -4030,7 +4030,7 @@
       "name": "example-enable-sticky-header-radix",
       "type": "registry:block",
       "title": "Sticky Header Example",
-      "description": "Keep the header and footer of a scrolling shadcn-table on screen with enableStickyHeader and enableStickyFooter inside a fixed-height table container.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/radix/enable-sticky-header/TS.tsx",
@@ -4054,7 +4054,7 @@
       "name": "example-expanding-tree-expanded-radix",
       "type": "registry:block",
       "title": "Expanding Tree Example",
-      "description": "Show nested subRows as an expanding tree in shadcn-table with enableExpanding, every row open at start and sub-rows kept out of the page size count.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure",
       "files": [
         {
           "path": "examples/radix/expanding-tree-expanded/TS.tsx",
@@ -4073,7 +4073,7 @@
       "name": "example-expanding-tree-flat-parse-radix",
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
-      "description": "Turn a flat list with parent ids into an expandable tree in shadcn-table by passing a getSubRows function that finds each row's children in the data.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
       "files": [
         {
           "path": "examples/radix/expanding-tree-flat-parse/TS.tsx",
@@ -4112,7 +4112,7 @@
       "name": "example-export-to-csv-radix",
       "type": "registry:block",
       "title": "CSV Export Example",
-      "description": "Export all, filtered, page or selected shadcn-table rows to a CSV file with export-to-csv, from buttons added through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to CSV using Shadcn Table.",
       "files": [
         {
           "path": "examples/radix/export-to-csv/TS.tsx",
@@ -4138,7 +4138,7 @@
       "name": "example-export-to-pdf-radix",
       "type": "registry:block",
       "title": "PDF Export Example",
-      "description": "Download shadcn-table rows as a PDF with jsPDF and jspdf-autotable, from export buttons added to the top toolbar through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to PDF using Shadcn Table.",
       "files": [
         {
           "path": "examples/radix/export-to-pdf/TS.tsx",
@@ -4217,7 +4217,7 @@
       "name": "example-infinite-scrolling-radix",
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
-      "description": "Stream rows from a server as users scroll a shadcn-table, with useInfiniteQuery from TanStack Query, enableRowVirtualization and server-side sorting.",
+      "description": "An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
       "files": [
         {
           "path": "examples/radix/infinite-scrolling/TS.tsx",
@@ -4237,7 +4237,7 @@
       "name": "example-lazy-detail-panel-radix",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "Load a row detail panel only when the row expands, using renderDetailPanel with a TanStack Query fetch that caches the result for the next open.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/radix/lazy-detail-panel/TS.tsx",
@@ -4259,7 +4259,7 @@
       "name": "example-lazy-sub-rows-radix",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "Fetch a shadcn-table row's children only when it expands, with getRowCanExpand, onExpandedChange and a TanStack Query request per expanded row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/radix/lazy-sub-rows/TS.tsx",
@@ -5283,7 +5283,7 @@
       "name": "example-minimal-radix",
       "type": "registry:block",
       "title": "Minimal Example",
-      "description": "Strip shadcn-table down to a plain styled table: enableSorting, enablePagination, enableColumnFilters and enableColumnActions off, a caption on top.",
+      "description": "A minimal example of Shadcn Table which turns off most of the advanced features",
       "files": [
         {
           "path": "examples/radix/minimal/TS.tsx",
@@ -5375,7 +5375,7 @@
       "name": "example-persistent-view-radix",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "Save a shadcn-table view to localStorage with persistViewSettings: column order, pinning, visibility, density and rows per page come back on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/radix/persistent-view/TS.tsx",
@@ -5400,7 +5400,7 @@
       "name": "example-react-query-radix",
       "type": "registry:block",
       "title": "React Query Example",
-      "description": "Fetch, filter, sort and paginate shadcn-table data on the server with TanStack Query, manualPagination, manualFiltering, manualSorting and rowCount.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
           "path": "examples/radix/react-query/TS.tsx",
@@ -5422,7 +5422,7 @@
       "name": "example-remote-radix",
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
-      "description": "Run shadcn-table filtering, sorting and pagination on a server with manualFiltering, manualSorting and manualPagination and a fetch in useEffect.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server",
       "files": [
         {
           "path": "examples/radix/remote/TS.tsx",
@@ -5551,7 +5551,7 @@
       "name": "example-subheader-filters-radix",
       "type": "registry:block",
       "title": "Subheader Filters Example",
-      "description": "Show a filter input under every column header with columnFilterDisplayMode: subheader; each text filter keeps its mode picker since modes are on.",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
       "files": [
         {
           "path": "examples/radix/subheader-filters/TS.tsx",
@@ -5575,7 +5575,7 @@
       "name": "example-virtualized-radix",
       "type": "registry:block",
       "title": "Virtualized Example",
-      "description": "Combine row and column virtualization in shadcn-table to scroll 10,000 rows and wide columns smoothly with enableRowVirtualization and TanStack Virtual.",
+      "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/radix/virtualized/TS.tsx",
@@ -5599,7 +5599,7 @@
       "name": "example-advanced-aria",
       "type": "registry:block",
       "title": "Advanced Example",
-      "description": "A full shadcn-table with row selection, detail panels, column pinning and ordering, grouping, row actions and a custom top toolbar, all client-side.",
+      "description": "Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
       "files": [
         {
           "path": "examples/aria/advanced/TS.tsx",
@@ -5626,7 +5626,7 @@
       "name": "example-aggregation-and-grouping-aria",
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
-      "description": "Group rows by one or more columns with enableGrouping in shadcn-table and show the per-group maximum and average through aggregationFn and AggregatedCell.",
+      "description": "A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
       "files": [
         {
           "path": "examples/aria/aggregation-and-grouping/TS.tsx",
@@ -5674,7 +5674,7 @@
       "name": "example-alternate-column-filtering-aria",
       "type": "registry:block",
       "title": "Popover Filters Example",
-      "description": "Show shadcn-table column filters in a popover behind a filter icon in each header with columnFilterDisplayMode: popover, like the filters in a spreadsheet.",
+      "description": "An example of Shadcn Table which shows an excel-like column filters.",
       "files": [
         {
           "path": "examples/aria/alternate-column-filtering/TS.tsx",
@@ -5746,7 +5746,7 @@
       "name": "example-basic-aria",
       "type": "registry:block",
       "title": "Basic Example",
-      "description": "The default shadcn-table: one useShadcnTable call with data and columns gives sorting, filtering, global search, pagination and column hiding.",
+      "description": "A basic example of Shadcn Table which includes sorting, filtering, search, and pagination features by default",
       "files": [
         {
           "path": "examples/aria/basic/TS.tsx",
@@ -5765,7 +5765,7 @@
       "name": "example-chart-detail-panel-aria",
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
-      "description": "Render a Recharts line chart inside each expandable row with renderDetailPanel, so a shadcn-table row opens into a per-row chart of its history.",
+      "description": "A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.",
       "files": [
         {
           "path": "examples/aria/chart-detail-panel/TS.tsx",
@@ -5863,7 +5863,7 @@
       "name": "example-custom-column-filtering-ui-aria",
       "type": "registry:block",
       "title": "Custom Filter UI Example",
-      "description": "Move the column filters out of the table into your own sidebar with columnFilterDisplayMode: custom and the exported ST_TableHeadCellFilterContainer.",
+      "description": "An example of Shadcn Table which shows custom filter ui in a sidebar.",
       "files": [
         {
           "path": "examples/aria/custom-column-filtering-ui/TS.tsx",
@@ -5887,7 +5887,7 @@
       "name": "example-custom-headless-aria",
       "type": "registry:block",
       "title": "Custom Headless Example",
-      "description": "Use useShadcnTable headless, write your own markup and place exported parts like ST_TablePagination, ST_GlobalFilterTextField and ST_TableBodyCellValue.",
+      "description": "A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components",
       "files": [
         {
           "path": "examples/aria/custom-headless/TS.tsx",
@@ -5982,7 +5982,7 @@
       "name": "example-customize-filter-modes-aria",
       "type": "registry:block",
       "title": "Filter Switching Example",
-      "description": "Let users switch each column filter between modes such as contains, startsWith or between, limited per column with columnFilterModeOptions in shadcn-table.",
+      "description": "An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.",
       "files": [
         {
           "path": "examples/aria/customize-filter-modes/TS.tsx",
@@ -6007,7 +6007,7 @@
       "name": "example-customize-filter-variants-aria",
       "type": "registry:block",
       "title": "Filter Variants Example",
-      "description": "Nine built-in filterVariant values in one shadcn-table: text, select, multi-select, checkbox, range, range-slider, and date, time and datetime ranges.",
+      "description": "An example of Shadcn Table which shows all of the powerful built-in filter variants.",
       "files": [
         {
           "path": "examples/aria/customize-filter-variants/TS.tsx",
@@ -6055,7 +6055,7 @@
       "name": "example-customize-remove-column-grouping-aria",
       "type": "registry:block",
       "title": "Customized Grouping Example",
-      "description": "Customize the grouping UI of shadcn-table: displayColumnDefOptions restyles the st-row-expand column and groupedColumnMode: remove hides grouped columns.",
+      "description": "A Shadcn Table example demonstrating various ways to customize the grouping UI.",
       "files": [
         {
           "path": "examples/aria/customize-remove-column-grouping/TS.tsx",
@@ -6194,7 +6194,7 @@
       "name": "example-dynamic-columns-aria",
       "type": "registry:block",
       "title": "Dynamic Columns Example",
-      "description": "Build shadcn-table column definitions at runtime from the keys of fetched data, with server-side filtering, sorting and pagination via TanStack Query.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically",
       "files": [
         {
           "path": "examples/aria/dynamic-columns/TS.tsx",
@@ -6215,7 +6215,7 @@
       "name": "example-editing-crud-cell-aria",
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
-      "description": "Edit one cell at a time in shadcn-table with editDisplayMode: cell and enableEditing, plus row actions and a create-row form for full CRUD.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline cell features",
       "files": [
         {
           "path": "examples/aria/editing-crud-cell/TS.tsx",
@@ -6243,7 +6243,7 @@
       "name": "example-editing-crud-modal-aria",
       "type": "registry:block",
       "title": "Editing CRUD Example",
-      "description": "Create, edit and delete rows in a shadcn-table dialog with editDisplayMode: modal, enableEditing and custom content in renderEditRowDialogContent.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features",
       "files": [
         {
           "path": "examples/aria/editing-crud-modal/TS.tsx",
@@ -6271,7 +6271,7 @@
       "name": "example-editing-crud-row-aria",
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
-      "description": "Edit a whole row in place in shadcn-table with editDisplayMode: row, where built-in save and cancel buttons call onEditingRowSave and onEditingRowCancel.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
           "path": "examples/aria/editing-crud-row/TS.tsx",
@@ -6298,7 +6298,7 @@
       "name": "example-editing-crud-table-aria",
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
-      "description": "Keep every shadcn-table cell editable at once with editDisplayMode: table, then save the changed values together from a bottom toolbar button.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD Inline table features",
       "files": [
         {
           "path": "examples/aria/editing-crud-table/TS.tsx",
@@ -6326,7 +6326,7 @@
       "name": "example-editing-crud-tree-aria",
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
-      "description": "Edit and create rows at any depth of an expanding tree in shadcn-table, placing new sub-rows under their parent with the positionCreatingRow option.",
+      "description": "An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows",
       "files": [
         {
           "path": "examples/aria/editing-crud-tree/TS.tsx",
@@ -6402,7 +6402,7 @@
       "name": "example-enable-column-grouping-aria",
       "type": "registry:block",
       "title": "Column Grouping Example",
-      "description": "Group a shadcn-table by state and gender with enableGrouping and switch groupedColumnMode between reorder, remove and off to see where grouped columns go.",
+      "description": "A Shadcn Table example demonstrating different grouping UI modes.",
       "files": [
         {
           "path": "examples/aria/enable-column-grouping/TS.tsx",
@@ -6428,7 +6428,7 @@
       "name": "example-enable-column-ordering-aria",
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
-      "description": "Column ordering in shadcn-table is on by default: users drag a header cell onto another to move the column, and the order lives in columnOrder.",
+      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/aria/enable-column-ordering/TS.tsx",
@@ -6452,7 +6452,7 @@
       "name": "example-enable-column-pinning-aria",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "Freeze columns to the start or end of a wide shadcn-table with enableColumnPinning and initialState.columnPinning while the other columns scroll.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/aria/enable-column-pinning/TS.tsx",
@@ -6501,7 +6501,7 @@
       "name": "example-enable-column-virtualization-aria",
       "type": "registry:block",
       "title": "Column Virtualization Example",
-      "description": "Render 500 columns smoothly with enableColumnVirtualization, which mounts only the columns in view through TanStack Virtual and columnVirtualizerOptions.",
+      "description": "An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/aria/enable-column-virtualization/TS.tsx",
@@ -6525,7 +6525,7 @@
       "name": "example-enable-detail-panel-conditionally-aria",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "Expand a shadcn-table row into extra details with renderDetailPanel, open only rows that have data, and restyle the panel with stDetailPanelProps.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row.",
       "files": [
         {
           "path": "examples/aria/enable-detail-panel-conditionally/TS.tsx",
@@ -6592,7 +6592,7 @@
       "name": "example-enable-filter-facet-values-aria",
       "type": "registry:block",
       "title": "Faceted Values Example",
-      "description": "Fill shadcn-table filter suggestions, select options and slider ranges from the data itself by turning on enableFacetedValues, with no hard-coded lists.",
+      "description": "An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.",
       "files": [
         {
           "path": "examples/aria/enable-filter-facet-values/TS.tsx",
@@ -6616,7 +6616,7 @@
       "name": "example-enable-row-dragging-aria",
       "type": "registry:block",
       "title": "Row Dragging Example",
-      "description": "Drag rows from one shadcn-table into another with enableRowDragging, tracking draggingRow and the hovered table to move the row in onDragEnd.",
+      "description": "An example of Shadcn Table which shows how to drag and drop rows for various use cases.",
       "files": [
         {
           "path": "examples/aria/enable-row-dragging/TS.tsx",
@@ -6688,7 +6688,7 @@
       "name": "example-enable-row-ordering-aria",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "Reorder shadcn-table rows by dragging a handle with enableRowOrdering, then write the new order back to your data in the onDragEnd callback of the handle.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/aria/enable-row-ordering/TS.tsx",
@@ -6712,7 +6712,7 @@
       "name": "example-enable-row-pinning-select-aria",
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
-      "description": "Pin rows as users select them so the selection stays in view while scrolling, with enableRowSelection, enableRowPinning and select-sticky display mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/aria/enable-row-pinning-select/TS.tsx",
@@ -6736,7 +6736,7 @@
       "name": "example-enable-row-pinning-static-aria",
       "type": "registry:block",
       "title": "Static Row Pinning Example",
-      "description": "Pin chosen rows to the top or bottom of a scrolling shadcn-table with enableRowPinning and rowPinningDisplayMode: top-and-bottom so they stay in view.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
       "files": [
         {
           "path": "examples/aria/enable-row-pinning-static/TS.tsx",
@@ -6760,7 +6760,7 @@
       "name": "example-enable-row-pinning-sticky-aria",
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
-      "description": "Pin rows that stay in place until scrolled past, then stick to the top or bottom of the table, with enableRowPinning and the default sticky mode.",
+      "description": "An example of Shadcn Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
       "files": [
         {
           "path": "examples/aria/enable-row-pinning-sticky/TS.tsx",
@@ -6803,7 +6803,7 @@
       "name": "example-enable-row-virtualization-aria",
       "type": "registry:block",
       "title": "Row Virtualization Example",
-      "description": "Render 10,000 rows in one shadcn-table page with enableRowVirtualization, which mounts only the visible rows through TanStack Virtual, no pagination.",
+      "description": "An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/aria/enable-row-virtualization/TS.tsx",
@@ -6827,7 +6827,7 @@
       "name": "example-enable-sticky-header-aria",
       "type": "registry:block",
       "title": "Sticky Header Example",
-      "description": "Keep the header and footer of a scrolling shadcn-table on screen with enableStickyHeader and enableStickyFooter inside a fixed-height table container.",
+      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
       "files": [
         {
           "path": "examples/aria/enable-sticky-header/TS.tsx",
@@ -6851,7 +6851,7 @@
       "name": "example-expanding-tree-expanded-aria",
       "type": "registry:block",
       "title": "Expanding Tree Example",
-      "description": "Show nested subRows as an expanding tree in shadcn-table with enableExpanding, every row open at start and sub-rows kept out of the page size count.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure",
       "files": [
         {
           "path": "examples/aria/expanding-tree-expanded/TS.tsx",
@@ -6870,7 +6870,7 @@
       "name": "example-expanding-tree-flat-parse-aria",
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
-      "description": "Turn a flat list with parent ids into an expandable tree in shadcn-table by passing a getSubRows function that finds each row's children in the data.",
+      "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
       "files": [
         {
           "path": "examples/aria/expanding-tree-flat-parse/TS.tsx",
@@ -6909,7 +6909,7 @@
       "name": "example-export-to-csv-aria",
       "type": "registry:block",
       "title": "CSV Export Example",
-      "description": "Export all, filtered, page or selected shadcn-table rows to a CSV file with export-to-csv, from buttons added through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to CSV using Shadcn Table.",
       "files": [
         {
           "path": "examples/aria/export-to-csv/TS.tsx",
@@ -6935,7 +6935,7 @@
       "name": "example-export-to-pdf-aria",
       "type": "registry:block",
       "title": "PDF Export Example",
-      "description": "Download shadcn-table rows as a PDF with jsPDF and jspdf-autotable, from export buttons added to the top toolbar through renderTopToolbarCustomActions.",
+      "description": "An example of how to export data to PDF using Shadcn Table.",
       "files": [
         {
           "path": "examples/aria/export-to-pdf/TS.tsx",
@@ -7014,7 +7014,7 @@
       "name": "example-infinite-scrolling-aria",
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
-      "description": "Stream rows from a server as users scroll a shadcn-table, with useInfiniteQuery from TanStack Query, enableRowVirtualization and server-side sorting.",
+      "description": "An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
       "files": [
         {
           "path": "examples/aria/infinite-scrolling/TS.tsx",
@@ -7034,7 +7034,7 @@
       "name": "example-lazy-detail-panel-aria",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "Load a row detail panel only when the row expands, using renderDetailPanel with a TanStack Query fetch that caches the result for the next open.",
+      "description": "A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "files": [
         {
           "path": "examples/aria/lazy-detail-panel/TS.tsx",
@@ -7056,7 +7056,7 @@
       "name": "example-lazy-sub-rows-aria",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "Fetch a shadcn-table row's children only when it expands, with getRowCanExpand, onExpandedChange and a TanStack Query request per expanded row.",
+      "description": "A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "files": [
         {
           "path": "examples/aria/lazy-sub-rows/TS.tsx",
@@ -8080,7 +8080,7 @@
       "name": "example-minimal-aria",
       "type": "registry:block",
       "title": "Minimal Example",
-      "description": "Strip shadcn-table down to a plain styled table: enableSorting, enablePagination, enableColumnFilters and enableColumnActions off, a caption on top.",
+      "description": "A minimal example of Shadcn Table which turns off most of the advanced features",
       "files": [
         {
           "path": "examples/aria/minimal/TS.tsx",
@@ -8172,7 +8172,7 @@
       "name": "example-persistent-view-aria",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "Save a shadcn-table view to localStorage with persistViewSettings: column order, pinning, visibility, density and rows per page come back on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/aria/persistent-view/TS.tsx",
@@ -8197,7 +8197,7 @@
       "name": "example-react-query-aria",
       "type": "registry:block",
       "title": "React Query Example",
-      "description": "Fetch, filter, sort and paginate shadcn-table data on the server with TanStack Query, manualPagination, manualFiltering, manualSorting and rowCount.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
           "path": "examples/aria/react-query/TS.tsx",
@@ -8219,7 +8219,7 @@
       "name": "example-remote-aria",
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
-      "description": "Run shadcn-table filtering, sorting and pagination on a server with manualFiltering, manualSorting and manualPagination and a fetch in useEffect.",
+      "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server",
       "files": [
         {
           "path": "examples/aria/remote/TS.tsx",
@@ -8348,7 +8348,7 @@
       "name": "example-subheader-filters-aria",
       "type": "registry:block",
       "title": "Subheader Filters Example",
-      "description": "Show a filter input under every column header with columnFilterDisplayMode: subheader; each text filter keeps its mode picker since modes are on.",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
       "files": [
         {
           "path": "examples/aria/subheader-filters/TS.tsx",
@@ -8372,7 +8372,7 @@
       "name": "example-virtualized-aria",
       "type": "registry:block",
       "title": "Virtualized Example",
-      "description": "Combine row and column virtualization in shadcn-table to scroll 10,000 rows and wide columns smoothly with enableRowVirtualization and TanStack Virtual.",
+      "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
           "path": "examples/aria/virtualized/TS.tsx",

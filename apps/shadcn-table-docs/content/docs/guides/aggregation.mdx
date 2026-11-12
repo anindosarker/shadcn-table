@@ -1,10 +1,9 @@
 ---
 title: 'Aggregation Guide'
-description: 'Aggregate grouped rows in shadcn-table with aggregationFns, the aggregationFn column option and AggregatedCell, client-side or on the server.'
-date: '2026-11-10'
+description: 'How to use and customize the aggregation and grouping features of Shadcn Table'
 ---
 
-shadcn-table computes aggregates for grouped rows with TanStack Table's aggregation functions: set `aggregationFn` on a column and render the result in its `AggregatedCell`. Grouping and aggregation run client-side by default; with `manualGrouping` your server returns the grouped rows instead. This guide covers both, plus the `aggregationFns` option for functions of your own.
+Shadcn Table has built-in aggregation features. There are options for both automatic client-side grouping and aggregation, as well as manual server-side grouping and aggregation. This guide will walk you through the different options and how to use and customize them.
 
 > See the [Column Grouping Guide](/docs/guides/column-grouping) as a prerequisite to this guide. The Aggregation and Grouping Guide was recently split into two separate guides.
 
@@ -46,7 +45,7 @@ shadcn-table computes aggregates for grouped rows with TanStack Table's aggregat
 
 ### Aggregation on Grouped Rows
 
-One of the cool features of shadcn-table is that it can automatically aggregate the data in grouped rows. To enable this, you must specify both an `aggregationFn` and an `AggregatedCell` render option on a column definition.
+One of the cool features of Shadcn Table is that it can automatically aggregate the data in grouped rows. To enable this, you must specify both an `aggregationFn` and an `AggregatedCell` render option on a column definition.
 
 #### Built-in Aggregation Functions
 
@@ -116,7 +115,7 @@ Register reusable definitions by name in the `aggregationFns` table option and r
 
 ### Aggregation on All Rows in Footer
 
-shadcn-table does not automatically aggregate all rows for you to calculate totals for the entire table. However, it is still easy enough to do this manually and add in your custom calculations into the `footer` or `Footer` of a column definition. It is recommended that you do any necessary aggregation calculations on your data in a useMemo hook before passing it to the columns footer in your columns definition.
+Shadcn Table does not automatically aggregate all rows for you to calculate totals for the entire table. However, it is still easy enough to do this manually and add in your custom calculations into the `footer` or `Footer` of a column definition. It is recommended that you do any necessary aggregation calculations on your data in a useMemo hook before passing it to the columns footer in your columns definition.
 
 ```jsx
 //calculate the total points for all players in the table in a useMemo hook
@@ -225,4 +224,4 @@ const columns = [
 
 ### Manual Grouping
 
-Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want shadcn-table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.
+Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want Shadcn Table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.

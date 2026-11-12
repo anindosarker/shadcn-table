@@ -3,7 +3,6 @@
   "defaultOpen": true,
   "pages": [
     "---Fundamentals---",
-    "tanstack-table-with-shadcn-ui",
     "production-ready-tables",
     "best-practices",
     "data-columns",
@@ -11,6 +10,7 @@
     "table-event-listeners",
     "state-management",
     "accessibility",
+    "tanstack-table-with-shadcn-ui",
     "---Customization Guides---",
     "customize-components",
     "customize-icons",

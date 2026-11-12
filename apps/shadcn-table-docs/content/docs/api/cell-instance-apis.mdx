@@ -1,7 +1,6 @@
 ---
 title: 'Cell Instance APIs'
-description: 'Every method and property of a cell instance in shadcn-table, from TanStack Table, reachable in Cell renders and in st...Props callbacks.'
-date: '2026-11-10'
+description: 'All the cell instance methods and objects that can be accessed from a cell in Shadcn Table'
 ---
 
 <OptionsSwitcher
@@ -25,11 +24,9 @@ date: '2026-11-10'
   ]}
 />
 
-This page lists the methods and properties of the `cell` object that shadcn-table passes to column renders such as `Cell` and to callback options such as `stTableBodyCellProps`. A cell is where one row meets one column, so it is the place to read a single value with `cell.getValue()`, reach its `cell.row` and `cell.column`, or check whether it is grouped or aggregated. These come from TanStack Table's cell APIs, so the TanStack Table docs describe the same methods. Use the row and column instance pages for the methods one level up, and the table instance page for the methods that act on the whole table.
-
 <br />
 
-Every cell provides a `cell` object that can be used in many props or column definitions that lets you have access to a cell's information and methods.
+Every cell provides a `cell` object that can be used in many props or column definitions that let's you have access to a cell's information and methods.
 
 You can access and use a `cell` object in quite a few places, but here are some of the most common:
 
@@ -61,7 +58,7 @@ const table = useShadcnTable({
 });
 ```
 
-> NOTE: These are NOT [props](/docs/api/table-options) or [column options](/docs/api/column-options) for shadcn-table. These are just static methods on a cell instance that you can use.
+> NOTE: These are NOT [props](/docs/api/table-options) or [column options](/docs/api/column-options) for Shadcn Table. These are just static methods on a cell instance that you can use.
 
 <CellInstanceAPIsTable />
 

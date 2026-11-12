@@ -1,10 +1,9 @@
 ---
 title: 'Async Loading UI Guide'
-description: 'Show loading UI in shadcn-table with isLoading and isSaving: shadcn/ui Skeleton cells, a Progress bar in the toolbars and a Spinner overlay on the table.'
-date: '2026-11-10'
+description: 'How to show loading indicators, skeletons, and progress bars in Shadcn Table'
 ---
 
-While your data loads, shadcn-table can show three kinds of loading UI, each drawn with your own shadcn/ui components: `Skeleton` placeholders in the body cells, a `Progress` bar in the toolbars and a `Spinner` overlay over the table. Each one is a state option (`showSkeletons`, `showProgressBars`, `showLoadingOverlay`) that follows `isLoading` or `isSaving` until you set it yourself.
+While you are fetching your data, you may want to show some loading indicators. Shadcn Table has some nice loading UI features built in that look better than a simple spinner.
 
 > This guide is mostly focused on the loading UI features. Make sure to also check out the [Remote Data](/docs/examples/remote) and [React Query](/docs/examples/react-query) examples for server-side logic examples.
 
@@ -36,7 +35,7 @@ While your data loads, shadcn-table can show three kinds of loading UI, each dra
 
 ### isLoading UI
 
-There are three different loading UI features that are built into shadcn-table:
+There are three different loading UI features that are built into Shadcn Table:
 
 1. Loading Overlay - shows spinner overlay over the table container.
 2. Cell Skeletons - show pretty and shimmering skeletons for each cell.

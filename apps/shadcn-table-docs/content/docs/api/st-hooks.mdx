@@ -1,7 +1,6 @@
 ---
 title: 'ST Hooks'
-description: 'Reference for useShadcnTable and the useST_ hooks behind it, for a custom headless table that keeps the same options, rows and virtualizers.'
-date: '2026-11-10'
+description: 'All the ST hooks that can be used'
 ---
 
 <OptionsSwitcher
@@ -19,7 +18,7 @@ date: '2026-11-10'
 
 <br />
 
-shadcn-table runs its logic in hooks, and it exports the same hooks its `ST_*` components use. `useShadcnTable` is the one most tables need; the `useST_*` hooks below are for a custom headless table that keeps the shadcn-table options, rows and virtualizers but renders its own markup.
+ST has been adopting more and more of a hooks based approach for its internal logic. Its API is becoming more standardized so that you can use the same hooks that the ST components use internally to build your own custom headless table if you want to.
 
 ### useShadcnTable
 
@@ -27,7 +26,7 @@ shadcn-table runs its logic in hooks, and it exports the same hooks its `ST_*` c
 
 > This is probably the only ST hook you will need to use, unless you are writing a custom headless table.
 
-This is the main hook from shadcn-table. It creates a TanStack Table instance with all of the features that ST provides and that you enable, and uses the proper default table options.
+This is the main hook from Shadcn Table. It creates a TanStack Table instance with all of the features that ST provides and that you enable, and uses the proper default table options.
 
 ```tsx
 import { useShadcnTable } from '@/components/ui/shadcn-table';

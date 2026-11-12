@@ -1,7 +1,6 @@
 ---
 title: 'Table Instance APIs'
-description: 'Every method and property on the shadcn-table instance: TanStack Table APIs plus setters such as setDensity, setIsFullScreen and setEditingRow.'
-date: '2026-11-10'
+description: 'All the table instance methods and objects that can be accessed from the table instance in Shadcn Table'
 ---
 
 <OptionsSwitcher
@@ -25,9 +24,7 @@ date: '2026-11-10'
   ]}
 />
 
-This page lists the methods and properties of the `table` object that `useShadcnTable` returns and that the table passes to callback options and custom renders. Most of them are TanStack Table's own instance APIs, such as `getRowModel`, `setSorting` and `resetColumnFilters`, and work as the TanStack Table docs describe. shadcn-table adds setters for its own states, such as `setDensity`, `setIsFullScreen`, `setEditingRow` and `setShowColumnFilters`, plus `refs` to the table's DOM elements and `options` with the merged table options. Use these methods to drive the table from your own buttons, effects or event handlers instead of keeping a second copy of its state in your own component.
-
-> NOTE: These are NOT the [table options](/docs/api/table-options) for shadcn-table. These are just static methods on a table instance that you can use.
+> NOTE: These are NOT the [table options](/docs/api/table-options) for Shadcn Table. These are just static methods on a table instance that you can use.
 
 These are the methods available on the `table` instance that is returned from the `useShadcnTable` hook. You can use these methods to interact with the table instance.
 

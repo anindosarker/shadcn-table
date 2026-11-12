@@ -1,7 +1,6 @@
 ---
 title: 'Table Options'
-description: 'Every option the useShadcnTable hook accepts: TanStack Table options, the shadcn-table feature options and the st...Props sent to each part of the table.'
-date: '2026-11-10'
+description: 'All the table options that can be used in the useShadcnTable hook'
 ---
 
 <OptionsSwitcher
@@ -20,8 +19,6 @@ date: '2026-11-10'
     },
   ]}
 />
-
-This page lists every option you can pass to the `useShadcnTable` hook, or as props to `<ShadcnTable />`. Some come from TanStack Table, such as `data`, `columns` and `getRowId`, and behave as the TanStack Table docs describe. The rest are shadcn-table's own: options that turn its features on and configure them, render callbacks such as `renderDetailPanel`, and the `st...Props` options that pass props to the shadcn/ui component or plain element drawing that part of the table. Most features have one `enable...` option that switches them on or off, plus options that configure them; each guide lists the options of its feature together, and many have a column option of the same name that overrides them for one column.
 
 > Many of the options you can pass to `useShadcnTable` are the same as the ones you can pass to the TanStack Table [useTable](https://tanstack.com/table/latest/docs/guide/tables) hook. The row model factories and the `features` object are set by the library, so they are not table options here.
 

@@ -1,14 +1,9 @@
 ---
 title: 'Detail Panel Example'
-description: 'Expand a shadcn-table row into extra details with renderDetailPanel, open only rows that have data, and restyle the panel with stDetailPanelProps.'
-date: '2026-11-10'
+description: 'A Shadcn Table example showing how to use expandable rows to show additional information about a row.'
 ---
 
-shadcn-table has several kinds of expanding rows. In its simplest form, the `renderDetailPanel` option renders a component under a row when the row is expanded, which is useful for details that do not fit in a column, such as an address or a short list of nested data. In this example, the panel renders only for rows that have an address, so the expand button is disabled on rows without one.
-
-The example also sets `enableExpandAll: false` to hide the expand-all button, styles the panel through `stDetailPanelProps`, and uses `stExpandButtonProps` so that opening one row closes the others. These props pass straight to the shadcn/ui elements shadcn-table renders, so classes and handlers work as they would on your own components.
-
-Use a detail panel when most rows need a short summary and a few users need the full record. When the panel needs data that is not loaded yet, see the [Lazy Detail Panel Example](/docs/examples/lazy-detail-panel). Learn more in the [Detail Panel Feature Guide](/docs/guides/detail-panel).
+Shadcn Table has multiple types of "expanding" row features. In its simplest form, you can use the `renderDetailPanel` option to render a component when a row is clicked. This is useful for showing additional information about a row, such as a list of nested data. Learn more in the [Detail Panel Feature Guide](/docs/guides/detail-panel).
 
 <EnableDetailPanelConditionallyExample />
 
