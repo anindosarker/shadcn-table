@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q64** The docs app still lists zod as a dependency although nothing imports it #run-E11
+	- `apps/shadcn-table-docs/package.json`: `zod` (added by spec 24) has no importer after spec 32 removed the `date` schema field; remove it or keep it.
 
 ## Decided
 
