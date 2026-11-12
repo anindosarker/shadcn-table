@@ -37,9 +37,10 @@ publishes the section as the GitHub release notes.
 
 - The home page loads less JavaScript: the nav and hero links prefetch the docs on hover, touch or focus instead of as soon as they show, so the docs route's scripts no longer download with the home page. Lighthouse (desktop) script transfer for `/` drops from 711 KB to 580 KB; `jspdf`, `jspdf-autotable` and `recharts` stay out of the home load (D59, D62).
 
-#### Spec 27 Home title and hero tagline name the category
+#### Spec 33 Home title, hero line and description
 
-- The home page title and `og:title` read `shadcn-table: data table for shadcn/ui, built on TanStack Table`; docs page titles keep `<page> | shadcn-table`. The hero eyebrow says "The batteries-included data table for shadcn/ui."; the H1 stays "shadcn-table" (D56).
+- The home page title and `og:title` read "shadcn-table: React Data Table for shadcn/ui and TanStack"; docs page titles keep `<page> | shadcn-table`. The hero line says "The open-source React data table for shadcn/ui, built on TanStack Table."; the H1 stays "shadcn-table" (D73).
+- The search description of `/` (`description`, `og:description`, `twitter:description`) reads "Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI." (D73). It is one shared `siteDescription`, read by the root layout, the home page metadata and JSON-LD, the OG image and the `llms.txt` summary (D76).
 
 ### Fixed
 
