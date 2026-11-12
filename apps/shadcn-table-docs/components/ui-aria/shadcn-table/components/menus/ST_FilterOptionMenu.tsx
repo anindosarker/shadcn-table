@@ -3,7 +3,9 @@ import {
   type ReactElement,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -22,6 +24,8 @@ import { getColumnFilterFnName } from '@/components/ui-aria/shadcn-table/shared/
 import { ST_ActionMenuItem } from '@/components/ui-aria/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
 import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
+
+const noSubscription = () => () => {};
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -304,6 +308,14 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     anchorEl,
     setAnchorEl: (next) => setAnchorEl?.(next),
   });
+  // The anchor is fixed at the button's screen position; in the body, no
+  // transformed ancestor (a popover) offsets it. The server and the
+  // hydration pass render it in place.
+  const hydrated = useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  );
 
   // The column mode name is written onto the column def from
   // `columnFilterFns` in the root render, so that slice is selected.
@@ -388,12 +400,16 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     );
   }
 
+  const anchorTrigger = (
+    // An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor.
+    <Pressable isDisabled>
+      <a {...spanProps} />
+    </Pressable>
+  );
+
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
-      <Pressable isDisabled>
-        <a {...spanProps} />
-      </Pressable>
+      {hydrated ? createPortal(anchorTrigger, document.body) : anchorTrigger}
       <DropdownMenu
         placement="right top"
         crossOffset={(rect?.height ?? 0) / 2}
