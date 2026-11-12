@@ -378,3 +378,7 @@
 ### Q59 The hosting budget fix is finished but not live
 - Tags:
 - From: lookup.
+- Side-agent note pasted by the owner, 2026-11-13. Vercel Hobby allows 4 hours of Fluid Active CPU a month; the usage page read 3h 01m on 2026-11-12; at 4 hours the project is paused.
+- The fix (D66, `proxy.ts` matcher `['/docs', '/docs/:path*']`) is merged on `claude/review` at 71cb18bb and verified on a production build; the live site runs 0.9.2 without it.
+- Release 0.9.3 (D61) is held by the owner until the docs wording is restored (Q58) and the preview is approved. `dev` and `master` are at 8feb7940 (0.9.2).
+- The owner has not ruled; the runner was stopped on the owner's order 2026-11-13 and nothing was shipped.
