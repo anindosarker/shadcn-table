@@ -683,3 +683,6 @@ index e1645117..e67a5482 100644
 - The table's columns become, in this order: shadcn-table, TanStack Table, the shadcn data-table recipe, Material React Table, AG Grid; the tablecn column goes. The sidebar label stays "Comparison"; the page's search title names the compared libraries (as TanStack Query's does). Every cell is a claim that can be shown from the cited project's own docs; a cell that cannot be sourced is left out.
 - Checks: the sidebar order on a production build; the D60 description script prints 0; `pnpm test docs-e2e --base base` green. The owner reads every row on the preview before release (D61 stays held).
 - Owner, 2026-11-13: "Looks good.", "k" on the item.
+
+### D72 TanStack guide moves last in Fundamentals
+
