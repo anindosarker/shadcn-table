@@ -48,7 +48,7 @@ Updated: 2026-11-13 02:59
 | E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
 | E11 34 PostHog after hydration |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
-| E11 35 Example sources per example |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
+| E11 35 Example sources per example |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E11 36 Registry fresh check | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 37 Docs e2e TanStack guide |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
 | E11 38 Integration 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
