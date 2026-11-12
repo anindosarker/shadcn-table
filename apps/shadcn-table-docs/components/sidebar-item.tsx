@@ -4,7 +4,11 @@ import type * as PageTree from 'fumadocs-core/page-tree';
 import { usePathname } from 'next/navigation';
 import { ExternalLinkIcon } from 'lucide-react';
 import { SidebarItem as BaseSidebarItem } from 'fumadocs-ui/components/sidebar/base';
-import { ITEM_CLASS } from '@/components/sidebar-section';
+import {
+  ITEM_CLASS,
+  SECTION_CLASS,
+  SECTION_LABEL_CLASS,
+} from '@/components/sidebar-section';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -19,18 +23,21 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
 
   if (item.external) {
     return (
-      <BaseSidebarItem
-        href={item.url}
-        external
-        // An empty icon keeps fumadocs from adding its leading ExternalLink.
-        icon={<></>}
-        // The size and colours are important: app/global.css gives every
-        // sidebar link the page-row size and foreground colour.
-        className="mt-6 inline-flex min-h-6 w-full items-center justify-between gap-2 px-2 font-mono text-[11px]! font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground! hover:text-fd-foreground! first:mt-0"
-      >
-        {item.name}
-        <ExternalLinkIcon className="size-3.5 shrink-0" />
-      </BaseSidebarItem>
+      <div className={SECTION_CLASS}>
+        <BaseSidebarItem
+          href={item.url}
+          external
+          // An empty icon keeps fumadocs from adding its leading ExternalLink.
+          icon={<></>}
+          // app/global.css styles sidebar page links; data-external opts this
+          // label row out of that rule.
+          data-external=""
+          className={`${SECTION_LABEL_CLASS} justify-between`}
+        >
+          {item.name}
+          <ExternalLinkIcon className="size-3.5 shrink-0" />
+        </BaseSidebarItem>
+      </div>
     );
   }
 
