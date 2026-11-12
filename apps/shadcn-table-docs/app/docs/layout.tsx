@@ -3,6 +3,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
+import { SidebarItem } from '@/components/sidebar-item';
 import { SiteNav } from '@/components/site-nav';
 import { IconLibraryProvider } from '@/components/icon-library-selector';
 
@@ -21,7 +22,11 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
       tree={source.getPageTree()}
       sidebar={{
         collapsible: false,
-        components: { Folder: SidebarSection, Separator: SidebarSeparator },
+        components: {
+          Folder: SidebarSection,
+          Separator: SidebarSeparator,
+          Item: SidebarItem,
+        },
       }}
     >
       {/* The install commands of a page share one icon library pick. */}
