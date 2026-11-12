@@ -1,10 +1,6 @@
 import type { Folder, Node, Root } from 'fumadocs-core/page-tree';
-import { siteName, siteUrl } from './shared';
+import { siteDescription, siteName, siteUrl } from './shared';
 import { source } from './source';
-
-/** The llms.txt summary: the home page description (`app/(home)/page.tsx`). */
-const siteSummary =
-  'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.';
 
 const fenceOpen = /^\s*(`{3,}|~{3,})/;
 
@@ -211,7 +207,7 @@ function collectFolder(folder: Folder, lines: string[]) {
  */
 export function renderLlmsIndex(): string {
   const tree: Root = source.getPageTree();
-  const sections = [`# ${siteName}`, `> ${siteSummary}`];
+  const sections = [`# ${siteName}`, `> ${siteDescription}`];
 
   for (const node of tree.children) {
     if (node.type === 'separator') continue;
