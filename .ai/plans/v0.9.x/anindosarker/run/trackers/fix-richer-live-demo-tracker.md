@@ -1,6 +1,6 @@
 # Richer live demo (Q63), tracker
 
-Status: done
+Status: merged (53d9fb5b)
 Files owned: apps/shadcn-table-docs/examples/{base,radix,aria}/live-demo/TS.tsx, apps/shadcn-table-docs/examples/{base,radix,aria}/live-demo/makeData.ts, apps/shadcn-table-docs/content/docs/getting-started/usage.mdx, apps/shadcn-table-docs/content/docs/getting-started/introduction.mdx, test/docs-e2e/lib/getting-started.mjs, test/docs-e2e/lib/helpers.mjs; generated: apps/shadcn-table-docs/examples/map.tsx, apps/shadcn-table-docs/registry.json; shared: CHANGELOG.md
 Depends on: none
 Branch `v0.9/fix-richer-live-demo`, worktree 06
