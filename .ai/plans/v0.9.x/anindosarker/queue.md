@@ -367,7 +367,7 @@
   - b) revert: drop the prefix (no icon, same tab, and the last docs page gets a Next card to the changelog on GitHub)
 
 ### Q58 Docs pages go back to their previous wording for this release
-- Tags:
+- Tags: D74
 - From: owner.
 - Owner, 2026-11-13: "Yeah, we should restore that"; a rewrite is planned with the docs session in a new version, not here.
 - Restore the intro and description of the example, guide and API pages to the text before spec 31 (D60), fixing only typos in that older text; regenerate `apps/shadcn-table-docs/registry.json`.

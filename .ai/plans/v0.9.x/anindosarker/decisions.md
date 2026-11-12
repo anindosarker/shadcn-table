@@ -699,3 +699,7 @@ index e1645117..e67a5482 100644
 - Root `title.default`: `shadcn-table: React Data Table for shadcn/ui and TanStack` (57 characters); the docs template `%s | shadcn-table` stays. H1 stays `shadcn-table`. The hero line (the eyebrow of spec 27) reads `The open-source React data table for shadcn/ui, built on TanStack Table.` The home meta description (and `og:description`, `twitter:description`) reads `Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI.`
 - Checks: `curl` of `/` on a production build shows the title, the description and the hero line exactly; a docs page title still ends in `| shadcn-table`; the home JSON-LD (D54) description follows the new text if it copies the old one; `pnpm test docs-e2e --base base` green. Search Console is re-read four weeks after the release.
 - Owner, 2026-11-13: "14 k".
+
+### D74 Docs pages return to their previous wording; byline and dates removed
+
+- Source: Q58
