@@ -659,3 +659,5 @@ index e1645117..e67a5482 100644
 
 ### D69 Example sources are read per example, not by a tree-wide pattern
 
+### D70 posthog-js loads after hydration
+
