@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q63** The first live demo visitors see only has text filters #owner
-	- Owner 2026-11-13, from a PostHog replay of /docs/getting-started/usage: the Live Example is a weak demo because every filter is a text box; select filters would show the library better.
-	- `content/docs/getting-started/usage.mdx:177` embeds `<BasicExample />` (`examples/<base>/basic/TS.tsx:76-103`): five string columns (First Name, Last Name, Address, City, State), five rows, no `filterVariant`, so all five filters are text. The Introduction page's demo is the same example. The Usage page's tutorial steps build exactly this data and these columns. Elsewhere the examples and stories use select 86 times, range 58, date 40, multi-select 34, text 30.
 
 ## Decided
 
@@ -224,6 +221,10 @@ kanban-plugin: basic
 - [x] **Q29** The llms.txt summary duplicates the home page description #run
 	- Decision: D76
 	- `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
+- [x] **Q63** The first live demo visitors see only has text filters #owner
+	- Decision: D78
+	- Owner 2026-11-13, from a PostHog replay of /docs/getting-started/usage: the Live Example is a weak demo because every filter is a text box; select filters would show the library better.
+	- `content/docs/getting-started/usage.mdx:177` embeds `<BasicExample />` (`examples/<base>/basic/TS.tsx:76-103`): five string columns (First Name, Last Name, Address, City, State), five rows, no `filterVariant`, so all five filters are text. The Introduction page's demo is the same example. The Usage page's tutorial steps build exactly this data and these columns. Elsewhere the examples and stories use select 86 times, range 58, date 40, multi-select 34, text 30.
 
 ## Later
 

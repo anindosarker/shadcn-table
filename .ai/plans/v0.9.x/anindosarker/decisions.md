@@ -751,3 +751,7 @@ index e1645117..e67a5482 100644
 - Runs as a fix milestone added to the running E11 column, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
 - Owner, 2026-11-13: "Choice 1: fix the menu only"; "add to the running epic."
 - Source: Q62
+
+### D78 Usage and Introduction show a richer live demo with select, range, date and multi-select filters
+
+- Source: Q63
