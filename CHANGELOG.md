@@ -25,6 +25,10 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### Spec 35 Example sources are read per example
+
+- Docs builds no longer trace the whole examples tree: the example generator writes each base's code-view sources to one file, read from a fixed path, so the build's "file pattern matches 10568 files" warning is gone. The code view shows the same files (D69).
+
 #### Spec 30 API page payload
 
 - The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
