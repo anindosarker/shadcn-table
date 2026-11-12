@@ -4,6 +4,7 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q63** The first live demo visitors see only has text filters #owner
 
 ## Decided
 
