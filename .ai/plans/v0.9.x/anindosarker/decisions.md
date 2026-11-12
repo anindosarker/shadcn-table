@@ -740,3 +740,7 @@ index e1645117..e67a5482 100644
 - Checks: `grep -rn` of the description sentence under `apps/shadcn-table-docs` (outside `.next*`) finds it once; `/llms.txt`, the `/` meta description and the OG image show the same text on a production build.
 - Settled by the lead 2026-11-13: one right answer, no visible change beyond D73.
 - Source: Q29
+
+### D77 Filter mode menu opens next to its button; the popover stays above the header
+
+- Source: Q62
