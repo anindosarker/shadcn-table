@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 03:06
+Updated: 2026-11-13 03:15
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 | S16 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -58,7 +58,7 @@ Updated: 2026-11-13 03:06
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Filter mode menu anchor (Q62) | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |
+| fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |
 | fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |
