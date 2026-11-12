@@ -640,3 +640,6 @@ index e1645117..e67a5482 100644
 - `test/docs-e2e/lib/` gets checks: every docs page renders the byline with the maintainer name and a date; the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
 - Checks: `pnpm test docs-e2e --base base` green with the new checks counted in the run summary.
 - Settled by the lead 2026-11-12: tooling gap, one right answer. Joins the next epic.
+
+### D66 proxy.ts runs only on docs paths
+
