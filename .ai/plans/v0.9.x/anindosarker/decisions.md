@@ -657,7 +657,21 @@ index e1645117..e67a5482 100644
 
 ### D68 validate-repo fails on a stale generated registry
 
+- Source: F36. `apps/shadcn-table-docs/registry.json` (and the other tracked registry outputs of `pnpm -w registry:build`, `registry:items`, `registry:hosted`) are generated from source files and committed; nothing fails when a milestone changes the source and not the output (spec 31 left a 252-line stale diff).
+- `pnpm test validate-repo` gains a step that runs the three registry generators and fails on `git diff --exit-code` over their tracked outputs, naming the stale file. The generators must be deterministic (same input, same bytes); if one is not, that is fixed first. Planning rule for specs: a milestone that edits example descriptions or registry sources owns the generated outputs too.
+- Checks: with a deliberately edited example description and no regeneration, `pnpm test validate-repo` fails naming `registry.json`; after `pnpm -w registry:items` it passes; CI (`pr.yml`) runs the same step.
+- Settled by the lead 2026-11-13: tooling with one right answer.
+
 ### D69 Example sources are read per example, not by a tree-wide pattern
+
+- Source: F35. `apps/shadcn-table-docs/lib/example-source.ts:39` reads example files with a dynamic directory, so Turbopack traces the whole `examples/` tree including the generated `examples/.<base>` copies (about 1321 files times 8 pattern alternatives) into the server bundle; builds and typecheck are slow and Turbopack warns.
+- The example file list and contents are produced at build time by the existing generator step (`lib/example-variants.mjs`, which already walks `examples/`) into one generated module per example (or one JSON index), and `example-source.ts` imports from that module with static paths. The server component no longer calls `fs.readFile` with a computed directory. What the docs show is unchanged.
+- Checks: `pnpm --filter shadcn-table-docs build` prints no "file pattern matches" warning; build and `types:check` wall time recorded before and after in the tracker; `pnpm test docs-e2e --base base` green (every example page still shows its source).
+- Settled by the lead 2026-11-13: build mechanics, no visible change.
 
 ### D70 posthog-js loads after hydration
 
+- Source: F30 (A21). posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first script load; on `/` they are most of the 580 KB left after spec 30.
+- `components/posthog-provider.tsx` initialises posthog-js after hydration (dynamic import on an idle callback or first interaction, whichever is first), with the queue of events captured before init flushed on init, so the first pageview is not lost. Session replay (D67) starts on the same init. Nothing else in the root layout changes.
+- Checks: on a production build the `/` first-load script transfer is under 450 KB (the D59 original target) with posthog-js absent from the initial chunks; a pageview and the recorder still arrive at `/ingest/*`; the docs check "icons: the pick survives a reload" passes.
+- Settled by the lead 2026-11-13: technical, no visible change.
