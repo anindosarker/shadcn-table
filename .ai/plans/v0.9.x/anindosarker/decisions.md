@@ -657,3 +657,5 @@ index e1645117..e67a5482 100644
 
 ### D68 validate-repo fails on a stale generated registry
 
+### D69 Example sources are read per example, not by a tree-wide pattern
+
