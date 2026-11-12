@@ -52,6 +52,10 @@ publishes the section as the GitHub release notes.
 
 - With `columnFilterDisplayMode: 'popover'` on Base UI and Radix, the filter mode menu opens next to its "Change filter mode" button instead of several hundred pixels away; the menu's anchor renders in `document.body`, out of the popover's transformed positioner. React Aria was already right (D77).
 
+#### Fix D80 Filter mode menu opened during the popover animation
+
+- A click on "Change filter mode" while the filter popover still animates in now opens the menu next to the button: the menu's anchor is measured again when an animation around it ends, and on React Aria it renders in `document.body` like on Base UI and Radix (D80). React Aria showed the menu about 117 px off before.
+
 #### Spec 29 Markdown delivery and llms.txt shape
 
 - A docs page served as Markdown (`Accept: text/markdown` or `/llms.mdx/docs/.../content.md`) now answers `Vary: Accept` and `text/markdown; charset=utf-8`, so a cache no longer hands Markdown to a browser or HTML to an agent (D58).
