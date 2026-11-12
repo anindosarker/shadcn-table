@@ -369,3 +369,8 @@
 ### Q58 Docs pages go back to their previous wording for this release
 - Tags:
 - From: owner.
+- Owner, 2026-11-13: "Yeah, we should restore that"; a rewrite is planned with the docs session in a new version, not here.
+- Restore the intro and description of the example, guide and API pages to the text before spec 31 (D60), fixing only typos in that older text; regenerate `apps/shadcn-table-docs/registry.json`.
+- Kept from spec 31: byline and dates, the Introduction page's install snippet and demo, the comparison page (D71), the TanStack guide (D72).
+- Falls away with it: D64 (corrections to the rewritten text) and D60's description-length check (120 to 155 characters).
+- Not ruled yet: whether the byline and dates also wait for the docs work.
