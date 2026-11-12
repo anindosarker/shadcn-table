@@ -17,6 +17,8 @@ Checks:
 - Check: lint, `pnpm test lint` at ee4e9ed5: pass (9 warnings)
 - Check: validate-repo, `pnpm test validate-repo` at ee4e9ed5: pass
 - Check: docs-e2e, `pnpm test docs-e2e --base base --url http://localhost:5343` (fresh `pnpm --filter shadcn-table-docs build`, `next start -p 5343`) at ee4e9ed5: pass (4 sections, 107 pages, 0 failed)
+- Check (verifier): local CI and 2.2 lines all valid (recorded at ee4e9ed5 or 807f548a; later commits touch only .ai/ and CHANGELOG.md); none rerun
+- Check (verifier): Acceptance 1.2 rerun at a0a4a6ad: source greps pass (1; nothing); fresh build with `NEXT_PUBLIC_SITE_URL=http://localhost:5343`, `next start -p 5343`: title, `og:title`, `description`, `og:description`, `twitter:description` exact; hero line count 2; docs title `<title>Introduction | shadcn-table</title>`; `llms.txt` line 3 the blockquote description; JSON-LD description exact; `/opengraph-image` 200 image/png; `pnpm test docs-e2e --base base --url http://localhost:5343` pass (4 sections, 107 pages, 0 failed); server stopped
 
 - Task 1 shared constant, title, hero line: done (807f548a)
 - Task 2 Acceptance on a production build: done (807f548a)
