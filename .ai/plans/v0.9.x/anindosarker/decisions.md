@@ -742,5 +742,12 @@ index e1645117..e67a5482 100644
 - Source: Q29
 
 ### D77 Filter mode menu opens next to its button; the popover stays above the header
+[E11]
 
+- With `columnFilterDisplayMode: 'popover'` on the Base UI and Radix bases, the filter-mode menu opens about 550 px right and 290 px below its button (measured: button 542,706, menu 1093,994); React Aria is correct; the live 0.9.2 site shows the same, so it predates E10 (d54340da, 2026-10-31).
+- Cause: `useST_MenuAnchor.ts:124-131` places the menu's invisible trigger span with `position: fixed` at the button's screen position; inside the popover positioner, which carries `transform: translate(...)`, fixed positioning is relative to that transformed ancestor, so the span is offset by the popover's own position (`ST_FilterOptionMenu.tsx:392-405` base, `:399` radix).
+- Fix: in `ST_FilterOptionMenu` for Base UI and Radix, the anchored trigger span renders through `createPortal(..., document.body)`, so no transformed ancestor moves it. React Aria is untouched. The popover keeps `side="top"` (`ST_TableHeadCellFilterLabel.tsx:176` base, `:181` radix), as Material React Table does; the owner chose that.
+- Proof (P11): a Storybook play on the popover filters story opens the filter popover, opens the mode menu and asserts the menu's box is adjacent to the mode button's box; it fails on the code before the fix and passes after, on Base UI and Radix.
+- Runs as a fix milestone added to the running E11 column, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
+- Owner, 2026-11-13: "Choice 1: fix the menu only"; "add to the running epic."
 - Source: Q62
