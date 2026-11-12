@@ -717,3 +717,7 @@ index e1645117..e67a5482 100644
 ### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
 
 - Source: Q59
+
+### D76 One shared site description
+
+- Source: Q29
