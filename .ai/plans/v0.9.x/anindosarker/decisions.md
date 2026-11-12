@@ -635,7 +635,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-12: a false claim and typos, not a choice. Joins the next epic.
 
 ### D65 Docs e2e checks cover the byline and the two new pages
-[E11]
+[Done]  [E11]
 
 - Source: Q31. Spec 31 expected `pnpm test docs-e2e` to prove the byline and `/docs/getting-started/comparison` and `/docs/guides/tanstack-table-with-shadcn-ui`, but no milestone owned `test/docs-e2e`, so the frame milestone proved them by curl and a route run only.
 - `test/docs-e2e/lib/` gets checks: the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
@@ -662,7 +662,7 @@ index e1645117..e67a5482 100644
 - 2026-11-13: nothing to build. posthog-js records by default once the project setting is on, and `components/posthog-provider.tsx` does not turn it off; the owner switched it on in PostHog and saw replays from the live site ("I saw session replay was working. skip it").
 
 ### D68 validate-repo fails on a stale generated registry
-[E11]
+[Done]  [E11]
 
 - Source: Q36. `apps/shadcn-table-docs/registry.json` (and the other tracked registry outputs of `pnpm -w registry:build`, `registry:items`, `registry:hosted`) are generated from source files and committed; nothing fails when a milestone changes the source and not the output (spec 31 left a 252-line stale diff).
 - `pnpm test validate-repo` gains a step that runs the three registry generators and fails on `git diff --exit-code` over their tracked outputs, naming the stale file. The generators must be deterministic (same input, same bytes); if one is not, that is fixed first. Planning rule for specs: a milestone that edits example descriptions or registry sources owns the generated outputs too.
@@ -670,7 +670,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: tooling with one right answer.
 
 ### D69 Example sources are read per example, not by a tree-wide pattern
-[E11]
+[Done]  [E11]
 
 - Source: Q35. `apps/shadcn-table-docs/lib/example-source.ts:39` reads example files with a dynamic directory, so Turbopack traces the whole `examples/` tree including the generated `examples/.<base>` copies (about 1321 files times 8 pattern alternatives) into the server bundle; builds and typecheck are slow and Turbopack warns.
 - The example file list and contents are produced at build time by the existing generator step (`lib/example-variants.mjs`, which already walks `examples/`) into one generated module per example (or one JSON index), and `example-source.ts` imports from that module with static paths. The server component no longer calls `fs.readFile` with a computed directory. What the docs show is unchanged.
@@ -678,7 +678,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: build mechanics, no visible change.
 
 ### D70 posthog-js loads after hydration
-[E11]
+[Done]  [E11]
 
 - Source: Q30 (Q30). posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first script load; on `/` they are most of the 580 KB left after spec 30.
 - `components/posthog-provider.tsx` initialises posthog-js after hydration (dynamic import on an idle callback or first interaction, whichever is first), with the queue of events captured before init flushed on init, so the first pageview is not lost. Session replay (D67) starts on the same init. Nothing else in the root layout changes.
@@ -694,7 +694,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "Looks good.", "k" on the item.
 
 ### D72 TanStack guide moves last in Fundamentals
-[E11]
+[Done]  [E11]
 
 - Amends D60 (built, spec 31 merged; patched forward). `content/docs/guides/tanstack-table-with-shadcn-ui.mdx` is listed first in the Fundamentals group of Guides. It exists for search ("tanstack table shadcn" has autocomplete suggestions: ui, example, shadcn datatable, github); a reader already in the docs meets the practical guides first.
 - `content/docs/guides/meta.json`: the entry moves to the end of the Fundamentals group. The page's content, title and URL are unchanged.
@@ -702,7 +702,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "k" on the item.
 
 ### D73 Home title, description and hero line: brand first with the category words
-[E11]
+[Done]  [E11]
 
 - Amends D56 (built, spec 27 merged; patched forward before release). The merged title "shadcn-table: data table for shadcn/ui, built on TanStack Table" is 63 characters and the eyebrow reads "The batteries-included data table for shadcn/ui."; the owner found both too technical.
 - Evidence, 2026-11-12: Search Console for `sc-domain:shadcn-table.com` (28 days, 85 impressions): "shadcn table" 54 impressions at position 6.2 on `/`, "shadcn tables" 7, "table shadcn" 6, "shadcn data table" 1 at position 74. Across about 28 ranking titles and descriptions: react 28, data table 25, shadcn/ui 14, TanStack 13, component 13, data grid 7; "production-ready" and "batteries" 0. sadmann7/shadcn-table (now tablecn) still appears for "shadcn table", so the title carries the category words next to the brand.
@@ -711,7 +711,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "14 k".
 
 ### D74 Docs pages return to their previous wording; byline and dates removed
-[E11]
+[Done]  [E11]
 
 - Supersedes D64. Amends D60 (built, spec 31 merged; patched forward before release). Spec 31 rewrote the intro and description of the example, guide and API pages with no keyword target per page and no style the owner had approved; the owner rejected the result on the preview (2026-11-13). A rewrite is the docs work's, in a new version; nothing is planned here.
 - Restored: every file under `content/docs/examples/**`, `content/docs/guides/*.mdx` and `content/docs/api/**` gets back its frontmatter `description` and body text from the commit before spec 31's copy milestones, with only typos in that older text fixed. `apps/shadcn-table-docs/registry.json` is regenerated from the restored descriptions.
@@ -723,7 +723,7 @@ index e1645117..e67a5482 100644
 - Source: Q58
 
 ### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
-[E11]
+[Done]  [E11]
 
 - Amends D61 (held, not built). The owner wants one deployment, after every decided change: the release does not ship the `proxy.ts` budget fix (D66) ahead of the rest.
 - 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D72, D73, D74, D76). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
@@ -734,7 +734,7 @@ index e1645117..e67a5482 100644
 - Source: Q59
 
 ### D76 One shared site description
-[E11]
+[Done]  [E11]
 
 - `apps/shadcn-table-docs/lib/llms.ts` holds the `llms.txt` summary as a copy of the home description, `app/opengraph-image.tsx` a third copy (spec 29, spec 26). One exported `siteDescription` in `lib/shared.ts` is read by the root layout metadata, the OG image, `lib/llms.ts` and the home JSON-LD; its text is D73's description.
 - Checks: `grep -rn` of the description sentence under `apps/shadcn-table-docs` (outside `.next*`) finds it once; `/llms.txt`, the `/` meta description and the OG image show the same text on a production build.
@@ -742,7 +742,7 @@ index e1645117..e67a5482 100644
 - Source: Q29
 
 ### D77 Filter mode menu opens next to its button; the popover stays above the header
-[E11]
+[Done]  [E11]
 
 - With `columnFilterDisplayMode: 'popover'` on the Base UI and Radix bases, the filter-mode menu opens about 550 px right and 290 px below its button (measured: button 542,706, menu 1093,994); React Aria is correct; the live 0.9.2 site shows the same, so it predates E10 (d54340da, 2026-10-31).
 - Cause: `useST_MenuAnchor.ts:124-131` places the menu's invisible trigger span with `position: fixed` at the button's screen position; inside the popover positioner, which carries `transform: translate(...)`, fixed positioning is relative to that transformed ancestor, so the span is offset by the popover's own position (`ST_FilterOptionMenu.tsx:392-405` base, `:399` radix).
@@ -753,7 +753,7 @@ index e1645117..e67a5482 100644
 - Source: Q62
 
 ### D78 Usage and Introduction show a richer live demo with select, range, date and multi-select filters
-[E11]
+[Done]  [E11]
 
 - The Live Example on `/docs/getting-started/usage` (`content/docs/getting-started/usage.mdx:177`) and the demo on `/docs/getting-started/introduction` are the Basic Example (`examples/<base>/basic/TS.tsx:76-103`): five string columns, five rows, every filter a text box. The owner saw it in a PostHog replay and found it a weak demo.
 - A new example (one per base, in the examples registry like the others) with about 20 rows: First Name and Last Name with text filters, State with `filterVariant: 'select'`, Age with a number range, a date column with a date filter, a status column with `filterVariant: 'multi-select'`. Both pages embed it where the Basic Example is embedded today.
@@ -764,7 +764,7 @@ index e1645117..e67a5482 100644
 - Source: Q63
 
 ### D79 The docs app drops its unused zod dependency
-[E11]
+[Done]  [E11]
 
 - `apps/shadcn-table-docs/package.json:57` lists `zod` (added by spec 24 for the frontmatter `date` field in `lib/source.ts`, 3e8114a3); spec 32 removed the field and the byline (005b49f3, D74), and nothing in the docs app imports `zod` now.
 - Fix: remove the `zod` line from `apps/shadcn-table-docs/package.json` and refresh `pnpm-lock.yaml` with `pnpm install`; no other file changes.
@@ -774,7 +774,7 @@ index e1645117..e67a5482 100644
 - Source: Q64
 
 ### D80 The filter mode menu lands next to its button even when opened while the filter popover animates in
-[E11]
+[Done]  [E11]
 
 - On React Aria, a click on the mode button during the popover's 100 ms enter animation (`zoom-in-95` plus slide, `registry/aria/components/ui/popover.tsx:37`) leaves the menu misplaced: `useST_MenuAnchor.ts:63-68, 84-85` measures the button's box once and re-measures only on resize or scroll, and the fixed anchor `<a>` sits inside the transformed popover (`aria/.../menus/ST_FilterOptionMenu.tsx:392-404`), so the offset counts twice. From the code, not reproduced; found by the D77 play.
 - Base UI and Radix share the hook and the same popover animation; after D77's portal the double offset is gone, but the anchor still keeps the mid-animation box. Likely the same bug, smaller; not verified.

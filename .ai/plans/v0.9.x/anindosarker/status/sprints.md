@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 03:44
+Updated: 2026-11-13 03:59
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 | S16 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -52,8 +52,8 @@ Updated: 2026-11-13 03:44
 | E11 36 Registry fresh check | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 37 Docs e2e TanStack guide |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |
 | E11 38 Integration 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |
-| E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |
-| E11 38 After release 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
+| E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |
+| E11 38 After release 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
