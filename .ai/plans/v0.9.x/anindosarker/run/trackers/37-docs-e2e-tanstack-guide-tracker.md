@@ -9,6 +9,10 @@ Checks:
 - Check: full run, `pnpm test docs-e2e --base base --url http://localhost:5355` at ad2042ad: pass, 1954 checks (guides 701), 108 pages; +9 over the baseline: 3 named checks plus 6 route checks (status, hydration, console at 1440 and 700) the page now gets as an entry
 - Check: failing case, H1 changed to `TanStack Table and shadcn/ui`, `pnpm test docs-e2e --base base --url http://localhost:5356 /docs/guides/tanstack-table-with-shadcn-ui` (next dev) at ad2042ad: fail as expected, `FAIL ... @1440 title h1=TanStack Table and shadcn/ui`; change reverted, `git status --short` empty
 - Check: `pnpm format` at ad2042ad: no changes
+- Check (verifier): lint at ad2042ad still valid at 2cdc3ba6 (diff touches only .ai/), not rerun
+- Check (verifier): acceptance rerun, section run `pnpm test docs-e2e --base base --url http://localhost:5355 --section guides` (next start of a fresh build) at 2cdc3ba6: pass, 701 checks; `title`, `first section`, `headings` listed under `/docs/guides/tanstack-table-with-shadcn-ui @1440`
+- Check (verifier): acceptance rerun, full run `pnpm test docs-e2e --base base --url http://localhost:5355` at 2cdc3ba6: pass, 1954 checks (getting-started 205, api 109, guides 701, examples 939), 108 pages; baseline 1945, +9
+- Check (verifier): acceptance rerun, failing case H1 `TanStack Table and shadcn/ui`, next dev on 5356 at 2cdc3ba6: fail as expected, `FAIL /docs/guides/tanstack-table-with-shadcn-ui @1440 title h1=TanStack Table and shadcn/ui`; reverted, `git status --short` empty
 
 - Task 1 baseline count: done (eb399188)
 - Task 2 entry and checks: done (ad2042ad)
