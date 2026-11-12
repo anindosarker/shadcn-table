@@ -16,6 +16,7 @@ kanban-plugin: basic
 	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
 - [ ] **Q61** Keep PostHog session recordings from piling up #owner
 	- Owner idea 2026-11-13: auto-clean recordings to save storage. From memory, not checked against the owner's project: PostHog bills replay by recordings captured per month (5,000 free), not by storage, and deletes recordings by itself after the plan's retention period. The levers that lower usage are capture-side project settings: sample rate, minimum session duration, URL triggers. No repo change.
+	- Owner 2026-11-13: fine as long as it works on the free plan; nothing to change.
 
 ## Decided
 
