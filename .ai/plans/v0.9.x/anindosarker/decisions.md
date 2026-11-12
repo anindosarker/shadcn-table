@@ -686,3 +686,7 @@ index e1645117..e67a5482 100644
 
 ### D72 TanStack guide moves last in Fundamentals
 
+- Amends D60 (built, spec 31 merged; patched forward). `content/docs/guides/tanstack-table-with-shadcn-ui.mdx` is listed first in the Fundamentals group of Guides. It exists for search ("tanstack table shadcn" has autocomplete suggestions: ui, example, shadcn datatable, github); a reader already in the docs meets the practical guides first.
+- `content/docs/guides/meta.json`: the entry moves to the end of the Fundamentals group. The page's content, title and URL are unchanged.
+- Checks: the sidebar order on a production build; `pnpm test docs-e2e --base base` green.
+- Owner, 2026-11-13: "k" on the item.
