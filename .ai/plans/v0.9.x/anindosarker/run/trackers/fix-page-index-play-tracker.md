@@ -1,4 +1,4 @@
-# Page index play (F22), tracker
+# Page index play (Q22), tracker
 
 Status: merged (938765e6)
 Files owned: `packages/shadcn-table/stories/features/ViewSettings.stories.tsx`

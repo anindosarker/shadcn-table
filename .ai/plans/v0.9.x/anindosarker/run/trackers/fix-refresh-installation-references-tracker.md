@@ -1,4 +1,4 @@
-# Installation references refreshed (F20), tracker
+# Installation references refreshed (Q20), tracker
 
 Status: merged (db8a27fc; dev 0adce149)
 Files owned: `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png`
@@ -12,7 +12,7 @@ Checks:
 ## Notes
 
 - No changelog block: the change is test fixtures only.
-- Run: https://github.com/anindosarker/shadcn-table/actions/runs/42446914317. All six captures 1800x1150; the new base light reference shows `Rows per page [10]  1-10 of 50`, otherwise the same table as the old one. Local diff not run (F21).
+- Run: https://github.com/anindosarker/shadcn-table/actions/runs/42446914317. All six captures 1800x1150; the new base light reference shows `Rows per page [10]  1-10 of 50`, otherwise the same table as the old one. Local diff not run (Q21).
 
 ## Attention
 

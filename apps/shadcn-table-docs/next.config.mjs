@@ -17,11 +17,18 @@ const config = {
       : '.next'),
   // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
   // the second server's git-ignored copy, not tsconfig.json.
+  // A build or `next typegen` reads tsconfig.build.json (tsconfig.preview.json
+  // for the preview build): tsconfig.json also lists the generated types of
+  // the other dist dirs, and a stale copy there (a route deleted since the
+  // last `next dev` or preview build) fails the build's type check.
   typescript: {
-    tsconfigPath:
-      process.env.PORT && process.env.PORT !== '5320'
+    tsconfigPath: process.env.NEXT_DEV
+      ? process.env.PORT && process.env.PORT !== '5320'
         ? `tsconfig.${process.env.PORT}.json`
-        : 'tsconfig.json',
+        : 'tsconfig.json'
+      : process.env.NEXT_DIST_DIR === '.next-preview'
+        ? 'tsconfig.preview.json'
+        : 'tsconfig.build.json',
   },
   // Hosted registry (public/r/<base>/<name>.json, written by
   // tools/registry/hosted.mjs, `pnpm registry:hosted`):
@@ -59,15 +66,39 @@ const config = {
       },
     ],
   }),
+  // Security response headers on every path, the root included (D57). No
+  // Content-Security-Policy: it needs nonces for Next's inline scripts,
+  // PostHog and fonts. Vercel sets Strict-Transport-Security itself.
+  headers: async () => [
+    {
+      source: '/:path*',
+      headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        {
+          key: 'Permissions-Policy',
+          value: 'camera=(), microphone=(), geolocation=()',
+        },
+      ],
+    },
+  ],
   // PostHog paths end with a slash (/ingest/e/, /ingest/batch/); without
   // this Next would redirect them to the slash-less form.
   skipTrailingSlashRedirect: true,
   // MRT's docs index is a table of contents page; the sidebar already is one.
   redirects: async () => [
+    // skipTrailingSlashRedirect turns Next's own slash redirect off for every
+    // path; this puts it back for all but the PostHog proxy (D53).
+    {
+      source: '/:path((?!ingest).*)/',
+      destination: '/:path',
+      permanent: true,
+    },
     {
       source: '/docs',
       destination: '/docs/getting-started/introduction',
-      permanent: false,
+      permanent: true,
     },
     // The getting-started overview was two links; the sidebar lists them.
     {

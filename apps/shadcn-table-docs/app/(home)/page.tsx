@@ -1,12 +1,19 @@
 import type { Metadata } from 'next';
 import { HomePage } from '@/components/dev-home/v12/home-page';
+import { JsonLd } from '@/components/json-ld';
+import { siteDescription } from '@/lib/shared';
+import { softwareSourceCodeJsonLd, websiteJsonLd } from '@/lib/structured-data';
 
 export const metadata: Metadata = {
-  title: { absolute: 'shadcn-table' },
-  description:
-    'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.',
+  description: siteDescription,
 };
 
 export default function Page() {
-  return <HomePage />;
+  return (
+    <>
+      <JsonLd data={websiteJsonLd()} />
+      <JsonLd data={softwareSourceCodeJsonLd(siteDescription)} />
+      <HomePage />
+    </>
+  );
 }

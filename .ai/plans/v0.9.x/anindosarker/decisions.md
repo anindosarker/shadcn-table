@@ -6,7 +6,7 @@
 
 [Done]  [E1]
 
-- Fixes F1. In the three `ST_FilterTextField.tsx`, the select trigger's `pe-9` becomes `pr-9`, so tailwind-merge drops the base `pr-2` and the chevron moves left of the overlaid clear x.
+- Fixes Q1. In the three `ST_FilterTextField.tsx`, the select trigger's `pe-9` becomes `pr-9`, so tailwind-merge drops the base `pr-2` and the chevron moves left of the overlaid clear x.
 - One play sets a select filter value and asserts the chevron is left of the clear button; it runs on the shipped code first and must fail there (v0.8.x P11).
 - Stays: the clear addon overlaid at the end of the trigger; multi-select unchanged.
 
@@ -53,7 +53,7 @@
 [Done]  [E1]
 
 - The `pages` footer (the default, v0.8.x D13 stays) shows the row range between Rows per page and the page buttons: `1-10 of 200`, localized, the filtered count, `1-2 of 2` on one page. Previewed on the docs copy (Base UI, worktree 01, port 5341) and accepted. Owner, 2026-11-08.
-- The compact footer's value is `paginationDisplayMode: 'compact'`; `'default'` is removed from the option type and the branch, no alias (no users yet). The stories, guide, API page and examples that say "default" for it are a separate item (F5, F7).
+- The compact footer's value is `paginationDisplayMode: 'compact'`; `'default'` is removed from the option type and the branch, no alias (no users yet). The stories, guide, API page and examples that say "default" for it are a separate item (Q5, Q7).
 - The accepted diff, to apply as is to `ST_TablePagination.tsx` in the three bases (path rewritten from the docs copy to the registry; `pnpm format` fixes the indent of the moved `<Pagination>` block; `'default'` in the branch becomes `'compact'`):
 
 ```diff
@@ -122,7 +122,7 @@ index 4b0227a2..21c2d077 100644
 
 [Done]  [E1]
 
-- Fixes F5 and F7, applies D6's rename. Every `'default'` for `paginationDisplayMode` becomes `'compact'`: the type `features/stConfigFeature.ts:391` and the branch `ST_TablePagination.tsx` (radix `:278`, base `:294`, aria `:281`) in the three bases; the docs-app copies follow by sync and `public/r/*.json` by regeneration (P9); `guides/pagination.mdx:104,110`, `guides/best-practices.mdx:199`, the API entry `lib/prop-tables/tableOptions.ts:1827-1835`, the example `alternate-pagination/TS.tsx:13` in three bases, `test/docs-e2e/lib/guides.mjs:139`, the stories `TableProvider.stories.tsx:63,169,218,224`, `NestedTable.stories.tsx:89,99`, `RowPinningOnSelect.stories.tsx:66,282,332`; a new CHANGELOG entry, the old `:122` stays.
+- Fixes Q5 and Q7, applies D6's rename. Every `'default'` for `paginationDisplayMode` becomes `'compact'`: the type `features/stConfigFeature.ts:391` and the branch `ST_TablePagination.tsx` (radix `:278`, base `:294`, aria `:281`) in the three bases; the docs-app copies follow by sync and `public/r/*.json` by regeneration (P9); `guides/pagination.mdx:104,110`, `guides/best-practices.mdx:199`, the API entry `lib/prop-tables/tableOptions.ts:1827-1835`, the example `alternate-pagination/TS.tsx:13` in three bases, `test/docs-e2e/lib/guides.mjs:139`, the stories `TableProvider.stories.tsx:63,169,218,224`, `NestedTable.stories.tsx:89,99`, `RowPinningOnSelect.stories.tsx:66,282,332`; a new CHANGELOG entry, the old `:122` stays.
 - Story names: the compact story `PaginationEnabledDefaultMoreData` (`Pagination.stories.tsx:60`) becomes `PaginationCompactMoreData`; the four stock-settings stories drop "Default": `PaginationEnabled` (`:56`), `PaginationEnabledBigData` (`:103`), `PaginationEnabledBigDataLanguage` (`:116`), `PaginationEnabledNoRowsPerPage` (`:133`). Titles follow the export names; the story ids change and no docs link points at them.
 - The guide and the API entry state that `'pages'` is the default and `'compact'` the alternative; no page calls the compact footer the default.
 - The next-app demo's stale copy (`test-projects/next-app/.../useST_TableOptions.ts:84`) is the owner's, outside the run (D34).
@@ -131,7 +131,7 @@ index 4b0227a2..21c2d077 100644
 
 [Done]  [E2]
 
-- Fixes F6. The static builds (`/base/`, `/radix/`, `/aria/`) reset a story after its play: `.storybook/main.ts` injects `window.__ST_STATIC__ = true` into the preview head only when `configType === 'PRODUCTION'`; `.storybook/preview.tsx` adds a project-level `afterEach` that bumps a counter and a `ResetAfterPlay` keyed wrapper inside the existing decorator, so React remounts the story with fresh state. The play does not rerun; the Interactions panel keeps its steps and PASS; Rerun runs the play and resets again. Previewed on the Base static build (worktree 01, port 5342) and accepted. Owner, 2026-11-08.
+- Fixes Q6. The static builds (`/base/`, `/radix/`, `/aria/`) reset a story after its play: `.storybook/main.ts` injects `window.__ST_STATIC__ = true` into the preview head only when `configType === 'PRODUCTION'`; `.storybook/preview.tsx` adds a project-level `afterEach` that bumps a counter and a `ResetAfterPlay` keyed wrapper inside the existing decorator, so React remounts the story with fresh state. The play does not rerun; the Interactions panel keeps its steps and PASS; Rerun runs the play and resets again. Previewed on the Base static build (worktree 01, port 5342) and accepted. Owner, 2026-11-08.
 - `storybook dev` (configType `DEVELOPMENT`) and vitest (no configType in the addon-vitest plugin) keep the end state. A failing play keeps its end state too: `afterEach` is skipped in the `errored` phase.
 - The accepted diff, to apply as is:
 
@@ -231,37 +231,37 @@ index e1645117..e67a5482 100644
 
 [Done]
 
-- Source: A1. The `resetColumnSizeAnimated` listener in `shared/utils/column.utils.ts` (three bases) removes itself on the first `transitionend` whose `propertyName` is `width` or `min-width`, not on the first event of any kind: button color transitions bubble to the table first and `{ once: true }` would leave `data-size-resetting` stuck. No timer; the D5 behaviour is unchanged. Kept as merged (E1 03, `54a51ee3`).
+- Source: Q37. The `resetColumnSizeAnimated` listener in `shared/utils/column.utils.ts` (three bases) removes itself on the first `transitionend` whose `propertyName` is `width` or `min-width`, not on the first event of any kind: button color transitions bubble to the table first and `{ once: true }` would leave `data-size-resetting` stuck. No timer; the D5 behaviour is unchanged. Kept as merged (E1 03, `54a51ee3`).
 
 ### D11 The select trigger pads with `ltr:pr-9 rtl:pl-9`
 
 [Done]
 
-- Source: A2. D1 named `pr-9`; the merged code uses `ltr:pr-9 rtl:pl-9` because `pnpm test validate-repo` rejects a physical padding class, and spec 01 requires that check green. The chevron sits left of the clear button in both directions. Kept as merged (E1 01, `4a61e251`).
+- Source: Q38. D1 named `pr-9`; the merged code uses `ltr:pr-9 rtl:pl-9` because `pnpm test validate-repo` rejects a physical padding class, and spec 01 requires that check green. The chevron sits left of the clear button in both directions. Kept as merged (E1 01, `4a61e251`).
 
 ### D12 Removing a filter chip returns the column to its initial filter mode
 
 [Done]
 
-- Source: A3. With modes on by default (D4), the old reset to the first listed mode turned a multi-select column into `fuzzy` and a select column away from `equals` after one chip removal; the merged code resets to `table.initialState.columnFilterFns`, or the first listed mode only when the initial one is not offered. Kept as merged (E1 01, `4a61e251`, `ST_FilterOptionMenu.tsx`, `filterSummary.utils.ts`).
+- Source: Q39. With modes on by default (D4), the old reset to the first listed mode turned a multi-select column into `fuzzy` and a select column away from `equals` after one chip removal; the merged code resets to `table.initialState.columnFilterFns`, or the first listed mode only when the initial one is not offered. Kept as merged (E1 01, `4a61e251`, `ST_FilterOptionMenu.tsx`, `filterSummary.utils.ts`).
 
 ### D13 The multi-select mode labels read Includes any, Includes all, Excludes in every locale
 
 [Done]
 
-- Source: A4. `filterArrIncludesSome` and `filterArrIncludesAll` already existed; the builder rewrote them to D4's wording in every locale and added `filterArrIncludesNone`; eleven locales had an imperative ("include everything") that became the descriptive label. Kept as merged (E1 01, `4a61e251`, `shared/locales/*.ts`).
+- Source: Q40. `filterArrIncludesSome` and `filterArrIncludesAll` already existed; the builder rewrote them to D4's wording in every locale and added `filterArrIncludesNone`; eleven locales had an imperative ("include everything") that became the descriptive label. Kept as merged (E1 01, `4a61e251`, `shared/locales/*.ts`).
 
 ### D14 Two more known flakes
 
 [Done]
 
-- Fixes F8. `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria, 90 s timeout) time out under machine load and pass alone; they join the P5 known-flake list, rerun once before a check is called red.
+- Fixes Q8. `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria, 90 s timeout) time out under machine load and pass alone; they join the P5 known-flake list, rerun once before a check is called red.
 
-### D15 Release 0.9.0 after E2 (superseded by D28, D45)
+### D15 (superseded by D28) (superseded by D45) Release 0.9.0 after E2
 
 [Done]  [E3]
 
-- A release spec (07, epic E3, depends on E2) ships 0.9.0 with E1, E2 and the F3 fix: the integration milestone fast-forwards `claude/review` into `dev` once and runs the suite there; then one PR `dev` into `master` with the label `release:minor`, auto-merge enabled at creation; `release.yml` tags, verifies the deploy and publishes. Supersedes the P4 bullet "no release is planned".
+- A release spec (07, epic E3, depends on E2) ships 0.9.0 with E1, E2 and the Q3 fix: the integration milestone fast-forwards `claude/review` into `dev` once and runs the suite there; then one PR `dev` into `master` with the label `release:minor`, auto-merge enabled at creation; `release.yml` tags, verifies the deploy and publishes. Supersedes the P4 bullet "no release is planned".
 - Superseded by D28 (the runner does not approve). The owner approved the 0.9.0 Prepare Release deployment in advance (2026-11-08: "you can approve it now"), the per-release word D3 requires; the runner approves it with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments` when the job waits. Any later release needs a fresh word.
 - The docs changes are not in 0.9.0; they ship as 0.9.1 after the docs discussion.
 
@@ -269,7 +269,7 @@ index e1645117..e67a5482 100644
 
 [Done]
 
-- Source: A5. The environment created by spec 05 (`aeca4d55`) keeps GitHub's default `can_admins_bypass: true`; the owner is the repository's only admin, so nobody else can merge past the Approve. Kept as created; no extra PUT.
+- Source: Q41. The environment created by spec 05 (`aeca4d55`) keeps GitHub's default `can_admins_bypass: true`; the owner is the repository's only admin, so nobody else can merge past the Approve. Kept as created; no extra PUT.
 
 ## Round 3: triage E2, 2026-11-08
 
@@ -277,25 +277,25 @@ index e1645117..e67a5482 100644
 
 [Done]
 
-- Source: A6. `sheet` is listed in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs` (as `alert-dialog` is), so `pnpm lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base; the registry gains no part the library does not use. Kept as merged (E2 04, `161c5ae6`).
+- Source: Q42. `sheet` is listed in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs` (as `alert-dialog` is), so `pnpm lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base; the registry gains no part the library does not use. Kept as merged (E2 04, `161c5ae6`).
 
 ### D18 `@tanstack/react-hotkeys` stays a caret range
 
 [Done]
 
-- Source: A7. `^0.22.0` in `apps/shadcn-table-docs/package.json`, the convention of the other dependencies there; the lockfile pins the installed build. Kept as merged (E2 04, `161c5ae6`).
+- Source: Q43. `^0.22.0` in `apps/shadcn-table-docs/package.json`, the convention of the other dependencies there; the lockfile pins the installed build. Kept as merged (E2 04, `161c5ae6`).
 
 ### D19 The home demo label reads the design system store
 
 [Done]
 
-- Source: A9. `no-step-3.tsx` reads the current preset from `useDesignSystem()`, the store the panel writes, so every pick (panel, shortcut, cycle button) updates the label; no MutationObserver on `data-design-system`. The D2 behaviour is unchanged. Kept as merged (E2 04, `161c5ae6`).
+- Source: Q45. `no-step-3.tsx` reads the current preset from `useDesignSystem()`, the store the panel writes, so every pick (panel, shortcut, cycle button) updates the label; no MutationObserver on `data-design-system`. The D2 behaviour is unchanged. Kept as merged (E2 04, `161c5ae6`).
 
 ### D20 The docs dev server loads clean
 
 [Done]  [E2]
 
-- Fixes F11. The runner runs `pnpm --filter shadcn-table-docs dev` on an agent port, loads `/`, `/docs` and one example page, reads the server and browser logs, and fixes each logged error or warning at its root cause (v0.8.x D34 style: no suppression, no `suppressHydrationWarning` blanket).
+- Fixes Q11. The runner runs `pnpm --filter shadcn-table-docs dev` on an agent port, loads `/`, `/docs` and one example page, reads the server and browser logs, and fixes each logged error or warning at its root cause (v0.8.x D34 style: no suppression, no `suppressHydrationWarning` blanket).
 - The hotkeys label: formatted only in the browser, or with the platform read from the request (`detectPlatform(userAgent)`) and set on the hotkeys provider, whichever the library's SSR guide names; the kbd hints stay (D2).
 - The hydration mismatch on the home page: the attribute located from the browser log and its server and client values made equal.
 - Acceptance: the same three loads log nothing from TanStack Hotkeys and no hydration mismatch, recorded in the tracker; `pnpm test docs-e2e --base base` green. Owner, 2026-11-08: fix now, before the release.
@@ -304,13 +304,13 @@ index e1645117..e67a5482 100644
 
 [Done]  [E4]
 
-- Fixes F18, amends D2. The `CopyMenu` (Copy CSS, Copy preset code, `theme-customizer.tsx:490-519`, used at `:146`) and `ImportPreset` (`:522-576`, used at `:275`) are removed, with `importPreset` (`design-system-provider.tsx:185`), `encodeConfig` and `decodeConfig` (`config.ts:501,518`) and the preset-code format they share; Random, the preset select, the tabs and every other D2 control stay. Owner, 2026-11-08: "Unnecessary items, remove them."
+- Fixes Q18, amends D2. The `CopyMenu` (Copy CSS, Copy preset code, `theme-customizer.tsx:490-519`, used at `:146`) and `ImportPreset` (`:522-576`, used at `:275`) are removed, with `importPreset` (`design-system-provider.tsx:185`), `encodeConfig` and `decodeConfig` (`config.ts:501,518`) and the preset-code format they share; Random, the preset select, the tabs and every other D2 control stay. Owner, 2026-11-08: "Unnecessary items, remove them."
 
 ### D22 One shortcut row at the top of the theme panel
 
 [Done]  [E4]
 
-- Fixes F19, F12, F17; amends D2's layout and keys. One row directly under the header, in Copy's former slot (D21), holds five buttons: Reset `Shift+R`, Undo `Mod+Z`, Redo `Mod+Shift+Z`, Random `R`, Next preset `C` (`Mod` is Cmd on macOS, Ctrl on Windows and Linux; the label comes from the client platform, D20). `P` for undo goes.
+- Fixes Q19, Q12, Q17; amends D2's layout and keys. One row directly under the header, in Copy's former slot (D21), holds five buttons: Reset `Shift+R`, Undo `Mod+Z`, Redo `Mod+Shift+Z`, Random `R`, Next preset `C` (`Mod` is Cmd on macOS, Ctrl on Windows and Linux; the label comes from the client platform, D20). `P` for undo goes.
 - Labeled buttons with their kbd hint when the row fits the panel width; when it does not, icon buttons with a tooltip that carries the label and the kbd hint. The header keeps the title and the close button only (the icon-only reset at `theme-customizer.tsx:133-141` and its hint go); the Presets row keeps the select alone (Random at `:292` and the `C` hint under the select move up).
 - Keys registered in `design-system-provider.tsx:193-198`, scope and guards unchanged (D2).
 
@@ -318,13 +318,13 @@ index e1645117..e67a5482 100644
 
 [Done]  [E4]
 
-- Fixes F13. In the Colors tab each token's swatch (`theme-customizer.tsx:631-638`, a static span today) becomes a button that opens a Popover holding `react-colorful`'s `HexColorPicker` above the existing text input; dragging in the picker writes the token live, and Undo records one step per Popover close (the per-keystroke undo of A10 stays for typed values). `react-colorful` is one new dependency of the docs app, added by the first milestone of the epic that ships this (P6).
+- Fixes Q13. In the Colors tab each token's swatch (`theme-customizer.tsx:631-638`, a static span today) becomes a button that opens a Popover holding `react-colorful`'s `HexColorPicker` above the existing text input; dragging in the picker writes the token live, and Undo records one step per Popover close (the per-keystroke undo of Q46 stays for typed values). `react-colorful` is one new dependency of the docs app, added by the first milestone of the epic that ships this (P6).
 
 ### D24 The persistent view example starts at ten rows
 
 [Done]  [E4]
 
-- Fixes F14. `initialState.pagination.pageSize` becomes 10 in `apps/shadcn-table-docs/examples/{radix,base,aria}/persistent-view/TS.tsx:344`; the stored view (`viewSettingsStorage.utils.ts`) keeps not persisting pagination, so a visitor's page size choice still resets on reload. No library change.
+- Fixes Q14. `initialState.pagination.pageSize` becomes 10 in `apps/shadcn-table-docs/examples/{radix,base,aria}/persistent-view/TS.tsx:344`; the stored view (`viewSettingsStorage.utils.ts`) keeps not persisting pagination, so a visitor's page size choice still resets on reload. No library change.
 
 ### D25 The stored view persists rows per page
 
@@ -338,7 +338,7 @@ index e1645117..e67a5482 100644
 
 [Done]  [E4]
 
-- Source: A8
+- Source: Q44
 - The docs parts in `apps/shadcn-table-docs/components/ui-<base>/` (three bases) are regenerated through `lib/install.mjs` with the preset that emits the `cn-*` hooks (`cn-menu-target` and the rest the design system's style layers in `lib/design-system/*` target, as the next-app reference's parts carry them); the library's own table parts under `shadcn-table/` are untouched. Owner, 2026-11-08: "No, they should work."
 - Acceptance: `pnpm test docs-e2e --base base` green, plus one check that picking a Style and a Menu Color changes a docs menu's computed style; a check that fails on the shipped parts first (P11).
 - Mechanism settled at spec time (spec 13, lead 2026-11-08): `shadcn add` cannot emit the hooks (ui.shadcn.com serves the parts resolved, and the CLI's `transformMenu` strips `cn-menu-target`, measured on 4.22.0 and 4.23.0), so `lib/install.mjs` gains a second phase that fetches the hooked sources from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit and rewrites their imports; the decided behaviour is unchanged.
@@ -347,11 +347,11 @@ index e1645117..e67a5482 100644
 
 [Done]  [E5]
 
-- Fixes F16; supersedes v0.7.x D38 "Lucide only" for the docs. The select (`theme-customizer.tsx:207-214`, disabled today) picks lucide, hugeicons, tabler, phosphor or remixicon; every docs example table shows that set; the docs chrome (nav, panel, shadcn parts) stays Lucide. Reset returns to lucide; the choice persists with the rest of the config (D2).
+- Fixes Q16; supersedes v0.7.x D38 "Lucide only" for the docs. The select (`theme-customizer.tsx:207-214`, disabled today) picks lucide, hugeicons, tabler, phosphor or remixicon; every docs example table shows that set; the docs chrome (nav, panel, shadcn parts) stays Lucide. Reset returns to lucide; the choice persists with the rest of the config (D2).
 - Mechanism, library side: the docs copies under `components/ui-<base>/shadcn-table/` are written by `lib:install` from the registry and carry no shared hook, and every example calls `useST_TableOptions` itself, so the library gains a defaults provider (`ST_DefaultsProvider`, three bases) whose `icons` the hook merges beneath the per-table `icons` option (`useST_TableOptions.ts:114`: defaults, then provider, then the table's own). Public surface (P7): API entry, the icons guide, a CHANGELOG entry; one story with a play.
 - Docs side: the provider wraps the examples with the set the theme config names; `hugeicons`, `tabler`, `phosphor` and `remixicon` packages become docs dependencies (P6); the registry's `icons/<lib>.ts` files are installed into the docs copies by `lib:install`.
 
-### D28 The 0.9.0 release waits for the owner's manual approval
+### D28 (superseded by D47) The 0.9.0 release waits for the owner's manual approval
 
 [E7]
 [Done]
@@ -362,7 +362,7 @@ index e1645117..e67a5482 100644
 
 [Done]  [E5]
 
-- Fixes F15. `app/global.css:9-16` stops importing the eight `styles/style-*.css` files; each style is its own CSS asset and only the active one is linked: the pre-paint script links the stored or default style's sheet before first paint, and a style change swaps the link and applies the class once the new sheet has loaded, so nothing flashes unstyled. The eight files themselves and the `.cn-*` layers stay as they are (spec 13 relies on them).
+- Fixes Q15. `app/global.css:9-16` stops importing the eight `styles/style-*.css` files; each style is its own CSS asset and only the active one is linked: the pre-paint script links the stored or default style's sheet before first paint, and a style change swaps the link and applies the class once the new sheet has loaded, so nothing flashes unstyled. The eight files themselves and the `.cn-*` layers stay as they are (spec 13 relies on them).
 - Measured 2026-11-08, same machine, commit `546bcabd` against `claude/review`: root stylesheet 351 KB to 2,755 KB; warm `/` usable at 1.3 s to 2.8 s; persistent view 1.6 s to 5.6 s; panel open one 1.1 to 1.3 s long task; light/dark toggle style recalc 81 ms to 476 ms. JS unchanged.
 - Acceptance: the root stylesheet of `/` within 10 percent of the 351 KB baseline plus the one active style sheet; opening the panel and toggling light/dark each under 300 ms of long task in the docs E2E harness, measured against the shipped code first (P11); every page green in `pnpm test docs-e2e --base base`.
 - Runs after spec 13 (E4) has merged, so the on-demand sheet is tested with the hooked parts.
@@ -371,28 +371,28 @@ index e1645117..e67a5482 100644
 
 [Done]
 
-- Source: A12
-- Source: A12. The fix milestone `refresh-installation-references` (F20: the six `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` taken after D6's footer range) is cut from `dev` at `df90bd27` and merged into `dev` directly with a merge commit, then into `claude/review`; `dev` is not fast-forwarded from `claude/review` again for 0.9.0, so the E4 and E5 merges stay out of it (D15). The one exception to P1 for this release; a later release returns to the fast-forward.
+- Source: Q48
+- Source: Q48. The fix milestone `refresh-installation-references` (Q20: the six `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` taken after D6's footer range) is cut from `dev` at `df90bd27` and merged into `dev` directly with a merge commit, then into `claude/review`; `dev` is not fast-forwarded from `claude/review` again for 0.9.0, so the E4 and E5 merges stay out of it (D15). The one exception to P1 for this release; a later release returns to the fast-forward.
 
 ### D31 Random keeps its curated presets through a private decoder
 
 [Done]
 
-- Source: A11
-- Source: A11. D21 removed the preset-code codec; the Random button (kept by D21) decoded its curated `SHUFFLE_PRESETS` with it, so the builder kept a private `curatedPreset` decoder and a `sameLook` field compare in `lib/design-system/config.ts`; `decodePreset` from `shadcn/preset` stays imported, nothing user-facing changes. Kept as merged (E4 08, `9d582dcd`).
+- Source: Q47
+- Source: Q47. D21 removed the preset-code codec; the Random button (kept by D21) decoded its curated `SHUFFLE_PRESETS` with it, so the builder kept a private `curatedPreset` decoder and a `sameLook` field compare in `lib/design-system/config.ts`; `decodePreset` from `shadcn/preset` stays imported, nothing user-facing changes. Kept as merged (E4 08, `9d582dcd`).
 
 ### D32 A CI-only red is reproduced and fixed under act before it merges
 
 [Done]  [E3]
 
-- A check that is red on GitHub Actions and green on the local macOS run (a Linux-only failure, such as the docs E2E `/` theme checks of F23 and F24) is reproduced locally with `act` against the local Docker (`act pull_request -W .github/workflows/pr.yml -j <job>` with the matrix narrowed to the red base) and the fix is confirmed green there before it merges into `dev`; the GitHub run is the confirmation, not the loop. Owner, 2026-11-08: "You can run them locally and fix them quickly, then do the pr"; "I have Docker and we discussed about using tools like act". Narrows process.md P3 ("never required") for the Linux-only case.
+- A check that is red on GitHub Actions and green on the local macOS run (a Linux-only failure, such as the docs E2E `/` theme checks of Q23 and Q24) is reproduced locally with `act` against the local Docker (`act pull_request -W .github/workflows/pr.yml -j <job>` with the matrix narrowed to the red base) and the fix is confirmed green there before it merges into `dev`; the GitHub run is the confirmation, not the loop. Owner, 2026-11-08: "You can run them locally and fix them quickly, then do the pr"; "I have Docker and we discussed about using tools like act". Narrows process.md P3 ("never required") for the Linux-only case.
 
 ### D33 The page index restore gets its red-first play
 
 [Done]
 
-- Source: A13
-- Source: A13. The F22 fix (`811045dc`) merged without a play that fails on the shipped code (P11). A fix milestone adds a `Persistence` play variant in `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` with `initialState.pagination.pageIndex: 2` and a stored rows-per-page, asserting the page index holds after remount; red at `117a81b5`, green at `811045dc`, the two lines in its tracker; three bases through `pnpm test storybook-tests --base <base>`. Settled by the lead: a coverage gap, no behaviour change.
+- Source: Q49
+- Source: Q49. The Q22 fix (`811045dc`) merged without a play that fails on the shipped code (P11). A fix milestone adds a `Persistence` play variant in `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` with `initialState.pagination.pageIndex: 2` and a stored rows-per-page, asserting the page index holds after remount; red at `117a81b5`, green at `811045dc`, the two lines in its tracker; three bases through `pnpm test storybook-tests --base <base>`. Settled by the lead: a coverage gap, no behaviour change.
 
 ### D34 No bot comment for the approval wait
 
@@ -447,36 +447,36 @@ index e1645117..e67a5482 100644
 
 [Done]
 
-- Source: A14
-- Source: A14. Spec 15 1.6.3 had `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; a stored style then failed React 19 hydration (error #418, head links matched by href) and a second link appeared. The pre-paint script in `lib/design-system/config.ts` creates the link (`blocking=render`), the layout renders none; D29's behaviour unchanged. Kept as merged (E5 15, `5df252e9`).
+- Source: Q50
+- Source: Q50. Spec 15 1.6.3 had `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; a stored style then failed React 19 hydration (error #418, head links matched by href) and a second link appeared. The pre-paint script in `lib/design-system/config.ts` creates the link (`blocking=render`), the layout renders none; D29's behaviour unchanged. Kept as merged (E5 15, `5df252e9`).
 
 ### D42 Every per-style sheet build runs the optimizer
 
 [Done]
 
-- Source: A15
-- Source: A15. `lib/build-styles.mjs` runs `optimize()` on every build so the flattened nesting and prefixes match the root bundle; `--minify` only adds minification (spec 15 1.6.2 said readable output without the flag). Kept as merged (E5 15, `5df252e9`).
+- Source: Q51
+- Source: Q51. `lib/build-styles.mjs` runs `optimize()` on every build so the flattened nesting and prefixes match the root bundle; `--minify` only adds minification (spec 15 1.6.2 said readable output without the flag). Kept as merged (E5 15, `5df252e9`).
 
 ### D43 The label event rebuilds the Validate PR failure lines
 
 [Done]
 
-- Source: A16
-- Source: A16. On a `labeled` or `unlabeled` run the previous comment's failures block is carried over except the `- **Validate PR**` lines, rebuilt from the new record, so a relabel that fixes the label leaves no stale Validate PR failure (spec 18 1.6.2 said verbatim). Kept as merged (E6 18, `b501c14f`).
+- Source: Q52
+- Source: Q52. On a `labeled` or `unlabeled` run the previous comment's failures block is carried over except the `- **Validate PR**` lines, rebuilt from the new record, so a relabel that fixes the label leaves no stale Validate PR failure (spec 18 1.6.2 said verbatim). Kept as merged (E6 18, `b501c14f`).
 
 ### D44 The called workflows skip every step on the bump commit
 
 [E7]
 [Done]
 
-- Source: A17
-- Source: A17. A job-level `if:` on a matrix job is read before the matrix expands, so GitHub reports one skipped job `Typecheck (${{ matrix.base }})` and the required leg contexts stay "Expected" (actions/runner#952); the four called workflows put the `if:` on every step instead, so each leg runs no step and reports success under its own context. D35's outcome holds. `act` cannot show the difference; the 0.9.1 release run is the proof, a context left "Expected" there is a new item. Kept as merged (E6 16, `8631dc07`).
+- Source: Q53
+- Source: Q53. A job-level `if:` on a matrix job is read before the matrix expands, so GitHub reports one skipped job `Typecheck (${{ matrix.base }})` and the required leg contexts stay "Expected" (actions/runner#952); the four called workflows put the `if:` on every step instead, so each leg runs no step and reports success under its own context. D35's outcome holds. `act` cannot show the difference; the 0.9.1 release run is the proof, a context left "Expected" there is a new item. Kept as merged (E6 16, `8631dc07`).
 
 ### D45 Release 0.9.1 now, the docs restructuring as 0.9.2
 
 [Done]  [E7]
 
-- Amends D15: 0.9.1 ships E4, E5 and E6 as merged on `claude/review` (the theme panel changes D21 to D29, the stored page size D25, `ST_DefaultsProvider` D27, the on-demand stylesheets D29, the CI changes D35 to D38), now; the docs restructuring (F2, F4, the docs session's decisions) ships as 0.9.2. Owner, 2026-11-09.
+- Amends D15: 0.9.1 ships E4, E5 and E6 as merged on `claude/review` (the theme panel changes D21 to D29, the stored page size D25, `ST_DefaultsProvider` D27, the on-demand stylesheets D29, the CI changes D35 to D38), now; the docs restructuring (Q2, Q4, the docs session's decisions) ships as 0.9.2. Owner, 2026-11-09.
 - Flow per D40 and D28: Integration does the changelog pass and fast-forwards `claude/review` into `dev`; the PR `dev` into `master`, title `release: 0.9.1`, label `release:minor` (new public API: `ST_DefaultsProvider`, `pageSize` in the stored view), auto-merge at creation; GitHub runs `pr.yml` once; the owner's Approve by click or "approve it" (D28, D39 does not carry over); the bump push skips the test jobs (D35); `release.yml` tags, verifies and publishes; After release brings `claude/review` and `dev` up to `master` (P4).
 - The run is the proof for D35, D36, D38 and D44: the release tracker records the bump run's contexts (nineteen test contexts and Prepare Release skipped, Validate PR and PR Summary green), zero "Node.js 20 is deprecated" annotations, the artifacts list (`test-out-installation-e2e-*` only), the comment complete; a context left "Expected" or a missing row is an ATTENTION item.
 
@@ -484,7 +484,7 @@ index e1645117..e67a5482 100644
 
 [Done]  [E7]
 
-- Fixes F10 and F27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (F10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (F27). Settled by the lead: tooling with one right answer. F9 and F26 (stale comments) wait for a change that touches their files (no comment-only commits).
+- Fixes Q10 and Q27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (Q10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (Q27). Settled by the lead: tooling with one right answer. Q9 and Q26 (stale comments) wait for a change that touches their files (no comment-only commits).
 
 ### D47 The runner approves every Prepare Release deployment
 [E9]
@@ -495,22 +495,22 @@ index e1645117..e67a5482 100644
 
 ### D48 The perf budget is 600 ms under --ci, 300 ms locally
 
-- Source: A18
+- Source: Q54
   [Done]
-- Source: A18. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (F28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
+- Source: Q54. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (Q28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
 
 ### D49 0.9.1 ships with the patch label; no 0.10.x in this release
 [E9]
 
-- Source: A19
+- Source: Q55
   [E7]
-- Source: A19; amends D45's label. PR 135 is relabelled `release:patch` (the `labeled` run rewrites Validate PR to "Ships as 0.9.1"), the runner approves Prepare Release (D47), 0.9.1 ships. Every v0.9.x release stays on the 0.9.x line: new public API in this release line takes a patch bump. Owner, 2026-11-09: "0.9.1. no 0.10x release."
+- Source: Q55; amends D45's label. PR 135 is relabelled `release:patch` (the `labeled` run rewrites Validate PR to "Ships as 0.9.1"), the runner approves Prepare Release (D47), 0.9.1 ships. Every v0.9.x release stays on the 0.9.x line: new public API in this release line takes a patch bump. Owner, 2026-11-09: "0.9.1. no 0.10x release."
 
 ## Round 4: discussion, SEO, 2026-11-10
 
 ### D50 Sitemap and robots for the docs site
 
-[E9]
+[Done]  [E9]
 
 - `https://www.shadcn-table.com/sitemap.xml` and `/robots.txt` both return 404 today; `apps/shadcn-table-docs` has no `sitemap.ts`, `robots.ts` or `next-sitemap` config, so Google finds pages only by following links.
 - Add `apps/shadcn-table-docs/app/sitemap.ts`: the home page at priority 1.0 plus every docs page from fumadocs `source.getPages()`, absolute URLs on `https://www.shadcn-table.com`; no `/dev/*` (removed by D51), no `/r/*`, no `/ingest/*`; no `lastmod` (Vercel shallow clones make git dates unreliable).
@@ -519,7 +519,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "k. record."
 
 ### D51 Remove the /dev preview routes from the docs site
-[E9]
+[Done]  [E9]
 
 - `apps/shadcn-table-docs/app/dev/**` (the home and theme preview pages, `/dev`, `/dev/theme`, `/dev/theme/1` to `/dev/theme/9`) is deployed and public on www.shadcn-table.com (200 today) although it is development scaffolding with `noindex`. It goes: the route folder is deleted, and every component, helper and data file imported only from it is deleted with it. Git history keeps them; the spec names the removing commit's parent so they can be viewed again.
 - Anything still imported from outside `app/dev` stays. Check scripts, tests and workflow steps that open a `/dev/theme` URL are changed to the page they really test or deleted when they tested only the preview.
@@ -527,8 +527,260 @@ index e1645117..e67a5482 100644
 - Source: a side-agent note on D50 (robots block vs `noindex`). Owner, 2026-11-10: "the /dev pages can go already. and we can view the components if needed."
 
 ### D52 Release 0.9.2 ships E9
-[E9]
+[Done]  [E9]
 
 - E9 (D50, D51) ships as 0.9.2 in the same epic: a release spec modelled on spec 20, patch label `release:patch` (D49), the D40 flow (release suite on GitHub only), the runner approves Prepare Release (D47), post-release sync per P4.
 - Release only after specs 21 and 22 have merged into `claude/review`; nothing else rides in.
 - Owner, 2026-11-10: "work on it and release a new version asap."
+
+### D53 Canonical URLs and trailing-slash redirect
+[Done]  [E10]
+
+- No page on www.shadcn-table.com carries `rel=canonical`, and every URL also answers with a trailing slash (`/docs/api/table-options/` returns 200, measured 2026-11-10), so Google sees two URLs per page with no signal which one counts (audit `reference/seo-audit-2026-11-10.md`).
+- `app/layout.tsx` adds `alternates: { canonical: './' }` to the root metadata; Next resolves it per page against the existing `metadataBase`, so the home page and every docs page get a canonical equal to their own slash-less URL. The docs `generateMetadata` keeps no canonical of its own.
+- `next.config.mjs` `redirects()` gains one permanent (308) entry from `/:path((?!ingest).*)/` to `/:path`; `skipTrailingSlashRedirect: true` stays so the PostHog proxy paths (`/ingest/e/`, `/ingest/batch/`) keep their slash.
+- Checks: `curl -sI /docs/api/table-options/` is 308 to `/docs/api/table-options`; `/ingest/e/` is not redirected; the head of `/` and of a docs page has exactly one `<link rel="canonical">` equal to its own URL on `siteUrl`.
+- Owner, 2026-11-10: "k" on the item.
+
+### D54 JSON-LD structured data on the home and docs pages
+[Done]  [E10]
+
+- No page on www.shadcn-table.com emits JSON-LD (0 `application/ld+json` on `/`, measured 2026-11-10; schema 10/100 in `reference/seo-audit-2026-11-10.md`), so search engines get no machine-readable statement of what the site and each page are.
+- Home page (`app/(home)/page.tsx`): `WebSite` (name, url) and `SoftwareSourceCode` (name, codeRepository = the GitHub repo URL, programmingLanguage TypeScript, license MIT, runtimePlatform React, url = siteUrl).
+- Every docs page (`app/docs/[[...slug]]/page.tsx`): `TechArticle` (headline = page title, description, url, author = the project as `Organization`) and `BreadcrumbList` built from the fumadocs page tree. Values come from the existing metadata, no new copy.
+- One `JsonLd` component renders a `<script type="application/ld+json">` per object; no `FAQPage`, no `HowTo`.
+- Checks: objects typed with `schema-dts` compile; `curl` of `/` shows exactly two scripts (`WebSite`, `SoftwareSourceCode`), a docs page exactly two (`TechArticle`, `BreadcrumbList`); each parses as JSON; Google Rich Results test on the deployed pages reports no errors (owner-side, after deploy).
+- Owner, 2026-11-10: "k" on the item.
+
+### D55 Home page Open Graph image
+[Done]  [E10]
+
+- `/` declares `twitter:card summary_large_image` but no `og:image` (measured 2026-11-10; `/opengraph-image` 404), so a shared link to the site shows no preview card. Docs pages already have one from `app/og/docs/[...slug]/route.tsx` through `getPageImageUrl`.
+- Add `apps/shadcn-table-docs/app/opengraph-image.tsx` (1200x630, `ImageResponse`) reusing the docs OG route's layout and fonts with the site name and the home description; Next.js adds `og:image` and `twitter:image` to `/` from the file, so `app/(home)/page.tsx` metadata is untouched.
+- Checks: the head of `/` has `og:image` and `twitter:image` on `siteUrl` pointing at `/opengraph-image`; the URL returns 200 `image/png` 1200x630; docs pages keep their `/og/docs/...` image.
+- Owner, 2026-11-10: "k" on the item.
+
+### D56 Home title and hero tagline name the category
+[Done]  [E10]
+
+- The home page `<title>`, `og:title` and H1 are the bare word "shadcn-table" and the searched phrases ("shadcn data table", "tanstack table shadcn") appear nowhere on the site (audit 2026-11-10, on-page 56/100), so the page competes only for its own name.
+- Root metadata `title.default` becomes `shadcn-table: data table for shadcn/ui, built on TanStack Table`; the template `%s | shadcn-table` for docs pages stays. The H1 stays "shadcn-table"; the hero tagline under it carries the phrase "data table for shadcn/ui" once. Docs titles are untouched (D60 covers descriptions).
+- Checks: `curl` of `/` shows the new `<title>` and `og:title`; a docs page title still ends in `| shadcn-table`; the hero renders the tagline; docs-e2e green.
+- Owner, 2026-11-10: "recommended on all".
+
+### D57 Security response headers
+[Done]  [E10]
+
+- The live site sends only `strict-transport-security` (measured 2026-11-10); `next.config.mjs` has no `headers()`.
+- `next.config.mjs` `headers()` sets on every path: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`. No `Content-Security-Policy` in this decision: it needs nonces for Next inline scripts, PostHog and fonts, and is its own decision when wanted.
+- The two-hop `http://shadcn-table.com` redirect (308 to https apex, 308 to www) is Vercel's standard behaviour and stays; no change.
+- Checks: `curl -sI` of `/` and of a docs page shows the four headers; `/ingest/*` and `/r/*` responses still work (the headers do not break the proxy or the registry JSON).
+- Owner, 2026-11-10: "recommended on all".
+
+### D58 Markdown delivery and llms.txt shape
+[Done]  [E10]
+
+- A docs URL requested with `Accept: text/markdown` answers `content-type: text/markdown` but its `vary` header lists only the Next router keys (measured 2026-11-10): `proxy.ts:26` sets `Vary: Accept` on the rewrite, Next drops it, so caches may serve Markdown to browsers or HTML to agents. `/llms.txt` starts with `# Docs` and no summary; `/llms-full.txt` carries raw JSX and import lines from the MDX.
+- `app/llms.mdx/docs/[[...slug]]/route.ts` sets `Vary: Accept` on its own response (and the HTML side keeps Next's vary; the proxy header may stay or go, whichever the check proves). `app/llms.txt/route.ts` follows llmstxt.org: `# shadcn-table` H1, one `>` blockquote summary (the home description), then the sections with one line per page: link and its description. `app/llms-full.txt/route.ts` strips MDX imports, JSX components and frontmatter before export; prose, headings and code fences stay.
+- Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL shows `vary` containing `Accept`; `/llms.txt` first two lines are the H1 and the blockquote; `grep -cE '^(import |<[A-Z])' ` on `/llms-full.txt` is 0.
+- Owner, 2026-11-10: "recommended on all".
+
+### D59 Home page JavaScript and API page payload
+[Done]  [E10]
+
+- Lab audit 2026-11-10: the home page ships 775 KB of JavaScript with 1040 ms total blocking time; `/docs/api/table-options` HTML is 1.94 MB. `jspdf`, `jspdf-autotable` and `recharts` are docs dependencies (`apps/shadcn-table-docs/package.json:45-56`).
+- The home demo (`components/dev-home/v12/home-page.tsx` and what it imports) loads below-the-fold parts with `next/dynamic`; `jspdf`, `jspdf-autotable` and `recharts` are imported only inside the component that uses them, dynamically, never in the initial home bundle. `/docs/api/table-options` renders its option tables so the HTML stays under 800 KB (the spec picks the mechanism after measuring what fills the payload).
+- Targets, measured with the perf budget tooling of Q28 (`--ci`): home initial JavaScript under 450 KB, lab TBT under 300 ms; `/docs/api/table-options` HTML under 800 KB. Visible behaviour unchanged.
+- Checks: the three numbers recorded in the tracker before and after; docs-e2e green; the home demo and the API page render the same content.
+- Owner, 2026-11-10: "recommended on all".
+
+### D60 Docs content, descriptions and discoverability pages
+[Done]  [E10]
+
+- Audit 2026-11-10 (content 62/100): docs intros and descriptions are 38 to 53 percent Material React Table wording with its typos (`/docs/guides/sorting` description, "use use" on the detail-panel page); descriptions are copied (column-pinning, row-pinning), missing (`/docs/api`) or under 45 characters (install, usage); 35 of 42 example pages are under 200 words; the Introduction page (where `/docs` lands) has no install snippet or demo; no page targets "TanStack Table" together with "shadcn/ui"; no comparison page; the GitHub repo has no topics, the docs no byline or dates.
+- Every docs page gets a unique description of 120 to 155 characters and an intro written around what is shadcn-specific, MRT typos gone; every example page gets two or three sentences on what it shows and when to use it. The Introduction page gets the install snippet and a demo; the `/docs` redirect becomes permanent (308).
+- New pages: a guide "TanStack Table with shadcn/ui" (why and how this library wires them), and a comparison page against tablecn, Material React Table and the shadcn data-table recipe (feature matrix, honest, no claims we cannot show). Each docs page shows the maintainer byline and a last-updated date from frontmatter, and the sidebar links the changelog.
+- The repo gets GitHub topics (`gh repo edit anindosarker/shadcn-table --add-topic react,shadcn-ui,tanstack-table,data-table,typescript,nextjs`).
+- This decision changes `content/docs/**`, the same files as the E8 docs restructuring; its epic is chosen with that in mind.
+- Checks: every page's description length in range (a script over `content/docs/**` frontmatter); no page under 150 words; the two new pages present in the sitemap; typecheck, lint, docs-e2e green.
+- Owner, 2026-11-10: "recommended on all".
+
+### D61 Release 0.9.3 ships E10
+
+- E10 (D53 to D60) ships as 0.9.3 in the same epic: a release spec modelled on spec 23, patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. Release only after every E10 spec has merged into `claude/review`.
+- Owner, 2026-11-10: "work on it and release a new version asap" (E9), "epic go" on D53 to D60.
+- Held by the owner 2026-11-10 ("Hold.", after a side-agent note): E10 merges into `claude/review` only; the owner reviews the home title, the rewritten docs copy and the comparison page on the preview deploy first, then says release. The release spec is written then and joins the next epic.
+
+### D62 Home script target follows the home components; the PostHog load is its own finding
+[Done]  [E10]
+
+- Source: Q30. D59's 450 KB script target on `/` is unreachable inside `components/dev-home/**`: measured 711 KB before, 580 KB on branch `v0.9/home-javascript` (b2bcf60d), blocking time 158 ms (under the 300 ms target); all but 19 KB of the first load is the shared root layout (posthog-js 114 KB, react-dom 72 KB), out of spec 30's scope.
+- The branch merges as it stands. D59's home target becomes: script transfer on `/` under 600 KB and lab TBT under 300 ms, both met at b2bcf60d. Visible behaviour unchanged (nav and hero links prefetch on hover, touch or focus instead of in the viewport; the demo table still loads on mount, which the docs check "icons: the pick survives a reload" needs).
+- The root layout's PostHog and provider load is Q30, for a later epic; the demo-table-on-intent variant (437 KB, needs the docs check changed) is not taken.
+- Settled by the lead 2026-11-10: a target number the lead set, no visible change; Q30 option a.
+
+### D63 The bundle analyzer wrap goes
+[Done]  [E10]
+
+- Source: Q56. Spec 24 wrapped `next.config.mjs` in `@next/bundle-analyzer` behind `ANALYZE=1` for spec 30's measurements; the docs app builds with Turbopack, where the analyzer writes no report, and `next build --webpack` fails on `node:` imports. The wrap and its devDependency do nothing.
+- A fix milestone on `claude/review` removes the wrap from `next.config.mjs` and `@next/bundle-analyzer` from `apps/shadcn-table-docs/package.json` and the lockfile. Bundle inspection, when needed, uses `next experimental-analyze` or the built `/` HTML, as spec 30 did.
+- Checks: `grep -c bundle-analyzer apps/shadcn-table-docs/next.config.mjs apps/shadcn-table-docs/package.json` is 0; `pnpm install` leaves the lockfile without it; typecheck, lint, validate-repo green.
+- Settled by the lead 2026-11-10: tooling with one right answer; Q56 option a.
+
+### D64 (superseded by D74) Guides and API copy states what is shadcn/ui and drops the inherited typos
+
+- Source: Q32. `content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24` say the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls (buttons, menus, inputs, dialogs) are shadcn/ui. The six inherited typos Q32 lists stay in the merged copy.
+- The four sentences say it as it is: the controls are shadcn/ui components, the table markup is plain elements styled with the shadcn theme tokens. The six typos are corrected in the same milestone. No other copy changes.
+- Checks: `grep` of the four files shows the corrected sentences; the D60 description script still prints 0; `pnpm test docs-e2e --base base` green.
+- Settled by the lead 2026-11-12: a false claim and typos, not a choice. Joins the next epic.
+
+### D65 Docs e2e checks cover the byline and the two new pages
+[E11]
+
+- Source: Q31. Spec 31 expected `pnpm test docs-e2e` to prove the byline and `/docs/getting-started/comparison` and `/docs/guides/tanstack-table-with-shadcn-ui`, but no milestone owned `test/docs-e2e`, so the frame milestone proved them by curl and a route run only.
+- `test/docs-e2e/lib/` gets checks: the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
+- Checks: `pnpm test docs-e2e --base base` green with the new checks counted in the run summary.
+- Settled by the lead 2026-11-12: tooling gap, one right answer. Joins the next epic.
+- Edited 2026-11-13 before build: no byline check; D74 removes the byline. Only the checks for the two new pages remain.
+- Edited 2026-11-13 before build: the comparison page is out of 0.9.3 (D75), so this epic checks `/docs/guides/tanstack-table-with-shadcn-ui` only; the comparison check comes with D71.
+
+### D66 proxy.ts runs only on docs paths
+[Done]
+
+- Source: Q33. `apps/shadcn-table-docs/proxy.ts` (the Markdown-by-`Accept` rewrite from `fumadocs-core/negotiation`) exports no `config.matcher`, so Next runs it as a function on every request: assets, bot hits, 404s. Vercel usage page 2026-11-12: 581K function invocations, 3h 01m of the Hobby plan's 4 h monthly Fluid Active CPU; prerendered pages are cache hits and builds are a separate budget, so the proxy is the cost.
+- `proxy.ts` gets `export const config = { matcher: [...] }` limited to the paths the two rewrites can match: `/docs/:path*` and the `.mdx` suffix form; never `/_next/*`, `/ingest/*`, `/r/*`, `/og/*`, static files. The rewrite behaviour on docs URLs is unchanged.
+- Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL still returns `text/markdown`; a docs URL with `.mdx` suffix still rewrites; `/`, `/sitemap.xml`, `/r/base/registry.json`, `/ingest/e/` unchanged; after deploy the Vercel usage page shows invocations falling to the docs-request count. Small fix, lands directly on `claude/review` (P13 style), ships with the next release.
+- Owner, 2026-11-12: "10. k".
+
+### D67 PostHog session replays on
+[Done]
+
+- Owner request 2026-11-12: watch how visitors use the site. `components/posthog-provider.tsx` initialises posthog-js with `api_host '/ingest'` (the reverse proxy in `next.config.mjs`); replays are off today.
+- Code: the init options enable session recording (`disable_session_recording: false`, inputs masked, the default), 100 percent sampling for now; the owner lowers the sample rate in the PostHog project settings if the free quota (5,000 replays a month) runs out. PostHog project: the owner turns on "Record user sessions" in Settings, Session replay. Both sides needed; the code side is a small fix that lands directly on `claude/review`.
+- Checks: on a production build the recorder script loads (network request to `/ingest/static/recorder` or the `$snapshot` events in `/ingest/e/`); a replay appears in the PostHog project after a visit on the deployed site.
+- Owner, 2026-11-12: "11. k".
+- 2026-11-13: nothing to build. posthog-js records by default once the project setting is on, and `components/posthog-provider.tsx` does not turn it off; the owner switched it on in PostHog and saw replays from the live site ("I saw session replay was working. skip it").
+
+### D68 validate-repo fails on a stale generated registry
+[E11]
+
+- Source: Q36. `apps/shadcn-table-docs/registry.json` (and the other tracked registry outputs of `pnpm -w registry:build`, `registry:items`, `registry:hosted`) are generated from source files and committed; nothing fails when a milestone changes the source and not the output (spec 31 left a 252-line stale diff).
+- `pnpm test validate-repo` gains a step that runs the three registry generators and fails on `git diff --exit-code` over their tracked outputs, naming the stale file. The generators must be deterministic (same input, same bytes); if one is not, that is fixed first. Planning rule for specs: a milestone that edits example descriptions or registry sources owns the generated outputs too.
+- Checks: with a deliberately edited example description and no regeneration, `pnpm test validate-repo` fails naming `registry.json`; after `pnpm -w registry:items` it passes; CI (`pr.yml`) runs the same step.
+- Settled by the lead 2026-11-13: tooling with one right answer.
+
+### D69 Example sources are read per example, not by a tree-wide pattern
+[E11]
+
+- Source: Q35. `apps/shadcn-table-docs/lib/example-source.ts:39` reads example files with a dynamic directory, so Turbopack traces the whole `examples/` tree including the generated `examples/.<base>` copies (about 1321 files times 8 pattern alternatives) into the server bundle; builds and typecheck are slow and Turbopack warns.
+- The example file list and contents are produced at build time by the existing generator step (`lib/example-variants.mjs`, which already walks `examples/`) into one generated module per example (or one JSON index), and `example-source.ts` imports from that module with static paths. The server component no longer calls `fs.readFile` with a computed directory. What the docs show is unchanged.
+- Checks: `pnpm --filter shadcn-table-docs build` prints no "file pattern matches" warning; build and `types:check` wall time recorded before and after in the tracker; `pnpm test docs-e2e --base base` green (every example page still shows its source).
+- Settled by the lead 2026-11-13: build mechanics, no visible change.
+
+### D70 posthog-js loads after hydration
+[E11]
+
+- Source: Q30 (Q30). posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first script load; on `/` they are most of the 580 KB left after spec 30.
+- `components/posthog-provider.tsx` initialises posthog-js after hydration (dynamic import on an idle callback or first interaction, whichever is first), with the queue of events captured before init flushed on init, so the first pageview is not lost. Session replay (D67) starts on the same init. Nothing else in the root layout changes.
+- Checks: on a production build the `/` first-load script transfer is under 450 KB (the D59 original target) with posthog-js absent from the initial chunks; a pageview and the recorder still arrive at `/ingest/*`; the docs check "icons: the pick survives a reload" passes.
+- Settled by the lead 2026-11-13: technical, no visible change.
+
+### D71 Comparison page moves last in Getting Started and compares the searched names
+
+- Amends D60 (built, spec 31 merged; patched forward). `content/docs/getting-started/comparison.mdx` sits second in Getting Started and compares against tablecn, Material React Table and the shadcn data-table recipe. Google autocomplete, 2026-11-12: "tanstack table vs shadcn table", "shadcn table vs tanstack table", "shadcn data table vs tanstack table", "material react table vs tanstack / mui datagrid / ag grid" and "ag grid alternative" exist; "tablecn vs" and "tablecn alternative" return nothing.
+- `content/docs/getting-started/meta.json` becomes `introduction, install, usage, agents, comparison` (the placement TanStack Query, Router, Form, Zustand and Jotai use: one Comparison entry near the end of Getting Started).
+- The table's columns become, in this order: shadcn-table, TanStack Table, the shadcn data-table recipe, Material React Table, AG Grid; the tablecn column goes. The sidebar label stays "Comparison"; the page's search title names the compared libraries (as TanStack Query's does). Every cell is a claim that can be shown from the cited project's own docs; a cell that cannot be sourced is left out.
+- Checks: the sidebar order on a production build; the D60 description script prints 0; `pnpm test docs-e2e --base base` green. The owner reads every row on the preview before release (D61 stays held).
+- Owner, 2026-11-13: "Looks good.", "k" on the item.
+
+### D72 TanStack guide moves last in Fundamentals
+[E11]
+
+- Amends D60 (built, spec 31 merged; patched forward). `content/docs/guides/tanstack-table-with-shadcn-ui.mdx` is listed first in the Fundamentals group of Guides. It exists for search ("tanstack table shadcn" has autocomplete suggestions: ui, example, shadcn datatable, github); a reader already in the docs meets the practical guides first.
+- `content/docs/guides/meta.json`: the entry moves to the end of the Fundamentals group. The page's content, title and URL are unchanged.
+- Checks: the sidebar order on a production build; `pnpm test docs-e2e --base base` green.
+- Owner, 2026-11-13: "k" on the item.
+
+### D73 Home title, description and hero line: brand first with the category words
+[E11]
+
+- Amends D56 (built, spec 27 merged; patched forward before release). The merged title "shadcn-table: data table for shadcn/ui, built on TanStack Table" is 63 characters and the eyebrow reads "The batteries-included data table for shadcn/ui."; the owner found both too technical.
+- Evidence, 2026-11-12: Search Console for `sc-domain:shadcn-table.com` (28 days, 85 impressions): "shadcn table" 54 impressions at position 6.2 on `/`, "shadcn tables" 7, "table shadcn" 6, "shadcn data table" 1 at position 74. Across about 28 ranking titles and descriptions: react 28, data table 25, shadcn/ui 14, TanStack 13, component 13, data grid 7; "production-ready" and "batteries" 0. sadmann7/shadcn-table (now tablecn) still appears for "shadcn table", so the title carries the category words next to the brand.
+- Root `title.default`: `shadcn-table: React Data Table for shadcn/ui and TanStack` (57 characters); the docs template `%s | shadcn-table` stays. H1 stays `shadcn-table`. The hero line (the eyebrow of spec 27) reads `The open-source React data table for shadcn/ui, built on TanStack Table.` The home meta description (and `og:description`, `twitter:description`) reads `Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI.`
+- Checks: `curl` of `/` on a production build shows the title, the description and the hero line exactly; a docs page title still ends in `| shadcn-table`; the home JSON-LD (D54) description follows the new text if it copies the old one; `pnpm test docs-e2e --base base` green. Search Console is re-read four weeks after the release.
+- Owner, 2026-11-13: "14 k".
+
+### D74 Docs pages return to their previous wording; byline and dates removed
+[E11]
+
+- Supersedes D64. Amends D60 (built, spec 31 merged; patched forward before release). Spec 31 rewrote the intro and description of the example, guide and API pages with no keyword target per page and no style the owner had approved; the owner rejected the result on the preview (2026-11-13). A rewrite is the docs work's, in a new version; nothing is planned here.
+- Restored: every file under `content/docs/examples/**`, `content/docs/guides/*.mdx` and `content/docs/api/**` gets back its frontmatter `description` and body text from the commit before spec 31's copy milestones, with only typos in that older text fixed. `apps/shadcn-table-docs/registry.json` is regenerated from the restored descriptions.
+- Removed: `components/docs-byline.tsx`, its use in `app/docs/[[...slug]]/page.tsx:81`, `siteAuthor` in `lib/shared.ts` when nothing else reads it, the `date` field in the docs schema and the `date:` line in all 105 docs files. The name was a fixed GitHub username and the date one hand-written value (`2026-11-10`) on every page.
+- Kept from spec 31: the Introduction page's install snippet and demo, `getting-started/comparison.mdx` (D71), `guides/tanstack-table-with-shadcn-ui.mdx` (D72), the permanent `/docs` redirect, the sidebar Changelog link.
+- Falls away: D60's description-length rule (120 to 155 characters) and its script; D65's byline check (D65 keeps the two new pages).
+- Checks: `git diff <commit before spec 31's copy milestones> -- content/docs/examples content/docs/guides content/docs/api` shows only typo fixes, the two kept pages and the D71/D72 order changes; `grep -rn "DocsByline\|^date:" apps/shadcn-table-docs/app apps/shadcn-table-docs/components apps/shadcn-table-docs/content` prints nothing; `pnpm test validate-repo` and `pnpm test docs-e2e --base base` green.
+- Owner, 2026-11-13: "So remove it. Q58, okay."
+- Source: Q58
+
+### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
+[E11]
+
+- Amends D61 (held, not built). The owner wants one deployment, after every decided change: the release does not ship the `proxy.ts` budget fix (D66) ahead of the rest.
+- 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D72, D73, D74, D76). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
+- Edited 2026-11-13 before build: no preview stop. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; D47 applies (the runner approves Prepare Release). The owner has seen or approved every visible change in it.
+- The comparison page stays out of 0.9.3: `content/docs/getting-started/comparison.mdx` and its `meta.json` entry are removed from `claude/review` in this epic (the file is in git history at the spec 31 merge). D71 is not in this epic; it ships in the next release, after the owner has read the table in chat.
+- Before the build starts the lead reads the Vercel usage page and tells the owner the Fluid Active CPU figure (3h 01m of 4 h on 2026-11-12).
+- Owner, 2026-11-13: "I want to do one deployment and that should be after all the items that have changed."; "59 k"; "you can release it in this epic. No need to wait for a preview."; "k. Epic Go".
+- Source: Q59
+
+### D76 One shared site description
+[E11]
+
+- `apps/shadcn-table-docs/lib/llms.ts` holds the `llms.txt` summary as a copy of the home description, `app/opengraph-image.tsx` a third copy (spec 29, spec 26). One exported `siteDescription` in `lib/shared.ts` is read by the root layout metadata, the OG image, `lib/llms.ts` and the home JSON-LD; its text is D73's description.
+- Checks: `grep -rn` of the description sentence under `apps/shadcn-table-docs` (outside `.next*`) finds it once; `/llms.txt`, the `/` meta description and the OG image show the same text on a production build.
+- Settled by the lead 2026-11-13: one right answer, no visible change beyond D73.
+- Source: Q29
+
+### D77 Filter mode menu opens next to its button; the popover stays above the header
+[E11]
+
+- With `columnFilterDisplayMode: 'popover'` on the Base UI and Radix bases, the filter-mode menu opens about 550 px right and 290 px below its button (measured: button 542,706, menu 1093,994); React Aria is correct; the live 0.9.2 site shows the same, so it predates E10 (d54340da, 2026-10-31).
+- Cause: `useST_MenuAnchor.ts:124-131` places the menu's invisible trigger span with `position: fixed` at the button's screen position; inside the popover positioner, which carries `transform: translate(...)`, fixed positioning is relative to that transformed ancestor, so the span is offset by the popover's own position (`ST_FilterOptionMenu.tsx:392-405` base, `:399` radix).
+- Fix: in `ST_FilterOptionMenu` for Base UI and Radix, the anchored trigger span renders through `createPortal(..., document.body)`, so no transformed ancestor moves it. React Aria is untouched. The popover keeps `side="top"` (`ST_TableHeadCellFilterLabel.tsx:176` base, `:181` radix), as Material React Table does; the owner chose that.
+- Proof (P11): a Storybook play on the popover filters story opens the filter popover, opens the mode menu and asserts the menu's box is adjacent to the mode button's box; it fails on the code before the fix and passes after, on Base UI and Radix.
+- Runs as a fix milestone added to the running E11 column, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
+- Owner, 2026-11-13: "Choice 1: fix the menu only"; "add to the running epic."
+- Source: Q62
+
+### D78 Usage and Introduction show a richer live demo with select, range, date and multi-select filters
+[E11]
+
+- The Live Example on `/docs/getting-started/usage` (`content/docs/getting-started/usage.mdx:177`) and the demo on `/docs/getting-started/introduction` are the Basic Example (`examples/<base>/basic/TS.tsx:76-103`): five string columns, five rows, every filter a text box. The owner saw it in a PostHog replay and found it a weak demo.
+- A new example (one per base, in the examples registry like the others) with about 20 rows: First Name and Last Name with text filters, State with `filterVariant: 'select'`, Age with a number range, a date column with a date filter, a status column with `filterVariant: 'multi-select'`. Both pages embed it where the Basic Example is embedded today.
+- The Usage page's tutorial steps and the Basic Example itself are unchanged; the new demo sits at the end as the richer result. The Basic Example stays in the Examples section.
+- Checks: on a production build both pages render the new demo on the three bases; each of the four non-text filters opens and filters rows (docs e2e); `pnpm test validate-repo` green with the regenerated registry (D68).
+- Edited 2026-11-13 before build: runs as a fix milestone in the running E11 epic, after spec 32 has merged (both touch `content/docs/getting-started/**`), and ships in 0.9.3 (owner: "It should be added to this current sprint as well.").
+- Owner, 2026-11-13: "update the demos there"; "k" on the item.
+- Source: Q63
+
+### D79 The docs app drops its unused zod dependency
+[E11]
+
+- `apps/shadcn-table-docs/package.json:57` lists `zod` (added by spec 24 for the frontmatter `date` field in `lib/source.ts`, 3e8114a3); spec 32 removed the field and the byline (005b49f3, D74), and nothing in the docs app imports `zod` now.
+- Fix: remove the `zod` line from `apps/shadcn-table-docs/package.json` and refresh `pnpm-lock.yaml` with `pnpm install`; no other file changes.
+- Checks: `git grep -n "from 'zod'" apps/shadcn-table-docs` is empty; the docs production build (`pnpm --filter shadcn-table-docs build`) and `pnpm test validate-repo` pass.
+- Runs as a fix milestone added to the running E11 epic, before `38 Integration 0.9.3`, so 0.9.3 ships with it.
+- Owner, 2026-11-13: "Remove Zod. should be part of this epic".
+- Source: Q64
+
+### D80 The filter mode menu lands next to its button even when opened while the filter popover animates in
+[E11]
+
+- On React Aria, a click on the mode button during the popover's 100 ms enter animation (`zoom-in-95` plus slide, `registry/aria/components/ui/popover.tsx:37`) leaves the menu misplaced: `useST_MenuAnchor.ts:63-68, 84-85` measures the button's box once and re-measures only on resize or scroll, and the fixed anchor `<a>` sits inside the transformed popover (`aria/.../menus/ST_FilterOptionMenu.tsx:392-404`), so the offset counts twice. From the code, not reproduced; found by the D77 play.
+- Base UI and Radix share the hook and the same popover animation; after D77's portal the double offset is gone, but the anchor still keeps the mid-animation box. Likely the same bug, smaller; not verified.
+- Fix: `useST_MenuAnchor.ts` on the three bases re-measures on `animationend` while open (a capture listener on `document`, only for events whose target contains the anchor element, beside the resize and scroll listeners). The React Aria `ST_FilterOptionMenu.tsx` renders its anchor through `createPortal(..., document.body)` with the hydration guard, as Base UI and Radix do since D77.
+- React Aria repositions an open menu only when its trigger resizes or an input changes (`useOverlayPosition`); if the re-measure alone does not move the menu, the builder makes the menu follow the re-measured anchor at the root. No delayed click, no disabled animation.
+- Proof (P11): a sibling play of `ModeMenuNextToButtonPopover` opens the mode menu right after the popover appears, without the animation wait (`Filtering.stories.tsx:1333-1336`), waits for all animations to end and asserts the menu's box is adjacent to the mode button's box. It fails before the fix on React Aria and passes after on the three bases; the tracker records what Base UI and Radix did before the fix.
+- Runs as a fix milestone added to the running E11 epic, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
+- Owner, 2026-11-13: "2" (fix it in E11, 0.9.3 waits for it).
+- Source: Q65

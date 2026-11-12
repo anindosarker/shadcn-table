@@ -1,6 +1,6 @@
 # v0.9.x ownership
 
-Generated: 2026-11-10 by ownership.py
+Generated: 2026-11-13 by ownership.py
 
 | Milestone | Spec | Depends on | Derived from | Files |
 |---|---|---|---|---|
@@ -33,14 +33,41 @@ Generated: 2026-11-10 by ownership.py
 | Integration 0.9.2 | 23 | Sitemap and robots, Remove dev routes | none | `CHANGELOG.md` |
 | Release PR 0.9.2 | 23 | Integration 0.9.2 | none | none |
 | After release 0.9.2 | 23 | Release PR 0.9.2 | none | none |
-| CRUD dialog check waits for the rows (F25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
-| Dev server clean (F11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
-| Page index play (F22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
-| Perf budgets on CI (F28) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
-| Installation references refreshed (F20) | fix | none | none | `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png` |
-| Stored view page index (F22) | fix | none | none | `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx` |
-| Theme check closes the search dialog (F24) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
-| Theme hotkey checks wait for the change (F23) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| E10 dependencies | 24 | none | Theme customizer (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Theme color picker (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Icon library select (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Style sheet on demand (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`) | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml` |
+| Canonical and slash redirect | 24 | E10 dependencies | Theme customizer (`apps/shadcn-table-docs/app/layout.tsx`), Icon library select (`apps/shadcn-table-docs/app/layout.tsx`), Style sheet on demand (`apps/shadcn-table-docs/app/layout.tsx`) | `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/next.config.mjs` |
+| JSON-LD | 25 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/components/json-ld.tsx`, `apps/shadcn-table-docs/lib/structured-data.ts`, `apps/shadcn-table-docs/app/(home)/page.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx` |
+| Home OG image | 26 | none | none | `apps/shadcn-table-docs/app/opengraph-image.tsx` |
+| Home title | 27 | E10 dependencies, Canonical and slash redirect, JSON-LD | Theme customizer (`apps/shadcn-table-docs/app/layout.tsx`), Icon library select (`apps/shadcn-table-docs/app/layout.tsx`), Style sheet on demand (`apps/shadcn-table-docs/app/layout.tsx`), Remove dev routes (`apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx`) | `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/app/(home)/page.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx` |
+| Security headers | 28 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/next.config.mjs` |
+| Markdown and llms | 29 | none | none | `apps/shadcn-table-docs/lib/llms.ts`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/app/llms.txt/route.ts`, `apps/shadcn-table-docs/app/llms-full.txt/route.ts`, `apps/shadcn-table-docs/app/llms.mdx/docs/[[...slug]]/route.ts` |
+| Home JavaScript | 30 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/components/dev-home/**` |
+| API page payload | 30 | none | none | `apps/shadcn-table-docs/components/prop-tables/**` |
+| Page frame and new pages | 31 | E10 dependencies, Canonical and slash redirect, JSON-LD, Security headers, Markdown and llms | none | `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/components/docs-byline.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`, `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/content/docs/meta.json`, `apps/shadcn-table-docs/content/docs/getting-started/**`, `apps/shadcn-table-docs/content/docs/guides/meta.json`, `apps/shadcn-table-docs/content/docs/guides/tanstack-table-with-shadcn-ui.mdx`, `tools/docs/check-frontmatter.mjs` |
+| Examples copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/examples/**` |
+| Guides and API copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
+| Docs wording restore | 32 | none | JSON-LD (`apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`), Page frame and new pages (`apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/components/docs-byline.tsx`, `tools/docs/check-frontmatter.mjs`), Markdown and llms (`apps/shadcn-table-docs/lib/source.ts`) | `apps/shadcn-table-docs/content/docs/**`, `apps/shadcn-table-docs/components/docs-byline.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/registry.json`, `tools/docs/check-frontmatter.mjs` |
+| Home title and description | 33 | Docs wording restore | Theme customizer (`apps/shadcn-table-docs/app/layout.tsx`), Icon library select (`apps/shadcn-table-docs/app/layout.tsx`), Style sheet on demand (`apps/shadcn-table-docs/app/layout.tsx`), Canonical and slash redirect (`apps/shadcn-table-docs/app/layout.tsx`), Home title (`apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx`, `apps/shadcn-table-docs/app/(home)/page.tsx`), Remove dev routes (`apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx`), JSON-LD (`apps/shadcn-table-docs/app/(home)/page.tsx`), Home OG image (`apps/shadcn-table-docs/app/opengraph-image.tsx`), Markdown and llms (`apps/shadcn-table-docs/lib/llms.ts`), Page frame and new pages (`apps/shadcn-table-docs/lib/shared.ts`) | `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/app/(home)/page.tsx`, `apps/shadcn-table-docs/app/opengraph-image.tsx`, `apps/shadcn-table-docs/lib/llms.ts`, `apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx` |
+| PostHog after hydration | 34 | none | none | `apps/shadcn-table-docs/lib/posthog-client.ts`, `apps/shadcn-table-docs/components/posthog-provider.tsx`, `apps/shadcn-table-docs/lib/analytics.ts` |
+| Example sources per example | 35 | none | none | `apps/shadcn-table-docs/lib/example-source.ts`, `apps/shadcn-table-docs/lib/example-variants.mjs`, `apps/shadcn-table-docs/lib/example-files.mjs` |
+| Registry fresh check | 36 | none | none | `test/validate-repo/lib/registry-fresh.mjs`, `test/validate-repo/test.mjs`, `test/validate-repo/run.mjs`, `docs/code-of-conduct/planning-guidelines.md` |
+| Docs e2e TanStack guide | 37 | Docs wording restore | Pagination (`test/docs-e2e/lib/guides.mjs`), Docs parts hooks (`test/docs-e2e/lib/guides.mjs`) | `test/docs-e2e/lib/guides.mjs` |
+| Integration 0.9.3 | 38 | Docs wording restore, Home title and description, PostHog after hydration, Example sources per example, Registry fresh check, Docs e2e TanStack guide | Integration 0.9.2 (`CHANGELOG.md`) | `CHANGELOG.md` |
+| Release PR 0.9.3 | 38 | Integration 0.9.3 | none | none |
+| After release 0.9.3 | 38 | Release PR 0.9.3 | none | none |
+| Bundle analyzer wrap (D63) | fix | none | none | `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml` |
+| CRUD dialog check waits for the rows (Q25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
+| Dev server clean (Q11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
+| Filter mode menu anchor (Q62) | fix | none | none | `pnpm lib:install base`, `pnpm lib:install radix`, `#### Fix D77` |
+| Filter mode menu during popover animation (Q65, D80) | fix | none | none | `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx`, `packages/shadcn-table/stories/features/Filtering.stories.tsx`, `CHANGELOG.md` |
+| Guides copy accuracy (Q32) | fix | none | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
+| Page index play (Q22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
+| Perf budgets on CI (Q28) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| Installation references refreshed (Q20) | fix | none | none | `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png` |
+| Remove unused zod (Q64, D79) | fix | none | none | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml` |
+| Richer live demo (Q63) | fix | none | none | none |
+| Stored view page index (Q22) | fix | none | none | `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx` |
+| Theme check closes the search dialog (Q24) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| Theme hotkey checks wait for the change (Q23) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
 
 ## Critical paths
 
@@ -52,3 +79,5 @@ Generated: 2026-11-10 by ownership.py
 - E6: 16 CI skip bump commit > 17 CI Node 24 actions > 19 PR summary job outputs
 - E7: 20 Integration 0.9.1 > 20 Release PR 0.9.1 > 20 After release 0.9.1
 - E9: 21 Sitemap and robots > 23 Integration 0.9.2 > 23 Release PR 0.9.2 > 23 After release 0.9.2
+- E10: 24 E10 dependencies > 24 Canonical and slash redirect > 25 JSON-LD > 31 Page frame and new pages > 31 Examples copy
+- E11: 32 Docs wording restore > 33 Home title and description > 38 Integration 0.9.3 > 38 Release PR 0.9.3 > 38 After release 0.9.3

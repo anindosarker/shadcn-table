@@ -1,4 +1,4 @@
-# Stored view page index (F22), tracker
+# Stored view page index (Q22), tracker
 
 Status: merged (811045dc86d26c0818081a9a7e436235b3fa4a1a)
 Files owned: `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx`
@@ -26,4 +26,4 @@ Checks:
 
 ## Attention
 
-- No play covers F22 (a stored rows per page with `initialState.pagination.pageIndex` above 0), so no P11 red line on the shipped code is recorded; the `Persistence` play of spec 12 stays green but does not exercise the page index. The verifier recorded the spec 12 checks only and did not add a play.
+- No play covers Q22 (a stored rows per page with `initialState.pagination.pageIndex` above 0), so no P11 red line on the shipped code is recorded; the `Persistence` play of spec 12 stays green but does not exercise the page index. The verifier recorded the spec 12 checks only and did not add a play.

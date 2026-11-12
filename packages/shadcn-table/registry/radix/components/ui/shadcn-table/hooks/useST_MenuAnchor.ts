@@ -19,7 +19,7 @@ export interface ST_MenuAnchor {
   readonly onOpenChange: (open: boolean) => void;
   /** Opener click handler: closes when open from this anchor, opens otherwise. */
   readonly toggle: (anchor: HTMLElement) => void;
-  /** The anchor's box this render, re-measured on resize and scroll while open; the last box after close. */
+  /** The anchor's box this render, re-measured on resize, scroll and an ancestor's animation end while open; the last box after close. */
   readonly rect: DOMRect | undefined;
   /** Spread on the visible opener: aria-haspopup, aria-expanded, onClick toggle. */
   readonly openerProps: {
@@ -81,12 +81,20 @@ export const useST_MenuAnchor = ({
     const forgetPress = () => {
       pressedAnchorRef.current = null;
     };
+    // An anchor inside an animating popover moves until the animation ends.
+    const measureAfterAnimation = (event: AnimationEvent) => {
+      if (event.target instanceof Node && event.target.contains(anchorEl)) {
+        measure();
+      }
+    };
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
+    document.addEventListener('animationend', measureAfterAnimation, true);
     document.addEventListener('pointerdown', notePress, true);
     return () => {
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
+      document.removeEventListener('animationend', measureAfterAnimation, true);
       document.removeEventListener('pointerdown', notePress, true);
       // Added during the closing press, so only the next press runs it.
       document.addEventListener('pointerdown', forgetPress, {

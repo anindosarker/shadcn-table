@@ -1,4 +1,4 @@
-# Theme check closes the search dialog (F24), tracker
+# Theme check closes the search dialog (Q24), tracker
 
 Status: merged (dbc43fd6; dev 50ef8dd5)
 Files owned: `test/docs-e2e/lib/getting-started.mjs`

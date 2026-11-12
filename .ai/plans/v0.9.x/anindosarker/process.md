@@ -31,8 +31,8 @@ Project facts only. The process itself is the expedition skill; commands are in 
 - The test runner is `pnpm test` followed by the test name, with `--base base|radix|aria`, `--scenario` and `--ci` as flags, from the repo root (`test/run.mjs`); `pnpm test --list` names the tests, `--all` runs every one, `--changed` runs those touched since `origin/claude/review`; runs are never parallel and their records go to `test/.out/`. `validate-pr` and `validate-production` run only in CI.
 - Several agents share this machine. Run as much in parallel as fits, but never start work that would push CPU above 90 percent or memory pressure out of the green zone; check with `top -l 1 | head -5` and `memory_pressure | tail -1` before a long check.
 - The dev registry on port 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
-- `pnpm test installation-e2e` runs the nextjs scenarios with `--no-diff` locally: the macOS capture differs from the Linux reference in every glyph (F21); the pixel diff is CI's check, and the references are refreshed from a `pr.yml` dispatch with `installation-e2e-only=true` (v0.8.x D-addendum, decisions.md line 780).
-- Known flakes, rerun once before calling a check failed: `Profiled Thousand Rows` (vitest browser mode); `PanelCollapse` "Progress And Banner Collapse" (aria, v0.8.x F60); docs E2E "pauses when scrolled away mid-step" (v0.8.x F61); `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria) under load (F8, D14); docs E2E getting-started `/` "theme: Shift+R returns to the default" and "theme: p restores it" under load (2026-11-08, F23 polls them now); `Filtering` "Multi Select Field Controls" (aria) under load (2026-11-08); docs E2E getting-started `/` "perf: panel open" and "perf: light/dark toggle" under load (spec 15 1.6.5).
+- `pnpm test installation-e2e` runs the nextjs scenarios with `--no-diff` locally: the macOS capture differs from the Linux reference in every glyph (Q21); the pixel diff is CI's check, and the references are refreshed from a `pr.yml` dispatch with `installation-e2e-only=true` (v0.8.x D-addendum, decisions.md line 780).
+- Known flakes, rerun once before calling a check failed: `Profiled Thousand Rows` (vitest browser mode); `PanelCollapse` "Progress And Banner Collapse" (aria, v0.8.x F60); docs E2E "pauses when scrolled away mid-step" (v0.8.x F61); `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria) under load (Q8, D14); docs E2E getting-started `/` "theme: Shift+R returns to the default" and "theme: p restores it" under load (2026-11-08, F23 polls them now); `Filtering` "Multi Select Field Controls" (aria) under load (2026-11-08); docs E2E getting-started `/` "perf: panel open" and "perf: light/dark toggle" under load (spec 15 1.6.5).
 
 ## P6 Agent sandbox
 
@@ -64,6 +64,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - An `Acceptance:` line points at a reference that exists: a ui.shadcn.com page, a shadcn block, the previous release, a capture of `claude/review` before the change, or a demo the owner supplied.
 - A bug is reproduced in `/Users/anindosarker/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
+- A diagram, mockup or other visual aid the owner asks for is saved in the release's `reference/` folder (`.ai/plans/v0.9.x/anindosarker/reference/<q-or-d id>-<slug>.excalidraw` or `.png`) and committed, never left in a scratchpad or `/tmp`; the reply names that path.
 
 ## P11 Plays
 

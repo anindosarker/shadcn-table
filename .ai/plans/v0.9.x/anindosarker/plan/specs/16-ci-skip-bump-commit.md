@@ -94,7 +94,7 @@ head:
 `typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`, status `refactor`.
 
 - `on.workflow_call.inputs.skip`: `description: Skip the job (the PR head is the version bump commit, D35)`, `type: boolean`, `default: false`.
-- The one job: `if: ${{ !inputs.skip }}` on every step (`always() && !inputs.skip` on the upload), never at job level: a job-level `if:` is read before the matrix expands and GitHub reports one unexpanded skipped job instead of the leg contexts (actions/runner#952), so each leg runs no step and reports success under its own context. (Run of 2026-11-09, A17.)
+- The one job: `if: ${{ !inputs.skip }}` on every step (`always() && !inputs.skip` on the upload), never at job level: a job-level `if:` is read before the matrix expands and GitHub reports one unexpanded skipped job instead of the leg contexts (actions/runner#952), so each leg runs no step and reports success under its own context. (Run of 2026-11-09, Q53.)
 - The header comment of each file names the input in one sentence.
 
 ### 1.7 Dependencies and env

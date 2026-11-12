@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-The default `pages` footer shows Rows per page, the page buttons and the chevrons, never how many rows there are or which range is shown; only the `default` mode renders `1-10 of 21`. D6 adds that range span to the `pages` branch, previewed and accepted as a diff, and renames the compact mode's value from `'default'` to `'compact'` with no alias. D7 carries the rename through the stories, guide, API entry, examples and the docs E2E, and takes "Default" out of the pagination story names (F5, F7).
+The default `pages` footer shows Rows per page, the page buttons and the chevrons, never how many rows there are or which range is shown; only the `default` mode renders `1-10 of 21`. D6 adds that range span to the `pages` branch, previewed and accepted as a diff, and renames the compact mode's value from `'default'` to `'compact'` with no alias. D7 carries the rename through the stories, guide, API entry, examples and the docs E2E, and takes "Default" out of the pagination story names (Q5, Q7).
 
 ### 1.2 Goals
 
