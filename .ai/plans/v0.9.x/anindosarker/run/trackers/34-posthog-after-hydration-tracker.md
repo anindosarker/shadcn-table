@@ -1,6 +1,6 @@
 # 34: posthog-js loads after hydration, tracker
 
-Status: blocked (Acceptance 450 KB unreachable, Attention)
+Status: running
 Branch `v0.9/posthog-after-hydration`, worktree `shadcn-react-table.worktrees/04`
 Checks:
 - `NEXT_PUBLIC_POSTHOG_KEY=phc_dummy NEXT_PUBLIC_SITE_URL=http://localhost:5346 pnpm --filter shadcn-table-docs build` at 59a003a9: pass
@@ -19,6 +19,8 @@ Checks:
 - `pnpm test lint` at 3b0ab641: pass (9 warnings)
 - `pnpm test validate-repo` at 3b0ab641: pass
 - `pnpm test docs-e2e --base base` at 3b0ab641: pass (107 pages; getting-started 205, api 109, guides 692, examples 939; "icons: the pick survives a reload" passed)
+- D70 first-load script transfer on / (HTML-referenced chunks, compressed) at 83c909db: 344.8 KB, pass (bar 450 KB). Verifier: fresh build with the dummy key on port 5346, 21 chunks, 353115 bytes; the spec chunk loop prints nothing (the only case-insensitive hit is the `PostHogProvider` component name in `0z81r-cf4jga6.js`, not posthog-js); `lib/posthog-client.ts` loads posthog-js on `requestIdleCallback` (3 s timeout) or the first pointerdown, keydown or scroll, scheduled from the provider's mount effect, and replays the queue after init
+- Spec 1.2 Lighthouse whole-trace sum: 586 KB, recorded, not required (run manager: D70's check is first-load transfer)
 
 - Task 1 before numbers: done (629d42de)
 - Task 2 loader, provider, events: done (201a0ceb)
