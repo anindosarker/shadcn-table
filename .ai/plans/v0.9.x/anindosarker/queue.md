@@ -14,6 +14,7 @@ kanban-plugin: basic
 - [ ] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
 	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
 	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
+- [ ] **Q61** Keep PostHog session recordings from piling up #owner
 
 ## Decided
 
