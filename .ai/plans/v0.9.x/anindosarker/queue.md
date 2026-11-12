@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q62** Popover filters open in the wrong place #owner
 	- Owner screenshot 2026-11-13, /docs/examples/popover-filters, Base UI, light mode: the First Name filter popover floats above the header row over the toolbar instead of under its filter icon, and its filter-mode menu (Fuzzy, Contains, ...) opens about 600 px to the right, under the Gender and Age columns, detached from the mode button it was opened from.
+	- Reproduced on localhost:5351 and on live 0.9.2 with the same numbers, so this shipped and is not a claude/review regression: trigger 643,764 24x24, popover 523,692 264x68 (data-side=top, above the header row at y 756), mode button 542,706, mode menu 1093,994 224x404.
 
 ## Decided
 
