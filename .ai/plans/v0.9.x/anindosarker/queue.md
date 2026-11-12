@@ -11,6 +11,8 @@ kanban-plugin: basic
 	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
 - [ ] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
 	- Found by the D78 browser check: it opens only on ArrowDown or the chevron; Base UI and Radix open on click.
+- [ ] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #run-E11
+	- Found by the D78 browser check: Radix closes it; on React Aria the open editor also blocks the Clear filters button until a click outside.
 
 ## Decided
 
