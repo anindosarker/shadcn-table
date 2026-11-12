@@ -716,8 +716,16 @@ index e1645117..e67a5482 100644
 
 ### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
 
+- Amends D61 (held, not built). The owner wants one deployment, after every decided change: the release does not ship the `proxy.ts` budget fix (D66) ahead of the rest.
+- 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D71, D72, D73, D74). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
+- The release milestones wait for the owner: when every other milestone of the epic has merged, the runner sends DONE with the preview instructions and stops; the lead sends the release RUN only on the owner's explicit yes after the preview. D47 (the runner approves Prepare Release) applies from that point.
+- Before the build starts the lead reads the Vercel usage page and tells the owner the Fluid Active CPU figure (3h 01m of 4 h on 2026-11-12).
+- Owner, 2026-11-13: "I want to do one deployment and that should be after all the items that have changed."; "59 k".
 - Source: Q59
 
 ### D76 One shared site description
 
+- `apps/shadcn-table-docs/lib/llms.ts` holds the `llms.txt` summary as a copy of the home description, `app/opengraph-image.tsx` a third copy (spec 29, spec 26). One exported `siteDescription` in `lib/shared.ts` is read by the root layout metadata, the OG image, `lib/llms.ts` and the home JSON-LD; its text is D73's description.
+- Checks: `grep -rn` of the description sentence under `apps/shadcn-table-docs` (outside `.next*`) finds it once; `/llms.txt`, the `/` meta description and the OG image show the same text on a production build.
+- Settled by the lead 2026-11-13: one right answer, no visible change beyond D73.
 - Source: Q29
