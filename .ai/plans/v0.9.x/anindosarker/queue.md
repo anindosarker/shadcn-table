@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #run-E11
 	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
+	- Owner 2026-11-13: fix it in E11, 0.9.3 waits for it (option 2). Cause lookup running.
 
 ## Decided
 
