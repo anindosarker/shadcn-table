@@ -1,6 +1,6 @@
 # 33: Home title, hero line and one shared site description, tracker
 
-Status: running
+Status: merged (02c6a98a)
 Branch `v0.9/home-title-and-description`, worktree 07
 Checks:
 - Check: types, `pnpm --filter shadcn-table-docs types:check` at 807f548a: pass
