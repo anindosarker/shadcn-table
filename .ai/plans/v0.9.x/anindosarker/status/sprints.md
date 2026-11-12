@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 02:32
+Updated: 2026-11-13 02:41
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -45,12 +45,12 @@ Updated: 2026-11-13 02:32
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
-| E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
-| E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
+| E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
+| E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
 | E11 34 PostHog after hydration | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 35 Example sources per example | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 36 Registry fresh check | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| E11 37 Docs e2e TanStack guide |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
+| E11 37 Docs e2e TanStack guide |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
 | E11 38 Integration 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
 | E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |
 | E11 38 After release 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
@@ -62,7 +62,7 @@ Updated: 2026-11-13 02:32
 | fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
 | fix Installation references refreshed (Q20) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Richer live demo (Q63) | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| fix Richer live demo (Q63) | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Stored view page index (Q22) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Theme check closes the search dialog (Q24) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Theme hotkey checks wait for the change (Q23) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
