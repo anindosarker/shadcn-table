@@ -627,7 +627,7 @@ index e1645117..e67a5482 100644
 - Checks: `grep -c bundle-analyzer apps/shadcn-table-docs/next.config.mjs apps/shadcn-table-docs/package.json` is 0; `pnpm install` leaves the lockfile without it; typecheck, lint, validate-repo green.
 - Settled by the lead 2026-11-10: tooling with one right answer; Q56 option a.
 
-### D64 Guides and API copy states what is shadcn/ui and drops the inherited typos
+### D64 (superseded by D74) Guides and API copy states what is shadcn/ui and drops the inherited typos
 
 - Source: Q32. `content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24` say the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls (buttons, menus, inputs, dialogs) are shadcn/ui. The six inherited typos Q32 lists stay in the merged copy.
 - The four sentences say it as it is: the controls are shadcn/ui components, the table markup is plain elements styled with the shadcn theme tokens. The six typos are corrected in the same milestone. No other copy changes.
@@ -637,7 +637,7 @@ index e1645117..e67a5482 100644
 ### D65 Docs e2e checks cover the byline and the two new pages
 
 - Source: Q31. Spec 31 expected `pnpm test docs-e2e` to prove the byline and `/docs/getting-started/comparison` and `/docs/guides/tanstack-table-with-shadcn-ui`, but no milestone owned `test/docs-e2e`, so the frame milestone proved them by curl and a route run only.
-- `test/docs-e2e/lib/` gets checks: every docs page renders the byline with the maintainer name and a date; the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
+- `test/docs-e2e/lib/` gets checks: the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
 - Checks: `pnpm test docs-e2e --base base` green with the new checks counted in the run summary.
 - Settled by the lead 2026-11-12: tooling gap, one right answer. Joins the next epic.
 
@@ -702,4 +702,11 @@ index e1645117..e67a5482 100644
 
 ### D74 Docs pages return to their previous wording; byline and dates removed
 
+- Supersedes D64. Amends D60 (built, spec 31 merged; patched forward before release). Spec 31 rewrote the intro and description of the example, guide and API pages with no keyword target per page and no style the owner had approved; the owner rejected the result on the preview (2026-11-13). A rewrite is the docs work's, in a new version; nothing is planned here.
+- Restored: every file under `content/docs/examples/**`, `content/docs/guides/*.mdx` and `content/docs/api/**` gets back its frontmatter `description` and body text from the commit before spec 31's copy milestones, with only typos in that older text fixed. `apps/shadcn-table-docs/registry.json` is regenerated from the restored descriptions.
+- Removed: `components/docs-byline.tsx`, its use in `app/docs/[[...slug]]/page.tsx:81`, `siteAuthor` in `lib/shared.ts` when nothing else reads it, the `date` field in the docs schema and the `date:` line in all 105 docs files. The name was a fixed GitHub username and the date one hand-written value (`2026-11-10`) on every page.
+- Kept from spec 31: the Introduction page's install snippet and demo, `getting-started/comparison.mdx` (D71), `guides/tanstack-table-with-shadcn-ui.mdx` (D72), the permanent `/docs` redirect, the sidebar Changelog link.
+- Falls away: D60's description-length rule (120 to 155 characters) and its script; D65's byline check (D65 keeps the two new pages).
+- Checks: `git diff <commit before spec 31's copy milestones> -- content/docs/examples content/docs/guides content/docs/api` shows only typo fixes, the two kept pages and the D71/D72 order changes; `grep -rn "DocsByline\|^date:" apps/shadcn-table-docs/app apps/shadcn-table-docs/components apps/shadcn-table-docs/content` prints nothing; `pnpm test validate-repo` and `pnpm test docs-e2e --base base` green.
+- Owner, 2026-11-13: "So remove it. Q58, okay."
 - Source: Q58
