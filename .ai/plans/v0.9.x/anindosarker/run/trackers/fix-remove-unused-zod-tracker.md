@@ -1,6 +1,6 @@
 # Remove unused zod (Q64, D79), tracker
 
-Status: running
+Status: merged (8171e287)
 Files owned: `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`
 Depends on: none
 Branch `v0.9/fix-remove-unused-zod`, worktree 08
