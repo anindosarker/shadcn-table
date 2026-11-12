@@ -16,8 +16,8 @@ import {
 import { data, type Member, statusList, usStateList } from './makeData';
 
 //dates are stored as YYYY-MM-DD and shown in UTC, so server and client agree
-const formatDate = (date: Date) =>
-  date.toLocaleDateString('en-US', {
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',
     timeZone: 'UTC',
@@ -56,14 +56,12 @@ const Example = () => {
         size: 110,
       },
       {
-        accessorFn: (row) => new Date(row.joined), //convert to Date for sorting and filtering
-        id: 'joined',
+        accessorKey: 'joined', //YYYY-MM-DD strings sort and filter in date order
         icon: CalendarIcon,
         header: 'Joined',
         filterVariant: 'date',
         filterFn: 'greaterThan',
-        sortingFn: 'datetime',
-        Cell: ({ cell }) => formatDate(cell.getValue<Date>()), //render the Date as a string
+        Cell: ({ cell }) => formatDate(cell.getValue<string>()),
         size: 150,
       },
       {

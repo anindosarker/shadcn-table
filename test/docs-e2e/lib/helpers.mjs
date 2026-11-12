@@ -677,3 +677,98 @@ export async function demoLoop({ page, check, base }) {
   }
   check('demo: no renderer crash', !crashed);
 }
+
+/**
+ * The live-demo example (D78) in panel `w`: each non-text filter (select,
+ * range, date, multi-select) is added from the toolbar Filter button, its
+ * chip editor opens, a value is set and the table shows the expected rows.
+ * Each case starts from a fresh load, so no filter carries over. The rows
+ * are fixed (examples/<base>/live-demo/makeData.ts), 10 per page.
+ */
+export async function liveDemoFilters(page, w, check) {
+  const editor = page.locator('[data-slot="popover-content"]:visible');
+  const rows = w.locator('tbody tr');
+  const settle = async (n) =>
+    rows
+      .nth(n)
+      .waitFor({ state: 'detached', timeout: 5000 })
+      .catch(() => {});
+  const pick = async (name) => {
+    await page
+      .getByRole('option', { name, exact: true })
+      .first()
+      .click({ timeout: 5000 });
+  };
+  const cases = [
+    {
+      column: 'State',
+      variant: 'select',
+      expected: 3,
+      set: async () => {
+        await editor.getByLabel('Filter by State').first().click();
+        await pick('Ohio');
+      },
+    },
+    {
+      column: 'Age',
+      variant: 'range',
+      expected: 6,
+      set: async () => {
+        await editor.getByLabel('Min', { exact: true }).first().fill('30');
+        await editor.getByLabel('Max', { exact: true }).first().fill('40');
+      },
+    },
+    {
+      column: 'Joined',
+      variant: 'date',
+      expected: 6,
+      set: async () => {
+        await editor.locator('input[type="date"]').first().fill('2023-01-01');
+      },
+    },
+    {
+      column: 'Status',
+      variant: 'multi-select',
+      expected: 4,
+      set: async () => {
+        // React Aria labels the chip list too: target the input.
+        await editor
+          .getByRole('combobox', { name: 'Filter by Status' })
+          .first()
+          .click();
+        // A React Aria combobox opens its list on ArrowDown, not on a click.
+        if (!(await page.getByRole('option', { name: 'Suspended' }).count()))
+          await page.keyboard.press('ArrowDown');
+        await pick('Suspended');
+      },
+    },
+  ];
+  for (const [i, { column, variant, expected, set }] of cases.entries()) {
+    const label = `live-demo: ${variant} filter (${column})`;
+    try {
+      if (i > 0) {
+        await page.reload({ waitUntil: 'networkidle' });
+        await rows.nth(9).waitFor({ timeout: 30000 });
+      }
+      await w.locator('button[aria-label="Filter"]').first().click();
+      await editor
+        .getByRole('option', { name: column, exact: true })
+        .first()
+        .click({ timeout: 5000 });
+      await editor.first().waitFor({ timeout: 5000 });
+      check(`${label} opens`, (await editor.count()) > 0);
+      await set();
+      await settle(expected);
+      const n = await rows.count();
+      check(`${label} filters rows`, n === expected, `rows=${n}`);
+    } catch (e) {
+      check(label, false, String(e.message).split('\n')[0].slice(0, 160));
+    }
+  }
+  // Leave the page unfiltered for the checks that follow.
+  await page.reload({ waitUntil: 'networkidle' });
+  await rows
+    .nth(9)
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+}
