@@ -713,3 +713,7 @@ index e1645117..e67a5482 100644
 - Checks: `git diff <commit before spec 31's copy milestones> -- content/docs/examples content/docs/guides content/docs/api` shows only typo fixes, the two kept pages and the D71/D72 order changes; `grep -rn "DocsByline\|^date:" apps/shadcn-table-docs/app apps/shadcn-table-docs/components apps/shadcn-table-docs/content` prints nothing; `pnpm test validate-repo` and `pnpm test docs-e2e --base base` green.
 - Owner, 2026-11-13: "So remove it. Q58, okay."
 - Source: Q58
+
+### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
+
+- Source: Q59

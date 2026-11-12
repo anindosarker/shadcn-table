@@ -6,11 +6,6 @@ kanban-plugin: basic
 
 - [ ] **Q29** The llms.txt summary duplicates the home page description #run
 	- `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
-- [ ] **Q59** The hosting budget fix is finished but not live #lookup
-	- Side-agent note pasted by the owner, 2026-11-13. Vercel Hobby allows 4 hours of Fluid Active CPU a month; the usage page read 3h 01m on 2026-11-12; at 4 hours the project is paused.
-	- The fix (D66, `proxy.ts` matcher `['/docs', '/docs/:path*']`) is merged on `claude/review` at 71cb18bb and verified on a production build; the live site runs 0.9.2 without it.
-	- Release 0.9.3 (D61) is held by the owner until the docs wording is restored (Q58) and the preview is approved. `dev` and `master` are at 8feb7940 (0.9.2).
-	- The owner has not ruled; the runner was stopped on the owner's order 2026-11-13 and nothing was shipped.
 - [ ] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
 	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
 	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
@@ -222,6 +217,12 @@ kanban-plugin: basic
 	- Kept from spec 31: byline and dates, the Introduction page's install snippet and demo, the comparison page (D71), the TanStack guide (D72).
 	- Falls away with it: D64 (corrections to the rewritten text) and D60's description-length check (120 to 155 characters).
 	- Not ruled yet: whether the byline and dates also wait for the docs work.
+- [x] **Q59** The hosting budget fix is finished but not live #lookup
+	- Decision: D75
+	- Side-agent note pasted by the owner, 2026-11-13. Vercel Hobby allows 4 hours of Fluid Active CPU a month; the usage page read 3h 01m on 2026-11-12; at 4 hours the project is paused.
+	- The fix (D66, `proxy.ts` matcher `['/docs', '/docs/:path*']`) is merged on `claude/review` at 71cb18bb and verified on a production build; the live site runs 0.9.2 without it.
+	- Release 0.9.3 (D61) is held by the owner until the docs wording is restored (Q58) and the preview is approved. `dev` and `master` are at 8feb7940 (0.9.2).
+	- The owner has not ruled; the runner was stopped on the owner's order 2026-11-13 and nothing was shipped.
 
 ## Later
 
