@@ -754,4 +754,10 @@ index e1645117..e67a5482 100644
 
 ### D78 Usage and Introduction show a richer live demo with select, range, date and multi-select filters
 
+- The Live Example on `/docs/getting-started/usage` (`content/docs/getting-started/usage.mdx:177`) and the demo on `/docs/getting-started/introduction` are the Basic Example (`examples/<base>/basic/TS.tsx:76-103`): five string columns, five rows, every filter a text box. The owner saw it in a PostHog replay and found it a weak demo.
+- A new example (one per base, in the examples registry like the others) with about 20 rows: First Name and Last Name with text filters, State with `filterVariant: 'select'`, Age with a number range, a date column with a date filter, a status column with `filterVariant: 'multi-select'`. Both pages embed it where the Basic Example is embedded today.
+- The Usage page's tutorial steps and the Basic Example itself are unchanged; the new demo sits at the end as the richer result. The Basic Example stays in the Examples section.
+- Checks: on a production build both pages render the new demo on the three bases; each of the four non-text filters opens and filters rows (docs e2e); `pnpm test validate-repo` green with the regenerated registry (D68).
+- Not in 0.9.3; joins the next epic.
+- Owner, 2026-11-13: "update the demos there"; "k" on the item.
 - Source: Q63
