@@ -1,6 +1,6 @@
 # 36: validate-repo fails on a stale generated registry, tracker
 
-Status: done
+Status: merged (148d216e)
 Branch `v0.9/registry-fresh-check`, worktree 06
 Checks:
 - Check: generators deterministic, `pnpm -w registry:build && pnpm -w registry:items && pnpm -w registry:hosted` twice at 59a003a9: pass, `git status --short` empty after run 1 and after run 2
