@@ -643,3 +643,7 @@ index e1645117..e67a5482 100644
 
 ### D66 proxy.ts runs only on docs paths
 
+- Source: F33. `apps/shadcn-table-docs/proxy.ts` (the Markdown-by-`Accept` rewrite from `fumadocs-core/negotiation`) exports no `config.matcher`, so Next runs it as a function on every request: assets, bot hits, 404s. Vercel usage page 2026-11-12: 581K function invocations, 3h 01m of the Hobby plan's 4 h monthly Fluid Active CPU; prerendered pages are cache hits and builds are a separate budget, so the proxy is the cost.
+- `proxy.ts` gets `export const config = { matcher: [...] }` limited to the paths the two rewrites can match: `/docs/:path*` and the `.mdx` suffix form; never `/_next/*`, `/ingest/*`, `/r/*`, `/og/*`, static files. The rewrite behaviour on docs URLs is unchanged.
+- Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL still returns `text/markdown`; a docs URL with `.mdx` suffix still rewrites; `/`, `/sitemap.xml`, `/r/base/registry.json`, `/ingest/e/` unchanged; after deploy the Vercel usage page shows invocations falling to the docs-request count. Small fix, lands directly on `claude/review` (P13 style), ships with the next release.
+- Owner, 2026-11-12: "10. k".

@@ -144,6 +144,7 @@
 - `apps/shadcn-table-docs/content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24`: the new copy (spec 31, merged edc04e01) says the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls are shadcn/ui. Typos and inherited phrasing left on edited lines: `guides/column-ordering-dnd.mdx:72` ("should also should"), `guides/editing.mdx:211` ("news rows"), `guides/column-size.mdx:88` ("ect."), `guides/detail-panel.mdx:163` ("as of version 2.6.0", a Material React Table version); `guides/sorting.mdx:3` says the sort arrow shows in each header cell (only sorted ones); four API pages keep an older sentence that restates the new lead. Review findings of the milestone, deferred by the script as minors.
 
 ### F33 Vercel free tier function CPU at 75 percent
+[D66]
 
 - Vercel mail 2026-11-11 02:01: team `anindo-sarkers-projects` used 75 percent of the Hobby tier's Fluid Active CPU (4 hours per month); at 100 percent the projects pause. Likely sources: the Show HN traffic of 2026-11-10, `proxy.ts` running on every request, the `/og/docs/[...slug]` image route, the llms and Markdown routes.
 - Choices for a later item: Vercel Pro (20 USD a month, pay-as-you-go above the included usage), or move per-request work off functions (static OG images at build, narrower `proxy.ts` matcher, cache headers on the Markdown routes) and re-measure on the Vercel usage page.
@@ -156,3 +157,4 @@
 
 ### F35 Example source read traces every examples file into the build
 
+- `apps/shadcn-table-docs/lib/example-source.ts:39` (`listExampleFiles`, October 2026, before E10): `fs.readFile(path.join(dir, rel))` with a dynamic `dir` makes Turbopack trace the whole `examples/` tree including the generated `examples/.<base>` copies (8 pattern alternatives times about 1321 files, reported as 10568 matches); builds and typecheck are slow. One-file literal paths made it worse (4 warnings, 13384 matches, reverted). Needs a change to how the example folders are read, across more than one file; a later decision.
