@@ -53,8 +53,7 @@
     "react-aria-components": "^1.22.1",
     "react-colorful": "5.8.1",
     "react-dom": "^19.3.0",
-    "recharts": "^2.15.4",
-    "zod": "^4.6.7"
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@tailwindcss/node": "^4.3.3",
