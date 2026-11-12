@@ -1,14 +1,9 @@
 ---
 title: 'Row Dragging Example'
-description: 'Drag rows from one shadcn-table into another with enableRowDragging, tracking draggingRow and the hovered table to move the row in onDragEnd.'
-date: '2026-11-10'
+description: 'An example of Shadcn Table which shows how to drag and drop rows for various use cases.'
 ---
 
-shadcn-table has built-in row drag and drop that you can use in more ways than reordering. This example sets `enableRowDragging` on two tables side by side and lets users drag a row from one table into the other. It keeps the dragged row in `draggingRow` state, records which table the pointer is over with an `onDragEnter` handler passed through `stTableLayoutProps`, and moves the row between the two data arrays in `onDragEnd`. `stRowDragHandleProps` passes these handlers to the drag handle.
-
-The drag handle is a display column shadcn-table adds, rendered with your shadcn/ui button. Unlike `enableRowOrdering`, `enableRowDragging` does not reorder rows within a table on its own: you decide what a drop means.
-
-Use this for workflows such as moving tasks between lists, assigning people to teams or picking items from a pool into a selection. Learn more about row ordering in the [Row Ordering/DnD Feature Guide](/docs/guides/row-ordering-dnd).
+Shadcn Table has built-in support row drag and drop features that can be used in a variety of ways. Learn more about row ordering in the [Row Ordering/DnD Feature Guide](/docs/guides/row-ordering-dnd).
 
 <EnableRowDraggingExample />
 

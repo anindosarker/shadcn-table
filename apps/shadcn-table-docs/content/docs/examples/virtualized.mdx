@@ -1,14 +1,15 @@
 ---
 title: 'Virtualized Example'
-description: 'Combine row and column virtualization in shadcn-table to scroll 10,000 rows and wide columns smoothly with enableRowVirtualization and TanStack Virtual.'
-date: '2026-11-10'
+description: 'An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets'
 ---
 
-shadcn-table has built-in virtualization through [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3) that lets you render a large number of rows and columns without the slowdown a large DOM would normally cause. This example sets both `enableRowVirtualization` and `enableColumnVirtualization`, tuned through `rowVirtualizerOptions` and `columnVirtualizerOptions`, and renders **10,000 rows** and over a dozen columns with pagination off; filtering, search and sorting stay responsive.
+Shadcn Table has a built-in virtualization features (via [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3)) that allows you to render a large number of rows or columns without major performance issues that you would normally see with a large number of DOM elements.
 
-Row numbers (`enableRowNumbers`) are turned on, and column pinning and resizing (`enableColumnPinning`, `enableColumnResizing`, both on by default) are stated explicitly, to show that they keep working with virtualization. Be sure to also check out the full [virtualization feature guide docs](/docs/guides/virtualization) to learn about both row and column virtualization.
+Try out the performance of the table below with **10,000 rows** and over a dozen columns! Filtering, Search, and Sorting also maintain usable performance.
 
-> NOTE: Only enable virtualization when you have many rows or columns. If you render fewer than a couple dozen rows at a time, it adds overhead to every render instead of saving it; it pays off once you render more than 50 or so rows at the same time with no pagination, or dozens of columns.
+Be sure to also check out the full [virtualization feature guide docs](/docs/guides/virtualization) to learn about both Row and Column Virtualization.
+
+> NOTE: You should only enable row virtualization if you have a large number of rows or columns. Depending on the size of the table, if you are rendering fewer than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have over 50 rows or so at the same time with no pagination or dozens of columns.
 
 <VirtualizedExample />
 

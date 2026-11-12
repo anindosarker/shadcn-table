@@ -1,14 +1,13 @@
 ---
 title: 'Minimal Example'
-description: 'Strip shadcn-table down to a plain styled table: enableSorting, enablePagination, enableColumnFilters and enableColumnActions off, a caption on top.'
-date: '2026-11-10'
+description: 'A minimal example of Shadcn Table which turns off most of the advanced features'
 ---
 
-shadcn-table gives you a lot out of the box, but it is just as easy to turn off the features you do not need. Every feature has an `enable...` table option that turns it on or off: this example sets `enableSorting`, `enablePagination`, `enableColumnFilters`, `enableColumnActions` and `enableKeyboardShortcuts` to `false`, and renders only the table body with `ST_Table` inside `ST_TableProvider`, without the toolbars.
+Shadcn Table gives you a lot out of the box, but it's also easy to turn off any features that you do not need.
 
-What is left is a plain table that still uses your shadcn/ui table components and theme. `renderCaption` adds a caption, and the `stTableProps`, `stTableHeadCellProps`, `stTableBodyRowProps` and `stTableBodyCellProps` options pass classes and attributes to the table elements, the same way you would style the shadcn/ui table directly.
+Every feature has an `enable...` table option that let's you turn it on or off.
 
-Use this setup for small read-only lists, such as a summary in a card or a dialog, where controls would add noise. You keep the typed column definitions and can turn a feature back on later with one option.
+For example, you can turn off sorting or hide the top or bottom toolbars if you want.
 
 <MinimalExample />
 

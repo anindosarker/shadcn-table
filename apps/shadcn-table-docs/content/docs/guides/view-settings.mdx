@@ -1,7 +1,6 @@
 ---
 title: 'View Settings Guide'
-description: 'The view settings panel of shadcn-table: ST_ViewSettingsButton, pinning its controls to the toolbar, and opt-in persistence with persistViewSettings.'
-date: '2026-11-10'
+description: 'How the view settings panel, its toolbar pins and the opt-in view persistence of Shadcn Table work'
 ---
 
 To remember each user's view across reloads, set `persistViewSettings: true`; nothing is stored until you do.
@@ -14,7 +13,7 @@ const table = useShadcnTable({
 });
 ```
 
-The view settings panel, `ST_ViewSettingsButton`, collects the table's display preferences behind one button at the far right of the toolbar, built on your shadcn/ui `Popover`, `Select` and `Switch`. Each setting can also be pinned to the toolbar as its own icon button. The panel is on by default (`enableViewSettings`).
+The view settings panel collects the table's display preferences behind one button at the far right of the toolbar. Each setting can also be pinned to the toolbar as its own icon button. The panel is on by default (`enableViewSettings`).
 
 ### Relevant Table Options
 

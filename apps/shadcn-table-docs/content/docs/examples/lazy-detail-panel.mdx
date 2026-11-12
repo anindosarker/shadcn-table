@@ -1,14 +1,11 @@
 ---
 title: 'Lazy Detail Panel Example'
-description: 'Load a row detail panel only when the row expands, using renderDetailPanel with a TanStack Query fetch that caches the result for the next open.'
-date: '2026-11-10'
+description: 'A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.'
 ---
 
-Fetching the data for a detail panel only after the user expands the row keeps the first load small, and it is easy to do in shadcn-table. In this example, `renderDetailPanel` renders a component that runs its own [React Query](https://tanstack.com/query/latest) request for the row, so the request starts the moment the panel opens. The data is cached for a while, so closing and reopening the panel shows it at once without another fetch.
+Fetching the additional data for the detail panels only after the user clicks to expand the row can be a good way to improve performance, and it is pretty easy to implement in Shadcn Table.
 
-The table itself also runs on the server: `manualFiltering`, `manualSorting` and `manualPagination` are set, the `on...Change` callbacks feed the main query, and `rowCount` drives the footer. `stExpandButtonProps` adjusts the expand button, and a loading state shows in the panel while its request runs.
-
-Use a lazy panel when the details are heavy (a history, a list of orders, a chart) and most users open only a few rows. For panels whose data is already in the row, see the [Detail Panel Example](/docs/examples/detail-panel).
+It's even easier if you are using [React Query.](https://tanstack.com/query/latest) In this example, react query is used to fetch the data for the detail panel, but only after the user clicks to expand the row. The data is also cached for a certain period of time so that when the detail panel is closed and reopened, the data is already available and won't need to be re-fetched.
 
 <LazyDetailPanelExample />
 

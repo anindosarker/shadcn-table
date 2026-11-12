@@ -1,10 +1,9 @@
 ---
 title: 'Column Size Guide'
-description: 'Set default, minimum and maximum column widths in shadcn-table with size, minSize, maxSize and grow, and see how layoutMode shares the spare width.'
-date: '2026-11-10'
+description: 'How to column width in Shadcn Table'
 ---
 
-shadcn-table sizes columns with TanStack Table's column sizing: each column has a `size`, `minSize` and `maxSize`, and `defaultColumn` sets them for every column. On top of that, the `grow` column option and the `layoutMode` table option decide how spare width is shared between columns.
+Shadcn Table lets you easily change the default widths (sizes) of columns.
 
 ### Relevant Table Options
 
@@ -31,7 +30,7 @@ shadcn-table sizes columns with TanStack Table's column sizing: each column has 
 
 ### Layout Modes
 
-shadcn-table has 3 layout modes that affect how column widths are applied. The `layoutMode` table option picks one; the default is `"grid"`, and virtualization always uses `"grid"`.
+Shadcn Table has 3 layout modes that affect how column widths are applied. The `layoutMode` table option picks one; the default is `"grid"`, and virtualization always uses `"grid"`.
 
 1. `"grid"` (default) - uses CSS Flexbox rows. Data columns share the spare width of the table in the ratio of their `size`, while display columns (row numbers, selection, row actions and the like) and pinned columns keep their set width. Once the columns are wider than the table, every column renders at its set width and the table scrolls sideways. Resizing does not change the mode.
 2. `"grid-no-grow"` - uses the same Flexbox rows, but sets `flex-grow: 0` on every column and adds an empty "spacer" column to the end of the table to fill the remaining space. Every column keeps exactly its set width.
@@ -83,9 +82,9 @@ If the layout mode of your table is `"semantic"`, the `grow` column option will 
 
 ### But I Want My Columns to Have a Percentage Width
 
-shadcn-table is not designed to use percentage column widths well by default. This is because having horizontal scrollbars on tables is both a very common use case, and usually the best way to ensure that the actual content of the cells in each column is visible and not cutoff or wrapped excessively.
+Shadcn Table is not designed to use percentage column widths well by default. This is because having horizontal scrollbars on tables is both a very common use case, and usually the best way to ensure that the actual content of the cells in each column is visible and not cutoff or wrapped excessively.
 
-If you disagree with that, that's fair, and you're not out of luck. shadcn-table exposes all `st*Props`, so if you really want to, you can add whatever CSS you want to achieve your own custom column widths behavior. This is not recommended by the maintainer, but some developers have found it useful to set all column sizes and minSizes to a very small number like `1`, `1.5`, `2`, etc., and then use either `layoutMode: "semantic"` or `layoutMode: "grid"`. This makes the columns act more like they are using percentage widths, up until a certain point. If you really need to never have a horizontal scrollbar, you can edit the `stTableContainerProps` `className` or `style` to set `overflow-x: hidden`. Be very careful with this though, as this could cause your table to be unusable on smaller screens.
+If you disagree with that, that's fair, and you're not out of luck. Shadcn Table exposes all `st*Props`, so if you really want to, you can add whatever CSS you want to achieve your own custom column widths behavior. This is not recommended by the maintainer, but some developers have found it useful to set all column sizes and minSizes to a very small number like `1`, `1.5`, `2`, etc., and then use either `layoutMode: "semantic"` or `layoutMode: "grid"`. This makes the columns act more like they are using percentage widths, up until a certain point. If you really need to never have a horizontal scrollbar, you can edit the `stTableContainerProps` `className` or `style` to set `overflow-x: hidden`. Be very careful with this though, as this could cause your table to be unusable on smaller screens.
 
 If the above still does not get you to where you need to be, `stTableHeadCellProps`, `stTableBodyCellProps`, and `stTableFooterCellProps` (`className` or `style`) and more are all exposed and available to you to override with whatever custom CSS that you need. Just be aware that non of the built-in TanStack Table size APIs will be accurate anymore.
 
