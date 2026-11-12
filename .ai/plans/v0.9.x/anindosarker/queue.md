@@ -9,6 +9,8 @@ kanban-plugin: basic
 	- Verifier re-measure at 83c909db: 344.8 KB compressed over the 21 chunks the HTML of `/` references (bar 450 KB); merged as ec360093.
 - [ ] **Q67** A date filter does nothing in the chips editor when the column holds real dates #run-E11
 	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
+- [ ] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
+	- Found by the D78 browser check: it opens only on ArrowDown or the chevron; Base UI and Radix open on click.
 
 ## Decided
 
