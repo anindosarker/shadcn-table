@@ -5,6 +5,7 @@ kanban-plugin: basic
 ## Open
 
 - [ ] **Q63** The first live demo visitors see only has text filters #owner
+	- Owner 2026-11-13, from a PostHog replay of /docs/getting-started/usage: the Live Example is a weak demo because every filter is a text box; select filters would show the library better.
 
 ## Decided
 
