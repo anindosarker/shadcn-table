@@ -3,7 +3,9 @@ import {
   type ReactElement,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from 'react';
+import { createPortal } from 'react-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +24,8 @@ import { getColumnFilterFnName } from '@/components/ui-radix/shadcn-table/shared
 import { ST_ActionMenuItem } from '@/components/ui-radix/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
+
+const noSubscription = () => () => {};
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -304,6 +308,14 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     anchorEl,
     setAnchorEl: (next) => setAnchorEl?.(next),
   });
+  // The anchor span is fixed at the button's screen position; in the body,
+  // no transformed ancestor (a popover's positioner) offsets it. The server
+  // and the hydration pass render it in place.
+  const hydrated = useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  );
 
   // The column mode name is written onto the column def from
   // `columnFilterFns` in the root render, so that slice is selected.
@@ -393,11 +405,15 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     );
   }
 
+  const anchorTrigger = (
+    <DropdownMenuTrigger asChild>
+      <span {...spanProps} />
+    </DropdownMenuTrigger>
+  );
+
   return (
     <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
-      <DropdownMenuTrigger asChild>
-        <span {...spanProps} />
-      </DropdownMenuTrigger>
+      {hydrated ? createPortal(anchorTrigger, document.body) : anchorTrigger}
       <DropdownMenuContent
         align="start"
         alignOffset={(rect?.height ?? 0) / 2}
