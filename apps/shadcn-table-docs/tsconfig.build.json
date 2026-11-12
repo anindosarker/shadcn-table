@@ -1,0 +1,17 @@
+// The tsconfig `next build` (dist dir .next), `next typegen` and `types:check`
+// read (next.config.mjs `typescript.tsconfigPath`). tsconfig.json lists the
+// generated types of every dist dir for the editor; a check over them reads
+// the stale ones too: `.next/dev/types` from the last `next dev` and
+// `.next-preview/types` from the last preview build name routes deleted since.
+// This copy leaves both out. Next does not edit a tsconfig with `extends`.
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "examples/radix",
+    "examples/base",
+    "examples/aria",
+    ".next/dev",
+    ".next-preview"
+  ]
+}

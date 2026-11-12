@@ -17,11 +17,18 @@ const config = {
       : '.next'),
   // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
   // the second server's git-ignored copy, not tsconfig.json.
+  // A build or `next typegen` reads tsconfig.build.json (tsconfig.preview.json
+  // for the preview build): tsconfig.json also lists the generated types of
+  // the other dist dirs, and a stale copy there (a route deleted since the
+  // last `next dev` or preview build) fails the build's type check.
   typescript: {
-    tsconfigPath:
-      process.env.PORT && process.env.PORT !== '5320'
+    tsconfigPath: process.env.NEXT_DEV
+      ? process.env.PORT && process.env.PORT !== '5320'
         ? `tsconfig.${process.env.PORT}.json`
-        : 'tsconfig.json',
+        : 'tsconfig.json'
+      : process.env.NEXT_DIST_DIR === '.next-preview'
+        ? 'tsconfig.preview.json'
+        : 'tsconfig.build.json',
   },
   // Hosted registry (public/r/<base>/<name>.json, written by
   // tools/registry/hosted.mjs, `pnpm registry:hosted`):
