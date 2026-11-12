@@ -1,6 +1,6 @@
 # 35: Example sources are read per example, tracker
 
-Status: done
+Status: merged (234b235f)
 Branch `v0.9/example-sources-per-example`, worktree 05
 Checks:
 - Check: before, file pattern warnings, `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build 2>&1 | grep -c "matches .* files"` at 59a003a9: 1 (matches 10568 files)
