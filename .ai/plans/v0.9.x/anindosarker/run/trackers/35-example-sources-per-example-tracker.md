@@ -19,6 +19,11 @@ Checks:
 - Check: `pnpm test typecheck --base base` at a6d21241: pass
 - Check: `pnpm test lint` at a6d21241: pass (9 warnings)
 - Check: `pnpm test docs-e2e --base base --url http://localhost:5349` (next start on 5349 of the 3cc75fb0 build) at a6d21241: pass, 107 pages, examples 939 passed
+- Check: verifier, Local CI and 2.2 lines above are valid at 78b4c5b3 (`git diff --name-only 3cc75fb0..HEAD` touches only .ai/ and CHANGELOG.md); not rerun
+- Check: verifier Acceptance rerun, `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build 2>&1 | grep -c "matches .* files"` at 78b4c5b3: 0 (warm build 26.41 s, compile 6.1 s, TypeScript 5.0 s)
+- Check: verifier Acceptance rerun, snapshot cmp, `node snapshot.mjs` then `cmp before.json verify-after.json` at 78b4c5b3: pass (base 117, radix 117, aria 117)
+- Check: verifier Acceptance rerun, `time pnpm --filter shadcn-table-docs types:check` at 78b4c5b3: pass, 6.96 s warm
+- Check: verifier Acceptance rerun, `pnpm test docs-e2e --base base --url http://localhost:5349` (next start on 5349 of the 78b4c5b3 build) at 78b4c5b3: pass, 107 pages, examples 939 passed
 
 - Task 1 before numbers and snapshot: done (0e9aa6fa)
 - Task 2 generator and reader: done (3cc75fb0)
