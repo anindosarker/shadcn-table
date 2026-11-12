@@ -69,6 +69,11 @@ publishes the section as the GitHub release notes.
 
 - Inherited typos fixed on six pages: the Detail Panel, Lazy Detail Panel and Lazy Sub Rows example descriptions, and the Column Ordering, Editing and Column Size guides (D74).
 
+#### Fix D78 Richer live demo on Usage and Introduction
+
+- New example `live-demo` (registry item `example-live-demo`, all three bases): 20 members with text filters on First Name and Last Name, a select filter on State, a range filter on Age, a date filter on Joined and a multi-select filter on Status (D78).
+- The Usage page's Live Example and the Introduction's demo show it in place of the Basic Example; the tutorial steps and the Basic Example itself are unchanged (D78).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
