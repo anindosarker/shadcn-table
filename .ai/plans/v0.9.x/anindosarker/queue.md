@@ -9,6 +9,7 @@ kanban-plugin: basic
 	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
 	- Live check 2026-11-13 (agent-browser, empty storage): / and /docs/getting-started/introduction load html.dark, colorScheme dark, body bg oklch(0.145 0 0) with prefers-color-scheme light and dark alike; the served inline next-themes script (args "class","theme","dark",...,enableSystem false) sets the class synchronously before body content, so no light flash.
 	- Returning visitors get what localStorage.theme holds: preset 'light' renders light (bg oklch(1 0 0)) under both OS schemes, and a stale 'system' (possible from before b186c244 set enableSystem: false on 2026-10-18) also renders light because the script adds the literal class 'system'.
+	- Only clicks write the theme: components/theme-controls.tsx:40 (header toggle) and components/theme-customizer.tsx:155 (Mode buttons); the home theme demo cycles data-demo-theme on a scoped element (components/theme-demo/theme-scope.tsx:72) and design-system-provider.tsx:361 toggles .dark only on .cn-menu-target popups, never on <html>.
 
 ## Decided
 
