@@ -1,14 +1,13 @@
 ---
 title: 'Lazy Sub-Rows Example'
-description: "Fetch a shadcn-table row's children only when it expands, with getRowCanExpand, onExpandedChange and a TanStack Query request per expanded row."
-date: '2026-11-10'
+description: 'A Shadcn Table example showing how to use expandable rows to fetch additional sub-rows data only after the user expands the row.'
 ---
 
-If you have a lot of nested data to display but do not want to fetch it all up front, you can set up shadcn-table to fetch the sub-rows of a row only when the user expands it. In this example, `getRowCanExpand` shows the expand button for rows that have subordinates, `onExpandedChange` tracks which rows are open, and the query fetches the children of the expanded rows; `getSubRows` then places them under their parent.
+If you have a ton of nested data that you want to display, but you don't want to fetch it all up front, you can set up Shadcn Table to only fetch the sub-rows data when the user expands the row.
 
-Pagination and sorting run on the server (`manualPagination`, `manualSorting`, with `rowCount`), and `getRowId` gives each row a stable ID so the expanded state survives refetches. Column filters are off (`enableFilters: false`) because a filter across levels would need every row loaded.
+There are quite a few ways in which you could implement fetching sub-rows lazily. This example is just one way to do it.
 
-There are quite a few ways to fetch sub-rows lazily; this example is one of them. It combines ideas from the [React Query Example](/docs/examples/react-query) and the [Expanding Parsed Tree Example](/docs/examples/expanding-tree-flat-parse). Use it for deep trees such as org charts or folder listings, where most branches stay closed.
+This example combines concepts from the [React Query Example](/docs/examples/react-query) and the [Expanding Parsed Tree Example](/docs/examples/expanding-tree-flat-parse).
 
 <LazySubRowsExample />
 

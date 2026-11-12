@@ -1,10 +1,9 @@
 ---
 title: 'Display (Built-in) Columns'
-description: 'Create your own display columns in shadcn-table, or change the built-in st-row-select, st-row-actions and other ones with displayColumnDefOptions.'
-date: '2026-11-10'
+description: 'How to create or edit display columns in Shadcn Table'
 ---
 
-Display columns show things that are not data: checkboxes, buttons, drag handles, row numbers. They need only an `id` and a `header` in the column definition, no `accessorKey` or `accessorFn`. shadcn-table creates several of its own (the `st-row-*` columns below) when you turn features on, and `displayColumnDefOptions` changes them.
+Display columns are used to display non-data elements in a table. They only require an `id` and `header` in the column definition. They do not need an `accessorKey` or `accessorFn`, as they are not meant to connect to your data at all.
 
 Display columns do not have any processing features, such as sorting, filtering, grouping, etc. enabled on them by default.
 
@@ -16,7 +15,7 @@ Display columns do not have any processing features, such as sorting, filtering,
 
 ### Built-in ST Display Columns
 
-shadcn-table has a few built-in display columns that are created automatically when certain features are enabled.
+Shadcn Table has a few built-in display columns that are created automatically when certain features are enabled.
 
 - `st-row-pin` - created when `enableRowPinning` table option is `true` with certain `rowPinningDisplayMode` values
 - `st-row-drag` - created when `enableRowDragging` or `enableRowOrdering` table option are `true`
@@ -28,7 +27,7 @@ shadcn-table has a few built-in display columns that are created automatically w
 
 The row actions column sits last by default, 48 px wide and pinned to the end so it stays visible while the table scrolls sideways; its header label is for screen readers only. See the [Row Actions Guide](/docs/guides/row-actions) to put it first. Display columns have `grow: false` by default, so in the default `"grid"` layout they keep their set width while the data columns share the spare width. Every built-in display column except row actions is locked while another column is dragged (see [Locked Columns](/docs/guides/column-ordering-dnd#locked-columns)).
 
-Display columns are, for the most part, the same as a data column, except they do not have an accessor to access data. When a display column is created internally by shadcn-table, the following options are all set to false by default:
+Display columns are, for the most part, the same as a data column, except they do not have an accessor to access data. When a display column is created internally by Shadcn Table, the following options are all set to false by default:
 
 ```tsx
 const defaultDisplayColumnDefOptions = {

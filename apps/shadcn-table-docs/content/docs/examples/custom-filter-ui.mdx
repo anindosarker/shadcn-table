@@ -1,14 +1,9 @@
 ---
 title: 'Custom Filter UI Example'
-description: 'Move the column filters out of the table into your own sidebar with columnFilterDisplayMode: custom and the exported ST_TableHeadCellFilterContainer.'
-date: '2026-11-10'
+description: 'An example of Shadcn Table which shows custom filter ui in a sidebar.'
 ---
 
-This example sets `columnFilterDisplayMode: 'custom'`, which tells shadcn-table not to render the column filters anywhere itself. The page then lays out its own filter panel beside the table and renders one `ST_TableHeadCellFilterContainer` per header in it, wrapped in `ST_TableProvider` so the parts can read the table. `enableFacetedValues` fills the filter suggestions from the data, and `stFilterTextFieldProps` adjusts the inputs for their new place.
-
-Use this when the filters should live outside the table: a sidebar on a search page, a drawer on mobile (the example switches layout with `useST_MediaQuery`), or a custom top toolbar. Because the filter containers are the same components the table uses internally, every filter variant and mode keeps working and stays in sync with the table state.
-
-The inputs are your shadcn/ui components, so they match the rest of the page and its theme. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
+Shadcn Table supports rendering your own custom filter UI. This can be useful if you want to render your filters in a custom top toolbar, sidebar, or drawer. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
 
 <CustomColumnFilteringUiExample />
 

@@ -1,14 +1,13 @@
 ---
 title: 'Infinite Scrolling Example'
-description: 'Stream rows from a server as users scroll a shadcn-table, with useInfiniteQuery from TanStack Query, enableRowVirtualization and server-side sorting.'
-date: '2026-11-10'
+description: 'An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query'
 ---
 
-An infinite scrolling table loads rows from a server as the user scrolls down. It works well with large data sets, like the [Virtualized Example](/docs/examples/virtualized), except here the data is not fetched all at once upfront: the table fetches a page at a time as it becomes necessary. This example uses `useInfiniteQuery` from [`@tanstack/react-query`](https://tanstack.com/query/v4) and calls `fetchNextPage` from an `onScroll` handler on the table container (`stTableContainerProps`) when the user nears the bottom.
+An infinite scrolling table is a table that streams data from a remote server as the user scrolls down the table. This works great with large datasets, just like our [Virtualized Example](/docs/examples/virtualized), except here we do not fetch all of the data at once upfront. Instead, we just fetch data a little bit at a time, as it becomes necessary.
 
-Pagination is off (`enablePagination: false`), and filtering and sorting run on the server (`manualFiltering`, `manualSorting`) so a new query starts from the top whenever they change. `enableRowVirtualization` with `rowVirtualizerOptions` keeps only the visible rows in the DOM; it is optional but encouraged once the table renders more than 100 rows. A count of fetched rows sits in the bottom toolbar.
+Using a library like [`@tanstack/react-query`](https://tanstack.com/query/v4) makes it easy to implement an infinite scrolling table in Shadcn Table with the `useInfiniteQuery` hook.
 
-Use infinite scrolling for feeds and logs where users browse rather than jump to a page.
+Enabling the virtualization feature is actually optional here but is encouraged if the table will be expected to render more than 100 rows at a time.
 
 <InfiniteScrollingExample />
 

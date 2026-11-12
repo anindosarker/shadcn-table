@@ -1,10 +1,9 @@
 ---
 title: 'Column Grouping Guide'
-description: 'Group rows by column in shadcn-table with enableGrouping and groupedColumnMode, from the column menu or initialState, client-side or with manualGrouping.'
-date: '2026-11-10'
+description: 'How to use and customize the column grouping features of Shadcn Table'
 ---
 
-shadcn-table groups rows by one or more columns on top of TanStack Table's grouped row model. Turn it on with `enableGrouping`; users then group from the column menu, and the grouped columns show as chips in the toolbar alert banner. Grouping runs client-side by default, or on your server with `manualGrouping`. This guide covers both.
+Shadcn Table has built-in column grouping features. There are options for both automatic client-side grouping as well as manual server-side grouping. This guide will walk you through the different options and how to use and customize them.
 
 ### Relevant Table Options
 
@@ -194,6 +193,6 @@ const table = useShadcnTable({
 
 ### Manual Grouping
 
-Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want shadcn-table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.
+Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want Shadcn Table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.
 
 > Learn more about [Expanding Sub Rows](/docs/guides/expanding-sub-rows) and [Aggregation](/docs/guides/aggregation) Features in their own dedicated guides.

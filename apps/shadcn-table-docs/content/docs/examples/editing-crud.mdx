@@ -1,14 +1,13 @@
 ---
 title: 'Editing CRUD Example'
-description: 'Create, edit and delete rows in a shadcn-table dialog with editDisplayMode: modal, enableEditing and custom content in renderEditRowDialogContent.'
-date: '2026-11-10'
+description: 'An example of Shadcn Table which shows how to use editing CRUD features'
 ---
 
-This example builds full CRUD (create, read, update, delete) with shadcn-table using the default [`"modal"`](/docs/guides/editing#modal-editing-mode) editing mode: with `enableEditing` and `editDisplayMode: 'modal'`, the edit button opens a shadcn/ui dialog with one input per editable column. `createDisplayMode: 'modal'` does the same for new rows, and `renderEditRowDialogContent` and `renderCreateRowDialogContent` lay out the dialog content.
+Full CRUD (Create, Read, Update, Delete) functionality can be easily implemented with Shadcn Table, with a combination of editing, toolbar, and row action features.
 
-Saving calls `onEditingRowSave` or `onCreatingRowSave` with the values; validation errors per column show under the inputs, and TanStack Query mutations update the table optimistically. The edit and delete buttons come from `renderRowActions`, the create button from `renderTopToolbarCustomActions`.
+This example below uses the default [`"modal"`](/docs/guides/editing#modal-editing-mode) editing mode, where a dialog opens up to edit 1 row at a time.
 
-Modal editing suits records with many fields or with fields too wide for a cell, and it keeps the table layout calm while a user edits. Because the dialog is your shadcn/ui dialog, it follows your theme and focus handling, and you can add any form layout inside it. Check out the other editing modes below, and the [editing guide](/docs/guides/editing) for more information.
+Check out the other editing modes down below, and the [editing guide](/docs/guides/editing) for more information.
 
 <EditingCrudModalExample />
 
