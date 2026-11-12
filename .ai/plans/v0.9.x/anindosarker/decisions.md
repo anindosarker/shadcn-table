@@ -257,7 +257,7 @@ index e1645117..e67a5482 100644
 
 - Fixes Q8. `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria, 90 s timeout) time out under machine load and pass alone; they join the P5 known-flake list, rerun once before a check is called red.
 
-### D15 Release 0.9.0 after E2 (superseded by D28, D45)
+### D15 (superseded by D28) (superseded by D45) Release 0.9.0 after E2
 
 [Done]  [E3]
 
@@ -351,7 +351,7 @@ index e1645117..e67a5482 100644
 - Mechanism, library side: the docs copies under `components/ui-<base>/shadcn-table/` are written by `lib:install` from the registry and carry no shared hook, and every example calls `useST_TableOptions` itself, so the library gains a defaults provider (`ST_DefaultsProvider`, three bases) whose `icons` the hook merges beneath the per-table `icons` option (`useST_TableOptions.ts:114`: defaults, then provider, then the table's own). Public surface (P7): API entry, the icons guide, a CHANGELOG entry; one story with a play.
 - Docs side: the provider wraps the examples with the set the theme config names; `hugeicons`, `tabler`, `phosphor` and `remixicon` packages become docs dependencies (P6); the registry's `icons/<lib>.ts` files are installed into the docs copies by `lib:install`.
 
-### D28 The 0.9.0 release waits for the owner's manual approval (superseded by D47)
+### D28 (superseded by D47) The 0.9.0 release waits for the owner's manual approval
 
 [E7]
 [Done]
