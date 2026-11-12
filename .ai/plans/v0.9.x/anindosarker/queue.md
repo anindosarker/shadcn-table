@@ -4,13 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
-	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
-	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
-	- Live check 2026-11-13 (agent-browser, empty storage): / and /docs/getting-started/introduction load html.dark, colorScheme dark, body bg oklch(0.145 0 0) with prefers-color-scheme light and dark alike; the served inline next-themes script (args "class","theme","dark",...,enableSystem false) sets the class synchronously before body content, so no light flash.
-	- Returning visitors get what localStorage.theme holds: preset 'light' renders light (bg oklch(1 0 0)) under both OS schemes, and a stale 'system' (possible from before b186c244 set enableSystem: false on 2026-10-18) also renders light because the script adds the literal class 'system'.
-	- Only clicks write the theme: components/theme-controls.tsx:40 (header toggle) and components/theme-customizer.tsx:155 (Mode buttons); the home theme demo cycles data-demo-theme on a scoped element (components/theme-demo/theme-scope.tsx:72) and design-system-provider.tsx:361 toggles .dark only on .cn-menu-target popups, never on <html>.
-	- PostHog replay (rrweb) snapshots <html> with the class already set and inlines CSS when it can, else the player refetches the stylesheet (PostHog troubleshooting docs), so a light replay is most likely a visitor with localStorage.theme light/system or an unstyled replay of old CSS (guess, replay not inspectable); no code change needed for new visitors, and forcing dark for returning ones would mean forcedTheme 'dark' (or dropping the toggle) in app/layout.tsx:69.
 
 ## Decided
 
@@ -249,6 +242,13 @@ kanban-plugin: basic
 - [x] **Q61** Keep PostHog session recordings from piling up #owner
 	- Owner idea 2026-11-13: auto-clean recordings to save storage. From memory, not checked against the owner's project: PostHog bills replay by recordings captured per month (5,000 free), not by storage, and deletes recordings by itself after the plan's retention period. The levers that lower usage are capture-side project settings: sample rate, minimum session duration, URL triggers. No repo change.
 	- Owner 2026-11-13: fine as long as it works on the free plan; nothing to change.
+- [x] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
+	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
+	- Not yet known: whether a private window loads dark, and whether the owner saw it on the live site or the local preview.
+	- Live check 2026-11-13 (agent-browser, empty storage): / and /docs/getting-started/introduction load html.dark, colorScheme dark, body bg oklch(0.145 0 0) with prefers-color-scheme light and dark alike; the served inline next-themes script (args "class","theme","dark",...,enableSystem false) sets the class synchronously before body content, so no light flash.
+	- Returning visitors get what localStorage.theme holds: preset 'light' renders light (bg oklch(1 0 0)) under both OS schemes, and a stale 'system' (possible from before b186c244 set enableSystem: false on 2026-10-18) also renders light because the script adds the literal class 'system'.
+	- Only clicks write the theme: components/theme-controls.tsx:40 (header toggle) and components/theme-customizer.tsx:155 (Mode buttons); the home theme demo cycles data-demo-theme on a scoped element (components/theme-demo/theme-scope.tsx:72) and design-system-provider.tsx:361 toggles .dark only on .cn-menu-target popups, never on <html>.
+	- PostHog replay (rrweb) snapshots <html> with the class already set and inlines CSS when it can, else the player refetches the stylesheet (PostHog troubleshooting docs), so a light replay is most likely a visitor with localStorage.theme light/system or an unstyled replay of old CSS (guess, replay not inspectable); no code change needed for new visitors, and forcing dark for returning ones would mean forcedTheme 'dark' (or dropping the toggle) in app/layout.tsx:69.
 
 ## Autofix
 
