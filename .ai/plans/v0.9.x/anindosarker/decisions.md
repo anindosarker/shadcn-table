@@ -774,6 +774,13 @@ index e1645117..e67a5482 100644
 - Source: Q64
 
 ### D80 The filter mode menu lands next to its button even when opened while the filter popover animates in
+[E11]
 
 - On React Aria, a click on the mode button during the popover's 100 ms enter animation (`zoom-in-95` plus slide, `registry/aria/components/ui/popover.tsx:37`) leaves the menu misplaced: `useST_MenuAnchor.ts:63-68, 84-85` measures the button's box once and re-measures only on resize or scroll, and the fixed anchor `<a>` sits inside the transformed popover (`aria/.../menus/ST_FilterOptionMenu.tsx:392-404`), so the offset counts twice. From the code, not reproduced; found by the D77 play.
+- Base UI and Radix share the hook and the same popover animation; after D77's portal the double offset is gone, but the anchor still keeps the mid-animation box. Likely the same bug, smaller; not verified.
+- Fix: `useST_MenuAnchor.ts` on the three bases re-measures on `animationend` while open (a capture listener on `document`, only for events whose target contains the anchor element, beside the resize and scroll listeners). The React Aria `ST_FilterOptionMenu.tsx` renders its anchor through `createPortal(..., document.body)` with the hydration guard, as Base UI and Radix do since D77.
+- React Aria repositions an open menu only when its trigger resizes or an input changes (`useOverlayPosition`); if the re-measure alone does not move the menu, the builder makes the menu follow the re-measured anchor at the root. No delayed click, no disabled animation.
+- Proof (P11): a sibling play of `ModeMenuNextToButtonPopover` opens the mode menu right after the popover appears, without the animation wait (`Filtering.stories.tsx:1333-1336`), waits for all animations to end and asserts the menu's box is adjacent to the mode button's box. It fails before the fix on React Aria and passes after on the three bases; the tracker records what Base UI and Radix did before the fix.
+- Runs as a fix milestone added to the running E11 epic, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
+- Owner, 2026-11-13: "2" (fix it in E11, 0.9.3 waits for it).
 - Source: Q65

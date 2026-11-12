@@ -58,6 +58,7 @@ Generated: 2026-11-13 by ownership.py
 | CRUD dialog check waits for the rows (Q25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
 | Dev server clean (Q11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 | Filter mode menu anchor (Q62) | fix | none | none | `pnpm lib:install base`, `pnpm lib:install radix`, `#### Fix D77` |
+| Filter mode menu during popover animation (Q65, D80) | fix | none | none | `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx`, `packages/shadcn-table/stories/features/Filtering.stories.tsx`, `CHANGELOG.md` |
 | Guides copy accuracy (Q32) | fix | none | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
 | Page index play (Q22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
 | Perf budgets on CI (Q28) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
