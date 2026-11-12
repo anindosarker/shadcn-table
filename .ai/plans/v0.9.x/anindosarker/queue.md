@@ -12,6 +12,7 @@ kanban-plugin: basic
 	- Release 0.9.3 (D61) is held by the owner until the docs wording is restored (Q58) and the preview is approved. `dev` and `master` are at 8feb7940 (0.9.2).
 	- The owner has not ruled; the runner was stopped on the owner's order 2026-11-13 and nothing was shipped.
 - [ ] **Q60** The site loaded in light mode for the owner; it should always load dark #owner
+	- `app/layout.tsx:69` sets `defaultTheme: 'dark', enableSystem: false`; the live page source carries the same values (read 2026-11-13). next-themes keeps a visitor's own choice in localStorage, so a browser that once chose light keeps loading light.
 
 ## Decided
 
