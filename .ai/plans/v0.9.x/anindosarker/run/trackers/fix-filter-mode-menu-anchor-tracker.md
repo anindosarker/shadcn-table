@@ -15,6 +15,9 @@ Checks:
 - Check: storybook-tests, `pnpm test storybook-tests --base base` at 18090f1b: pass, 621 passed
 - Check: storybook-tests, `pnpm test storybook-tests --base radix` at 18090f1b: pass, 621 passed
 - Check: Filtering plays on aria, `ST_BASE=aria pnpm exec vitest run stories/features/Filtering.stories.tsx` at 18090f1b: pass, 29 passed
+- Check (verifier): play at HEAD, `ST_BASE=base` and `ST_BASE=radix pnpm exec vitest run stories/features/Filtering.stories.tsx -t "Mode Menu Next To Button Popover"` at cf4fc8ae: pass on both (1 passed, 28 skipped)
+- Check (verifier): code review at cf4fc8ae: anchor trigger span portalled to `document.body` via `createPortal` in base and radix `ST_FilterOptionMenu.tsx` only; no aria file in the diff from 0815c1cf; popover `side="top"` unchanged (`ST_TableHeadCellFilterLabel.tsx:176` base, `:181` radix); `#### Fix D77` block under `### Fixed` in CHANGELOG.md
+- Check (verifier): typecheck, lint, validate-repo, storybook-tests base and radix, aria Filtering plays: recorded at 18090f1b, diff to HEAD touches only .ai/, not rerun
 
 - Task 1 play first: done (677cff43)
 - Task 2 fix per D77: done (18090f1b)
