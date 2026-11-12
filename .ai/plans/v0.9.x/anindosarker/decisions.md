@@ -641,6 +641,7 @@ index e1645117..e67a5482 100644
 - Checks: `pnpm test docs-e2e --base base` green with the new checks counted in the run summary.
 - Settled by the lead 2026-11-12: tooling gap, one right answer. Joins the next epic.
 - Edited 2026-11-13 before build: no byline check; D74 removes the byline. Only the checks for the two new pages remain.
+- Edited 2026-11-13 before build: the comparison page is out of 0.9.3 (D75), so this epic checks `/docs/guides/tanstack-table-with-shadcn-ui` only; the comparison check comes with D71.
 
 ### D66 proxy.ts runs only on docs paths
 [Done]
@@ -717,10 +718,11 @@ index e1645117..e67a5482 100644
 ### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
 
 - Amends D61 (held, not built). The owner wants one deployment, after every decided change: the release does not ship the `proxy.ts` budget fix (D66) ahead of the rest.
-- 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D71, D72, D73, D74). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
-- The release milestones wait for the owner: when every other milestone of the epic has merged, the runner sends DONE with the preview instructions and stops; the lead sends the release RUN only on the owner's explicit yes after the preview. D47 (the runner approves Prepare Release) applies from that point.
+- 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D72, D73, D74, D76). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
+- Edited 2026-11-13 before build: no preview stop. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; D47 applies (the runner approves Prepare Release). The owner has seen or approved every visible change in it.
+- The comparison page stays out of 0.9.3: `content/docs/getting-started/comparison.mdx` and its `meta.json` entry are removed from `claude/review` in this epic (the file is in git history at the spec 31 merge). D71 is not in this epic; it ships in the next release, after the owner has read the table in chat.
 - Before the build starts the lead reads the Vercel usage page and tells the owner the Fluid Active CPU figure (3h 01m of 4 h on 2026-11-12).
-- Owner, 2026-11-13: "I want to do one deployment and that should be after all the items that have changed."; "59 k".
+- Owner, 2026-11-13: "I want to do one deployment and that should be after all the items that have changed."; "59 k"; "you can release it in this epic. No need to wait for a preview."; "k. Epic Go".
 - Source: Q59
 
 ### D76 One shared site description
