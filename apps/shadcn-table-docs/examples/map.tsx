@@ -180,6 +180,7 @@ export const LazySubRowsExample = () => <ExampleSnippet name="lazy-sub-rows" />;
 export const LinearProgressExample = () => (
   <ExampleSnippet name="linear-progress" />
 );
+export const LiveDemoExample = () => <ExampleSnippet name="live-demo" />;
 export const LoadingExample = () => <ExampleSnippet name="loading" />;
 export const LocalizationI18nArExample = () => (
   <ExampleSnippet name="localization-i18n-ar" />
@@ -395,6 +396,7 @@ export const exampleComponents = {
   LazyDetailPanelExample,
   LazySubRowsExample,
   LinearProgressExample,
+  LiveDemoExample,
   LoadingExample,
   LocalizationI18nArExample,
   LocalizationI18nAzExample,
