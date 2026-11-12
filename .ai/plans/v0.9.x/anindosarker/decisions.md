@@ -762,3 +762,13 @@ index e1645117..e67a5482 100644
 - Edited 2026-11-13 before build: runs as a fix milestone in the running E11 epic, after spec 32 has merged (both touch `content/docs/getting-started/**`), and ships in 0.9.3 (owner: "It should be added to this current sprint as well.").
 - Owner, 2026-11-13: "update the demos there"; "k" on the item.
 - Source: Q63
+
+### D79 The docs app drops its unused zod dependency
+[E11]
+
+- `apps/shadcn-table-docs/package.json:57` lists `zod` (added by spec 24 for the frontmatter `date` field in `lib/source.ts`, 3e8114a3); spec 32 removed the field and the byline (005b49f3, D74), and nothing in the docs app imports `zod` now.
+- Fix: remove the `zod` line from `apps/shadcn-table-docs/package.json` and refresh `pnpm-lock.yaml` with `pnpm install`; no other file changes.
+- Checks: `git grep -n "from 'zod'" apps/shadcn-table-docs` is empty; the docs production build (`pnpm --filter shadcn-table-docs build`) and `pnpm test validate-repo` pass.
+- Runs as a fix milestone added to the running E11 epic, before `38 Integration 0.9.3`, so 0.9.3 ships with it.
+- Owner, 2026-11-13: "Remove Zod. should be part of this epic".
+- Source: Q64

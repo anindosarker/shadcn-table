@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #run-E11
+	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
 
 ## Decided
 
@@ -289,6 +291,9 @@ kanban-plugin: basic
 	- Decision: D78
 	- Owner 2026-11-13, from a PostHog replay of /docs/getting-started/usage: the Live Example is a weak demo because every filter is a text box; select filters would show the library better.
 	- `content/docs/getting-started/usage.mdx:177` embeds `<BasicExample />` (`examples/<base>/basic/TS.tsx:76-103`): five string columns (First Name, Last Name, Address, City, State), five rows, no `filterVariant`, so all five filters are text. The Introduction page's demo is the same example. The Usage page's tutorial steps build exactly this data and these columns. Elsewhere the examples and stories use select 86 times, range 58, date 40, multi-select 34, text 30.
+- [x] **Q64** The docs app still lists zod as a dependency although nothing imports it #run-E11
+	- Decision: D79
+	- `apps/shadcn-table-docs/package.json`: `zod` (added by spec 24) has no importer after spec 32 removed the `date` schema field; remove it or keep it.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm"}
