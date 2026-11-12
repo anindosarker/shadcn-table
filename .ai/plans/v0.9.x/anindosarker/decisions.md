@@ -626,3 +626,6 @@ index e1645117..e67a5482 100644
 - A fix milestone on `claude/review` removes the wrap from `next.config.mjs` and `@next/bundle-analyzer` from `apps/shadcn-table-docs/package.json` and the lockfile. Bundle inspection, when needed, uses `next experimental-analyze` or the built `/` HTML, as spec 30 did.
 - Checks: `grep -c bundle-analyzer apps/shadcn-table-docs/next.config.mjs apps/shadcn-table-docs/package.json` is 0; `pnpm install` leaves the lockfile without it; typecheck, lint, validate-repo green.
 - Settled by the lead 2026-11-10: tooling with one right answer; A20 option a.
+
+### D64 Guides and API copy states what is shadcn/ui and drops the inherited typos
+
