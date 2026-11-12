@@ -1,6 +1,6 @@
 # 32: Docs wording restored, byline and dates removed, tracker
 
-Status: running
+Status: merged (12fd7d78)
 Branch `v0.9/docs-wording-restore`, worktree 03
 Checks:
 - Check: content diff, `git diff --stat 33f62f5e~1 -- content/docs/{examples,guides,api}` at f7e3dff6: pass (8 files changed, 59 insertions(+), 6 deletions(-); 65 changed lines: 52 added `guides/tanstack-table-with-shadcn-ui.mdx`, 1 `guides/meta.json` entry after "accessibility", 6 typo lines replaced)
