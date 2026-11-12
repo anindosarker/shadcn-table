@@ -629,5 +629,14 @@ index e1645117..e67a5482 100644
 
 ### D64 Guides and API copy states what is shadcn/ui and drops the inherited typos
 
+- Source: F32. `content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24` say the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls (buttons, menus, inputs, dialogs) are shadcn/ui. The six inherited typos F32 lists stay in the merged copy.
+- The four sentences say it as it is: the controls are shadcn/ui components, the table markup is plain elements styled with the shadcn theme tokens. The six typos are corrected in the same milestone. No other copy changes.
+- Checks: `grep` of the four files shows the corrected sentences; the D60 description script still prints 0; `pnpm test docs-e2e --base base` green.
+- Settled by the lead 2026-11-12: a false claim and typos, not a choice. Joins the next epic.
+
 ### D65 Docs e2e checks cover the byline and the two new pages
 
+- Source: F31. Spec 31 expected `pnpm test docs-e2e` to prove the byline and `/docs/getting-started/comparison` and `/docs/guides/tanstack-table-with-shadcn-ui`, but no milestone owned `test/docs-e2e`, so the frame milestone proved them by curl and a route run only.
+- `test/docs-e2e/lib/` gets checks: every docs page renders the byline with the maintainer name and a date; the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
+- Checks: `pnpm test docs-e2e --base base` green with the new checks counted in the run summary.
+- Settled by the lead 2026-11-12: tooling gap, one right answer. Joins the next epic.
