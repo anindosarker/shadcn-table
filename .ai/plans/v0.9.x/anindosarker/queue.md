@@ -374,3 +374,7 @@
 - Kept from spec 31: byline and dates, the Introduction page's install snippet and demo, the comparison page (D71), the TanStack guide (D72).
 - Falls away with it: D64 (corrections to the rewritten text) and D60's description-length check (120 to 155 characters).
 - Not ruled yet: whether the byline and dates also wait for the docs work.
+
+### Q59 The hosting budget fix is finished but not live
+- Tags:
+- From: lookup.
