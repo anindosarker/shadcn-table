@@ -8,6 +8,8 @@ export default defineTest({
     'packages/shadcn-table/registry.json',
     'packages/shadcn-table/package.json',
     'apps/shadcn-table-docs/examples/**',
+    'apps/shadcn-table-docs/content/docs/examples/**',
+    'apps/shadcn-table-docs/registry.json',
     'tools/**',
     'test/validate-repo/**',
   ],
