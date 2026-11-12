@@ -647,3 +647,6 @@ index e1645117..e67a5482 100644
 - `proxy.ts` gets `export const config = { matcher: [...] }` limited to the paths the two rewrites can match: `/docs/:path*` and the `.mdx` suffix form; never `/_next/*`, `/ingest/*`, `/r/*`, `/og/*`, static files. The rewrite behaviour on docs URLs is unchanged.
 - Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL still returns `text/markdown`; a docs URL with `.mdx` suffix still rewrites; `/`, `/sitemap.xml`, `/r/base/registry.json`, `/ingest/e/` unchanged; after deploy the Vercel usage page shows invocations falling to the docs-request count. Small fix, lands directly on `claude/review` (P13 style), ships with the next release.
 - Owner, 2026-11-12: "10. k".
+
+### D67 PostHog session replays on
+
