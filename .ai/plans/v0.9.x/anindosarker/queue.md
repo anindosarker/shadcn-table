@@ -6,7 +6,7 @@
 - Once a select filter has a value, the clear x (`absolute inset-y-0 inset-e-0`, `ST_FilterTextField.tsx:335-347` radix; aria `:369`, base `:340`) sits on top of the `SelectTrigger` chevron. The trigger's `pe-9` never applies: the shadcn `SelectTrigger` base has `pr-2` (`select.tsx:46`), tailwind-merge keeps both classes, and Tailwind 4 emits `padding-right` after `padding-inline-end`, so `pr-2` wins. Same in chips, subheader and popover modes, all three registries. Owner's screenshot `v0.8.x/reference/image/bugs/1793953068792.png`. Resolved by D1.
 
 ### Q2 The filtering stories show the old filter UI, not the current format
-- Tags:
+- Tags: Later
 - From: lead.
 - Owner, 2026-11-08, on the deployed Storybook (`https://storybook.shadcn-table.com/base/`): the filtering stories are not updated to the new format. Stories looked at: `Features/Filtering Examples` (`FilteringChangeModeEnabled`, `FilteringChangeModeEnabledFaceted`, `SubheaderRangeFieldsNarrow`, `FilterFnAndFilterVariants`, `packages/shadcn-table/stories/features/Filtering.stories.tsx:174-702`) and `Features/Filter Chips Examples` (`FilterModePickerTableLevel`, `FilterChips.stories.tsx:300`). Major. Screenshot 2026-11-08 of `FilteringChangeModeEnabled` (Base build): the subheader filter row with one input per column and a "Filter Mode: Fuzzy" helper line under each, no chips; the docs filtering examples moved to chips in v0.8.x (D51) while the stories did not.
 
@@ -17,7 +17,7 @@
 - Resolved 2026-11-08: the jump is the filter mode menu's exit animation. `useST_MenuAnchor.ts` stored `anchorEl?.getBoundingClientRect()` on close, undefined once the anchor cleared, so the invisible trigger span moved to (0,0) and the Base UI and Radix positioners followed it while the menu faded; the hook now keeps the last measured box (three bases). Play `FilterModeMenuClosesInPlace`, red on base and radix before, green after; merged as a fix from the lead at the merge commit after `546bcabd`.
 
 ### Q4 Stories carry no explainer
-- Tags:
+- Tags: Later
 - From: lead.
 - Owner, 2026-11-08, screenshot of `Features/Filtering Examples/Column Filtering Disabled` (Base build): every story shows the same three-line banner (docs link, base links, source link) and nothing about what the story demonstrates or what to try; a visitor cannot tell what "Column Filtering Disabled" shows. Holds for every story (594 stories, one shared banner from `.storybook/preview.tsx`). To be discussed with the docs restructuring items, not on its own.
 
