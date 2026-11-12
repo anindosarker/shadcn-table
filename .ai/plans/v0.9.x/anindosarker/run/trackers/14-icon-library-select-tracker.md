@@ -15,7 +15,7 @@ Checks:
 - `ls components/ui-<base>/shadcn-table/icons/` for radix, base, aria at efd1087f + Task 4 files: pass, hugeicons phosphor remixicon tabler in each
 - `pnpm test validate-repo` at efd1087f + Task 4 files: pass (bases identical, icon maps complete, registry valid, 27 unit tests)
 - `pnpm --filter shadcn-table-docs types:check` at c06f68ee: pass
-- `pnpm test docs-e2e --base base /` at c06f68ee: fail 3 times on the theme hotkey checks (`theme: r changes --primary` and the three after it; icon checks pass); cause measured: the home demo replays while centered (demoLoop leaves it there) and moves focus into its search field, where the theme keys are ignored; under load `r` also lands about 1.1 s late against the 200 ms wait (F23). Not caused by this milestone's code (the hotkeys fire in a probe on the same build)
+- `pnpm test docs-e2e --base base /` at c06f68ee: fail 3 times on the theme hotkey checks (`theme: r changes --primary` and the three after it; icon checks pass); cause measured: the home demo replays while centered (demoLoop leaves it there) and moves focus into its search field, where the theme keys are ignored; under load `r` also lands about 1.1 s late against the 200 ms wait (Q23). Not caused by this milestone's code (the hotkeys fire in a probe on the same build)
 - `pnpm test typecheck --base radix`, `--base base`, `--base aria` at bf40fd6a: pass, tsc clean
 - `pnpm test lint` at bf40fd6a: pass (9 warnings in the docs app, none in this milestone's files)
 - `pnpm test validate-repo` at bf40fd6a: pass

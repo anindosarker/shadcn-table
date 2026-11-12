@@ -1,4 +1,4 @@
-# CRUD dialog check waits for the rows (F25), tracker
+# CRUD dialog check waits for the rows (Q25), tracker
 
 Status: merged (fff96d29; dev 634739d3)
 Files owned: `test/docs-e2e/lib/examples.mjs`

@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-A table with column filtering shows a plain input per column and no mode picker unless the consumer sets `enableColumnFilterModes`; the option has no default (`hooks/useST_TableOptions.ts:36-62` lists every other default). D4 turns it on by default, keeps every variant's mode list as it is, and gives multi-select three labelled array modes. Once a select filter has a value, its clear button is drawn over the `SelectTrigger` chevron because the trigger's `pe-9` loses to the shadcn base `pr-2` (F1); D1 swaps it for `pr-9`. Three bases, byte-identical.
+A table with column filtering shows a plain input per column and no mode picker unless the consumer sets `enableColumnFilterModes`; the option has no default (`hooks/useST_TableOptions.ts:36-62` lists every other default). D4 turns it on by default, keeps every variant's mode list as it is, and gives multi-select three labelled array modes. Once a select filter has a value, its clear button is drawn over the `SelectTrigger` chevron because the trigger's `pe-9` loses to the shadcn base `pr-2` (Q1); D1 swaps it for `pr-9`. Three bases, byte-identical.
 
 ### 1.2 Goals
 
@@ -57,7 +57,7 @@ test/docs-e2e/lib/examples.mjs                ← asserts `enableColumnFilterMod
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): `#### Epic 01 Filtering` under `## Unreleased` (the block created if missing): modes on by default, the multi-select modes, the select clear button fix (D1, D4, F1).
+- `CHANGELOG.md` (P9): `#### Epic 01 Filtering` under `## Unreleased` (the block created if missing): modes on by default, the multi-select modes, the select clear button fix (D1, D4, Q1).
 - `apps/shadcn-table-docs/components/ui-<base>/` and `public/r/`: regenerated at merge, never hand-edited (P9).
 - The tracker `trackers/01-filtering-tracker.md`: the red run of each play on the shipped code (P11).
 
@@ -73,7 +73,7 @@ test/docs-e2e/lib/examples.mjs                ← asserts `enableColumnFilterMod
 - `types.ts`: `filterArrIncludesSome`, `filterArrIncludesAll`, `filterArrIncludesNone` in `ST_Localization`, alphabetical. `shared/locales/en.ts`: `'Includes any'`, `'Includes all'`, `'Excludes'`. Every other locale: the three keys translated into that locale's language in the style of its `filterContains` line (the type makes every key mandatory).
 - Does NOT change the default fn (`column.utils.ts:179`, still `arrIncludesSome`), so a multi-select mode picker opens with Includes any checked.
 
-#### 1.6.4 Select clear button (D1, F1)
+#### 1.6.4 Select clear button (D1, Q1)
 
 - `ST_FilterTextField.tsx`, the `SelectTrigger` className: `hasFilterValue && 'pe-9'` becomes `hasFilterValue && 'pr-9'` (radix :544, base :560, aria :591); tailwind-merge then drops the base `pr-2` and the chevron sits left of the overlaid clear button. The comment line above it stays.
 - Does NOT move the clear addon (`:335-347`) or touch multi-select.

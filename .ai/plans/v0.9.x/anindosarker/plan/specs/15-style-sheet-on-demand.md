@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-`app/global.css:9-16` imports all eight `styles/style-*.css` layers into the root stylesheet, which grew from 351 KB to 2,755 KB with the theme panel; every theme or class change then recalculates styles over the whole page (F15, D29). D29 makes each style its own CSS asset: a build step compiles `styles/style-<name>.css` against the docs' Tailwind theme into `public/styles/style-<name>.css`, the root layout links the default one in `<head>`, the pre-paint script swaps the link to the stored style before first paint, and a style change loads the new sheet and switches the `style-<name>` class once it has loaded. The eight source files and the `.cn-*` layers stay as they are (spec 13 relies on them).
+`app/global.css:9-16` imports all eight `styles/style-*.css` layers into the root stylesheet, which grew from 351 KB to 2,755 KB with the theme panel; every theme or class change then recalculates styles over the whole page (Q15, D29). D29 makes each style its own CSS asset: a build step compiles `styles/style-<name>.css` against the docs' Tailwind theme into `public/styles/style-<name>.css`, the root layout links the default one in `<head>`, the pre-paint script swaps the link to the stored style before first paint, and a style change loads the new sheet and switches the `style-<name>` class once it has loaded. The eight source files and the `.cn-*` layers stay as they are (spec 13 relies on them).
 
 ### 1.2 Goals
 

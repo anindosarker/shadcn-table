@@ -46,12 +46,12 @@ Updated: 2026-11-10 03:40
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |
-| fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |
-| fix Dev server clean (F11) |  | [x] |  |  |  |  |  |  |  |  |  |
-| fix Guides copy accuracy (F32) |  |  |  |  |  |  |  |  |  |  | [x] |
-| fix Page index play (F22) |  |  | [x] |  |  |  |  |  |  |  |  |
-| fix Perf budgets on CI (F28) |  |  |  |  |  | [x] |  |  |  |  |  |
-| fix Installation references refreshed (F20) |  | [x] |  |  |  |  |  |  |  |  |  |
-| fix Stored view page index (F22) |  | [x] |  |  |  |  |  |  |  |  |  |
-| fix Theme check closes the search dialog (F24) |  |  | [x] |  |  |  |  |  |  |  |  |
-| fix Theme hotkey checks wait for the change (F23) |  |  | [x] |  |  |  |  |  |  |  |  |
+| fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |
+| fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |
+| fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |
+| fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |
+| fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |
+| fix Installation references refreshed (Q20) |  | [x] |  |  |  |  |  |  |  |  |  |
+| fix Stored view page index (Q22) |  | [x] |  |  |  |  |  |  |  |  |  |
+| fix Theme check closes the search dialog (Q24) |  |  | [x] |  |  |  |  |  |  |  |  |
+| fix Theme hotkey checks wait for the change (Q23) |  |  | [x] |  |  |  |  |  |  |  |  |

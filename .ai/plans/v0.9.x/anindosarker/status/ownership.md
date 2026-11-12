@@ -46,15 +46,15 @@ Generated: 2026-11-10 by ownership.py
 | Examples copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/examples/**` |
 | Guides and API copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
 | Bundle analyzer wrap (D63) | fix | none | none | `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml` |
-| CRUD dialog check waits for the rows (F25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
-| Dev server clean (F11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
-| Guides copy accuracy (F32) | fix | none | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
-| Page index play (F22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
-| Perf budgets on CI (F28) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
-| Installation references refreshed (F20) | fix | none | none | `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png` |
-| Stored view page index (F22) | fix | none | none | `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx` |
-| Theme check closes the search dialog (F24) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
-| Theme hotkey checks wait for the change (F23) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| CRUD dialog check waits for the rows (Q25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
+| Dev server clean (Q11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
+| Guides copy accuracy (Q32) | fix | none | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
+| Page index play (Q22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
+| Perf budgets on CI (Q28) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| Installation references refreshed (Q20) | fix | none | none | `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png` |
+| Stored view page index (Q22) | fix | none | none | `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx` |
+| Theme check closes the search dialog (Q24) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
+| Theme hotkey checks wait for the change (Q23) | fix | none | none | `test/docs-e2e/lib/getting-started.mjs` |
 
 ## Critical paths
 

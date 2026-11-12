@@ -1,4 +1,4 @@
-# Guides copy accuracy (F32), tracker
+# Guides copy accuracy (Q32), tracker
 
 Status: merged (e12547a5)
 Files owned: `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**`

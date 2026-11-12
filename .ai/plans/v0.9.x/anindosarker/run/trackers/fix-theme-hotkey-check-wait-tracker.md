@@ -1,4 +1,4 @@
-# Theme hotkey checks wait for the change (F23), tracker
+# Theme hotkey checks wait for the change (Q23), tracker
 
 Status: merged (1fb91e9f; dev ea276251)
 Files owned: `test/docs-e2e/lib/getting-started.mjs`

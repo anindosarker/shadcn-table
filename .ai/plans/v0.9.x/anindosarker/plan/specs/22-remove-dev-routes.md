@@ -90,7 +90,7 @@ Status `refactor` (delete). `git rm -r apps/shadcn-table-docs/app/dev`.
 | `theme-demo/theme-chips.tsx`, 10 variants | delete | dev-only after the routes go |
 | `theme-demo/variants/whole-app*.tsx` | keep | homepage theming demo |
 
-#### 1.6.3 Ride-alongs in owned files (D51, F9-style stale comments)
+#### 1.6.3 Ride-alongs in owned files (D51, Q9-style stale comments)
 
 Status `refactor`; each touches a file this milestone owns anyway, never a comment-only commit.
 
@@ -98,7 +98,7 @@ Status `refactor`; each touches a file this milestone owns anyway, never a comme
 - `components/dev-home/v12/home-page.tsx:26,169`: the `showVariantsLink` prop and its JSDoc go; `<Footer />`; the header comment (lines 20-24) drops "and at /dev/12".
 - `components/dev-home/v4/nav.tsx`: `Wordmark` (href `/dev/4`) and `Nav` deleted; `GITHUB_URL` and `NAV_LINKS` stay (imported by `v12/footer.tsx:5`, `v12/nav.tsx:7`); unused imports (`Link`, `ArrowUpRightIcon`) dropped.
 - Comments: `app/global.css:8` and `app/global.css:461-462` ("the /dev/12 tokens", "so /dev and the home page keep"), `components/dev-home/tokens.css:3-6`, `components/dev-home/v12/v12.css:5`, `components/dev-home/v12/theme-demo.tsx:25` reworded without `app/dev`, `/dev/12` or `/dev/theme/9`; the facts they state about `.dev-home` scoping stay.
-- Does NOT restyle, rename or move anything in `dev-home/**`; does NOT touch `demo-themes.ts`, `install.mjs`, `global.css` beyond lines 8 and 461-462 (F9 and F26 belong to E8's first milestone, E8 note).
+- Does NOT restyle, rename or move anything in `dev-home/**`; does NOT touch `demo-themes.ts`, `install.mjs`, `global.css` beyond lines 8 and 461-462 (Q9 and Q26 belong to E8's first milestone, E8 note).
 
 **Stays unchanged:** `app/(home)/page.tsx`, `app/layout.tsx`, `components/dev-home/v12/{nav,rise-figure,theme-demo}.tsx` apart from the one comment, `components/dev-home/v4/font*`, every docs page.
 

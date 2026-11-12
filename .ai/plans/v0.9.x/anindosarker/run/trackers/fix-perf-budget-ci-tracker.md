@@ -1,4 +1,4 @@
-# Perf budgets on CI (F28), tracker
+# Perf budgets on CI (Q28), tracker
 
 Status: merged (629dcf81)
 Files owned: `test/docs-e2e/lib/getting-started.mjs`
