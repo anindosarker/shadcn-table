@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #run-E11
-	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
-	- Owner 2026-11-13: fix it in E11, 0.9.3 waits for it (option 2). Cause lookup running.
 
 ## Decided
 
@@ -224,6 +221,10 @@ kanban-plugin: basic
 - [x] **Q29** The llms.txt summary duplicates the home page description #run
 	- Decision: D76
 	- `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
+- [x] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #run-E11
+	- Decision: D80
+	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
+	- Owner 2026-11-13: fix it in E11, 0.9.3 waits for it (option 2). Cause lookup running.
 
 ## Later
 

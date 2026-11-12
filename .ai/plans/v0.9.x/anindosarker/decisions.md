@@ -772,3 +772,8 @@ index e1645117..e67a5482 100644
 - Runs as a fix milestone added to the running E11 epic, before `38 Integration 0.9.3`, so 0.9.3 ships with it.
 - Owner, 2026-11-13: "Remove Zod. should be part of this epic".
 - Source: Q64
+
+### D80 The filter mode menu lands next to its button even when opened while the filter popover animates in
+
+- On React Aria, a click on the mode button during the popover's 100 ms enter animation (`zoom-in-95` plus slide, `registry/aria/components/ui/popover.tsx:37`) leaves the menu misplaced: `useST_MenuAnchor.ts:63-68, 84-85` measures the button's box once and re-measures only on resize or scroll, and the fixed anchor `<a>` sits inside the transformed popover (`aria/.../menus/ST_FilterOptionMenu.tsx:392-404`), so the offset counts twice. From the code, not reproduced; found by the D77 play.
+- Source: Q65
