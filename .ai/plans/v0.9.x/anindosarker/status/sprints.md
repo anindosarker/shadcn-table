@@ -46,7 +46,7 @@ Updated: 2026-11-13 03:00
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
-| E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
+| E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |
 | E11 34 PostHog after hydration |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
 | E11 35 Example sources per example |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E11 36 Registry fresh check | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -58,7 +58,7 @@ Updated: 2026-11-13 03:00
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Filter mode menu anchor (Q62) | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
+| fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
 | fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |
