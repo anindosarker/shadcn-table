@@ -143,3 +143,5 @@
 
 ### F33 Vercel free tier function CPU at 75 percent
 
+- Vercel mail 2026-11-11 02:01: team `anindo-sarkers-projects` used 75 percent of the Hobby tier's Fluid Active CPU (4 hours per month); at 100 percent the projects pause. Likely sources: the Show HN traffic of 2026-11-10, `proxy.ts` running on every request, the `/og/docs/[...slug]` image route, the llms and Markdown routes.
+- Choices for a later item: Vercel Pro (20 USD a month, pay-as-you-go above the included usage), or move per-request work off functions (static OG images at build, narrower `proxy.ts` matcher, cache headers on the Markdown routes) and re-measure on the Vercel usage page.
