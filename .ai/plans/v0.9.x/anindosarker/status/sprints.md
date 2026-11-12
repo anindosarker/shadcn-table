@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 02:20
+Updated: 2026-11-13 02:21
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -57,7 +57,7 @@ Updated: 2026-11-13 02:20
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Filter mode menu anchor (Q62) | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| fix Filter mode menu anchor (Q62) | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
