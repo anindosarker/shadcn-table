@@ -678,3 +678,8 @@ index e1645117..e67a5482 100644
 
 ### D71 Comparison page moves last in Getting Started and compares the searched names
 
+- Amends D60 (built, spec 31 merged; patched forward). `content/docs/getting-started/comparison.mdx` sits second in Getting Started and compares against tablecn, Material React Table and the shadcn data-table recipe. Google autocomplete, 2026-11-12: "tanstack table vs shadcn table", "shadcn table vs tanstack table", "shadcn data table vs tanstack table", "material react table vs tanstack / mui datagrid / ag grid" and "ag grid alternative" exist; "tablecn vs" and "tablecn alternative" return nothing.
+- `content/docs/getting-started/meta.json` becomes `introduction, install, usage, agents, comparison` (the placement TanStack Query, Router, Form, Zustand and Jotai use: one Comparison entry near the end of Getting Started).
+- The table's columns become, in this order: shadcn-table, TanStack Table, the shadcn data-table recipe, Material React Table, AG Grid; the tablecn column goes. The sidebar label stays "Comparison"; the page's search title names the compared libraries (as TanStack Query's does). Every cell is a claim that can be shown from the cited project's own docs; a cell that cannot be sourced is left out.
+- Checks: the sidebar order on a production build; the D60 description script prints 0; `pnpm test docs-e2e --base base` green. The owner reads every row on the preview before release (D61 stays held).
+- Owner, 2026-11-13: "Looks good.", "k" on the item.
