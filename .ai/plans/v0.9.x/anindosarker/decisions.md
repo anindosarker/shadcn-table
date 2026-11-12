@@ -645,7 +645,6 @@ index e1645117..e67a5482 100644
 - Edited 2026-11-13 before build: the comparison page is out of 0.9.3 (D75), so this epic checks `/docs/guides/tanstack-table-with-shadcn-ui` only; the comparison check comes with D71.
 
 ### D66 proxy.ts runs only on docs paths
-[E11]
 [Done]
 
 - Source: Q33. `apps/shadcn-table-docs/proxy.ts` (the Markdown-by-`Accept` rewrite from `fumadocs-core/negotiation`) exports no `config.matcher`, so Next runs it as a function on every request: assets, bot hits, 404s. Vercel usage page 2026-11-12: 581K function invocations, 3h 01m of the Hobby plan's 4 h monthly Fluid Active CPU; prerendered pages are cache hits and builds are a separate budget, so the proxy is the cost.
@@ -654,7 +653,6 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-12: "10. k".
 
 ### D67 PostHog session replays on
-[E11]
 [Done]
 
 - Owner request 2026-11-12: watch how visitors use the site. `components/posthog-provider.tsx` initialises posthog-js with `api_host '/ingest'` (the reverse proxy in `next.config.mjs`); replays are off today.
@@ -688,7 +686,6 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: technical, no visible change.
 
 ### D71 Comparison page moves last in Getting Started and compares the searched names
-[E11]
 
 - Amends D60 (built, spec 31 merged; patched forward). `content/docs/getting-started/comparison.mdx` sits second in Getting Started and compares against tablecn, Material React Table and the shadcn data-table recipe. Google autocomplete, 2026-11-12: "tanstack table vs shadcn table", "shadcn table vs tanstack table", "shadcn data table vs tanstack table", "material react table vs tanstack / mui datagrid / ag grid" and "ag grid alternative" exist; "tablecn vs" and "tablecn alternative" return nothing.
 - `content/docs/getting-started/meta.json` becomes `introduction, install, usage, agents, comparison` (the placement TanStack Query, Router, Form, Zustand and Jotai use: one Comparison entry near the end of Getting Started).
