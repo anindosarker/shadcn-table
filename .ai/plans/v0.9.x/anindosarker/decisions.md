@@ -690,3 +690,6 @@ index e1645117..e67a5482 100644
 - `content/docs/guides/meta.json`: the entry moves to the end of the Fundamentals group. The page's content, title and URL are unchanged.
 - Checks: the sidebar order on a production build; `pnpm test docs-e2e --base base` green.
 - Owner, 2026-11-13: "k" on the item.
+
+### D73 Home title, description and hero line: brand first with the category words
+
