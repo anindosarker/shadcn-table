@@ -11,6 +11,11 @@ Checks:
 - Check (spec 43): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`EscapeClosesEditorAfterSelectPick`, `ClearFiltersClickableWithEditorOpen`, `RemoveAndClear`, `SelectClearBesideChevron` among them) after Task 4: pass, 23 of 23 on base, radix and aria; `pnpm test typecheck --base base`, `--base aria`: pass
 - Check (spec 44): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`SelectChevronAtInputEnd`, `SelectClearBesideChevron` among them) after Task 5: pass, 24 of 24 on base, radix and aria; `pnpm test typecheck --base aria`: pass
 - Check (spec 45): the two `grep` lines of spec 45 1.2 after Task 6: nothing, 9
+- Check (Local CI): `pnpm test typecheck --base base`, `--base radix`, `--base aria` at fbfb5192: pass (tsc clean)
+- Check (Local CI): `pnpm test lint` at df03b7f1: pass (9 warnings, all in `apps/shadcn-table-docs/examples/*/advanced` and `expanding-tree-flat-parse`, not this milestone's files)
+- Check (Local CI): `pnpm test validate-repo` at df03b7f1: pass (bases identical, registry fresh, 40 unit tests)
+- Check (Local CI): `pnpm test storybook-tests --base base` and `--base radix` at fbfb5192: pass, 651 of 651 each; `--base aria` at df03b7f1: pass, 651 of 651
+- Check (Local CI): `pnpm test docs-e2e --base aria --url http://localhost:5340` (`next start` of this branch's production build) at fbfb5192: fail, 10 checks (live-demo select and multi-select filters, guides and faceted-values chip flows: `locator.click: Timeout 5000ms exceeded`), cause in the 43 tracker; at df03b7f1: pass, 4 sections, 109 pages
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
@@ -26,11 +31,13 @@ Checks:
 - Task 3 spec 42, React Aria multi-select opens on click, docs E2E fallback removed: done (95ec9676)
 - Task 4 spec 43, Escape closes the editor after a select pick, Clear filters clickable on React Aria: done (0f0f9f54)
 - Task 5 spec 44, React Aria select chevron at the input's end: done (f13027c7)
-- Task 6 spec 45, Filter Mode caption `mt-1.5` in nine lines, captures: done
+- Task 6 spec 45, Filter Mode caption `mt-1.5` in nine lines, captures: done (348b684c)
+- Task 7 regenerate (`pnpm registry:build`, `pnpm lib:install` per base), `pnpm format`, changelog blocks for specs 41 to 45, Local CI: done (fbfb5192, df03b7f1)
 
 ## Attention
 
 - Spec 42 1.6.2 names `menuTrigger="focus"`; it also opens the React Aria list when the chip editor focuses the input on open, which hides the editor's other controls and breaks `MultiSelectArrayModes`, so the fix opens the list on a click through the ComboBox state (`ComboBoxStateContext`) instead; revert to `menuTrigger="focus"` if the owner prefers the list open on editor open.
+- Spec 43: the React Aria chips mode editor, now non-modal (`isNonModal`, as 1.6.3 asks), closes when the page scrolls (React Aria's rule for non-modal popovers) where it locked the page's scroll before; Base UI keeps it open on scroll. The docs E2E helpers now click the Filter button after scrolling it into view and click inside the open editor without Playwright's pre-click scroll.
 - Spec 43: the React Aria chip editor is now non-modal (`isNonModal`), so a click on a blank, non-focusable part of the page no longer closes it (React Aria closes a non-modal popover on blur to a focusable element, on scroll, on Escape or on its trigger); a click on a control, a table cell or Clear filters closes it as on Base UI and Radix.
 - `stories/features/Filtering.stories.tsx:363` and `stories/fixed-bugs/MultiSelectFilter.stories.tsx:53` still carry the ArrowDown fallback for the React Aria multi-select ("opens from the keyboard, not on a click"); harmless now (the list is open after the click), outside this milestone's files.
 
