@@ -57,7 +57,7 @@ export const ST_FilterRangeFields = <TData extends ST_RowData>({
         ))}
       </div>
       {showFilterModeCaption ? (
-        <p className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+        <p className="mt-1.5 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
           {localization.filterMode.replace(
             '{filterType}',
             localization[

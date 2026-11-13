@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableHeadCell } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCell';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export interface ST_TableHeadRowProps<TData extends ST_RowData>
   extends TableRowProps {

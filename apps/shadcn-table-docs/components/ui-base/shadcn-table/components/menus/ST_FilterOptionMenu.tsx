@@ -22,7 +22,7 @@ import {
 } from '@/components/ui-base/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui-base/shadcn-table/components/menus/ST_ActionMenuItem';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
 const noSubscription = () => () => {};

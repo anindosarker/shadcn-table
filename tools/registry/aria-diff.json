@@ -41,8 +41,8 @@
   "components/toolbar/ST_TablePagination.tsx",
   "components/toolbar/ST_ToolbarAlertBanner.tsx",
   "components/toolbar/ST_ViewSettingsButton.tsx",
+  "context/ST_TableContext.tsx",
   "hooks/display-columns/getST_RowExpandColumnDef.tsx",
-  "hooks/stTableHook.tsx",
   "shared/utils/style.utils.ts",
   "types.ts"
 ]

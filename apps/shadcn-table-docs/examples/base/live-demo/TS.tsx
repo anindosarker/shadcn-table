@@ -7,13 +7,23 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import {
+  BanknoteIcon,
+  BriefcaseIcon,
+  Building2Icon,
   CakeIcon,
   CalendarIcon,
   CircleCheckIcon,
+  MailIcon,
   MapIcon,
   UserIcon,
 } from 'lucide-react';
-import { data, type Member, statusList, usStateList } from './makeData';
+import {
+  data,
+  departmentList,
+  type Member,
+  statusList,
+  usStateList,
+} from './makeData';
 
 //dates are stored as YYYY-MM-DD and shown in UTC, so server and client agree
 const formatDate = (date: string) =>
@@ -22,6 +32,13 @@ const formatDate = (date: string) =>
     month: 'short',
     timeZone: 'UTC',
     year: 'numeric',
+  });
+
+const formatSalary = (salary: number) =>
+  salary.toLocaleString('en-US', {
+    currency: 'USD',
+    maximumFractionDigits: 0,
+    style: 'currency',
   });
 
 const Example = () => {
@@ -40,6 +57,18 @@ const Example = () => {
         size: 150,
       },
       {
+        accessorKey: 'email',
+        icon: MailIcon,
+        header: 'Email',
+        size: 240,
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+        size: 160,
+      },
+      {
         accessorKey: 'state',
         icon: MapIcon,
         header: 'State',
@@ -48,12 +77,29 @@ const Example = () => {
         size: 150,
       },
       {
+        accessorKey: 'department',
+        icon: BriefcaseIcon,
+        header: 'Department',
+        filterVariant: 'select',
+        filterSelectOptions: departmentList,
+        size: 170,
+      },
+      {
         accessorKey: 'age',
         icon: CakeIcon,
         header: 'Age',
         filterVariant: 'range',
         filterFn: 'between',
         size: 110,
+      },
+      {
+        accessorKey: 'salary',
+        icon: BanknoteIcon,
+        header: 'Salary',
+        filterVariant: 'range',
+        filterFn: 'between',
+        Cell: ({ cell }) => formatSalary(cell.getValue<number>()),
+        size: 140,
       },
       {
         accessorKey: 'joined', //YYYY-MM-DD strings sort and filter in date order

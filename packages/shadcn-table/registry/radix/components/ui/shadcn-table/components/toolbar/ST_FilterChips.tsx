@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import {
@@ -111,7 +111,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className={filterEditorClassName}
+        className={filterEditorClassName(column)}
         onOpenAutoFocus={(event) => {
           if (focusFilterInput(table, column.id)) event.preventDefault();
         }}
@@ -154,8 +154,14 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
     (column) => column.getCanFilter() && !chipIds.includes(column.id),
   );
 
+  // Focus the editor's input once per opened column: the table object changes
+  // with every filter write, which must not pull focus back to the first input.
+  const focusedIdRef = useRef<string | null>(null);
   useEffect(() => {
-    if (editingId) focusFilterInput(table, editingId);
+    if (editingId && focusedIdRef.current !== editingId) {
+      focusFilterInput(table, editingId);
+    }
+    focusedIdRef.current = editingId;
   }, [editingId, table]);
 
   const handleOpenChange = (next: boolean) => {
@@ -196,7 +202,9 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       {trigger}
       <PopoverContent
         align={variant === 'icon' ? 'end' : 'start'}
-        className={editingColumn ? filterEditorClassName : pickerClassName}
+        className={
+          editingColumn ? filterEditorClassName(editingColumn) : pickerClassName
+        }
         ref={popupRef}
         sideOffset={8}
       >

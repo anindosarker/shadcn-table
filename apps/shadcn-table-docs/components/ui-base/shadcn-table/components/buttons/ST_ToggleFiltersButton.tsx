@@ -2,7 +2,7 @@ import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui-base/button';
 import { type ButtonProps } from '@/components/ui-base/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 
 export type ST_ToggleFiltersButtonProps = ButtonProps;
 

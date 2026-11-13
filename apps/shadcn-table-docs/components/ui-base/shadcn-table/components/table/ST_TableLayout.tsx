@@ -11,7 +11,7 @@ import {
   ST_VIEW_PENDING_ATTR,
   ST_ViewPendingScript,
 } from '@/components/ui-base/shadcn-table/components/table/ST_ViewPendingScript';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui-base/shadcn-table/hooks/useST_ComposedRef';
 import { useST_FullScreenContainer } from '@/components/ui-base/shadcn-table/hooks/useST_FullScreenContainer';
 

@@ -33,7 +33,7 @@ import { ST_SortFns } from '@/components/ui-base/shadcn-table/shared/fns/sortFns
 
 // The registry slots are typed as open records, not as the built-in keys: the
 // table a call builds registers its own `filterFns`, `sortFns` and
-// `aggregationFns` on top of these (hooks/stTableHook.tsx), so any name is a
+// `aggregationFns` on top of these (hooks/createSTTableHook.ts), so any name is a
 // valid `filterFn`, `sortFn`, `aggregationFn` or `globalFilterFn` for core.
 const filterFns: NonNullable<TableFeatures['filterFns']> = ST_FilterFns;
 const sortFns: NonNullable<TableFeatures['sortFns']> = ST_SortFns;

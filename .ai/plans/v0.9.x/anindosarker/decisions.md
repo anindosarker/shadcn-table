@@ -494,6 +494,7 @@ index e1645117..e67a5482 100644
 - Supersedes D28 and the per-release word of D3 and D39: from 0.9.1 on, the runner approves the Prepare Release deployment of every release PR as soon as the job waits, with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D47"`; no approval line to the lead, no owner click. The `release` environment and its required reviewer stay (D3): the owner can still reject a waiting deployment by hand before the runner reaches it. Owner, 2026-11-09: "Approve it. Don't ask me for approvals from now on, you have access and approvals."
 
 ### D48 The perf budget is 600 ms under --ci, 300 ms locally
+[E13]
 
 - Source: Q54
   [Done]
@@ -635,7 +636,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-12: a false claim and typos, not a choice. Joins the next epic.
 
 ### D65 Docs e2e checks cover the byline and the two new pages
-[E11]
+[Done]  [E11]
 
 - Source: Q31. Spec 31 expected `pnpm test docs-e2e` to prove the byline and `/docs/getting-started/comparison` and `/docs/guides/tanstack-table-with-shadcn-ui`, but no milestone owned `test/docs-e2e`, so the frame milestone proved them by curl and a route run only.
 - `test/docs-e2e/lib/` gets checks: the two new pages render with their title and their first heading; the comparison table has one row per compared library. Owned by one milestone with `test/docs-e2e/**`.
@@ -662,7 +663,7 @@ index e1645117..e67a5482 100644
 - 2026-11-13: nothing to build. posthog-js records by default once the project setting is on, and `components/posthog-provider.tsx` does not turn it off; the owner switched it on in PostHog and saw replays from the live site ("I saw session replay was working. skip it").
 
 ### D68 validate-repo fails on a stale generated registry
-[E11]
+[Done]  [E11]
 
 - Source: Q36. `apps/shadcn-table-docs/registry.json` (and the other tracked registry outputs of `pnpm -w registry:build`, `registry:items`, `registry:hosted`) are generated from source files and committed; nothing fails when a milestone changes the source and not the output (spec 31 left a 252-line stale diff).
 - `pnpm test validate-repo` gains a step that runs the three registry generators and fails on `git diff --exit-code` over their tracked outputs, naming the stale file. The generators must be deterministic (same input, same bytes); if one is not, that is fixed first. Planning rule for specs: a milestone that edits example descriptions or registry sources owns the generated outputs too.
@@ -670,7 +671,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: tooling with one right answer.
 
 ### D69 Example sources are read per example, not by a tree-wide pattern
-[E11]
+[Done]  [E11]
 
 - Source: Q35. `apps/shadcn-table-docs/lib/example-source.ts:39` reads example files with a dynamic directory, so Turbopack traces the whole `examples/` tree including the generated `examples/.<base>` copies (about 1321 files times 8 pattern alternatives) into the server bundle; builds and typecheck are slow and Turbopack warns.
 - The example file list and contents are produced at build time by the existing generator step (`lib/example-variants.mjs`, which already walks `examples/`) into one generated module per example (or one JSON index), and `example-source.ts` imports from that module with static paths. The server component no longer calls `fs.readFile` with a computed directory. What the docs show is unchanged.
@@ -678,7 +679,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: build mechanics, no visible change.
 
 ### D70 posthog-js loads after hydration
-[E11]
+[Done]  [E11]
 
 - Source: Q30 (Q30). posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first script load; on `/` they are most of the 580 KB left after spec 30.
 - `components/posthog-provider.tsx` initialises posthog-js after hydration (dynamic import on an idle callback or first interaction, whichever is first), with the queue of events captured before init flushed on init, so the first pageview is not lost. Session replay (D67) starts on the same init. Nothing else in the root layout changes.
@@ -686,6 +687,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: technical, no visible change.
 
 ### D71 Comparison page moves last in Getting Started and compares the searched names
+[E12]
 
 - Amends D60 (built, spec 31 merged; patched forward). `content/docs/getting-started/comparison.mdx` sits second in Getting Started and compares against tablecn, Material React Table and the shadcn data-table recipe. Google autocomplete, 2026-11-12: "tanstack table vs shadcn table", "shadcn table vs tanstack table", "shadcn data table vs tanstack table", "material react table vs tanstack / mui datagrid / ag grid" and "ag grid alternative" exist; "tablecn vs" and "tablecn alternative" return nothing.
 - `content/docs/getting-started/meta.json` becomes `introduction, install, usage, agents, comparison` (the placement TanStack Query, Router, Form, Zustand and Jotai use: one Comparison entry near the end of Getting Started).
@@ -694,7 +696,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "Looks good.", "k" on the item.
 
 ### D72 TanStack guide moves last in Fundamentals
-[E11]
+[Done]  [E11]
 
 - Amends D60 (built, spec 31 merged; patched forward). `content/docs/guides/tanstack-table-with-shadcn-ui.mdx` is listed first in the Fundamentals group of Guides. It exists for search ("tanstack table shadcn" has autocomplete suggestions: ui, example, shadcn datatable, github); a reader already in the docs meets the practical guides first.
 - `content/docs/guides/meta.json`: the entry moves to the end of the Fundamentals group. The page's content, title and URL are unchanged.
@@ -702,7 +704,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "k" on the item.
 
 ### D73 Home title, description and hero line: brand first with the category words
-[E11]
+[Done]  [E11]
 
 - Amends D56 (built, spec 27 merged; patched forward before release). The merged title "shadcn-table: data table for shadcn/ui, built on TanStack Table" is 63 characters and the eyebrow reads "The batteries-included data table for shadcn/ui."; the owner found both too technical.
 - Evidence, 2026-11-12: Search Console for `sc-domain:shadcn-table.com` (28 days, 85 impressions): "shadcn table" 54 impressions at position 6.2 on `/`, "shadcn tables" 7, "table shadcn" 6, "shadcn data table" 1 at position 74. Across about 28 ranking titles and descriptions: react 28, data table 25, shadcn/ui 14, TanStack 13, component 13, data grid 7; "production-ready" and "batteries" 0. sadmann7/shadcn-table (now tablecn) still appears for "shadcn table", so the title carries the category words next to the brand.
@@ -711,7 +713,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-13: "14 k".
 
 ### D74 Docs pages return to their previous wording; byline and dates removed
-[E11]
+[Done]  [E11]
 
 - Supersedes D64. Amends D60 (built, spec 31 merged; patched forward before release). Spec 31 rewrote the intro and description of the example, guide and API pages with no keyword target per page and no style the owner had approved; the owner rejected the result on the preview (2026-11-13). A rewrite is the docs work's, in a new version; nothing is planned here.
 - Restored: every file under `content/docs/examples/**`, `content/docs/guides/*.mdx` and `content/docs/api/**` gets back its frontmatter `description` and body text from the commit before spec 31's copy milestones, with only typos in that older text fixed. `apps/shadcn-table-docs/registry.json` is regenerated from the restored descriptions.
@@ -723,7 +725,7 @@ index e1645117..e67a5482 100644
 - Source: Q58
 
 ### D75 One 0.9.3 deployment with everything, released on the owner's yes after the preview
-[E11]
+[Done]  [E11]
 
 - Amends D61 (held, not built). The owner wants one deployment, after every decided change: the release does not ship the `proxy.ts` budget fix (D66) ahead of the rest.
 - 0.9.3 carries E10 (D53 to D60, D62, D63), the direct fixes (D66, the sidebar Changelog row, the build tsconfig split, the regenerated registry) and the next epic's decisions (D65, D68, D69, D70, D72, D73, D74, D76). The release spec joins that epic, modelled on spec 23: patch label (D49), the D40 flow, P4 sync.
@@ -734,7 +736,7 @@ index e1645117..e67a5482 100644
 - Source: Q59
 
 ### D76 One shared site description
-[E11]
+[Done]  [E11]
 
 - `apps/shadcn-table-docs/lib/llms.ts` holds the `llms.txt` summary as a copy of the home description, `app/opengraph-image.tsx` a third copy (spec 29, spec 26). One exported `siteDescription` in `lib/shared.ts` is read by the root layout metadata, the OG image, `lib/llms.ts` and the home JSON-LD; its text is D73's description.
 - Checks: `grep -rn` of the description sentence under `apps/shadcn-table-docs` (outside `.next*`) finds it once; `/llms.txt`, the `/` meta description and the OG image show the same text on a production build.
@@ -742,7 +744,7 @@ index e1645117..e67a5482 100644
 - Source: Q29
 
 ### D77 Filter mode menu opens next to its button; the popover stays above the header
-[E11]
+[Done]  [E11]
 
 - With `columnFilterDisplayMode: 'popover'` on the Base UI and Radix bases, the filter-mode menu opens about 550 px right and 290 px below its button (measured: button 542,706, menu 1093,994); React Aria is correct; the live 0.9.2 site shows the same, so it predates E10 (d54340da, 2026-10-31).
 - Cause: `useST_MenuAnchor.ts:124-131` places the menu's invisible trigger span with `position: fixed` at the button's screen position; inside the popover positioner, which carries `transform: translate(...)`, fixed positioning is relative to that transformed ancestor, so the span is offset by the popover's own position (`ST_FilterOptionMenu.tsx:392-405` base, `:399` radix).
@@ -753,7 +755,7 @@ index e1645117..e67a5482 100644
 - Source: Q62
 
 ### D78 Usage and Introduction show a richer live demo with select, range, date and multi-select filters
-[E11]
+[Done]  [E11]
 
 - The Live Example on `/docs/getting-started/usage` (`content/docs/getting-started/usage.mdx:177`) and the demo on `/docs/getting-started/introduction` are the Basic Example (`examples/<base>/basic/TS.tsx:76-103`): five string columns, five rows, every filter a text box. The owner saw it in a PostHog replay and found it a weak demo.
 - A new example (one per base, in the examples registry like the others) with about 20 rows: First Name and Last Name with text filters, State with `filterVariant: 'select'`, Age with a number range, a date column with a date filter, a status column with `filterVariant: 'multi-select'`. Both pages embed it where the Basic Example is embedded today.
@@ -764,7 +766,7 @@ index e1645117..e67a5482 100644
 - Source: Q63
 
 ### D79 The docs app drops its unused zod dependency
-[E11]
+[Done]  [E11]
 
 - `apps/shadcn-table-docs/package.json:57` lists `zod` (added by spec 24 for the frontmatter `date` field in `lib/source.ts`, 3e8114a3); spec 32 removed the field and the byline (005b49f3, D74), and nothing in the docs app imports `zod` now.
 - Fix: remove the `zod` line from `apps/shadcn-table-docs/package.json` and refresh `pnpm-lock.yaml` with `pnpm install`; no other file changes.
@@ -774,7 +776,7 @@ index e1645117..e67a5482 100644
 - Source: Q64
 
 ### D80 The filter mode menu lands next to its button even when opened while the filter popover animates in
-[E11]
+[Done]  [E11]
 
 - On React Aria, a click on the mode button during the popover's 100 ms enter animation (`zoom-in-95` plus slide, `registry/aria/components/ui/popover.tsx:37`) leaves the menu misplaced: `useST_MenuAnchor.ts:63-68, 84-85` measures the button's box once and re-measures only on resize or scroll, and the fixed anchor `<a>` sits inside the transformed popover (`aria/.../menus/ST_FilterOptionMenu.tsx:392-404`), so the offset counts twice. From the code, not reproduced; found by the D77 play.
 - Base UI and Radix share the hook and the same popover animation; after D77's portal the double offset is gone, but the anchor still keeps the mid-animation box. Likely the same bug, smaller; not verified.
@@ -784,3 +786,139 @@ index e1645117..e67a5482 100644
 - Runs as a fix milestone added to the running E11 epic, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
 - Owner, 2026-11-13: "2" (fix it in E11, 0.9.3 waits for it).
 - Source: Q65
+
+### D81 Date filters compare dates, also when the column holds Date values
+[E12]
+
+- With `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`: "greater than" keeps every row, "less than" none (run E11, card Q67). Seen live by the owner on 0.9.3, /docs/examples/react-query: "after 11/02/2025" kept rows dated 9/20/2025, 2/18/2025 and 9/28/2025.
+- Fix in the next epic, not as a patch release: date filter modes compare date values for `Date` accessors and for ISO string accessors. The spec follows one lookup: the exact cause in the filter functions, which modes are affected (equals, between), what Material React Table does, and whether the react-query and other remote examples filter in their own mock server code and need the same fix there.
+- Proof (P11): a play with a `Date` accessor column that fails before the fix on "greater than" and "less than" and passes after; the live demo (D78) may then return to a `Date` accessor.
+- Lookup 2026-11-13 (code read, not run). Cause: the date, datetime and time inputs send `event.target.value`, a string (`ST_FilterTextField.tsx:420-426` base and radix, `:445` aria); `shared/fns/filterFns.ts:85-170` then compares it with the `Date`'s text form. For a `Date` accessor all eight modes are wrong: `greaterThan` and `greaterThanOrEqualTo` keep every row, `lessThan`, `lessThanOrEqualTo` and `equals` none, `notEquals` every row, `between` and `betweenInclusive` none once the upper bound is set; a plain `'date'` column with no `filterFn` defaults to `fuzzy` (`column.utils.ts:216`) and keeps none. ISO string accessors work. Material React Table passes dayjs objects, so its greater, less and between modes work: a port deviation.
+- Fix: in `shared/fns/filterFns.ts` (identical on the three bases), when the row value is a `Date` the filter value becomes a timestamp before comparing: a date-only string reads as local midnight and equality compares by calendar day; an `HH:mm` value compares time of day. Filter values stay strings, so stored and URL state stay serializable. `getDefaultColumnFilterFn` (`column.utils.ts:210`) gives a plain date variant `equals` instead of `fuzzy`.
+- Examples affected, client side: advanced, subheader-filters, customize-filter-variants. Not affected: persistent-view (ISO strings), server-side-data (its route compares by `getTime()`).
+- react-query: its route `app/api/data/route.ts:29-33` compares dates correctly but ignores the filter mode (always `>`), and `getData()` re-randomizes `lastLogin` on every request (`route.ts:16`, `db.ts:1413`); the owner's live symptom there is not explained by the library bug. The spec finds that cause and fixes the route in the same epic.
+- Owner, 2026-11-13: "1k" (next epic, after a lookup).
+- Source: Q67
+
+### D82 On React Aria the multi-select filter list opens on a click into its input
+[E12]
+
+- Today it opens only on ArrowDown or the chevron; Base UI and Radix open on click (run E11 browser check of the D78 demo). Fix: React Aria opens on click like the other two bases. Owner, 2026-11-13: "decision is to fix it".
+- Source: Q68
+
+### D83 (superseded by D97) Escape closes the filter chip editor after a select value is picked, on the three bases
+[E12]
+
+- Today Radix closes it; Base UI and React Aria leave the editor open, and on React Aria the open editor blocks the Clear filters button until a click outside (run E11 browser check of the D78 demo). Fix: Escape closes the editor on Base UI and React Aria as on Radix, and Clear filters stays clickable. Owner, 2026-11-13: "fix. k".
+- Source: Q69
+
+### D84 The live demo on Introduction and Usage has ten columns, so wide-table behavior shows
+[E12]
+
+- The D78 demo (`examples/{base,radix,aria}/live-demo`) has six columns: First Name, Last Name, State, Age, Joined, Status. It gains Email, City, Department (select filter) and Salary (range filter), ten in all, so the table scrolls sideways at the docs width on purpose and pinning, hiding and reordering have columns to act on. No column is pinned by default. Checks as D78: both pages render it on the three bases and each non-text filter opens and filters rows. Owner, 2026-11-13: "add more columns in intro and usage instead to show the behaviours for multi columns"; "1 k".
+- Source: Q70
+
+### D85 The Filter Mode line sits 6 px under the filter input
+[E12]
+
+- The caption "Filter Mode: <mode>" has `mt-0.75` (3 px) in nine places: `ST_FilterTextField.tsx`, `ST_FilterRangeFields.tsx`, `ST_FilterRangeSlider.tsx` on Base UI, Radix and React Aria. It becomes `mt-1.5` (6 px); `leading-[0.8rem]` and the other classes stay. Owner, 2026-11-13: "need to increase a bit padding for the line that says filter fuzzy"; "1 k".
+- Source: Q71
+
+### D86 Range filter editors show both inputs in full and accept input
+[E12]
+
+- Live 0.9.3, /docs/examples/filter-variants, Base UI, Departure Time chip, mode between inclusive: the two time inputs sit side by side, the second runs past the editor's right edge (no clock icon), and the owner could not fill the inputs at all. Fix: in the chip editor both inputs of a range filter fit inside the editor and accept input, on the three bases, for time, date, datetime and number ranges. The cause of the failed input is not looked up; the spec finds it first. Proof (P11): a play that fills both inputs of a time range in the chip editor and asserts both boxes lie inside the editor's box. Owner, 2026-11-13: "This filter is broken"; "I wasn't able to put inputs at all, need to fix the UI as well"; "Q73 1k".
+- Source: Q73
+
+### D87 On React Aria the select filter's chevron sits at the right end of its input
+[E12]
+
+- Live 0.9.3, /docs/examples/filter-variants, React Aria, City chip editor, mode equals: the chevron follows the placeholder "Filter by City" in the middle of the input. Fix: the chevron sits at the input's right end, as on Base UI and Radix (the spec compares the three). Owner, 2026-11-13: "arrow in the middle, ui issue"; "1 k".
+- Source: Q75
+
+### D88 Typed filters use one debounce hook with commit and cancel rules
+[E12]
+
+- Today typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce created once per mount (`ST_FilterTextField.tsx:212-232`, 200 ms, 400 ms with `manualFiltering`); global search has its own (`ST_GlobalFilterTextField.tsx:67-77`, 250 or 500 ms); the util (`shared/utils/utils.ts:60-77`) has `clear()` and no flush. A 1:1 port of Material React Table v3.
+- Problems: filters fire mid-typing; native date and time inputs emit half-typed values, so a pause over 200 ms applies a wrong date; the field's clear button, Clear filters (`ST_FilterChips.tsx:277`), the column menu clear (`ST_ColumnActionMenu.tsx:157`), a stored view load and global search clear or Escape do not cancel a pending call, which re-applies the old text; a pending call fires after unmount; Enter and blur do not commit.
+- Hook: `hooks/useST_DebouncedCallback.ts`, identical on the three bases, one `registry.json` entry each; no new dependency (`@tanstack/react-pacer`, used by the Material React Table v9 port, is not adopted). `useST_DebouncedCallback(fn, wait)` returns `run`, `flush`, `cancel`, `isPending`; it calls the latest `fn` and reads `wait` live.
+- Used by the typed column filters and global search. Select, multi-select, checkbox, range slider and edit cells stay as they are.
+- Rules: Enter and blur flush; every clear path cancels (the field's clear button, Escape, the outside-value sync, which covers Clear filters, the column menu and stored views, the global clear, closing the search field). On unmount: the spec picks flush or cancel and proves it with a play on a chip editor that closes mid-wait.
+- Waits: text, number and autocomplete column filters 500 ms; global search 500 ms; the same with `manualFiltering`. Date, datetime and time apply only a complete value, on Enter, on blur or on a pick from the native picker, never per keystroke; the spec checks per input type in a browser what counts as complete.
+- The wait is a table option with a per-column override; names are set in the spec, next to `manualFiltering` in the table options and next to the filter props in the column definition.
+- Proof (P11): plays that fail before and pass after: type then Clear filters (the text does not come back), type then Enter (applies at once), a half-typed year in a date filter (no filter applied). `RenderCounts.stories.tsx` stays green. The `debounce` util is removed if nothing else uses it.
+- Owner, 2026-11-13: "The filters apply way faster than I type"; "add a debounce hook. and then implement. this needs good planning"; "1 k" (own hook, with the option).
+- Source: Q74
+
+### D89 Release 0.9.4 ships E12
+[E12]
+
+- E12 (D71, D81 to D88, and the home heading decision if the owner adds it) ships as 0.9.4 in the same epic: a release spec modelled on spec 38 (`plan/specs/38-release-0-9-3.md`), patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; no preview stop, except that the D71 comparison table is read by the owner in chat before its milestone merges. Owner, 2026-11-13: "yes add" (on "add release 0.9.4" to E12).
+- Edited 2026-11-13 before build: the owner does not read the comparison table. The lead verifies every cell against its cited source before the milestone merges and removes or corrects a cell that the source does not show; nothing is pasted to the owner. This also replaces the owner read in D71's Checks. Owner: "Double check and verify yourself, I don't wanna see it."
+
+### D90 Home hero: the name stays the heading; the line above and the sentence below carry the search words
+[E12]
+
+- Amends D73 (built, live in 0.9.3) for the hero line and adds the hero sentence. The h1 stays `shadcn-table`. The line above it reads `The open-source shadcn data table for React, built on TanStack Table.` (was `The open-source React data table for shadcn/ui, built on TanStack Table.`). The sentence below it reads `A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in.` (was `A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.`). The title tag and the meta description of D73 are unchanged. Chosen by the owner after the SEO research in session "v0.9.x heading". Checks: `curl` of `/` on a production build shows both texts exactly; `pnpm test docs-e2e --base base` green. Owner, 2026-11-13: "this is what I picked for 72".
+- Source: Q72
+
+### D91 The table context and the defaults context move to a context folder, named as contexts
+[E12]
+
+- `hooks/stTableHook.tsx` (table context pair, `useSTContext`, `ST_TableProvider`, and the factory `createSTTableHook`) and `hooks/useST_Defaults.tsx` (context, provider, reader hook) are filed and named as hooks. Per base, under `registry/<base>/components/ui/shadcn-table/`: new `context/ST_TableContext.tsx` exports `tableContext`, `useTableContext`, `useSTContext`, `ST_TableProvider`; new `context/ST_DefaultsContext.tsx` exports `ST_DefaultsContext`, `ST_DefaultsProvider`, `useST_Defaults`; the factory moves to `hooks/createSTTableHook.ts`; the two old files are removed.
+- Every exported name stays the same, so imports through `index.ts` keep working; only path imports change (about 60 files per base, the stories, the registry entries, the docs pages that name the files). One file per context holds context, provider and reader hook together.
+- Checks: `grep -rn "hooks/stTableHook\|hooks/useST_Defaults" packages apps` prints nothing outside the changelog; typecheck, lint, validate-repo and the Storybook tests green on the three bases; the registry is regenerated and `registry.json` lists the new paths; the changelog names the moved files under `### Changed`.
+- Runs as a fix milestone added to the running E12 epic, after `Filter editor fixes` has merged (same files' import lines), so 0.9.4 ships with it.
+- Owner, 2026-11-14: "These are bad coding patterns"; on the first suggested layout: "this looks better. record and add to current epic".
+- Source: Q82
+
+### D92 ISO date-time text values keep comparing as dates in date filters
+[E13]
+
+- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
+- Source: Q77
+
+### D93 Clearing an is-empty filter returns the column to its default filter mode
+[E13]
+
+- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
+- Source: Q78
+
+### D94 The column filtering guide states the date defaults of D81
+[E13]
+
+- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
+- Source: Q79
+
+### D95 The React Query example offers only the filter modes its server applies
+[E13]
+
+- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
+- Source: Q81
+
+### D96 A click in a date or time filter box starts typing at its first part
+[E13]
+
+- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
+- Source: Q80
+
+### D97 React Aria filter popups are modal again as in 0.9.3; the Escape fix stays
+[E12]
+
+- Supersedes D83.
+- Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
+- Fix: remove `isNonModal` from the three popups and the code added only for it (focus on open in `focusFilterInput`, the two `shouldCloseOnInteractOutside` filters, the `clickInView` and `clickInPlace` helpers in `test/docs-e2e/lib/helpers.mjs` where nothing else needs them), in the registry and the generated docs copies. Not a revert of the commits: the `closeOnEscape` change (Escape closes the editor after a select pick, base and aria) and every other E12 fix stay.
+- React Aria again: page locked while a popup is open, the popup never closes on scroll, the first outside click only closes it. Clear filters takes two clicks there with a popup open; D83's "Clear filters stays clickable" is dropped for React Aria. The play `ClearFiltersClickableWithEditorOpen` no longer asserts one click on React Aria. Base UI and Radix are unchanged.
+- Checks on React Aria: `EscapeClosesEditorAfterSelectPick` passes with the modal popup; a popup stays open and the page does not scroll while it is open; the select filter's arrow sits at the right edge of its field (owner screenshot of live 0.9.3, `/docs/examples/filter-variants`, City chip), and a misplaced arrow becomes its own card. CHANGELOG 0.9.4 drops the non-modal lines.
+- Owner, 2026-11-14: "The old behavior was completely fine", "don't just blindly revert code", "k".
+- Source: Q83
+
+### D98 The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader
+[E13]
+
+- `packages/shadcn-table/stories/features/Filtering.stories.tsx` has 37 stories; 21 pin `columnFilterDisplayMode: 'subheader'` while the library default is `'chips'` (`useST_TableOptions.ts:40`), so Storybook shows the old filter row for most filtering features (owner, 2026-11-08, deployed Storybook).
+- Fix: the 10 subheader stories with no play drop the pin and follow the default chips: FilterFnAndFilterVariants, FilterFnAndFilterVariantsFaceted, FilteringChangeModeEnabled, DisableSomeFilterTypesForCertainColumns, FilteringDisabledForCertainColumns, CustomFilterFunctionPerColumn, CustomFilterFns, CustomFilterComponent, CustomizeFilterTextFields, ExternalSetFilterValue.
+- The 11 subheader stories with a play keep the subheader row and their plays unchanged, as that mode's regression tests; each gets a story name that says "Subheader". FilterModeMenuClosesInPlace reuses the render of FilteringChangeModeEnabled (:489) and keeps a subheader render of its own.
+- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
+- Owner, 2026-11-14: "k" on option 1.
+- Source: Q2
