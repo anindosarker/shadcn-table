@@ -15,6 +15,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-14: 'Did we invent a date picker for ourselves instead of using the shadcn one?', pointing at https://ui.shadcn.com/docs/components/base/date-picker#input (the Input variant). Today: native input type date, datetime-local and time in ST_FilterTextField.tsx (base :595-609, radix :596-610, aria :661-675). Related: Q84, a native-input caret problem.
 	- Owner, 2026-11-14: 'Of course, we are gonna use shadcn date picker.' Direction set; the open parts are what the lookup finds: ranges, time and date-time filters, the React Aria base, new dependencies.
 	- Owner, 2026-11-14: 'We are gonna use shadcn input and shadcn date picker wherever it's relevant.' Scope is every place the library renders its own input or date control, not only the date filters.
+	- shadcn date picker (docs /base and /radix date-picker, fetched 2026-11-14): no DatePicker component and no registry item; docs say it is 'a composition of the <Popover /> and the <Calendar />' that the user copies. Calendar item needs react-day-picker + date-fns (registry calendar.json). Input variant: InputGroupInput free text, onChange runs new Date(e.target.value) and keeps it if valid, ArrowDown opens the Popover Calendar (mode=single); not segmented. Docs also show Range (Calendar mode=range), Time Picker (a native <input type=time> beside the calendar), Natural Language (chrono-node). No date-time picker.
 
 ## Decided
 
