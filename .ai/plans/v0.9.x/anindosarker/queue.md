@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q66** The home page still downloads 586 KB of scripts in total although analytics now loads late #run-E11
-	- Spec 34: first-load script transfer on `/` fell from 421 KB to 317 KB and posthog-js is in no initial chunk (D70's check, met), but the spec's Lighthouse whole-trace sum stays 586 KB (target 450): posthog-js loads on idle inside the trace, and without it the sum is 482 KB because the home demo table loads on mount (D62). The run merges 34 on D70's check; keep, or gate the demo table.
-	- Verifier re-measure at 83c909db: 344.8 KB compressed over the 21 chunks the HTML of `/` references (bar 450 KB); merged as ec360093.
-	- Owner 2026-11-13: keep it for now (option 1); first load is under the bar.
 - [ ] **Q67** A date filter does nothing in the chips editor when the column holds real dates #run-E11
 	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
 - [ ] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
@@ -265,6 +261,10 @@ kanban-plugin: basic
 	- Returning visitors get what localStorage.theme holds: preset 'light' renders light (bg oklch(1 0 0)) under both OS schemes, and a stale 'system' (possible from before b186c244 set enableSystem: false on 2026-10-18) also renders light because the script adds the literal class 'system'.
 	- Only clicks write the theme: components/theme-controls.tsx:40 (header toggle) and components/theme-customizer.tsx:155 (Mode buttons); the home theme demo cycles data-demo-theme on a scoped element (components/theme-demo/theme-scope.tsx:72) and design-system-provider.tsx:361 toggles .dark only on .cn-menu-target popups, never on <html>.
 	- PostHog replay (rrweb) snapshots <html> with the class already set and inlines CSS when it can, else the player refetches the stylesheet (PostHog troubleshooting docs), so a light replay is most likely a visitor with localStorage.theme light/system or an unstyled replay of old CSS (guess, replay not inspectable); no code change needed for new visitors, and forcing dark for returning ones would mean forcedTheme 'dark' (or dropping the toggle) in app/layout.tsx:69.
+- [x] **Q66** The home page still downloads 586 KB of scripts in total although analytics now loads late #run-E11
+	- Spec 34: first-load script transfer on `/` fell from 421 KB to 317 KB and posthog-js is in no initial chunk (D70's check, met), but the spec's Lighthouse whole-trace sum stays 586 KB (target 450): posthog-js loads on idle inside the trace, and without it the sum is 482 KB because the home demo table loads on mount (D62). The run merges 34 on D70's check; keep, or gate the demo table.
+	- Verifier re-measure at 83c909db: 344.8 KB compressed over the 21 chunks the HTML of `/` references (bar 450 KB); merged as ec360093.
+	- Owner 2026-11-13: keep it for now (option 1); first load is under the bar.
 
 ## Autofix
 
