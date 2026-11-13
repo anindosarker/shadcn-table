@@ -14,8 +14,6 @@ kanban-plugin: basic
 	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.
 - [ ] **Q81** The React Query example offers every filter mode on text columns but its server only does contains
 	- `apps/shadcn-table-docs/app/api/data/route.ts` and `examples/<base>/react-query/TS.tsx`: spec 40 sent and limited modes for Last Login only, as scoped; the text columns still show all modes and ignore the choice.
-- [ ] **Q82** Two files that hold React contexts and providers are named and filed as hooks
-	- Owner 2026-11-14: `hooks/stTableHook.tsx` and `hooks/useST_Defaults.tsx` are "bad coding patterns"; they are context providers and should live in a `context/` folder with context and provider names.
 
 ## Decided
 
@@ -215,6 +213,8 @@ kanban-plugin: basic
 - [x] **Q72** The home page's big heading is only the name and says nothing about tables #D90 #E12
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
 	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
+- [ ] **Q82** Two files that hold React contexts and providers are named and filed as hooks #D91
+	- Owner 2026-11-14: `hooks/stTableHook.tsx` and `hooks/useST_Defaults.tsx` are "bad coding patterns"; they are context providers and should live in a `context/` folder with context and provider names.
 
 ## Later
 
