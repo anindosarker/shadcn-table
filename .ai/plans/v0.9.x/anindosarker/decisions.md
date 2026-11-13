@@ -806,3 +806,8 @@ index e1645117..e67a5482 100644
 
 - Today Radix closes it; Base UI and React Aria leave the editor open, and on React Aria the open editor blocks the Clear filters button until a click outside (run E11 browser check of the D78 demo). Fix: Escape closes the editor on Base UI and React Aria as on Radix, and Clear filters stays clickable. Owner, 2026-11-13: "fix. k".
 - Source: Q69
+
+### D84 The live demo on Introduction and Usage has ten columns, so wide-table behavior shows
+
+- The D78 demo (`examples/{base,radix,aria}/live-demo`) has six columns: First Name, Last Name, State, Age, Joined, Status. It gains Email, City, Department (select filter) and Salary (range filter), ten in all, so the table scrolls sideways at the docs width on purpose and pinning, hiding and reordering have columns to act on. No column is pinned by default. Checks as D78: both pages render it on the three bases and each non-text filter opens and filters rows. Owner, 2026-11-13: "add more columns in intro and usage instead to show the behaviours for multi columns"; "1 k".
+- Source: Q70
