@@ -266,3 +266,53 @@ export const EscapeClearsThenCloses = {
     await waitFor(() => expect(document.activeElement).toBe(toggle));
   },
 };
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** The search with its global filter state printed above it. */
+const SearchWithClearButton = () => {
+  const [globalFilter, setGlobalFilter] = useState<string | undefined>();
+  return (
+    <>
+      <output data-testid="global-filter">
+        {JSON.stringify(globalFilter ?? null)}
+      </output>
+      <ShadcnTable
+        columns={columns}
+        data={data}
+        initialState={{ showGlobalFilter: true }}
+        onGlobalFilterChange={setGlobalFilter}
+        showClearSearchButton
+        state={{ globalFilter }}
+      />
+    </>
+  );
+};
+
+/**
+ * The clear button and Escape inside the wait drop the pending write: the
+ * global filter stays unset (D88).
+ */
+export const ClearCancelsPendingSearch = {
+  render: () => <SearchWithClearButton />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const before = bodyRowTexts(canvasElement);
+    const output = canvas.getByTestId('global-filter');
+
+    await userEvent.type(searchInput(canvasElement), data[3].lastName);
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear search' }));
+    await sleep(700);
+    expect(output).toHaveTextContent('null');
+    expect(searchInput(canvasElement)).toHaveValue('');
+    expect(bodyRowTexts(canvasElement)).toEqual(before);
+
+    await userEvent.type(searchInput(canvasElement), data[3].lastName);
+    await userEvent.keyboard('{Escape}');
+    await sleep(700);
+    expect(output).toHaveTextContent('null');
+    expect(searchInput(canvasElement)).toHaveValue('');
+    expect(bodyRowTexts(canvasElement)).toEqual(before);
+  },
+};

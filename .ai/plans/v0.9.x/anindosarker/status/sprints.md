@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-13 20:34
+Updated: 2026-11-14 00:52
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 | S16 | S17 | S18 | S19 | S20 | S21 | S22 | S23 | S24 | S25 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -15,12 +15,19 @@ Updated: 2026-11-13 20:34
 | E3 07 After release |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 08 Theme panel copy import |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 09 Theme panel shortcut row |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 09.1 Dev server clean |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 09.2 Theme check closes the search dialog |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 09.3 Theme hotkey checks wait for the change |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 10 Theme color picker |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 11 Persistent view page size |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 12 Stored view page size |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 12.1 Stored view page index |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E4 13 Docs parts hooks |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 13.1 CRUD dialog check waits for the rows |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E4 13.2 Installation references refreshed |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E5 14 Icon library select |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E5 15 Style sheet on demand |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E5 15.1 Perf budgets on CI |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E6 16 CI skip bump commit |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E6 17 CI Node 24 actions |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E6 18 PR summary layout | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -28,6 +35,7 @@ Updated: 2026-11-13 20:34
 | E7 20 Integration 0.9.1 |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E7 20 Release PR 0.9.1 |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E7 20 After release 0.9.1 |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E7 20.1 Page index play |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E9 21 Sitemap and robots | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E9 22 Remove dev routes |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E9 23 Integration 0.9.2 |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -45,7 +53,11 @@ Updated: 2026-11-13 20:34
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E10 31.1 Bundle analyzer wrap |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E10 31.2 Guides copy accuracy |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 32 Docs wording restore |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 32.1 Remove unused zod |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 32.2 Richer live demo |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
 | E11 33 Home title and description |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 34 PostHog after hydration |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E11 35 Example sources per example |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -54,31 +66,18 @@ Updated: 2026-11-13 20:34
 | E11 38 Integration 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
 | E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |
 | E11 38 After release 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
-| E12 39 Filter debounce hook |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
-| E12 40 Date filter compare |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
-| E12 40 React Query route dates |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |
-| E12 41 Range filter editor |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |
-| E12 42 React Aria multi-select opens on click |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |
-| E12 43 Escape closes filter editor |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |
-| E12 44 React Aria select filter chevron |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
-| E12 45 Filter Mode caption gap |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
-| E12 46 Live demo ten columns |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |
+| E11 38.1 Filter mode menu anchor | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E11 38.2 Filter mode menu during popover animation |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
+| E12 39 Filter debounce hook |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
+| E12 40 Date filter compare |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
+| E12 40 React Query route dates |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
+| E12 41 Filter editor fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
+| E12 41.1 Context folder |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
+| E12 41.2 Docs library install removes files the registry dropped |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
+| E12 46 Live demo ten columns |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E12 47 Comparison page |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
-| E12 48 Integration 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
-| E12 48 Release PR 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |
-| E12 48 After release 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
-| E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
-| fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Filter mode menu anchor (Q62) | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
-| fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Page index play (Q22) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Perf budgets on CI (Q28) |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Installation references refreshed (Q20) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Remove unused zod (Q64, D79) |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Richer live demo (Q63) |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
-| fix Stored view page index (Q22) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Theme check closes the search dialog (Q24) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Theme hotkey checks wait for the change (Q23) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E12 47.1 Docs build memory |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
+| E12 48 Integration 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |
+| E12 48 Release PR 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |
+| E12 48 After release 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
+| E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |

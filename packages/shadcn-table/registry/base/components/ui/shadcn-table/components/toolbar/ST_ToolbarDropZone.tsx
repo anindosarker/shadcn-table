@@ -5,7 +5,7 @@ import {
   type DivProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export type ST_ToolbarDropZoneProps = DivProps;
 

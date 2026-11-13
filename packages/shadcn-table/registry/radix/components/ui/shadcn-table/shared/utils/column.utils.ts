@@ -210,7 +210,13 @@ export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
   const { filterVariant } = columnDef;
   if (filterVariant === 'multi-select') return 'arrIncludesSome';
   if (filterVariant?.includes('range')) return 'betweenInclusive';
-  if (filterVariant === 'select' || filterVariant === 'checkbox')
+  if (
+    filterVariant === 'select' ||
+    filterVariant === 'checkbox' ||
+    filterVariant === 'date' ||
+    filterVariant === 'datetime' ||
+    filterVariant === 'time'
+  )
     return 'equals';
   return 'fuzzy';
 };

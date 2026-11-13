@@ -20,7 +20,7 @@ import {
 } from '@/components/ui-radix/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-radix/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui-radix/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
-import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ShowHideColumnsMenuProps

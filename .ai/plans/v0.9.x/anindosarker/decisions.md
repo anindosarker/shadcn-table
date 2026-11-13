@@ -860,3 +860,13 @@ index e1645117..e67a5482 100644
 
 - Amends D73 (built, live in 0.9.3) for the hero line and adds the hero sentence. The h1 stays `shadcn-table`. The line above it reads `The open-source shadcn data table for React, built on TanStack Table.` (was `The open-source React data table for shadcn/ui, built on TanStack Table.`). The sentence below it reads `A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in.` (was `A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.`). The title tag and the meta description of D73 are unchanged. Chosen by the owner after the SEO research in session "v0.9.x heading". Checks: `curl` of `/` on a production build shows both texts exactly; `pnpm test docs-e2e --base base` green. Owner, 2026-11-13: "this is what I picked for 72".
 - Source: Q72
+
+### D91 The table context and the defaults context move to a context folder, named as contexts
+[E12]
+
+- `hooks/stTableHook.tsx` (table context pair, `useSTContext`, `ST_TableProvider`, and the factory `createSTTableHook`) and `hooks/useST_Defaults.tsx` (context, provider, reader hook) are filed and named as hooks. Per base, under `registry/<base>/components/ui/shadcn-table/`: new `context/ST_TableContext.tsx` exports `tableContext`, `useTableContext`, `useSTContext`, `ST_TableProvider`; new `context/ST_DefaultsContext.tsx` exports `ST_DefaultsContext`, `ST_DefaultsProvider`, `useST_Defaults`; the factory moves to `hooks/createSTTableHook.ts`; the two old files are removed.
+- Every exported name stays the same, so imports through `index.ts` keep working; only path imports change (about 60 files per base, the stories, the registry entries, the docs pages that name the files). One file per context holds context, provider and reader hook together.
+- Checks: `grep -rn "hooks/stTableHook\|hooks/useST_Defaults" packages apps` prints nothing outside the changelog; typecheck, lint, validate-repo and the Storybook tests green on the three bases; the registry is regenerated and `registry.json` lists the new paths; the changelog names the moved files under `### Changed`.
+- Runs as a fix milestone added to the running E12 epic, after `Filter editor fixes` has merged (same files' import lines), so 0.9.4 ships with it.
+- Owner, 2026-11-14: "These are bad coding patterns"; on the first suggested layout: "this looks better. record and add to current epic".
+- Source: Q82

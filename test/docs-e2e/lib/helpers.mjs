@@ -82,6 +82,38 @@ export async function headerLabelsFit(w, id, check) {
 }
 
 /**
+ * Clicks `locator` after scrolling it to the middle of the viewport and
+ * letting the scroll settle. React Aria closes a non-modal popover (the chips
+ * mode editor, spec 43) when the page around its trigger scrolls: Playwright's
+ * own pre-click scroll, for the trigger or for an option of an editor that
+ * opened against the bottom edge, arrives a frame later and would close it.
+ */
+export async function clickInView(page, locator) {
+  await locator.evaluate((element) =>
+    element.scrollIntoView({ block: 'center', inline: 'nearest' }),
+  );
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      ),
+  );
+  await locator.click();
+}
+
+/**
+ * Clicks the centre of `locator` with the mouse where it is, without
+ * Playwright's pre-click scroll, which would close an open React Aria
+ * chips mode editor (see clickInView).
+ */
+export async function clickInPlace(page, locator, timeout = 5000) {
+  await locator.waitFor({ state: 'visible', timeout });
+  const box = await locator.boundingBox();
+  if (!box) throw new Error('clickInPlace: the element has no box');
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+
+/**
  * The chips filter flow of example `w` (filters in chips mode): the toolbar
  * Filter button opens the column picker, picking `column` adds its chip and
  * opens the editor in place; closing it and clicking the chip opens the
@@ -92,11 +124,11 @@ export async function headerLabelsFit(w, id, check) {
 export async function chipFilter(page, w, id, column, control, check) {
   const editor = page.locator('[data-slot="popover-content"]:visible');
   try {
-    await w.locator('button[aria-label="Filter"]').first().click();
-    await editor
-      .getByRole('option', { name: column, exact: true })
-      .first()
-      .click({ timeout: 5000 });
+    await clickInView(page, w.locator('button[aria-label="Filter"]').first());
+    await clickInPlace(
+      page,
+      editor.getByRole('option', { name: column, exact: true }).first(),
+    );
     await page.keyboard.press('Escape');
     await editor.first().waitFor({ state: 'hidden', timeout: 5000 });
   } catch (e) {
@@ -110,7 +142,7 @@ export async function chipFilter(page, w, id, column, control, check) {
   const chip = w.locator('[data-filter-chip]', { hasText: column });
   check(`${id}: ${column} chip`, (await chip.count()) === 1);
   if (!(await chip.count())) return editor;
-  await chip.first().click();
+  await clickInView(page, chip.first());
   await editor
     .first()
     .waitFor({ timeout: 5000 })
@@ -679,25 +711,66 @@ export async function demoLoop({ page, check, base }) {
 }
 
 /**
- * The live-demo example (D78) in panel `w`: each non-text filter (select,
+ * The live-demo example (D78, D84) in panel `w`: each non-text filter (select,
  * range, date, multi-select) is added from the toolbar Filter button, its
  * chip editor opens, a value is set and the table shows the expected rows.
  * Each case starts from a fresh load, so no filter carries over. The rows
- * are fixed (examples/<base>/live-demo/makeData.ts), 10 per page.
+ * are fixed (examples/<base>/live-demo/makeData.ts), 10 per page. Before the
+ * cases: the ten columns of D84 in order, and the table scrolls sideways at
+ * a 1280 px viewport.
  */
 export async function liveDemoFilters(page, w, check) {
   const editor = page.locator('[data-slot="popover-content"]:visible');
   const rows = w.locator('tbody tr');
+  const headers = [
+    'First Name',
+    'Last Name',
+    'Email',
+    'City',
+    'State',
+    'Department',
+    'Age',
+    'Salary',
+    'Joined',
+    'Status',
+  ];
+  const texts = (await w.locator('thead th').allInnerTexts()).map((t) =>
+    t.replace(/\s+/g, ' ').trim(),
+  );
+  check(
+    'live-demo: ten columns in order',
+    texts.length === headers.length && headers.every((h, i) => texts[i] === h),
+    texts.join(' | '),
+  );
+  const size = page.viewportSize();
+  await page.setViewportSize({ width: 1280, height: size?.height ?? 900 });
+  // The nearest ancestor of the table that scrolls sideways.
+  const scroll = await w
+    .locator('table')
+    .first()
+    .evaluate((table) => {
+      for (let el = table.parentElement; el; el = el.parentElement) {
+        if (/auto|scroll/.test(getComputedStyle(el).overflowX))
+          return { inner: el.scrollWidth, outer: el.clientWidth };
+      }
+      return null;
+    });
+  check(
+    'live-demo: scrolls sideways at 1280 px',
+    !!scroll && scroll.inner > scroll.outer,
+    scroll ? `scrollWidth=${scroll.inner} clientWidth=${scroll.outer}` : '',
+  );
+  if (size) await page.setViewportSize(size);
   const settle = async (n) =>
     rows
       .nth(n)
       .waitFor({ state: 'detached', timeout: 5000 })
       .catch(() => {});
   const pick = async (name) => {
-    await page
-      .getByRole('option', { name, exact: true })
-      .first()
-      .click({ timeout: 5000 });
+    await clickInPlace(
+      page,
+      page.getByRole('option', { name, exact: true }).first(),
+    );
   };
   const cases = [
     {
@@ -705,8 +778,20 @@ export async function liveDemoFilters(page, w, check) {
       variant: 'select',
       expected: 3,
       set: async () => {
-        await editor.getByLabel('Filter by State').first().click();
+        await clickInPlace(page, editor.getByLabel('Filter by State').first());
         await pick('Ohio');
+      },
+    },
+    {
+      column: 'Department',
+      variant: 'select',
+      expected: 6,
+      set: async () => {
+        await clickInPlace(
+          page,
+          editor.getByLabel('Filter by Department').first(),
+        );
+        await pick('Engineering');
       },
     },
     {
@@ -716,6 +801,15 @@ export async function liveDemoFilters(page, w, check) {
       set: async () => {
         await editor.getByLabel('Min', { exact: true }).first().fill('30');
         await editor.getByLabel('Max', { exact: true }).first().fill('40');
+      },
+    },
+    {
+      column: 'Salary',
+      variant: 'range',
+      expected: 8,
+      set: async () => {
+        await editor.getByLabel('Min', { exact: true }).first().fill('70000');
+        await editor.getByLabel('Max', { exact: true }).first().fill('100000');
       },
     },
     {
@@ -732,13 +826,10 @@ export async function liveDemoFilters(page, w, check) {
       expected: 4,
       set: async () => {
         // React Aria labels the chip list too: target the input.
-        await editor
-          .getByRole('combobox', { name: 'Filter by Status' })
-          .first()
-          .click();
-        // A React Aria combobox opens its list on ArrowDown, not on a click.
-        if (!(await page.getByRole('option', { name: 'Suspended' }).count()))
-          await page.keyboard.press('ArrowDown');
+        await clickInPlace(
+          page,
+          editor.getByRole('combobox', { name: 'Filter by Status' }).first(),
+        );
         await pick('Suspended');
       },
     },
@@ -750,11 +841,11 @@ export async function liveDemoFilters(page, w, check) {
         await page.reload({ waitUntil: 'networkidle' });
         await rows.nth(9).waitFor({ timeout: 30000 });
       }
-      await w.locator('button[aria-label="Filter"]').first().click();
-      await editor
-        .getByRole('option', { name: column, exact: true })
-        .first()
-        .click({ timeout: 5000 });
+      await clickInView(page, w.locator('button[aria-label="Filter"]').first());
+      await clickInPlace(
+        page,
+        editor.getByRole('option', { name: column, exact: true }).first(),
+      );
       await editor.first().waitFor({ timeout: 5000 });
       check(`${label} opens`, (await editor.count()) > 0);
       await set();

@@ -107,7 +107,7 @@ sequenceDiagram
 ### Milestone: Integration 0.9.4
 
 - Files owned: `CHANGELOG.md`
-- Depends on: 39, 40, 41, 42, 43, 44, 45, 46, 47, 49
+- Depends on: 39, 40, 41, 46, 47, 49
 - Review: none
 - Local CI: `pnpm test validate-repo`, `pnpm test lint`
 - Task 1: Changelog pass of 1.6.1 on `claude/review` (commit and push), then the fast-forward of 1.6.2. Checks: `git rev-parse origin/dev` equals `git rev-parse origin/claude/review`; `grep -c '^## Unreleased' CHANGELOG.md` prints `1`; `awk '/^## Unreleased/{p=1;next} p&&/^## /{exit} p' CHANGELOG.md | grep -E '^###+ '` prints the headings of 1.6.1 and no other
