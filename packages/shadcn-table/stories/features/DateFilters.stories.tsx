@@ -1,5 +1,5 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 // Date filter values are strings ('YYYY-MM-DD', 'HH:mm', 'YYYY-MM-DDTHH:mm')
@@ -261,4 +261,101 @@ export const IsoDateTimeStringColumnByDay = () => (
 
 IsoDateTimeStringColumnByDay.play = async ({ canvasElement }: StoryContext) => {
   await waitFor(() => expect(names(canvasElement)).toEqual(['Ben', 'Cara']));
+};
+
+// D93: clearing an is-empty filter returns a date column with no allowed
+// list to its 'equals' default, not to 'fuzzy'.
+export const ClearEmptyReturnsDateDefaultMode = () => (
+  <ShadcnTable
+    columnFilterDisplayMode="subheader"
+    columns={[nameColumn, joinedColumn({ filterVariant: 'date' })]}
+    data={data}
+    enableColumnFilterModes
+    initialState={{ showColumnFilters: true }}
+  />
+);
+
+ClearEmptyReturnsDateDefaultMode.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ann');
+  const joinedFilter = () =>
+    canvas.getByLabelText('Filter by Joined').closest('th')!;
+  await waitFor(() =>
+    expect(joinedFilter()).toHaveTextContent('Filter Mode: Equals'),
+  );
+
+  const modeButton = within(joinedFilter()).getByRole('button', {
+    name: 'Change filter mode',
+  });
+  const group = modeButton.closest('[data-slot="input-group"]') as HTMLElement;
+  await userEvent.click(modeButton);
+  const empty = await waitFor(() => {
+    const item = body
+      .getAllByRole('menuitem')
+      .find(
+        (item) =>
+          item.textContent?.trim().endsWith('Empty') &&
+          !item.textContent.includes('Not'),
+      );
+    expect(item).toBeDefined();
+    return item!;
+  });
+  await userEvent.click(empty);
+  await waitFor(() =>
+    expect(joinedFilter()).toHaveTextContent('Filter Mode: Empty'),
+  );
+
+  // Radix hides the page from the accessibility tree until its menu closes.
+  const clearChip = await waitFor(() =>
+    within(group).getByRole('button', { name: 'Clear filter' }),
+  );
+  await userEvent.click(clearChip);
+  await waitFor(() =>
+    expect(joinedFilter()).toHaveTextContent('Filter Mode: Equals'),
+  );
+};
+
+// D96: a real pointer click at the centre of the first date range input,
+// then a full date typed with real key presses, fills the whole date. In the
+// chip editor the range inputs sit at their minimum width, where the native
+// input put the caret on the segment under the pointer: the year.
+export const ClickCentreOfDateRangeInputTypesFullDate = () => (
+  <ShadcnTable
+    columnFilterDisplayMode="chips"
+    columns={[nameColumn, joinedColumn({ filterVariant: 'date-range' })]}
+    data={data}
+  />
+);
+
+ClickCentreOfDateRangeInputTypesFullDate.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ann');
+  await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+  await userEvent.click(await body.findByRole('option', { name: 'Joined' }));
+  const min = (await body.findByLabelText('Min')) as HTMLInputElement;
+  await waitFor(() =>
+    expect(min.closest('[data-slot="popover-content"]')).not.toBeNull(),
+  );
+  // Playwright input: a trusted press at the element's centre and real key
+  // presses; storybook/test's userEvent fills no date segment.
+  const pointer =
+    (
+      globalThis as {
+        stBrowserUserEvent?: {
+          click: (element: Element) => Promise<void>;
+          keyboard: (text: string) => Promise<void>;
+        };
+      }
+    ).stBrowserUserEvent ?? userEvent;
+  await pointer.click(min);
+  await waitFor(() => expect(document.activeElement).toBe(min));
+  // Day and month 03 read the same in either segment order of the locale.
+  await pointer.keyboard('03032025');
+  await waitFor(() => expect(min).toHaveValue('2025-03-03'));
 };
