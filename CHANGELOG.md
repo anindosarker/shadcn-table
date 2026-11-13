@@ -9,11 +9,17 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Changed
+
+#### Spec 40 Date filter compare
+
+- `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
+
 ### Fixed
 
 #### Spec 40 Date filter compare
 
-- Date, datetime and time filters now work on columns that hold `Date` values (D81): `equals`, `notEquals`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between` and `betweenInclusive` read a `YYYY-MM-DD` filter value as local midnight and compare by calendar day, an `HH:mm` value by time of day and a `YYYY-MM-DDTHH:mm` value to the minute. Before, they compared the filter string with the date's text form, so "greater than" kept every row and "less than" none. Filter values stay strings; number and string columns, ISO strings included, filter as before (three bases).
+- Date, datetime and time filters now work on columns that hold `Date` values (D81): `equals`, `notEquals`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between` and `betweenInclusive` read a `YYYY-MM-DD` filter value as local midnight and compare by calendar day, an `HH:mm` value by time of day and a `YYYY-MM-DDTHH:mm` value to the minute (to the second when the value has seconds). Before, they compared the filter string with the date's text form, so "greater than" kept every row and "less than" none. A string row value holding a full ISO date and time (`2025-11-02T14:15:00.000Z`) compares the same way, as a date. Filter values stay strings; number columns and date-only `YYYY-MM-DD` string columns filter as before (three bases).
 - A column with `filterVariant: 'date'`, `'datetime'` or `'time'` and no `filterFn` filters by `equals` (by day for a date) instead of `fuzzy`, which matched no `Date` row.
 
 ## 0.9.3 - 2026-11-12
