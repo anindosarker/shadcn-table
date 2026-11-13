@@ -106,7 +106,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
         <ExpandMoreIcon />
       </Button>
       <Popover
-        className={filterEditorClassName}
+        className={filterEditorClassName(column)}
         offset={8}
         placement="bottom start"
       >
@@ -202,7 +202,9 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
     <PopoverTrigger isOpen={open} onOpenChange={handleOpenChange}>
       {trigger}
       <Popover
-        className={editingColumn ? filterEditorClassName : pickerClassName}
+        className={
+          editingColumn ? filterEditorClassName(editingColumn) : pickerClassName
+        }
         offset={8}
         placement={variant === 'icon' ? 'bottom end' : 'bottom start'}
       >

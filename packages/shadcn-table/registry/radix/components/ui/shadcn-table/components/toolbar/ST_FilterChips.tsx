@@ -111,7 +111,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className={filterEditorClassName}
+        className={filterEditorClassName(column)}
         onOpenAutoFocus={(event) => {
           if (focusFilterInput(table, column.id)) event.preventDefault();
         }}
@@ -202,7 +202,9 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       {trigger}
       <PopoverContent
         align={variant === 'icon' ? 'end' : 'start'}
-        className={editingColumn ? filterEditorClassName : pickerClassName}
+        className={
+          editingColumn ? filterEditorClassName(editingColumn) : pickerClassName
+        }
         ref={popupRef}
         sideOffset={8}
       >

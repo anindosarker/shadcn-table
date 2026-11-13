@@ -647,7 +647,8 @@ const rangeInputs = async () => {
  * D86: both inputs of a range filter lie inside the chip editor and take
  * typed values. Date-like values are typed key by key from the first segment
  * with real key presses (the synthetic ones do not fill the segments); the
- * digits suit a day-month or a month-day locale and a 12 or 24 hour clock.
+ * digits suit a day-month or a month-day locale and a 12 or 24 hour clock;
+ * ArrowRight leaves the year, which takes up to six digits.
  */
 const rangeEditorCase = (
   variant: RangeVariant,
@@ -721,7 +722,7 @@ export const RangeEditorInputsFitAndFillDate = rangeEditorCase(
 
 export const RangeEditorInputsFitAndFillDateTime = rangeEditorCase(
   'datetime-range',
-  ['030320251000A', '040420251200P'],
+  ['03032025{ArrowRight}1000A', '04042025{ArrowRight}1200P'],
   ['2025-03-03T10:00', '2025-04-04T12:00'],
 );
 
