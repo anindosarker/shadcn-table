@@ -23,7 +23,6 @@ Checks:
 - Task 1 Guide wording: done (51f5ae5b)
 - Task 2 React Query text columns: done (823baa01)
 - Task 3 Cleanup and changelog: done (f3a441e7)
+- D99 filterFn contains on the five text columns: done (9ac8432b) (D99)
 
 ## Attention
-
-- The five text columns keep their default `fuzzy` filter function (the spec adds only `columnFilterModeOptions`), so the mode button reads "auto" and the one listed mode, Contains, shows unchecked until picked; adding `filterFn: 'contains'` to those columns would make the menu show it as active.
