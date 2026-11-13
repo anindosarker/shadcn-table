@@ -4,6 +4,15 @@
 // the stale ones too: `.next/dev/types` from the last `next dev` and
 // `.next-preview/types` from the last preview build name routes deleted since.
 // This copy leaves both out. Next does not edit a tsconfig with `extends`.
+//
+// It also leaves out the base and aria copies of the library and their
+// example variants: every copy merges the same `@tanstack/react-table`
+// feature maps (`declare module`), so in one program each copy's types are
+// compared with the first copy's, and the check of all three needed more
+// than Node's default heap (Q76). tsconfig.ui-base.json and
+// tsconfig.ui-aria.json check those, one copy per program, as an install
+// has it; the files the app imports from them (components/example-icons.tsx)
+// are still checked here.
 {
   "extends": "./tsconfig.json",
   "exclude": [
@@ -11,6 +20,10 @@
     "examples/radix",
     "examples/base",
     "examples/aria",
+    "examples/.base",
+    "examples/.aria",
+    "components/ui-base/shadcn-table",
+    "components/ui-aria/shadcn-table",
     ".next/dev",
     ".next-preview"
   ]

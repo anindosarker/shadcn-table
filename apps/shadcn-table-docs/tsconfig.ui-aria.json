@@ -1,0 +1,13 @@
+// The aria copy of the library and its example variants, checked in a program
+// of their own by `types:bases` (`types:check` and `build`): see
+// tsconfig.build.json.
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "next-env.d.ts",
+    "components/ui-aria/**/*.ts",
+    "components/ui-aria/**/*.tsx",
+    "examples/.aria/**/*.ts",
+    "examples/.aria/**/*.tsx"
+  ]
+}
