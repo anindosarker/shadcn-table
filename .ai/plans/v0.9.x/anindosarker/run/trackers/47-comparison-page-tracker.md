@@ -17,6 +17,7 @@ Checks:
 - Check: `pnpm test lint` at 72658df0: pass (9 warnings, none in this milestone's files)
 - Check: `pnpm test validate-repo` at 72658df0: pass (bases identical, registry valid, registry fresh, 40 unit tests)
 - Check: `pnpm test docs-e2e --base base --url http://localhost:5355` (next start of the b2151355 build) at 72658df0: pass, getting-started 243, api 109, guides 701, examples 939, 110 pages; server on 5355 stopped
+- lead verified 2026-11-14, corrections applied (4ce6d97c)
 Local CI: `pnpm test typecheck --base base` pass, `pnpm test lint` pass, `pnpm test validate-repo` pass, `pnpm test docs-e2e --base base` pass, at 72658df0
 
 - Task 1 search title field: done (146db937); `searchTitle` built as `pageSchema.extend({ searchTitle: pageSchema.shape.title.optional() })`, the zod methods of fumadocs' own schema object, no import of zod and no package added; the `meta.json` fallback form was not needed
@@ -83,7 +84,7 @@ Read on 2026-11-13; exactly as the page renders it (`content/docs/getting-starte
 | Virtualization | Built in, rows and columns | Not a table feature; examples with TanStack Virtual | Not covered | Built in, rows and columns | Built in, rows and columns (Community) |
 | Editing | Built in | Not a stock feature; TanStack Form example | Not covered | Built in | Built in (Community) |
 | Export | Not built in; CSV and PDF examples | Not a stock feature | Not covered | Not built in; CSV and PDF examples | CSV (Community); Excel and PDF (Enterprise) |
-| i18n | 39 locales | No UI text (headless) | RTL guide | 38 locales | 46 provided locales |
+| i18n | 39 locales | No UI text (headless) | No UI strings; RTL section | 38 locales (docs list) | 46 provided locales |
 | Styling | Your shadcn/ui components and Tailwind CSS | Your own markup and styles | shadcn/ui `Table` and Tailwind CSS | Material UI theme, `sx` and `mui*Props` | Built-in themes, theme parameters and CSS |
 | TanStack Table version | v9 | v9 (`9.3.1`) | v9 | v8 (`8.20.6`) | Not built on TanStack Table |
 | License | MIT | MIT | MIT (shadcn/ui) | MIT | Community MIT; Enterprise commercial |
@@ -100,16 +101,17 @@ Source of every non-shadcn-table cell:
 - Material React Table, Install model; Base libraries: https://www.material-react-table.com/docs/getting-started/install (`npm i material-react-table @mui/material ...`).
 - Material React Table, Sorting, Filtering, Grouping and aggregation, pinning, Virtualization, Editing: https://www.material-react-table.com/docs/guides/sorting, .../column-filtering, .../aggregation-and-grouping, .../column-pinning, .../row-pinning, .../virtualization (`enableRowVirtualization`, `enableColumnVirtualization`), .../editing (all 200 on 2026-11-13; options read on the pages: `enableSorting`, `enableColumnFilters` and `filterFn`, `enableGrouping` and `AggregatedCell`, `enableColumnPinning`, `enableRowPinning`, `enableEditing` with `editDisplayMode`).
 - Material React Table, Export: https://www.material-react-table.com/docs/examples/export-csv ("does not have a data exporting feature built in"), https://www.material-react-table.com/docs/examples/export-pdf.
-- Material React Table, i18n: https://www.material-react-table.com/docs/guides/localization (38 built-in locales, `ar` to `zh-Hant`).
+- Material React Table, i18n: https://www.material-react-table.com/docs/guides/localization (docs list of 38 locales, `ar` to `zh-Hant`).
 - Material React Table, Styling: https://www.material-react-table.com/docs/guides/customize-components (`mui...Props`, `sx`, Material UI theme).
 - Material React Table, TanStack Table version and License: https://github.com/KevinVandy/material-react-table/blob/v3/packages/material-react-table/package.json (3.2.1, `@tanstack/react-table` `8.20.6`, MIT).
 - AG Grid, Install model: https://www.ag-grid.com/react-data-grid/getting-started/ (`npm install ag-grid-react`).
 - AG Grid, Base libraries and TanStack Table version: https://github.com/ag-grid/ag-grid/blob/latest/packages/ag-grid-community/package.json (dependencies `ag-stack`, `ag-charts-types` only); Styling: https://www.ag-grid.com/react-data-grid/theming/ ("ships with built-in styles", Built-in Theme, Theme Parameters, CSS).
 - AG Grid, Community or Enterprise per feature: the docs menu flags `isEnterprise` on grouping, aggregation, filter-set, filter-multi, filter-advanced, excel-export, pdf-export, cell-editing-batch; not on row-sorting, filtering, filter-text, column-pinning, row-pinning, dom-virtualisation, cell-editing, csv-export, localisation. Pages: https://www.ag-grid.com/react-data-grid/community-vs-enterprise/, .../filtering/ (Text, Number, BigInt, Date, Set filters plus Multi Filter), .../grouping/, .../aggregation/, .../column-pinning/, .../row-pinning/, .../dom-virtualisation/ ("row and column virtualisation"), .../cell-editing/, .../csv-export/.
+- AG Grid, Filtering (advanced filter, Enterprise): https://www.ag-grid.com/react-data-grid/filter-advanced/.
+- AG Grid, Export (Excel and PDF, Enterprise): https://www.ag-grid.com/react-data-grid/excel-export/, https://www.ag-grid.com/react-data-grid/pdf-export/.
 - AG Grid, i18n: https://www.ag-grid.com/react-data-grid/localisation/ (46 provided locales in `@ag-grid-community/locale`; npm description "translations in 46 languages").
 - AG Grid, License: https://www.ag-grid.com/react-data-grid/community-vs-enterprise/ ("AG Grid Community is available under the MIT licence", Enterprise "requires a commercial, EULA licence").
 
 ## Attention
-- the lead verifies the comparison table (D89)
 - `next build` of the docs app runs out of the default Node heap in its type check on this machine (also without this milestone's code changes); the build passed with `NODE_OPTIONS=--max-old-space-size=8192`, and nothing in the repo sets a heap size.
 - The computed task named the section "Table for the owner" and the line "the owner reads the comparison table"; the spec and E12 Notes were edited on 2026-11-13 to "the lead", so the tracker follows the spec.
