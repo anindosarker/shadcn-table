@@ -48,12 +48,21 @@ export const focusFilterInput = <TData extends ST_RowData>(
 ) => getFilterInput(table, columnId)?.focus();
 
 /**
- * The filter inputs stop Escape from bubbling to the popover's dismiss
- * handler, so an Escape in an input closes the editor in the capture phase.
+ * The filter inputs and the select trigger stop Escape from bubbling to the
+ * popover's dismiss handler, so an Escape on one of them closes the editor in
+ * the capture phase; while the control's own list is open, the Escape is the
+ * list's.
  */
 export const closeOnEscape =
   (close: () => void) => (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === 'Escape' && event.target instanceof HTMLInputElement) {
+    const { key, target } = event;
+    if (
+      key === 'Escape' &&
+      target instanceof HTMLElement &&
+      (target instanceof HTMLInputElement ||
+        target.dataset.slot === 'select-trigger') &&
+      target.getAttribute('aria-expanded') !== 'true'
+    ) {
       close();
     }
   };

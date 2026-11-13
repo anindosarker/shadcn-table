@@ -74,6 +74,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
     icons: { ExpandMoreIcon },
   } = table.options;
   const focusOnMount = useFocusFilterInputOnMount(table, column.id);
+  const chipRef = useRef<HTMLButtonElement>(null);
   const mode = describeFilterMode(column);
   const emptyMode = !!mode && isEmptyFilterMode(column);
   const summary = summarizeFilterValue(column);
@@ -91,6 +92,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
     >
       <Button
         data-filter-chip={column.id}
+        ref={chipRef}
         size="sm"
         type="button"
         variant="secondary"
@@ -107,8 +109,14 @@ const ST_FilterChip = <TData extends ST_RowData>({
       </Button>
       <Popover
         className={filterEditorClassName(column)}
+        // Non-modal: the rest of the page stays clickable (Clear filters).
+        // Focus moving to the chip leaves the closing to the chip's press.
+        isNonModal
         offset={8}
         placement="bottom start"
+        shouldCloseOnInteractOutside={(element) =>
+          !chipRef.current?.contains(element)
+        }
       >
         <div
           className="contents"
@@ -169,6 +177,8 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
     focusedIdRef.current = editingId;
   }, [editingId, table]);
 
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   const handleOpenChange = (next: boolean) => {
     // Reset on open, not on close, so the editor does not swap back to the
     // list while the popover fades out.
@@ -181,7 +191,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
 
   const trigger =
     variant === 'pill' ? (
-      <Button size="sm" type="button" variant="ghost">
+      <Button ref={triggerRef} size="sm" type="button" variant="ghost">
         <AddIcon />
         {localization.addFilter}
       </Button>
@@ -189,6 +199,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       <ST_Tooltip title={localization.filter}>
         <Button
           aria-label={localization.filter}
+          ref={triggerRef}
           size="icon"
           type="button"
           variant={chips.length > 0 ? 'secondary' : 'ghost'}
@@ -205,8 +216,14 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
         className={
           editingColumn ? filterEditorClassName(editingColumn) : pickerClassName
         }
+        // Non-modal: the rest of the page stays clickable (Clear filters).
+        // Focus moving to the trigger leaves the closing to its press.
+        isNonModal
         offset={8}
         placement={variant === 'icon' ? 'bottom end' : 'bottom start'}
+        shouldCloseOnInteractOutside={(element) =>
+          !triggerRef.current?.contains(element)
+        }
       >
         <div
           className="contents"
