@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q76** The docs site build runs out of memory on this machine unless Node gets a bigger heap
 	- `pnpm --filter shadcn-table-docs build` dies in its type check with 'JavaScript heap out of memory' at the default heap, also with no code change; it passes with `NODE_OPTIONS=--max-old-space-size=8192`. Seen by the run in spec 47 and in the D78 fix; nothing in the repo sets a heap size; CI passes.
+	- Lead 2026-11-13: tooling, settled without the owner: fix milestone fix-docs-build-memory. Find why the type check of the docs build needs more than the default heap and fix the cause; set the heap in the docs build script only if the size is inherent, and record the measured peak.
 
 ## Decided
 
