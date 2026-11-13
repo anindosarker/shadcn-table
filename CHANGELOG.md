@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Spec 49 Home hero wording
+
+- The home hero line above the `shadcn-table` heading reads "The open-source shadcn data table for React, built on TanStack Table." and the sentence below it reads "A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in." (D90). The heading, the title tag and the meta description are unchanged.
+
 ## 0.9.3 - 2026-11-12
 
 ### Added
