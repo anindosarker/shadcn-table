@@ -16,12 +16,27 @@ Checks:
 - Check: `pnpm test storybook-tests --base radix` at a27fd299: pass, 629
 - Check: `pnpm test storybook-tests --base aria` at a27fd299: 1 failed, 628 passed (name not in the record), rerun once: pass, 629
 - Check: P7 `git diff origin/claude/review -- packages/shadcn-table/registry/*/components/ui/shadcn-table/index.ts | grep '^-export'` at a27fd299: empty
+- Check (review fixes): `IsoDateTimeStringColumnByDay` with the filterFns.ts of 4eb91071's parent a27fd299 (`ST_BASE=base`): fail, `expected [ 'No results found' ] to deeply equal [ 'Ben', 'Cara' ]`
+- Check: `ST_BASE=<base> pnpm exec vitest run stories/features/DateFilters.stories.tsx stories/features/CustomFilterFns.stories.tsx stories/features/Filtering.stories.tsx` at d3f59e57: pass, 55 of 55 on base, radix and aria
+- Check: `cmp` of `filterFns.ts` base against radix and aria at d3f59e57: identical
+- Check: `pnpm test typecheck --base base` and `--base aria` at 4eb91071: pass
+- Check: `NODE_OPTIONS=--max-old-space-size=8192 pnpm test typecheck --base radix` at 4eb91071: pass
+- Check: `pnpm test lint` at 4eb91071: pass
+- Check: `pnpm test validate-repo` at 4eb91071: pass
+- Check: `pnpm test storybook-tests --base base` at 4eb91071: pass, 635
+- Check: `pnpm test storybook-tests --base radix` at 4eb91071: 1 failed (`ClickToCopy` "Click Copies Value", P5 known flake), rerun: pass, 635
+- Check: `pnpm test storybook-tests --base aria` at 4eb91071: pass, 635
+- Check: P7 `-export` grep at 4eb91071: empty
 
 - Task 1 Plays first: done (0c5d4fa4)
 - Task 2 Comparison helper and default mode: done (b652d149)
 - Task 3 Regenerate, format, changelog: done (a27fd299)
+- Review fixes: done (4eb91071)
 
 ## Attention
 
 - The docs `types:check` step of `pnpm test typecheck --base radix` runs out of the default Node heap on this machine (about 4.7 GB resident when it passes with `NODE_OPTIONS=--max-old-space-size=8192`); the milestone touches no docs source beyond the generated copies, so this is not caused here, but every radix typecheck will hit it until the step gets a larger heap.
 - The first aria storybook-tests run had one failure whose name the record does not keep; the rerun was green, so it is taken as a load flake.
+- Review fix, judgment call: string row values holding a full ISO date-time (`/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/`, valid `new Date`) now compare as dates in the eight modes, per D81 bullet 2, so the new `equals` default keeps matching them by day; this departs from spec 1.6.2 ("string row values take exactly today's branches") and changes `greaterThan`/`lessThan` on such strings from text to date compare (changelog `### Changed`); revert to text if the owner rules otherwise.
+- Follow-up for an F item: `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'` instead of `getDefaultColumnFilterFn(columnDef)`, so a date column lands on `fuzzy` there; outside this milestone's files (spec 39 owns ST_FilterTextField), needs a play that clears an `empty` chip on a date column and filters by day.
+- Follow-up for the docs session: `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx` (lines 93-98, 175) still says the default is `fuzzy` and does not say how date, datetime and time filters compare with `Date` values (local day, time of day, minute); not in this milestone's files, so not edited.
