@@ -31,6 +31,10 @@ publishes the section as the GitHub release notes.
 
 - `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
 
+#### Spec 45 Filter Mode caption gap
+
+- The "Filter Mode: <mode>" caption under a filter input sits 6 px below it instead of 3 px (`mt-1.5`), in the text field, the range fields and the range slider on the three bases (D85).
+
 ### Fixed
 
 #### Spec 40 Date filter compare
@@ -45,6 +49,23 @@ publishes the section as the GitHub release notes.
 #### Fix Q76
 
 - The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
+
+#### Spec 41 Range filter editors fit and accept input
+
+- In the chips mode, the value editor of a time, date or datetime range (the `*-range` variants or a between mode) is 308 px wide instead of 260 px, so both Min and Max fields and their picker icons lie inside it (capped at the viewport width less 1 rem); every other filter keeps the 260 px editor (D86, three bases). Typing into both fields applies the range on Enter or blur since spec 39.
+
+#### Spec 42 React Aria multi-select filter opens on click
+
+- On React Aria a click into the multi-select filter's input opens its option list, as on Base UI and Radix; before, only ArrowDown or the chevron opened it (D82).
+
+#### Spec 43 Escape closes the filter editor after a select pick
+
+- After a value is picked in a select filter, one Escape closes the chips mode value editor on Base UI and React Aria, as on Radix; an Escape while a select or combobox list is open closes only the list (D83).
+- On React Aria the chips mode value editor (chip, toolbar picker and column menu) is a non-modal popover, so one click on Clear filters with the editor open clears the filters; before, the page outside the editor was inert and the first click only closed it (D83). As a non-modal React Aria popover, the editor now closes when the page scrolls instead of locking the page's scroll, and focus moves into it on open (its input, else its first control) so Escape closes it.
+
+#### Spec 44 React Aria select filter chevron
+
+- On React Aria the select filter's chevron sits at the right end of its input instead of right after the placeholder (D87).
 
 ### Docs
 

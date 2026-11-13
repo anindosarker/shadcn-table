@@ -1,7 +1,9 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type KeyboardEvent,
   type MouseEvent,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -9,6 +11,7 @@ import {
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import {
+  ComboBoxStateContext,
   type FocusableElement,
   type Key,
   TagGroupContext,
@@ -64,6 +67,26 @@ import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons
 import { ST_FilterOptionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useST_DebouncedCallback } from '@/components/ui-aria/shadcn-table/hooks/useST_DebouncedCallback';
 import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
+
+/**
+ * The multi-select input: a click opens the option list, as on Base UI and
+ * Radix (D82). React Aria opens it on typing or ArrowDown only; its
+ * `menuTrigger="focus"` would also open it when the editor focuses the input.
+ */
+const ST_MultiSelectChipsInput = (
+  props: ComponentProps<typeof ComboboxChipsInput>,
+) => {
+  const state = useContext(ComboBoxStateContext);
+  return (
+    <ComboboxChipsInput
+      {...props}
+      onClick={(event) => {
+        props.onClick?.(event);
+        if (state && !state.isOpen) state.open(null, 'manual');
+      }}
+    />
+  );
+};
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -690,6 +713,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             // React Aria Select raises no ChangeEvent, so a user onChange cannot fire.
             <Select
               aria-label={filterPlaceholder}
+              // The root spans the input group, so the trigger's chevron sits
+              // at the field's right end (the part's default is w-fit).
+              className="w-full min-w-0 flex-1"
               isDisabled={!!filterChipLabel || textFieldProps.disabled}
               onChange={(key) => handlePick(key ?? '')}
               placeholder={filterPlaceholder}
@@ -769,7 +795,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                       )}
                     </ComboboxChipList>
                   </TagGroupContext.Provider>
-                  <ComboboxChipsInput
+                  <ST_MultiSelectChipsInput
                     aria-label={filterPlaceholder}
                     className="min-w-4"
                     onKeyDown={(e) => {
@@ -815,7 +841,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         {/* A range field's caption spans the whole range group, in
             ST_FilterRangeFields. */}
         {showChangeModeButton && rangeFilterIndex === undefined ? (
-          <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          <label className="mt-1.5 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',
               localization[

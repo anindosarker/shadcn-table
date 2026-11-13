@@ -1,8 +1,13 @@
 # 43: Escape closes the filter editor after a select pick, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
-Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+Status: running
+Runs in milestone Filter editor fixes, tracker 41-range-filter-editor-tracker.md
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Escape Closes Editor After Select Pick"` and `-t "Clear Filters Clickable With Editor Open"`, plays of 95ec9676 on the registry of 95ec9676: `EscapeClosesEditorAfterSelectPick` base fail (`expected <button type="button" …(3)>…(1)</button> to be null`, the Remove filter button stays), radix pass, aria fail (same assertion); `ClearFiltersClickableWithEditorOpen` base pass, radix pass, aria fail (`expected <button …(11)>…(3)</button> to be null`, the chips stay).
+- Focus after the pick (chip editor, real pointer): base the Select trigger (`role="combobox"`, `aria-expanded="false"`), radix the Select trigger, aria the Select trigger (`data-slot="select-trigger"`).
+- Who handles Escape there: base and aria, the trigger's `onKeyDown` stops propagation and `closeOnEscape` acted on `HTMLInputElement` targets only, so neither the popover's dismiss nor the capture handler closes the editor; radix, the Radix popover's own Escape listener on `document` in the capture phase closes it before the trigger's handler.
+- The play waits until focus is back on the trigger before Escape: right after the list closes, React Aria leaves focus on `body` for a moment (the removed option held it) before its focus scope restores the trigger; an Escape in that moment reaches no handler on any base's editor.
+- What a click on Clear filters hits on React Aria with the editor open: `document.elementFromPoint` at the button's centre returns `body`; React Aria's modal Popover (`usePopover`, react-aria 3.53.1) calls `ariaHideOutside(..., { shouldUseInert: true })`, which makes everything outside the popover `inert`, so the click lands on `body` and only dismisses the popover.
+- React Aria docs, react-aria-components 1.22.1 Popover: `isNonModal` (no underlay, no `inert` outside, `isDismissable` off, focus not contained; the popover then closes on blur to a focusable element or on scroll) and `shouldCloseOnInteractOutside` (consulted by the blur close). Used: `isNonModal` at the three call sites, plus `shouldCloseOnInteractOutside` on the chip and picker popovers so focus moving to their own trigger leaves the closing to the trigger's press (without it a second click on the chip reopened the editor).
+- After: both plays pass on base, radix and aria; `RemoveAndClear` and `SelectClearBesideChevron` pass.
+- Side effects of `isNonModal` found by `pnpm test docs-e2e --base aria`: React Aria closes a non-modal popover on any scroll of the page around its trigger (`useCloseOnScroll`), and the non-modal popover takes no focus on open (no Dialog), so after picking a select column focus fell to `body` and Escape reached nothing. Fixed in df03b7f1: the React Aria editor focuses its input on open, else its first control (`focusFilterInput(table, columnId, container)`); the docs E2E helpers click the Filter button after scrolling it to the viewport's middle (`clickInView`) and click inside an open editor at the element's position (`clickInPlace`), since Playwright's pre-click scroll closed the editor.
