@@ -156,8 +156,12 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
   const popupRef = useST_PopupResize(editingId ?? '');
   // The aria Popover takes no ref: the glide measures the popover itself,
   // the parent of its content box.
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const attachPopup = useCallback(
-    (node: HTMLDivElement | null) => popupRef(node?.parentElement ?? null),
+    (node: HTMLDivElement | null) => {
+      contentRef.current = node;
+      popupRef(node?.parentElement ?? null);
+    },
     [popupRef],
   );
   const editingColumn = editingId
@@ -172,7 +176,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
   const focusedIdRef = useRef<string | null>(null);
   useEffect(() => {
     if (editingId && focusedIdRef.current !== editingId) {
-      focusFilterInput(table, editingId);
+      focusFilterInput(table, editingId, contentRef.current);
     }
     focusedIdRef.current = editingId;
   }, [editingId, table]);

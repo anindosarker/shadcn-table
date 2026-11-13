@@ -32,10 +32,26 @@ export const filterEditorClassName = <TData extends ST_RowData>(
   return isDateLike && isRange ? 'w-77 max-w-[calc(100vw-1rem)]' : 'w-65';
 };
 
+/**
+ * Focuses the column's filter input; for a filter with no text input (a
+ * select) the first control of the editor in `container`. The editor is a
+ * non-modal popover with no focus of its own, and Escape reaches its dismiss
+ * handler only from inside it.
+ */
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
   columnId: string,
-) => table.refs.filterInputRefs.current?.[`${columnId}-0`]?.focus();
+  container?: HTMLElement | null,
+) => {
+  const input = table.refs.filterInputRefs.current?.[`${columnId}-0`];
+  if (input?.isConnected) input.focus();
+  else
+    container
+      ?.querySelector<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), [tabindex="0"]',
+      )
+      ?.focus();
+};
 
 /**
  * A ref callback that focuses the column's filter input once, when the aria
@@ -47,7 +63,7 @@ export const useFocusFilterInputOnMount = <TData extends ST_RowData>(
 ) =>
   useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && columnId) focusFilterInput(table, columnId);
+      if (node && columnId) focusFilterInput(table, columnId, node);
     },
     [columnId, table],
   );

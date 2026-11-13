@@ -61,7 +61,7 @@ publishes the section as the GitHub release notes.
 #### Spec 43 Escape closes the filter editor after a select pick
 
 - After a value is picked in a select filter, one Escape closes the chips mode value editor on Base UI and React Aria, as on Radix; an Escape while a select or combobox list is open closes only the list (D83).
-- On React Aria the chips mode value editor (chip, toolbar picker and column menu) is a non-modal popover, so one click on Clear filters with the editor open clears the filters; before, the page outside the editor was inert and the first click only closed it (D83).
+- On React Aria the chips mode value editor (chip, toolbar picker and column menu) is a non-modal popover, so one click on Clear filters with the editor open clears the filters; before, the page outside the editor was inert and the first click only closed it (D83). As a non-modal React Aria popover, the editor now closes when the page scrolls instead of locking the page's scroll, and focus moves into it on open (its input, else its first control) so Escape closes it.
 
 #### Spec 44 React Aria select filter chevron
 
