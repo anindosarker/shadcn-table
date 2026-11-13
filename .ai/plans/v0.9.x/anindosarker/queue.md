@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q70** The new live demo's Status column is partly cut off at the docs page width #run-E11
 	- D78 demo on /docs/getting-started/usage and /introduction: six columns need the table's horizontal scroll at the docs content width; screenshots /tmp/e11-richer-demo/{base,radix,aria}-{usage,introduction}.png.
+	- Owner 2026-11-13 (screenshot, live Usage page, React Aria, wide window): all six columns show in full. Owner: "add more columns in intro and usage instead to show the behaviours for multi columns".
 - [ ] **Q71** The Filter Mode line in the filter popover sits too tight under the input #owner
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/popover-filters on Base UI (screenshot): "need to increase a bit padding for the line that says filter fuzzy".
 - [ ] **Q72** The home page's big heading is only the name and says nothing about tables #owner
