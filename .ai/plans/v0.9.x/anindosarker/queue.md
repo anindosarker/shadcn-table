@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q76** The docs site build runs out of memory on this machine unless Node gets a bigger heap
-	- `pnpm --filter shadcn-table-docs build` dies in its type check with 'JavaScript heap out of memory' at the default heap, also with no code change; it passes with `NODE_OPTIONS=--max-old-space-size=8192`. Seen by the run in spec 47 and in the D78 fix; nothing in the repo sets a heap size; CI passes.
-	- Lead 2026-11-13: tooling, settled without the owner: fix milestone fix-docs-build-memory. Find why the type check of the docs build needs more than the default heap and fix the cause; set the heap in the docs build script only if the size is inherent, and record the measured peak.
 
 ## Decided
 
@@ -281,6 +278,9 @@ kanban-plugin: basic
 - [x] **Q65** On React Aria the filter mode menu opens in the wrong place when clicked while the filter popover is still animating in #D80
 	- Found by the D77 play (`Filtering.stories.tsx` ModeMenuNextToButtonPopover waits for the popover enter animation); D77 left React Aria untouched, so it ships as is in 0.9.3.
 	- Owner 2026-11-13: fix it in E11, 0.9.3 waits for it (option 2). Cause lookup running.
+- [x] **Q76** The docs site build runs out of memory on this machine unless Node gets a bigger heap
+	- `pnpm --filter shadcn-table-docs build` dies in its type check with 'JavaScript heap out of memory' at the default heap, also with no code change; it passes with `NODE_OPTIONS=--max-old-space-size=8192`. Seen by the run in spec 47 and in the D78 fix; nothing in the repo sets a heap size; CI passes.
+	- Lead 2026-11-13: tooling, settled without the owner: fix milestone fix-docs-build-memory. Find why the type check of the docs build needs more than the default heap and fix the cause; set the heap in the docs build script only if the size is inherent, and record the measured peak.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
