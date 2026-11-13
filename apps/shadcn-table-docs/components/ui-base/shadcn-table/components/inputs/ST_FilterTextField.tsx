@@ -2,6 +2,9 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
   useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
@@ -38,6 +41,7 @@ import {
 import {
   type DropdownOption,
   type InputProps,
+  type ST_ColumnFiltersState,
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
@@ -62,6 +66,26 @@ const filterTextFieldVariants = cva(
 
 /** Every value the filter inputs hand to the column filter. */
 type FilterInputValue = Date | number | string | string[] | null;
+
+const isSameFilterValue = (a: unknown, b: unknown): boolean =>
+  Object.is(a, b) ||
+  (a instanceof Date && b instanceof Date && a.getTime() === b.getTime()) ||
+  (Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((value, index) => isSameFilterValue(value, b[index])));
+
+/** Compares by content: a controlled parent may pass an equal new array. */
+const isSameColumnFilters = (
+  a: ST_ColumnFiltersState,
+  b: ST_ColumnFiltersState,
+) =>
+  a.length === b.length &&
+  a.every(
+    (filter, index) =>
+      filter.id === b[index]?.id &&
+      isSameFilterValue(filter.value, b[index]?.value),
+  );
 export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
@@ -219,24 +243,24 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     }
   };
 
-  // What the pending call must still find when it runs: the column filters
-  // nobody else wrote since the last key (a stored view) and the column's
-  // chip, which Clear filters and Remove filter take away. Otherwise the call
-  // is dropped, also on unmount.
+  // A pending value is dropped when the column filters or the column's chip
+  // changed since the last key (stored view, Clear filters, Remove filter).
   const getCommitGuard = () => ({
     columnFilters: table.atoms.columnFilters.get(),
     hasChip: table.atoms.filterChips.get().columnIds.includes(column.id),
   });
 
+  const isCommitGuardHeld = (guard: ReturnType<typeof getCommitGuard>) => {
+    const now = getCommitGuard();
+    return (
+      isSameColumnFilters(now.columnFilters, guard.columnFilters) &&
+      (now.hasChip || !guard.hasChip)
+    );
+  };
+
   const debouncedCommit = useST_DebouncedCallback(
     (newValue: FilterInputValue, guard: ReturnType<typeof getCommitGuard>) => {
-      const now = getCommitGuard();
-      if (
-        now.columnFilters === guard.columnFilters &&
-        (now.hasChip || !guard.hasChip)
-      ) {
-        commitFilterValue(newValue);
-      }
+      if (isCommitGuardHeld(guard)) commitFilterValue(newValue);
     },
     columnDef.filterDebounceMs ?? columnFilterDebounceMs ?? 500,
   );
@@ -256,14 +280,29 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // A date, datetime or time input holds a valid value after each typed
   // digit, so a typed value applies on Enter or blur only; a change with no
   // key press since the last commit is a pick in the native picker.
-  const isNativeDateInput = ['date', 'datetime', 'time'].some((variant) =>
-    filterVariant?.startsWith(variant),
-  );
   const [isDateTyped, setIsDateTyped] = useState(false);
+  // The typed date not applied yet; an unmount without a blur applies it.
+  const typedDate = useRef<{
+    guard: ReturnType<typeof getCommitGuard>;
+    value: string;
+  } | null>(null);
+  const commitTypedDateOnUnmount = useRef(() => {});
+  useLayoutEffect(() => {
+    commitTypedDateOnUnmount.current = () => {
+      if (typedDate.current && isCommitGuardHeld(typedDate.current.guard)) {
+        commitFilterValue(typedDate.current.value || null);
+      }
+    };
+  });
+  useEffect(() => {
+    const commit = commitTypedDateOnUnmount;
+    return () => commit.current();
+  }, []);
 
   const commitTypedValue = () => {
-    if (isNativeDateInput && isDateTyped) {
+    if (isDateFilter && isDateTyped) {
       setIsDateTyped(false);
+      typedDate.current = null;
       handlePick((filterValue as string) || null);
     } else {
       debouncedCommit.flush();
@@ -301,6 +340,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClear = () => {
     debouncedCommit.cancel();
+    typedDate.current = null;
     if (isMultiSelectFilter) {
       setFilterValue([]);
       column.setFilterValue([]);
@@ -322,6 +362,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClearEmptyFilterChip = () => {
     debouncedCommit.cancel();
+    typedDate.current = null;
     setFilterValue('');
     column.setFilterValue(undefined);
     setColumnFilterFns((prev) => ({
@@ -340,13 +381,18 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const [prevColumnFilters, setPrevColumnFilters] = useState(columnFilters);
   const [prevColumnFilterValue, setPrevColumnFilterValue] =
     useState(columnFilterValue);
-  if (columnFilters !== prevColumnFilters) {
+  const columnFiltersChanged = !isSameColumnFilters(
+    columnFilters,
+    prevColumnFilters,
+  );
+  if (columnFiltersChanged) {
     setPrevColumnFilters(columnFilters);
     setPrevColumnFilterValue(columnFilterValue);
   }
   if (
-    columnFilters !== prevColumnFilters &&
-    (debouncedCommit.isPending() || columnFilterValue !== prevColumnFilterValue)
+    columnFiltersChanged &&
+    (debouncedCommit.isPending() ||
+      !isSameFilterValue(columnFilterValue, prevColumnFilterValue))
   ) {
     debouncedCommit.cancel();
     if (columnFilterValue === undefined) {
@@ -465,8 +511,12 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       if (e.key === 'Enter') {
         commitTypedValue();
       } else if (
-        isNativeDateInput &&
-        !['ArrowLeft', 'ArrowRight', 'Escape', 'Tab'].includes(e.key) &&
+        isDateFilter &&
+        // Space, F4 and Alt+ArrowDown open the native picker: not typing.
+        !(e.altKey && ['ArrowDown', 'ArrowUp'].includes(e.key)) &&
+        ![' ', 'ArrowLeft', 'ArrowRight', 'Escape', 'F4', 'Tab'].includes(
+          e.key,
+        ) &&
         !['Alt', 'Control', 'Meta', 'Shift'].includes(e.key)
       ) {
         setIsDateTyped(true);
@@ -481,6 +531,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     onChange: (event: ChangeEvent<HTMLInputElement>) => {
       if (isDateTyped) {
         setFilterValue(event.target.value);
+        typedDate.current = {
+          guard: getCommitGuard(),
+          value: event.target.value,
+        };
       } else {
         handlePick(event.target.value || null);
       }
