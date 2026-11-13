@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q78** Clearing an is-empty filter on a date column switches it to fuzzy matching instead of the date default
-	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 - [ ] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison
 	- `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx:93-98, 175`: after D81 (spec 40) date columns default to `equals` and compare by local day, time of day or minute; the guide was outside the milestone's files.
 - [ ] **Q80** Typing a date into the Min or Max box of a between filter wipes the box on the first key
@@ -216,6 +214,8 @@ kanban-plugin: basic
 	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
 - [ ] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone #D92
 	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
+- [ ] **Q78** Clearing an is-empty filter on a date column switches it to fuzzy matching instead of the date default #D93
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 
 ## Later
 
