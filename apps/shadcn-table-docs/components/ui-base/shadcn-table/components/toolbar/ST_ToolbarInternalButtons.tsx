@@ -16,7 +16,7 @@ import {
   ST_InternalButtonsContext,
   ST_ViewSettingsItems,
 } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ViewSettingsItems';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 
 export type ST_ToolbarInternalButtonsProps = DivProps;
 

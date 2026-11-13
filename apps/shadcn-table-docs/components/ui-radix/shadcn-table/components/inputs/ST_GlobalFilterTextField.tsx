@@ -21,7 +21,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui-radix/shadcn-table/components/menus/ST_FilterOptionMenu';
-import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
 import { useST_DebouncedCallback } from '@/components/ui-radix/shadcn-table/hooks/useST_DebouncedCallback';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 

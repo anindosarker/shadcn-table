@@ -1,7 +1,7 @@
 import { type ButtonProps } from '@/components/ui/shadcn-table/types';
 import { ST_TooltipButton } from '@/components/ui/shadcn-table/components/buttons/ST_TooltipButton';
 import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export type ST_ShowHideColumnsButtonProps = ButtonProps;
 

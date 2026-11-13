@@ -10,7 +10,7 @@ import { ST_TablePagination } from '@/components/ui-radix/shadcn-table/component
 import { ST_ToolbarAlertBanner } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_ToolbarDropZone } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 import { useST_MediaQuery } from '@/components/ui-radix/shadcn-table/hooks/useST_MediaQuery';
-import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui-radix/shadcn-table/hooks/useST_ComposedRef';
 
 export type ST_BottomToolbarProps = DivProps;

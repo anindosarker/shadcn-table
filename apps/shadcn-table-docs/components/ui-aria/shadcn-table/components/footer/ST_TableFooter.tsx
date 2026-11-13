@@ -7,7 +7,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_TableFooterRow } from '@/components/ui-aria/shadcn-table/components/footer/ST_TableFooterRow';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_TableFooterProps extends TableFooterProps {
