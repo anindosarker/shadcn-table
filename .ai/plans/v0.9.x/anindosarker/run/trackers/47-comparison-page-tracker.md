@@ -1,6 +1,6 @@
 # 47: Comparison page returns with the searched names, tracker
 
-Status: running (lead verified, corrections applied, checks rerun; ready to merge)
+Status: merged (888572c1)
 Branch `v0.9/comparison-page`, worktree 05
 Checks:
 - Check: Task 1, `pnpm --filter shadcn-table-docs types:check` at 146db937: pass on the second run; the first run aborted in `tsc` (exit 134, out of heap under load), the rerun at default heap was clean
