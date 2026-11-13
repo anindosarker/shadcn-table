@@ -47,6 +47,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import {
   getColumnFilterInfo,
+  getDefaultColumnFilterFn,
   isNumberColumn,
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
@@ -367,7 +368,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     column.setFilterValue(undefined);
     setColumnFilterFns((prev) => ({
       ...prev,
-      [header.id]: allowedColumnFilterOptions?.[0] ?? 'fuzzy',
+      [header.id]:
+        allowedColumnFilterOptions?.[0] ?? getDefaultColumnFilterFn(columnDef),
     }));
   };
 
