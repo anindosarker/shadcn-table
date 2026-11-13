@@ -23,6 +23,18 @@ Local CI: `pnpm test typecheck --base base` pass, `pnpm test lint` pass, `pnpm t
 - Task 2 page, `meta.json`, docs E2E check: done (b2151355)
 - Task 3 format and changelog: done (72658df0); lead verification: waiting
 
+Verifier checks (ea44fe88, 2026-11-13):
+- Check: Local CI line at 72658df0 still valid: `git diff --name-only 72658df0..HEAD` lists only this tracker; not rerun
+- Check: files against "Files owned", 1.4 and 1.6: `git diff $(git merge-base origin/claude/review HEAD)..HEAD --stat` lists the five owned files, `CHANGELOG.md` (P9) and this tracker; nothing else
+- Check: production build, `NODE_OPTIONS=--max-old-space-size=8192 npx next build` at ea44fe88: pass; `next start -p 5355`
+- Check: `curl -s -o /dev/null -w '%{http_code}' localhost:5355/docs/getting-started/comparison`: `200`
+- Check: `<title>`: `<title>shadcn-table vs TanStack Table, shadcn/ui data-table, Material React Table and AG Grid | shadcn-table</title>`
+- Check: `grep -ci tablecn .../comparison.mdx`: `0`; `curl -s localhost:5355/sitemap.xml | grep -c getting-started/comparison`: `1`; no `date:` and no byline in the page; `meta.json` pages `introduction, install, usage, agents, comparison`
+- Check: `pnpm test docs-e2e --base base --url http://localhost:5355 /docs/getting-started/comparison`: pass, 10 checks, sidebar order Introduction,Installation,Usage,AI Agent Setup,Comparison
+- Check: `pnpm test docs-e2e --base base --url http://localhost:5355`: pass, 110 pages, 1992 checks (getting-started 243, api 109, guides 701, examples 939); server on 5355 stopped
+- Check: table under `## Table for the lead` equals the page's table (`diff` of the `|` lines): identical
+- Check: independent source read of the non-shadcn-table cells, all confirmed: TanStack Table version and license (react-table `package.json` `9.3.1`, MIT); TanStack Table Virtualization (guide: "do not come with any virtualization APIs or features built in"); TanStack Table Sorting, Filtering, Grouping and aggregation, pinning (the eight `*Feature` names on the features guide), Editing and Export (no edit or export feature there); Material React Table version and license (v3 `package.json` 3.2.1, `@tanstack/react-table` `8.20.6`, MIT); Material React Table Export (CSV example: "does not have a data exporting feature built in"); Material React Table i18n (38 locale tabs, `ar` to `zh-Hant`); AG Grid License (Community MIT, Enterprise commercial EULA); AG Grid Community or Enterprise per feature (docs menu `isEnterprise` on grouping, aggregation, filter-set, filter-multi, filter-advanced, excel-export, pdf-export; not on row-sorting, filter-text, filter-number, filter-date, column-pinning, row-pinning, dom-virtualisation, cell-editing, csv-export); AG Grid Virtualization ("row and column virtualisation"); AG Grid i18n (Provided Locales table has 46 rows, `@ag-grid-community/locale` "translations in 46 languages"); AG Grid Base libraries and TanStack Table version (ag-grid-community dependencies `ag-charts-types`, `ag-stack` only); shadcn/ui recipe (Base UI, Radix UI, React Aria tabs; "This guide uses TanStack Table v9"; headings Pagination, Sorting, Filtering with `Filter emails...`, Visibility, Row Selection, Reusable Components, RTL; no grouping, pinning, virtualization, editing or export section)
+
 Sources checked (status code, 2026-11-13):
 - 200 https://github.com/anindosarker/shadcn-table
 - 200 https://tanstack.com/table/latest/docs/overview
