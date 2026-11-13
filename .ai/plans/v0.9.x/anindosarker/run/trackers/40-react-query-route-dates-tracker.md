@@ -1,6 +1,6 @@
 # 40: Date filters compare dates, React Query route dates, tracker
 
-Status: running
+Status: merged (57966fdf)
 Branch `v0.9/react-query-route-dates`, worktree 07
 Checks:
 - Check: Task 1 reproduction, production build (`pnpm --filter shadcn-table-docs build`, `next start -p 5346`) at 9387a606, base, Playwright, locale en-GB: done, record below
