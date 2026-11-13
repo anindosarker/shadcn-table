@@ -12,8 +12,6 @@ kanban-plugin: basic
 	- Today only plain text filters debounce: 200 ms, 400 ms with manualFiltering; every other variant (date, time, number) fires after 1 ms (base ST_FilterTextField.tsx:228).
 	- Owner 2026-11-13: happens on text filters as well; less painful there because backspace and edit is easy, but the debounce should apply there too (so 200 ms feels too short), and on date and time inputs.
 	- Owner 2026-11-13: not a change of numbers: "add a debounce hook. and then implement. this needs good planning". Lookup of every debounced or instantly committed input running.
-- [ ] **Q75** On React Aria the select filter's chevron sits in the middle of the input, not at its right edge #owner
-	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on React Aria (screenshot): City chip editor, mode equals: the chevron follows the placeholder "Filter by City" instead of the input's right end. Owner: "arrow in the middle, ui issue".
 
 ## Decided
 
@@ -251,6 +249,9 @@ kanban-plugin: basic
 	- Decision: D86
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot): Departure Time chip, mode between inclusive: the editor shows two time inputs side by side; the second one runs past the editor's right edge, its clock icon is not visible. Owner: "This filter is broken, add finding."
 	- Owner 2026-11-13: "I wasn't able to put inputs at all, need to fix the UI as well": the range editor's inputs could not be filled, besides the cut-off layout; both stand.
+- [x] **Q75** On React Aria the select filter's chevron sits in the middle of the input, not at its right edge #owner
+	- Decision: D87
+	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on React Aria (screenshot): City chip editor, mode equals: the chevron follows the placeholder "Filter by City" instead of the input's right end. Owner: "arrow in the middle, ui issue".
 
 ## Later
 

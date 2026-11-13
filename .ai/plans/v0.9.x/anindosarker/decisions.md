@@ -821,3 +821,8 @@ index e1645117..e67a5482 100644
 
 - Live 0.9.3, /docs/examples/filter-variants, Base UI, Departure Time chip, mode between inclusive: the two time inputs sit side by side, the second runs past the editor's right edge (no clock icon), and the owner could not fill the inputs at all. Fix: in the chip editor both inputs of a range filter fit inside the editor and accept input, on the three bases, for time, date, datetime and number ranges. The cause of the failed input is not looked up; the spec finds it first. Proof (P11): a play that fills both inputs of a time range in the chip editor and asserts both boxes lie inside the editor's box. Owner, 2026-11-13: "This filter is broken"; "I wasn't able to put inputs at all, need to fix the UI as well"; "Q73 1k".
 - Source: Q73
+
+### D87 On React Aria the select filter's chevron sits at the right end of its input
+
+- Live 0.9.3, /docs/examples/filter-variants, React Aria, City chip editor, mode equals: the chevron follows the placeholder "Filter by City" in the middle of the input. Fix: the chevron sits at the input's right end, as on Base UI and Radix (the spec compares the three). Owner, 2026-11-13: "arrow in the middle, ui issue"; "1 k".
+- Source: Q75
