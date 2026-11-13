@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q72** The home page's big heading is only the name and says nothing about tables #owner
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
+	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
 - [ ] **Q73** The time range filter's second input is cut off in the chip editor #owner
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot): Departure Time chip, mode between inclusive: the editor shows two time inputs side by side; the second one runs past the editor's right edge, its clock icon is not visible. Owner: "This filter is broken, add finding."
 	- Owner 2026-11-13: "I wasn't able to put inputs at all, need to fix the UI as well": the range editor's inputs could not be filled, besides the cut-off layout; both stand.
