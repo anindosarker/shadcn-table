@@ -101,7 +101,7 @@ export async function generateMetadata(
   if (!page) notFound();
 
   return {
-    title: page.data.title,
+    title: page.data.searchTitle ?? page.data.title,
     description: page.data.description,
     // Replaces the root layout's openGraph object, so restate siteName.
     openGraph: {

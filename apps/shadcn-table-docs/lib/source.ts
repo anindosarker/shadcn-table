@@ -5,10 +5,17 @@ import { toPlainMarkdown } from './llms';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 
+// `searchTitle`: an optional `<title>` for search results that differs from
+// the heading and the sidebar label (`title`). Built with the zod methods of
+// fumadocs' own `pageSchema`, so the docs app needs no zod dependency.
+const docsPageSchema = pageSchema.extend({
+  searchTitle: pageSchema.shape.title.optional(),
+});
+
 const docs = defineDocs({
   dir: 'content/docs',
   docs: {
-    schema: pageSchema,
+    schema: docsPageSchema,
     postprocess: {
       includeProcessedMarkdown: true,
     },
