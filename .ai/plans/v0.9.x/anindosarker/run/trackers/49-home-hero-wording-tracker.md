@@ -1,6 +1,6 @@
 # 49: Home hero line and sentence carry the search words, tracker
 
-Status: running
+Status: merged (da730e7d)
 Branch `v0.9/home-hero-wording`, worktree 06
 Checks:
 - Check: docs types, `NODE_OPTIONS=--max-old-space-size=8192 pnpm --filter shadcn-table-docs types:check` at dc7f05fd: pass
