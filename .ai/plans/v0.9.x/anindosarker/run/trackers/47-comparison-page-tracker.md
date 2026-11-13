@@ -1,6 +1,6 @@
 # 47: Comparison page returns with the searched names, tracker
 
-Status: running (stopped before the merge for the lead verification, D89)
+Status: running (lead verified, corrections applied, checks rerun; ready to merge)
 Branch `v0.9/comparison-page`, worktree 05
 Checks:
 - Check: Task 1, `pnpm --filter shadcn-table-docs types:check` at 146db937: pass on the second run; the first run aborted in `tsc` (exit 134, out of heap under load), the rerun at default heap was clean
@@ -18,11 +18,22 @@ Checks:
 - Check: `pnpm test validate-repo` at 72658df0: pass (bases identical, registry valid, registry fresh, 40 unit tests)
 - Check: `pnpm test docs-e2e --base base --url http://localhost:5355` (next start of the b2151355 build) at 72658df0: pass, getting-started 243, api 109, guides 701, examples 939, 110 pages; server on 5355 stopped
 - lead verified 2026-11-14, corrections applied (4ce6d97c)
-Local CI: `pnpm test typecheck --base base` pass, `pnpm test lint` pass, `pnpm test validate-repo` pass, `pnpm test docs-e2e --base base` pass, at 72658df0
+- Check: after merging `origin/claude/review` (701aacb0, CHANGELOG conflict: both sides kept, `#### Spec 47 Comparison page` under `### Docs` after spec 46) and the corrections, `pnpm format` at a93b41b5: no diff
+- Check: `pnpm test typecheck --base base` at a93b41b5: pass, tsc clean
+- Check: `pnpm test lint` at a93b41b5: pass (0 errors, 9 warnings, none in this milestone's files)
+- Check: `pnpm test validate-repo` at a93b41b5: pass (bases identical, icon maps complete, tailwind valid, registry valid, registry fresh, 40 unit tests)
+- Check: production build, `NEXT_PUBLIC_SITE_URL=http://localhost:5355 pnpm --filter shadcn-table-docs build` at a93b41b5: pass at the default heap (Q76 fix now merged); `next start -p 5355`
+- Check: `curl -s -o /dev/null -w '%{http_code}' localhost:5355/docs/getting-started/comparison` at a93b41b5: `200`
+- Check: `<title>` at a93b41b5: `<title>shadcn-table vs TanStack Table, shadcn/ui data-table, Material React Table and AG Grid | shadcn-table</title>`
+- Check: `grep -ci tablecn apps/shadcn-table-docs/content/docs/getting-started/comparison.mdx` at a93b41b5: `0`
+- Check: `curl -s localhost:5355/sitemap.xml | grep -c getting-started/comparison` at a93b41b5: `1`
+- Check: every Sources link, `curl -s -o /dev/null -w '%{http_code}'` per link on 2026-11-14 at a93b41b5: 34 of 34 return 200, the three new AG Grid links included (list below)
+- Check: `pnpm test docs-e2e --base base --url http://localhost:5355` at a93b41b5: pass, 110 pages (getting-started 255, api 109, guides 701, examples 939, 0 failed); named comparison check passes (`title`, `search title`, `matrix columns`, `sidebar order` Introduction,Installation,Usage,AI Agent Setup,Comparison); server on 5355 stopped
+Local CI: `pnpm test typecheck --base base` pass, `pnpm test lint` pass, `pnpm test validate-repo` pass, `pnpm test docs-e2e --base base` pass, at a93b41b5
 
 - Task 1 search title field: done (146db937); `searchTitle` built as `pageSchema.extend({ searchTitle: pageSchema.shape.title.optional() })`, the zod methods of fumadocs' own schema object, no import of zod and no package added; the `meta.json` fallback form was not needed
 - Task 2 page, `meta.json`, docs E2E check: done (b2151355)
-- Task 3 format and changelog: done (72658df0); lead verification: waiting
+- Task 3 format and changelog: done (72658df0); lead verification: done 2026-11-14, six corrections applied (4ce6d97c)
 
 Verifier checks (ea44fe88, 2026-11-13):
 - Check: Local CI line at 72658df0 still valid: `git diff --name-only 72658df0..HEAD` lists only this tracker; not rerun
@@ -65,6 +76,42 @@ Sources checked (status code, 2026-11-13):
 - 200 https://www.ag-grid.com/react-data-grid/dom-virtualisation/
 - 200 https://www.ag-grid.com/react-data-grid/cell-editing/
 - 200 https://www.ag-grid.com/react-data-grid/csv-export/
+- 200 https://www.ag-grid.com/react-data-grid/localisation/
+- 200 https://www.ag-grid.com/react-data-grid/theming/
+- 200 https://github.com/ag-grid/ag-grid/blob/latest/packages/ag-grid-community/package.json
+
+Sources checked (status code, 2026-11-14, at a93b41b5):
+- 200 https://github.com/anindosarker/shadcn-table
+- 200 https://tanstack.com/table/latest/docs/overview
+- 200 https://tanstack.com/table/latest/docs/installation
+- 200 https://tanstack.com/table/latest/docs/guide/features
+- 200 https://tanstack.com/table/latest/docs/framework/react/guide/virtualization
+- 200 https://tanstack.com/table/latest/docs/framework/react/examples/with-tanstack-form
+- 200 https://github.com/TanStack/table/blob/main/packages/react-table/package.json
+- 200 https://ui.shadcn.com/docs/components/base/data-table
+- 200 https://github.com/shadcn-ui/ui/blob/main/LICENSE.md
+- 200 https://github.com/KevinVandy/material-react-table
+- 200 https://www.material-react-table.com/docs/getting-started/install
+- 200 https://github.com/KevinVandy/material-react-table/blob/v3/packages/material-react-table/package.json
+- 200 https://www.material-react-table.com/docs/guides/virtualization
+- 200 https://www.material-react-table.com/docs/guides/editing
+- 200 https://www.material-react-table.com/docs/examples/export-csv
+- 200 https://www.material-react-table.com/docs/examples/export-pdf
+- 200 https://www.material-react-table.com/docs/guides/localization
+- 200 https://www.material-react-table.com/docs/guides/customize-components
+- 200 https://www.ag-grid.com/react-data-grid/getting-started/
+- 200 https://www.ag-grid.com/react-data-grid/community-vs-enterprise/
+- 200 https://www.ag-grid.com/react-data-grid/filtering/
+- 200 https://www.ag-grid.com/react-data-grid/filter-advanced/
+- 200 https://www.ag-grid.com/react-data-grid/grouping/
+- 200 https://www.ag-grid.com/react-data-grid/aggregation/
+- 200 https://www.ag-grid.com/react-data-grid/column-pinning/
+- 200 https://www.ag-grid.com/react-data-grid/row-pinning/
+- 200 https://www.ag-grid.com/react-data-grid/dom-virtualisation/
+- 200 https://www.ag-grid.com/react-data-grid/cell-editing/
+- 200 https://www.ag-grid.com/react-data-grid/csv-export/
+- 200 https://www.ag-grid.com/react-data-grid/excel-export/
+- 200 https://www.ag-grid.com/react-data-grid/pdf-export/
 - 200 https://www.ag-grid.com/react-data-grid/localisation/
 - 200 https://www.ag-grid.com/react-data-grid/theming/
 - 200 https://github.com/ag-grid/ag-grid/blob/latest/packages/ag-grid-community/package.json
