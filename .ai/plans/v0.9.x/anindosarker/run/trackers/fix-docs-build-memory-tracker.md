@@ -1,6 +1,6 @@
 # Docs build memory (Q76), tracker
 
-Status: running
+Status: merged (8be51c0e)
 Files owned: `apps/shadcn-table-docs/package.json`, `apps/shadcn-table-docs/tsconfig.build.json`, `apps/shadcn-table-docs/tsconfig.preview.json`, `apps/shadcn-table-docs/tsconfig.ui-base.json`, `apps/shadcn-table-docs/tsconfig.ui-aria.json`, `.gitignore`, `CHANGELOG.md` (Fix Q76 block)
 Depends on: none
 Branch `v0.9/fix-docs-build-memory`, worktree `shadcn-react-table.worktrees/06`
