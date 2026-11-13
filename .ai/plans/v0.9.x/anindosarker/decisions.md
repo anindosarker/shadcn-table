@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #R4
+	- Source: Q86
+
 ## In progress
 
 - [ ] **D48** The perf budget is 600 ms under --ci, 300 ms locally #E13 #R3
