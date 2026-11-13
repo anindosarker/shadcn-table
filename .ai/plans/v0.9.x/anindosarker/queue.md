@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone
+	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
 
 ## Decided
 
