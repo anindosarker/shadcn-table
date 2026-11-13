@@ -82,38 +82,6 @@ export async function headerLabelsFit(w, id, check) {
 }
 
 /**
- * Clicks `locator` after scrolling it to the middle of the viewport and
- * letting the scroll settle. React Aria closes a non-modal popover (the chips
- * mode editor, spec 43) when the page around its trigger scrolls: Playwright's
- * own pre-click scroll, for the trigger or for an option of an editor that
- * opened against the bottom edge, arrives a frame later and would close it.
- */
-export async function clickInView(page, locator) {
-  await locator.evaluate((element) =>
-    element.scrollIntoView({ block: 'center', inline: 'nearest' }),
-  );
-  await page.evaluate(
-    () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve)),
-      ),
-  );
-  await locator.click();
-}
-
-/**
- * Clicks the centre of `locator` with the mouse where it is, without
- * Playwright's pre-click scroll, which would close an open React Aria
- * chips mode editor (see clickInView).
- */
-export async function clickInPlace(page, locator, timeout = 5000) {
-  await locator.waitFor({ state: 'visible', timeout });
-  const box = await locator.boundingBox();
-  if (!box) throw new Error('clickInPlace: the element has no box');
-  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-}
-
-/**
  * The chips filter flow of example `w` (filters in chips mode): the toolbar
  * Filter button opens the column picker, picking `column` adds its chip and
  * opens the editor in place; closing it and clicking the chip opens the
@@ -124,11 +92,11 @@ export async function clickInPlace(page, locator, timeout = 5000) {
 export async function chipFilter(page, w, id, column, control, check) {
   const editor = page.locator('[data-slot="popover-content"]:visible');
   try {
-    await clickInView(page, w.locator('button[aria-label="Filter"]').first());
-    await clickInPlace(
-      page,
-      editor.getByRole('option', { name: column, exact: true }).first(),
-    );
+    await w.locator('button[aria-label="Filter"]').first().click();
+    await editor
+      .getByRole('option', { name: column, exact: true })
+      .first()
+      .click({ timeout: 5000 });
     await page.keyboard.press('Escape');
     await editor.first().waitFor({ state: 'hidden', timeout: 5000 });
   } catch (e) {
@@ -142,7 +110,7 @@ export async function chipFilter(page, w, id, column, control, check) {
   const chip = w.locator('[data-filter-chip]', { hasText: column });
   check(`${id}: ${column} chip`, (await chip.count()) === 1);
   if (!(await chip.count())) return editor;
-  await clickInView(page, chip.first());
+  await chip.first().click();
   await editor
     .first()
     .waitFor({ timeout: 5000 })
@@ -767,10 +735,10 @@ export async function liveDemoFilters(page, w, check) {
       .waitFor({ state: 'detached', timeout: 5000 })
       .catch(() => {});
   const pick = async (name) => {
-    await clickInPlace(
-      page,
-      page.getByRole('option', { name, exact: true }).first(),
-    );
+    await page
+      .getByRole('option', { name, exact: true })
+      .first()
+      .click({ timeout: 5000 });
   };
   const cases = [
     {
@@ -778,7 +746,7 @@ export async function liveDemoFilters(page, w, check) {
       variant: 'select',
       expected: 3,
       set: async () => {
-        await clickInPlace(page, editor.getByLabel('Filter by State').first());
+        await editor.getByLabel('Filter by State').first().click();
         await pick('Ohio');
       },
     },
@@ -787,10 +755,7 @@ export async function liveDemoFilters(page, w, check) {
       variant: 'select',
       expected: 6,
       set: async () => {
-        await clickInPlace(
-          page,
-          editor.getByLabel('Filter by Department').first(),
-        );
+        await editor.getByLabel('Filter by Department').first().click();
         await pick('Engineering');
       },
     },
@@ -826,10 +791,10 @@ export async function liveDemoFilters(page, w, check) {
       expected: 4,
       set: async () => {
         // React Aria labels the chip list too: target the input.
-        await clickInPlace(
-          page,
-          editor.getByRole('combobox', { name: 'Filter by Status' }).first(),
-        );
+        await editor
+          .getByRole('combobox', { name: 'Filter by Status' })
+          .first()
+          .click();
         await pick('Suspended');
       },
     },
@@ -841,11 +806,11 @@ export async function liveDemoFilters(page, w, check) {
         await page.reload({ waitUntil: 'networkidle' });
         await rows.nth(9).waitFor({ timeout: 30000 });
       }
-      await clickInView(page, w.locator('button[aria-label="Filter"]').first());
-      await clickInPlace(
-        page,
-        editor.getByRole('option', { name: column, exact: true }).first(),
-      );
+      await w.locator('button[aria-label="Filter"]').first().click();
+      await editor
+        .getByRole('option', { name: column, exact: true })
+        .first()
+        .click({ timeout: 5000 });
       await editor.first().waitFor({ timeout: 5000 });
       check(`${label} opens`, (await editor.count()) > 0);
       await set();
