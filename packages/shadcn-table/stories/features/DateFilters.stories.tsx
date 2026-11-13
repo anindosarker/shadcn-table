@@ -15,6 +15,7 @@ export default meta;
 
 type Person = {
   joined: Date;
+  joinedAt: string;
   joinedIso: string;
   name: string;
 };
@@ -24,6 +25,7 @@ const person = (
   [year, month, day, hours, minutes]: [number, number, number, number, number],
 ): Person => ({
   joined: new Date(year, month - 1, day, hours, minutes),
+  joinedAt: new Date(year, month - 1, day, hours, minutes).toISOString(),
   joinedIso: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
   name,
 });
@@ -173,4 +175,90 @@ export const IsoStringColumnUnchanged = () => (
 
 IsoStringColumnUnchanged.play = async ({ canvasElement }: StoryContext) => {
   await waitFor(() => expect(names(canvasElement)).toEqual(['Dan', 'Eve']));
+};
+
+export const NotEqualsOnDateColumn = () => (
+  <DateTable
+    column={joinedColumn({ filterFn: 'notEquals', filterVariant: 'date' })}
+    value="2025-11-02"
+  />
+);
+
+NotEqualsOnDateColumn.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() =>
+    expect(names(canvasElement)).toEqual(['Ann', 'Dan', 'Eve', 'Finn']),
+  );
+};
+
+// A 'YYYY-MM-DDTHH:mm' value compares the instant to the minute.
+export const DateTimeOnDateColumn = () => (
+  <DateTable
+    column={joinedColumn({ filterFn: 'equals', filterVariant: 'datetime' })}
+    value="2025-11-02T14:15"
+  />
+);
+
+DateTimeOnDateColumn.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => expect(names(canvasElement)).toEqual(['Ben']));
+};
+
+export const DateTimeGreaterThanOnDateColumn = () => (
+  <DateTable
+    column={joinedColumn({
+      filterFn: 'greaterThan',
+      filterVariant: 'datetime',
+    })}
+    value="2025-11-02T14:15"
+  />
+);
+
+DateTimeGreaterThanOnDateColumn.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await waitFor(() =>
+    expect(names(canvasElement)).toEqual(['Cara', 'Dan', 'Eve']),
+  );
+};
+
+// An 'HH:mm:ss' value compares the time of day to the second.
+export const TimeWithSecondsOnDateColumn = () => (
+  <DateTable
+    column={joinedColumn({ filterFn: 'equals', filterVariant: 'time' })}
+    value="14:15:00"
+  />
+);
+
+TimeWithSecondsOnDateColumn.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => expect(names(canvasElement)).toEqual(['Ben']));
+};
+
+// A `Date` filter value compares by getTime().
+export const DateFilterValueOnDateColumn = () => (
+  <DateTable
+    column={joinedColumn({ filterFn: 'equals' })}
+    value={new Date(2025, 10, 5, 9, 0)}
+  />
+);
+
+DateFilterValueOnDateColumn.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => expect(names(canvasElement)).toEqual(['Dan']));
+};
+
+// An accessor returning ISO date-time strings ('2025-11-02T13:15:00.000Z'),
+// no filterFn: the 'equals' default compares by local day, as `fuzzy`
+// matched by prefix before.
+export const IsoDateTimeStringColumnByDay = () => (
+  <DateTable
+    column={{
+      accessorKey: 'joinedAt',
+      filterVariant: 'date',
+      header: 'Joined',
+      id: 'joinedAt',
+    }}
+    value="2025-11-02"
+  />
+);
+
+IsoDateTimeStringColumnByDay.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => expect(names(canvasElement)).toEqual(['Ben', 'Cara']));
 };

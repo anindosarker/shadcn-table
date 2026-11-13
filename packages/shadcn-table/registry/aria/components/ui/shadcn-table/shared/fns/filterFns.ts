@@ -25,19 +25,37 @@ const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 const TIME_OF_DAY_PATTERN = /^(\d{2}):(\d{2})(?::(\d{2}))?$/;
 const DATE_TIME_PATTERN =
   /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/;
+const ISO_DATE_TIME_ROW_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+
+/**
+ * A row value read as a date: a `Date`, or a string holding a full ISO date
+ * and time ('2025-11-02T14:15:00.000Z'); a date-only string stays text.
+ */
+const getRowDate = (rowValue: unknown): Date | undefined => {
+  const date =
+    rowValue instanceof Date
+      ? rowValue
+      : typeof rowValue === 'string' &&
+          ISO_DATE_TIME_ROW_PATTERN.test(rowValue.trim())
+        ? new Date(rowValue.trim())
+        : undefined;
+  return date && !isNaN(date.getTime()) ? date : undefined;
+};
 
 /**
  * The [row, filter] numbers to compare when the row value is a valid `Date`
- * and the filter value a date ('YYYY-MM-DD', local midnight, compared by
- * day), a time of day ('HH:mm' or 'HH:mm:ss'), a local date and time
- * ('YYYY-MM-DDTHH:mm', compared to the minute) or a `Date`; `undefined` for
- * any other pair, which keeps the text and number comparison.
+ * or ISO date-time string and the filter value a date ('YYYY-MM-DD', local
+ * midnight, compared by day), a time of day ('HH:mm', or to the second with
+ * 'HH:mm:ss'), a local date and time ('YYYY-MM-DDTHH:mm' to the minute, with
+ * ':ss' to the second) or a `Date`; `undefined` for any other pair, which
+ * keeps the text and number comparison.
  */
 const getDateComparablePair = (
-  rowValue: unknown,
+  rowDateValue: unknown,
   filterValue: unknown,
 ): [number, number] | undefined => {
-  if (!(rowValue instanceof Date) || isNaN(rowValue.getTime())) return;
+  const rowValue = getRowDate(rowDateValue);
+  if (!rowValue) return;
   if (filterValue instanceof Date) {
     return isNaN(filterValue.getTime())
       ? undefined
