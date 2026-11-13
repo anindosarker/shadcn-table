@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone
-	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
 - [ ] **Q78** Clearing an is-empty filter on a date column switches it to fuzzy matching instead of the date default
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 - [ ] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison
@@ -216,6 +214,8 @@ kanban-plugin: basic
 - [x] **Q72** The home page's big heading is only the name and says nothing about tables #D90 #E12
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
 	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
+- [ ] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone #D92
+	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
 
 ## Later
 
