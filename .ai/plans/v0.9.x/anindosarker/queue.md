@@ -12,6 +12,7 @@ kanban-plugin: basic
 	- Today only plain text filters debounce: 200 ms, 400 ms with manualFiltering; every other variant (date, time, number) fires after 1 ms (base ST_FilterTextField.tsx:228).
 	- Owner 2026-11-13: happens on text filters as well; less painful there because backspace and edit is easy, but the debounce should apply there too (so 200 ms feels too short), and on date and time inputs.
 	- Owner 2026-11-13: not a change of numbers: "add a debounce hook. and then implement. this needs good planning". Lookup of every debounced or instantly committed input running.
+	- Lookup 2026-11-13 (code read): typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce in ST_FilterTextField.tsx:212-232, 200 ms or 400 ms with manualFiltering; native date and time inputs emit partial values per segment, so a pause over 200 ms commits a half-typed date. Global search: ST_GlobalFilterTextField.tsx:67-77, 250 or 500 ms. Select, checkbox, slider (commit on release) and edit cells (blur or Enter) are fine.
 
 ## Decided
 
@@ -333,5 +334,5 @@ kanban-plugin: basic
 	- Owner 2026-11-13: fix it in E11, 0.9.3 waits for it (option 2). Cause lookup running.
 
 %% kanban:settings
-{"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm"}
+{"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list"}
 %%
