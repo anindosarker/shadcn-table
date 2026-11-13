@@ -2,6 +2,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type PointerEvent,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -288,6 +289,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     value: string;
   } | null>(null);
   const commitTypedDateOnUnmount = useRef(() => {});
+  // The pointer type of the press in progress on a date-like input.
+  const datePointerType = useRef('');
   useLayoutEffect(() => {
     commitTypedDateOnUnmount.current = () => {
       if (typedDate && isCommitGuardHeld(typedDate.guard)) {
@@ -530,6 +533,39 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const commonDatePickerProps = {
     // Tighter inset so the native placeholder fits at the date minimum width.
     className: cn('px-1.5', commonTextFieldProps.className),
+    // A native date, datetime or time input puts the caret on the segment
+    // under the pointer, so a click at the centre of the box lands on the
+    // year (D96). A mouse or pen press on a field without focus starts at the
+    // first segment instead; a press on the picker button at the inline end,
+    // a press on the focused field, touch and the keyboard keep the browser's
+    // behavior.
+    onMouseDown: (event: MouseEvent<HTMLInputElement>) => {
+      textFieldProps.onMouseDown?.(event);
+      const input = event.currentTarget;
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        !['mouse', 'pen'].includes(datePointerType.current) ||
+        input.ownerDocument.activeElement === input
+      ) {
+        return;
+      }
+      // Chromium and Firefox draw the picker button within 24px of the
+      // inline-end padding.
+      const { left, right } = input.getBoundingClientRect();
+      const style = getComputedStyle(input);
+      const isOnPickerButton =
+        style.direction === 'rtl'
+          ? event.clientX < left + parseFloat(style.paddingLeft) + 24
+          : event.clientX > right - parseFloat(style.paddingRight) - 24;
+      if (isOnPickerButton) return;
+      event.preventDefault();
+      input.focus();
+    },
+    onPointerDown: (event: PointerEvent<HTMLInputElement>) => {
+      datePointerType.current = event.pointerType;
+      textFieldProps.onPointerDown?.(event);
+    },
     onChange: (event: ChangeEvent<HTMLInputElement>) => {
       if (isDateTyped) {
         setFilterValue(event.target.value);

@@ -319,14 +319,18 @@ ClearEmptyReturnsDateDefaultMode.play = async ({
 };
 
 // D96: a real pointer click at the centre of the first date range input,
-// then a full date typed with real key presses, fills the whole date. In the
-// chip editor the range inputs sit at their minimum width, where the native
-// input put the caret on the segment under the pointer: the year.
+// then a full date typed with real key presses, fills the whole date. The
+// native input put the caret on the segment under the pointer; at this
+// column size the centre of the input is on the year.
 export const ClickCentreOfDateRangeInputTypesFullDate = () => (
   <ShadcnTable
-    columnFilterDisplayMode="chips"
-    columns={[nameColumn, joinedColumn({ filterVariant: 'date-range' })]}
+    columnFilterDisplayMode="subheader"
+    columns={[
+      nameColumn,
+      joinedColumn({ filterVariant: 'date-range', size: 95 }),
+    ]}
     data={data}
+    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -334,14 +338,8 @@ ClickCentreOfDateRangeInputTypesFullDate.play = async ({
   canvasElement,
 }: StoryContext) => {
   const canvas = within(canvasElement);
-  const body = within(document.body);
   await canvas.findByText('Ann');
-  await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
-  await userEvent.click(await body.findByRole('option', { name: 'Joined' }));
-  const min = (await body.findByLabelText('Min')) as HTMLInputElement;
-  await waitFor(() =>
-    expect(min.closest('[data-slot="popover-content"]')).not.toBeNull(),
-  );
+  const min = canvas.getByLabelText('Min') as HTMLInputElement;
   // Playwright input: a trusted press at the element's centre and real key
   // presses; storybook/test's userEvent fills no date segment.
   const pointer =
