@@ -163,7 +163,7 @@ kanban-plugin: basic
 	- Options:
 		- a) Recommended: keep (spec 16 1.6.4 already reads this way); the 0.9.1 run is the proof, a context left "Expected" there is a new item
 		- b) revert to the job-level `if:` and prove it on a throwaway PR first
-- [x] **Q54** The getting-started perf budgets are 600 ms under --ci, 300 ms locally #D48 #E13
+- [x] **Q54** The getting-started perf budgets are 600 ms under --ci, 300 ms locally #D48
 	- D29 accepts the panel open and light/dark toggle at under 300 ms of long tasks; the 0.9.1 release run (42514739346) measured the toggle at 342 to 351 ms on GitHub runners on two of three bases, twice, so the release PR was red on the budget, not the code (Q28). The fix milestone keeps 300 ms locally (D29's measure) and uses 600 ms under `--ci` so the release can ship; the fix merges into `claude/review` and `dev` before the PR reruns (merged 629dcf81: `PERF_BUDGET_MS` is 600 when `process.env.CI === 'true'`, which GitHub sets; a local `--ci` run keeps 300 ms because `test/run.mjs --ci` does not set `CI`).
 	- Options:
 		- a) Recommended: keep (amend D29's acceptance line: 300 ms locally, 600 ms on GitHub runners)
@@ -222,9 +222,9 @@ kanban-plugin: basic
 	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
 - [x] **Q78** Clearing an is-empty filter on a date column switches it to fuzzy matching instead of the date default #D93 #E13
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
-- [x] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison #D94 #E13
+- [x] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison #D94
 	- `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx:93-98, 175`: after D81 (spec 40) date columns default to `equals` and compare by local day, time of day or minute; the guide was outside the milestone's files.
-- [x] **Q81** The React Query example offers every filter mode on text columns but its server only does contains #D95 #E13
+- [x] **Q81** The React Query example offers every filter mode on text columns but its server only does contains #D95
 	- `apps/shadcn-table-docs/app/api/data/route.ts` and `examples/<base>/react-query/TS.tsx`: spec 40 sent and limited modes for Last Login only, as scoped; the text columns still show all modes and ignore the choice.
 - [x] **Q80** Typing a date into the Min or Max box of a between filter wipes the box on the first key #D96 #E13
 	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.

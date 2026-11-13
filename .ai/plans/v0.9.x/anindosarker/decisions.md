@@ -6,22 +6,12 @@ kanban-plugin: basic
 
 ## In progress
 
-- [ ] **D48** The perf budget is 600 ms under --ci, 300 ms locally #E13 #R3
-	- Source: Q54
-	  [Done]
-	- Source: Q54. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (Q28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
 	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
 	- Source: Q77
 - [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
 	- Source: Q78
-- [ ] **D94** The column filtering guide states the date defaults of D81 #E13 #R4
-	- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
-	- Source: Q79
-- [ ] **D95** The React Query example offers only the filter modes its server applies #E13 #R4
-	- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
-	- Source: Q81
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
@@ -321,6 +311,10 @@ kanban-plugin: basic
 	- Fixes Q10 and Q27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (Q10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (Q27). Settled by the lead: tooling with one right answer. Q9 and Q26 (stale comments) wait for a change that touches their files (no comment-only commits).
 - [x] **D47** The runner approves every Prepare Release deployment #E9 #R3
 	- Supersedes D28 and the per-release word of D3 and D39: from 0.9.1 on, the runner approves the Prepare Release deployment of every release PR as soon as the job waits, with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D47"`; no approval line to the lead, no owner click. The `release` environment and its required reviewer stay (D3): the owner can still reject a waiting deployment by hand before the runner reaches it. Owner, 2026-11-09: "Approve it. Don't ask me for approvals from now on, you have access and approvals."
+- [x] **D48** The perf budget is 600 ms under --ci, 300 ms locally #E13 #R3
+	- Source: Q54
+	  [Done]
+	- Source: Q54. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (Q28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
 - [x] **D49** 0.9.1 ships with the patch label; no 0.10.x in this release #E9 #R3
 	- Source: Q55
 	  [E7]
@@ -563,6 +557,12 @@ kanban-plugin: basic
 	- Runs as a fix milestone added to the running E12 epic, after `Filter editor fixes` has merged (same files' import lines), so 0.9.4 ships with it.
 	- Owner, 2026-11-14: "These are bad coding patterns"; on the first suggested layout: "this looks better. record and add to current epic".
 	- Source: Q82
+- [x] **D94** The column filtering guide states the date defaults of D81 #E13 #R4
+	- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
+	- Source: Q79
+- [x] **D95** The React Query example offers only the filter modes its server applies #E13 #R4
+	- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
+	- Source: Q81
 - [x] **D97** React Aria filter popups are modal again as in 0.9.3; the Escape fix stays #E12 #R4
 	- Supersedes D83.
 	- Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
