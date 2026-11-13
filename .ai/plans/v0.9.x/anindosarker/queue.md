@@ -16,6 +16,8 @@ kanban-plugin: basic
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/popover-filters on Base UI (screenshot): "need to increase a bit padding for the line that says filter fuzzy".
 - [ ] **Q72** The home page's big heading is only the name and says nothing about tables #owner
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
+- [ ] **Q73** The time range filter's second input is cut off in the chip editor #owner
+	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot): Departure Time chip, mode between inclusive: the editor shows two time inputs side by side; the second one runs past the editor's right edge, its clock icon is not visible. Owner: "This filter is broken, add finding."
 
 ## Decided
 
