@@ -265,8 +265,6 @@ export const FilterFnAndFilterVariants = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -310,12 +308,10 @@ export const FilterFnAndFilterVariantsFaceted = () => (
     ]}
     data={data}
     enableFacetedValues
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
-/** The subheader th whose header text starts with `name`. */
+/** The header th whose text starts with `name`. */
 const filterHeaderCell = (canvasElement: HTMLElement, name: string) =>
   Array.from(canvasElement.querySelectorAll<HTMLElement>('thead th')).find(
     (th) => th.textContent?.trim().startsWith(name),
@@ -325,6 +321,7 @@ const filterHeaderCell = (canvasElement: HTMLElement, name: string) =>
 // once a value exists (the empty slot takes no room), and on radix and base
 // highlights the first match so Enter picks it.
 export const MultiSelectFieldControls = {
+  name: 'Subheader: Multi Select Field Controls',
   render: () => (
     <ShadcnTable
       columnFilterDisplayMode="subheader"
@@ -396,6 +393,7 @@ const thumbValues = (th: HTMLElement) =>
 // F46: the aria range slider reads min and max from stFilterSliderProps, as
 // radix and base do.
 export const RangeSliderCustomBounds = {
+  name: 'Subheader: Range Slider Custom Bounds',
   render: () => (
     <ShadcnTable
       columnFilterDisplayMode="subheader"
@@ -427,7 +425,14 @@ export const RangeSliderCustomBounds = {
   },
 };
 
-export const FilteringChangeModeEnabled = () => (
+/** The filter mode demo table, in the given filter display mode. */
+const ChangeModeTable = ({
+  columnFilterDisplayMode,
+  initialState,
+}: Pick<
+  ST_TableOptions<(typeof data)[0]>,
+  'columnFilterDisplayMode' | 'initialState'
+>) => (
   <ShadcnTable
     columns={[
       {
@@ -473,10 +478,12 @@ export const FilteringChangeModeEnabled = () => (
     ]}
     data={data}
     enableColumnFilterModes
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
+    columnFilterDisplayMode={columnFilterDisplayMode}
+    initialState={initialState}
   />
 );
+
+export const FilteringChangeModeEnabled = () => <ChangeModeTable />;
 
 // The closing state of a menu popup in each base.
 const menuExiting = (popup: Element) =>
@@ -486,7 +493,13 @@ const menuExiting = (popup: Element) =>
 
 /** F3: the filter mode menu plays its exit animation where it opened. */
 export const FilterModeMenuClosesInPlace = {
-  render: FilteringChangeModeEnabled,
+  name: 'Subheader: Filter Mode Menu Closes In Place',
+  render: () => (
+    <ChangeModeTable
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     const [modeButton] = await canvas.findAllByRole('button', {
@@ -603,6 +616,7 @@ const sliderCaptionBelowTrack = async (canvasElement: HTMLElement) => {
 };
 
 export const FilteringChangeModeEnabledFaceted = {
+  name: 'Subheader: Filtering Change Mode Enabled Faceted',
   render: () => (
     <ShadcnTable
       columns={[
@@ -828,8 +842,6 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
     ]}
     data={data}
     enableColumnFilterModes
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -870,8 +882,6 @@ export const FilteringDisabledForCertainColumns = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -920,8 +930,6 @@ export const CustomFilterFunctionPerColumn = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -971,8 +979,6 @@ export const CustomFilterFns = () => (
           .startsWith(filterValue.toLowerCase());
       },
     }}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1030,8 +1036,6 @@ export const CustomFilterComponent = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1074,8 +1078,6 @@ export const CustomizeFilterTextFields = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1113,8 +1115,6 @@ export const ExternalSetFilterValue = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
     renderTopToolbarCustomActions={({ table }) => (
       <div>
         <Button
@@ -1213,6 +1213,7 @@ const scoreColumns: ST_ColumnDef<Score>[] = [
 
 /** A Min value filters the rows; the number range input rejects letters. */
 export const RangeFilterMinValue = {
+  name: 'Subheader: Range Filter Min Value',
   render: () => (
     <ShadcnTable
       columns={scoreColumns}
@@ -1486,6 +1487,7 @@ export const TypeThenClearFiltersStaysCleared = {
 
 /** Enter applies the typed text before the wait ends. */
 export const TypeThenEnterAppliesAtOnce = {
+  name: 'Subheader: Type Then Enter Applies At Once',
   render: () => (
     <DebounceTable
       columnFilterDisplayMode="subheader"
@@ -1511,6 +1513,7 @@ export const TypeThenEnterAppliesAtOnce = {
  * (0002, 0020, ...): a typed date applies on blur or Enter, never on a pause.
  */
 export const HalfTypedYearAppliesNothing = {
+  name: 'Subheader: Half Typed Year Applies Nothing',
   render: () => (
     <DebounceTable
       columnFilterDisplayMode="subheader"
@@ -1572,6 +1575,7 @@ const RerenderingDebounceTable = () => {
 
 /** Parent re-renders inside the wait keep the typed text and apply it. */
 export const ControlledRerenderKeepsTypedFilter = {
+  name: 'Subheader: Controlled Rerender Keeps Typed Filter',
   render: () => <RerenderingDebounceTable />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
@@ -1657,6 +1661,7 @@ export const ChipEditorEscapeKeepsTypedDate = {
 
 /** The table wait and a column's own wait (D88). */
 export const CustomFilterDebounce = {
+  name: 'Subheader: Custom Filter Debounce',
   render: () => (
     <DebounceTable
       columnFilterDebounceMs={50}
