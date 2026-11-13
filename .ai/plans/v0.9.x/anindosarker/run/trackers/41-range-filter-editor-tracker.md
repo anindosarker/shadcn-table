@@ -27,6 +27,12 @@ Checks:
 - Check: `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` at 0745a6d1: pass, 24 of 24 on base, radix and aria
 - Check (Local CI): `pnpm test storybook-tests --base radix`, `--base base`, `--base aria` at 0745a6d1: pass, 651 of 651 each
 - Check (Local CI): `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 0745a6d1: pass (tsc clean); `pnpm test lint` at 0745a6d1: pass (9 warnings, outside this milestone); `pnpm test validate-repo` at 0745a6d1: pass
+- Check (verifier 2, Local CI): `pnpm test docs-e2e --base aria --url http://localhost:5340` (`next start` of this branch's production build) at 02cb9942: pass, 4 sections, 109 pages (getting-started 245, api 109, guides 701, examples 939, 0 failed); also the docs E2E part of spec 42's Acceptance
+- Check (verifier 2): not rerun, valid at 0745a6d1 (only `.ai/` changed since): `pnpm test typecheck --base base`, `--base radix`, `--base aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test storybook-tests --base base`, `--base radix`, `--base aria`
+- Check (verifier 2, Acceptance 41 to 44): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` at 02cb9942: pass, 24 of 24 on base, radix and aria
+- Check (verifier 2, Acceptance 45): the two `grep` lines of spec 45 1.2 at 02cb9942: nothing, 9
+- Check (verifier 2, P11): the before-the-change failures are recorded for specs 41 (this tracker), 42, 43 and 44 (their trackers), and for the Clear filters hit-test play (this tracker); spec 45 has no play, its captures are in its tracker
+- Check (verifier 2, files): the branch diff matches Files owned, CHANGELOG.md, the generated `apps/shadcn-table-docs/components/ui-<base>/` copies and the plan files
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
