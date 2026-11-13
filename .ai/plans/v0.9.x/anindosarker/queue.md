@@ -6,6 +6,10 @@ kanban-plugin: basic
 
 - [ ] **Q2** The filtering stories show the old filter UI, not the current format
 	- Owner, 2026-11-08, on the deployed Storybook (`https://storybook.shadcn-table.com/base/`): the filtering stories are not updated to the new format. Stories looked at: `Features/Filtering Examples` (`FilteringChangeModeEnabled`, `FilteringChangeModeEnabledFaceted`, `SubheaderRangeFieldsNarrow`, `FilterFnAndFilterVariants`, `packages/shadcn-table/stories/features/Filtering.stories.tsx:174-702`) and `Features/Filter Chips Examples` (`FilterModePickerTableLevel`, `FilterChips.stories.tsx:300`). Major. Screenshot 2026-11-08 of `FilteringChangeModeEnabled` (Base build): the subheader filter row with one input per column and a "Filter Mode: Fuzzy" helper line under each, no chips; the docs filtering examples moved to chips in v0.8.x (D51) while the stories did not.
+- [ ] **Q34** Rank one for shadcn table and a keyword-led snippet
+	- Owner, 2026-11-12, Google query "shadcn table" (logged in, personalised): the result shown is `/docs/getting-started/introduction`, below shadcn.io's "Shadcn Table: Free Data Table Component for Next.js" (tablecn) and a shadcn-ui GitHub issue; the owner also reports finding the page only on the sixth page in another view. Goal: rank one for "shadcn table", with the home page as the landing result, not the introduction page.
+	- The snippet Google shows is the introduction's description ("shadcn-table is a feature-rich data table for shadcn/ui. It covers everything from a simple list to a production data grid."); the owner wants it rewritten around the terms people search (shadcn table, shadcn data table, data table component, Next.js, TanStack Table), as the tablecn result does ("production-ready, feature-rich data table component. Built with Next.js, React, Tailwind and shadcn/ui").
+	- Inputs for the item: Search Console query and page data once it fills (the property is 2 days old), the live home and introduction descriptions after E10 ships, a keyword check with the `/seo` tools. To discuss later, at the owner's call.
 
 ## Decided
 
@@ -225,10 +229,6 @@ kanban-plugin: basic
 
 - [ ] **Q4** Stories carry no explainer
 	- Owner, 2026-11-08, screenshot of `Features/Filtering Examples/Column Filtering Disabled` (Base build): every story shows the same three-line banner (docs link, base links, source link) and nothing about what the story demonstrates or what to try; a visitor cannot tell what "Column Filtering Disabled" shows. Holds for every story (594 stories, one shared banner from `.storybook/preview.tsx`). To be discussed with the docs restructuring items, not on its own.
-- [ ] **Q34** Rank one for shadcn table and a keyword-led snippet
-	- Owner, 2026-11-12, Google query "shadcn table" (logged in, personalised): the result shown is `/docs/getting-started/introduction`, below shadcn.io's "Shadcn Table: Free Data Table Component for Next.js" (tablecn) and a shadcn-ui GitHub issue; the owner also reports finding the page only on the sixth page in another view. Goal: rank one for "shadcn table", with the home page as the landing result, not the introduction page.
-	- The snippet Google shows is the introduction's description ("shadcn-table is a feature-rich data table for shadcn/ui. It covers everything from a simple list to a production data grid."); the owner wants it rewritten around the terms people search (shadcn table, shadcn data table, data table component, Next.js, TanStack Table), as the tablecn result does ("production-ready, feature-rich data table component. Built with Next.js, React, Tailwind and shadcn/ui").
-	- Inputs for the item: Search Console query and page data once it fills (the property is 2 days old), the live home and introduction descriptions after E10 ships, a keyword check with the `/seo` tools. To discuss later, at the owner's call.
 
 ## Dropped
 
