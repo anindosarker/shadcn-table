@@ -796,3 +796,8 @@ index e1645117..e67a5482 100644
 - react-query: its route `app/api/data/route.ts:29-33` compares dates correctly but ignores the filter mode (always `>`), and `getData()` re-randomizes `lastLogin` on every request (`route.ts:16`, `db.ts:1413`); the owner's live symptom there is not explained by the library bug. The spec finds that cause and fixes the route in the same epic.
 - Owner, 2026-11-13: "1k" (next epic, after a lookup).
 - Source: Q67
+
+### D82 On React Aria the multi-select filter list opens on a click into its input
+
+- Today it opens only on ArrowDown or the chevron; Base UI and Radix open on click (run E11 browser check of the D78 demo). Fix: React Aria opens on click like the other two bases. Owner, 2026-11-13: "decision is to fix it".
+- Source: Q68
