@@ -788,4 +788,7 @@ index e1645117..e67a5482 100644
 ### D81 Date filters compare dates, also when the column holds Date values
 
 - With `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`: "greater than" keeps every row, "less than" none (run E11, card Q67). Seen live by the owner on 0.9.3, /docs/examples/react-query: "after 11/02/2025" kept rows dated 9/20/2025, 2/18/2025 and 9/28/2025.
+- Fix in the next epic, not as a patch release: date filter modes compare date values for `Date` accessors and for ISO string accessors. The spec follows one lookup: the exact cause in the filter functions, which modes are affected (equals, between), what Material React Table does, and whether the react-query and other remote examples filter in their own mock server code and need the same fix there.
+- Proof (P11): a play with a `Date` accessor column that fails before the fix on "greater than" and "less than" and passes after; the live demo (D78) may then return to a `Date` accessor.
+- Owner, 2026-11-13: "1k" (next epic, after a lookup).
 - Source: Q67
