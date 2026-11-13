@@ -1,4 +1,4 @@
-# 47: Comparison page, tracker
+# 47: Comparison page returns with the searched names, tracker
 
 Status: running (stopped before the merge for the lead verification, D89)
 Branch `v0.9/comparison-page`, worktree 05
