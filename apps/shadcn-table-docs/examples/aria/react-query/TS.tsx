@@ -112,30 +112,35 @@ const Example = () => {
         icon: UserIcon,
         header: 'First Name',
         columnFilterModeOptions: ['contains'], //the API matches text by contains
+        filterFn: 'contains',
       },
       {
         accessorKey: 'lastName',
         icon: UserIcon,
         header: 'Last Name',
         columnFilterModeOptions: ['contains'],
+        filterFn: 'contains',
       },
       {
         accessorKey: 'address',
         icon: MapPinIcon,
         header: 'Address',
         columnFilterModeOptions: ['contains'],
+        filterFn: 'contains',
       },
       {
         accessorKey: 'state',
         icon: MapIcon,
         header: 'State',
         columnFilterModeOptions: ['contains'],
+        filterFn: 'contains',
       },
       {
         accessorKey: 'phoneNumber',
         icon: PhoneIcon,
         header: 'Phone Number',
         columnFilterModeOptions: ['contains'],
+        filterFn: 'contains',
       },
       {
         accessorFn: (row) => new Date(row.lastLogin),

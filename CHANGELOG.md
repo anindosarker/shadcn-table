@@ -7,6 +7,16 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+#### Spec 52 Docs filter facts
+
+- The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
+- The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
+- On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
@@ -66,11 +76,6 @@ publishes the section as the GitHub release notes.
 #### Fix Q76
 
 - The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
-
-#### Spec 52 Docs filter facts
-
-- The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
-- The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 
 ### Docs
 
