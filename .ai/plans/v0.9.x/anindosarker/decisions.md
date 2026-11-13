@@ -880,3 +880,8 @@ index e1645117..e67a5482 100644
 
 - `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
 - Source: Q78
+
+### D94 The column filtering guide states the date defaults of D81
+
+- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
+- Source: Q79
