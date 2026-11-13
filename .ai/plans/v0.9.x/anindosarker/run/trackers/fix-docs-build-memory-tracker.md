@@ -14,6 +14,10 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base aria` at 13eef88a: pass
 - Check: lint, `pnpm test lint` at 13eef88a: pass (9 warnings, all in example files, none from this change)
 - Check: validate-repo, `pnpm test validate-repo` at 13eef88a: pass
+- Check (verifier): types:check, `/usr/bin/time -l pnpm --filter shadcn-table-docs types:check` (NODE_OPTIONS unset, tsbuildinfo deleted) at a6a2d2df: pass, peak RSS 1.91 GB, 34.1 s
+- Check (verifier): deliberate error, `export const __q76v: number = 'x'` in `examples/aria/aggregation-and-grouping/TS.tsx` and in `components/callout.tsx` at a6a2d2df: types:check fails on each (TS2322, ui-aria and build programs), reverted, `git status --short` empty
+- Check (verifier): coverage, `tsc --listFilesOnly` non-node_modules files of the merge-base `tsconfig.build.json` vs the union of build, ui-base and ui-aria at a6a2d2df: identical, 1433 files
+- Check (verifier): diff since merge-base: no `ignoreBuildErrors`, no `max-old-space-size`; the only excludes added are the base and aria copies, checked in their own programs; the builder's build, typecheck, lint and validate-repo lines at 13eef88a stay valid (later diff touches only .ai/ and CHANGELOG.md)
 
 - Task 1 measure and find the cause: done (13eef88a)
 - Task 2 fix at the source: done (13eef88a)
