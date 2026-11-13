@@ -180,9 +180,7 @@ export function useTableQueryParams<TData extends ST_RowData>({
   });
   const [search, setSearch] = useState('');
   const [sorting, setSorting] = useState<ST_SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
   //one filter mode per column, from the column's filterFn or 'contains'
   const [columnFilterFns, setColumnFilterFns] =
     useState<ST_ColumnFilterFnsState>(() =>
@@ -212,9 +210,7 @@ export function useTableQueryParams<TData extends ST_RowData>({
       setColumnFilters(updater);
       resetPageIndex();
     },
-    onColumnFilterFnsChange: (
-      updater: ST_Updater<ST_ColumnFilterFnsState>,
-    ) => {
+    onColumnFilterFnsChange: (updater: ST_Updater<ST_ColumnFilterFnsState>) => {
       setColumnFilterFns(updater);
       resetPageIndex();
     },
@@ -309,7 +305,7 @@ const table = useShadcnTable({
 - **Loading:** `isLoading` is true only on the first load, when there is no data yet. Later requests keep the old page (thanks to `keepPreviousData`) and show a progress bar.
 - **Errors:** `showAlertBanner` shows the error above the table. Without it, a failed request just looks like an empty table.
 
-The search box and the text column filters already debounce their input when `manualFiltering` is on (500ms for search, 400ms for filters), so you don't need your own debounce.
+The search box and the typed column filters already wait 500ms after the last key before they apply (`globalFilterDebounceMs` and `columnFilterDebounceMs` change it), so you don't need your own debounce.
 
 </Step>
 
@@ -370,7 +366,7 @@ useMutation({
 - **Hiding errors.** Set `showAlertBanner` from `isError`, and make the service throw on a bad status.
 - **Leaving params out of the `queryKey`.** The query never refetches, and the table is stuck on page 1.
 - **Forgetting `rowCount`.** The pagination thinks there is only one page.
-- **Adding your own debounce.** The built-in search and filter inputs already debounce in manual mode. A second debounce just adds lag.
+- **Adding your own debounce.** The built-in search and filter inputs already debounce. A second debounce just adds lag.
 
 ### Related
 

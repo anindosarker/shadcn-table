@@ -58,6 +58,17 @@ export const tableOptions: TableOption[] = [
     type: 'boolean',
   },
   {
+    tableOption: 'columnFilterDebounceMs',
+    defaultValue: '500',
+    description:
+      'Milliseconds a typed column filter waits after the last key before it applies. Enter and blur apply it at once; a date, datetime or time filter applies a typed value on Enter or blur only. The column option filterDebounceMs overrides it for one column.',
+    link: '/docs/guides/column-filtering',
+    linkText: 'ST Column Filtering Docs',
+    required: false,
+    source: 'ST',
+    type: 'number',
+  },
+  {
     tableOption: 'columnFilterDisplayMode',
     defaultValue: "'chips'",
     description:
@@ -797,6 +808,17 @@ export const tableOptions: TableOption[] = [
     required: false,
     source: 'ST',
     type: 'boolean',
+  },
+  {
+    tableOption: 'globalFilterDebounceMs',
+    defaultValue: '500',
+    description:
+      'Milliseconds the global search waits after the last key before it applies. Enter and blur apply it at once.',
+    link: '/docs/guides/global-filtering',
+    linkText: 'ST Global Filtering Docs',
+    required: false,
+    source: 'ST',
+    type: 'number',
   },
   {
     tableOption: 'globalFilterModeOptions',

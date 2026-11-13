@@ -1544,3 +1544,49 @@ export const HalfTypedYearAppliesNothing = {
     );
   },
 };
+
+/** The table wait and a column's own wait (D88). */
+export const CustomFilterDebounce = {
+  render: () => (
+    <DebounceTable
+      columnFilterDebounceMs={50}
+      columnFilterDisplayMode="subheader"
+      columns={[
+        debounceColumns[0]!,
+        { ...debounceColumns[1]!, filterDebounceMs: 1000 },
+      ]}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+
+    await userEvent.type(
+      canvas.getByRole('textbox', { name: 'Filter by First Name' }),
+      'Ada',
+    );
+    await waitFor(() => expect(debounceRows(canvasElement)).toHaveLength(1), {
+      timeout: 300,
+    });
+
+    await userEvent.type(
+      canvas.getByRole('textbox', { name: 'Filter by Last Name' }),
+      'Love',
+    );
+    const typedAt = performance.now();
+    await sleep(750);
+    expect(
+      columnFilterState(canvasElement).find(({ id }) => id === 'lastName'),
+    ).toBeUndefined();
+    await waitFor(
+      () =>
+        expect(columnFilterState(canvasElement)).toContainEqual({
+          id: 'lastName',
+          value: 'Love',
+        }),
+      { timeout: 1500 },
+    );
+    expect(performance.now() - typedAt).toBeGreaterThanOrEqual(800);
+  },
+};

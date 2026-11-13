@@ -12,9 +12,13 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base base|radix|aria` at the Task 2 commit: pass (radix with `NODE_OPTIONS=--max-old-space-size=8192`, see Attention)
 - Check: plays, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx stories/features/Search.stories.tsx stories/features/FilterChips.stories.tsx` on base, radix, aria at the Task 2 commit: pass (68 of 68 each)
 - Check: `cmp` of the three `hooks/useST_DebouncedCallback.ts` at the Task 2 commit: identical
+- Check: `grep -rn "debounce(" packages/shadcn-table/registry/*/components/ui/shadcn-table` at the Task 3 commit: prints nothing
+- Check: `pnpm --filter shadcn-table-docs types:check` at the Task 3 commit (after `pnpm registry:build` and `pnpm --filter shadcn-table-docs lib:install base|radix|aria`): pass
+- Check: `CustomFilterDebounce`, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx -t "Custom Filter Debounce"` on base, radix, aria at the Task 3 commit: pass
 
 - Task 1 plays first: done (5b7254f9)
-- Task 2 hook, column filter field, global search: running
+- Task 2 hook, column filter field, global search: done (35c9fc00); the three options and their defaults (1.6.5) landed here, since the field reads them
+- Task 3 options docs, CustomFilterDebounce, util removal, guide lines: running
 
 ## Browser record (1.6.3)
 
