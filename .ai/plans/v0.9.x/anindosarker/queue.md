@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q84** A click in a date filter box that the editor already focused still lands on the year
 	- Run E13, spec 50 (tracker 50-filter-input-fixes, waiting on the owner): the D96 fix skips a field that already has focus, as D96 says. The chips editor, the header editor and the popover focus their first box on open, so the first click in that box (the chips range Min included) keeps the caret on the year; the fix reaches subheader fields, the range Max and every unfocused field. Review round 1 raises the same point; D96's line 'a click on an already focused field keeps the browser's behavior' would have to change.
+- [ ] **Q85** A click in a date filter box still lands on the year in the chip editor, the header editor and the popover
+	- Spec 50 (D96) starts typing at the first part only for a box that does not have focus yet, as D96 says; the chip editor, the header editor and the popover focus their first box when they open, so the first centre click there still puts the caret on the year (Chromium and Firefox: typing 03032025 gives an empty value). Only subheader fields and the range Max get the fix. Found by the run's review of spec 50; the milestone is built and waits, branch v0.9/filter-input-fixes. Keep D96 as written, or extend the fix to editor-focused boxes.
 
 ## Decided
 
