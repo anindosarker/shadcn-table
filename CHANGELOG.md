@@ -7,6 +7,16 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+#### Spec 52 Docs filter facts
+
+- The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
+- The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
+- On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
