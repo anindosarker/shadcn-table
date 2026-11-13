@@ -8,7 +8,7 @@ import { DropdownMenuItem } from '@/components/ui-aria/dropdown-menu';
 import { Button } from '@/components/ui-aria/button';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui-aria/shadcn-table/types';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 const actionMenuItemVariants = cva('items-center justify-between my-0');
 

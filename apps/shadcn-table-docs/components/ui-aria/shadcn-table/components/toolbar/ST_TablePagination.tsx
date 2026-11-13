@@ -35,7 +35,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { useST_MediaQuery } from '@/components/ui-aria/shadcn-table/hooks/useST_MediaQuery';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 

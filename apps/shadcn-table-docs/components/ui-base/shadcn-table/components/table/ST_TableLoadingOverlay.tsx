@@ -3,7 +3,7 @@ import { Spinner } from '@/components/ui-base/spinner';
 import { cn } from '@/lib/utils';
 import { type ST_CircularProgressProps } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 
 export type ST_TableLoadingOverlayProps = ST_CircularProgressProps;
 

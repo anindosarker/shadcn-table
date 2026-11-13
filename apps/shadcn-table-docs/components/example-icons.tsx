@@ -2,9 +2,9 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDesignSystem } from '@/components/design-system-provider';
-import { ST_DefaultsProvider as AriaDefaults } from '@/components/ui-aria/shadcn-table/hooks/useST_Defaults';
-import { ST_DefaultsProvider as BaseDefaults } from '@/components/ui-base/shadcn-table/hooks/useST_Defaults';
-import { ST_DefaultsProvider as RadixDefaults } from '@/components/ui-radix/shadcn-table/hooks/useST_Defaults';
+import { ST_DefaultsProvider as AriaDefaults } from '@/components/ui-aria/shadcn-table/context/ST_DefaultsContext';
+import { ST_DefaultsProvider as BaseDefaults } from '@/components/ui-base/shadcn-table/context/ST_DefaultsContext';
+import { ST_DefaultsProvider as RadixDefaults } from '@/components/ui-radix/shadcn-table/context/ST_DefaultsContext';
 import type { ST_Icons } from '@/components/ui-radix/shadcn-table/types';
 import type { IconLibraryName } from '@/lib/design-system/config';
 import type { Base } from '@/lib/install';

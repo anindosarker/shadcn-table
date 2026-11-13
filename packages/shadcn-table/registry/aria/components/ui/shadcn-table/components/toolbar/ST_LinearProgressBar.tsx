@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { useCollapsingChildren } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;

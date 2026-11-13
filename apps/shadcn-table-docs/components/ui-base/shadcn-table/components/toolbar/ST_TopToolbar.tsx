@@ -12,7 +12,7 @@ import { ST_GlobalFilterTextField } from '@/components/ui-base/shadcn-table/comp
 import { Separator } from '@/components/ui-base/separator';
 import { ST_FilterChips } from '@/components/ui-base/shadcn-table/components/toolbar/ST_FilterChips';
 import { ST_SortPopover } from '@/components/ui-base/shadcn-table/components/toolbar/ST_SortPopover';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui-base/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(

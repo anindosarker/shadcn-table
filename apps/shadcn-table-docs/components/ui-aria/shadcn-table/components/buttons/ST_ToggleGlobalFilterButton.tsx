@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui-aria/button';
 import { type ButtonProps } from '@/components/ui-aria/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 export type ST_ToggleGlobalFilterButtonProps = ButtonProps;
 

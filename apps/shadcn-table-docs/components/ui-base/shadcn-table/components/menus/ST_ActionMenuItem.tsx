@@ -7,7 +7,7 @@ import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui-base/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui-base/shadcn-table/types';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 
 const actionMenuItemVariants = cva('items-center justify-between my-0');
 

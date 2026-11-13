@@ -7,7 +7,7 @@ import {
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;

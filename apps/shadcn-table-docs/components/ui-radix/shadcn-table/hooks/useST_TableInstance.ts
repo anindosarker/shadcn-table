@@ -34,7 +34,7 @@ import {
   type ST_Features,
   stFeatures,
 } from '@/components/ui-radix/shadcn-table/features/stFeatures';
-import { createSTTableHook } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { createSTTableHook } from '@/components/ui-radix/shadcn-table/hooks/createSTTableHook';
 import { getST_RowActionsColumnDef } from '@/components/ui-radix/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef';
 import { getST_RowDragColumnDef } from '@/components/ui-radix/shadcn-table/hooks/display-columns/getST_RowDragColumnDef';
 import { getST_RowExpandColumnDef } from '@/components/ui-radix/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef';

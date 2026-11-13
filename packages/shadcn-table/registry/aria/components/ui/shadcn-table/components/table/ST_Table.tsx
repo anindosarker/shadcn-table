@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/shadcn-table/components/body/ST_TableBody';
 import { ST_TableFooter } from '@/components/ui/shadcn-table/components/footer/ST_TableFooter';
 import { ST_TableHead } from '@/components/ui/shadcn-table/components/head/ST_TableHead';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export type ST_TableProps = TableProps;
 

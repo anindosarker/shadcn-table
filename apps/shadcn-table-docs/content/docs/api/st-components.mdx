@@ -53,7 +53,7 @@ Shadcn Table now exports all of its internal components. You can use them for yo
 
 #### \<ST_TableProvider /\>
 
-[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx)
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/context/ST_TableContext.tsx)
 
 Most sub-components take no `table` prop (the toolbar components `ST_FilterChips`, `ST_ColumnPicker`, `ST_SortPopover`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems` and `ST_ScrollButtons` take it explicitly). Those that render a `row`, `cell`, `header` or `column` read the table from it; the others read it from the context that `<ShadcnTable />` provides. Outside `<ShadcnTable />`, wrap them in `<ST_TableProvider table={table}>`. See [Compose with ST_TableProvider](/docs/guides/toolbar-customization#compose-with-st_tableprovider).
 
@@ -69,7 +69,7 @@ return (
 
 #### \<ST_DefaultsProvider /\>
 
-[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_Defaults.tsx)
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/context/ST_DefaultsContext.tsx)
 
 Sets defaults for every table rendered below it. Its one prop is `icons` (`Partial<ST_Icons>`). Each table merges its icons in this order: `ST_Default_Icons` (the icon set your edition installed), then the nearest provider's `icons`, then the table's own `icons` option, so a table's own icon always wins for that key. A table outside any provider behaves as without one.
 
