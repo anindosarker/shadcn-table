@@ -16,8 +16,8 @@ Spec 31 (D60) added `content/docs/getting-started/comparison.mdx`, second in Get
 - Every cell is a claim shown by the cited project's own docs or repository, with the source in the Sources section and the date of the reading on the page; a cell that cannot be sourced is left out (D71).
 - The sidebar label is "Comparison"; the page's `<title>` names the compared libraries (D71).
 - The page has no byline and no `date` frontmatter field (D74).
-- The owner reads the full table in chat before the merge (D89).
-- Acceptance: programmatic and one owner read. On a production build served on a P6 port: `curl -s -o /dev/null -w '%{http_code}' localhost:<port>/docs/getting-started/comparison` prints `200`; `curl -s localhost:<port>/docs/getting-started/comparison | grep -o '<title>[^<]*</title>'` prints a title that contains `TanStack Table`, `Material React Table` and `AG Grid` and ends in ` | shadcn-table`; the sidebar's Getting Started group lists Introduction, Installation, Usage, AI Agent Setup, Comparison in that order (a named docs E2E check); `grep -ci tablecn apps/shadcn-table-docs/content/docs/getting-started/comparison.mdx` prints 0; `curl -s localhost:<port>/sitemap.xml | grep -c getting-started/comparison` prints 1; `pnpm test docs-e2e --base base` green. The tracker holds the table under `## Table for the owner` and the owner's answer.
+- The lead verifies every cell of the table against its source before the merge; the owner does not read it (D89, edited 2026-11-13).
+- Acceptance: programmatic and one lead verification. On a production build served on a P6 port: `curl -s -o /dev/null -w '%{http_code}' localhost:<port>/docs/getting-started/comparison` prints `200`; `curl -s localhost:<port>/docs/getting-started/comparison | grep -o '<title>[^<]*</title>'` prints a title that contains `TanStack Table`, `Material React Table` and `AG Grid` and ends in ` | shadcn-table`; the sidebar's Getting Started group lists Introduction, Installation, Usage, AI Agent Setup, Comparison in that order (a named docs E2E check); `grep -ci tablecn apps/shadcn-table-docs/content/docs/getting-started/comparison.mdx` prints 0; `curl -s localhost:<port>/sitemap.xml | grep -c getting-started/comparison` prints 1; `pnpm test docs-e2e --base base` green. The tracker holds the table under `## Table for the lead` and the owner's answer.
 
 ### 1.3 Current structure
 
@@ -52,7 +52,7 @@ CHANGELOG.md (P9)                             ← #### Spec 47 under ### Docs
 #### 1.6.1 Data artifacts
 
 - `CHANGELOG.md` (P9): `#### Spec 47 Comparison page` under `## Unreleased`, `### Docs`: a Comparison page in Getting Started compares shadcn-table with TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid (D71).
-- The tracker section `## Table for the owner`: the feature matrix as Markdown, exactly as the page renders it, with the source link of every non-shadcn-table cell.
+- The tracker section `## Table for the lead`: the feature matrix as Markdown, exactly as the page renders it, with the source link of every non-shadcn-table cell.
 
 #### 1.6.2 Page (D71)
 
@@ -73,9 +73,9 @@ CHANGELOG.md (P9)                             ← #### Spec 47 under ### Docs
 - `generateMetadata`: `title: page.data.searchTitle ?? page.data.title`. The page heading and the sidebar keep `page.data.title`.
 - Does NOT change the title template, JSON-LD, or any other page's title.
 
-#### 1.6.4 Owner read (D89)
+#### 1.6.4 Lead verification (D89)
 
-- When the page and its checks are done and before the merge, the milestone stops: the tracker gets `## Attention` with one line "the owner reads the comparison table (D89)" and the table under `## Table for the owner`; the runner sends `BLOCKED E12 <tracker path>`. The lead pastes the table in chat. The owner's answer comes back as a typed `NOTE E12:` line; corrections are applied, the checks rerun, and the milestone merges. No other milestone waits for this one except the release Integration.
+- When the page and its checks are done and before the merge, the milestone stops: the tracker gets `## Attention` with one line "the lead verifies the comparison table (D89)" and the table under `## Table for the lead`; the runner sends `BLOCKED E12 <tracker path>`. The lead checks every non-shadcn-table cell against its source link (an independent read, not the builder's) and does not paste the table to the owner. The lead's answer comes back as a typed `NOTE E12:` line; corrections are applied, the checks rerun, and the milestone merges. No other milestone waits for this one except the release Integration.
 
 **Stays unchanged:** every other docs page, `lib/llms.ts`, `app/sitemap.ts`, `reference/docs-layout/` (the docs session's work).
 
@@ -93,10 +93,10 @@ CHANGELOG.md (P9)                             ← #### Spec 47 under ### Docs
 - Local CI: `pnpm test typecheck --base base`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`
 - Task 1: The search title field (1.6.3). Checks: `pnpm --filter shadcn-table-docs types:check`; `git diff origin/claude/review -- apps/shadcn-table-docs/package.json` prints nothing
 - Task 2: The page and `meta.json` (1.6.2), every cell read against its source that day; the docs E2E check. Checks: the `curl` and `grep` lines of 1.2 on a production build on a P6 port; every link of the Sources section returns 200 (`curl -s -o /dev/null -w '%{http_code}'` per link, the list in the tracker); the server stopped
-- Task 3: `pnpm format`, the changelog block, then the owner read (1.6.4). Checks: 2.2; the owner's answer recorded in the tracker before the merge
+- Task 3: `pnpm format`, the changelog block, then the lead verification (1.6.4). Checks: 2.2; the lead's answer recorded in the tracker before the merge
 
 ### 2.2 Checks
 
 - The Local CI lines green; the Acceptance lines of 1.2
-- The table and the owner's answer in the tracker (D89)
-- Review: none (docs content read by the owner; one optional schema field; P7 untouched)
+- The table and the lead's answer in the tracker (D89)
+- Review: none (docs content verified by the lead; one optional schema field; P7 untouched)

@@ -72,7 +72,7 @@ sequenceDiagram
 
 #### 1.6.2 Integration (D40, D89, P1)
 
-- Precondition: specs 39 to 47 and 49 merged (`status/sprints.md` has no `·`, `[ ]` or `[!]` row for them; a `[!]` row stops this milestone and becomes a queue card, the release does not ship a partial epic); the comparison page milestone merged only after the owner's read (spec 47, D89); `claude/review` contains `origin/master` (`git merge-base --is-ancestor origin/master origin/claude/review`).
+- Precondition: specs 39 to 47 and 49 merged (`status/sprints.md` has no `·`, `[ ]` or `[!]` row for them; a `[!]` row stops this milestone and becomes a queue card, the release does not ship a partial epic); the comparison page milestone merged only after the lead's verification (spec 47, D89); `claude/review` contains `origin/master` (`git merge-base --is-ancestor origin/master origin/claude/review`).
 - The changelog pass of 1.6.1 lands on `claude/review` (commit, push); then `git fetch origin && git checkout dev && git merge --ff-only origin/claude/review && git push origin dev`: the one fast-forward of P1.
 - No local suite (D40): the milestones ran their checks; `pr.yml` is the one full run. No preview stop and no message to the owner before the PR (D89).
 - Does NOT run `validate-pr` or `validate-production` locally (CI only, P5); does NOT touch `master`; does NOT include any docs restructuring work.

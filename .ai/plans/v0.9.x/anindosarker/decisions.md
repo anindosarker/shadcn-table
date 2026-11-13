@@ -853,6 +853,7 @@ index e1645117..e67a5482 100644
 [E12]
 
 - E12 (D71, D81 to D88, and the home heading decision if the owner adds it) ships as 0.9.4 in the same epic: a release spec modelled on spec 38 (`plan/specs/38-release-0-9-3.md`), patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; no preview stop, except that the D71 comparison table is read by the owner in chat before its milestone merges. Owner, 2026-11-13: "yes add" (on "add release 0.9.4" to E12).
+- Edited 2026-11-13 before build: the owner does not read the comparison table. The lead verifies every cell against its cited source before the milestone merges and removes or corrects a cell that the source does not show; nothing is pasted to the owner. This also replaces the owner read in D71's Checks. Owner: "Double check and verify yourself, I don't wanna see it."
 
 ### D90 Home hero: the name stays the heading; the line above and the sentence below carry the search words
 [E12]
