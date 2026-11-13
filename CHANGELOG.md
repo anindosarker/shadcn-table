@@ -7,6 +7,18 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Added
+
+#### Spec 39 Typed filters wait for you to finish typing
+
+- A new hook, `useST_DebouncedCallback(fn, wait)`, returns `run`, `flush`, `cancel` and `isPending`; it calls the latest `fn`, reads `wait` on each call and flushes a pending call on unmount. Typed column filters (text, number, autocomplete, each range end) and the global search use it (D88).
+- Table options `columnFilterDebounceMs` and `globalFilterDebounceMs` and column option `filterDebounceMs` set the wait; the default is 500 ms for both, with or without `manualFiltering` (was 200 ms, 400 ms for filters and 250 ms, 500 ms for search) (D88).
+- Enter and blur apply a typed filter or search at once. The field's clear button, Clear filters, Remove filter, the column menu clear, a stored view, the search clear button, Escape and closing the search drop the pending call, so a cleared filter no longer comes back (D88).
+- Date, datetime and time filters apply a complete value: a typed value applies on Enter or blur, a value picked in the native picker at once, never a half-typed year (D88).
+- Select and multi-select filters apply the picked value at once instead of after a 1 ms timer.
+
 ## 0.9.3 - 2026-11-12
 
 ### Added
