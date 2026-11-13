@@ -1,9 +1,9 @@
 import {
   constructAggregationFn,
   createTableHook,
-  createTableHookContexts,
   tableFeatures,
 } from '@tanstack/react-table';
+import { tableContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 import {
   type ST_Features,
   stFeatures,
@@ -14,16 +14,7 @@ import { ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import {
   type ST_DefinedTableOptions,
   type ST_RowData,
-  type ST_TableInstance,
-  type ST_TableProviderProps,
 } from '@/components/ui/shadcn-table/types';
-
-/**
- * The table context every ST table publishes on, handed to each table hook
- * explicitly so `useSTContext` reads any table, whichever hook built it.
- */
-export const { tableContext, useTableContext } =
-  createTableHookContexts<ST_Features>();
 
 /**
  * Builds the table hook for one mounted table. The `filterFns`, `sortFns` and
@@ -54,16 +45,3 @@ export const createSTTableHook = <TData extends ST_RowData>({
   });
   return createTableHook({ features, tableContext });
 };
-
-export function useSTContext<
-  TData extends ST_RowData = ST_RowData,
->(): ST_TableInstance<TData> {
-  // The context carries the core-typed table; the ST wrapper types re-type
-  // its row, column, cell and header getters.
-  return useTableContext() as unknown as ST_TableInstance<TData>;
-}
-
-export const ST_TableProvider = <TData extends ST_RowData>({
-  children,
-  table,
-}: ST_TableProviderProps<TData>) => <table.AppTable>{children}</table.AppTable>;

@@ -1,0 +1,37 @@
+---
+title: 'Comparison'
+searchTitle: 'shadcn-table vs TanStack Table, shadcn/ui data-table, Material React Table and AG Grid'
+description: 'shadcn-table, TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid compared: install, bases, features, styling, license.'
+---
+
+Five common ways to build a data table in a React project, side by side. Each cell states only what the project's own public documentation or repository shows on 2026-11-13; "not covered" means the shadcn/ui guide does not show it. Corrections are welcome on [GitHub](https://github.com/anindosarker/shadcn-table/issues).
+
+## Feature matrix
+
+| | shadcn-table | TanStack Table | shadcn/ui data-table recipe | Material React Table | AG Grid |
+| --- | --- | --- | --- | --- | --- |
+| Install model | Copied source, shadcn registry (`shadcn add`) | npm package (`@tanstack/react-table`) | A guide; you write the code | npm package (`material-react-table`) | npm package (`ag-grid-react`) |
+| Base libraries | Base UI, Radix UI, React Aria | None; headless, no markup or styles | Base UI, Radix UI, React Aria | Material UI | None; the grid ships its own UI and styles |
+| Sorting | Built in | Sorting feature and sorted row model | Covered in the guide | Built in | Built in (Community) |
+| Filtering | Built in, several filter modes | Column and global filtering features, faceting | One text input filtering one column | Built in | Text, number and date filters (Community); set, multi and advanced filters (Enterprise) |
+| Grouping and aggregation | Built in | Grouping and aggregation features | Not covered | Built in | Enterprise |
+| Column and row pinning | Built in | Column and row pinning features | Not covered | Built in | Built in (Community) |
+| Virtualization | Built in, rows and columns | Not a table feature; examples with TanStack Virtual | Not covered | Built in, rows and columns | Built in, rows and columns (Community) |
+| Editing | Built in | Not a stock feature; TanStack Form example | Not covered | Built in | Built in (Community) |
+| Export | Not built in; CSV and PDF examples | Not a stock feature | Not covered | Not built in; CSV and PDF examples | CSV (Community); Excel and PDF (Enterprise) |
+| i18n | 39 locales | No UI text (headless) | No UI strings; RTL section | 38 locales (docs list) | 46 provided locales |
+| Styling | Your shadcn/ui components and Tailwind CSS | Your own markup and styles | shadcn/ui `Table` and Tailwind CSS | Material UI theme, `sx` and `mui*Props` | Built-in themes, theme parameters and CSS |
+| TanStack Table version | v9 | v9 (`9.3.1`) | v9 | v8 (`8.20.6`) | Not built on TanStack Table |
+| License | MIT | MIT | MIT (shadcn/ui) | MIT | Community MIT; Enterprise commercial |
+
+## Which one fits
+
+Pick **TanStack Table** on its own when you want the engine only: it brings sorting, filtering, grouping and pinning as opt-in features and leaves all markup and styles to you. Pick the **shadcn/ui data-table recipe** when you want to own every line: the guide builds a table on TanStack Table v9 with pagination, sorting, a filter on one column, column visibility and row selection, and you write anything beyond that yourself. Pick **Material React Table** when your app already uses Material UI: it has sorting, filtering, grouping, pinning, virtualization and editing built in, on TanStack Table v8, and it styles through the Material UI theme rather than shadcn/ui. Pick **AG Grid** when you want a grid that ships its own UI and themes; grouping, aggregation and Excel or PDF export need the commercial Enterprise license. Pick **shadcn-table** when your app uses shadcn/ui and you want those features built in, rendered through your own components on Base UI, Radix UI or React Aria. See [TanStack Table with shadcn/ui](/docs/guides/tanstack-table-with-shadcn-ui) for how it is put together.
+
+## Sources
+
+- shadcn-table: [repository](https://github.com/anindosarker/shadcn-table).
+- TanStack Table: [overview](https://tanstack.com/table/latest/docs/overview), [installation](https://tanstack.com/table/latest/docs/installation), [features guide](https://tanstack.com/table/latest/docs/guide/features), [virtualization guide](https://tanstack.com/table/latest/docs/framework/react/guide/virtualization), [TanStack Form example](https://tanstack.com/table/latest/docs/framework/react/examples/with-tanstack-form), [package.json](https://github.com/TanStack/table/blob/main/packages/react-table/package.json).
+- shadcn/ui: [data table guide](https://ui.shadcn.com/docs/components/base/data-table), [license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
+- Material React Table: [README](https://github.com/KevinVandy/material-react-table), [installation](https://www.material-react-table.com/docs/getting-started/install), [package.json](https://github.com/KevinVandy/material-react-table/blob/v3/packages/material-react-table/package.json), [virtualization](https://www.material-react-table.com/docs/guides/virtualization), [editing](https://www.material-react-table.com/docs/guides/editing), [CSV export example](https://www.material-react-table.com/docs/examples/export-csv), [PDF export example](https://www.material-react-table.com/docs/examples/export-pdf), [localization](https://www.material-react-table.com/docs/guides/localization), [customizing components](https://www.material-react-table.com/docs/guides/customize-components).
+- AG Grid: [quick start](https://www.ag-grid.com/react-data-grid/getting-started/), [Community vs. Enterprise](https://www.ag-grid.com/react-data-grid/community-vs-enterprise/), [column filters](https://www.ag-grid.com/react-data-grid/filtering/), [advanced filter](https://www.ag-grid.com/react-data-grid/filter-advanced/), [row grouping](https://www.ag-grid.com/react-data-grid/grouping/), [aggregation](https://www.ag-grid.com/react-data-grid/aggregation/), [column pinning](https://www.ag-grid.com/react-data-grid/column-pinning/), [row pinning](https://www.ag-grid.com/react-data-grid/row-pinning/), [DOM virtualisation](https://www.ag-grid.com/react-data-grid/dom-virtualisation/), [cell editing](https://www.ag-grid.com/react-data-grid/cell-editing/), [CSV export](https://www.ag-grid.com/react-data-grid/csv-export/), [Excel export](https://www.ag-grid.com/react-data-grid/excel-export/), [PDF export](https://www.ag-grid.com/react-data-grid/pdf-export/), [localisation](https://www.ag-grid.com/react-data-grid/localisation/), [theming](https://www.ag-grid.com/react-data-grid/theming/), [package.json](https://github.com/ag-grid/ag-grid/blob/latest/packages/ag-grid-community/package.json).

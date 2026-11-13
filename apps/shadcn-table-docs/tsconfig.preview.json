@@ -1,7 +1,8 @@
 // The tsconfig the preview build (`pnpm preview`, dist dir .next-preview)
 // reads (next.config.mjs `typescript.tsconfigPath`): tsconfig.json without
 // the generated types of .next and of the preview's own last `next dev`
-// output, which name routes deleted since. See tsconfig.build.json.
+// output, which name routes deleted since, and without the base and aria
+// library copies the build checks apart. See tsconfig.build.json.
 {
   "extends": "./tsconfig.json",
   "exclude": [
@@ -9,6 +10,10 @@
     "examples/radix",
     "examples/base",
     "examples/aria",
+    "examples/.base",
+    "examples/.aria",
+    "components/ui-base/shadcn-table",
+    "components/ui-aria/shadcn-table",
     ".next",
     ".next-preview/dev"
   ]

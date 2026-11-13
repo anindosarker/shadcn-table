@@ -7,6 +7,7 @@ import {
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { ST_BASE } from '../../.storybook/themes';
 
 // Chips mode: filters live as chips in the toolbar, added from the column
 // picker, edited in one value editor that stays where it was opened.
@@ -417,9 +418,6 @@ export const ChipEditorKeepsWidth = {
       const name = new RegExp(`^${status}`);
       if (!body.queryByRole('option', { name })) {
         await userEvent.click(input);
-        // The aria combobox opens from the keyboard, not on a click.
-        if (!body.queryByRole('listbox'))
-          await userEvent.keyboard('{ArrowDown}');
       }
       await userEvent.click(await body.findByRole('option', { name }));
     }
@@ -537,8 +535,6 @@ export const MultiSelectArrayModes = {
     );
     await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
     await userEvent.click(input);
-    // The aria combobox opens from the keyboard, not on a click.
-    if (!body.queryByRole('listbox')) await userEvent.keyboard('{ArrowDown}');
     await userEvent.click(await body.findByRole('option', { name: /^Done/ }));
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
     expect(canvas.queryByText('Build search index')).toBeNull();
@@ -583,6 +579,364 @@ export const SelectClearBesideChevron = {
         chevronRight,
         `chevron right ${chevronRight}, clear left ${clearLeft}`,
       ).toBeLessThanOrEqual(clearLeft);
+    });
+  },
+};
+
+type Trip = { distance: number; name: string; when: Date };
+
+const trips: Trip[] = [
+  { distance: 5, name: 'Morning run', when: new Date(2025, 2, 1, 8, 30) },
+  { distance: 12, name: 'Lunch ride', when: new Date(2025, 2, 20, 11, 15) },
+  { distance: 30, name: 'Evening trip', when: new Date(2025, 4, 1, 18, 45) },
+];
+
+type RangeVariant = 'date-range' | 'datetime-range' | 'range' | 'time-range';
+
+const rangeColumns = (variant: RangeVariant): ST_ColumnDef<Trip>[] => [
+  { accessorKey: 'name', header: 'Name' },
+  variant === 'range'
+    ? { accessorKey: 'distance', filterVariant: 'range', header: 'Distance' }
+    : {
+        Cell: ({ cell }) => cell.getValue<Date>().toISOString(),
+        accessorFn: (row) => row.when,
+        filterVariant: variant,
+        header: 'When',
+        id: 'when',
+      },
+];
+
+/** Fails when the element's box is not inside the editor's (1 px slack). */
+const expectInside = (element: HTMLElement, editor: HTMLElement) => {
+  const box = element.getBoundingClientRect();
+  const outer = editor.getBoundingClientRect();
+  const label = `${element.getAttribute('aria-label') ?? element.dataset.slot} ${Math.round(box.left)}..${Math.round(box.right)} in editor ${Math.round(outer.left)}..${Math.round(outer.right)}`;
+  expect(box.left, label).toBeGreaterThanOrEqual(outer.left - 1);
+  expect(box.right, label).toBeLessThanOrEqual(outer.right + 1);
+  expect(box.top, label).toBeGreaterThanOrEqual(outer.top - 1);
+  expect(box.bottom, label).toBeLessThanOrEqual(outer.bottom + 1);
+};
+
+/** Both range fields, their input groups included, lie inside the editor. */
+const expectRangeFieldsInside = (min: HTMLElement, max: HTMLElement) =>
+  waitFor(() => {
+    const editor = min.closest<HTMLElement>('[data-slot="popover-content"]');
+    expect(editor, 'the chip editor').not.toBeNull();
+    for (const input of [min, max]) {
+      expectInside(input, editor!);
+      expectInside(
+        input.closest<HTMLElement>('[data-slot="input-group"]')!,
+        editor!,
+      );
+    }
+  });
+
+const rangeInputs = async () => {
+  const body = within(document.body);
+  return [
+    await body.findByLabelText('Min'),
+    await body.findByLabelText('Max'),
+  ] as HTMLInputElement[];
+};
+
+/**
+ * D86: both inputs of a range filter lie inside the chip editor and take
+ * typed values. Date-like values are typed key by key from the first segment
+ * with real key presses (the synthetic ones do not fill the segments); the
+ * digits suit a day-month or a month-day locale and a 12 or 24 hour clock;
+ * ArrowRight leaves the year, which takes up to six digits.
+ */
+const rangeEditorCase = (
+  variant: RangeVariant,
+  [minKeys, maxKeys]: [string, string],
+  [minValue, maxValue]: [number, number] | [string, string],
+) => ({
+  render: () => (
+    <ShadcnTable columns={rangeColumns(variant)} data={trips} {...options} />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    const keyboard =
+      variant === 'range'
+        ? userEvent
+        : ((
+            globalThis as {
+              stBrowserUserEvent?: {
+                keyboard: (text: string) => Promise<void>;
+              };
+            }
+          ).stBrowserUserEvent ?? userEvent);
+    const label = variant === 'range' ? 'Distance' : 'When';
+    await canvas.findByText('Lunch ride');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: label }));
+    const [min, max] = await rangeInputs();
+    await expectRangeFieldsInside(min, max);
+
+    for (const [input, keys, value] of [
+      [min, minKeys, minValue],
+      [max, maxKeys, maxValue],
+    ] as const) {
+      input.focus();
+      await keyboard.keyboard(keys);
+      await waitFor(() => expect(input).toHaveValue(value));
+    }
+    max.blur();
+    await waitFor(() =>
+      expect(
+        [...bodyRows(canvasElement)].map((row) => row.textContent),
+      ).toEqual([expect.stringContaining('Lunch ride')]),
+    );
+
+    // The chip opens the same editor.
+    await userEvent.click(min);
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(body.queryByLabelText('Min')).toBeNull());
+    await userEvent.click(
+      chipOf(canvasElement, variant === 'range' ? 'distance' : 'when')!,
+    );
+    const [chipMin, chipMax] = await rangeInputs();
+    await expectRangeFieldsInside(chipMin, chipMax);
+    expect(chipMin).toHaveValue(minValue);
+    expect(chipMax).toHaveValue(maxValue);
+  },
+});
+
+export const RangeEditorInputsFitAndFillTime = rangeEditorCase(
+  'time-range',
+  ['1000A', '1200P'],
+  ['10:00', '12:00'],
+);
+
+export const RangeEditorInputsFitAndFillDate = rangeEditorCase(
+  'date-range',
+  ['03032025', '04042025'],
+  ['2025-03-03', '2025-04-04'],
+);
+
+export const RangeEditorInputsFitAndFillDateTime = rangeEditorCase(
+  'datetime-range',
+  ['03032025{ArrowRight}1000A', '04042025{ArrowRight}1200P'],
+  ['2025-03-03T10:00', '2025-04-04T12:00'],
+);
+
+export const RangeEditorInputsFitAndFillNumber = rangeEditorCase(
+  'range',
+  ['10', '20'],
+  [10, 20],
+);
+
+// D82: one click into the multi-select input opens its option list, with no
+// key press, on the three bases.
+export const MultiSelectOpensOnClick = {
+  render: ChipEditorKeepsWidth.render,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const input = await body.findByRole('combobox', {
+      name: 'Filter by Status',
+    });
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    await userEvent.click(input);
+    await waitFor(
+      () => expect(body.getByRole('option', { name: /^Done/ })).toBeVisible(),
+      { timeout: 1000 },
+    );
+  },
+};
+
+const selectStatusColumns = () =>
+  plainColumns().map((column) =>
+    column.accessorKey === 'status'
+      ? {
+          ...column,
+          filterSelectOptions: ['Done', 'In Progress', 'Not Started'],
+          filterVariant: 'select' as const,
+        }
+      : column,
+  );
+
+/**
+ * Playwright's pointer and keys when the Vitest run provides them: a real hit
+ * test, and keys that reach the focused element's native listeners in order.
+ */
+const realUserEvent = () =>
+  (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (
+          element: Element,
+          options?: { force?: boolean; timeout?: number },
+        ) => Promise<void>;
+        keyboard: (text: string) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent ?? userEvent;
+
+// D83: after a value is picked in a select filter, one Escape closes the chip
+// editor; the Escape that closes the option list closes only the list.
+export const EscapeClosesEditorAfterSelectPick = {
+  render: () => (
+    <ShadcnTable
+      columns={selectStatusColumns()}
+      data={data}
+      initialState={{ columnFilters: [{ id: 'status', value: 'In Progress' }] }}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const body = within(document.body);
+    const user = realUserEvent();
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(1));
+
+    await user.click(chipOf(canvasElement, 'status')!);
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    const trigger = removeFilter
+      .closest('[data-slot="popover-content"]')!
+      .querySelector<HTMLElement>('[data-slot="select-trigger"]')!;
+    expect(trigger, 'the select trigger').not.toBeNull();
+    await user.click(trigger);
+    await body.findByRole('option', { name: /^Done/ });
+    // Escape with the list open closes the list only.
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(body.queryByRole('option', { name: /^Done/ })).toBeNull(),
+    );
+    expect(removeFilter).toBeInTheDocument();
+
+    await user.click(trigger);
+    await user.click(await body.findByRole('option', { name: /^Done/ }));
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+    // The list has closed and handed focus back to the trigger, as when a
+    // person reads the pick before pressing Escape.
+    await waitFor(() =>
+      expect(body.queryByRole('option', { name: /^Done/ })).toBeNull(),
+    );
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(body.queryByRole('button', { name: 'Remove filter' })).toBeNull(),
+    );
+    expect(chipOf(canvasElement, 'status')?.textContent).toContain('Done');
+  },
+};
+
+// D83: with a chip editor open, one click on Clear filters clears every
+// filter and chip, on Base UI and Radix. On React Aria the editor is modal
+// (D97): the first click outside only closes it, the second clears.
+export const ClearFiltersClickableWithEditorOpen = {
+  render: ChipsSeeded,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+
+    await userEvent.click(chipOf(canvasElement, 'priority')!);
+    await body.findByRole('button', { name: 'Remove filter' });
+    const clearFilters = canvas.getByRole('button', { name: 'Clear filters' });
+    if (ST_BASE === 'aria') {
+      // The popover's underlay covers the page: a click at the button's
+      // centre lands on it and only closes the editor.
+      const atPoint = { force: true };
+      await realUserEvent().click(clearFilters, atPoint);
+      await waitFor(() =>
+        expect(
+          body.queryByRole('button', { name: 'Remove filter' }),
+        ).toBeNull(),
+      );
+      expect(chipOf(canvasElement, 'priority')).not.toBeNull();
+      expect(bodyRows(canvasElement)).toHaveLength(2);
+    } else {
+      // Hit test at the button's centre: an inert or covered page answers
+      // with another element. A time limit on the real click instead failed
+      // on a loaded machine with nothing covering the button.
+      const box = clearFilters.getBoundingClientRect();
+      const hit = document.elementFromPoint(
+        box.left + box.width / 2,
+        box.top + box.height / 2,
+      );
+      expect(
+        clearFilters.contains(hit),
+        `a click on Clear filters hits ${hit?.tagName ?? 'nothing'}`,
+      ).toBe(true);
+    }
+    await realUserEvent().click(clearFilters);
+    await waitFor(() => {
+      expect(chipOf(canvasElement, 'status')).toBeNull();
+      expect(chipOf(canvasElement, 'priority')).toBeNull();
+    });
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(4));
+  },
+};
+
+// D97: on React Aria an open chip editor locks the page's scroll and a
+// scroll does not close it.
+export const AriaEditorLocksPageScroll = {
+  render: ChipsSeeded,
+  play: async ({ canvasElement }: StoryContext) => {
+    if (ST_BASE !== 'aria') return;
+    const body = within(document.body);
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+
+    await userEvent.click(chipOf(canvasElement, 'priority')!);
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    await waitFor(() =>
+      expect(getComputedStyle(document.documentElement).overflow).toBe(
+        'hidden',
+      ),
+    );
+    document.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('scroll'));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(removeFilter).toBeInTheDocument();
+    expect(removeFilter).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(removeFilter).not.toBeInTheDocument());
+  },
+};
+
+// D87: the select filter's chevron sits at the right end of its input.
+export const SelectChevronAtInputEnd = {
+  render: () => (
+    <ShadcnTable columns={selectStatusColumns()} data={data} {...options} />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    const editor = removeFilter.closest<HTMLElement>(
+      '[data-slot="popover-content"]',
+    )!;
+    const chevron = editor.querySelector<SVGElement>(
+      '[data-slot="select-trigger"] svg',
+    );
+    expect(chevron, 'the select chevron').not.toBeNull();
+    const group = chevron!.closest<HTMLElement>('[data-slot="input-group"]')!;
+    await waitFor(() => {
+      const gap =
+        group.getBoundingClientRect().right -
+        chevron!.getBoundingClientRect().right;
+      expect(
+        gap,
+        `chevron ${gap} px from the input's right end`,
+      ).toBeLessThanOrEqual(12);
     });
   },
 };

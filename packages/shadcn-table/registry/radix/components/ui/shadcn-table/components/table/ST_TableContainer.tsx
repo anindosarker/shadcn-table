@@ -14,7 +14,7 @@ import { ST_ScrollButtons } from '@/components/ui/shadcn-table/components/table/
 import { ST_TableLoadingOverlay } from '@/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_CellActionMenu';
 import { ST_EditRowModal } from '@/components/ui/shadcn-table/components/modals/ST_EditRowModal';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 import { useST_HorizontalOverflow } from '@/components/ui/shadcn-table/hooks/useST_HorizontalOverflow';
 

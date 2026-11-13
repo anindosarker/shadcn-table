@@ -5,6 +5,7 @@ import {
   ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
+  type ST_ColumnFilterFnsState,
   type ST_ColumnFiltersState,
   type ST_PaginationState,
   type ST_SortingState,
@@ -50,6 +51,9 @@ type User = {
 const Example = () => {
   //manage our own state for stuff we want to pass to the API
   const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
+  //the filter mode of each column, sent with its filter so the API compares the same way
+  const [columnFilterFns, setColumnFilterFns] =
+    useState<ST_ColumnFilterFnsState>({ lastLogin: 'greaterThan' });
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<ST_SortingState>([]);
   const [pagination, setPagination] = useState<ST_PaginationState>({
@@ -69,6 +73,7 @@ const Example = () => {
       'users-list',
       {
         columnFilters, //refetch when columnFilters changes
+        columnFilterFns, //refetch when a filter mode changes
         globalFilter, //refetch when globalFilter changes
         pagination, //refetch when pagination changes
         sorting, //refetch when sorting changes
@@ -83,7 +88,15 @@ const Example = () => {
         `${pagination.pageIndex * pagination.pageSize}`,
       );
       fetchURL.searchParams.set('size', `${pagination.pageSize}`);
-      fetchURL.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
+      fetchURL.searchParams.set(
+        'filters',
+        JSON.stringify(
+          (columnFilters ?? []).map((filter) => ({
+            ...filter,
+            mode: columnFilterFns[filter.id],
+          })),
+        ),
+      );
       fetchURL.searchParams.set('globalFilter', globalFilter ?? '');
       fetchURL.searchParams.set('sorting', JSON.stringify(sorting ?? []));
 
@@ -131,6 +144,17 @@ const Example = () => {
         Cell: ({ cell }) => new Date(cell.getValue<Date>()).toLocaleString(),
         filterFn: 'greaterThan',
         filterVariant: 'date',
+        //the date modes the API compares
+        columnFilterModeOptions: [
+          'equals',
+          'notEquals',
+          'greaterThan',
+          'greaterThanOrEqualTo',
+          'lessThan',
+          'lessThanOrEqualTo',
+          'between',
+          'betweenInclusive',
+        ],
         enableGlobalFilter: false,
       },
     ],
@@ -150,6 +174,7 @@ const Example = () => {
           children: 'Error loading data',
         }
       : undefined,
+    onColumnFilterFnsChange: setColumnFilterFns,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
@@ -166,6 +191,7 @@ const Example = () => {
     ),
     rowCount: meta?.totalRowCount ?? 0,
     state: {
+      columnFilterFns,
       columnFilters,
       globalFilter,
       isLoading,

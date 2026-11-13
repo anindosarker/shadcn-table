@@ -7,6 +7,76 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.9.4 - 2026-11-13
+
+### Added
+
+#### Spec 39 Typed filters wait for you to finish typing
+
+- A new hook, `useST_DebouncedCallback(fn, wait)`, returns `run`, `flush`, `cancel` and `isPending`; it calls the latest `fn`, reads `wait` on each call and flushes a pending call on unmount. Typed column filters (text, number, autocomplete, each range end) and the global search use it (D88).
+- Table options `columnFilterDebounceMs` and `globalFilterDebounceMs` and column option `filterDebounceMs` set the wait; the default is 500 ms for both, with or without `manualFiltering` (was 200 ms, 400 ms for filters and 250 ms, 500 ms for search) (D88).
+- Enter and blur apply a typed filter or search at once. The field's clear button, Clear filters, Remove filter, the column menu clear, a stored view, the search clear button, Escape and closing the search drop the pending call, so a cleared filter no longer comes back (D88).
+- Date, datetime and time filters apply a complete value: a typed value applies on Enter, blur or when its chip editor closes, a value picked in the native picker at once, never a half-typed year (D88).
+- A controlled `state.columnFilters` rebuilt on every parent render (equal content, new array) no longer drops a typed filter inside the wait.
+- The chips mode editor focuses its input once when it opens, not on every table change: typing Min and then clicking Max no longer moves focus back to Min.
+- Select and multi-select filters apply the picked value at once instead of after a 1 ms timer.
+
+### Changed
+
+#### Spec 45 Filter Mode caption gap
+
+- The "Filter Mode: <mode>" caption under a filter input sits 6 px below it instead of 3 px (`mt-1.5`), in the text field, the range fields and the range slider on the three bases (D85).
+
+#### Spec 49 Home hero wording
+
+- The home hero line above the `shadcn-table` heading reads "The open-source shadcn data table for React, built on TanStack Table." and the sentence below it reads "A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in." (D90). The heading, the title tag and the meta description are unchanged.
+
+#### Fix D91
+
+- The table context and the defaults context move to a `context/` folder, one file per context (three bases). `hooks/stTableHook.tsx` becomes `context/ST_TableContext.tsx` (`tableContext`, `useTableContext`, `useSTContext`, `ST_TableProvider`) and its factory `createSTTableHook` moves to `hooks/createSTTableHook.ts`; `hooks/useST_Defaults.tsx` becomes `context/ST_DefaultsContext.tsx` (`ST_DefaultsContext`, `ST_DefaultsProvider`, `useST_Defaults`). Every exported name is unchanged, so imports through `index.ts` keep working; an import from one of the old file paths moves to the new one. A project that installed the library through the shadcn CLI keeps its two old files after an update until it deletes them.
+
+### Fixed
+
+#### Spec 40 Date filter compare
+
+- Date, datetime and time filters now work on columns that hold `Date` values (D81): `equals`, `notEquals`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between` and `betweenInclusive` read a `YYYY-MM-DD` filter value as local midnight and compare by calendar day, an `HH:mm` value by time of day and a `YYYY-MM-DDTHH:mm` value to the minute (to the second when the value has seconds). Before, they compared the filter string with the date's text form, so "greater than" kept every row and "less than" none. A string row value holding a full ISO date and time (`2025-11-02T14:15:00.000Z`) compares the same way, as a date. Filter values stay strings; number columns and date-only `YYYY-MM-DD` string columns filter as before (three bases).
+- A column with `filterVariant: 'date'`, `'datetime'` or `'time'` and no `filterFn` filters by `equals` (by day for a date) instead of `fuzzy`, which matched no `Date` row.
+- `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
+
+#### Spec 40 React Query route dates
+
+- The React Query example's Last Login filter shows only matching rows in every mode it offers (D81). The example now offers the eight date comparison modes and sends the chosen mode with each filter; its mock route compares by that mode (it always kept later dates before), reads a `YYYY-MM-DD` value as local midnight, compares by calendar day, and keeps its random `lastLogin` dates for the life of the server instead of drawing new ones on every request (three bases).
+
+#### Spec 41 Range filter editors fit and accept input
+
+- In the chips mode, the value editor of a time, date or datetime range (the `*-range` variants or a between mode) is 308 px wide instead of 260 px, so both Min and Max fields and their picker icons lie inside it (capped at the viewport width less 1 rem); every other filter keeps the 260 px editor (D86, three bases). Typing into both fields applies the range on Enter or blur since spec 39.
+
+#### Spec 42 React Aria multi-select filter opens on click
+
+- On React Aria a click into the multi-select filter's input opens its option list, as on Base UI and Radix; before, only ArrowDown or the chevron opened it (D82).
+
+#### Spec 43 Escape closes the filter editor after a select pick
+
+- After a value is picked in a select filter, one Escape closes the chips mode value editor on Base UI and React Aria, as on Radix; an Escape while a select or combobox list is open closes only the list (D83).
+
+#### Spec 44 React Aria select filter chevron
+
+- On React Aria the select filter's chevron sits at the right end of its input instead of right after the placeholder (D87).
+
+#### Fix Q76
+
+- The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
+
+### Docs
+
+#### Spec 46 Live demo with ten columns
+
+- The live demo on the Introduction and Usage pages has ten columns (D84): First Name, Last Name, Email, City, State, Department, Age, Salary, Joined, Status. Department has a select filter and Salary a range filter shown in US dollars; the four filters of before work as they did. At the docs content width the table scrolls sideways, so pinning, hiding and reordering have columns to act on; no column is pinned by default (three bases).
+
+#### Spec 47 Comparison page
+
+- A Comparison page, last in Getting Started, compares shadcn-table with TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid; every cell is sourced from the project's own docs or repository, and the page `<title>` names the compared libraries through the new optional `searchTitle` frontmatter field (D71).
+
 ## 0.9.3 - 2026-11-12
 
 ### Added

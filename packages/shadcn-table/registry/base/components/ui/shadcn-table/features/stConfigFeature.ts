@@ -74,6 +74,8 @@ export interface ST_TableOptions_Config<
   TParts extends ST_NeutralPartPropTypes = ST_NeutralPartPropTypes,
 > {
   aggregationFns?: Record<string, Exclude<ST_AggregationFn<TData>, string>>;
+  /** Milliseconds a typed column filter waits after the last key before it applies. Default 500. */
+  columnFilterDebounceMs?: number;
   columnFilterDisplayMode?: 'chips' | 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
     LiteralUnion<string & ST_FilterOption>
@@ -132,6 +134,8 @@ export interface ST_TableOptions_Config<
   /** Puts the table preferences behind one view settings toolbar button. */
   enableViewSettings?: boolean;
   filterFns?: Record<string, Exclude<ST_FilterFn<TData>, string>>;
+  /** Milliseconds the global search waits after the last key before it applies. Default 500. */
+  globalFilterDebounceMs?: number;
   globalFilterModeOptions?: ST_FilterOption[] | null;
   icons?: Partial<ST_Icons>;
   id?: string;
@@ -568,6 +572,8 @@ export interface ST_ColumnDef_Config<
     rangeFilterIndex?: number;
     table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
+  /** Overrides `columnFilterDebounceMs` for this column. */
+  filterDebounceMs?: number;
   filterSelectOptions?: DropdownOption[];
   filterVariant?:
     | 'autocomplete'

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableFooterCell } from '@/components/ui/shadcn-table/components/footer/ST_TableFooterCell';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export interface ST_TableFooterRowProps<TData extends ST_RowData>
   extends TableRowProps {
