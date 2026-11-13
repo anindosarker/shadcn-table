@@ -77,6 +77,10 @@ publishes the section as the GitHub release notes.
 
 - The live demo on the Introduction and Usage pages has ten columns (D84): First Name, Last Name, Email, City, State, Department, Age, Salary, Joined, Status. Department has a select filter and Salary a range filter shown in US dollars; the four filters of before work as they did. At the docs content width the table scrolls sideways, so pinning, hiding and reordering have columns to act on; no column is pinned by default (three bases).
 
+#### Spec 47 Comparison page
+
+- A Comparison page, last in Getting Started, compares shadcn-table with TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid; every cell is sourced from the project's own docs or repository, and the page `<title>` names the compared libraries through the new optional `searchTitle` frontmatter field (D71).
+
 ## 0.9.3 - 2026-11-12
 
 ### Added
