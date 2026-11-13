@@ -826,3 +826,8 @@ index e1645117..e67a5482 100644
 
 - Live 0.9.3, /docs/examples/filter-variants, React Aria, City chip editor, mode equals: the chevron follows the placeholder "Filter by City" in the middle of the input. Fix: the chevron sits at the input's right end, as on Base UI and Radix (the spec compares the three). Owner, 2026-11-13: "arrow in the middle, ui issue"; "1 k".
 - Source: Q75
+
+### D88 Typed filters use one debounce hook with commit and cancel rules
+
+- Today typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce created once per mount (`ST_FilterTextField.tsx:212-232`, 200 ms, 400 ms with `manualFiltering`); global search has its own (`ST_GlobalFilterTextField.tsx:67-77`, 250 or 500 ms); the util (`shared/utils/utils.ts:60-77`) has `clear()` and no flush. A 1:1 port of Material React Table v3.
+- Source: Q74
