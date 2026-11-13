@@ -885,3 +885,8 @@ index e1645117..e67a5482 100644
 
 - `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
 - Source: Q79
+
+### D95 The React Query example offers only the filter modes its server applies
+
+- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
+- Source: Q81

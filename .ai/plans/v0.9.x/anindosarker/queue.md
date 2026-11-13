@@ -7,8 +7,6 @@ kanban-plugin: basic
 - [ ] **Q80** Typing a date into the Min or Max box of a between filter wipes the box on the first key
 	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.
 	- Filter editor fixes builder (spec 41 1.6.3): not a library bug in its reading; native Chromium date segments: a click at the centre of the field lands on the year segment, so typed digits fill only the year; typing from the first segment works and the new plays cover date and datetime digit typing.
-- [ ] **Q81** The React Query example offers every filter mode on text columns but its server only does contains
-	- `apps/shadcn-table-docs/app/api/data/route.ts` and `examples/<base>/react-query/TS.tsx`: spec 40 sent and limited modes for Last Login only, as scoped; the text columns still show all modes and ignore the choice.
 - [ ] **Q83** On React Aria the filter chip editor now closes when the page scrolls
 	- Spec 43 (merged 4b0d182d) made the React Aria chip, picker and header filter editors non-modal so Clear filters is clickable with an editor open (D83); a non-modal editor no longer locks page scroll, closes on scroll and is no longer a dialog. Base UI keeps its editor open on scroll. Keep, or rule a different fix for Clear filters.
 
@@ -216,6 +214,8 @@ kanban-plugin: basic
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 - [ ] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison #D94
 	- `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx:93-98, 175`: after D81 (spec 40) date columns default to `equals` and compare by local day, time of day or minute; the guide was outside the milestone's files.
+- [ ] **Q81** The React Query example offers every filter mode on text columns but its server only does contains #D95
+	- `apps/shadcn-table-docs/app/api/data/route.ts` and `examples/<base>/react-query/TS.tsx`: spec 40 sent and limited modes for Last Login only, as scoped; the text columns still show all modes and ignore the choice.
 
 ## Later
 
