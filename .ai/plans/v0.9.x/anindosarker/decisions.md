@@ -897,6 +897,7 @@ index e1645117..e67a5482 100644
 - Source: Q80
 
 ### D97 React Aria filter popups are modal again as in 0.9.3; the Escape fix stays
+[E12]
 
 - Supersedes D83.
 - Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
