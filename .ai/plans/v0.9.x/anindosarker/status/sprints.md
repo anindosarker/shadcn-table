@@ -84,4 +84,4 @@ Updated: 2026-11-14 02:04
 | E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E13 50 Filter input fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |
 | E13 51 Filtering stories show chips |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |
-| E13 52 Docs filter facts |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |
+| E13 52 Docs filter facts |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |
