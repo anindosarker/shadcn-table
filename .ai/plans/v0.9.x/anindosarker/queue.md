@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone
 	- Spec 40 Date filter compare (merged 19792082): string row values matching `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` compare as dates in the eight modes, so the new `equals` default matches them by day (D81 bullet 2); spec 40 1.6.2 said string row values keep today's branches, and `greaterThan`/`lessThan` on such strings change from text to date comparison. Reviewer's fix, builder's judgment call: keep or revert.
+- [ ] **Q78** Clearing an is-empty filter on a date column switches it to fuzzy matching instead of the date default
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 
 ## Decided
 
