@@ -27,6 +27,10 @@ Checks:
 - Check: `pnpm test storybook-tests --base radix` at 4eb91071: 1 failed (`ClickToCopy` "Click Copies Value", P5 known flake), rerun: pass, 635
 - Check: `pnpm test storybook-tests --base aria` at 4eb91071: pass, 635
 - Check: P7 `-export` grep at 4eb91071: empty
+- Check (verifier): Local CI and 2.2 lines at 4eb91071 still valid at a6877a97 (`git diff --name-only 4eb91071..a6877a97` touches only the tracker); not rerun. Radix typecheck counted on the `NODE_OPTIONS=--max-old-space-size=8192` line (environment heap, see Attention)
+- Check (verifier, Acceptance 1.2): `ST_BASE=<base> pnpm exec vitest run stories/features/DateFilters.stories.tsx stories/features/CustomFilterFns.stories.tsx stories/features/Filtering.stories.tsx` at a6877a97: pass, 55 of 55 on base, radix and aria; the seven plays of 1.2 present and green; P11 before-the-change failures of `GreaterThanOnDateColumn` and `LessThanOnDateColumn` recorded above at 0c5d4fa4, and of `IsoDateTimeStringColumnByDay` at a27fd299
+- Check (verifier): P7 `-export` grep against origin/claude/review at a6877a97: empty
+- Check (verifier): `git diff $(git merge-base origin/claude/review HEAD)..HEAD --stat` at a6877a97: the seven owned files, the six generated `ui-<base>` copies, CHANGELOG.md and this tracker; matches Files owned and 1.4/1.6.1
 
 - Task 1 Plays first: done (0c5d4fa4)
 - Task 2 Comparison helper and default mode: done (b652d149)
