@@ -841,7 +841,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         {/* A range field's caption spans the whole range group, in
             ST_FilterRangeFields. */}
         {showChangeModeButton && rangeFilterIndex === undefined ? (
-          <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          <label className="mt-1.5 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',
               localization[
