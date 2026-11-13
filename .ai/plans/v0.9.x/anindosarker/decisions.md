@@ -906,3 +906,7 @@ index e1645117..e67a5482 100644
 - Checks on React Aria: `EscapeClosesEditorAfterSelectPick` passes with the modal popup; a popup stays open and the page does not scroll while it is open; the select filter's arrow sits at the right edge of its field (owner screenshot of live 0.9.3, `/docs/examples/filter-variants`, City chip), and a misplaced arrow becomes its own card. CHANGELOG 0.9.4 drops the non-modal lines.
 - Owner, 2026-11-14: "The old behavior was completely fine", "don't just blindly revert code", "k".
 - Source: Q83
+
+### D98 The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader
+
+- Source: Q2
