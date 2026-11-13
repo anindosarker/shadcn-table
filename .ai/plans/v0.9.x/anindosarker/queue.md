@@ -225,9 +225,6 @@ kanban-plugin: basic
 	- Owner, 2026-11-08, on the deployed Storybook (`https://storybook.shadcn-table.com/base/`): the filtering stories are not updated to the new format. Stories looked at: `Features/Filtering Examples` (`FilteringChangeModeEnabled`, `FilteringChangeModeEnabledFaceted`, `SubheaderRangeFieldsNarrow`, `FilterFnAndFilterVariants`, `packages/shadcn-table/stories/features/Filtering.stories.tsx:174-702`) and `Features/Filter Chips Examples` (`FilterModePickerTableLevel`, `FilterChips.stories.tsx:300`). Major. Screenshot 2026-11-08 of `FilteringChangeModeEnabled` (Base build): the subheader filter row with one input per column and a "Filter Mode: Fuzzy" helper line under each, no chips; the docs filtering examples moved to chips in v0.8.x (D51) while the stories did not.
 - [ ] **Q4** Stories carry no explainer
 	- Owner, 2026-11-08, screenshot of `Features/Filtering Examples/Column Filtering Disabled` (Base build): every story shows the same three-line banner (docs link, base links, source link) and nothing about what the story demonstrates or what to try; a visitor cannot tell what "Column Filtering Disabled" shows. Holds for every story (594 stories, one shared banner from `.storybook/preview.tsx`). To be discussed with the docs restructuring items, not on its own.
-- [ ] **Q9** Two doc comments name files spec 04 deleted or misstate their list
-	- `apps/shadcn-table-docs/components/theme-demo/demo-themes.ts:42` still names `lib/theme-presets.ts` and `themes/*.css`, deleted by spec 04; `apps/shadcn-table-docs/lib/install.mjs:52` says `EXTRA_PARTS` holds "parts the examples import", but `sheet` is imported by the theme panel, not by an example.
-	- Settled by the lead 2026-11-14: comment-only wording, no behavior change; dropped under the no comment-only commits rule.
 - [ ] **Q26** Spec 15 comments still name app/layout.tsx as the style link owner
 	- `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the Q50 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
 - [ ] **Q34** Rank one for shadcn table and a keyword-led snippet
@@ -251,6 +248,9 @@ kanban-plugin: basic
 	- Spec 34: first-load script transfer on `/` fell from 421 KB to 317 KB and posthog-js is in no initial chunk (D70's check, met), but the spec's Lighthouse whole-trace sum stays 586 KB (target 450): posthog-js loads on idle inside the trace, and without it the sum is 482 KB because the home demo table loads on mount (D62). The run merges 34 on D70's check; keep, or gate the demo table.
 	- Verifier re-measure at 83c909db: 344.8 KB compressed over the 21 chunks the HTML of `/` references (bar 450 KB); merged as ec360093.
 	- Owner 2026-11-13: keep it for now (option 1); first load is under the bar.
+- [x] **Q9** Two doc comments name files spec 04 deleted or misstate their list
+	- `apps/shadcn-table-docs/components/theme-demo/demo-themes.ts:42` still names `lib/theme-presets.ts` and `themes/*.css`, deleted by spec 04; `apps/shadcn-table-docs/lib/install.mjs:52` says `EXTRA_PARTS` holds "parts the examples import", but `sheet` is imported by the theme panel, not by an example.
+	- Settled by the lead 2026-11-14: comment-only wording, no behavior change; dropped under the no comment-only commits rule.
 
 ## Autofix
 
