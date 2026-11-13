@@ -417,9 +417,6 @@ export const ChipEditorKeepsWidth = {
       const name = new RegExp(`^${status}`);
       if (!body.queryByRole('option', { name })) {
         await userEvent.click(input);
-        // The aria combobox opens from the keyboard, not on a click.
-        if (!body.queryByRole('listbox'))
-          await userEvent.keyboard('{ArrowDown}');
       }
       await userEvent.click(await body.findByRole('option', { name }));
     }
@@ -537,8 +534,6 @@ export const MultiSelectArrayModes = {
     );
     await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
     await userEvent.click(input);
-    // The aria combobox opens from the keyboard, not on a click.
-    if (!body.queryByRole('listbox')) await userEvent.keyboard('{ArrowDown}');
     await userEvent.click(await body.findByRole('option', { name: /^Done/ }));
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
     expect(canvas.queryByText('Build search index')).toBeNull();
@@ -731,3 +726,26 @@ export const RangeEditorInputsFitAndFillNumber = rangeEditorCase(
   ['10', '20'],
   [10, 20],
 );
+
+// D82: one click into the multi-select input opens its option list, with no
+// key press, on the three bases.
+export const MultiSelectOpensOnClick = {
+  render: ChipEditorKeepsWidth.render,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const input = await body.findByRole('combobox', {
+      name: 'Filter by Status',
+    });
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    await userEvent.click(input);
+    await waitFor(
+      () => expect(body.getByRole('option', { name: /^Done/ })).toBeVisible(),
+      { timeout: 1000 },
+    );
+  },
+};

@@ -795,9 +795,6 @@ export async function liveDemoFilters(page, w, check) {
           .getByRole('combobox', { name: 'Filter by Status' })
           .first()
           .click();
-        // A React Aria combobox opens its list on ArrowDown, not on a click.
-        if (!(await page.getByRole('option', { name: 'Suspended' }).count()))
-          await page.keyboard.press('ArrowDown');
         await pick('Suspended');
       },
     },

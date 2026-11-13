@@ -1,7 +1,9 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type KeyboardEvent,
   type MouseEvent,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -9,6 +11,7 @@ import {
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import {
+  ComboBoxStateContext,
   type FocusableElement,
   type Key,
   TagGroupContext,
@@ -64,6 +67,26 @@ import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_T
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useST_DebouncedCallback } from '@/components/ui/shadcn-table/hooks/useST_DebouncedCallback';
 import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
+
+/**
+ * The multi-select input: a click opens the option list, as on Base UI and
+ * Radix (D82). React Aria opens it on typing or ArrowDown only; its
+ * `menuTrigger="focus"` would also open it when the editor focuses the input.
+ */
+const ST_MultiSelectChipsInput = (
+  props: ComponentProps<typeof ComboboxChipsInput>,
+) => {
+  const state = useContext(ComboBoxStateContext);
+  return (
+    <ComboboxChipsInput
+      {...props}
+      onClick={(event) => {
+        props.onClick?.(event);
+        if (state && !state.isOpen) state.open(null, 'manual');
+      }}
+    />
+  );
+};
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -769,7 +792,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                       )}
                     </ComboboxChipList>
                   </TagGroupContext.Provider>
-                  <ComboboxChipsInput
+                  <ST_MultiSelectChipsInput
                     aria-label={filterPlaceholder}
                     className="min-w-4"
                     onKeyDown={(e) => {
