@@ -26,7 +26,7 @@ components/toolbar/ST_HeaderFilterEditor.tsx:16      ← export const filterEdit
 components/toolbar/ST_FilterChips.tsx:118,203        ← PopoverContent className={filterEditorClassName} (chip), editingColumn ? filterEditorClassName : pickerClassName (picker)
 components/toolbar/ST_HeaderFilterEditor.tsx:94      ← the header-anchored editor, same class
 components/toolbar/ST_FilterEditor.tsx:140-141       ← renders ST_TableHeadCellFilterContainer header open
-components/inputs/ST_FilterRangeFields.tsx:17-21     ← 'grid grid-cols-[1fr_1fr] items-start gap-2': Min and Max side by side at every size (D61); identical on the three bases
+components/inputs/ST_FilterRangeFields.tsx:17-21     ← 'grid grid-cols-[1fr_1fr] items-start gap-2': Min and Max side by side at every size (v0.8.x D61); identical on the three bases
 components/inputs/ST_FilterRangeFields.tsx:50-56     ← two ST_FilterTextField with rangeFilterIndex 0 and 1
 components/inputs/ST_FilterTextField.tsx:446-457     ← min widths: isDateFilter 'min-w-35', multi-select 'min-w-30', range 'min-w-18', else 'min-w-24' (isDateFilter wins over range)
 components/inputs/ST_FilterTextField.tsx:420-426     ← date-like onChange (spec 39 changes how it commits)
@@ -38,7 +38,7 @@ stories/features/FilterChips.stories.tsx:379         ← ChipEditorKeepsWidth
 
 ```
 components/toolbar/ST_HeaderFilterEditor.tsx   ← the editor width for a range filter of date-like fields grows to fit both inputs; 260 px stays the width for every other filter
-components/inputs/ST_FilterRangeFields.tsx     ← only if the fit needs it (track sizing); Min and Max stay side by side (D61)
+components/inputs/ST_FilterRangeFields.tsx     ← only if the fit needs it (track sizing); Min and Max stay side by side (v0.8.x D61)
 components/inputs/ST_FilterTextField.tsx       ← only if the input fix needs it (the cause found in Task 1)
 stories/features/FilterChips.stories.tsx       ← RangeEditorInputsFitAndFill
 CHANGELOG.md (P9)                              ← #### Spec 41 under ### Fixed
@@ -59,7 +59,7 @@ CHANGELOG.md (P9)                              ← #### Spec 41 under ### Fixed
 
 - `filterEditorClassName` stays the export every caller uses; it becomes a function of the column (or a second exported class for date-like range filters) so that an editor holding two date-like fields is at least as wide as both minimum widths, the gap and the popover padding (288 px of content today), capped at the viewport width minus the popover's side offset. The three call sites (`ST_FilterChips.tsx` chip and picker, `ST_HeaderFilterEditor.tsx`) pass the column; `ST_FilterChips.tsx` is edited only at those two lines.
 - `useST_PopupResize` in the picker keeps animating the width change between the column list and the editor.
-- Does NOT stack Min and Max (D61), shrink the date-like minimum width below what Chromium's native placeholder needs (the comment at `ST_FilterTextField.tsx:445`), or change the subheader and popover display modes.
+- Does NOT stack Min and Max (v0.8.x D61), shrink the date-like minimum width below what Chromium's native placeholder needs (the comment at `ST_FilterTextField.tsx:445`), or change the subheader and popover display modes.
 
 #### 1.6.3 Input (D86)
 
