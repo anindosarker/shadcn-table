@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
+  type ST_TableOptions,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
@@ -1392,5 +1393,310 @@ export const ModeMenuNextToButtonDuringPopoverAnimation = {
       expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
       expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
     });
+  },
+};
+
+// D88: typed column filters commit through one debounced call per field.
+type DebouncePerson = {
+  birthDate: string;
+  firstName: string;
+  lastName: string;
+};
+
+const debouncePeople: DebouncePerson[] = [
+  { birthDate: '1990-01-15', firstName: 'Ada', lastName: 'Lovelace' },
+  { birthDate: '1985-06-02', firstName: 'Grace', lastName: 'Hopper' },
+  { birthDate: '1979-11-23', firstName: 'Linus', lastName: 'Torvalds' },
+  { birthDate: '1969-03-08', firstName: 'Margaret', lastName: 'Hamilton' },
+];
+
+const debounceColumns: ST_ColumnDef<DebouncePerson>[] = [
+  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'lastName', header: 'Last Name' },
+  {
+    accessorFn: (row) => new Date(row.birthDate),
+    Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+    filterFn: 'lessThan',
+    filterVariant: 'date',
+    header: 'Birth Date',
+    id: 'birthDate',
+  },
+];
+
+/** The table with its column filter state printed above it. */
+const DebounceTable = ({
+  columns = debounceColumns,
+  ...options
+}: Partial<ST_TableOptions<DebouncePerson>>) => {
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
+  return (
+    <>
+      <output data-testid="column-filters">
+        {JSON.stringify(columnFilters)}
+      </output>
+      <ShadcnTable
+        columns={columns}
+        data={debouncePeople}
+        onColumnFiltersChange={setColumnFilters}
+        state={{ columnFilters }}
+        {...options}
+      />
+    </>
+  );
+};
+
+const columnFilterState = (canvasElement: HTMLElement) =>
+  JSON.parse(
+    within(canvasElement).getByTestId('column-filters').textContent ?? '[]',
+  ) as ST_ColumnFiltersState;
+
+const debounceRows = (canvasElement: HTMLElement) =>
+  canvasElement.querySelectorAll('tbody tr');
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Clear filters inside the wait drops the typed text for good. */
+export const TypeThenClearFiltersStaysCleared = {
+  render: () => <DebounceTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Ada');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(
+      await body.findByRole('option', { name: 'First Name' }),
+    );
+    const input = await body.findByRole('textbox', {
+      name: 'Filter by First Name',
+    });
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    await userEvent.type(input, 'Ada');
+    const clearFilters = () =>
+      canvas.queryByRole('button', { name: 'Clear filters' });
+    await userEvent.click(clearFilters()!);
+    // React Aria's popover spends the first outside press on closing itself.
+    if (clearFilters()) await userEvent.click(clearFilters()!);
+
+    await sleep(700);
+    expect(columnFilterState(canvasElement)).toEqual([]);
+    expect(debounceRows(canvasElement)).toHaveLength(4);
+  },
+};
+
+/** Enter applies the typed text before the wait ends. */
+export const TypeThenEnterAppliesAtOnce = {
+  render: () => (
+    <DebounceTable
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+    const input = canvas.getByRole('textbox', {
+      name: 'Filter by First Name',
+    });
+    await userEvent.type(input, 'Ada');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(debounceRows(canvasElement)).toHaveLength(1), {
+      timeout: 100,
+    });
+  },
+};
+
+/**
+ * A native date input holds a valid value after each digit of the year
+ * (0002, 0020, ...): a typed date applies on blur or Enter, never on a pause.
+ */
+export const HalfTypedYearAppliesNothing = {
+  render: () => (
+    <DebounceTable
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+    const input = canvas.getByLabelText('Filter by Birth Date');
+    // Real key presses: the synthetic ones do not fill the date segments.
+    const keyboard =
+      (
+        globalThis as {
+          stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
+        }
+      ).stBrowserUserEvent ?? userEvent;
+    input.focus();
+    // Day and month 01 read the same in either segment order of the locale.
+    await keyboard.keyboard('01012');
+    await waitFor(() => expect(input).toHaveValue('0002-01-01'));
+
+    await sleep(700);
+    expect(columnFilterState(canvasElement)).toEqual([]);
+
+    input.blur();
+    await waitFor(() =>
+      expect(columnFilterState(canvasElement)).toEqual([
+        { id: 'birthDate', value: '0002-01-01' },
+      ]),
+    );
+  },
+};
+
+/** A controlled parent that rebuilds an equal filters array on each render. */
+const RerenderingDebounceTable = () => {
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((tick) => tick + 1), 50);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <>
+      <output data-testid="column-filters">
+        {JSON.stringify(columnFilters)}
+      </output>
+      <ShadcnTable
+        columnFilterDisplayMode="subheader"
+        columns={debounceColumns}
+        data={debouncePeople}
+        initialState={{ showColumnFilters: true }}
+        onColumnFiltersChange={setColumnFilters}
+        state={{ columnFilters: [...columnFilters] }}
+      />
+    </>
+  );
+};
+
+/** Parent re-renders inside the wait keep the typed text and apply it. */
+export const ControlledRerenderKeepsTypedFilter = {
+  render: () => <RerenderingDebounceTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+    const input = canvas.getByRole('textbox', {
+      name: 'Filter by First Name',
+    });
+    await userEvent.type(input, 'Ada');
+
+    await sleep(700);
+    expect(input).toHaveValue('Ada');
+    expect(columnFilterState(canvasElement)).toEqual([
+      { id: 'firstName', value: 'Ada' },
+    ]);
+    expect(debounceRows(canvasElement)).toHaveLength(1);
+  },
+};
+
+/** Opens the chips mode editor of one column from the toolbar. */
+const openChipEditor = async (canvasElement: HTMLElement, column: string) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Ada');
+  await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+  await userEvent.click(
+    await within(document.body).findByRole('option', { name: column }),
+  );
+};
+
+/** Escape closes the chip editor without a blur: the typed text applies. */
+export const ChipEditorEscapeKeepsTypedText = {
+  render: () => <DebounceTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await openChipEditor(canvasElement, 'First Name');
+    const input = await within(document.body).findByRole('textbox', {
+      name: 'Filter by First Name',
+    });
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    await userEvent.type(input, 'Ada');
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => expect(input).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(columnFilterState(canvasElement)).toEqual([
+        { id: 'firstName', value: 'Ada' },
+      ]),
+    );
+    await sleep(700);
+    expect(columnFilterState(canvasElement)).toEqual([
+      { id: 'firstName', value: 'Ada' },
+    ]);
+  },
+};
+
+/** Escape closes the chip editor without a blur: the typed date applies. */
+export const ChipEditorEscapeKeepsTypedDate = {
+  render: () => <DebounceTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await openChipEditor(canvasElement, 'Birth Date');
+    const input = await within(document.body).findByLabelText(
+      'Filter by Birth Date',
+    );
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    // Real key presses: the synthetic ones do not fill the date segments.
+    const keyboard =
+      (
+        globalThis as {
+          stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
+        }
+      ).stBrowserUserEvent ?? userEvent;
+    await keyboard.keyboard('01011990');
+    await waitFor(() => expect(input).toHaveValue('1990-01-01'));
+    expect(columnFilterState(canvasElement)).toEqual([]);
+    await keyboard.keyboard('{Escape}');
+
+    await waitFor(() => expect(input).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(columnFilterState(canvasElement)).toEqual([
+        { id: 'birthDate', value: '1990-01-01' },
+      ]),
+    );
+  },
+};
+
+/** The table wait and a column's own wait (D88). */
+export const CustomFilterDebounce = {
+  render: () => (
+    <DebounceTable
+      columnFilterDebounceMs={50}
+      columnFilterDisplayMode="subheader"
+      columns={[
+        debounceColumns[0]!,
+        { ...debounceColumns[1]!, filterDebounceMs: 1000 },
+      ]}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+
+    await userEvent.type(
+      canvas.getByRole('textbox', { name: 'Filter by First Name' }),
+      'Ada',
+    );
+    await waitFor(() => expect(debounceRows(canvasElement)).toHaveLength(1), {
+      timeout: 300,
+    });
+
+    await userEvent.type(
+      canvas.getByRole('textbox', { name: 'Filter by Last Name' }),
+      'Love',
+    );
+    const typedAt = performance.now();
+    await sleep(750);
+    expect(
+      columnFilterState(canvasElement).find(({ id }) => id === 'lastName'),
+    ).toBeUndefined();
+    await waitFor(
+      () =>
+        expect(columnFilterState(canvasElement)).toContainEqual({
+          id: 'lastName',
+          value: 'Love',
+        }),
+      { timeout: 1500 },
+    );
+    expect(performance.now() - typedAt).toBeGreaterThanOrEqual(800);
   },
 };

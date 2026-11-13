@@ -3,7 +3,6 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -20,13 +19,11 @@ import {
   type InputProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import {
-  debounce,
-  parseFromValuesOrFunc,
-} from '@/components/ui/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_DebouncedCallback } from '@/components/ui/shadcn-table/hooks/useST_DebouncedCallback';
 import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export type ST_GlobalFilterTextFieldProps = InputProps;
@@ -38,9 +35,9 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   const {
     options: {
       enableGlobalFilterModes,
+      globalFilterDebounceMs,
       icons: { CloseIcon, SearchIcon },
       localization,
-      manualFiltering,
       showClearSearchButton,
       stSearchTextFieldProps,
     },
@@ -65,21 +62,14 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   });
   const [searchValue, setSearchValue] = useState(globalFilter ?? '');
 
-  const handleChangeDebounced = useMemo(
-    () =>
-      debounce(
-        (event: ChangeEvent<HTMLInputElement>) => {
-          setGlobalFilter(event.target.value ?? undefined);
-        },
-        manualFiltering ? 500 : 250,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call
-    [],
+  const debouncedSearch = useST_DebouncedCallback(
+    (value: string) => setGlobalFilter(value || undefined),
+    globalFilterDebounceMs ?? 500,
   );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
-    handleChangeDebounced(event);
+    debouncedSearch.run(event.target.value);
   };
 
   const handleGlobalFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
@@ -89,6 +79,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   };
 
   const handleClear = () => {
+    debouncedSearch.cancel();
     setSearchValue('');
     setGlobalFilter(undefined);
   };
@@ -110,6 +101,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     textFieldProps.onKeyDown?.(event);
+    if (event.key === 'Enter') {
+      debouncedSearch.flush();
+      return;
+    }
     if (event.key !== 'Escape' || event.defaultPrevented) {
       return;
     }
@@ -129,7 +124,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   if (showGlobalFilter !== prevShowGlobalFilter) {
     setPrevShowGlobalFilter(showGlobalFilter);
     if (!showGlobalFilter) {
-      handleChangeDebounced.clear();
+      debouncedSearch.cancel();
       setSearchValue('');
     }
   }
@@ -184,6 +179,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
             placeholder={localization.search}
             value={searchValue ?? ''}
             {...textFieldProps}
+            onBlur={(event) => {
+              debouncedSearch.flush();
+              textFieldProps.onBlur?.(event);
+            }}
             onKeyDown={handleKeyDown}
             ref={(inputRef) => {
               searchInputRef.current = inputRef;

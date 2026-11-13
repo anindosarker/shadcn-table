@@ -333,6 +333,17 @@ export const columnOptions: ColumnOption[] = [
     type: 'ST_FilterFn',
   },
   {
+    columnOption: 'filterDebounceMs',
+    defaultValue: '',
+    description:
+      'Overrides the columnFilterDebounceMs table option for this column.',
+    link: '/docs/guides/column-filtering',
+    linkText: 'ST Column Filtering Docs',
+    source: 'ST',
+    required: false,
+    type: 'number',
+  },
+  {
     columnOption: 'filterSelectOptions',
     defaultValue: '',
     description: '',
