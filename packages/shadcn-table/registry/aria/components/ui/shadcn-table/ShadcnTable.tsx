@@ -1,4 +1,4 @@
-import { ST_TableProvider } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { ST_TableProvider } from '@/components/ui/shadcn-table/context/ST_TableContext';
 import {
   selectST_TransformState,
   useST_TableInstance,

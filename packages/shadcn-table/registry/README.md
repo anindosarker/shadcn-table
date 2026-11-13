@@ -14,7 +14,8 @@ registry/<base>/
   components/ui/*.tsx                  the shadcn parts this base builds on
   components/ui/shadcn-table/          the library, every file
     features/                          stFeatures.ts and one st*Feature.ts per state group
-    hooks/                             stTableHook, useShadcnTable, useST_*, display-columns/
+    context/                           ST_TableContext.tsx  ST_DefaultsContext.tsx
+    hooks/                             createSTTableHook, useShadcnTable, useST_*, display-columns/
     components/                        table/ head/ body/ footer/ toolbar/ buttons/ inputs/ menus/ modals/
     shared/fns/                        filterFns.ts  sortFns.ts  aggregationFns.ts
     shared/utils/                      cell, column, row, style, pagination, virtualization, ...

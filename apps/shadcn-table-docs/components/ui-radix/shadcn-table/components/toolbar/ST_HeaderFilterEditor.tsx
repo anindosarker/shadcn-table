@@ -5,14 +5,35 @@ import {
   PopoverContent,
 } from '@/components/ui-radix/popover';
 import {
+  type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
+import { getColumnFilterFnName } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
 import { ST_FilterEditor } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterEditor';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 
-export const filterEditorClassName = 'w-65';
+/**
+ * The chips mode value editor's width: 260 px, or 308 px for a range of two
+ * date, datetime or time fields, which keep a 140 px minimum each (126 px of
+ * native placeholder), so both fit beside the 8 px gap and the 10 px padding.
+ */
+export const filterEditorClassName = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+) => {
+  const { columnDef } = column;
+  const { filterVariant } = columnDef;
+  const isDateLike = !!(
+    filterVariant?.startsWith('date') || filterVariant?.startsWith('time')
+  );
+  const isRange =
+    !!filterVariant?.includes('range') ||
+    ['between', 'betweenInclusive', 'inNumberRange'].includes(
+      getColumnFilterFnName(columnDef),
+    );
+  return isDateLike && isRange ? 'w-77 max-w-[calc(100vw-1rem)]' : 'w-65';
+};
 
 /** Focuses the column's first filter input; false when it is not mounted. */
 export const focusFilterInput = <TData extends ST_RowData>(
@@ -47,6 +68,8 @@ export const ST_HeaderFilterEditor = <TData extends ST_RowData>({
   table: ST_TableInstance<TData>;
 }) => {
   const { openAnchor, openColumnId } = useSelector(table.atoms.filterChips);
+  // A mode change to or from a between mode changes the editor's width.
+  useSelector(table.atoms.columnFilterFns);
   const column =
     table.options.columnFilterDisplayMode === 'chips' &&
     openAnchor === 'header' &&
@@ -75,7 +98,7 @@ export const ST_HeaderFilterEditor = <TData extends ST_RowData>({
       {column && (
         <PopoverContent
           align="start"
-          className={filterEditorClassName}
+          className={filterEditorClassName(column)}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
             cell

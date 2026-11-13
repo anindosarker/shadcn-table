@@ -3,7 +3,7 @@ import { Spinner } from '@/components/ui-aria/spinner';
 import { cn } from '@/lib/utils';
 import { type ST_CircularProgressProps } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 export type ST_TableLoadingOverlayProps = ST_CircularProgressProps;
 

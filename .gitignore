@@ -17,6 +17,9 @@ apps/shadcn-table-docs/tsconfig.*.json
 # committed: the build's and the preview build's tsconfig (next.config.mjs)
 !apps/shadcn-table-docs/tsconfig.build.json
 !apps/shadcn-table-docs/tsconfig.preview.json
+# committed: the base and aria copies' own type-check programs (types:bases)
+!apps/shadcn-table-docs/tsconfig.ui-base.json
+!apps/shadcn-table-docs/tsconfig.ui-aria.json
 
 # build
 *.log

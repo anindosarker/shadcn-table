@@ -19,7 +19,7 @@ import {
   getST_SelectAllHandler,
 } from '@/components/ui-aria/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 const selectCheckboxVariants = cva('z-0', {
   variants: {

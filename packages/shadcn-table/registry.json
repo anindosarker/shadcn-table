@@ -413,6 +413,16 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/context/ST_DefaultsContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_DefaultsContext.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/context/ST_TableContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_TableContext.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -483,6 +493,11 @@
           "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/createSTTableHook.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/createSTTableHook.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
@@ -518,11 +533,6 @@
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/hooks/stTableHook.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
@@ -538,9 +548,9 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DebouncedCallback.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+          "target": "@ui/shadcn-table/hooks/useST_DebouncedCallback.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
@@ -1818,6 +1828,16 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/context/ST_DefaultsContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_DefaultsContext.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/context/ST_TableContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_TableContext.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -1888,6 +1908,11 @@
           "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/createSTTableHook.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/createSTTableHook.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
@@ -1923,11 +1948,6 @@
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
-        },
-        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
@@ -1943,9 +1963,9 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_DebouncedCallback.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+          "target": "@ui/shadcn-table/hooks/useST_DebouncedCallback.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
@@ -3223,6 +3243,16 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/context/ST_DefaultsContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_DefaultsContext.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/context/ST_TableContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_TableContext.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -3293,6 +3323,11 @@
           "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/createSTTableHook.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/createSTTableHook.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
@@ -3328,11 +3363,6 @@
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
         },
         {
-          "path": "registry/aria/components/ui/shadcn-table/hooks/stTableHook.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
-        },
-        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
@@ -3348,9 +3378,9 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
-          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_DebouncedCallback.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+          "target": "@ui/shadcn-table/hooks/useST_DebouncedCallback.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
@@ -4628,6 +4658,16 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/context/ST_DefaultsContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_DefaultsContext.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/context/ST_TableContext.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/context/ST_TableContext.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -4698,6 +4738,11 @@
           "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/createSTTableHook.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/createSTTableHook.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
@@ -4733,11 +4778,6 @@
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/hooks/stTableHook.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
@@ -4753,9 +4793,9 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DebouncedCallback.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+          "target": "@ui/shadcn-table/hooks/useST_DebouncedCallback.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
