@@ -1472,9 +1472,11 @@ export const TypeThenClearFiltersStaysCleared = {
     });
     await waitFor(() => expect(document.activeElement).toBe(input));
     await userEvent.type(input, 'Ada');
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Clear filters' }),
-    );
+    const clearFilters = () =>
+      canvas.queryByRole('button', { name: 'Clear filters' });
+    await userEvent.click(clearFilters()!);
+    // React Aria's popover spends the first outside press on closing itself.
+    if (clearFilters()) await userEvent.click(clearFilters()!);
 
     await sleep(700);
     expect(columnFilterState(canvasElement)).toEqual([]);
