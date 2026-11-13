@@ -6,7 +6,7 @@ export const isLessThan = (a: string | Date, b: string | Date) =>
     : String(a) < String(b);
 
 //data definitions...
-export const getData = (): DbRow[] =>
+const createRows = (): DbRow[] =>
   [
     {
       firstName: 'Hermann',
@@ -1413,6 +1413,12 @@ export const getData = (): DbRow[] =>
     lastLogin: randomDate(new Date(2019, 0, 1), new Date()),
   }));
 //end
+
+//built once per server process, so every request sees the same lastLogin dates
+const rows = createRows();
+
+//a copy, so a request that sorts its rows leaves the shared list as it was
+export const getData = (): DbRow[] => [...rows];
 
 //random date from last year
 function randomDate(start: Date, end: Date) {
