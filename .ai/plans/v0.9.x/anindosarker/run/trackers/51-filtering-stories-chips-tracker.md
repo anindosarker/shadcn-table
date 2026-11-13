@@ -15,6 +15,13 @@ Checks:
 - Check: `pnpm test storybook-tests --base aria` at 2469c649: pass 651/651
 - Check: Acceptance at 0bf55cc7: vitest 37/37 on base, radix, aria; no changed line inside a play; no `subheader` between the export of each of the 10 stories and the next export
 - Check: Storybook server on 5346 stopped
+- Check (verifier): `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 14d1e39c: pass, tsc clean
+- Check (verifier): `pnpm test lint` at 14d1e39c: pass (9 warnings, 0 errors)
+- Check (verifier): `pnpm test storybook-tests --base base` at 14d1e39c: pass 651/651
+- Check (verifier): `pnpm test storybook-tests --base radix` at 14d1e39c: pass 651/651
+- Check (verifier): `pnpm test storybook-tests --base aria` at 14d1e39c: pass 651/651
+- Check (verifier): Acceptance at 14d1e39c: vitest 37/37 on base, radix, aria; 18 plays before and after, no changed line inside a play against origin/claude/review; no `subheader` between the export of each of the 10 stories and the next export
+- Check (verifier): P11 not applicable, the milestone adds no play; no server left on 5346 to 5348
 
 Plain stories under chips (no subheader inputs in thead on any base):
 - FilterFnAndFilterVariants: Filter menu lists all 11 columns, State chip editor opens with the multi-select (base, radix, aria)
