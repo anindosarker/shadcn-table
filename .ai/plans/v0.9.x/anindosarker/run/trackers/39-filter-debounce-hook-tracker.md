@@ -1,6 +1,6 @@
 # 39: Typed filters use one debounce hook, tracker
 
-Status: running
+Status: done
 Branch `v0.9/filter-debounce-hook`, worktree 03
 Checks:
 - Check: plays before the change (P11), `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx stories/features/Search.stories.tsx -t "<play>"` on base, radix, aria at the Task 1 commit (library code unchanged): fail as required, the same line on the three bases:
@@ -15,10 +15,20 @@ Checks:
 - Check: `grep -rn "debounce(" packages/shadcn-table/registry/*/components/ui/shadcn-table` at the Task 3 commit: prints nothing
 - Check: `pnpm --filter shadcn-table-docs types:check` at the Task 3 commit (after `pnpm registry:build` and `pnpm --filter shadcn-table-docs lib:install base|radix|aria`): pass
 - Check: `CustomFilterDebounce`, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx -t "Custom Filter Debounce"` on base, radix, aria at the Task 3 commit: pass
+- Check: `pnpm test docs-e2e --base base --url http://localhost:5340` (own `next start` of the production build) at 744cdd11: fail, live-demo range filter (Age) `rows=1` on two pages and the api prop table counts `213` and `66`; fixed in c2af36ba (see Attention)
+- Check: `pnpm test docs-e2e --base base --url http://localhost:5340` at c2af36ba: pass (getting-started 233, api 109, guides 701, examples 939)
+- Check: `pnpm test typecheck --base base|radix|aria` at c2af36ba: pass (with `NODE_OPTIONS=--max-old-space-size=8192`)
+- Check: `pnpm test lint` at c2af36ba: pass (9 warnings, none in this milestone's files)
+- Check: `pnpm test validate-repo` at c2af36ba: pass (registry fresh)
+- Check: `pnpm test storybook-tests --base base` at 744cdd11: `ClickToCopy` "Click Copies Value" failed (P5 known flake), rerun pass 627; at c2af36ba: pass 627
+- Check: `pnpm test storybook-tests --base radix` at c2af36ba: pass 627
+- Check: `pnpm test storybook-tests --base aria` at c2af36ba: pass 627
+- Check: P7, `git diff origin/claude/review -- …/index.ts …/types.ts | grep '^-export'` at c2af36ba: prints nothing
 
 - Task 1 plays first: done (5b7254f9)
 - Task 2 hook, column filter field, global search: done (35c9fc00); the three options and their defaults (1.6.5) landed here, since the field reads them
-- Task 3 options docs, CustomFilterDebounce, util removal, guide lines: running
+- Task 3 options docs, CustomFilterDebounce, util removal, guide lines: done (2ac0faec); the generated docs copies and `registry.json` were regenerated here, because the docs type check reads them
+- Task 4 regenerate, format, changelog: done (744cdd11, c2af36ba)
 
 ## Browser record (1.6.3)
 
@@ -26,3 +36,11 @@ Checks:
 - WebKit and Firefox: not installed for Playwright on this machine; not recorded. The native picker pick cannot be driven headless; the rule treats any change with no key press since the last commit as a pick.
 
 ## Attention
+
+- `ST_FilterChips.tsx` (three bases, not owned by this spec) re-focused the chip editor's first input on every table change, because its focus effect depends on the `table` object, which changes with each filter write; with blur now committing, typing Min then clicking Max put the Max text into Min (docs E2E live-demo range filter). Fixed in c2af36ba: the effect focuses once per opened column.
+- `test/docs-e2e/lib/api.mjs` (listed as unchanged in 1.6) counts the option table rows; the counts went from 211 to 213 and 65 to 66 for the three new option rows (c2af36ba).
+- Clear filters often leaves the column filter value unchanged (it was never committed), so the outside-change sync of 1.6.3 cannot see it; the field also drops a pending call when the column filters array was replaced or the column's chip was removed since the last key, which covers Clear filters and Remove filter, including the unmount flush.
+- React Aria's chip editor popover takes the first outside press to close itself, which flushes the typed text (the unmount rule); `TypeThenClearFiltersStaysCleared` clicks Clear filters a second time when the button is still there.
+- `ClearCancelsPendingSearch` asserts the global filter is unset (`null`): the old search debounce read the live input value, so after a clear its late call wrote `""`, not the old text.
+- A typed date, datetime or time value that is still unapplied when the field unmounts without a blur is dropped; the unmount flush covers the debounced typed filters only.
+- `pnpm --filter shadcn-table-docs types:check` (inside `typecheck --base radix`) ran out of heap once under machine load at the default heap; it passed later at the default heap and with `--max-old-space-size=8192`.
