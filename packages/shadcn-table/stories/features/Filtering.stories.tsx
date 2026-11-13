@@ -311,7 +311,7 @@ export const FilterFnAndFilterVariantsFaceted = () => (
   />
 );
 
-/** The subheader th whose header text starts with `name`. */
+/** The header th whose text starts with `name`. */
 const filterHeaderCell = (canvasElement: HTMLElement, name: string) =>
   Array.from(canvasElement.querySelectorAll<HTMLElement>('thead th')).find(
     (th) => th.textContent?.trim().startsWith(name),
