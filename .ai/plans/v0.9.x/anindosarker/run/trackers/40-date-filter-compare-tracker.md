@@ -1,6 +1,6 @@
 # 40: Date filters compare dates, tracker
 
-Status: running
+Status: merged (19792082)
 Branch `v0.9/date-filter-compare`, worktree 04
 Checks:
 - Check: P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/DateFilters.stories.tsx` at 0c5d4fa4: fail as required on base, radix and aria. `GreaterThanOnDateColumn`: `expected [ 'Ann', 'Ben', 'Cara', 'Dan', …(2) ] to deeply equal [ 'Dan', 'Eve' ]` (every row kept); `LessThanOnDateColumn`: `expected [ 'No results found' ] to deeply equal [ 'Ann', 'Finn' ]` (no row kept); identical line on the three bases. Also failing before: Equals, BetweenInclusive, TimeOfDay, PlainDateVariant; IsoStringColumnUnchanged passed
