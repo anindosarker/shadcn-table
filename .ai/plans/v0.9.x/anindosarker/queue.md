@@ -7,39 +7,39 @@ kanban-plugin: basic
 
 ## Decided
 
-- [x] **Q1** Select filter clear button overlaps the chevron #D1 #E1
+- [x] **Q1** Select filter clear button overlaps the chevron #D1
 	- Once a select filter has a value, the clear x (`absolute inset-y-0 inset-e-0`, `ST_FilterTextField.tsx:335-347` radix; aria `:369`, base `:340`) sits on top of the `SelectTrigger` chevron. The trigger's `pe-9` never applies: the shadcn `SelectTrigger` base has `pr-2` (`select.tsx:46`), tailwind-merge keeps both classes, and Tailwind 4 emits `padding-right` after `padding-inline-end`, so `pr-2` wins. Same in chips, subheader and popover modes, all three registries. Owner's screenshot `v0.8.x/reference/image/bugs/1793953068792.png`. Resolved by D1.
-- [x] **Q5** The pagination mode named `default` is not the default #D7 #E1
+- [x] **Q5** The pagination mode named `default` is not the default #D7
 	- `paginationDisplayMode` defaults to `pages` (v0.8.x D13, `useST_TableOptions.ts:90`), but the mode value `'default'` names the compact range-and-arrows footer, so the guide (`/docs/guides/pagination#pagination-display-modes`) has to say "by default ('pages') ... set to 'default' for the compact UI". Owner, 2026-11-08: the page reads as wrong. The name comes from Material React Table, where `default` is the default. Renaming the value is a public option change (v0.8.x P7), so the fix is decided with item 6.
-- [x] **Q6** The deployed Storybook runs the plays and shows their end state #D8 #E2
+- [x] **Q6** The deployed Storybook runs the plays and shows their end state #D8
 	- Owner, 2026-11-08, `https://storybook.shadcn-table.com/base/?path=/story/features-pagination-examples--pagination-enabled-default-more-data`: the story opens with the global filter already set to "42459 Eda Springs" and one row left, because its play function runs on load in the static build too. A visitor takes the filtered end state for the example (D59 requires a play per story, so most stories end in some changed state). The static builds under `/base/`, `/radix/` and `/aria/` should render the stories without running the plays (the plays keep running in vitest and in local dev), or the play should restore the initial state; the mechanism is decided with the Storybook items.
-- [x] **Q7** "Default" names the compact pagination across stories and docs #D7 #E1
+- [x] **Q7** "Default" names the compact pagination across stories and docs #D7
 	- Owner, 2026-11-08, `Features/Pagination Examples/Pagination Enabled Default More Data` (Base build): the story is titled "Default" and shows the compact footer (`Rows per page`, `1-10 of 551`, four arrows), which is not the default since v0.8.x D13 (`pages`). The same wording runs through the pagination stories (`Pagination Enabled Default`, `... Big Data`, `... No Rows Per Page` and more), the guide, the API page and the examples. Fixing it is bigger than F5: one audit of every story title, docs page and example that says "default" for `paginationDisplayMode: 'default'`, with the rename decided separately from item 6 (the range span). Decided in its own item.
 - [x] **Q8** Two storybook plays time out under machine load and are not on the known-flake list #D14
 	- `stories/features/ClickToCopy.stories.tsx` "Click Copies Value" (base and radix) and `stories/features/RowOrdering.stories.tsx` "Drag Reorders Rows" (aria, 90 s timeout) failed once each in the E1 verifier runs at load average about 16 and passed on rerun and alone; neither is in the P5 known-flake list, so a loaded run reads them as red.
-- [x] **Q10** The static Storybook test folder matches the build-output ignore line #D46 #E7
+- [x] **Q10** The static Storybook test folder matches the build-output ignore line #D46
 	- `.gitignore`: the line `storybook-static` also matches `test/storybook-static/`, so spec 06 added its two files with `git add -f`; git tracks them now, but a new file in that folder is ignored unless a `!test/storybook-static/` line follows.
-- [x] **Q11** The docs dev server logs errors on every page load #D20 #E2
+- [x] **Q11** The docs dev server logs errors on every page load #D20
 	- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review` (`815436fa`), GET `/`: two logs on every load. Server: `[TanStack Hotkeys] A hotkey label was formatted during server rendering without a platform, so it uses 'linux'` (the kbd hints of the theme panel, E2 04, format on the server with no `platform`). Browser: `A tree hydrated but some attributes of the server rendered HTML didn't match the client properties` under `<Page>` of `(home)/page`, attribute mismatch not yet located. Owner: "Every time I run the server locally I see huge errors."
-- [x] **Q12** Reset is not discoverable #D22 #E4
+- [x] **Q12** Reset is not discoverable #D22
 	- Owner, 2026-11-08, same screenshot: "There is no button or hint to reset theme." The header holds an icon-only reset button with a `⇧R` hint (spec 04 review fix), which the owner did not read as reset.
-- [x] **Q13** The color tokens have no color picker #D23 #E4
+- [x] **Q13** The color tokens have no color picker #D23
 	- Owner, 2026-11-08, same screenshot: each token in the Colors tab shows a static swatch and a hex input; no picker opens from the swatch. The reference (shadcnstudio.com/theme-generator, D2) opens a picker.
-- [x] **Q14** The persistent view example starts with more than ten rows #D24 #E4
+- [x] **Q14** The persistent view example starts with more than ten rows #D24
 	- Owner, 2026-11-08, `/docs/examples/persistent-view`: the default page size should be ten.
-- [x] **Q15** The docs dev server is slow #D29 #E5
+- [x] **Q15** The docs dev server is slow #D29
 	- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review`: "The site is super slow in dev server." Cause, measured 2026-11-08 in a browser before and after the theme panel: `app/global.css:9-16` imports all eight `styles/style-*.css`, the root stylesheet grew from 351 KB to 2,755 KB, and every theme or class change recalculates styles over about 3,560 nodes (0.5 to 1 s); the first-hit compile (12 to 18 s) is the same on both builds. The machine's load average of 20 plus from agent gates doubles it. Resolved by D29.
-- [x] **Q16** The icon library cannot be changed #D27 #E5
+- [x] **Q16** The icon library cannot be changed #D27
 	- Owner, 2026-11-08, same screenshot: the Icon Library select is disabled at Lucide (D2: "Lucide only, v0.7.x D38"). Owner: add the option.
-- [x] **Q17** Undo and redo use `p` and no key #D22 #E4
+- [x] **Q17** Undo and redo use `p` and no key #D22
 	- Owner, 2026-11-08: undo and redo should be the regular shortcuts, Cmd+Z and Cmd+Shift+Z (Ctrl on Windows and Linux); D2 gave undo `p` and redo nothing.
-- [x] **Q18** The theme panel carries Copy and Import #D21 #E4
+- [x] **Q18** The theme panel carries Copy and Import #D21
 	- Owner, 2026-11-08, screenshot of the panel on `/docs/examples/persistent-view` (dev, `claude/review`): the Copy button (top row) and the Import button (Presets row), both from D2's layout, marked "Unnecessary items, remove them."
-- [x] **Q19** The shortcut buttons and hints are spread over the panel #D22 #E4
+- [x] **Q19** The shortcut buttons and hints are spread over the panel #D22
 	- Owner, 2026-11-08, same screenshot: Undo (`P`) and Redo sit in the top row, Random (`R`) in the Presets row, the cycle hint `C` under the preset select, Reset (`⇧R`) as an icon in the header. Owner: keep all shortcut buttons and hints together at the top.
-- [x] **Q27** The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path #D46 #E7
+- [x] **Q27** The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path #D46
 	- `tools/release/record-output.mjs:28`: `capRecord` holds the one rule D38 specifies (five errors, 400 characters, an `…` mark) and is exported, but no `tools/release/record-output.test.mjs` runs under `pnpm test validate-repo`; the cap was checked by hand in the spec 19 review only. `tools/release/pr-summary.mjs:10`: the header says the `test/.out/*.json` fallback serves "spec 18's act check", but under act `toJSON(needs)` sets `NEEDS` too, so the fallback serves a plain shell run only. Both nits from the spec 19 review (a0677dfc), deferred.
-- [x] **Q30** PostHog and providers load in the root layout on every page #D70 #E11
+- [x] **Q30** PostHog and providers load in the root layout on every page #D70
 	- `apps/shadcn-table-docs/app/layout.tsx`: posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first load; on `/` they are most of the 580 KB of script left after spec 30 (Q30). A later decision lazy-loads posthog-js after hydration or on first interaction and re-measures `/` against 450 KB; the docs check "icons: the pick survives a reload" must keep passing.
 	- D59 and spec 30 ask for under 450 KB of script transfer on `/`, changing only `components/dev-home/**`. The builder measured 711 KB before and 580 KB after (blocking time 158 ms, under the 300 ms target). Of the first load, all but 19 KB is the shared root layout (posthog-js 114 KB, react-dom 72 KB), which spec 30 puts out of scope; the live demo table adds 167 KB and the docs check "icons: the pick survives a reload" needs it to load without input. Milestone 30 Home JavaScript is stopped, not merged: branch `v0.9/home-javascript` at b2bcf60d holds the 580 KB state (nav and hero links prefetch on hover, touch or focus instead of in the viewport), every check green.
 	- Options:
@@ -47,16 +47,16 @@ kanban-plugin: basic
 		- b) load the demo table only on visitor intent (437 KB measured) and change the docs check that waits for the table after a reload
 		- c) widen spec 30 to `app/layout.tsx` and lazy-load posthog-js and the providers, then rerun the milestone against 450 KB
 		- d) drop the branch; the home page stays at 711 KB
-- [x] **Q31** The docs check suite has no check for the byline or the two new pages #D65 #E11
+- [x] **Q31** The docs check suite has no check for the byline or the two new pages #D65
 	- `test/docs-e2e/lib/`: spec 31 2.2 expects `pnpm test docs-e2e` to prove the byline and the two new pages (`/docs/getting-started/comparison`, `/docs/guides/tanstack-table-with-shadcn-ui`), but no milestone of spec 31 owns `test/docs-e2e`, so no named check exists; the frame milestone (merged 23e1cfa9) proved them by curl and a route run only (render, hydration, console).
 - [x] **Q32** Guides and API copy overclaims shadcn components and keeps six inherited typos #D64
 	- `apps/shadcn-table-docs/content/docs/guides/accessibility.mdx:7`, `guides/customize-components.mdx:7`, `api/st-components.mdx:22`, `api/table-options.mdx:24`: the new copy (spec 31, merged edc04e01) says the table is built from shadcn/ui components throughout; the table, rows and cells are plain elements (`ST_Table.tsx:113`, `ST_TableBodyCell.tsx:317`), only the controls are shadcn/ui. Typos and inherited phrasing left on edited lines: `guides/column-ordering-dnd.mdx:72` ("should also should"), `guides/editing.mdx:211` ("news rows"), `guides/column-size.mdx:88` ("ect."), `guides/detail-panel.mdx:163` ("as of version 2.6.0", a Material React Table version); `guides/sorting.mdx:3` says the sort arrow shows in each header cell (only sorted ones); four API pages keep an older sentence that restates the new lead. Review findings of the milestone, deferred by the script as minors.
 - [x] **Q33** Vercel free tier function CPU at 75 percent #D66
 	- Vercel mail 2026-11-11 02:01: team `anindo-sarkers-projects` used 75 percent of the Hobby tier's Fluid Active CPU (4 hours per month); at 100 percent the projects pause. Likely sources: the Show HN traffic of 2026-11-10, `proxy.ts` running on every request, the `/og/docs/[...slug]` image route, the llms and Markdown routes.
 	- Choices for a later item: Vercel Pro (20 USD a month, pay-as-you-go above the included usage), or move per-request work off functions (static OG images at build, narrower `proxy.ts` matcher, cache headers on the Markdown routes) and re-measure on the Vercel usage page.
-- [x] **Q35** Example source read traces every examples file into the build #D69 #E11
+- [x] **Q35** Example source read traces every examples file into the build #D69
 	- `apps/shadcn-table-docs/lib/example-source.ts:39` (`listExampleFiles`, October 2026, before E10): `fs.readFile(path.join(dir, rel))` with a dynamic `dir` makes Turbopack trace the whole `examples/` tree including the generated `examples/.<base>` copies (8 pattern alternatives times about 1321 files, reported as 10568 matches); builds and typecheck are slow. One-file literal paths made it worse (4 warnings, 13384 matches, reverted). Needs a change to how the example folders are read, across more than one file; a later decision.
-- [x] **Q36** The generated examples registry was not regenerated with the spec 31 descriptions #D68 #E11
+- [x] **Q36** The generated examples registry was not regenerated with the spec 31 descriptions #D68
 	- `apps/shadcn-table-docs/registry.json` is tracked and generated by `tools/registry/examples.mjs` (`pnpm -w registry:items`, run by the docs `build` script) from the example pages' descriptions. Spec 31's Examples copy milestone owned `content/docs/examples/**` only, so the rewritten descriptions never reached the committed file; the owner's local build regenerated it and left a 252-line diff. Committed by the lead 2026-11-12. Gap: no check fails when a generated tracked file is stale; `pnpm test validate-repo` should regenerate and `git diff --exit-code` the registry files, and a milestone that edits example descriptions must own `registry.json`. A later decision.
 - [x] **Q37** Column size reset listener stays until the width transition ends #D10
 	- Epic 03 said the reset helper listens for `transitionend` with `{ once: true }`; the merged code keeps listening until a `width` or `min-width` transitionend instead, because other transitions (button colors) bubble to the table first and `once` would leave `data-size-resetting` stuck.
@@ -98,7 +98,7 @@ kanban-plugin: basic
 	- Options:
 		- a) Recommended: keep `^0.22.0`
 		- b) pin the exact version `0.22.0`
-- [x] **Q44** Three theme controls change nothing visible in the docs #D26 #E4
+- [x] **Q44** Three theme controls change nothing visible in the docs #D26
 	- Menu Color, Menu Accent and Style in the theme panel have no visible effect: the docs `components/ui-<base>/` parts carry no `cn-*` hooks for them to target, and spec 04 does not regenerate those parts. Tokens, fonts and radius do apply.
 	- Options:
 		- a) Recommended: keep the controls; hook the docs parts in a later spec
@@ -108,7 +108,7 @@ kanban-plugin: basic
 	- Options:
 		- a) Recommended: keep `useDesignSystem()`
 		- b) revert to the MutationObserver as 1.6.7 words it
-- [x] **Q46** Undo in the Colors tab steps back one keystroke at a time #D23 #E4
+- [x] **Q46** Undo in the Colors tab steps back one keystroke at a time #D23
 	- Each valid keystroke in a Colors tab input is one history entry, so undo walks back through a typed value one valid prefix at a time (spec 04 does not say).
 	- Options:
 		- a) Recommended: keep
@@ -143,7 +143,7 @@ kanban-plugin: basic
 	- Options:
 		- a) Recommended: keep (amend spec 18 1.6.2: "verbatim except the Validate PR lines")
 		- b) revert: the block verbatim, a stale Validate PR failure stays until the next full run
-- [x] **Q53** The four called workflows skip every step on the bump commit, not the job #D44 #E7
+- [x] **Q53** The four called workflows skip every step on the bump commit, not the job #D44
 	- Spec 16 1.6.4 put `if: ${{ !inputs.skip }}` on the matrix job of `typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml` and `installation-e2e.yml`. The builder found that a job-level `if:` is read before the matrix expands, so GitHub reports one skipped job named `Typecheck (${{ matrix.base }})` and the required leg contexts stay "Expected" (actions/runner#952, closed unfixed). Merged 8631dc07: every step carries the `if:` instead, so on the bump commit each leg runs no step and reports success under its own context; D35's outcome (no second test run, Prepare Release skipped through Lint and Validate Repo) holds. act expands the legs either way, so only the 0.9.1 release run confirms it.
 	- Options:
 		- a) Recommended: keep (spec 16 1.6.4 already reads this way); the 0.9.1 run is the proof, a context left "Expected" there is a new item
@@ -153,46 +153,46 @@ kanban-plugin: basic
 	- Options:
 		- a) Recommended: keep (amend D29's acceptance line: 300 ms locally, 600 ms on GitHub runners)
 		- b) revert: one budget of 300 ms everywhere, the release run reruns until the runner is fast enough (or the perf checks leave the CI run)
-- [x] **Q55** The release label minor ships 0.10.0, D45 names 0.9.1 #D49 #E9
+- [x] **Q55** The release label minor ships 0.10.0, D45 names 0.9.1 #D49
 	- D45 names the release 0.9.1 and the label `release:minor` (new public API: `ST_DefaultsProvider`, `pageSize` in the stored view); on 0.9.0 that label bumps to 0.10.0 (Validate PR on PR 135, run 42518019709: "Ships as 0.10.0 (release:minor)"). Prepare Release waits; the runner did not approve (a tag and a publish cannot be undone). Everything else is green; the D36 and D38 proof lines are recorded in `trackers/20-release-pr-0-9-1-tracker.md`.
 	- Options:
 		- a) Recommended: ship 0.10.0 as labelled (semver: new public API is a minor), rename spec 20 and the trackers to 0.10.0 after the merge; the runner approves on the ruling
 		- b) relabel PR 135 `release:patch` (`gh pr edit 135 --remove-label release:minor --add-label release:patch`), a new `labeled` run, then approve: ships 0.9.1 with new API under a patch number
-- [x] **Q56** The bundle analyzer wrap writes no report under Turbopack #D63 #E10
+- [x] **Q56** The bundle analyzer wrap writes no report under Turbopack #D63
 	- Spec 24 wraps `next.config.mjs` in `@next/bundle-analyzer` behind `ANALYZE=1` (D53, for spec 30's measurements). The docs app builds with Turbopack, and the analyzer prints "not compatible with Turbopack builds, no report will be generated"; `next build --webpack` writes the reports but fails on `node:` imports. So the wrap and its devDependency do nothing today. The canonical tags and the 308 redirect pass; milestone 24 merges with the wrap as specified, and spec 30 measures the home page chunks from the built `/` HTML and Lighthouse instead.
 	- Options:
 		- a) Recommended: remove the wrap and the `@next/bundle-analyzer` devDependency in a small fix milestone; bundle inspection uses `next experimental-analyze` when needed
 		- b) keep the wrap as merged (inert until the app builds with webpack)
-- [x] **Q58** Docs pages go back to their previous wording for this release #D74 #E11
+- [x] **Q58** Docs pages go back to their previous wording for this release #D74
 	- Owner, 2026-11-13: "Yeah, we should restore that"; a rewrite is planned with the docs session in a new version, not here.
 	- Restore the intro and description of the example, guide and API pages to the text before spec 31 (D60), fixing only typos in that older text; regenerate `apps/shadcn-table-docs/registry.json`.
 	- Kept from spec 31: byline and dates, the Introduction page's install snippet and demo, the comparison page (D71), the TanStack guide (D72).
 	- Falls away with it: D64 (corrections to the rewritten text) and D60's description-length check (120 to 155 characters).
 	- Not ruled yet: whether the byline and dates also wait for the docs work.
-- [x] **Q59** The hosting budget fix is finished but not live #D75 #E11
+- [x] **Q59** The hosting budget fix is finished but not live #D75
 	- Side-agent note pasted by the owner, 2026-11-13. Vercel Hobby allows 4 hours of Fluid Active CPU a month; the usage page read 3h 01m on 2026-11-12; at 4 hours the project is paused.
 	- The fix (D66, `proxy.ts` matcher `['/docs', '/docs/:path*']`) is merged on `claude/review` at 71cb18bb and verified on a production build; the live site runs 0.9.2 without it.
 	- Release 0.9.3 (D61) is held by the owner until the docs wording is restored (Q58) and the preview is approved. `dev` and `master` are at 8feb7940 (0.9.2).
 	- The owner has not ruled; the runner was stopped on the owner's order 2026-11-13 and nothing was shipped.
-- [x] **Q29** The llms.txt summary duplicates the home page description #D76 #E11
+- [x] **Q29** The llms.txt summary duplicates the home page description #D76
 	- `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
-- [x] **Q67** A date filter does nothing in the chips editor when the column holds real dates #D81 #E12
+- [x] **Q67** A date filter does nothing in the chips editor when the column holds real dates #D81
 	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
-- [x] **Q68** On React Aria the multi-select filter list does not open on a click into its input #D82 #E12
+- [x] **Q68** On React Aria the multi-select filter list does not open on a click into its input #D82
 	- Found by the D78 browser check: it opens only on ArrowDown or the chevron; Base UI and Radix open on click.
-- [x] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #D83 #E12
+- [x] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #D83
 	- Found by the D78 browser check: Radix closes it; on React Aria the open editor also blocks the Clear filters button until a click outside.
-- [x] **Q70** The new live demo's Status column is partly cut off at the docs page width #D84 #E12
+- [x] **Q70** The new live demo's Status column is partly cut off at the docs page width #D84
 	- D78 demo on /docs/getting-started/usage and /introduction: six columns need the table's horizontal scroll at the docs content width; screenshots /tmp/e11-richer-demo/{base,radix,aria}-{usage,introduction}.png.
 	- Owner 2026-11-13 (screenshot, live Usage page, React Aria, wide window): all six columns show in full. Owner: "add more columns in intro and usage instead to show the behaviours for multi columns".
-- [x] **Q71** The Filter Mode line in the filter popover sits too tight under the input #D85 #E12
+- [x] **Q71** The Filter Mode line in the filter popover sits too tight under the input #D85
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/popover-filters on Base UI (screenshot): "need to increase a bit padding for the line that says filter fuzzy".
-- [x] **Q73** The time range filter's second input is cut off in the chip editor #D86 #E12
+- [x] **Q73** The time range filter's second input is cut off in the chip editor #D86
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot): Departure Time chip, mode between inclusive: the editor shows two time inputs side by side; the second one runs past the editor's right edge, its clock icon is not visible. Owner: "This filter is broken, add finding."
 	- Owner 2026-11-13: "I wasn't able to put inputs at all, need to fix the UI as well": the range editor's inputs could not be filled, besides the cut-off layout; both stand.
-- [x] **Q75** On React Aria the select filter's chevron sits in the middle of the input, not at its right edge #D87 #E12
+- [x] **Q75** On React Aria the select filter's chevron sits in the middle of the input, not at its right edge #D87
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on React Aria (screenshot): City chip editor, mode equals: the chevron follows the placeholder "Filter by City" instead of the input's right end. Owner: "arrow in the middle, ui issue".
-- [x] **Q74** Filters fire while the user is still typing; they need a debounce #D88 #E12
+- [x] **Q74** Filters fire while the user is still typing; they need a debounce #D88
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot: Hire Date chip editor, between inclusive): "The filters apply way faster than I type, so whenever I haven't even finished typing but they automatically fire. Need debounce."
 	- Today only plain text filters debounce: 200 ms, 400 ms with manualFiltering; every other variant (date, time, number) fires after 1 ms (base ST_FilterTextField.tsx:228).
 	- Owner 2026-11-13: happens on text filters as well; less painful there because backspace and edit is easy, but the debounce should apply there too (so 200 ms feels too short), and on date and time inputs.
@@ -200,7 +200,7 @@ kanban-plugin: basic
 	- Lookup 2026-11-13 (code read): typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce in ST_FilterTextField.tsx:212-232, 200 ms or 400 ms with manualFiltering; native date and time inputs emit partial values per segment, so a pause over 200 ms commits a half-typed date. Global search: ST_GlobalFilterTextField.tsx:67-77, 250 or 500 ms. Select, checkbox, slider (commit on release) and edit cells (blur or Enter) are fine.
 	- Lookup: the debounce util (shared/utils/utils.ts:60-77) has clear() but no flush; it is created once per mount, so callback and wait are frozen. Proven bugs: the field's clear button, Clear filters, the column menu clear, a stored view load and global search clear or Escape do not cancel a pending call, which then re-applies the old text; a pending call fires after unmount; Enter and blur do not commit. A 1:1 port of Material React Table v3; its v9 port uses useDebouncedCallback from @tanstack/react-pacer. No debounce hook and no wait option exist in the library; TanStack Table 9.3.1 has none. Hooks are useST_<Name>.ts per base with a registry.json entry each.
 	- Lookup: 11 story files type into filters and rely on waitFor's 1000 ms default, so waits up to about 800 ms stay green; RenderCounts.stories.tsx counts renders after typing.
-- [x] **Q72** The home page's big heading is only the name and says nothing about tables #D90 #E12
+- [x] **Q72** The home page's big heading is only the name and says nothing about tables #D90
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
 	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
 - [x] **Q77** Text values that hold a full date and time now filter as dates, which the plan said to leave alone #D92 #E13
@@ -214,7 +214,7 @@ kanban-plugin: basic
 - [x] **Q80** Typing a date into the Min or Max box of a between filter wipes the box on the first key #D96 #E13
 	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.
 	- Filter editor fixes builder (spec 41 1.6.3): not a library bug in its reading; native Chromium date segments: a click at the centre of the field lands on the year segment, so typed digits fill only the year; typing from the first segment works and the new plays cover date and datetime digit typing.
-- [x] **Q83** On React Aria the filter chip editor now closes when the page scrolls #D97 #E12
+- [x] **Q83** On React Aria the filter chip editor now closes when the page scrolls #D97
 	- Spec 43 (merged 4b0d182d) made the React Aria chip, picker and header filter editors non-modal so Clear filters is clickable with an editor open (D83); a non-modal editor no longer locks page scroll, closes on scroll and is no longer a dialog. Base UI keeps its editor open on scroll. Keep, or rule a different fix for Clear filters.
 	- Owner 2026-11-14: "This is very bad. It is a very bad implementation. All the filters were made with modals. Why did you decide to change it?" The non-modal change came from spec 43 (now spec 41 section 3.2, line 250), not from a decision; commits 0f0f9f54 and df03b7f1, `isNonModal` at aria ST_FilterChips.tsx:114, :225 and ST_HeaderFilterEditor.tsx:141. Release steps of E12 are on hold by an Urgent note. The owner wants the code double-checked thoroughly before the item is discussed again.
 	- Code check 2026-11-14 (library defaults read in node_modules, no modal prop set in project code): at v0.9.3 only React Aria filter popovers were modal (scroll lock, underlay, inert page, focus trap, role dialog); Base UI and Radix chip editor, picker, header editor and popover display mode were non-modal at v0.9.3 and now; filter mode menus are modal on all three. 0f0f9f54 and df03b7f1 changed aria only (isNonModal x3, shouldCloseOnInteractOutside x2, focus on open, docs E2E click helpers) plus the closeOnEscape fix on base and aria, which does not depend on the modal flag. Non-modal aria now: closes on scroll, no dialog role, blank-area click does not close it, Escape only with focus inside; aria popover display mode is still modal. Modal restored: ClearFiltersClickableWithEditorOpen fails on aria (first click only closes); react-aria has no prop that both dismisses and activates the clicked element.
