@@ -114,3 +114,5 @@ export {
   ST_DefaultsProvider,
   useST_Defaults,
 } from '@/components/ui-radix/shadcn-table/hooks/useST_Defaults';
+// spec 39
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_DebouncedCallback';
