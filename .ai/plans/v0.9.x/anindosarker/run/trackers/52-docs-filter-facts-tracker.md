@@ -1,6 +1,6 @@
 # 52: Docs filter facts, tracker
 
-Status: running
+Status: merged (e4b69548)
 Branch `v0.9/docs-filter-facts`, worktree 07
 Checks:
 - Check: docs types, `pnpm --filter shadcn-table-docs types:check` at 823baa01: pass
