@@ -30,6 +30,12 @@ publishes the section as the GitHub release notes.
 
 - The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
 
+### Docs
+
+#### Spec 46 Live demo with ten columns
+
+- The live demo on the Introduction and Usage pages has ten columns (D84): First Name, Last Name, Email, City, State, Department, Age, Salary, Joined, Status. Department has a select filter and Salary a range filter shown in US dollars; the four filters of before work as they did. At the docs content width the table scrolls sideways, so pinning, hiding and reordering have columns to act on; no column is pinned by default (three bases).
+
 ## 0.9.3 - 2026-11-12
 
 ### Added
