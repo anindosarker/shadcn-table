@@ -10,6 +10,8 @@ kanban-plugin: basic
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`, not `getDefaultColumnFilterFn(columnDef)`. Found by the run in spec 40; no play covers it.
 - [ ] **Q79** The column filtering guide still says the default filter mode is fuzzy and does not explain date comparison
 	- `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx:93-98, 175`: after D81 (spec 40) date columns default to `equals` and compare by local day, time of day or minute; the guide was outside the milestone's files.
+- [ ] **Q80** Typing a date into the Min or Max box of a between filter wipes the box on the first key
+	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.
 
 ## Decided
 
