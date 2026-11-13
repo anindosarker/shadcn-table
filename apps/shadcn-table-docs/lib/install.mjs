@@ -32,6 +32,10 @@
  * package the item needs is already a dependency here), from copies taken
  * before the install, so uncommitted edits to them survive.
  *
+ * After the add, every file under components/ui-<base>/shadcn-table/ that the
+ * merged item did not write is removed (spec 41.2), so a file the registry
+ * moved or dropped leaves no stale copy; the parts beside it are untouched.
+ *
  * Manual equivalent: pnpm exec shadcn add <rewritten item json> table --overwrite --yes
  * with components.json temporarily set to {"style":"<style>","aliases":{"ui":"@/components/ui-<base>"}}.
  *
@@ -188,10 +192,48 @@ try {
   for (const [file, content] of kept) fs.writeFileSync(file, content);
   fs.rmSync(tmp, { recursive: true, force: true });
 }
+const pruned = pruneLibrary();
 const parts = await installHookedParts();
 console.log(
-  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}; components.json, app/global.css, package.json and the lockfile kept as they were`,
+  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in, ${pruned} dropped files removed), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}; components.json, app/global.css, package.json and the lockfile kept as they were`,
 );
+
+/**
+ * Removes every file under components/ui-<base>/shadcn-table/ (the library
+ * copy this install owns) that the merged item did not write in this run, so
+ * a file moved or removed in the registry leaves no stale copy; empty folders
+ * go with them. The parts beside it are left alone. Returns how many files.
+ */
+function pruneLibrary() {
+  const libDir = path.join(uiDir, 'shadcn-table');
+  const written = new Set(
+    item.files.map((file) => {
+      if (!file.target.startsWith('@ui/shadcn-table/')) {
+        console.error(
+          `install: ${base} target ${file.target} is outside @ui/shadcn-table/; nothing pruned`,
+        );
+        process.exit(1);
+      }
+      return path.join(uiDir, file.target.slice('@ui/'.length));
+    }),
+  );
+  let removed = 0;
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(file);
+        if (fs.readdirSync(file).length === 0) fs.rmdirSync(file);
+      } else if (!written.has(file)) {
+        fs.rmSync(file);
+        console.log(`install: removed ${path.relative(APP, file)}`);
+        removed++;
+      }
+    }
+  };
+  walk(libDir);
+  return removed;
+}
 
 /**
  * `<IconPlaceholder lucide="XIcon" tabler="..." ... />` becomes
