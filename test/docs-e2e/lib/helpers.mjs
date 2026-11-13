@@ -679,15 +679,57 @@ export async function demoLoop({ page, check, base }) {
 }
 
 /**
- * The live-demo example (D78) in panel `w`: each non-text filter (select,
+ * The live-demo example (D78, D84) in panel `w`: each non-text filter (select,
  * range, date, multi-select) is added from the toolbar Filter button, its
  * chip editor opens, a value is set and the table shows the expected rows.
  * Each case starts from a fresh load, so no filter carries over. The rows
- * are fixed (examples/<base>/live-demo/makeData.ts), 10 per page.
+ * are fixed (examples/<base>/live-demo/makeData.ts), 10 per page. Before the
+ * cases: the ten columns of D84 in order, and the table scrolls sideways at
+ * a 1280 px viewport.
  */
 export async function liveDemoFilters(page, w, check) {
   const editor = page.locator('[data-slot="popover-content"]:visible');
   const rows = w.locator('tbody tr');
+  const headers = [
+    'First Name',
+    'Last Name',
+    'Email',
+    'City',
+    'State',
+    'Department',
+    'Age',
+    'Salary',
+    'Joined',
+    'Status',
+  ];
+  const texts = (await w.locator('thead th').allInnerTexts()).map((t) =>
+    t.replace(/\s+/g, ' ').trim(),
+  );
+  check(
+    'live-demo: ten columns in order',
+    texts.length === headers.length &&
+      headers.every((h, i) => texts[i] === h),
+    texts.join(' | '),
+  );
+  const size = page.viewportSize();
+  await page.setViewportSize({ width: 1280, height: size?.height ?? 900 });
+  // The nearest ancestor of the table that scrolls sideways.
+  const scroll = await w
+    .locator('table')
+    .first()
+    .evaluate((table) => {
+      for (let el = table.parentElement; el; el = el.parentElement) {
+        if (/auto|scroll/.test(getComputedStyle(el).overflowX))
+          return { inner: el.scrollWidth, outer: el.clientWidth };
+      }
+      return null;
+    });
+  check(
+    'live-demo: scrolls sideways at 1280 px',
+    !!scroll && scroll.inner > scroll.outer,
+    scroll ? `scrollWidth=${scroll.inner} clientWidth=${scroll.outer}` : '',
+  );
+  if (size) await page.setViewportSize(size);
   const settle = async (n) =>
     rows
       .nth(n)
@@ -710,12 +752,30 @@ export async function liveDemoFilters(page, w, check) {
       },
     },
     {
+      column: 'Department',
+      variant: 'select',
+      expected: 6,
+      set: async () => {
+        await editor.getByLabel('Filter by Department').first().click();
+        await pick('Engineering');
+      },
+    },
+    {
       column: 'Age',
       variant: 'range',
       expected: 6,
       set: async () => {
         await editor.getByLabel('Min', { exact: true }).first().fill('30');
         await editor.getByLabel('Max', { exact: true }).first().fill('40');
+      },
+    },
+    {
+      column: 'Salary',
+      variant: 'range',
+      expected: 8,
+      set: async () => {
+        await editor.getByLabel('Min', { exact: true }).first().fill('70000');
+        await editor.getByLabel('Max', { exact: true }).first().fill('100000');
       },
     },
     {
