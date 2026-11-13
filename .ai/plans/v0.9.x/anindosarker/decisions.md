@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #R4
-	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
-	- Source: Q86
-
 ## In progress
 
 - [ ] **D48** The perf budget is 600 ms under --ci, 300 ms locally #E13 #R3
@@ -36,6 +32,9 @@ kanban-plugin: basic
 	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
 	- Owner, 2026-11-14: "k" on option 1.
 	- Source: Q2
+- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
+	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
+	- Source: Q86
 
 ## Done
 
