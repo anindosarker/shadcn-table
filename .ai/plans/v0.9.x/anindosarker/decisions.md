@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D61** Release 0.9.3 ships E10 #R4
-	- E10 (D53 to D60) ships as 0.9.3 in the same epic: a release spec modelled on spec 23, patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. Release only after every E10 spec has merged into `claude/review`.
-	- Owner, 2026-11-10: "work on it and release a new version asap" (E9), "epic go" on D53 to D60.
-	- Held by the owner 2026-11-10 ("Hold.", after a side-agent note): E10 merges into `claude/review` only; the owner reviews the home title, the rewritten docs copy and the comparison page on the preview deploy first, then says release. The release spec is written then and joins the next epic.
-
 ## In progress
 
 - [ ] **D48** The perf budget is 600 ms under --ci, 300 ms locally #E13 #R3
@@ -400,6 +395,10 @@ kanban-plugin: basic
 	- This decision changes `content/docs/**`, the same files as the E8 docs restructuring; its epic is chosen with that in mind.
 	- Checks: every page's description length in range (a script over `content/docs/**` frontmatter); no page under 150 words; the two new pages present in the sitemap; typecheck, lint, docs-e2e green.
 	- Owner, 2026-11-10: "recommended on all".
+- [x] **D61** Release 0.9.3 ships E10 #R4
+	- E10 (D53 to D60) ships as 0.9.3 in the same epic: a release spec modelled on spec 23, patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. Release only after every E10 spec has merged into `claude/review`.
+	- Owner, 2026-11-10: "work on it and release a new version asap" (E9), "epic go" on D53 to D60.
+	- Held by the owner 2026-11-10 ("Hold.", after a side-agent note): E10 merges into `claude/review` only; the owner reviews the home title, the rewritten docs copy and the comparison page on the preview deploy first, then says release. The release spec is written then and joins the next epic.
 - [x] **D62** Home script target follows the home components; the PostHog load is its own finding #E10 #R4
 	- Source: Q30. D59's 450 KB script target on `/` is unreachable inside `components/dev-home/**`: measured 711 KB before, 580 KB on branch `v0.9/home-javascript` (b2bcf60d), blocking time 158 ms (under the 300 ms target); all but 19 KB of the first load is the shared root layout (posthog-js 114 KB, react-dom 72 KB), out of spec 30's scope.
 	- The branch merges as it stands. D59's home target becomes: script transfer on `/` under 600 KB and lab TBT under 300 ms, both met at b2bcf60d. Visible behaviour unchanged (nav and hero links prefetch on hover, touch or focus instead of in the viewport; the demo table still loads on mount, which the docs check "icons: the pick survives a reload" needs).
