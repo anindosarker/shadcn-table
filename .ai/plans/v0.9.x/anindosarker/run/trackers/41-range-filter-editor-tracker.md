@@ -4,6 +4,9 @@ Status: running
 Branch `v0.9/filter-editor-fixes`, worktree 03 (milestone Filter editor fixes: specs 41, 42, 43, 44, 45)
 Checks:
 - Check: P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Range Editor Inputs Fit And Fill"` at 4a7d9d23: fail as required on base, radix and aria, identical line: `Max 905..1043 in editor 746..1006: expected 1043 to be less than or equal to 1007` for Time, Date and Date Time; Number passes (its fields keep `min-w-18`)
+- Check: `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (the four `RangeEditorInputsFitAndFill` cases and `ChipEditorKeepsWidth` among them) after Task 2: pass, 20 of 20 on base, radix and aria
+- Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` after Task 2: pass
+- Screenshots after the change, time range editor (308 px, both fields inside): `41-shots/after-base-time-range-editor.png`, `41-shots/after-radix-time-range-editor.png`, `41-shots/after-aria-time-range-editor.png`
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
@@ -14,4 +17,5 @@ Checks:
 - Cause: the input works after spec 39 on the three bases (typed date-like values held until Enter or blur, no commit per key); the failure the owner saw in 0.9.3 was the per-key commit spec 39 removed, and the clipped Max field. No input code changes (1.6.3).
 - Milestone 40 finding (digit typing clears the date field and commits null): not reproduced from the first segment; reproduced only by typing from the segment a click lands on (year), where Chromium keeps the value empty until every segment is filled and the blur commits null for that bound. The fix of this milestone does not change that (native segment editing); `RangeEditorInputsFitAndFillDate` and `...DateTime` cover date and datetime digit typing from the first segment.
 
-- Task 1 play and record: done
+- Task 1 play and record: done (4ebf2742)
+- Task 2 width (`filterEditorClassName(column)`, 308 px for a date-like range, 260 px otherwise) and input (no change, see record): done
