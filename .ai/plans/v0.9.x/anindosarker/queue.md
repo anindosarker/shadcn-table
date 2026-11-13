@@ -14,6 +14,8 @@ kanban-plugin: basic
 	- Date column in Between or Between Inclusive mode: typing digit by digit clears the field on the first key and commits null for that bound; a pasted or picked value works. Seen by the run on the react-query example, Base UI, production build at 57966fdf; the range fields are library code (`ST_FilterRangeFields.tsx`). The Filter editor fixes milestone (spec 41, 1.6.3) is told to check whether its input fix covers it.
 - [ ] **Q81** The React Query example offers every filter mode on text columns but its server only does contains
 	- `apps/shadcn-table-docs/app/api/data/route.ts` and `examples/<base>/react-query/TS.tsx`: spec 40 sent and limited modes for Last Login only, as scoped; the text columns still show all modes and ignore the choice.
+- [ ] **Q83** On React Aria the filter chip editor now closes when the page scrolls
+	- Spec 43 (merged 4b0d182d) made the React Aria chip, picker and header filter editors non-modal so Clear filters is clickable with an editor open (D83); a non-modal editor no longer locks page scroll, closes on scroll and is no longer a dialog. Base UI keeps its editor open on scroll. Keep, or rule a different fix for Clear filters.
 
 ## Decided
 
