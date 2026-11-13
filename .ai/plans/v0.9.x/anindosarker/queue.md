@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #run-E11
-	- Found by the D78 browser check: Radix closes it; on React Aria the open editor also blocks the Clear filters button until a click outside.
 - [ ] **Q70** The new live demo's Status column is partly cut off at the docs page width #run-E11
 	- D78 demo on /docs/getting-started/usage and /introduction: six columns need the table's horizontal scroll at the docs content width; screenshots /tmp/e11-richer-demo/{base,radix,aria}-{usage,introduction}.png.
 - [ ] **Q71** The Filter Mode line in the filter popover sits too tight under the input #owner
@@ -242,6 +240,9 @@ kanban-plugin: basic
 - [x] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
 	- Decision: D82
 	- Found by the D78 browser check: it opens only on ArrowDown or the chevron; Base UI and Radix open on click.
+- [x] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #run-E11
+	- Decision: D83
+	- Found by the D78 browser check: Radix closes it; on React Aria the open editor also blocks the Clear filters button until a click outside.
 
 ## Later
 

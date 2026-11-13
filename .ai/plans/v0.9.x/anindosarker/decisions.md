@@ -801,3 +801,8 @@ index e1645117..e67a5482 100644
 
 - Today it opens only on ArrowDown or the chevron; Base UI and Radix open on click (run E11 browser check of the D78 demo). Fix: React Aria opens on click like the other two bases. Owner, 2026-11-13: "decision is to fix it".
 - Source: Q68
+
+### D83 Escape closes the filter chip editor after a select value is picked, on the three bases
+
+- Today Radix closes it; Base UI and React Aria leave the editor open, and on React Aria the open editor blocks the Clear filters button until a click outside (run E11 browser check of the D78 demo). Fix: Escape closes the editor on Base UI and React Aria as on Radix, and Clear filters stays clickable. Owner, 2026-11-13: "fix. k".
+- Source: Q69
