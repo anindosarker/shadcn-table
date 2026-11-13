@@ -707,8 +707,7 @@ export async function liveDemoFilters(page, w, check) {
   );
   check(
     'live-demo: ten columns in order',
-    texts.length === headers.length &&
-      headers.every((h, i) => texts[i] === h),
+    texts.length === headers.length && headers.every((h, i) => texts[i] === h),
     texts.join(' | '),
   );
   const size = page.viewportSize();
