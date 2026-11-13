@@ -69,7 +69,9 @@ CHANGELOG.md (P9)                                         ← #### Spec 42 under
 
 ### 2.1 Milestones
 
-### Milestone: React Aria multi-select opens on click
+#### Work, in milestone `Filter editor fixes` of spec 41 (was milestone: React Aria multi-select opens on click)
+
+Regrouped 2026-11-13 by the lead: this spec's work runs as a task of the milestone `Filter editor fixes` (spec 41), which owns the files; the regenerate, format and Local CI steps run once there. The lines below describe the work only.
 
 - Files owned: `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/stories/features/FilterChips.stories.tsx`, `test/docs-e2e/lib/helpers.mjs`
 - Depends on: 41

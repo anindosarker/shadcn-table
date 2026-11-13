@@ -56,7 +56,9 @@ CHANGELOG.md (P9)          ← #### Spec 45 under ### Changed
 
 ### 2.1 Milestones
 
-### Milestone: Filter Mode caption gap
+#### Work, in milestone `Filter editor fixes` of spec 41 (was milestone: Filter Mode caption gap)
+
+Regrouped 2026-11-13 by the lead: this spec's work runs as a task of the milestone `Filter editor fixes` (spec 41), which owns the files; the regenerate, format and Local CI steps run once there. The lines below describe the work only.
 
 - Files owned: `packages/shadcn-table/registry/base/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx`
 - Depends on: 44

@@ -77,8 +77,10 @@ CHANGELOG.md (P9)                       ← #### Spec 46 under ### Docs
 
 ### Milestone: Live demo ten columns
 
+Regrouped 2026-11-13 by the lead: no dependency on spec 42; `test/docs-e2e/lib/helpers.mjs` keeps its ArrowDown fallback here, the milestone `Filter editor fixes` (spec 41) removes it afterwards.
+
 - Files owned: `apps/shadcn-table-docs/examples/base/live-demo/TS.tsx`, `apps/shadcn-table-docs/examples/base/live-demo/makeData.ts`, `apps/shadcn-table-docs/examples/radix/live-demo/TS.tsx`, `apps/shadcn-table-docs/examples/radix/live-demo/makeData.ts`, `apps/shadcn-table-docs/examples/aria/live-demo/TS.tsx`, `apps/shadcn-table-docs/examples/aria/live-demo/makeData.ts`, `test/docs-e2e/lib/helpers.mjs`
-- Depends on: 42
+- Depends on: none
 - Review: none
 - Local CI: `pnpm test typecheck --base base`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`, `pnpm test docs-e2e --base radix`, `pnpm test docs-e2e --base aria`
 - Task 1: The data and the columns (1.6.1, 1.6.2) in the Base UI copy, copied to Radix and React Aria. Checks: the two `diff -r` lines of 1.2; `pnpm --filter shadcn-table-docs types:check`
