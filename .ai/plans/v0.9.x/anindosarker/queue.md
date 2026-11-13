@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q71** The Filter Mode line in the filter popover sits too tight under the input #owner
-	- Owner 2026-11-13, live 0.9.3, /docs/examples/popover-filters on Base UI (screenshot): "need to increase a bit padding for the line that says filter fuzzy".
 - [ ] **Q72** The home page's big heading is only the name and says nothing about tables #owner
 	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
 - [ ] **Q73** The time range filter's second input is cut off in the chip editor #owner
@@ -247,6 +245,9 @@ kanban-plugin: basic
 	- Decision: D84
 	- D78 demo on /docs/getting-started/usage and /introduction: six columns need the table's horizontal scroll at the docs content width; screenshots /tmp/e11-richer-demo/{base,radix,aria}-{usage,introduction}.png.
 	- Owner 2026-11-13 (screenshot, live Usage page, React Aria, wide window): all six columns show in full. Owner: "add more columns in intro and usage instead to show the behaviours for multi columns".
+- [x] **Q71** The Filter Mode line in the filter popover sits too tight under the input #owner
+	- Decision: D85
+	- Owner 2026-11-13, live 0.9.3, /docs/examples/popover-filters on Base UI (screenshot): "need to increase a bit padding for the line that says filter fuzzy".
 
 ## Later
 

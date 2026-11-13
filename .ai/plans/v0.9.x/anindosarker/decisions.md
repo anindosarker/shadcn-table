@@ -811,3 +811,8 @@ index e1645117..e67a5482 100644
 
 - The D78 demo (`examples/{base,radix,aria}/live-demo`) has six columns: First Name, Last Name, State, Age, Joined, Status. It gains Email, City, Department (select filter) and Salary (range filter), ten in all, so the table scrolls sideways at the docs width on purpose and pinning, hiding and reordering have columns to act on. No column is pinned by default. Checks as D78: both pages render it on the three bases and each non-text filter opens and filters rows. Owner, 2026-11-13: "add more columns in intro and usage instead to show the behaviours for multi columns"; "1 k".
 - Source: Q70
+
+### D85 The Filter Mode line sits 6 px under the filter input
+
+- The caption "Filter Mode: <mode>" has `mt-0.75` (3 px) in nine places: `ST_FilterTextField.tsx`, `ST_FilterRangeFields.tsx`, `ST_FilterRangeSlider.tsx` on Base UI, Radix and React Aria. It becomes `mt-1.5` (6 px); `leading-[0.8rem]` and the other classes stay. Owner, 2026-11-13: "need to increase a bit padding for the line that says filter fuzzy"; "1 k".
+- Source: Q71
