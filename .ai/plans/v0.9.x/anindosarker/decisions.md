@@ -839,3 +839,7 @@ index e1645117..e67a5482 100644
 - Proof (P11): plays that fail before and pass after: type then Clear filters (the text does not come back), type then Enter (applies at once), a half-typed year in a date filter (no filter applied). `RenderCounts.stories.tsx` stays green. The `debounce` util is removed if nothing else uses it.
 - Owner, 2026-11-13: "The filters apply way faster than I type"; "add a debounce hook. and then implement. this needs good planning"; "1 k" (own hook, with the option).
 - Source: Q74
+
+### D89 Release 0.9.4 ships E12
+
+- E12 (D71, D81 to D88, and the home heading decision if the owner adds it) ships as 0.9.4 in the same epic: a release spec modelled on spec 38 (`plan/specs/38-release-0-9-3.md`), patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; no preview stop, except that the D71 comparison table is read by the owner in chat before its milestone merges. Owner, 2026-11-13: "yes add" (on "add release 0.9.4" to E12).
