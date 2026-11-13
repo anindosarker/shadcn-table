@@ -55,7 +55,7 @@ Updated: 2026-11-13 21:21
 | E11 38 Release PR 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |
 | E11 38 After release 0.9.3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
 | E12 39 Filter debounce hook |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
-| E12 40 Date filter compare |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
+| E12 40 Date filter compare |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E12 40 React Query route dates |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |
 | E12 41 Range filter editor |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |
 | E12 42 React Aria multi-select opens on click |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |
@@ -67,11 +67,11 @@ Updated: 2026-11-13 21:21
 | E12 48 Integration 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
 | E12 48 Release PR 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |
 | E12 48 After release 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
-| E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
+| E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Docs build memory (Q76) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |  |
+| fix Docs build memory (Q76) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
 | fix Filter mode menu anchor (Q62) | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Filter mode menu during popover animation (Q65, D80) |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
 | fix Guides copy accuracy (Q32) |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
