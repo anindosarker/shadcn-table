@@ -713,6 +713,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             // React Aria Select raises no ChangeEvent, so a user onChange cannot fire.
             <Select
               aria-label={filterPlaceholder}
+              // The root spans the input group, so the trigger's chevron sits
+              // at the field's right end (the part's default is w-fit).
+              className="w-full min-w-0 flex-1"
               isDisabled={!!filterChipLabel || textFieldProps.disabled}
               onChange={(key) => handlePick(key ?? '')}
               placeholder={filterPlaceholder}

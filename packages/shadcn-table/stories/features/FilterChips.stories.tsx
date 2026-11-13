@@ -852,3 +852,38 @@ export const ClearFiltersClickableWithEditorOpen = {
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(4));
   },
 };
+
+// D87: the select filter's chevron sits at the right end of its input.
+export const SelectChevronAtInputEnd = {
+  render: () => (
+    <ShadcnTable columns={selectStatusColumns()} data={data} {...options} />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    const editor = removeFilter.closest<HTMLElement>(
+      '[data-slot="popover-content"]',
+    )!;
+    const chevron = editor.querySelector<SVGElement>(
+      '[data-slot="select-trigger"] svg',
+    );
+    expect(chevron, 'the select chevron').not.toBeNull();
+    const group = chevron!.closest<HTMLElement>('[data-slot="input-group"]')!;
+    await waitFor(() => {
+      const gap =
+        group.getBoundingClientRect().right -
+        chevron!.getBoundingClientRect().right;
+      expect(
+        gap,
+        `chevron ${gap} px from the input's right end`,
+      ).toBeLessThanOrEqual(12);
+    });
+  },
+};

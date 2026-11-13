@@ -9,6 +9,7 @@ Checks:
 - Screenshots after the change, time range editor (308 px, both fields inside): `41-shots/after-base-time-range-editor.png`, `41-shots/after-radix-time-range-editor.png`, `41-shots/after-aria-time-range-editor.png`
 - Check (spec 42): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`MultiSelectOpensOnClick`, `MultiSelectArrayModes` and `ChipEditorKeepsWidth` without the ArrowDown fallback) after Task 3: pass, 21 of 21 on base, radix and aria; `pnpm test typecheck --base aria`: pass
 - Check (spec 43): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`EscapeClosesEditorAfterSelectPick`, `ClearFiltersClickableWithEditorOpen`, `RemoveAndClear`, `SelectClearBesideChevron` among them) after Task 4: pass, 23 of 23 on base, radix and aria; `pnpm test typecheck --base base`, `--base aria`: pass
+- Check (spec 44): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`SelectChevronAtInputEnd`, `SelectClearBesideChevron` among them) after Task 5: pass, 24 of 24 on base, radix and aria; `pnpm test typecheck --base aria`: pass
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
@@ -22,7 +23,8 @@ Checks:
 - Task 1 play and record: done (4ebf2742)
 - Task 2 width (`filterEditorClassName(column)`, 308 px for a date-like range, 260 px otherwise) and input (no change, see record): done (052deb67)
 - Task 3 spec 42, React Aria multi-select opens on click, docs E2E fallback removed: done (95ec9676)
-- Task 4 spec 43, Escape closes the editor after a select pick, Clear filters clickable on React Aria: done
+- Task 4 spec 43, Escape closes the editor after a select pick, Clear filters clickable on React Aria: done (0f0f9f54)
+- Task 5 spec 44, React Aria select chevron at the input's end: done
 
 ## Attention
 
