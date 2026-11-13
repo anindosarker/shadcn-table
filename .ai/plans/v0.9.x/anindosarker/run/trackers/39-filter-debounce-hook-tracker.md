@@ -35,6 +35,10 @@ Checks:
 - Check: `pnpm test storybook-tests --base base`, `--base radix`, `--base aria` (one after another) at fc3529b6: pass 630 each
 - Check: `pnpm test docs-e2e --base base --url http://localhost:5340` (own `next start` of the production build) at fc3529b6: pass (getting-started 233, api 109, guides 701, examples 939)
 - Check: P7, `git diff origin/claude/review -- …/index.ts …/types.ts | grep '^-export'` at fc3529b6: prints nothing
+- Check (verifier): Local CI and 2.2 not rerun at 7bdc1d31, `git diff --name-only fc3529b6..HEAD` touches only `.ai/`; the fc3529b6 lines above stand
+- Check (verifier): Acceptance (1.2), `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx stories/features/Search.stories.tsx -t "<the five plays>"` on base, radix, aria at 7bdc1d31: pass (5 of 5 each); the P11 failures of the four pre-change plays are recorded above, `CustomFilterDebounce` needs the new option (Task 1)
+- Check (verifier): `grep -rn "debounce(" packages/shadcn-table/registry/*/components/ui/shadcn-table` at 7bdc1d31: prints nothing; `RenderCounts.stories.tsx` not in the branch diff
+- Check (verifier): files against Files owned, 1.4 and 1.6 at 7bdc1d31: extra `registry/{base,radix,aria}/…/components/toolbar/ST_FilterChips.tsx` and `test/docs-e2e/lib/api.mjs` (both listed unchanged in 1.6; see Attention)
 
 - Task 1 plays first: done (5b7254f9)
 - Task 2 hook, column filter field, global search: done (35c9fc00); the three options and their defaults (1.6.5) landed here, since the field reads them
