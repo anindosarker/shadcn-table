@@ -33,17 +33,18 @@ export function HomePage() {
           <Dune className="v12-field" fps={9} />
           <div className="v4-shell v12-hero-copy">
             <p className="v7-eyebrow v12-eyebrow">
-              <span>{'//'}</span> The open-source React data table for
-              shadcn/ui, built on TanStack Table.
+              <span>{'//'}</span> The open-source shadcn data table for React,
+              built on TanStack Table.
             </p>
             <h1 id="v12-title" className="v4-display v12-h1">
               shadcn<span className="v7-wordmark-dash">-</span>table
             </h1>
             <p className="v12-pitch">
-              A production-ready table library built with{' '}
+              A production-ready data table library built with{' '}
               <span className="v12-accent">TanStack Table</span> and{' '}
               <span className="v12-accent">shadcn/ui</span>. Sorting, filtering,
-              grouping, pinning, virtualization, and more, all built in.
+              pagination, grouping, pinning, virtualization, and more, all built
+              in.
             </p>
             <AgentBar
               prompt={agentPrompt}
