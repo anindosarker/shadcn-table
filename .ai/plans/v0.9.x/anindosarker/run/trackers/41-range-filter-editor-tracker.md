@@ -23,6 +23,10 @@ Checks:
 - Check (verifier, Acceptance 45): the two `grep` lines of spec 45 1.2 at 245a14be: nothing, 9
 - Check (verifier): not rerun, valid at df03b7f1 (only `.ai/` changed since): `pnpm test lint`, `pnpm test validate-repo`, `pnpm test storybook-tests --base aria`, `pnpm test docs-e2e --base aria` (the docs E2E part of spec 42's Acceptance)
 - Check (verifier, P11): the before-the-change failures are recorded for specs 41 (this tracker), 42, 43 and 44 (their trackers); spec 45 has no play (no behaviour change), its captures are in its tracker
+- Check (fix of the verifier's radix failure): `ClearFiltersClickableWithEditorOpen` hit-tests the Clear filters button (`document.elementFromPoint` at its centre) and clicks without a time limit, in place of the 2000 ms click timeout it swallowed; P11 rerun with the aria `ST_FilterChips.tsx` and `ST_HeaderFilterEditor.tsx` of 95ec9676: fail, `a click on Clear filters hits BODY: expected false to be true`
+- Check: `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` at 0745a6d1: pass, 24 of 24 on base, radix and aria
+- Check (Local CI): `pnpm test storybook-tests --base radix`, `--base base`, `--base aria` at 0745a6d1: pass, 651 of 651 each
+- Check (Local CI): `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 0745a6d1: pass (tsc clean); `pnpm test lint` at 0745a6d1: pass (9 warnings, outside this milestone); `pnpm test validate-repo` at 0745a6d1: pass
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
@@ -39,11 +43,10 @@ Checks:
 - Task 4 spec 43, Escape closes the editor after a select pick, Clear filters clickable on React Aria: done (0f0f9f54)
 - Task 5 spec 44, React Aria select chevron at the input's end: done (f13027c7)
 - Task 6 spec 45, Filter Mode caption `mt-1.5` in nine lines, captures: done (348b684c)
+- Fix of the verifier's radix failure, Clear filters play hit test: done (0745a6d1)
 - Task 7 regenerate (`pnpm registry:build`, `pnpm lib:install` per base), `pnpm format`, changelog blocks for specs 41 to 45, Local CI: done (fbfb5192, df03b7f1)
 
 ## Attention
-
-- `ClearFiltersClickableWithEditorOpen` fails on radix in the full `pnpm test storybook-tests --base radix` run (twice at 245a14be) but passes when its story file runs alone, with radix code unchanged since the passing run at fbfb5192; the play's 2000 ms timeout on the Clear filters click, whose error it swallows, looks too tight under the full suite and needs a fix before the merge.
 
 - Spec 42 1.6.2 names `menuTrigger="focus"`; it also opens the React Aria list when the chip editor focuses the input on open, which hides the editor's other controls and breaks `MultiSelectArrayModes`, so the fix opens the list on a click through the ComboBox state (`ComboBoxStateContext`) instead; revert to `menuTrigger="focus"` if the owner prefers the list open on editor open.
 - Spec 43: the React Aria chips mode editor, now non-modal (`isNonModal`, as 1.6.3 asks), closes when the page scrolls (React Aria's rule for non-modal popovers) where it locked the page's scroll before; Base UI keeps it open on scroll. The docs E2E helpers now click the Filter button after scrolling it into view and click inside the open editor without Playwright's pre-click scroll.
