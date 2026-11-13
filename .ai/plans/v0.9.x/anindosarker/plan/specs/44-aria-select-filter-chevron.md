@@ -1,4 +1,5 @@
 # 44: React Aria select filter chevron at the right end
+- Epic: E12
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 

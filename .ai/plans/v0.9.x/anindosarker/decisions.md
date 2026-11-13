@@ -686,6 +686,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-13: technical, no visible change.
 
 ### D71 Comparison page moves last in Getting Started and compares the searched names
+[E12]
 
 - Amends D60 (built, spec 31 merged; patched forward). `content/docs/getting-started/comparison.mdx` sits second in Getting Started and compares against tablecn, Material React Table and the shadcn data-table recipe. Google autocomplete, 2026-11-12: "tanstack table vs shadcn table", "shadcn table vs tanstack table", "shadcn data table vs tanstack table", "material react table vs tanstack / mui datagrid / ag grid" and "ag grid alternative" exist; "tablecn vs" and "tablecn alternative" return nothing.
 - `content/docs/getting-started/meta.json` becomes `introduction, install, usage, agents, comparison` (the placement TanStack Query, Router, Form, Zustand and Jotai use: one Comparison entry near the end of Getting Started).
@@ -786,6 +787,7 @@ index e1645117..e67a5482 100644
 - Source: Q65
 
 ### D81 Date filters compare dates, also when the column holds Date values
+[E12]
 
 - With `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`: "greater than" keeps every row, "less than" none (run E11, card Q67). Seen live by the owner on 0.9.3, /docs/examples/react-query: "after 11/02/2025" kept rows dated 9/20/2025, 2/18/2025 and 9/28/2025.
 - Fix in the next epic, not as a patch release: date filter modes compare date values for `Date` accessors and for ISO string accessors. The spec follows one lookup: the exact cause in the filter functions, which modes are affected (equals, between), what Material React Table does, and whether the react-query and other remote examples filter in their own mock server code and need the same fix there.
@@ -798,36 +800,43 @@ index e1645117..e67a5482 100644
 - Source: Q67
 
 ### D82 On React Aria the multi-select filter list opens on a click into its input
+[E12]
 
 - Today it opens only on ArrowDown or the chevron; Base UI and Radix open on click (run E11 browser check of the D78 demo). Fix: React Aria opens on click like the other two bases. Owner, 2026-11-13: "decision is to fix it".
 - Source: Q68
 
 ### D83 Escape closes the filter chip editor after a select value is picked, on the three bases
+[E12]
 
 - Today Radix closes it; Base UI and React Aria leave the editor open, and on React Aria the open editor blocks the Clear filters button until a click outside (run E11 browser check of the D78 demo). Fix: Escape closes the editor on Base UI and React Aria as on Radix, and Clear filters stays clickable. Owner, 2026-11-13: "fix. k".
 - Source: Q69
 
 ### D84 The live demo on Introduction and Usage has ten columns, so wide-table behavior shows
+[E12]
 
 - The D78 demo (`examples/{base,radix,aria}/live-demo`) has six columns: First Name, Last Name, State, Age, Joined, Status. It gains Email, City, Department (select filter) and Salary (range filter), ten in all, so the table scrolls sideways at the docs width on purpose and pinning, hiding and reordering have columns to act on. No column is pinned by default. Checks as D78: both pages render it on the three bases and each non-text filter opens and filters rows. Owner, 2026-11-13: "add more columns in intro and usage instead to show the behaviours for multi columns"; "1 k".
 - Source: Q70
 
 ### D85 The Filter Mode line sits 6 px under the filter input
+[E12]
 
 - The caption "Filter Mode: <mode>" has `mt-0.75` (3 px) in nine places: `ST_FilterTextField.tsx`, `ST_FilterRangeFields.tsx`, `ST_FilterRangeSlider.tsx` on Base UI, Radix and React Aria. It becomes `mt-1.5` (6 px); `leading-[0.8rem]` and the other classes stay. Owner, 2026-11-13: "need to increase a bit padding for the line that says filter fuzzy"; "1 k".
 - Source: Q71
 
 ### D86 Range filter editors show both inputs in full and accept input
+[E12]
 
 - Live 0.9.3, /docs/examples/filter-variants, Base UI, Departure Time chip, mode between inclusive: the two time inputs sit side by side, the second runs past the editor's right edge (no clock icon), and the owner could not fill the inputs at all. Fix: in the chip editor both inputs of a range filter fit inside the editor and accept input, on the three bases, for time, date, datetime and number ranges. The cause of the failed input is not looked up; the spec finds it first. Proof (P11): a play that fills both inputs of a time range in the chip editor and asserts both boxes lie inside the editor's box. Owner, 2026-11-13: "This filter is broken"; "I wasn't able to put inputs at all, need to fix the UI as well"; "Q73 1k".
 - Source: Q73
 
 ### D87 On React Aria the select filter's chevron sits at the right end of its input
+[E12]
 
 - Live 0.9.3, /docs/examples/filter-variants, React Aria, City chip editor, mode equals: the chevron follows the placeholder "Filter by City" in the middle of the input. Fix: the chevron sits at the input's right end, as on Base UI and Radix (the spec compares the three). Owner, 2026-11-13: "arrow in the middle, ui issue"; "1 k".
 - Source: Q75
 
 ### D88 Typed filters use one debounce hook with commit and cancel rules
+[E12]
 
 - Today typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce created once per mount (`ST_FilterTextField.tsx:212-232`, 200 ms, 400 ms with `manualFiltering`); global search has its own (`ST_GlobalFilterTextField.tsx:67-77`, 250 or 500 ms); the util (`shared/utils/utils.ts:60-77`) has `clear()` and no flush. A 1:1 port of Material React Table v3.
 - Problems: filters fire mid-typing; native date and time inputs emit half-typed values, so a pause over 200 ms applies a wrong date; the field's clear button, Clear filters (`ST_FilterChips.tsx:277`), the column menu clear (`ST_ColumnActionMenu.tsx:157`), a stored view load and global search clear or Escape do not cancel a pending call, which re-applies the old text; a pending call fires after unmount; Enter and blur do not commit.
@@ -841,10 +850,12 @@ index e1645117..e67a5482 100644
 - Source: Q74
 
 ### D89 Release 0.9.4 ships E12
+[E12]
 
 - E12 (D71, D81 to D88, and the home heading decision if the owner adds it) ships as 0.9.4 in the same epic: a release spec modelled on spec 38 (`plan/specs/38-release-0-9-3.md`), patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; no preview stop, except that the D71 comparison table is read by the owner in chat before its milestone merges. Owner, 2026-11-13: "yes add" (on "add release 0.9.4" to E12).
 
 ### D90 Home hero: the name stays the heading; the line above and the sentence below carry the search words
+[E12]
 
 - Amends D73 (built, live in 0.9.3) for the hero line and adds the hero sentence. The h1 stays `shadcn-table`. The line above it reads `The open-source shadcn data table for React, built on TanStack Table.` (was `The open-source React data table for shadcn/ui, built on TanStack Table.`). The sentence below it reads `A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in.` (was `A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.`). The title tag and the meta description of D73 are unchanged. Chosen by the owner after the SEO research in session "v0.9.x heading". Checks: `curl` of `/` on a production build shows both texts exactly; `pnpm test docs-e2e --base base` green. Owner, 2026-11-13: "this is what I picked for 72".
 - Source: Q72
