@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q72** The home page's big heading is only the name and says nothing about tables #owner
-	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
-	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
 
 ## Decided
 
@@ -256,6 +253,10 @@ kanban-plugin: basic
 	- Lookup 2026-11-13 (code read): typed column filters (text, number, autocomplete, date, datetime, time, both range ends) share one debounce in ST_FilterTextField.tsx:212-232, 200 ms or 400 ms with manualFiltering; native date and time inputs emit partial values per segment, so a pause over 200 ms commits a half-typed date. Global search: ST_GlobalFilterTextField.tsx:67-77, 250 or 500 ms. Select, checkbox, slider (commit on release) and edit cells (blur or Enter) are fine.
 	- Lookup: the debounce util (shared/utils/utils.ts:60-77) has clear() but no flush; it is created once per mount, so callback and wait are frozen. Proven bugs: the field's clear button, Clear filters, the column menu clear, a stored view load and global search clear or Escape do not cancel a pending call, which then re-applies the old text; a pending call fires after unmount; Enter and blur do not commit. A 1:1 port of Material React Table v3; its v9 port uses useDebouncedCallback from @tanstack/react-pacer. No debounce hook and no wait option exist in the library; TanStack Table 9.3.1 has none. Hooks are useST_<Name>.ts per base with a registry.json entry each.
 	- Lookup: 11 story files type into filters and rely on waitFor's 1000 ms default, so waits up to about 800 ms stay green; RenderCounts.stories.tsx counts renders after typing.
+- [x] **Q72** The home page's big heading is only the name and says nothing about tables #owner
+	- Decision: D90
+	- Owner 2026-11-13, live 0.9.3 home (screenshot): "I don't like this title. Maybe we should use a better title like the one that usage words like table, data table"; asked for suggestions.
+	- Owner 2026-11-13: "this needs more thoughtful findings"; SEO research and the discussion run in window "v0.9.x heading"; it reports HEADING Q72 to the lead, who records the decision.
 
 ## Later
 

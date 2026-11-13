@@ -843,3 +843,8 @@ index e1645117..e67a5482 100644
 ### D89 Release 0.9.4 ships E12
 
 - E12 (D71, D81 to D88, and the home heading decision if the owner adds it) ships as 0.9.4 in the same epic: a release spec modelled on spec 38 (`plan/specs/38-release-0-9-3.md`), patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. The release milestones run as soon as every other milestone of the epic has merged and its checks pass; no preview stop, except that the D71 comparison table is read by the owner in chat before its milestone merges. Owner, 2026-11-13: "yes add" (on "add release 0.9.4" to E12).
+
+### D90 Home hero: the name stays the heading; the line above and the sentence below carry the search words
+
+- Amends D73 (built, live in 0.9.3) for the hero line and adds the hero sentence. The h1 stays `shadcn-table`. The line above it reads `The open-source shadcn data table for React, built on TanStack Table.` (was `The open-source React data table for shadcn/ui, built on TanStack Table.`). The sentence below it reads `A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in.` (was `A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.`). The title tag and the meta description of D73 are unchanged. Chosen by the owner after the SEO research in session "v0.9.x heading". Checks: `curl` of `/` on a production build shows both texts exactly; `pnpm test docs-e2e --base base` green. Owner, 2026-11-13: "this is what I picked for 72".
+- Source: Q72
