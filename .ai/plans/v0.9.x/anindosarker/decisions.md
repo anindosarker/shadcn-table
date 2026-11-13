@@ -805,7 +805,7 @@ index e1645117..e67a5482 100644
 - Today it opens only on ArrowDown or the chevron; Base UI and Radix open on click (run E11 browser check of the D78 demo). Fix: React Aria opens on click like the other two bases. Owner, 2026-11-13: "decision is to fix it".
 - Source: Q68
 
-### D83 Escape closes the filter chip editor after a select value is picked, on the three bases
+### D83 (superseded by D97) Escape closes the filter chip editor after a select value is picked, on the three bases
 [E12]
 
 - Today Radix closes it; Base UI and React Aria leave the editor open, and on React Aria the open editor blocks the Clear filters button until a click outside (run E11 browser check of the D78 demo). Fix: Escape closes the editor on Base UI and React Aria as on Radix, and Clear filters stays clickable. Owner, 2026-11-13: "fix. k".
@@ -898,4 +898,10 @@ index e1645117..e67a5482 100644
 
 ### D97 React Aria filter popups are modal again as in 0.9.3; the Escape fix stays
 
+- Supersedes D83.
+- Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
+- Fix: remove `isNonModal` from the three popups and the code added only for it (focus on open in `focusFilterInput`, the two `shouldCloseOnInteractOutside` filters, the `clickInView` and `clickInPlace` helpers in `test/docs-e2e/lib/helpers.mjs` where nothing else needs them), in the registry and the generated docs copies. Not a revert of the commits: the `closeOnEscape` change (Escape closes the editor after a select pick, base and aria) and every other E12 fix stay.
+- React Aria again: page locked while a popup is open, the popup never closes on scroll, the first outside click only closes it. Clear filters takes two clicks there with a popup open; D83's "Clear filters stays clickable" is dropped for React Aria. The play `ClearFiltersClickableWithEditorOpen` no longer asserts one click on React Aria. Base UI and Radix are unchanged.
+- Checks on React Aria: `EscapeClosesEditorAfterSelectPick` passes with the modal popup; a popup stays open and the page does not scroll while it is open; the select filter's arrow sits at the right edge of its field (owner screenshot of live 0.9.3, `/docs/examples/filter-variants`, City chip), and a misplaced arrow becomes its own card. CHANGELOG 0.9.4 drops the non-modal lines.
+- Owner, 2026-11-14: "The old behavior was completely fine", "don't just blindly revert code", "k".
 - Source: Q83
