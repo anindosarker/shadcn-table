@@ -23,17 +23,13 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
-#### Spec 49 Home hero wording
-
-- The home hero line above the `shadcn-table` heading reads "The open-source shadcn data table for React, built on TanStack Table." and the sentence below it reads "A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in." (D90). The heading, the title tag and the meta description are unchanged.
-
-#### Spec 40 Date filter compare
-
-- `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
-
 #### Spec 45 Filter Mode caption gap
 
 - The "Filter Mode: <mode>" caption under a filter input sits 6 px below it instead of 3 px (`mt-1.5`), in the text field, the range fields and the range slider on the three bases (D85).
+
+#### Spec 49 Home hero wording
+
+- The home hero line above the `shadcn-table` heading reads "The open-source shadcn data table for React, built on TanStack Table." and the sentence below it reads "A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in." (D90). The heading, the title tag and the meta description are unchanged.
 
 #### Fix D91
 
@@ -45,14 +41,11 @@ publishes the section as the GitHub release notes.
 
 - Date, datetime and time filters now work on columns that hold `Date` values (D81): `equals`, `notEquals`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between` and `betweenInclusive` read a `YYYY-MM-DD` filter value as local midnight and compare by calendar day, an `HH:mm` value by time of day and a `YYYY-MM-DDTHH:mm` value to the minute (to the second when the value has seconds). Before, they compared the filter string with the date's text form, so "greater than" kept every row and "less than" none. A string row value holding a full ISO date and time (`2025-11-02T14:15:00.000Z`) compares the same way, as a date. Filter values stay strings; number columns and date-only `YYYY-MM-DD` string columns filter as before (three bases).
 - A column with `filterVariant: 'date'`, `'datetime'` or `'time'` and no `filterFn` filters by `equals` (by day for a date) instead of `fuzzy`, which matched no `Date` row.
+- `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
 
 #### Spec 40 React Query route dates
 
 - The React Query example's Last Login filter shows only matching rows in every mode it offers (D81). The example now offers the eight date comparison modes and sends the chosen mode with each filter; its mock route compares by that mode (it always kept later dates before), reads a `YYYY-MM-DD` value as local midnight, compares by calendar day, and keeps its random `lastLogin` dates for the life of the server instead of drawing new ones on every request (three bases).
-
-#### Fix Q76
-
-- The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
 
 #### Spec 41 Range filter editors fit and accept input
 
@@ -70,6 +63,10 @@ publishes the section as the GitHub release notes.
 #### Spec 44 React Aria select filter chevron
 
 - On React Aria the select filter's chevron sits at the right end of its input instead of right after the placeholder (D87).
+
+#### Fix Q76
+
+- The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
 
 ### Docs
 
