@@ -1,6 +1,6 @@
 # 42: React Aria multi-select filter opens on click, tracker
 
-Status: running
+Status: merged (4b0d182d)
 Runs in milestone Filter editor fixes, tracker 41-range-filter-editor-tracker.md
 
 - P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Multi Select Opens On Click"` at 052deb67: base pass, radix pass, aria fail: `Unable to find role="option" and name /^Done/`.

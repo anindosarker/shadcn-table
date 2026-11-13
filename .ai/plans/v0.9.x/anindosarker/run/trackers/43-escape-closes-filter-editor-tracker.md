@@ -1,6 +1,6 @@
 # 43: Escape closes the filter editor after a select pick, tracker
 
-Status: running
+Status: merged (4b0d182d)
 Runs in milestone Filter editor fixes, tracker 41-range-filter-editor-tracker.md
 
 - P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Escape Closes Editor After Select Pick"` and `-t "Clear Filters Clickable With Editor Open"`, plays of 95ec9676 on the registry of 95ec9676: `EscapeClosesEditorAfterSelectPick` base fail (`expected <button type="button" …(3)>…(1)</button> to be null`, the Remove filter button stays), radix pass, aria fail (same assertion); `ClearFiltersClickableWithEditorOpen` base pass, radix pass, aria fail (`expected <button …(11)>…(3)</button> to be null`, the chips stay).

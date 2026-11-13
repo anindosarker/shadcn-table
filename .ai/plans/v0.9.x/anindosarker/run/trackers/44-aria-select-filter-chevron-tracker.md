@@ -1,6 +1,6 @@
 # 44: React Aria select filter chevron at the right end, tracker
 
-Status: running
+Status: merged (4b0d182d)
 Runs in milestone Filter editor fixes, tracker 41-range-filter-editor-tracker.md
 
 - P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Select Chevron At Input End"` at 0f0f9f54: base pass, radix pass, aria fail: `chevron 109.953125 px from the input's right end: expected 109.953125 to be less than or equal to 12`.

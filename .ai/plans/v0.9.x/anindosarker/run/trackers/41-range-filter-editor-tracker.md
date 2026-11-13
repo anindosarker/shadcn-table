@@ -1,6 +1,6 @@
 # 41: Range filter editors fit and accept input, tracker
 
-Status: running
+Status: merged (4b0d182d)
 Branch `v0.9/filter-editor-fixes`, worktree 03 (milestone Filter editor fixes: specs 41, 42, 43, 44, 45)
 Checks:
 - Check: P11 before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx -t "Range Editor Inputs Fit And Fill"` at 4a7d9d23: fail as required on base, radix and aria, identical line: `Max 905..1043 in editor 746..1006: expected 1043 to be less than or equal to 1007` for Time, Date and Date Time; Number passes (its fields keep `min-w-18`)
