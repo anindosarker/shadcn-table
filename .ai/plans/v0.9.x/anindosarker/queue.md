@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q67** A date filter does nothing in the chips editor when the column holds real dates #run-E11
-	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
 - [ ] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
 	- Found by the D78 browser check: it opens only on ArrowDown or the chevron; Base UI and Radix open on click.
 - [ ] **Q69** Escape after picking a select filter value leaves the chip editor open on Base UI and React Aria #run-E11
@@ -240,6 +238,9 @@ kanban-plugin: basic
 - [x] **Q29** The llms.txt summary duplicates the home page description #run
 	- Decision: D76
 	- `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
+- [x] **Q67** A date filter does nothing in the chips editor when the column holds real dates #run-E11
+	- Decision: D81
+	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
 
 ## Later
 

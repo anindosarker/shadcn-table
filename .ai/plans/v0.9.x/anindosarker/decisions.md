@@ -784,3 +784,8 @@ index e1645117..e67a5482 100644
 - Runs as a fix milestone added to the running E11 epic, so 0.9.3 ships with it; the changelog gets a `#### Fix` block under `### Fixed`.
 - Owner, 2026-11-13: "2" (fix it in E11, 0.9.3 waits for it).
 - Source: Q65
+
+### D81 Date filters compare dates, also when the column holds Date values
+
+- With `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`: "greater than" keeps every row, "less than" none (run E11, card Q67). Seen live by the owner on 0.9.3, /docs/examples/react-query: "after 11/02/2025" kept rows dated 9/20/2025, 2/18/2025 and 9/28/2025.
+- Source: Q67
