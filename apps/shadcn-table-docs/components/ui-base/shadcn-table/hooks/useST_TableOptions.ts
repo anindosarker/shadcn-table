@@ -36,6 +36,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   tableOptions: ST_TableOptions<TData>,
 ) => ST_DefinedTableOptions<TData> = <TData extends ST_RowData>({
   autoResetExpanded = false,
+  columnFilterDebounceMs = 500,
   columnFilterDisplayMode = 'chips',
   columnResizeDirection,
   columnResizeMode = 'onChange',
@@ -81,6 +82,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableTopToolbar = true,
   enableViewSettings = true,
   getRowCanExpand,
+  globalFilterDebounceMs = 500,
   icons,
   id: idProp,
   layoutMode,
@@ -177,6 +179,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
 
   return {
     autoResetExpanded,
+    columnFilterDebounceMs,
     columnFilterDisplayMode,
     columnResizeDirection,
     columnResizeMode,
@@ -235,6 +238,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
           })) ||
         ((enableExpanding ?? true) && !!row.subRows?.length)),
     getSubRows: (row) => row?.subRows,
+    globalFilterDebounceMs,
     icons: definedIcons,
     id,
     layoutMode,

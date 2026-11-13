@@ -53,29 +53,6 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-export interface Cancelable {
-  clear(): void;
-}
-
-export function debounce<T extends (...args: never[]) => unknown>(
-  func: T,
-  wait = 166,
-): T & Cancelable {
-  let timeout: ReturnType<typeof setTimeout>;
-  function debounced(...args: Parameters<T>) {
-    const later = () => {
-      // @ts-expect-error -- `this` is untyped here
-      func.apply(this, args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  }
-  debounced.clear = () => {
-    clearTimeout(timeout);
-  };
-  return debounced as T & Cancelable;
-}
-
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;
