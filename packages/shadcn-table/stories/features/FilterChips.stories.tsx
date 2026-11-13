@@ -586,3 +586,147 @@ export const SelectClearBesideChevron = {
     });
   },
 };
+
+type Trip = { distance: number; name: string; when: Date };
+
+const trips: Trip[] = [
+  { distance: 5, name: 'Morning run', when: new Date(2025, 2, 1, 8, 30) },
+  { distance: 12, name: 'Lunch ride', when: new Date(2025, 2, 20, 11, 15) },
+  { distance: 30, name: 'Evening trip', when: new Date(2025, 4, 1, 18, 45) },
+];
+
+type RangeVariant = 'date-range' | 'datetime-range' | 'range' | 'time-range';
+
+const rangeColumns = (variant: RangeVariant): ST_ColumnDef<Trip>[] => [
+  { accessorKey: 'name', header: 'Name' },
+  variant === 'range'
+    ? { accessorKey: 'distance', filterVariant: 'range', header: 'Distance' }
+    : {
+        Cell: ({ cell }) => cell.getValue<Date>().toISOString(),
+        accessorFn: (row) => row.when,
+        filterVariant: variant,
+        header: 'When',
+        id: 'when',
+      },
+];
+
+/** Fails when the element's box is not inside the editor's (1 px slack). */
+const expectInside = (element: HTMLElement, editor: HTMLElement) => {
+  const box = element.getBoundingClientRect();
+  const outer = editor.getBoundingClientRect();
+  const label = `${element.getAttribute('aria-label') ?? element.dataset.slot} ${Math.round(box.left)}..${Math.round(box.right)} in editor ${Math.round(outer.left)}..${Math.round(outer.right)}`;
+  expect(box.left, label).toBeGreaterThanOrEqual(outer.left - 1);
+  expect(box.right, label).toBeLessThanOrEqual(outer.right + 1);
+  expect(box.top, label).toBeGreaterThanOrEqual(outer.top - 1);
+  expect(box.bottom, label).toBeLessThanOrEqual(outer.bottom + 1);
+};
+
+/** Both range fields, their input groups included, lie inside the editor. */
+const expectRangeFieldsInside = (min: HTMLElement, max: HTMLElement) =>
+  waitFor(() => {
+    const editor = min.closest<HTMLElement>('[data-slot="popover-content"]');
+    expect(editor, 'the chip editor').not.toBeNull();
+    for (const input of [min, max]) {
+      expectInside(input, editor!);
+      expectInside(
+        input.closest<HTMLElement>('[data-slot="input-group"]')!,
+        editor!,
+      );
+    }
+  });
+
+const rangeInputs = async () => {
+  const body = within(document.body);
+  return [
+    await body.findByLabelText('Min'),
+    await body.findByLabelText('Max'),
+  ] as HTMLInputElement[];
+};
+
+/**
+ * D86: both inputs of a range filter lie inside the chip editor and take
+ * typed values. Date-like values are typed key by key from the first segment
+ * with real key presses (the synthetic ones do not fill the segments); the
+ * digits suit a day-month or a month-day locale and a 12 or 24 hour clock.
+ */
+const rangeEditorCase = (
+  variant: RangeVariant,
+  [minKeys, maxKeys]: [string, string],
+  [minValue, maxValue]: [number, number] | [string, string],
+) => ({
+  render: () => (
+    <ShadcnTable columns={rangeColumns(variant)} data={trips} {...options} />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    const keyboard =
+      variant === 'range'
+        ? userEvent
+        : ((
+            globalThis as {
+              stBrowserUserEvent?: {
+                keyboard: (text: string) => Promise<void>;
+              };
+            }
+          ).stBrowserUserEvent ?? userEvent);
+    const label = variant === 'range' ? 'Distance' : 'When';
+    await canvas.findByText('Lunch ride');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: label }));
+    const [min, max] = await rangeInputs();
+    await expectRangeFieldsInside(min, max);
+
+    for (const [input, keys, value] of [
+      [min, minKeys, minValue],
+      [max, maxKeys, maxValue],
+    ] as const) {
+      input.focus();
+      await keyboard.keyboard(keys);
+      await waitFor(() => expect(input).toHaveValue(value));
+    }
+    max.blur();
+    await waitFor(() =>
+      expect(
+        [...bodyRows(canvasElement)].map((row) => row.textContent),
+      ).toEqual([expect.stringContaining('Lunch ride')]),
+    );
+
+    // The chip opens the same editor.
+    await userEvent.click(min);
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(body.queryByLabelText('Min')).toBeNull());
+    await userEvent.click(
+      chipOf(canvasElement, variant === 'range' ? 'distance' : 'when')!,
+    );
+    const [chipMin, chipMax] = await rangeInputs();
+    await expectRangeFieldsInside(chipMin, chipMax);
+    expect(chipMin).toHaveValue(minValue);
+    expect(chipMax).toHaveValue(maxValue);
+  },
+});
+
+export const RangeEditorInputsFitAndFillTime = rangeEditorCase(
+  'time-range',
+  ['1000A', '1200P'],
+  ['10:00', '12:00'],
+);
+
+export const RangeEditorInputsFitAndFillDate = rangeEditorCase(
+  'date-range',
+  ['03032025', '04042025'],
+  ['2025-03-03', '2025-04-04'],
+);
+
+export const RangeEditorInputsFitAndFillDateTime = rangeEditorCase(
+  'datetime-range',
+  ['030320251000A', '040420251200P'],
+  ['2025-03-03T10:00', '2025-04-04T12:00'],
+);
+
+export const RangeEditorInputsFitAndFillNumber = rangeEditorCase(
+  'range',
+  ['10', '20'],
+  [10, 20],
+);
