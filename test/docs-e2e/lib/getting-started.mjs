@@ -1511,6 +1511,56 @@ const checks = {
       (await page.locator('article a[href="/llms.txt"]').count()) === 1,
     );
   },
+  // Spec 47 (D71): the comparison page sits last in Getting Started, its
+  // heading stays the short label and the <title> names the compared
+  // libraries (frontmatter searchTitle).
+  '/docs/getting-started/comparison': async ({ page, check }) => {
+    const title = (
+      (await page.locator('article h1').first().textContent()) ?? ''
+    ).trim();
+    check('title', title === 'Comparison', `h1=${title}`);
+    const docTitle = await page.title();
+    check(
+      'search title',
+      ['TanStack Table', 'Material React Table', 'AG Grid'].every((name) =>
+        docTitle.includes(name),
+      ) && docTitle.endsWith(' | shadcn-table'),
+      docTitle,
+    );
+    const header = (
+      await page
+        .locator('article table')
+        .first()
+        .locator('thead th')
+        .allTextContents()
+    )
+      .map((t) => t.trim())
+      .join(',');
+    check(
+      'matrix columns',
+      header ===
+        ',shadcn-table,TanStack Table,shadcn/ui data-table recipe,Material React Table,AG Grid',
+      header,
+    );
+    const group = page
+      .locator('[data-slot="collapsible"]', {
+        has: page.locator('[data-slot="collapsible-trigger"]', {
+          hasText: 'Getting Started',
+        }),
+      })
+      .first();
+    const items = (
+      await group
+        .locator('[data-slot="collapsible-content"] > a')
+        .allTextContents()
+    ).map((t) => t.trim());
+    check(
+      'sidebar order',
+      items.join(',') ===
+        'Introduction,Installation,Usage,AI Agent Setup,Comparison',
+      items.join(','),
+    );
+  },
   '/docs/getting-started': async ({ page, check }) => {
     check(
       'redirects to introduction',
