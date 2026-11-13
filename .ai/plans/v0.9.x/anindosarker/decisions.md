@@ -909,4 +909,9 @@ index e1645117..e67a5482 100644
 
 ### D98 The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader
 
+- `packages/shadcn-table/stories/features/Filtering.stories.tsx` has 37 stories; 21 pin `columnFilterDisplayMode: 'subheader'` while the library default is `'chips'` (`useST_TableOptions.ts:40`), so Storybook shows the old filter row for most filtering features (owner, 2026-11-08, deployed Storybook).
+- Fix: the 10 subheader stories with no play drop the pin and follow the default chips: FilterFnAndFilterVariants, FilterFnAndFilterVariantsFaceted, FilteringChangeModeEnabled, DisableSomeFilterTypesForCertainColumns, FilteringDisabledForCertainColumns, CustomFilterFunctionPerColumn, CustomFilterFns, CustomFilterComponent, CustomizeFilterTextFields, ExternalSetFilterValue.
+- The 11 subheader stories with a play keep the subheader row and their plays unchanged, as that mode's regression tests; each gets a story name that says "Subheader". FilterModeMenuClosesInPlace reuses the render of FilteringChangeModeEnabled (:489) and keeps a subheader render of its own.
+- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
+- Owner, 2026-11-14: "k" on option 1.
 - Source: Q2
