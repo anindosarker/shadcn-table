@@ -1,6 +1,6 @@
 # 51: Filtering stories show chips, tracker
 
-Status: running
+Status: merged (98070667)
 Branch `v0.9/filtering-stories-chips`, worktree 06
 Checks:
 - Check: vitest before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx` at 7df6f7a2: pass, 37/37 on base, radix, aria
