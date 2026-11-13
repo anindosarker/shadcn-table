@@ -68,6 +68,11 @@ publishes the section as the GitHub release notes.
 
 - The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
 
+#### Spec 50 Filter input fixes
+
+- Clearing an "Empty" or "Not Empty" filter returns a column that lists no `columnFilterModeOptions` to its default filter mode, `equals` for a date, datetime or time column, instead of `fuzzy`; a column that lists allowed modes still returns to its first one. Both the chip on the filter input and the column menu's clear do this (D93, three bases).
+- A mouse click in a date, datetime or time filter box that does not have focus starts typing at its first part (month or day), in the single and the range inputs, so a click at the centre of the box no longer lands on the year and fills only the year. A click on the native picker icon, a click in a box that already has focus, touch and the keyboard behave as before (D96, three bases).
+
 ### Docs
 
 #### Spec 46 Live demo with ten columns
