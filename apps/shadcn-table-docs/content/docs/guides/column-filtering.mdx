@@ -98,6 +98,8 @@ Shadcn Table has several built-in filter variants for advanced filtering. These 
 - `'time-range'` - shows a time range picker for filtering by time ranges
 - `'checkbox'` - shows a checkbox for filtering by `'true'` or `'false'` values
 
+The `'date'`, `'datetime'` and `'time'` variants compare values as dates: by local day, to the minute, or by time of day, also when the accessor returns a `Date`.
+
 <CustomizeFilterVariantsExample />
 
 #### Faceted Values for Filter Variants
@@ -172,7 +174,7 @@ You can specify either a pre-built filterFn that comes with Shadcn Table or pass
 
 #### Custom Filter Functions Per Column
 
-By default, Shadcn Table uses a `fuzzy` filtering algorithm based on the popular `match-sorter` [library from Kent C. Dodds](https://www.npmjs.com/package/match-sorter). However, Shadcn Table also comes with numerous other filter functions that you can specify per column in the `filterFn` column options.
+By default, Shadcn Table uses a `fuzzy` filtering algorithm based on the popular `match-sorter` [library from Kent C. Dodds](https://www.npmjs.com/package/match-sorter) for text columns, while `'date'`, `'datetime'` and `'time'` columns default to `equals`. However, Shadcn Table also comes with numerous other filter functions that you can specify per column in the `filterFn` column options.
 
 ##### Pre-built ST Filter Functions
 
