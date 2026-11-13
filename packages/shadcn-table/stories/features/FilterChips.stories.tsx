@@ -839,12 +839,20 @@ export const ClearFiltersClickableWithEditorOpen = {
 
     await userEvent.click(chipOf(canvasElement, 'priority')!);
     await body.findByRole('button', { name: 'Remove filter' });
-    // A covered button times out; the play then fails on the chips below.
-    await realUserEvent()
-      .click(canvas.getByRole('button', { name: 'Clear filters' }), {
-        timeout: 2000,
-      })
-      .catch(() => {});
+    const clearFilters = canvas.getByRole('button', { name: 'Clear filters' });
+    // Hit test at the button's centre: an inert or covered page answers
+    // with another element. A time limit on the real click instead failed
+    // on a loaded machine with nothing covering the button.
+    const box = clearFilters.getBoundingClientRect();
+    const hit = document.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2,
+    );
+    expect(
+      clearFilters.contains(hit),
+      `a click on Clear filters hits ${hit?.tagName ?? 'nothing'}`,
+    ).toBe(true);
+    await realUserEvent().click(clearFilters);
     await waitFor(() => {
       expect(chipOf(canvasElement, 'status')).toBeNull();
       expect(chipOf(canvasElement, 'priority')).toBeNull();
