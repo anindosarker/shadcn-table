@@ -25,13 +25,6 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
-- [ ] **D98** The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader #E13 #R4
-	- `packages/shadcn-table/stories/features/Filtering.stories.tsx` has 37 stories; 21 pin `columnFilterDisplayMode: 'subheader'` while the library default is `'chips'` (`useST_TableOptions.ts:40`), so Storybook shows the old filter row for most filtering features (owner, 2026-11-08, deployed Storybook).
-	- Fix: the 10 subheader stories with no play drop the pin and follow the default chips: FilterFnAndFilterVariants, FilterFnAndFilterVariantsFaceted, FilteringChangeModeEnabled, DisableSomeFilterTypesForCertainColumns, FilteringDisabledForCertainColumns, CustomFilterFunctionPerColumn, CustomFilterFns, CustomFilterComponent, CustomizeFilterTextFields, ExternalSetFilterValue.
-	- The 11 subheader stories with a play keep the subheader row and their plays unchanged, as that mode's regression tests; each gets a story name that says "Subheader". FilterModeMenuClosesInPlace reuses the render of FilteringChangeModeEnabled (:489) and keeps a subheader render of its own.
-	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
-	- Owner, 2026-11-14: "k" on option 1.
-	- Source: Q2
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
@@ -578,6 +571,13 @@ kanban-plugin: basic
 	- Checks on React Aria: `EscapeClosesEditorAfterSelectPick` passes with the modal popup; a popup stays open and the page does not scroll while it is open; the select filter's arrow sits at the right edge of its field (owner screenshot of live 0.9.3, `/docs/examples/filter-variants`, City chip), and a misplaced arrow becomes its own card. CHANGELOG 0.9.4 drops the non-modal lines.
 	- Owner, 2026-11-14: "The old behavior was completely fine", "don't just blindly revert code", "k".
 	- Source: Q83
+- [x] **D98** The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader #E13 #R4
+	- `packages/shadcn-table/stories/features/Filtering.stories.tsx` has 37 stories; 21 pin `columnFilterDisplayMode: 'subheader'` while the library default is `'chips'` (`useST_TableOptions.ts:40`), so Storybook shows the old filter row for most filtering features (owner, 2026-11-08, deployed Storybook).
+	- Fix: the 10 subheader stories with no play drop the pin and follow the default chips: FilterFnAndFilterVariants, FilterFnAndFilterVariantsFaceted, FilteringChangeModeEnabled, DisableSomeFilterTypesForCertainColumns, FilteringDisabledForCertainColumns, CustomFilterFunctionPerColumn, CustomFilterFns, CustomFilterComponent, CustomizeFilterTextFields, ExternalSetFilterValue.
+	- The 11 subheader stories with a play keep the subheader row and their plays unchanged, as that mode's regression tests; each gets a story name that says "Subheader". FilterModeMenuClosesInPlace reuses the render of FilteringChangeModeEnabled (:489) and keeps a subheader render of its own.
+	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
+	- Owner, 2026-11-14: "k" on option 1.
+	- Source: Q2
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
