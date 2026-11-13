@@ -1,6 +1,6 @@
 # 50: Filter input fixes, tracker
 
-Status: running
+Status: waiting (owner: date filter click fix misses the default editors)
 Branch `v0.9/filter-input-fixes`, worktree 04
 Checks:
 - Check: plays before the change (P11), `ST_BASE=<base> pnpm exec vitest run stories/features/DateFilters.stories.tsx` at 8c34979e, base, radix, aria: `ClearEmptyReturnsDateDefaultMode` fails "Expected element to have text content: Filter Mode: Equals / Received: JoinedFilter Mode: Fuzzy" on each base; the 13 existing plays pass
@@ -28,6 +28,8 @@ Browsers (1.6.3), Playwright 1.64.1, plain page, date input 140 px wide, padding
 
 ## Attention
 
+- Decide whether a click in a date filter box that the editor has already focused should also start typing at the first part: today's fix follows D96 and skips focused boxes, so the chip editor, the header editor and the popover (they focus their first box on open) still put the caret on the year.
+- Review round 1, for the same decision: only subheader fields and the range Max get the fix; D96's line "a click on an already focused field keeps the browser's behavior" has to change for the rest. Also open from the review: no play for the column menu reset (`ST_ColumnActionMenu.tsx:169-175`); touch presses keep the browser's behavior though D96 says pointer; the changelog line says "month or day" for a time box; the play's `?? userEvent` fallback cannot pass in the Storybook UI.
 - The chips mode editor focuses its Min input when it opens (`ST_FilterChips.tsx`, `focusFilterInput`), so a centre click in that Min is a click on a focused field and, as D96 says, keeps the browser's caret on the year; the fix reaches the chips editor's Max and every unfocused field, not that first Min click.
 - `ClickCentreOfDateRangeInputTypesFullDate` runs in subheader mode with the column at size 95, which puts the input centre on the year on the three bases; the chips editor could not carry it because of the focused Min above.
 - The fix's picker-button zone is a fixed 24 px past the inline-end padding (measured in Chromium and Firefox); a press inside it keeps the browser's behavior, including on the end of the year segment of a very narrow field.
