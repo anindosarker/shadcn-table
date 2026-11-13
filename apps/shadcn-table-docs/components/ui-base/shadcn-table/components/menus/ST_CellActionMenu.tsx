@@ -13,7 +13,7 @@ import {
 import { openEditingCell } from '@/components/ui-base/shadcn-table/shared/utils/cell.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui-base/shadcn-table/components/menus/ST_ActionMenuItem';
-import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/context/ST_TableContext';
 import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
 export type ST_CellActionMenuProps = ComponentPropsWithRef<

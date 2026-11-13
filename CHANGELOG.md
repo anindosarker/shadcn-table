@@ -35,6 +35,10 @@ publishes the section as the GitHub release notes.
 
 - The "Filter Mode: <mode>" caption under a filter input sits 6 px below it instead of 3 px (`mt-1.5`), in the text field, the range fields and the range slider on the three bases (D85).
 
+#### Fix D91
+
+- The table context and the defaults context move to a `context/` folder, one file per context (three bases). `hooks/stTableHook.tsx` becomes `context/ST_TableContext.tsx` (`tableContext`, `useTableContext`, `useSTContext`, `ST_TableProvider`) and its factory `createSTTableHook` moves to `hooks/createSTTableHook.ts`; `hooks/useST_Defaults.tsx` becomes `context/ST_DefaultsContext.tsx` (`ST_DefaultsContext`, `ST_DefaultsProvider`, `useST_Defaults`). Every exported name is unchanged, so imports through `index.ts` keep working; an import from one of the old file paths moves to the new one. A project that installed the library through the shadcn CLI keeps its two old files after an update until it deletes them.
+
 ### Fixed
 
 #### Spec 40 Date filter compare

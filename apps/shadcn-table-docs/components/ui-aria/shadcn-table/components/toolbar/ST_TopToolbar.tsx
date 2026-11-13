@@ -12,7 +12,7 @@ import { ST_GlobalFilterTextField } from '@/components/ui-aria/shadcn-table/comp
 import { Separator } from '@/components/ui-aria/separator';
 import { ST_FilterChips } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_FilterChips';
 import { ST_SortPopover } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_SortPopover';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(

@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from 'react';
 import { ST_Default_Icons } from '@/components/ui-radix/shadcn-table/icons';
-import { useST_Defaults } from '@/components/ui-radix/shadcn-table/hooks/useST_Defaults';
+import { useST_Defaults } from '@/components/ui-radix/shadcn-table/context/ST_DefaultsContext';
 import { ST_Localization_EN } from '@/components/ui-radix/shadcn-table/shared/locales/en';
 import {
   type ST_DefinedTableOptions,
