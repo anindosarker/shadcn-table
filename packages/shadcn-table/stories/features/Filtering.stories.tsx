@@ -265,8 +265,6 @@ export const FilterFnAndFilterVariants = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -310,8 +308,6 @@ export const FilterFnAndFilterVariantsFaceted = () => (
     ]}
     data={data}
     enableFacetedValues
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -427,7 +423,14 @@ export const RangeSliderCustomBounds = {
   },
 };
 
-export const FilteringChangeModeEnabled = () => (
+/** The filter mode demo table, in the given filter display mode. */
+const ChangeModeTable = ({
+  columnFilterDisplayMode,
+  initialState,
+}: Pick<
+  ST_TableOptions<(typeof data)[0]>,
+  'columnFilterDisplayMode' | 'initialState'
+>) => (
   <ShadcnTable
     columns={[
       {
@@ -473,10 +476,12 @@ export const FilteringChangeModeEnabled = () => (
     ]}
     data={data}
     enableColumnFilterModes
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
+    columnFilterDisplayMode={columnFilterDisplayMode}
+    initialState={initialState}
   />
 );
+
+export const FilteringChangeModeEnabled = () => <ChangeModeTable />;
 
 // The closing state of a menu popup in each base.
 const menuExiting = (popup: Element) =>
@@ -486,7 +491,12 @@ const menuExiting = (popup: Element) =>
 
 /** F3: the filter mode menu plays its exit animation where it opened. */
 export const FilterModeMenuClosesInPlace = {
-  render: FilteringChangeModeEnabled,
+  render: () => (
+    <ChangeModeTable
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     const [modeButton] = await canvas.findAllByRole('button', {
@@ -828,8 +838,6 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
     ]}
     data={data}
     enableColumnFilterModes
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -870,8 +878,6 @@ export const FilteringDisabledForCertainColumns = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -920,8 +926,6 @@ export const CustomFilterFunctionPerColumn = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -971,8 +975,6 @@ export const CustomFilterFns = () => (
           .startsWith(filterValue.toLowerCase());
       },
     }}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1030,8 +1032,6 @@ export const CustomFilterComponent = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1074,8 +1074,6 @@ export const CustomizeFilterTextFields = () => (
       },
     ]}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
   />
 );
 
@@ -1113,8 +1111,6 @@ export const ExternalSetFilterValue = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
     renderTopToolbarCustomActions={({ table }) => (
       <div>
         <Button
