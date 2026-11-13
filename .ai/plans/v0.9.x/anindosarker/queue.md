@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q83** On React Aria the filter chip editor now closes when the page scrolls
 	- Spec 43 (merged 4b0d182d) made the React Aria chip, picker and header filter editors non-modal so Clear filters is clickable with an editor open (D83); a non-modal editor no longer locks page scroll, closes on scroll and is no longer a dialog. Base UI keeps its editor open on scroll. Keep, or rule a different fix for Clear filters.
+	- Owner 2026-11-14: "This is very bad. It is a very bad implementation. All the filters were made with modals. Why did you decide to change it?" The non-modal change came from spec 43 (now spec 41 section 3.2, line 250), not from a decision; commits 0f0f9f54 and df03b7f1, `isNonModal` at aria ST_FilterChips.tsx:114, :225 and ST_HeaderFilterEditor.tsx:141. Release steps of E12 are on hold by an Urgent note. The owner wants the code double-checked thoroughly before the item is discussed again.
 
 ## Decided
 
