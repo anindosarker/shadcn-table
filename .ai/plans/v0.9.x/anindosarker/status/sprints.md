@@ -57,7 +57,7 @@ Updated: 2026-11-14 00:23
 | E12 39 Filter debounce hook |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E12 40 Date filter compare |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E12 40 React Query route dates |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
-| E12 41 Filter editor fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |
+| E12 41 Filter editor fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
 | E12 46 Live demo ten columns |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E12 47 Comparison page |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
 | E12 48 Integration 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |
@@ -65,7 +65,7 @@ Updated: 2026-11-14 00:23
 | E12 48 After release 0.9.4 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
 | E12 49 Home hero wording |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| fix Context folder (Q82, D91) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |  |
+| fix Context folder (Q82, D91) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |
 | fix CRUD dialog check waits for the rows (Q25) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Dev server clean (Q11) |  | [x] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | fix Docs build memory (Q76) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
