@@ -21,6 +21,7 @@ kanban-plugin: basic
 - [ ] **Q74** Filters fire while the user is still typing; they need a debounce #owner
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot: Hire Date chip editor, between inclusive): "The filters apply way faster than I type, so whenever I haven't even finished typing but they automatically fire. Need debounce."
 	- Today only plain text filters debounce: 200 ms, 400 ms with manualFiltering; every other variant (date, time, number) fires after 1 ms (base ST_FilterTextField.tsx:228).
+	- Owner 2026-11-13: happens on text filters as well; less painful there because backspace and edit is easy, but the debounce should apply there too (so 200 ms feels too short), and on date and time inputs.
 
 ## Decided
 
