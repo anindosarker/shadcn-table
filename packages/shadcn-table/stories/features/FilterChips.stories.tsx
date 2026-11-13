@@ -749,3 +749,106 @@ export const MultiSelectOpensOnClick = {
     );
   },
 };
+
+const selectStatusColumns = () =>
+  plainColumns().map((column) =>
+    column.accessorKey === 'status'
+      ? {
+          ...column,
+          filterSelectOptions: ['Done', 'In Progress', 'Not Started'],
+          filterVariant: 'select' as const,
+        }
+      : column,
+  );
+
+/**
+ * Playwright's pointer and keys when the Vitest run provides them: a real hit
+ * test, and keys that reach the focused element's native listeners in order.
+ */
+const realUserEvent = () =>
+  (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (
+          element: Element,
+          options?: { timeout?: number },
+        ) => Promise<void>;
+        keyboard: (text: string) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent ?? userEvent;
+
+// D83: after a value is picked in a select filter, one Escape closes the chip
+// editor; the Escape that closes the option list closes only the list.
+export const EscapeClosesEditorAfterSelectPick = {
+  render: () => (
+    <ShadcnTable
+      columns={selectStatusColumns()}
+      data={data}
+      initialState={{ columnFilters: [{ id: 'status', value: 'In Progress' }] }}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const body = within(document.body);
+    const user = realUserEvent();
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(1));
+
+    await user.click(chipOf(canvasElement, 'status')!);
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    const trigger = removeFilter
+      .closest('[data-slot="popover-content"]')!
+      .querySelector<HTMLElement>('[data-slot="select-trigger"]')!;
+    expect(trigger, 'the select trigger').not.toBeNull();
+    await user.click(trigger);
+    await body.findByRole('option', { name: /^Done/ });
+    // Escape with the list open closes the list only.
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(body.queryByRole('option', { name: /^Done/ })).toBeNull(),
+    );
+    expect(removeFilter).toBeInTheDocument();
+
+    await user.click(trigger);
+    await user.click(await body.findByRole('option', { name: /^Done/ }));
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+    // The list has closed and handed focus back to the trigger, as when a
+    // person reads the pick before pressing Escape.
+    await waitFor(() =>
+      expect(body.queryByRole('option', { name: /^Done/ })).toBeNull(),
+    );
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+    await user.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(body.queryByRole('button', { name: 'Remove filter' })).toBeNull(),
+    );
+    expect(chipOf(canvasElement, 'status')?.textContent).toContain('Done');
+  },
+};
+
+// D83: with a chip editor open, one click on Clear filters clears every
+// filter and chip.
+export const ClearFiltersClickableWithEditorOpen = {
+  render: ChipsSeeded,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+
+    await userEvent.click(chipOf(canvasElement, 'priority')!);
+    await body.findByRole('button', { name: 'Remove filter' });
+    // A covered button times out; the play then fails on the chips below.
+    await realUserEvent()
+      .click(canvas.getByRole('button', { name: 'Clear filters' }), {
+        timeout: 2000,
+      })
+      .catch(() => {});
+    await waitFor(() => {
+      expect(chipOf(canvasElement, 'status')).toBeNull();
+      expect(chipOf(canvasElement, 'priority')).toBeNull();
+    });
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(4));
+  },
+};

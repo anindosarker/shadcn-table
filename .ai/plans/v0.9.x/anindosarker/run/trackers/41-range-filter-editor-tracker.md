@@ -8,6 +8,7 @@ Checks:
 - Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` after Task 2: pass
 - Screenshots after the change, time range editor (308 px, both fields inside): `41-shots/after-base-time-range-editor.png`, `41-shots/after-radix-time-range-editor.png`, `41-shots/after-aria-time-range-editor.png`
 - Check (spec 42): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`MultiSelectOpensOnClick`, `MultiSelectArrayModes` and `ChipEditorKeepsWidth` without the ArrowDown fallback) after Task 3: pass, 21 of 21 on base, radix and aria; `pnpm test typecheck --base aria`: pass
+- Check (spec 43): `ST_BASE=<base> pnpm exec vitest run stories/features/FilterChips.stories.tsx` (`EscapeClosesEditorAfterSelectPick`, `ClearFiltersClickableWithEditorOpen`, `RemoveAndClear`, `SelectClearBesideChevron` among them) after Task 4: pass, 23 of 23 on base, radix and aria; `pnpm test typecheck --base base`, `--base aria`: pass
 
 ## Record 1.6.3 (code before the change, chip editor from the toolbar picker, headless Chromium, locale dd/mm/yyyy and 24 h clock, real key presses)
 
@@ -20,10 +21,12 @@ Checks:
 
 - Task 1 play and record: done (4ebf2742)
 - Task 2 width (`filterEditorClassName(column)`, 308 px for a date-like range, 260 px otherwise) and input (no change, see record): done (052deb67)
-- Task 3 spec 42, React Aria multi-select opens on click, docs E2E fallback removed: done
+- Task 3 spec 42, React Aria multi-select opens on click, docs E2E fallback removed: done (95ec9676)
+- Task 4 spec 43, Escape closes the editor after a select pick, Clear filters clickable on React Aria: done
 
 ## Attention
 
 - Spec 42 1.6.2 names `menuTrigger="focus"`; it also opens the React Aria list when the chip editor focuses the input on open, which hides the editor's other controls and breaks `MultiSelectArrayModes`, so the fix opens the list on a click through the ComboBox state (`ComboBoxStateContext`) instead; revert to `menuTrigger="focus"` if the owner prefers the list open on editor open.
+- Spec 43: the React Aria chip editor is now non-modal (`isNonModal`), so a click on a blank, non-focusable part of the page no longer closes it (React Aria closes a non-modal popover on blur to a focusable element, on scroll, on Escape or on its trigger); a click on a control, a table cell or Clear filters closes it as on Base UI and Radix.
 - `stories/features/Filtering.stories.tsx:363` and `stories/fixed-bugs/MultiSelectFilter.stories.tsx:53` still carry the ArrowDown fallback for the React Aria multi-select ("opens from the keyboard, not on a click"); harmless now (the list is open after the click), outside this milestone's files.
 
