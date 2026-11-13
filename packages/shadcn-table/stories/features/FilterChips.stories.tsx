@@ -7,6 +7,7 @@ import {
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { ST_BASE } from '../../.storybook/themes';
 
 // Chips mode: filters live as chips in the toolbar, added from the column
 // picker, edited in one value editor that stays where it was opened.
@@ -771,7 +772,7 @@ const realUserEvent = () =>
       stBrowserUserEvent?: {
         click: (
           element: Element,
-          options?: { timeout?: number },
+          options?: { force?: boolean; timeout?: number },
         ) => Promise<void>;
         keyboard: (text: string) => Promise<void>;
       };
@@ -829,7 +830,8 @@ export const EscapeClosesEditorAfterSelectPick = {
 };
 
 // D83: with a chip editor open, one click on Clear filters clears every
-// filter and chip.
+// filter and chip, on Base UI and Radix. On React Aria the editor is modal
+// (D97): the first click outside only closes it, the second clears.
 export const ClearFiltersClickableWithEditorOpen = {
   render: ChipsSeeded,
   play: async ({ canvasElement }: StoryContext) => {
@@ -840,24 +842,67 @@ export const ClearFiltersClickableWithEditorOpen = {
     await userEvent.click(chipOf(canvasElement, 'priority')!);
     await body.findByRole('button', { name: 'Remove filter' });
     const clearFilters = canvas.getByRole('button', { name: 'Clear filters' });
-    // Hit test at the button's centre: an inert or covered page answers
-    // with another element. A time limit on the real click instead failed
-    // on a loaded machine with nothing covering the button.
-    const box = clearFilters.getBoundingClientRect();
-    const hit = document.elementFromPoint(
-      box.left + box.width / 2,
-      box.top + box.height / 2,
-    );
-    expect(
-      clearFilters.contains(hit),
-      `a click on Clear filters hits ${hit?.tagName ?? 'nothing'}`,
-    ).toBe(true);
+    if (ST_BASE === 'aria') {
+      // The popover's underlay covers the page: a click at the button's
+      // centre lands on it and only closes the editor.
+      const atPoint = { force: true };
+      await realUserEvent().click(clearFilters, atPoint);
+      await waitFor(() =>
+        expect(
+          body.queryByRole('button', { name: 'Remove filter' }),
+        ).toBeNull(),
+      );
+      expect(chipOf(canvasElement, 'priority')).not.toBeNull();
+      expect(bodyRows(canvasElement)).toHaveLength(2);
+    } else {
+      // Hit test at the button's centre: an inert or covered page answers
+      // with another element. A time limit on the real click instead failed
+      // on a loaded machine with nothing covering the button.
+      const box = clearFilters.getBoundingClientRect();
+      const hit = document.elementFromPoint(
+        box.left + box.width / 2,
+        box.top + box.height / 2,
+      );
+      expect(
+        clearFilters.contains(hit),
+        `a click on Clear filters hits ${hit?.tagName ?? 'nothing'}`,
+      ).toBe(true);
+    }
     await realUserEvent().click(clearFilters);
     await waitFor(() => {
       expect(chipOf(canvasElement, 'status')).toBeNull();
       expect(chipOf(canvasElement, 'priority')).toBeNull();
     });
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(4));
+  },
+};
+
+// D97: on React Aria an open chip editor locks the page's scroll and a
+// scroll does not close it.
+export const AriaEditorLocksPageScroll = {
+  render: ChipsSeeded,
+  play: async ({ canvasElement }: StoryContext) => {
+    if (ST_BASE !== 'aria') return;
+    const body = within(document.body);
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+
+    await userEvent.click(chipOf(canvasElement, 'priority')!);
+    const removeFilter = await body.findByRole('button', {
+      name: 'Remove filter',
+    });
+    await waitFor(() =>
+      expect(getComputedStyle(document.documentElement).overflow).toBe(
+        'hidden',
+      ),
+    );
+    document.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('scroll'));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(removeFilter).toBeInTheDocument();
+    expect(removeFilter).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(removeFilter).not.toBeInTheDocument());
   },
 };
 
