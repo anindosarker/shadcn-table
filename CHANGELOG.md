@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Docs
+
+#### Spec 47 Comparison page
+
+- A Comparison page, last in Getting Started, compares shadcn-table with TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid; every cell is sourced from the project's own docs or repository, and the page `<title>` names the compared libraries through the new optional `searchTitle` frontmatter field (D71).
+
 ## 0.9.3 - 2026-11-12
 
 ### Added
