@@ -494,6 +494,7 @@ index e1645117..e67a5482 100644
 - Supersedes D28 and the per-release word of D3 and D39: from 0.9.1 on, the runner approves the Prepare Release deployment of every release PR as soon as the job waits, with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D47"`; no approval line to the lead, no owner click. The `release` environment and its required reviewer stay (D3): the owner can still reject a waiting deployment by hand before the runner reaches it. Owner, 2026-11-09: "Approve it. Don't ask me for approvals from now on, you have access and approvals."
 
 ### D48 The perf budget is 600 ms under --ci, 300 ms locally
+[E13]
 
 - Source: Q54
   [Done]
@@ -872,26 +873,31 @@ index e1645117..e67a5482 100644
 - Source: Q82
 
 ### D92 ISO date-time text values keep comparing as dates in date filters
+[E13]
 
 - Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
 - Source: Q77
 
 ### D93 Clearing an is-empty filter returns the column to its default filter mode
+[E13]
 
 - `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
 - Source: Q78
 
 ### D94 The column filtering guide states the date defaults of D81
+[E13]
 
 - `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
 - Source: Q79
 
 ### D95 The React Query example offers only the filter modes its server applies
+[E13]
 
 - `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
 - Source: Q81
 
 ### D96 A click in a date or time filter box starts typing at its first part
+[E13]
 
 - Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 - Source: Q80
@@ -908,6 +914,7 @@ index e1645117..e67a5482 100644
 - Source: Q83
 
 ### D98 The plain filtering demo stories show filter chips; the tested subheader stories stay and say Subheader
+[E13]
 
 - `packages/shadcn-table/stories/features/Filtering.stories.tsx` has 37 stories; 21 pin `columnFilterDisplayMode: 'subheader'` while the library default is `'chips'` (`useST_TableOptions.ts:40`), so Storybook shows the old filter row for most filtering features (owner, 2026-11-08, deployed Storybook).
 - Fix: the 10 subheader stories with no play drop the pin and follow the default chips: FilterFnAndFilterVariants, FilterFnAndFilterVariantsFaceted, FilteringChangeModeEnabled, DisableSomeFilterTypesForCertainColumns, FilteringDisabledForCertainColumns, CustomFilterFunctionPerColumn, CustomFilterFns, CustomFilterComponent, CustomizeFilterTextFields, ExternalSetFilterValue.
