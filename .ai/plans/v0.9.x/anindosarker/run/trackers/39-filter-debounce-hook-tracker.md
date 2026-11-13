@@ -45,6 +45,7 @@ Checks:
 - Task 3 options docs, CustomFilterDebounce, util removal, guide lines: done (2ac0faec); the generated docs copies and `registry.json` were regenerated here, because the docs type check reads them
 - Task 4 regenerate, format, changelog: done (744cdd11, c2af36ba)
 - Review fixes: done (179466f8, fc3529b6)
+- Verifier file findings (`ST_FilterChips.tsx` on three bases, `test/docs-e2e/lib/api.mjs`): declined, kept; reverting either turns the Local CI line `pnpm test docs-e2e --base base` red (recorded at 744cdd11: range filter `rows=1`, prop table counts 213 and 66), so no code change and no check rerun
 
 ## Browser record (1.6.3)
 
@@ -62,4 +63,5 @@ Checks:
 - The pending-call guard and the outside-change sync compare the column filters by content, not by array identity, so a controlled parent that rebuilds an equal array per render keeps the typed text; a stored view with the same content as the current filters therefore no longer drops a pending call (the same as the spec's value-based sync).
 - A typed date, datetime or time value still unapplied when the field unmounts without a blur (Escape in a chip editor) is applied, under the same guard as the debounced typed filters.
 - Specs 41 and 43 cite `ST_FilterChips.tsx` line numbers that moved by 6 lines with the focus fix of c2af36ba.
+- Spec 39 1.6 lists every toolbar component and `test/docs-e2e/**` as unchanged, yet its Local CI needs docs E2E green, which needs the `ST_FilterChips.tsx` focus fix and the new prop table counts; the branch keeps both changes.
 - `pnpm --filter shadcn-table-docs types:check` (inside `typecheck --base radix`) ran out of heap once under machine load at the default heap; it passed later at the default heap and with `--max-old-space-size=8192`.
