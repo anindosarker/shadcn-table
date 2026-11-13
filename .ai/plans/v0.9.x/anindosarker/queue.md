@@ -20,6 +20,7 @@ kanban-plugin: basic
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot): Departure Time chip, mode between inclusive: the editor shows two time inputs side by side; the second one runs past the editor's right edge, its clock icon is not visible. Owner: "This filter is broken, add finding."
 - [ ] **Q74** Filters fire while the user is still typing; they need a debounce #owner
 	- Owner 2026-11-13, live 0.9.3, /docs/examples/filter-variants on Base UI (screenshot: Hire Date chip editor, between inclusive): "The filters apply way faster than I type, so whenever I haven't even finished typing but they automatically fire. Need debounce."
+	- Today only plain text filters debounce: 200 ms, 400 ms with manualFiltering; every other variant (date, time, number) fires after 1 ms (base ST_FilterTextField.tsx:228).
 
 ## Decided
 
