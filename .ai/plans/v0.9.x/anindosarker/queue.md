@@ -7,6 +7,7 @@ kanban-plugin: basic
 - [ ] **Q66** The home page still downloads 586 KB of scripts in total although analytics now loads late #run-E11
 	- Spec 34: first-load script transfer on `/` fell from 421 KB to 317 KB and posthog-js is in no initial chunk (D70's check, met), but the spec's Lighthouse whole-trace sum stays 586 KB (target 450): posthog-js loads on idle inside the trace, and without it the sum is 482 KB because the home demo table loads on mount (D62). The run merges 34 on D70's check; keep, or gate the demo table.
 	- Verifier re-measure at 83c909db: 344.8 KB compressed over the 21 chunks the HTML of `/` references (bar 450 KB); merged as ec360093.
+	- Owner 2026-11-13: keep it for now (option 1); first load is under the bar.
 - [ ] **Q67** A date filter does nothing in the chips editor when the column holds real dates #run-E11
 	- Found building the live demo (D78): with `filterVariant: 'date'` and an accessor returning a `Date`, the input yields a 'YYYY-MM-DD' string and greaterThan/lessThan compare it with `Date.toString()`; the advanced and react-query examples are affected. The live demo uses an ISO string accessor to avoid it.
 - [ ] **Q68** On React Aria the multi-select filter list does not open on a click into its input #run-E11
