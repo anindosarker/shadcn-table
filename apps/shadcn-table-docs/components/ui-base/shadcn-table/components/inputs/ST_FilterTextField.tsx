@@ -282,15 +282,15 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // key press since the last commit is a pick in the native picker.
   const [isDateTyped, setIsDateTyped] = useState(false);
   // The typed date not applied yet; an unmount without a blur applies it.
-  const typedDate = useRef<{
+  const [typedDate, setTypedDate] = useState<{
     guard: ReturnType<typeof getCommitGuard>;
     value: string;
   } | null>(null);
   const commitTypedDateOnUnmount = useRef(() => {});
   useLayoutEffect(() => {
     commitTypedDateOnUnmount.current = () => {
-      if (typedDate.current && isCommitGuardHeld(typedDate.current.guard)) {
-        commitFilterValue(typedDate.current.value || null);
+      if (typedDate && isCommitGuardHeld(typedDate.guard)) {
+        commitFilterValue(typedDate.value || null);
       }
     };
   });
@@ -302,7 +302,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const commitTypedValue = () => {
     if (isDateFilter && isDateTyped) {
       setIsDateTyped(false);
-      typedDate.current = null;
+      setTypedDate(null);
       handlePick((filterValue as string) || null);
     } else {
       debouncedCommit.flush();
@@ -340,7 +340,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClear = () => {
     debouncedCommit.cancel();
-    typedDate.current = null;
+    setTypedDate(null);
     if (isMultiSelectFilter) {
       setFilterValue([]);
       column.setFilterValue([]);
@@ -362,7 +362,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClearEmptyFilterChip = () => {
     debouncedCommit.cancel();
-    typedDate.current = null;
+    setTypedDate(null);
     setFilterValue('');
     column.setFilterValue(undefined);
     setColumnFilterFns((prev) => ({
@@ -531,10 +531,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     onChange: (event: ChangeEvent<HTMLInputElement>) => {
       if (isDateTyped) {
         setFilterValue(event.target.value);
-        typedDate.current = {
-          guard: getCommitGuard(),
-          value: event.target.value,
-        };
+        setTypedDate({ guard: getCommitGuard(), value: event.target.value });
       } else {
         handlePick(event.target.value || null);
       }
