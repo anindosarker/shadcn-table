@@ -1,6 +1,6 @@
 # 46: Live demo with ten columns, tracker
 
-Status: running
+Status: merged (5054cf80)
 Branch `v0.9/live-demo-ten-columns`, worktree 08
 Checks:
 - Check: copies identical, `diff -r examples/base/live-demo examples/radix/live-demo` and `aria` at 826b2d55: pass (no output)
