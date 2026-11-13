@@ -14,6 +14,7 @@ kanban-plugin: basic
 - [ ] **Q88** Date filters use the browser's date boxes instead of shadcn's date picker
 	- Owner, 2026-11-14: 'Did we invent a date picker for ourselves instead of using the shadcn one?', pointing at https://ui.shadcn.com/docs/components/base/date-picker#input (the Input variant). Today: native input type date, datetime-local and time in ST_FilterTextField.tsx (base :595-609, radix :596-610, aria :661-675). Related: Q84, a native-input caret problem.
 	- Owner, 2026-11-14: 'Of course, we are gonna use shadcn date picker.' Direction set; the open parts are what the lookup finds: ranges, time and date-time filters, the React Aria base, new dependencies.
+	- Owner, 2026-11-14: 'We are gonna use shadcn input and shadcn date picker wherever it's relevant.' Scope is every place the library renders its own input or date control, not only the date filters.
 
 ## Decided
 
