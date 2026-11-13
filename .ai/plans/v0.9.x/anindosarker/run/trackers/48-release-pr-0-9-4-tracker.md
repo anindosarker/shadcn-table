@@ -1,9 +1,10 @@
 # 48: Release 0.9.4, Release PR, tracker
 
-Status: planned (stopped by the run manager 2026-11-14 01:24, owner hold for the Q83 fix)
+Status: running (resumed 2026-11-14 after spec 41.3 merged, a57354f8)
 Branch `dev`, main checkout (gh only)
 Checks:
 - Check: dev equals claude/review, `git rev-parse origin/dev origin/claude/review` at f7905db9: pass (one sha); `git merge-base --is-ancestor origin/master origin/dev`: pass
+- Check (resume): `## Unreleased` on claude/review 59f239f3, `awk '/^## Unreleased/{p=1;next} p&&/^## /{exit} p' CHANGELOG.md | grep -E '^###+ '`: order of spec 48 1.6.1 intact, 41.3 only dropped the non-modal line under Spec 43 (no claim of non-modal React Aria editors left): pass, no edit
 
 - Task 1 Open the PR with label and auto-merge: running
 - Task 2 Full run green; approve Prepare Release (D47): planned
