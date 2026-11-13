@@ -39,6 +39,9 @@ Checks:
 - Check (verifier): Acceptance (1.2), `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx stories/features/Search.stories.tsx -t "<the five plays>"` on base, radix, aria at 7bdc1d31: pass (5 of 5 each); the P11 failures of the four pre-change plays are recorded above, `CustomFilterDebounce` needs the new option (Task 1)
 - Check (verifier): `grep -rn "debounce(" packages/shadcn-table/registry/*/components/ui/shadcn-table` at 7bdc1d31: prints nothing; `RenderCounts.stories.tsx` not in the branch diff
 - Check (verifier): files against Files owned, 1.4 and 1.6 at 7bdc1d31: extra `registry/{base,radix,aria}/…/components/toolbar/ST_FilterChips.tsx` and `test/docs-e2e/lib/api.mjs` (both listed unchanged in 1.6; see Attention)
+- Check (verifier 2): Local CI and 2.2 not rerun at 5c1224ce, `git diff --name-only fc3529b6..HEAD` touches only `.ai/`; the fc3529b6 lines above stand
+- Check (verifier 2): Acceptance (1.2), the five plays on base, radix, aria at 5c1224ce: pass (5 of 5 each); P11 failures of the four pre-change plays recorded above
+- Check (verifier 2): files against Files owned, 1.4 and 1.6 at 5c1224ce: same extras as at 7bdc1d31 (`ST_FilterChips.tsx` on three bases, `test/docs-e2e/lib/api.mjs`), kept by the builder
 
 - Task 1 plays first: done (5b7254f9)
 - Task 2 hook, column filter field, global search: done (35c9fc00); the three options and their defaults (1.6.5) landed here, since the field reads them
