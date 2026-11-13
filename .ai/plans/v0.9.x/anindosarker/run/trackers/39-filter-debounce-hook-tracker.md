@@ -1,6 +1,6 @@
 # 39: Typed filters use one debounce hook, tracker
 
-Status: done
+Status: merged (81e24975)
 Branch `v0.9/filter-debounce-hook`, worktree 03
 Checks:
 - Check: plays before the change (P11), `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx stories/features/Search.stories.tsx -t "<play>"` on base, radix, aria at the Task 1 commit (library code unchanged): fail as required, the same line on the three bases:
