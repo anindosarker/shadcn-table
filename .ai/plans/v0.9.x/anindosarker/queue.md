@@ -18,6 +18,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-14, to the runner during the demo build: 'You should use this demo. I would like to use the dropdown for year and months', pointing at ui.shadcn.com/docs/components/base/calendar and the date picker docs' Date of Birth example (Calendar captionLayout=dropdown, month and year selects in the caption). The demo's calendars use it.
 	- Owner, 2026-11-14, on the demo at next-app commit 77a5044 (screenshot of the date and date-range rows, candidates A, B, C, dark): 'these two look absolutelty beatiful. approved for these.' Read by the runner as: the look of the date and date-range rows is approved; no candidate picked yet.
 	- Owner, 2026-11-14, same message: 'date time, you gotta build a time picker, none of them has any.' The demo's datetime, datetime-range, time and time-range rows get a built time picker (hour and minute chosen in the popover, composed from stock shadcn parts) instead of only the browser's time box.
+	- Owner, 2026-11-14, correcting the runner's reading above: the approval is for candidate A (browser date box in an InputGroup with the Calendar button) in the date row and in the date-range row (two boxes, one range Calendar); screenshots with A outlined in red. Not recorded as a decision yet.
 
 ## Decided
 
