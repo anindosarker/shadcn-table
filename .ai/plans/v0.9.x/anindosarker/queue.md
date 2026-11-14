@@ -235,7 +235,7 @@ kanban-plugin: basic
 	- 18 plays in Filtering.stories.tsx; 11 query subheader inputs in the header row: MultiSelectFieldControls, RangeSliderCustomBounds, FilterModeMenuClosesInPlace, FilteringChangeModeEnabledFaceted, SubheaderRangeFieldsNarrow, RangeFilterMinValue, ModePickerByDefaultSubheader, TypeThenEnterAppliesAtOnce, HalfTypedYearAppliesNothing, ControlledRerenderKeepsTypedFilter, CustomFilterDebounce; 3 of them test the subheader layout itself. Docs: customize-filter-modes, customize-filter-variants default chips; alternate-column-filtering popover; custom-column-filtering-ui custom; subheader-filters example exists. Since 2026-11-08 no story moved to chips; subheader pins grew 15 to 20.
 - [x] **Q86** In the React Query example the one filter mode left, Contains, shows unchecked #D99 #E13
 	- Spec 52 (D95) limits the five text columns to `columnFilterModeOptions: ['contains']` as specified; they keep the default fuzzy filter function, so the mode button reads 'auto' and Contains is unchecked until picked. Adding `filterFn: 'contains'` to those columns would show it active. Branch v0.9/docs-filter-facts, verified, not merged yet.
-- [ ] **Q89** Release 0.9.4 went out without the owner's explicit approval #D100
+- [x] **Q89** Release 0.9.4 went out without the owner's explicit approval #D100
 	- Owner, 2026-11-14: 'I did not approve it.' What happened: the release was held for Q83; the lead's notes to the runner said the hold lifts when the fix (spec 41.3) has merged, and the lead told the owner twice that the release goes out by itself once the fix merges; the runner then merged PR 138 at 02:40 and published v0.9.4 at 02:47. No decision in force requires an owner yes per release (D47 superseded D28).
 
 ## Later
