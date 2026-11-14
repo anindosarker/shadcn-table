@@ -7,9 +7,6 @@ kanban-plugin: basic
 - [ ] **Q84** A click in a date filter box that the editor already focused still lands on the year
 	- Run E13, spec 50 (tracker 50-filter-input-fixes, waiting on the owner): the D96 fix skips a field that already has focus, as D96 says. The chips editor, the header editor and the popover focus their first box on open, so the first click in that box (the chips range Min included) keeps the caret on the year; the fix reaches subheader fields, the range Max and every unfocused field. Review round 1 raises the same point; D96's line 'a click on an already focused field keeps the browser's behavior' would have to change.
 	- Owner test 2026-11-14 (localhost:5330, Base UI, filter-variants, Hire Date chip, dd/mm/yyyy locale): click in the middle of the auto-focused Min box, typed 03032025: day empty, month 03, year 32025. Owner then asked why the filters use native date inputs and not shadcn's date picker; see the date picker card.
-- [ ] **Q85** A click in a date filter box still lands on the year in the chip editor, the header editor and the popover
-	- Spec 50 (D96) starts typing at the first part only for a box that does not have focus yet, as D96 says; the chip editor, the header editor and the popover focus their first box when they open, so the first centre click there still puts the caret on the year (Chromium and Firefox: typing 03032025 gives an empty value). Only subheader fields and the range Max get the fix. Found by the run's review of spec 50; the milestone is built and waits, branch v0.9/filter-input-fixes. Keep D96 as written, or extend the fix to editor-focused boxes.
-	- Same as Q84.
 - [ ] **Q87** The registry namespace returns 404 for projects on the old new-york or default shadcn style
 	- Side-agent note, 2026-11-14, after registry directory PR shadcn-ui/ui 12711: the CLI fills {style} from the user's components.json (packages/registry/src/registry/builder.ts:65-73); apps/shadcn-table-docs/next.config.mjs:33-53 rewrites only radix-*, base-* and aria-* style paths; new-york, default and new-york-v4 return 404 (checked live). Docs promise only the three families (getting-started/agents.mdx:24). Not verified: whether the Radix copy installs and looks right in a new-york project. Owner leans: no support needed.
 - [ ] **Q88** Date filters use the browser's date boxes instead of shadcn's date picker
@@ -279,6 +276,9 @@ kanban-plugin: basic
 - [x] **Q26** Spec 15 comments still name app/layout.tsx as the style link owner
 	- `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the Q50 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
 	- Settled by the lead 2026-11-14: stale comments and one CONTRIBUTING line, no behavior change; dropped under the no comment-only commits rule.
+- [x] **Q85** A click in a date filter box still lands on the year in the chip editor, the header editor and the popover
+	- Spec 50 (D96) starts typing at the first part only for a box that does not have focus yet, as D96 says; the chip editor, the header editor and the popover focus their first box when they open, so the first centre click there still puts the caret on the year (Chromium and Firefox: typing 03032025 gives an empty value). Only subheader fields and the range Max get the fix. Found by the run's review of spec 50; the milestone is built and waits, branch v0.9/filter-input-fixes. Keep D96 as written, or extend the fix to editor-focused boxes.
+	- Same as Q84.
 
 ## Autofix
 
