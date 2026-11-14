@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #R4
+	- Source: Q89
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
