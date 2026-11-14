@@ -256,6 +256,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-14: when release 0.9.4 is live, the lead reminds the owner to request indexing in Search Console (URL inspection, Request indexing) for https://www.shadcn-table.com/, /docs/getting-started/introduction and /docs/getting-started/comparison.
 	- Owner, 2026-11-14: this card is only the reminder to request indexing in Search Console after 0.9.4 is live; no wording change, no further listings. Registry directory PR shadcn-ui/ui 12711 and awesome-shadcn-ui PR 713 are submitted. Close the card once the owner has been reminded.
 	- Owner, 2026-11-14: 0.9.4 went out without the owner's indexing step in mind; the reminder moves to the next release: when it is live, remind the owner to request indexing for /, /docs/getting-started/introduction and /docs/getting-started/comparison.
+	- Owner, 2026-11-14: the next release means 0.9.5. Remind when 0.9.5 is live.
 
 ## Dropped
 
