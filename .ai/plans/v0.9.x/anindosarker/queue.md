@@ -253,6 +253,7 @@ kanban-plugin: basic
 	- 'shadcn table' on / per day (pos): 11-08 5.0, 11-09 4.5, 11-10 10.1, 11-11 4.9, 11-12 5.9, 11-13 6.0; no trend in 6 days. GSC links report not exposed by the MCP tools. Repo homepage www.shadcn-table.com, 6 topics, 56 stars; README links site; packages/shadcn-table/package.json homepage https://shadcn-table.com (apex), private, not on npm. Not in shadcn-ui directory.json, birobirobiro/awesome-shadcn-ui or gaofubin/awesome-shadcn (raw files grepped 2026-11-14).
 	- Owner, 2026-11-14: when release 0.9.4 is live, the lead reminds the owner to request indexing in Search Console (URL inspection, Request indexing) for https://www.shadcn-table.com/, /docs/getting-started/introduction and /docs/getting-started/comparison.
 	- Owner, 2026-11-14: this card is only the reminder to request indexing in Search Console after 0.9.4 is live; no wording change, no further listings. Registry directory PR shadcn-ui/ui 12711 and awesome-shadcn-ui PR 713 are submitted. Close the card once the owner has been reminded.
+	- Owner, 2026-11-14: 0.9.4 went out without the owner's indexing step in mind; the reminder moves to the next release: when it is live, remind the owner to request indexing for /, /docs/getting-started/introduction and /docs/getting-started/comparison.
 
 ## Dropped
 
