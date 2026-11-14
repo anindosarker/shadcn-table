@@ -7,9 +7,6 @@ kanban-plugin: basic
 - [ ] **Q84** A click in a date filter box that the editor already focused still lands on the year
 	- Run E13, spec 50 (tracker 50-filter-input-fixes, waiting on the owner): the D96 fix skips a field that already has focus, as D96 says. The chips editor, the header editor and the popover focus their first box on open, so the first click in that box (the chips range Min included) keeps the caret on the year; the fix reaches subheader fields, the range Max and every unfocused field. Review round 1 raises the same point; D96's line 'a click on an already focused field keeps the browser's behavior' would have to change.
 	- Owner test 2026-11-14 (localhost:5330, Base UI, filter-variants, Hire Date chip, dd/mm/yyyy locale): click in the middle of the auto-focused Min box, typed 03032025: day empty, month 03, year 32025. Owner then asked why the filters use native date inputs and not shadcn's date picker; see the date picker card.
-- [ ] **Q87** The registry namespace returns 404 for projects on the old new-york or default shadcn style
-	- Side-agent note, 2026-11-14, after registry directory PR shadcn-ui/ui 12711: the CLI fills {style} from the user's components.json (packages/registry/src/registry/builder.ts:65-73); apps/shadcn-table-docs/next.config.mjs:33-53 rewrites only radix-*, base-* and aria-* style paths; new-york, default and new-york-v4 return 404 (checked live). Docs promise only the three families (getting-started/agents.mdx:24). Not verified: whether the Radix copy installs and looks right in a new-york project. Owner leans: no support needed.
-	- Owner, 2026-11-14: 'no support needed, drop it'.
 - [ ] **Q88** Date filters use the browser's date boxes instead of shadcn's date picker
 	- Owner, 2026-11-14: 'Did we invent a date picker for ourselves instead of using the shadcn one?', pointing at https://ui.shadcn.com/docs/components/base/date-picker#input (the Input variant). Today: native input type date, datetime-local and time in ST_FilterTextField.tsx (base :595-609, radix :596-610, aria :661-675). Related: Q84, a native-input caret problem.
 	- Owner, 2026-11-14: 'Of course, we are gonna use shadcn date picker.' Direction set; the open parts are what the lookup finds: ranges, time and date-time filters, the React Aria base, new dependencies.
@@ -284,6 +281,9 @@ kanban-plugin: basic
 - [x] **Q85** A click in a date filter box still lands on the year in the chip editor, the header editor and the popover
 	- Spec 50 (D96) starts typing at the first part only for a box that does not have focus yet, as D96 says; the chip editor, the header editor and the popover focus their first box when they open, so the first centre click there still puts the caret on the year (Chromium and Firefox: typing 03032025 gives an empty value). Only subheader fields and the range Max get the fix. Found by the run's review of spec 50; the milestone is built and waits, branch v0.9/filter-input-fixes. Keep D96 as written, or extend the fix to editor-focused boxes.
 	- Same as Q84.
+- [x] **Q87** The registry namespace returns 404 for projects on the old new-york or default shadcn style
+	- Side-agent note, 2026-11-14, after registry directory PR shadcn-ui/ui 12711: the CLI fills {style} from the user's components.json (packages/registry/src/registry/builder.ts:65-73); apps/shadcn-table-docs/next.config.mjs:33-53 rewrites only radix-*, base-* and aria-* style paths; new-york, default and new-york-v4 return 404 (checked live). Docs promise only the three families (getting-started/agents.mdx:24). Not verified: whether the Radix copy installs and looks right in a new-york project. Owner leans: no support needed.
+	- Owner, 2026-11-14: 'no support needed, drop it'.
 
 ## Autofix
 
