@@ -5,6 +5,9 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #R4
+	- Release 0.9.4 was on a hold the owner asked for (Q83); the lead lifted it once the fix merged and the runner published without an owner yes. From 0.9.5 on: a release that is part of an epic the owner started ships with that epic; a release not in the plan ships only on the owner's explicit yes; a hold the owner asks for stays until the owner says release, and a merged fix, green checks, the lead or the runner never lift it.
+	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
+	- Recorded in `process.md` P4. Owner, 2026-11-14: "If I ask it to hold, then it should hold. Otherwise if I explicitly say yes or during the plan that release is part of it, then yes.", "record it".
 	- Source: Q89
 
 ## In progress
