@@ -6,9 +6,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **LQ21** Visitors get confused by the detail panel example because some rows cannot expand #owner
-	- Owner, 2026-11-13, from a screen recording: on `/docs/examples/detail-panel` rows 3 and 5 show a greyed expand chevron that does nothing; nothing on the page says those rows are deliberately disabled, so the visitor thinks the feature is broken. The example text needs to say which rows cannot expand and why, and the table needs a visible cue on those rows (a tooltip on the disabled chevron, or a muted row with a short note).
-	- Fact, 2026-11-13: the page renders `examples/<base>/enable-detail-panel-conditionally/TS.tsx` (same in base, radix, aria), where `renderDetailPanel: ({ row }) => row.original.address ? (...) : null` (TS.tsx:61-69) returns null for Ervin (row 3) and Branson (row 5), which have no `address` in `makeData.ts`; the default `getRowCanExpand` then marks them not expandable (`registry/base/.../hooks/useST_TableOptions.ts:228`), and the example's `stExpandButtonProps` (TS.tsx:50-58) forces a `rotate(-90deg)` style so disabled and collapsed chevrons look the same. The MDX already says it once, at the end of the intro paragraph (`content/docs/examples/detail-panel.mdx:7`): "In this example, the panel renders only for rows that have an address, so the expand button is disabled on rows without one." In the library, `registry/<base>/.../buttons/ST_ExpandButton.tsx` renders a disabled row as `disabled={!canExpand && !detailPanel}` (base and radix :87; aria `isDisabled` :86) with the tooltip switched off (`disableHoverListener`, :78) and no title or explanation, so the greyed chevron gives no reason on hover. Storybook `stories/features/DetailPanel.stories.tsx` shows disabled rows in `DetailPanelEnabledConditional` (:193), `DetailPanelEnabledConditionalHide` (:240, hides the button instead) and `ConditionalPanelDisablesEmptyRow` (:665, play test), none with a description.
 - [ ] **LQ22** First-time visitors land on Guides and see no example #owner
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
 	- Fact, 2026-11-16 (wt1 `a8cca4d4`): 11 of the 12 home feature tiles link to a guide (`components/dev-home/shared/outline-tiles.tsx:50-138`, link at `:930`); only Export goes to an example. "All feature guides" (`components/dev-home/v12/home-page.tsx:127`), the top bar and the footer go to `/docs/guides`. The main buttons go to install and `/docs/examples` (`home-page.tsx:55-62`).
@@ -16,11 +13,6 @@ kanban-plugin: basic
 	- Fact: 46 guide pages. 40 embed a live example, first at about line 83 of the body (median), after 5 to 6 headings, mostly under a "Demo" heading near the end; 6 have code blocks only (accessibility, best-practices, column-size, full-screen-toggle, table-event-listeners, tanstack-table-with-shadcn-ui). 27 guides have a matching example page, 19 do not.
 	- Fact: a guide embeds a table with a bare tag such as `<EnableStickyHeaderExample />` (`examples/map.tsx`, `components/mdx/example-snippet.tsx:12-14`), the same tag the example page uses; moving it up needs no new component.
 	- Fact: `usage.mdx:184` links `/docs/guides#fundamentals` and `#feature-guides`; neither anchor exists.
-- [ ] **LQ23** An example page does not say what the visitor is looking at #owner
-	- Owner, 2026-11-16, from PostHog screen recordings: visitors land on an example and try to work out what it is; the page gives too little information. The example descriptions need a rewrite.
-- [ ] **LQ24** Visitors try the example table and get lost #owner
-	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
-	- Owner, 2026-11-16: LQ21 (detail panel, rows that cannot expand) needs no item of its own; the rewritten description and steps must cover it.
 - [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
 	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
 	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
@@ -71,8 +63,24 @@ kanban-plugin: basic
 	- Owner, 2026-11-16, from PostHog screen recordings: many visitors change example through the quick example picker or the sidebar. The deployed sidebar is worse than the preview one (L8, L9, L10); switching examples through the sidebar must be easy. Related: LQ7.
 	- Fact, 2026-11-16: the picker's left and right arrows were removed on the preview by `ae316d45` and restored on owner feedback in wt1 `3f027846`.
 	- Covered by L8, L9, L10 and the picker arrows (wt1 `3f027846`). Owner is happy with the preview sidebar, 2026-11-16.
+- [x] **LQ21** Visitors get confused by the detail panel example because some rows cannot expand #owner
+	- Decision: L14
+	- Owner, 2026-11-13, from a screen recording: on `/docs/examples/detail-panel` rows 3 and 5 show a greyed expand chevron that does nothing; nothing on the page says those rows are deliberately disabled, so the visitor thinks the feature is broken. The example text needs to say which rows cannot expand and why, and the table needs a visible cue on those rows (a tooltip on the disabled chevron, or a muted row with a short note).
+	- Fact, 2026-11-13: the page renders `examples/<base>/enable-detail-panel-conditionally/TS.tsx` (same in base, radix, aria), where `renderDetailPanel: ({ row }) => row.original.address ? (...) : null` (TS.tsx:61-69) returns null for Ervin (row 3) and Branson (row 5), which have no `address` in `makeData.ts`; the default `getRowCanExpand` then marks them not expandable (`registry/base/.../hooks/useST_TableOptions.ts:228`), and the example's `stExpandButtonProps` (TS.tsx:50-58) forces a `rotate(-90deg)` style so disabled and collapsed chevrons look the same. The MDX already says it once, at the end of the intro paragraph (`content/docs/examples/detail-panel.mdx:7`): "In this example, the panel renders only for rows that have an address, so the expand button is disabled on rows without one." In the library, `registry/<base>/.../buttons/ST_ExpandButton.tsx` renders a disabled row as `disabled={!canExpand && !detailPanel}` (base and radix :87; aria `isDisabled` :86) with the tooltip switched off (`disableHoverListener`, :78) and no title or explanation, so the greyed chevron gives no reason on hover. Storybook `stories/features/DetailPanel.stories.tsx` shows disabled rows in `DetailPanelEnabledConditional` (:193), `DetailPanelEnabledConditionalHide` (:240, hides the button instead) and `ConditionalPanelDisablesEmptyRow` (:665, play test), none with a description.
+- [x] **LQ23** An example page does not say what the visitor is looking at #owner
+	- Decision: L14; the rewording of descriptions is LQ26
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors land on an example and try to work out what it is; the page gives too little information. The example descriptions need a rewrite.
+- [x] **LQ24** Visitors try the example table and get lost #owner
+	- Decision: L14
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
+	- Owner, 2026-11-16: LQ21 (detail panel, rows that cannot expand) needs no item of its own; the rewritten description and steps must cover it.
 
 ## Later
+
+- [ ] **LQ26** Example, guide and API wording is partly a copy of Material React Table #owner
+	- Fact: `reference/seo-audit-2026-11-10.md` finding 6: 38 to 53% overlap in 6-word phrases on sampled pages; some descriptions are MRT's with the name swapped. Release D74 reverted the first rewrite (spec 31) on style.
+	- Owner, 2026-11-16: not now; the demo comes first. A rephrase needs the owner to go through every description for meaning and SEO; the default agent rephrase does not read well. Until then titles, descriptions and body text stay as they are (L14).
+	- Not measured: how much the Try it and Related guides sections lower the overlap on example pages.
 
 ## Dropped
 
