@@ -16,12 +16,6 @@ kanban-plugin: basic
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors land on an example and try to work out what it is; the page gives too little information. The example descriptions need a rewrite.
 - [ ] **LQ24** Visitors try the example table and get lost #owner
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
-- [ ] **LQ25** Visitors switch examples through the picker and the sidebar, and the deployed sidebar is poor #owner
-	- Owner, 2026-11-16, from PostHog screen recordings: many visitors change example through the quick example picker or the sidebar. The deployed sidebar is worse than the preview one (L8, L9, L10); switching examples through the sidebar must be easy. Related: LQ7.
-	- Fact, 2026-11-16: the picker's left and right arrows were removed on the preview by `ae316d45` and restored on owner feedback in wt1 `3f027846`.
-- [ ] **LQ7** The examples list is hard to get through because the groups collapse #owner
-	- Owner, 2026-11-13, from screen recordings of real users: collapsed groups in the Examples sidebar hide the pages. The group labels (L8: small, flush left) stay as plain subheaders, but no group collapses, ever; every example page is visible at all times. Guides and API follow the same rule unless decided otherwise.
-	- Fix: drop the collapse from `components/sidebar-subgroup.tsx` (or render groups through the stock fumadocs separator, which has no collapse), keep the label style, no chevron.
 - [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
 	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
 	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
@@ -64,6 +58,14 @@ kanban-plugin: basic
 	- Decision: L12
 - [x] **LQ8** Keep the live examples stack or replace the landing with a card grid #lead
 	- Decision: L13
+- [x] **LQ7** The examples list is hard to get through because the groups collapse #owner
+	- Owner, 2026-11-13, from screen recordings of real users: collapsed groups in the Examples sidebar hide the pages. The group labels (L8: small, flush left) stay as plain subheaders, but no group collapses, ever; every example page is visible at all times. Guides and API follow the same rule unless decided otherwise.
+	- Fix: drop the collapse from `components/sidebar-subgroup.tsx` (or render groups through the stock fumadocs separator, which has no collapse), keep the label style, no chevron.
+	- Covered by L9: on the preview each section is a root, so group labels render through the plain separator and never collapse. Owner confirmed on the running preview, 2026-11-16.
+- [x] **LQ25** Visitors switch examples through the picker and the sidebar, and the deployed sidebar is poor #owner
+	- Owner, 2026-11-16, from PostHog screen recordings: many visitors change example through the quick example picker or the sidebar. The deployed sidebar is worse than the preview one (L8, L9, L10); switching examples through the sidebar must be easy. Related: LQ7.
+	- Fact, 2026-11-16: the picker's left and right arrows were removed on the preview by `ae316d45` and restored on owner feedback in wt1 `3f027846`.
+	- Covered by L8, L9, L10 and the picker arrows (wt1 `3f027846`). Owner is happy with the preview sidebar, 2026-11-16.
 
 ## Later
 
