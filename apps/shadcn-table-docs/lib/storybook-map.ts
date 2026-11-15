@@ -1,5 +1,6 @@
 import type { Base } from '@/lib/install';
 import { storybookUrl } from '@/components/mdx/storybook-link';
+import { examplePageSlug } from '@/lib/examples-entry.mjs';
 
 /**
  * Example page slug (content/docs/examples/<slug>.mdx) to the Storybook story
@@ -68,6 +69,6 @@ export const storybookStoryId: Record<string, string> = {
 
 /** The selected base's Storybook, deep-linked to the example's story. */
 export function storybookExampleUrl(base: Base, slug: string | undefined) {
-  const id = slug ? storybookStoryId[slug] : undefined;
+  const id = slug ? storybookStoryId[examplePageSlug(slug)] : undefined;
   return id ? `${storybookUrl[base]}?path=/story/${id}` : storybookUrl[base];
 }
