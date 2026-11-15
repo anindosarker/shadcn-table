@@ -6,18 +6,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **LQ27** Guide sections start at h3 where they should be h2 #owner
-	- Owner, 2026-11-16, on the v3 guide preview (wt1 `343f6f3d`): every section in a guide is an h3; the sections should be h2, so all guide headings need a bump up by one level.
-	- Fact: `content/docs/guides/column-pinning.mdx` and `virtualization.mdx` use `###` for their sections and `####` below; no `##` on the page. Not verified for the other 44 guides, the API pages or the "On this page" list depth setting.
-	- Owner, 2026-11-16: `/docs/guides/production-ready-tables` needs proper heading sizes too. Fact: all 8 of its sections are `###` (`production-ready-tables.mdx:30` to `:371`), none `##`.
-	- The added Example section (LQ22) follows the guide's section level, so it moves with this fix.
-- [ ] **LQ22** First-time visitors land on Guides and see no example #owner
-	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
-	- Fact, 2026-11-16 (wt1 `a8cca4d4`): 11 of the 12 home feature tiles link to a guide (`components/dev-home/shared/outline-tiles.tsx:50-138`, link at `:930`); only Export goes to an example. "All feature guides" (`components/dev-home/v12/home-page.tsx:127`), the top bar and the footer go to `/docs/guides`. The main buttons go to install and `/docs/examples` (`home-page.tsx:55-62`).
-	- Fact: the Guides overview (`content/docs/guides/index.mdx`) is a title and one sentence; no links, no table.
-	- Fact: 46 guide pages. 40 embed a live example, first at about line 83 of the body (median), after 5 to 6 headings, mostly under a "Demo" heading near the end; 6 have code blocks only (accessibility, best-practices, column-size, full-screen-toggle, table-event-listeners, tanstack-table-with-shadcn-ui). 27 guides have a matching example page, 19 do not.
-	- Fact: a guide embeds a table with a bare tag such as `<EnableStickyHeaderExample />` (`examples/map.tsx`, `components/mdx/example-snippet.tsx:12-14`), the same tag the example page uses; moving it up needs no new component.
-	- Fact: `usage.mdx:184` links `/docs/guides#fundamentals` and `#feature-guides`; neither anchor exists.
 - [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
 	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
 	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
@@ -79,8 +67,26 @@ kanban-plugin: basic
 	- Decision: L14
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
 	- Owner, 2026-11-16: LQ21 (detail panel, rows that cannot expand) needs no item of its own; the rewritten description and steps must cover it.
+- [x] **LQ27** Guide sections start at h3 where they should be h2 #owner
+	- Decision: L15
+	- Owner, 2026-11-16, on the v3 guide preview (wt1 `343f6f3d`): every section in a guide is an h3; the sections should be h2, so all guide headings need a bump up by one level.
+	- Fact: `content/docs/guides/column-pinning.mdx` and `virtualization.mdx` use `###` for their sections and `####` below; no `##` on the page. Not verified for the other 44 guides, the API pages or the "On this page" list depth setting.
+	- Owner, 2026-11-16: `/docs/guides/production-ready-tables` needs proper heading sizes too. Fact: all 8 of its sections are `###` (`production-ready-tables.mdx:30` to `:371`), none `##`.
+	- The added Example section (LQ22) follows the guide's section level, so it moves with this fix.
+- [x] **LQ22** First-time visitors land on Guides and see no example #owner
+	- Decision: L15
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
+	- Fact, 2026-11-16 (wt1 `a8cca4d4`): 11 of the 12 home feature tiles link to a guide (`components/dev-home/shared/outline-tiles.tsx:50-138`, link at `:930`); only Export goes to an example. "All feature guides" (`components/dev-home/v12/home-page.tsx:127`), the top bar and the footer go to `/docs/guides`. The main buttons go to install and `/docs/examples` (`home-page.tsx:55-62`).
+	- Fact: the Guides overview (`content/docs/guides/index.mdx`) is a title and one sentence; no links, no table.
+	- Fact: 46 guide pages. 40 embed a live example, first at about line 83 of the body (median), after 5 to 6 headings, mostly under a "Demo" heading near the end; 6 have code blocks only (accessibility, best-practices, column-size, full-screen-toggle, table-event-listeners, tanstack-table-with-shadcn-ui). 27 guides have a matching example page, 19 do not.
+	- Fact: a guide embeds a table with a bare tag such as `<EnableStickyHeaderExample />` (`examples/map.tsx`, `components/mdx/example-snippet.tsx:12-14`), the same tag the example page uses; moving it up needs no new component.
+	- Fact: `usage.mdx:184` links `/docs/guides#fundamentals` and `#feature-guides`; neither anchor exists.
 
 ## Later
+
+- [ ] **LQ28** Audit which guide tables are part of the guide and which are appended demos #lookup
+	- Owner, 2026-11-16 (L15): a table the guide text refers to stays in place; a table that only shows an example at the end is removed once the Example section shows it. Needs a pass over all 46 guides (40 embed a table); later.
+	- The same pass picks the best relevant example per guide: 27 guides have a matching example page, 13 embed a table without one, 6 have no table.
 
 - [ ] **LQ26** Example, guide and API wording is partly a copy of Material React Table #owner
 	- Fact: `reference/seo-audit-2026-11-10.md` finding 6: 38 to 53% overlap in 6-word phrases on sampled pages; some descriptions are MRT's with the name swapped. Release D74 reverted the first rewrite (spec 31) on style.

@@ -124,3 +124,16 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Not part of this decision: rewording titles, descriptions or body text (LQ26).
 - Owner accepted on the preview 2026-11-16: wt1 `10bd63f3`, pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
 - Source: LQ23, LQ24
+
+### L15 Guides get an "Example" section under the intro with the best relevant example
+
+- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
+- The Example section is a heading "Example" at the guide's section level and the live example block, nothing else. It shows the best relevant example: the guide's own example when it has one, otherwise the best match from the Examples section.
+- The example's toolbar names the example in its left slot. One example: the example page title followed by the arrow-up-right icon, together the link to `/docs/examples/<slug>`. Several examples: the example picker (arrows and dropdown) listing only this guide's examples; it swaps the table in place without changing the URL, and an "Open example page" button beside it follows the selection. MDX tag `<GuideExamples slugs={[...]} />`, first slug is the default (`components/mdx/guide-examples.tsx`, `components/guide-example-switch.tsx`).
+- On guide pages the toolbar stays on one row: the name truncates, and Storybook and Copy prompt show only their icons when the column is narrow. Example pages are unchanged.
+- Tables already in a guide: a table the guide's text refers to stays exactly where it is. A table that is only appended as a demo and is not part of the guide's writing (for example "Column Pinning Example" at the end of the column pinning guide) is removed, because the Example section shows it. Which table is which is settled per guide by an audit (LQ28).
+- Guide sections are h2 and their sub-sections h3; every guide heading moves up one level (LQ27).
+- Guide text is not reworded (LQ26).
+- To fix with the rollout: an example mounted twice on one page repeats its element id (`example-<name>`).
+- Owner accepted on the preview 2026-11-16: wt1 `8f287c43`, pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
+- Source: LQ22, LQ27
