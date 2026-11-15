@@ -31,6 +31,8 @@
     "async-loading",
     "pagination",
     "virtualization",
+    "virtualization-new-format",
+    "virtualization-new-format-2",
     "---Data Mutation Guides---",
     "row-selection",
     "editing",
