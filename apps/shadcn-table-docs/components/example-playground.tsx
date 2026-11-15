@@ -246,7 +246,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
     switcher = <ExampleSwitcher section={section} current={current} />;
   } else if (guide && guidePage && guide.pages.length > 1) {
     switcher = (
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
         <ExampleSwitcher
           pages={guide.pages}
           current={guidePage}
@@ -263,12 +263,15 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
     );
   } else if (guidePage) {
     switcher = (
-      <Link
-        href={guidePage.url}
-        className="min-w-0 truncate text-sm font-medium text-fd-foreground underline-offset-4 hover:underline"
-      >
-        {guidePage.name}
-      </Link>
+      <div className="flex min-w-0 flex-1 items-center">
+        <Link
+          href={guidePage.url}
+          className="inline-flex min-w-0 items-center gap-1 text-sm font-medium text-fd-foreground underline-offset-4 hover:underline"
+        >
+          <span className="truncate">{guidePage.name}</span>
+          <ArrowUpRightIcon className="size-3.5 shrink-0" />
+        </Link>
+      </div>
     );
   }
 
@@ -281,17 +284,29 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
       data-fullscreen={fullscreen || undefined}
       className={cn(
         'docs-playground not-prose my-8 scroll-mt-24 overflow-hidden rounded-lg bg-fd-background',
+        // Guide panels sit in the narrower column beside "On this page":
+        // their toolbar keeps one row by container width (below).
+        guide && '@container',
         fullscreen && 'fixed inset-0 z-50 my-0 flex flex-col rounded-none',
       )}
     >
       <header
         className={cn(
           'flex min-h-12 flex-wrap items-center justify-between gap-x-4 gap-y-2 px-3 py-1.5',
+          // Guide panels: one row from 36rem, the example link or picker
+          // takes the space left and truncates; below 48rem Storybook and
+          // Copy prompt show their icons only. Example pages are unchanged.
+          guide && '@xl:flex-nowrap',
           fullscreen && 'shrink-0',
         )}
       >
         {switcher}
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div
+          className={cn(
+            'ml-auto flex flex-wrap items-center gap-2',
+            guide && '@xl:shrink-0',
+          )}
+        >
           <div
             role="group"
             aria-label="View mode"
@@ -333,7 +348,9 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 }
               >
                 <BookOpenIcon data-icon="inline-start" />
-                Storybook
+                <span className={cn(guide && '@max-3xl:sr-only')}>
+                  Storybook
+                </span>
               </a>
             </Button>
             <Button
@@ -350,7 +367,12 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               )}
               {/* Both labels share one cell so the button keeps its width
                   while it reads "Copied"; the hidden one is not announced. */}
-              <span className="grid justify-items-start">
+              <span
+                className={cn(
+                  'grid justify-items-start',
+                  guide && '@max-3xl:sr-only',
+                )}
+              >
                 <span
                   className={cn(
                     'col-start-1 row-start-1',

@@ -41,7 +41,7 @@ export const GuideExamples = async ({ slugs }: Props) => {
       );
     }
     const Example = exampleComponents[component];
-    return { slug, title: page.title ?? slug, panel: <Example /> };
+    return { slug, title: page.title ?? slug, panel: <Example key={slug} /> };
   });
 
   return (
