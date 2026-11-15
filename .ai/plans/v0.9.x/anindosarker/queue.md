@@ -23,6 +23,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-15, final state of the demo (next-app commit above d1d6330; picks.json, defaults.json): picks 1.A, 2.A, 2.B, 3.A, 3.G, 4.A, 4.G, 4.H, 5.A, 6.A (1.C dropped); library defaults ticked 2.A, 3.G, 4.G, 5.A, 6.A; row 1 has no Default tick and 1.A is its only pick. Owner: 'defaults set. for example demos we will use the cooler ones', read by the runner as: the docs examples show the picked non-default cards (2.B one range button, 4.H one button with calendar and time pickers). Feedback from the demo session, not recorded as a decision.
 	- Owner then ticked 1.A as Default too: library defaults are 1.A, 2.A, 3.G, 4.G, 5.A, 6.A. Captures and report: reference/q88-date-filter-demo/ (claude/review bc33f6df).
 	- Owner, 2026-11-15: likes the look of the ten picked cards; before any decision an audit of them is required: implementation, code quality, deviation from the shadcn sources and custom parts, additional libraries, accessibility. Assigned to the runner, brief reference/q88-date-filter-demo/audit-brief.md, result audit.md.
+	- Audit of the ten picked cards (1.A 2.A 2.B 3.A 3.G 4.A 4.G 4.H 5.A 6.A): 2 blockers, 10 majors, 15 minors (not second-checked), 0 dropped. Every blocker and major reproduced by a second checker. File: reference/q88-date-filter-demo/audit.md. Ready after fixes: 1.A 3.A 3.G 4.A 5.A 6.A. Not ready as built: 2.A 4.G 2.B 4.H.
 
 ## Decided
 
