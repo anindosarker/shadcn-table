@@ -11,6 +11,7 @@ import {
 } from '@/components/examples-virtual-list';
 import { LazyMount } from '@/components/lazy-mount';
 import { ExampleSkeleton } from '@/components/example-skeleton';
+import { BackToTop } from '@/components/back-to-top';
 
 interface StackEntry {
   page: DocsPage;
@@ -80,7 +81,8 @@ const EAGER_BLOCKS = 3;
  * EAGER_BLOCKS bodies are rendered here (each in its own Suspense boundary,
  * LazyMount deferring the live table); every other body is fetched when its
  * block nears the viewport. Every title and description is also in a plain
- * list outside the virtualized one, so the HTML carries them all.
+ * list outside the virtualized one, so the HTML carries them all. A floating
+ * button scrolls back to the top.
  */
 export function ExamplesStack({
   index,
@@ -126,6 +128,7 @@ export function ExamplesStack({
           ))}
         </ul>
       </nav>
+      <BackToTop />
     </>
   );
 }
