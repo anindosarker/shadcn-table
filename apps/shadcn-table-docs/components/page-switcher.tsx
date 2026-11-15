@@ -90,23 +90,31 @@ function filterPages(value: string, search: string, keywords?: string[]) {
  * Last breadcrumb crumb as a combobox: the trigger shows the current page name,
  * the popover lists every page of the current top-level section, grouped by
  * the sidebar's separator labels, with a search input on top. Enter or click
- * navigates and closes the popover.
+ * navigates and closes the popover. With `pages` instead of `section` it lists
+ * only those pages, ungrouped; `onSelect` replaces the navigation.
  */
 export function PageSwitcher({
   section,
+  pages,
   current,
+  onSelect,
   className,
 }: {
-  section: PageTree.Folder;
+  section?: PageTree.Folder;
+  pages?: PageTree.Item[];
   current: PageTree.Item;
+  onSelect?: (page: PageTree.Item) => void;
   className?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const listId = useId();
-  const groups = useMemo(() => groupPages(section), [section]);
+  const groups = useMemo<PageGroup[]>(
+    () => (pages ? [{ pages }] : section ? groupPages(section) : []),
+    [section, pages],
+  );
   const label =
-    section.index && current.url === section.index.url
+    section?.index && current.url === section.index.url
       ? 'Overview'
       : current.name;
 
@@ -119,7 +127,7 @@ export function PageSwitcher({
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={listId}
-          aria-label="Switch page"
+          aria-label={pages ? 'Switch example' : 'Switch page'}
           className={cn(
             'inline-flex max-w-[60vw] cursor-pointer items-center gap-1 transition-colors hover:text-fd-foreground data-[state=open]:text-fd-foreground sm:max-w-xs',
             className,
@@ -146,7 +154,9 @@ export function PageSwitcher({
                     data-checked={page.url === current.url}
                     onSelect={() => {
                       setOpen(false);
-                      if (page.url !== current.url) router.push(page.url);
+                      if (page.url === current.url) return;
+                      if (onSelect) onSelect(page);
+                      else router.push(page.url);
                     }}
                   >
                     <span className="truncate">{page.name}</span>

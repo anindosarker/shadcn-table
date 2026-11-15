@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  ArrowUpRightIcon,
   CheckIcon,
   ChevronDownIcon,
   BookOpenIcon,
@@ -17,6 +18,7 @@ import {
   SparklesIcon,
   TerminalIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTreePath } from 'fumadocs-ui/contexts/tree';
 import { Button } from '@/components/ui-radix/button';
@@ -35,6 +37,7 @@ import {
 import { BaseSwitch, useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
+import { useGuideExamples } from '@/components/guide-example-switch';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 import { storybookExampleUrl } from '@/lib/storybook-map';
@@ -155,7 +158,12 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const path = useTreePath();
-  const exampleSlug = /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1];
+  // Inside a guide's <GuideExamples>: its example list and the one on show.
+  const guide = useGuideExamples();
+  const guidePage = guide?.pages[guide.index];
+  const exampleSlug =
+    /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1] ??
+    guidePage?.url.slice(guidePage.url.lastIndexOf('/') + 1);
 
   useEffect(
     () => () => {
@@ -223,16 +231,46 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
 
   const showCode = mode !== 'preview' && files.length > 0;
 
-  // Only example pages get the switcher: inside a guide the panel is one of
-  // several and switching would navigate away from the guide.
+  // Example pages get the section switcher. A guide's plain example panel
+  // gets nothing (switching would navigate away from the guide); one inside
+  // <GuideExamples> gets its example page's link, or with several examples
+  // the switcher over that list, swapping the example in place.
   const section = path[0];
   const current = path[path.length - 1];
-  const switcher =
+  let switcher: ReactNode = null;
+  if (
     pathname.startsWith('/docs/examples/') &&
     section?.type === 'folder' &&
-    current?.type === 'page' ? (
-      <ExampleSwitcher section={section} current={current} />
-    ) : null;
+    current?.type === 'page'
+  ) {
+    switcher = <ExampleSwitcher section={section} current={current} />;
+  } else if (guide && guidePage && guide.pages.length > 1) {
+    switcher = (
+      <div className="flex min-w-0 items-center gap-2">
+        <ExampleSwitcher
+          pages={guide.pages}
+          current={guidePage}
+          onSelect={(page) =>
+            guide.select(guide.pages.findIndex((p) => p.url === page.url))
+          }
+        />
+        <Button asChild variant="ghost" size="icon-sm">
+          <Link href={guidePage.url} aria-label="Open example page">
+            <ArrowUpRightIcon />
+          </Link>
+        </Button>
+      </div>
+    );
+  } else if (guidePage) {
+    switcher = (
+      <Link
+        href={guidePage.url}
+        className="min-w-0 truncate text-sm font-medium text-fd-foreground underline-offset-4 hover:underline"
+      >
+        {guidePage.name}
+      </Link>
+    );
+  }
 
   return (
     <div
