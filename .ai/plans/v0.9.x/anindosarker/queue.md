@@ -35,6 +35,7 @@ kanban-plugin: basic
 	- audit-2.md, what held: 6.B fully; 5.A apart from a half-typed hour; plain typing and odd dates on 1.A; Escape order and focus return of the nested popovers; stored values across time zones; 320 to 360 px layouts; no console error or crash in Chromium, Firefox, WebKit. Earlier findings: B1, B2, M1, M2, M4 (3.G, 4.I, 5.A), M5, M6, M8, M9 still happen; M3 gone. Not verified: iOS, Android, real Safari, a screen reader, paste, seconds, a 24 hour locale, true 200 percent zoom; WebKit and most Firefox results are the breakers' only.
 - [ ] **Q90** Dragging does not work reliably on mobile
 	- Owner, 2026-11-16: 'dragging doesn't work reliably on mobile.' Which drag (column reorder, row reorder, column resize, something in the date demo), page, device and browser: not stated yet.
+	- Code (all three bases alike): column reorder (whole th draggable, ST_TableHeadCell.tsx:276-278; grip ST_GrabHandleButton.tsx:47), row reorder (ST_TableBodyRowGrabHandle.tsx:68-69), show/hide menu reorder, sort popover rule reorder (ST_SortPopover.tsx:202) and the grouping drop zone use HTML5 drag and drop only: no touch or pointer handlers, no touch-none on grips (28px) or th. Resize uses getResizeHandler with onTouchStart plus touch-none (ST_TableHeadCellResizeHandle.tsx:61,73, 8px wide). Range slider is the base primitive with touch-none. v0.8.x D37 already records 'touch screens have no drag (unchanged)'. MRT has the same HTML5 grab handle; no touch stories or tests exist.
 
 ## Decided
 
