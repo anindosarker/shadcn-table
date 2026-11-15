@@ -76,6 +76,8 @@ export function ExamplesVirtualList({
   const [scrollMargin, setScrollMargin] = useState<number | null>(null);
   const [bodies, setBodies] = useState<Record<string, BlockBody>>({});
   const started = useRef(new Set<string>());
+  // Ends a running smooth scroll to the top; null when none runs.
+  const stopTopScroll = useRef<(() => void) | null>(null);
 
   const virtualizer = useWindowVirtualizer({
     count: items.length,
@@ -88,6 +90,10 @@ export function ExamplesVirtualList({
     // The default reads window.scrollY, which the server cannot know.
     initialOffset: 0,
   });
+  // The same instance for the list's lifetime; the ref lets an event handler
+  // set its `shouldAdjustScrollPositionOnItemSizeChange`, which 3.11 offers
+  // as an instance field, not an option.
+  const virtualizerRef = useRef(virtualizer);
 
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -115,8 +121,9 @@ export function ExamplesVirtualList({
   const urlAt = useCallback(
     (offset: number) => {
       // At the top the page shows the intro, even when a tall viewport puts
-      // the spy line inside the first block.
-      if (window.scrollY <= 0) return introUrl;
+      // the spy line inside the first block. On the way up the blocks passed
+      // are not written.
+      if (window.scrollY <= 0 || stopTopScroll.current) return introUrl;
       const item = virtualizer.getVirtualItemForOffset(offset);
       // A heading between two blocks belongs to the block above it.
       for (let index = item?.index ?? 0; index >= 0; index--) {
@@ -130,10 +137,45 @@ export function ExamplesVirtualList({
   );
   useExamplesScrollSpy(urlAt);
 
+  /**
+   * A smooth scroll to the top. The virtualizer keeps a block in place when a
+   * block above the viewport changes size, with an instant `scrollTo` that
+   * would cancel the smooth one; the target 0 does not depend on sizes, so
+   * that correction is off until the scroll ends, reaches the top or the
+   * user takes over.
+   */
+  const scrollToTopSmoothly = useCallback(() => {
+    stopTopScroll.current?.();
+    if (window.scrollY <= 0) return;
+    const interrupts = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    const onScroll = () => {
+      if (window.scrollY <= 0) stop();
+    };
+    const stop = () => {
+      stopTopScroll.current = null;
+      virtualizerRef.current.shouldAdjustScrollPositionOnItemSizeChange =
+        undefined;
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scrollend', stop);
+      for (const type of interrupts) window.removeEventListener(type, stop);
+    };
+    stopTopScroll.current = stop;
+    virtualizerRef.current.shouldAdjustScrollPositionOnItemSizeChange = () =>
+      false;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scrollend', stop);
+    for (const type of interrupts) {
+      window.addEventListener(type, stop, { passive: true });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+  useEffect(() => () => stopTopScroll.current?.(), []);
+
   const scrollTo = useCallback(
-    (slug: string) => {
+    (slug: string, { smooth = false }: { smooth?: boolean } = {}) => {
       if (!slug) {
-        window.scrollTo({ top: 0 });
+        if (smooth) scrollToTopSmoothly();
+        else window.scrollTo({ top: 0 });
         replaceExamplesUrl(introUrl);
         return true;
       }
@@ -145,7 +187,7 @@ export function ExamplesVirtualList({
       replaceExamplesUrl(`${introUrl}#${slug}`);
       return true;
     },
-    [items, introUrl, virtualizer],
+    [items, introUrl, virtualizer, scrollToTopSmoothly],
   );
   useEffect(() => registerStackScroller(scrollTo), [scrollTo]);
 
