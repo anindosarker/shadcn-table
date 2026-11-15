@@ -16,6 +16,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors land on an example and try to work out what it is; the page gives too little information. The example descriptions need a rewrite.
 - [ ] **LQ24** Visitors try the example table and get lost #owner
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
+	- Owner, 2026-11-16: LQ21 (detail panel, rows that cannot expand) needs no item of its own; the rewritten description and steps must cover it.
 - [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
 	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
 	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
