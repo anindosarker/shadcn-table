@@ -1,0 +1,64 @@
+---
+title: 'Column Pinning Guide (new format)'
+description: 'How to use and customize the column pinning features of Shadcn Table'
+---
+
+{/* Preview-only comparison page: the live example moved up under the intro. Remove before shipping. */}
+
+Column pinning lets users pin (freeze) columns to the start or end of the table (left and right in a left-to-right layout). Pinned columns do not scroll horizontally with the rest of the columns, so they always stay visible to the user. Column pinning is on by default: the column menu has Pin to start, Pin to end and Unpin items.
+
+#### Column Pinning Example
+
+<EnableColumnPinningExample />
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={new Set(['enableColumnPinning', 'onColumnPinningChange'])}
+/>
+
+### Relevant Column Options
+
+<ColumnOptionsTable onlyOptions={new Set(['enablePinning'])} />
+
+### Relevant State
+
+<StateOptionsTable onlyOptions={new Set(['columnPinning'])} />
+
+### Turn Column Pinning Off
+
+Column pinning is enabled by default. Set the `enableColumnPinning` table option to `false` to remove the pin items from the column menu. To keep one column from being pinned, set `enablePinning: false` in its column definition.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  enableColumnPinning: false,
+});
+
+return <ShadcnTable table={table} />;
+```
+
+### Pin (Freeze) Columns By Default
+
+Columns can start out pinned in your table by setting the `columnPinning` states in `initialState` or `state`. The pinning sides are `start` and `end`.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  initialState: { columnPinning: { start: ['email'] } }, //pin email column to the start (left in LTR) by default
+});
+
+return <ShadcnTable table={table} />;
+```
+
+When `enableRowActions` is on, the row actions column is pinned to the end by default. That default applies only while you give no `columnPinning` of your own, so include `'st-row-actions'` in `end` if you set `columnPinning` and still want it pinned. See the [Row Actions Guide](/docs/guides/row-actions).
+
+### Pinned Column Widths and the Edge Shadow
+
+In the default `'grid'` layout, pinned columns keep their set width while the other data columns share the spare width, so a pinned column never changes width while the table scrolls.
+
+The pinned cells on the inner edge of each side, header and body, cast a small shadow towards the scrolling columns while that side has pinned columns. The shadow color comes from the `--st-edge-shadow` variable, see the [Tint Tokens Guide](/docs/guides/tint-tokens). When columns are hidden behind the scrolled edge, a scroll chevron shows in the header row on hover, see the [Scroll Cues Guide](/docs/guides/scroll-cues).
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
