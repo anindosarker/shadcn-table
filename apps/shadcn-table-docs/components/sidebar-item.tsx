@@ -9,6 +9,7 @@ import {
   SECTION_CLASS,
   SECTION_LABEL_CLASS,
 } from '@/components/sidebar-section';
+import { EXAMPLES_URL, useLocationHash } from '@/lib/examples-url';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -20,6 +21,7 @@ import {
  */
 export function SidebarItem({ item }: { item: PageTree.Item }) {
   const pathname = usePathname();
+  const hash = useLocationHash();
 
   if (item.external) {
     return (
@@ -44,13 +46,42 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
   return (
     <BaseSidebarItem
       href={item.url}
-      active={normalize(item.url) === normalize(pathname)}
+      active={isActive({ url: item.url, pathname, hash })}
       icon={item.icon}
       className={ITEM_CLASS}
     >
       {item.name}
     </BaseSidebarItem>
   );
+}
+
+/**
+ * On the examples stack the hash names the block in view, so an example row
+ * is active when its slug is the hash and the Overview row when there is none.
+ */
+function isActive({
+  url,
+  pathname,
+  hash,
+}: {
+  url: string;
+  pathname: string;
+  hash: string;
+}) {
+  const page = normalize(url);
+  if (normalize(pathname) === EXAMPLES_URL) {
+    if (page === EXAMPLES_URL) return hash === '';
+    const slug = exampleSlug(page);
+    if (slug) return `#${slug}` === hash;
+  }
+  return page === normalize(pathname);
+}
+
+/** `basic` for `/docs/examples/basic`; undefined for any other page. */
+function exampleSlug(page: string) {
+  return page.startsWith(`${EXAMPLES_URL}/`)
+    ? page.slice(EXAMPLES_URL.length + 1)
+    : undefined;
 }
 
 /** Drops a trailing slash, as fumadocs does before comparing URLs. */
