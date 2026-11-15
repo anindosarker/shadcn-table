@@ -1,3 +1,5 @@
+import { FIRST_EXAMPLE_URL } from './examples-entry.mjs';
+
 export type RouteItem = {
   href: string;
   label: string;
@@ -37,7 +39,8 @@ export const routes: Array<RouteItem> = [
   },
   {
     label: 'Examples',
-    href: '/docs/examples',
+    // the section has no index page (lib/examples-entry.mjs)
+    href: FIRST_EXAMPLE_URL,
     items: [
       {
         href: '/docs/examples/basic',
