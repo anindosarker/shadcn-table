@@ -48,3 +48,25 @@ export function useLocationHash(): string {
     () => '',
   );
 }
+
+/** Scrolls the mounted examples stack to a block; `''` is the top. */
+type StackScroller = (slug: string) => boolean;
+
+let stackScroller: StackScroller | null = null;
+
+/** Called by the examples stack while it is mounted; returns the cleanup. */
+export function registerStackScroller(scroller: StackScroller) {
+  stackScroller = scroller;
+  return () => {
+    if (stackScroller === scroller) stackScroller = null;
+  };
+}
+
+/**
+ * Scrolls the examples stack to the block `slug` (`''` for the top) and
+ * points the URL at it. False when no stack is mounted or the slug is not
+ * one of its blocks, so the caller can fall back to a plain navigation.
+ */
+export function scrollStackTo(slug: string): boolean {
+  return stackScroller?.(slug) ?? false;
+}
