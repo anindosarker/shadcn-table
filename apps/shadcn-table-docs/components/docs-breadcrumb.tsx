@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'fumadocs-core/link';
-import type * as PageTree from 'fumadocs-core/page-tree';
 import { getBreadcrumbItemsFromPath } from 'fumadocs-core/breadcrumb';
 import { useTreeContext, useTreePath } from 'fumadocs-ui/contexts/tree';
 import type { BreadcrumbProps } from 'fumadocs-ui/layouts/notebook/page';
@@ -10,6 +9,7 @@ import { Fragment, useMemo } from 'react';
 import { docsRoute } from '@/lib/shared';
 import { cn } from '@/lib/cn';
 import { PageSwitcher } from '@/components/page-switcher';
+import { firstPageUrl } from '@/lib/page-tree-utils';
 
 /** Passed to the DocsPage breadcrumb slot: the page renders its own in the bar. */
 export function NoBreadcrumb() {
@@ -80,19 +80,4 @@ export function DocsBreadcrumb({
       })}
     </div>
   );
-}
-
-/** URL of the first page under `node`, in tree order. */
-function firstPageUrl(
-  node: PageTree.Root | PageTree.Folder,
-): string | undefined {
-  if ('index' in node && node.index) return node.index.url;
-  for (const child of node.children) {
-    if (child.type === 'page') return child.url;
-    if (child.type === 'folder') {
-      const url = firstPageUrl(child);
-      if (url) return url;
-    }
-  }
-  return undefined;
 }
