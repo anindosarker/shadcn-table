@@ -117,12 +117,15 @@ export function ExamplesStack({
   return (
     <>
       <ExamplesVirtualList items={items} introUrl={index.url} />
-      {/* Plain anchors, not next/link: a Link would prefetch every page. */}
+      {/* Plain anchors, not next/link: a Link would prefetch every page.
+          Out of the tab order: the links are for crawlers, not keyboards. */}
       <nav aria-label="Every example" className="sr-only">
         <ul>
           {entries.map(({ page }) => (
             <li key={page.url}>
-              <a href={page.url}>{page.data.title}</a>
+              <a href={page.url} tabIndex={-1}>
+                {page.data.title}
+              </a>
               {page.data.description && <p>{page.data.description}</p>}
             </li>
           ))}
