@@ -6,6 +6,10 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **LQ27** Guide sections start at h3 where they should be h2 #owner
+	- Owner, 2026-11-16, on the v3 guide preview (wt1 `343f6f3d`): every section in a guide is an h3; the sections should be h2, so all guide headings need a bump up by one level.
+	- Fact: `content/docs/guides/column-pinning.mdx` and `virtualization.mdx` use `###` for their sections and `####` below; no `##` on the page. Not verified for the other 44 guides, the API pages or the "On this page" list depth setting.
+	- The added Example section (LQ22) follows the guide's section level, so it moves with this fix.
 - [ ] **LQ22** First-time visitors land on Guides and see no example #owner
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
 	- Fact, 2026-11-16 (wt1 `a8cca4d4`): 11 of the 12 home feature tiles link to a guide (`components/dev-home/shared/outline-tiles.tsx:50-138`, link at `:930`); only Export goes to an example. "All feature guides" (`components/dev-home/v12/home-page.tsx:127`), the top bar and the footer go to `/docs/guides`. The main buttons go to install and `/docs/examples` (`home-page.tsx:55-62`).
