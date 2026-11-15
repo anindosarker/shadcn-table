@@ -12,7 +12,10 @@
  * `@/components/ui-<base>/`. Nothing else changes: an example that needs other
  * code on a base has it written in that base's folder.
  * components/example-variant.tsx lazy-loads the variant for the selected base;
- * the output is formatted with the repo's prettier config.
+ * the output is formatted with the repo's prettier config. Each variant folder
+ * also gets sources.json, the hand-written files the code view shows
+ * (lib/example-source.ts reads it from a fixed path per base, so the docs
+ * build does not trace the examples tree).
  *
  * Runs before `next build` and `next dev` (package.json `build`, `predev`)
  * and from `pnpm examples:variants`. Stale variant folders are removed.
@@ -21,11 +24,18 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
-import { listExampleFiles } from './example-files.mjs';
+import { listExampleFiles, stripDirective } from './example-files.mjs';
 import { VARIANT_DIRS } from './example-variant-dir.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const EXAMPLES = path.join(APP, 'examples');
+
+/**
+ * examples/<variant dir>/sources.json: { [slug]: ExampleFile[] }, the files
+ * the code view shows (lib/example-source.ts), in listExampleFiles order,
+ * with the leading 'use client' directive stripped.
+ */
+const SOURCES_FILE = 'sources.json';
 
 /**
  * `@/components/ui/<part>` and `@/components/ui/shadcn-table...` imports to
@@ -69,10 +79,14 @@ async function main() {
     const out = path.join(EXAMPLES, variantDir);
     const slugs = await listSlugs(sourceRoot);
     let files = 0;
+    /** @type {Record<string, { path: string, source: string }[]>} */
+    const sources = {};
     for (const slug of slugs) {
       const dir = path.join(sourceRoot, slug);
+      sources[slug] = [];
       for (const rel of await listExampleFiles(dir)) {
         const source = await fs.readFile(path.join(dir, rel), 'utf8');
+        sources[slug].push({ path: rel, source: stripDirective(source) });
         const target = path.join(out, slug, rel);
         await fs.mkdir(path.dirname(target), { recursive: true });
         await fs.writeFile(
@@ -82,9 +96,14 @@ async function main() {
         files += 1;
       }
     }
-    // Variant folders whose example is gone.
-    const kept = new Set(slugs);
+    // The code view's sources: the hand-written files, not the variants.
     await fs.mkdir(out, { recursive: true });
+    await fs.writeFile(
+      path.join(out, SOURCES_FILE),
+      `${JSON.stringify(sources)}\n`,
+    );
+    // Variant folders whose example is gone (files such as sources.json stay).
+    const kept = new Set(slugs);
     for (const entry of await fs.readdir(out, { withFileTypes: true })) {
       if (entry.isDirectory() && !kept.has(entry.name)) {
         await fs.rm(path.join(out, entry.name), { recursive: true });

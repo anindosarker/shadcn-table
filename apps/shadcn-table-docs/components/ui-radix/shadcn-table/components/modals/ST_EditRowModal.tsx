@@ -19,7 +19,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_EditActionButtons } from '@/components/ui-radix/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_EditCellTextField } from '@/components/ui-radix/shadcn-table/components/inputs/ST_EditCellTextField';
-import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
 
 const editRowModalVariants = cva('max-h-[calc(100%-4rem)]');
 

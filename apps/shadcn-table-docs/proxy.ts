@@ -30,3 +30,8 @@ export default function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+// Without a matcher the proxy ran as a function on every request (assets, /ingest, bots), the main Vercel cost (D66); both rewrites only match under /docs.
+export const config = {
+  matcher: ['/docs', '/docs/:path*'],
+};

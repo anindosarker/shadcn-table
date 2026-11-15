@@ -1,9 +1,11 @@
-// validate-repo: five repository checks in order, all of them before the
-// exit: bases-identical, icon-maps, tailwind-classes, registry-valid, unit.
-// Summary `bases identical, icon maps complete, tailwind valid, registry
-// valid, <n> unit tests`, the failing checks named on a failure.
+// validate-repo: six repository checks in order, all of them before the
+// exit: bases-identical, icon-maps, tailwind-classes, registry-valid,
+// registry-fresh, unit. Summary `bases identical, icon maps complete,
+// tailwind valid, registry valid, registry fresh, <n> unit tests`, the
+// failing checks named on a failure.
 import { check as basesIdentical } from './lib/bases-identical.mjs';
 import { check as iconMaps } from './lib/icon-maps.mjs';
+import { check as registryFresh } from './lib/registry-fresh.mjs';
 import { check as registryValid } from './lib/registry-valid.mjs';
 import { check as tailwindClasses } from './lib/tailwind-classes.mjs';
 import { check as unit } from './lib/unit.mjs';
@@ -32,6 +34,9 @@ export const run = async (ctx) => {
   );
   await step('registry-valid', 'registry valid', () =>
     registryValid(ctx.log, ctx.root),
+  );
+  await step('registry-fresh', 'registry fresh', () =>
+    registryFresh(ctx.log, ctx.root),
   );
   let tests = 0;
   await step('unit', 'unit', async () => {

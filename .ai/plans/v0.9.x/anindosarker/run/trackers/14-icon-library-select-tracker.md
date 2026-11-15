@@ -15,7 +15,7 @@ Checks:
 - `ls components/ui-<base>/shadcn-table/icons/` for radix, base, aria at efd1087f + Task 4 files: pass, hugeicons phosphor remixicon tabler in each
 - `pnpm test validate-repo` at efd1087f + Task 4 files: pass (bases identical, icon maps complete, registry valid, 27 unit tests)
 - `pnpm --filter shadcn-table-docs types:check` at c06f68ee: pass
-- `pnpm test docs-e2e --base base /` at c06f68ee: fail 3 times on the theme hotkey checks (`theme: r changes --primary` and the three after it; icon checks pass); cause measured: the home demo replays while centered (demoLoop leaves it there) and moves focus into its search field, where the theme keys are ignored; under load `r` also lands about 1.1 s late against the 200 ms wait (F23). Not caused by this milestone's code (the hotkeys fire in a probe on the same build)
+- `pnpm test docs-e2e --base base /` at c06f68ee: fail 3 times on the theme hotkey checks (`theme: r changes --primary` and the three after it; icon checks pass); cause measured: the home demo replays while centered (demoLoop leaves it there) and moves focus into its search field, where the theme keys are ignored; under load `r` also lands about 1.1 s late against the 200 ms wait (Q23). Not caused by this milestone's code (the hotkeys fire in a probe on the same build)
 - `pnpm test typecheck --base radix`, `--base base`, `--base aria` at bf40fd6a: pass, tsc clean
 - `pnpm test lint` at bf40fd6a: pass (9 warnings in the docs app, none in this milestone's files)
 - `pnpm test validate-repo` at bf40fd6a: pass
@@ -32,7 +32,7 @@ Checks:
 - `pnpm test storybook-tests --base base` at 5cb8af69: pass, 619 passed (Icons play included)
 - `pnpm test storybook-tests --base radix` at 5cb8af69: pass, 619 passed
 - `pnpm test storybook-tests --base aria` at 5cb8af69: pass, 619 passed
-- Merge of `origin/claude/review` into the branch at 450ee4f7 (conflict in `getting-started.mjs`: kept claude/review's F23/F24 helpers, added the `themeIconLibrary` call, which now takes the shared `closePanel`); lockfile unchanged, regenerated copies unchanged
+- Merge of `origin/claude/review` into the branch at 450ee4f7 (conflict in `getting-started.mjs`: kept claude/review's Q23/F24 helpers, added the `themeIconLibrary` call, which now takes the shared `closePanel`); lockfile unchanged, regenerated copies unchanged
 - `pnpm test typecheck --base radix` at 450ee4f7: pass, tsc clean
 - `pnpm test lint` at 450ee4f7: pass (9 warnings, 0 errors)
 - `pnpm test validate-repo` at 450ee4f7: pass (bases identical, icon maps complete, tailwind valid, registry valid, 27 unit tests)
@@ -49,7 +49,7 @@ Checks:
 ## Attention
 
 - Random keeps the current icon library: `shuffleConfig` sets `iconLibrary: current.iconLibrary` on every shuffle, since the curated presets name icon libraries of their own and the spec says Random does not change it; the spec text only named `randomFields` keeping the default (which would reset a Tabler pick to Lucide on Random). Revert by dropping that line in `lib/design-system/config.ts`.
-- The theme hotkey checks on `/` (`theme: r changes --primary` and after) fail whenever the home demo is in view: `demoLoop` leaves it centered, the replay restarts after each reload and moves focus into its search field, where the panel's single-key shortcuts are ignored. At the top of the page the demo holds, but then the first Escape only dismisses the focused Reset button's tooltip and leaves the panel open. For F23: scroll to the top before the panel checks and close the panel with Escape until it detaches; this milestone did that only in its own icon checks to stay off F23's lines.
+- The theme hotkey checks on `/` (`theme: r changes --primary` and after) fail whenever the home demo is in view: `demoLoop` leaves it centered, the replay restarts after each reload and moves focus into its search field, where the panel's single-key shortcuts are ignored. At the top of the page the demo holds, but then the first Escape only dismisses the focused Reset button's tooltip and leaves the panel open. For Q23: scroll to the top before the panel checks and close the panel with Escape until it detaches; this milestone did that only in its own icon checks to stay off Q23's lines.
 - The Task 1 story red is read from `tsc -p packages/shadcn-table/tsconfig.stories.json` and vitest: `pnpm test typecheck` does not include `stories/`, so it stayed green on the shipped code. The stories tsconfig carries 3 older errors (HeaderGroups, ViewSettings, PinnedItemsCustomToolbar stories).
 - The one `pnpm install` also re-resolved `@emnapi/core` and `@emnapi/runtime` peers in the lockfile (1.11.0 to 1.9.2 inside the vite/vitest peer strings); `pnpm install --frozen-lockfile` is clean.
 

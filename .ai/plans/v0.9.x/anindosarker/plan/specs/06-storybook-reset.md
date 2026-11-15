@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-Every story's play runs when the story opens, so the deployed Storybook (`storybook.shadcn-table.com/<base>/`) shows each story in its play's end state: a filter typed, the last page selected (F6). D8 resets the story after its play on the static builds only: `main.ts` tells the preview it is a static build, and a project-level `afterEach` in `preview.tsx` remounts the story through a keyed wrapper. `storybook dev` and vitest keep the end state. The diff is accepted as is (D8) and applied verbatim.
+Every story's play runs when the story opens, so the deployed Storybook (`storybook.shadcn-table.com/<base>/`) shows each story in its play's end state: a filter typed, the last page selected (Q6). D8 resets the story after its play on the static builds only: `main.ts` tells the preview it is a static build, and a project-level `afterEach` in `preview.tsx` remounts the story through a keyed wrapper. `storybook dev` and vitest keep the end state. The diff is accepted as is (D8) and applied verbatim.
 
 ### 1.2 Goals
 
@@ -41,7 +41,7 @@ test/storybook-static/
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): `#### Spec 06 Storybook reset` under `## Unreleased`: the deployed Storybook resets each story after its play (D8, F6).
+- `CHANGELOG.md` (P9): `#### Spec 06 Storybook reset` under `## Unreleased`: the deployed Storybook resets each story after its play (D8, Q6).
 - The tracker `trackers/06-storybook-reset-tracker.md`: the red run of `storybook-static` on the shipped code (P11).
 
 #### 1.6.2 Reset after play (D8)

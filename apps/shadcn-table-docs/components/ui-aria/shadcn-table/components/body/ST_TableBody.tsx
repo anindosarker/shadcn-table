@@ -15,7 +15,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_OverflowTooltipProvider } from '@/components/ui-aria/shadcn-table/components/body/ST_OverflowText';
 import { ST_TableBodyRow } from '@/components/ui-aria/shadcn-table/components/body/ST_TableBodyRow';
-import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 export interface ST_TableBodyProps extends TableBodyProps {
   columnVirtualizer?: ST_ColumnVirtualizer;

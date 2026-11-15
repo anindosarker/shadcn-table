@@ -3,6 +3,12 @@ import { createGetUrl } from 'fumadocs-core/source';
 export const appName = 'Shadcn Table';
 /** Lowercase name used in page titles and OG/Twitter metadata. */
 export const siteName = 'shadcn-table';
+/**
+ * The site description (D73, D76): read by the root layout metadata, the home
+ * page metadata and JSON-LD, the OG image and the llms.txt summary.
+ */
+export const siteDescription =
+  'Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI.';
 export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';

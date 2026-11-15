@@ -20,6 +20,8 @@ import {
 } from '@/lib/shared';
 import { findSectionName, footerNeighbours } from '@/lib/page-tree-utils';
 import { ExamplesStack } from '@/components/examples-stack';
+import { JsonLd } from '@/components/json-ld';
+import { breadcrumbJsonLd, techArticleJsonLd } from '@/lib/structured-data';
 
 /** True only for the examples index, `/docs/examples`. */
 function isExamplesIndex(slug: string[] | undefined): boolean {
@@ -50,6 +52,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       // prev / next across section edges (sections are root folders)
       footer={{ items: footerNeighbours(source.getPageTree(), page.url) }}
     >
+      <JsonLd data={techArticleJsonLd(page)} />
+      <JsonLd data={breadcrumbJsonLd(page)} />
       {/* Sticky under the top nav (and the mobile TOC popover): fumadocs
           publishes that edge as --fd-docs-row-3. */}
       <div className="docs-page-bar sticky top-(--fd-docs-row-3) z-10 flex flex-row items-center justify-between gap-4 bg-fd-background py-2">
@@ -120,7 +124,7 @@ export async function generateMetadata(
   if (!page) notFound();
 
   return {
-    title: page.data.title,
+    title: page.data.searchTitle ?? page.data.title,
     description: page.data.description,
     // Replaces the root layout's openGraph object, so restate siteName.
     openGraph: {

@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-In the panel's Colors tab each token row shows a static swatch (`<span aria-hidden>`) and a text input; the only way to change a color is typing a value. D23 makes the swatch a button that opens a popover with `react-colorful`'s `HexColorPicker` above the input: a drag writes the token live, and closing the popover records one undo step. Typed values keep their per-keystroke history (A10, D23).
+In the panel's Colors tab each token row shows a static swatch (`<span aria-hidden>`) and a text input; the only way to change a color is typing a value. D23 makes the swatch a button that opens a popover with `react-colorful`'s `HexColorPicker` above the input: a drag writes the token live, and closing the popover records one undo step. Typed values keep their per-keystroke history (Q46, D23).
 
 ### 1.2 Goals
 
@@ -83,7 +83,7 @@ sequenceDiagram
 `components/design-system-provider.tsx`, status `refactor`.
 
 - `beginTokenEdit()` stores the current config as the session's start; while a session is open `setToken` applies and stores without recording history; `endTokenEdit()` records one entry holding the start config when the config changed, then clears the session. Nested or unmatched calls are no-ops.
-- `setToken` outside a session keeps recording one entry per call (A10).
+- `setToken` outside a session keeps recording one entry per call (Q46).
 
 **Interfaces:**
 

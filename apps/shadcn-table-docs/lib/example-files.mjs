@@ -1,14 +1,23 @@
 /**
  * Source files of one docs example folder (examples/<base>/<slug>/). Shared by
  * tools/registry/examples.mjs (the registry item's
- * files) and lib/example-source.ts (the playground's code explorer), so both
- * see the same files in the same order.
+ * files) and lib/example-variants.mjs (the playground's code explorer sources,
+ * read by lib/example-source.ts), so both see the same files in the same order.
  *
  * Plain ESM so the Node script can import it without a TypeScript loader;
  * tsconfig has `allowJs`, so the app imports it with types from the JSDoc.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+
+/**
+ * Strips the leading 'use client' directive: a Next.js requirement, not part
+ * of the example. lib/example-variants.mjs applies it to the code-view sources
+ * it writes (examples/.<base>/sources.json).
+ * @param {string} src
+ */
+export const stripDirective = (src) =>
+  src.replace(/^'use client';\r?\n(\r?\n)?/, '');
 
 /** The example's entry file, always listed first. */
 export const ENTRY_FILE = 'TS.tsx';

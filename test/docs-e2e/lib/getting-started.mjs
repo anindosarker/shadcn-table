@@ -16,6 +16,7 @@ import {
   example,
   headerBaseLabel,
   headerBaseMenu,
+  liveDemoFilters,
 } from './helpers.mjs';
 
 // D29's 300 ms budget holds on a local machine, but GitHub runners took 342 to
@@ -1360,13 +1361,29 @@ const checks = {
       (await steps.count()) === 4,
       String(await steps.count()),
     );
-    const w = await example(page, 'basic', check);
-    await codeToggle(page, 'basic', 'useShadcnTable', check);
+    // The Live Example is the live-demo example (D78); the Basic Example
+    // stays on its own examples page.
+    check(
+      'no basic example',
+      (await page.locator('[id="example-basic"]').count()) === 0,
+    );
+    const w = await example(page, 'live-demo', check);
+    await liveDemoFilters(page, w, check);
+    await codeToggle(page, 'live-demo', 'useShadcnTable', check);
     // The header's base switch re-renders the example on Base UI and the
     // code view shows that variant's imports; Radix again afterwards.
-    await baseSwitch(page, 'basic', check);
+    await baseSwitch(page, 'live-demo', check);
     // The example toolbar's own base select drives the same switch.
-    await baseSwitch(page, 'basic', check, { via: 'toolbar' });
+    await baseSwitch(page, 'live-demo', check, { via: 'toolbar' });
+  },
+  '/docs/getting-started/introduction': async ({ page, check }) => {
+    // The See it demo is the live-demo example (D78).
+    check(
+      'no basic example',
+      (await page.locator('[id="example-basic"]').count()) === 0,
+    );
+    const w = await example(page, 'live-demo', check);
+    await liveDemoFilters(page, w, check);
   },
   '/docs': async ({ page, check }) => {
     check(
@@ -1492,6 +1509,56 @@ const checks = {
     check(
       'llms link',
       (await page.locator('article a[href="/llms.txt"]').count()) === 1,
+    );
+  },
+  // Spec 47 (D71): the comparison page sits last in Getting Started, its
+  // heading stays the short label and the <title> names the compared
+  // libraries (frontmatter searchTitle).
+  '/docs/getting-started/comparison': async ({ page, check }) => {
+    const title = (
+      (await page.locator('article h1').first().textContent()) ?? ''
+    ).trim();
+    check('title', title === 'Comparison', `h1=${title}`);
+    const docTitle = await page.title();
+    check(
+      'search title',
+      ['TanStack Table', 'Material React Table', 'AG Grid'].every((name) =>
+        docTitle.includes(name),
+      ) && docTitle.endsWith(' | shadcn-table'),
+      docTitle,
+    );
+    const header = (
+      await page
+        .locator('article table')
+        .first()
+        .locator('thead th')
+        .allTextContents()
+    )
+      .map((t) => t.trim())
+      .join(',');
+    check(
+      'matrix columns',
+      header ===
+        ',shadcn-table,TanStack Table,shadcn/ui data-table recipe,Material React Table,AG Grid',
+      header,
+    );
+    const group = page
+      .locator('[data-slot="collapsible"]', {
+        has: page.locator('[data-slot="collapsible-trigger"]', {
+          hasText: 'Getting Started',
+        }),
+      })
+      .first();
+    const items = (
+      await group
+        .locator('[data-slot="collapsible-content"] > a')
+        .allTextContents()
+    ).map((t) => t.trim());
+    check(
+      'sidebar order',
+      items.join(',') ===
+        'Introduction,Installation,Usage,AI Agent Setup,Comparison',
+      items.join(','),
     );
   },
   '/docs/getting-started': async ({ page, check }) => {

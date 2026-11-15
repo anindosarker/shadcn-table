@@ -1,132 +1,31 @@
 'use client';
 
-import { useMemo } from 'react';
-import {
-  ShadcnTable,
-  type ST_ColumnDef,
-} from '@/components/ui-radix/shadcn-table';
+import dynamic from 'next/dynamic';
 import { type StateOption, stateOptions } from '@/lib/prop-tables/stateOptions';
-import { InlineCode } from './inline-code';
-import { PropLink } from './prop-link';
-import { useDesktopColumnPinning } from './use-desktop-column-pinning';
+import { PropTableFallback, PropTableShell } from './prop-table-shell';
+import { staticRows } from './static-prop-table';
+
+const StateOptionsTableClient = dynamic(
+  () => import('./state-options-table.client'),
+  {
+    ssr: false,
+    loading: PropTableFallback,
+  },
+);
 
 interface Props {
   onlyOptions?: Set<StateOption['stateOption']>;
 }
 
-export const StateOptionsTable = ({ onlyOptions }: Props) => {
-  const columns = useMemo<ST_ColumnDef<StateOption>[]>(
-    () => [
-      {
-        accessorKey: 'stateOption',
-        enableClickToCopy: true,
-        header: 'State Option',
-        stCopyButtonProps: ({ cell }) => ({
-          className: 'state-option',
-          id: `${cell.getValue<string>()}-state-option`,
-        }),
-      },
-      {
-        accessorKey: 'type',
-        header: 'Type',
-        enableGlobalFilter: false,
-        size: 150,
-        Cell: ({ cell }) => <InlineCode>{cell.getValue<string>()}</InlineCode>,
-      },
-      {
-        accessorKey: 'defaultValue',
-        enableGlobalFilter: false,
-        header: 'Default Value',
-        size: 130,
-        Cell: ({ cell }) => <InlineCode>{cell.getValue<string>()}</InlineCode>,
-      },
-      {
-        accessorKey: 'description',
-        enableGlobalFilter: false,
-        header: 'Description',
-      },
-      {
-        accessorKey: 'link',
-        enableColumnFilter: false,
-        enableGlobalFilter: false,
-        header: 'More Info Links',
-        size: 150,
-        Cell: ({ cell, row }) => (
-          <PropLink href={cell.getValue<string>()}>
-            {row.original?.linkText}
-          </PropLink>
-        ),
-      },
-    ],
-    [],
-  );
-
-  const [columnPinning, setColumnPinning] =
-    useDesktopColumnPinning('stateOption');
-
-  const data = useMemo(() => {
-    if (onlyOptions) {
-      return stateOptions.filter(({ stateOption }) =>
-        onlyOptions.has(stateOption),
-      );
-    }
-    return stateOptions;
-  }, [onlyOptions]);
-
-  return (
-    <div className="not-prose">
-      <ShadcnTable
-        columns={columns}
-        data={data}
-        displayColumnDefOptions={{
-          'st-row-numbers': {
-            size: 10,
-          },
-          'st-row-expand': {
-            size: 10,
-          },
-        }}
-        enableColumnActions={!onlyOptions}
-        enableColumnFilterModes
-        enablePagination={false}
-        enableColumnPinning
-        enableRowNumbers
-        enableBottomToolbar={false}
-        enableTopToolbar={!onlyOptions}
-        initialState={{
-          columnVisibility: { description: false },
-          density: 'compact',
-          showGlobalFilter: true,
-          sorting: [{ id: 'stateOption', desc: false }],
-        }}
-        stSearchTextFieldProps={{
-          placeholder: 'Search State Options',
-          className: 'min-w-[18rem]',
-        }}
-        stTableLayoutProps={{
-          className: 'mb-6',
-          id: onlyOptions
-            ? 'relevant-state-options-table'
-            : 'state-options-table',
-        }}
-        positionGlobalFilter="left"
-        renderDetailPanel={({ row }) => (
-          <p
-            className={
-              row.original.description
-                ? 'text-foreground'
-                : 'text-muted-foreground'
-            }
-          >
-            {row.original.description || 'No Description Provided... Yet...'}
-          </p>
-        )}
-        rowNumberDisplayMode="static"
-        onColumnPinningChange={setColumnPinning}
-        state={{ columnPinning }}
-      />
-    </div>
-  );
-};
+/** Static HTML table on the server, the interactive one after hydration. */
+export const StateOptionsTable = ({ onlyOptions }: Props) => (
+  <PropTableShell
+    anchor="state-option"
+    nameHeader="State Option"
+    rows={staticRows(stateOptions, 'stateOption', onlyOptions)}
+  >
+    <StateOptionsTableClient onlyOptions={onlyOptions} />
+  </PropTableShell>
+);
 
 export default StateOptionsTable;

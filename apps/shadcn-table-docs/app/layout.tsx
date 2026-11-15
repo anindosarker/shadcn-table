@@ -10,13 +10,18 @@ import { Inter } from 'next/font/google';
 import { archivo } from '@/lib/fonts';
 import { designSystemScript } from '@/lib/design-system/config';
 import { designSystemFontVariables } from '@/lib/design-system/fonts';
-import { siteName, siteUrl } from '@/lib/shared';
+import { siteDescription, siteName, siteUrl } from '@/lib/shared';
+
+/** The home page title: the brand first, then the category words (D73). */
+const siteTitle = 'shadcn-table: React Data Table for shadcn/ui and TanStack';
 
 export const metadata: Metadata = {
-  title: { default: siteName, template: `%s | ${siteName}` },
-  description:
-    'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.',
+  title: { default: siteTitle, template: `%s | ${siteName}` },
+  description: siteDescription,
   metadataBase: new URL(siteUrl),
+  // './' resolves per route against metadataBase: every page names its own
+  // slash-less URL as canonical (D53).
+  alternates: { canonical: './' },
   applicationName: siteName,
   openGraph: { siteName, type: 'website' },
   twitter: { card: 'summary_large_image' },

@@ -7,7 +7,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) and E6 (CI D35 to D38) sit on `claude/review` (`2c268682`, which already contains `master` through the 0.9.0 merge `566f56a6`); `dev` and `master` are at 0.9.0 (`2eeafde9`). D45 ships them as 0.9.1 through the D40 flow: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, the PR `dev` into `master` opens at once with `release:minor` and auto-merge, `pr.yml` on GitHub is the one full run, the runner approves Prepare Release (D47), the bump push skips the test jobs (D35), auto-merge merges, `release.yml` tags `v0.9.1`, verifies the deploy and publishes. The run is the proof D35, D36, D38 and D44 wait for, recorded in the release tracker. Two tooling gaps ride along in Integration before the fast-forward (D46): the `.gitignore` negation for `test/storybook-static/` (F10) and the `capRecord` unit test plus the `pr-summary.mjs` header sentence (F27). The docs restructuring is not in it (0.9.2, D45).
+E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) and E6 (CI D35 to D38) sit on `claude/review` (`2c268682`, which already contains `master` through the 0.9.0 merge `566f56a6`); `dev` and `master` are at 0.9.0 (`2eeafde9`). D45 ships them as 0.9.1 through the D40 flow: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, the PR `dev` into `master` opens at once with `release:minor` and auto-merge, `pr.yml` on GitHub is the one full run, the runner approves Prepare Release (D47), the bump push skips the test jobs (D35), auto-merge merges, `release.yml` tags `v0.9.1`, verifies the deploy and publishes. The run is the proof D35, D36, D38 and D44 wait for, recorded in the release tracker. Two tooling gaps ride along in Integration before the fast-forward (D46): the `.gitignore` negation for `test/storybook-static/` (Q10) and the `capRecord` unit test plus the `pr-summary.mjs` header sentence (Q27). The docs restructuring is not in it (0.9.2, D45).
 
 ### 1.2 Goals
 
@@ -23,11 +23,11 @@ E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) an
 ### 1.3 Current structure
 
 ```
-claude/review  2c268682              ← E4 (08 9d582dcd, 09, 10, 11 d7ee15f3, 12 117a81b5, 13), E5 (14, 15 5df252e9), E6 (16 to 19, a0677dfc), fixes F20 to F25, merge of master 566f56a6, plan commits
+claude/review  2c268682              ← E4 (08 9d582dcd, 09, 10, 11 d7ee15f3, 12 117a81b5, 13), E5 (14, 15 5df252e9), E6 (16 to 19, a0677dfc), fixes Q20 to Q25, merge of master 566f56a6, plan commits
 dev, master    2eeafde9              ← 0.9.0 (v0.9.0 tagged 2026-11-08)
 CHANGELOG.md:10-68                   ← `## Unreleased`: `### Added` (Spec 12), `### Changed` (Spec 19, 18, 16, 17), `### Docs` (Spec 11, 08, 13, 09, 10, 14, 15); `## 0.9.0 - 2026-11-08` below
 packages/shadcn-table/package.json:8 ← "version": "0.9.0"
-.gitignore:23                        ← `storybook-static` (matches test/storybook-static/ too, F10)
+.gitignore:23                        ← `storybook-static` (matches test/storybook-static/ too, Q10)
 tools/release/record-output.mjs:24-39 ← MAX_ERRORS 5, MAX_ERROR_LENGTH 400, capRecord (exported), outputLine; no test file
 tools/release/pr-summary.mjs:9-10    ← "else from test/.out/*.json (a local run, spec 18's act check)"
 test/validate-repo/lib/unit.mjs:13   ← node --test "tools/**/*.test.mjs"
@@ -74,15 +74,15 @@ sequenceDiagram
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes F20 to F25 whose merge is not yet in `master` each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did; F20, F23, F24, F25 shipped in 0.9.0 and F21 has no fix commit, so 0.9.1 lists Fix F22 only); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
+- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes Q20 to Q25 whose merge is not yet in `master` each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did; Q20, Q23, Q24, Q25 shipped in 0.9.0 and Q21 has no fix commit, so 0.9.1 lists Fix F22 only); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
 - `packages/shadcn-table/package.json` and the root `package.json`: version `0.9.1` through Prepare Release only; never bumped by hand.
 - The trackers: `trackers/20-integration-0-9-1-tracker.md` (Integration), `trackers/20-release-pr-0-9-1-tracker.md`, `trackers/20-after-release-0-9-1-tracker.md`: check lines, the PR number, the run ids, the proof lines of 1.6.3, the final shas.
 
 #### 1.6.2 Ride-alongs (D46)
 
-- `.gitignore`, status `refactor`: after line 23 `storybook-static`, the line `!test/storybook-static/` so new files in `test/storybook-static/` are tracked without `git add -f` (F10).
+- `.gitignore`, status `refactor`: after line 23 `storybook-static`, the line `!test/storybook-static/` so new files in `test/storybook-static/` are tracked without `git add -f` (Q10).
 - `tools/release/record-output.test.mjs`, status `new`: `node:test` cases for `capRecord` from `record-output.mjs`: a record with seven errors keeps the first five; an error of 401 characters becomes 399 characters plus `…` (length 400); an error of 400 characters is untouched; a record without `errors` is returned unchanged; `outputLine('base', record)` prints `base=` followed by one-line JSON of the capped record and `''` for a missing record. Runs under `pnpm test validate-repo` through `tools/**/*.test.mjs`.
-- `tools/release/pr-summary.mjs:9-10`, status `refactor`: "(a local run, spec 18's act check)" becomes "(a local run without NEEDS)"; under `act` `NEEDS` is set as on GitHub (F27).
+- `tools/release/pr-summary.mjs:9-10`, status `refactor`: "(a local run, spec 18's act check)" becomes "(a local run without NEEDS)"; under `act` `NEEDS` is set as on GitHub (Q27).
 - Does NOT change `capRecord`, `MAX_ERRORS`, `MAX_ERROR_LENGTH` or any workflow.
 
 #### 1.6.3 Integration (D40, D45, P1)
@@ -129,7 +129,7 @@ sequenceDiagram
 - Review: none
 - Local CI: `node --test tools/release/record-output.test.mjs`, `pnpm test validate-repo`, `pnpm test lint`
 - Task 1: Ride-alongs (1.6.2): the test file first, red on the shipped `capRecord` only where a case is wrong (the cases describe the shipped rule, so green is the expected result and the tracker says so, P11 does not apply to a coverage add); the `.gitignore` line; the header sentence; `pnpm format`. Checks: `node --test tools/release/record-output.test.mjs` green; `git check-ignore -q test/storybook-static/new.mjs` exits 1; `grep -c "spec 18's act check" tools/release/pr-summary.mjs` prints `0`; `pnpm test validate-repo` green; `pnpm test lint` green
-- Task 2: Changelog pass of 1.6.1 on `claude/review` (commit, push), then the fast-forward of 1.6.3. Checks: `git rev-parse origin/dev` equals `git rev-parse origin/claude/review`; `grep -c '^## Unreleased' CHANGELOG.md` prints `1`; every `#### Spec` block of 08 to 19 and one `#### Fix F<n>` line per fix not yet in `master` (F22) sit under a `###` group
+- Task 2: Changelog pass of 1.6.1 on `claude/review` (commit, push), then the fast-forward of 1.6.3. Checks: `git rev-parse origin/dev` equals `git rev-parse origin/claude/review`; `grep -c '^## Unreleased' CHANGELOG.md` prints `1`; every `#### Spec` block of 08 to 19 and one `#### Fix F<n>` line per fix not yet in `master` (Q22) sit under a `###` group
 
 ### Milestone: Release PR 0.9.1
 

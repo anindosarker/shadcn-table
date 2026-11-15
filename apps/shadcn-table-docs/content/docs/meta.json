@@ -4,6 +4,7 @@
     "getting-started",
     "examples",
     "guides",
-    "api"
+    "api",
+    "external:[Changelog](https://github.com/anindosarker/shadcn-table/blob/master/CHANGELOG.md)"
   ]
 }

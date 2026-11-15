@@ -16,6 +16,7 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
 ├── lib/                     ← install.mjs (lib:install), example-map.mjs and the docs helpers
 test/                        ← every test, one folder per test behind `pnpm test <name>` (run.mjs the runner)
 tools/
+├── docs/                    ← docs content checks (check-frontmatter.mjs)
 ├── registry/                ← base list, registry build, hosted copies, example items, add-part, the base diff lists
 ├── release/                 ← the release tools the workflows run, with their *.test.mjs
 └── preview.mjs              ← the root and package previews

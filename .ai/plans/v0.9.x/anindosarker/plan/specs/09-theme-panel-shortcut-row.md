@@ -11,7 +11,7 @@ The panel's shortcut controls are spread out: Undo (`P`) and Redo in the toolbar
 
 ### 1.2 Goals
 
-- One row directly under the header holds Reset, Undo, Redo, Random, Next preset, each with its kbd hint: `Shift+R`, `Mod+Z`, `Mod+Shift+Z`, `R`, `C` (`Mod` is Cmd on macOS, Ctrl elsewhere; the label comes from the client platform through the formatter the F11 fix (D20) leaves in place) (D22).
+- One row directly under the header holds Reset, Undo, Redo, Random, Next preset, each with its kbd hint: `Shift+R`, `Mod+Z`, `Mod+Shift+Z`, `R`, `C` (`Mod` is Cmd on macOS, Ctrl elsewhere; the label comes from the client platform through the formatter the Q11 fix (D20) leaves in place) (D22).
 - The header holds the title and the close button only; the Presets row holds the preset select only (D22).
 - Labeled buttons when the row fits the panel width; icon buttons with a tooltip (label plus kbd hint) when it does not (D22). The row never overflows horizontally.
 - Acceptance: programmatic. `pnpm test docs-e2e --base base /` green with the checks of 1.6.3: the row has the five buttons by accessible name, `ControlOrMeta+z` undoes, `ControlOrMeta+Shift+z` redoes, `p` changes nothing, `Shift+R` resets, the row's `scrollWidth` equals its `clientWidth`; `pnpm test typecheck --base radix`, `pnpm test lint` green.
