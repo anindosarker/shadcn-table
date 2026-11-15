@@ -114,6 +114,9 @@ export function ExamplesVirtualList({
 
   const urlAt = useCallback(
     (offset: number) => {
+      // At the top the page shows the intro, even when a tall viewport puts
+      // the spy line inside the first block.
+      if (window.scrollY <= 0) return introUrl;
       const item = virtualizer.getVirtualItemForOffset(offset);
       // A heading between two blocks belongs to the block above it.
       for (let index = item?.index ?? 0; index >= 0; index--) {
