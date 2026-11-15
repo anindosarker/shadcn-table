@@ -28,6 +28,7 @@ kanban-plugin: basic
 	- Audit verdict on 2.B: yes after fixes, as an example demo only. Fixes: let the calendar reach years outside 1926 to 2026, and put the picked range in the button's accessible name. Not as a library default: no typing, no one-ended range, no Enter or blur commit, no input for focus on open or the E2E fill.
 	- Audit libraries: the ten cards need shadcn calendar, scroll-area, button-group, card and packages react-day-picker 10.0.2 and date-fns 4.4.0 (both MIT); none is in the core item on any base. Not verified: iOS, Android, a real screen reader, WebKit typing, 24 hour locale, Radix and React Aria bases, the cards inside the real chip editor.
 	- Owner, 2026-11-15, updated ticks after more demo passes (new cards 2.D and 4.I: one lean button, popover with typed From and To boxes above a two-month range calendar): picks 1.A, 2.A, 2.D, 3.A, 3.G, 4.A, 4.I, 5.A, 6.A, 6.B; library defaults 1.A, 2.D, 3.G, 4.I, 5.A, 6.A. 2.B, 4.G and 4.H are no longer picked. Owner asked for a new audit on these ten only, aimed at breaking them. Feedback, not a recorded decision.
+	- Break-it audit, 2026-11-15, of the owner's updated picks 1.A, 2.A, 2.D, 3.A, 3.G, 4.A, 4.I, 5.A, 6.A, 6.B (defaults 1.A, 2.D, 3.G, 4.I, 5.A, 6.A) at next-app 202e5ea: reference/q88-date-filter-demo/audit-2.md. 4 blockers, 10 majors, 9 minors, 1 dropped, about 235 attempts. Every kept bug was replayed by a checker in Chromium. Verdicts: 4.I broken; 1.A, 2.A, 2.D, 3.A, 3.G, 4.A, 6.A have bugs; 5.A minor issues; 6.B held.
 
 ## Decided
 
