@@ -5,6 +5,7 @@
   "pages": [
     "basic",
     "basic-new-format",
+    "basic-new-format-2",
     "minimal",
     "advanced",
     "custom-headless",
@@ -17,6 +18,7 @@
     "row-ordering",
     "row-dragging",
     "row-dragging-new-format",
+    "row-dragging-new-format-2",
     "---Editing (CRUD) Examples---",
     "editing-crud",
     "editing-crud-inline-row",
@@ -31,6 +33,7 @@
     "aggregation-and-grouping",
     "detail-panel",
     "detail-panel-new-format",
+    "detail-panel-new-format-2",
     "chart-detail-panel",
     "---Filtering Examples---",
     "filter-variants",
