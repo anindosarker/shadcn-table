@@ -3,15 +3,24 @@
 ## Where
 
 - App repo: `test-projects/next-app` (own git repo, branch `playground/header-demo-theming`, not pushed).
-- Final commits: page `b5015f7`, owner's picks `5931f23`.
+- Final commits: page `d1d6330`, owner's picks and defaults `6db0517` (next-app head).
 - Page: `app/date-filter-demo/page.tsx`, at `/date-filter-demo` on the dev server.
-- Picks: stored in `app/date-filter-demo/picks.json` through the route handler `app/api/date-filter-picks/route.ts` (GET reads, PUT replaces the whole list, ids `1.A` to `6.J`, atomic write). The page loads them on mount and on window focus, so every device on the dev server sees the same ticks; localStorage is only the fallback when the request fails.
+- Ticks: each card has a Pick and a Default checkbox. Picks live in `app/date-filter-demo/picks.json`, library defaults in `app/date-filter-demo/defaults.json` (at most one per row; a Default is always picked; unpicking drops the Default).
+- Both go through the route handler `app/api/date-filter-picks/route.ts`: GET returns both lists; each tick POSTs only its change (`{kind, id, checked}`), and the server merges it into the files under an in-process lock with atomic writes, then returns both lists. A stale tab on another device cannot overwrite newer ticks.
+- The page loads the ticks on mount and refetches on focus, visibilitychange and pageshow, so every device on the dev server sees the same ticks; localStorage is only the fallback when a request fails.
 
-## Owner's picks
+## Owner's picks and library defaults
 
-- `picks.json` at `5931f23` holds: 1.A, 2.A, 2.B, 3.A, 3.G, 4.A, 4.G, 4.H, 5.A, 6.A.
-- The lead's list also names 1.C; it is not in the committed file. Captures for 1.C were taken anyway.
-- Per row: 1 date: A (and C per the lead). 2 date-range: A, B. 3 datetime: A, G. 4 datetime-range: A, G, H. 5 time: A. 6 time-range: A.
+- Committed at `6db0517`: picks 1.A, 2.A, 2.B, 3.A, 3.G, 4.A, 4.G, 4.H, 5.A, 6.A; defaults 2.A, 3.G, 4.G, 5.A, 6.A.
+- The live `defaults.json` also has 1.A (the owner ticked it during this pass, not committed); the captures show that live state.
+- Per row:
+  - 1 date: pick A; default A (live file only; 1.A is the only pick).
+  - 2 date-range: picks A, B; default A.
+  - 3 datetime: picks A, G; default G.
+  - 4 datetime-range: picks A, G, H; default G.
+  - 5 time: pick A; default A.
+  - 6 time-range: pick A; default A.
+- Owner: "for example demos we will use the cooler ones": the docs examples show the picked non-default cards, 2.B and 4.H.
 
 ## Cards and what they are built from
 
@@ -46,6 +55,7 @@
 - Clear X on every control: an InputGroupButton for boxes, an outline Button in a ButtonGroup beside Button triggers; shown only with a value, focus returns to the field.
 - Row and card numbering (`1 date`, `1.A ...`).
 - Pick checkboxes per card with a "Picked:" summary, later moved from localStorage to the shared file.
+- Default checkbox per card ("this is the library's default for this variant") with a "Default:" summary, stored in `defaults.json`; saves changed to one change per request, merged on the server.
 - Single-component datetime cards: 3.D to 3.G.
 - Single-button and shared-popover range cards: 4.D to 4.H.
 
@@ -76,10 +86,11 @@
 
 ## Verification done
 
-- One verifier round (visual, behavior, fidelity) on the first build only; its findings went to the fix pass.
+- One verifier round (visual, behavior, fidelity) on the first build only; its findings went to the fix pass. The brief asked for up to three rounds; only one ran.
 - Everything after that was checked by the builder alone in Chromium (agent-browser) at 1280 and 360 px, dark, at the owner's request to iterate fast.
 - No WebKit or Firefox run. Light theme and the other themes were not rechecked after the first round, apart from these captures.
 - agent-browser cannot type into native date and time boxes, so desktop typing in A cells was driven with input events, not keystrokes.
+- Tick saving was checked with two tabs, one forced stale: its tick kept the other tab's newer ticks.
 
 ## Open items
 
@@ -87,12 +98,11 @@
 - 3.E's popover has no inner scroll; on a very short phone the stacked time columns can be cut off.
 - The single-button trigger truncates a range in another year at 360 px (`Nov 14 '25 00:00 - Nov 28 '25 23:59`), hiding the end time.
 - The playground header overflows at 360 px (app layout, not this page).
-- The picks API replaces the whole list, so a stale tab can overwrite newer ticks from another device until it refetches on focus.
 - 4.E's End tab Calendar does not show the start day, so the range is not visible while picking the end.
 - The native boxes' format follows the browser locale (`14/11/2026` here), while Button triggers use the docs' English formats.
 
 ## Captures
 
-- `page-light.png`, `page-dark.png`: full page at 1280 px.
-- `<candidate>-<variant>-<light|dark>.png`: closed captures of the 11 cards, with values filled in.
+- `page-light.png`, `page-dark.png`: full page at 1280 px, with the Picked and Default lines.
+- `<candidate>-<variant>-<light|dark>.png`: closed captures of the 10 picked cards, with values filled in, showing the Pick and Default checkboxes.
 - `a-date-open-dark.png`, `g-datetime-open-dark.png`, `g-datetime-range-open-dark.png`, `h-datetime-range-open-dark.png`: popover open, dark.
