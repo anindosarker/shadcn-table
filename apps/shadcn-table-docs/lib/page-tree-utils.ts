@@ -89,6 +89,21 @@ export function findSiblings(
   return visit(root.children);
 }
 
+/** URL of the first page under `node`, in tree order. */
+export function firstPageUrl(
+  node: PageTree.Root | PageTree.Folder,
+): string | undefined {
+  if ('index' in node && node.index) return node.index.url;
+  for (const child of node.children) {
+    if (child.type === 'page') return child.url;
+    if (child.type === 'folder') {
+      const url = firstPageUrl(child);
+      if (url) return url;
+    }
+  }
+  return undefined;
+}
+
 /** Name of the top-level folder that holds the page at `url`, if any. */
 export function findSectionName(
   root: Pick<PageTree.Root, 'children'>,
