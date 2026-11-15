@@ -264,7 +264,9 @@ html > body[data-scroll-locked] {
 /* page links only: the page tree sits in the scroll area (Base UI
    role="presentation"); the banner's section tabs
    (components/sidebar-section-tabs.tsx) sit outside it */
-:is(#nd-sidebar, #nd-sidebar-mobile) [role='presentation'] a {
+:is(#nd-sidebar, #nd-sidebar-mobile)
+  [role='presentation']
+  a:where(:not([data-external])) {
   padding-block: 0.25rem;
   font-size: 0.8125rem;
   color: var(--color-fd-foreground);

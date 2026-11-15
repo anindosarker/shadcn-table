@@ -11,7 +11,7 @@ export * from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
 export * from '@/components/ui/shadcn-table/shared/fns/filterFns';
 export * from '@/components/ui/shadcn-table/shared/fns/sortFns';
 
-export { ST_TableProvider } from '@/components/ui/shadcn-table/hooks/stTableHook';
+export { ST_TableProvider } from '@/components/ui/shadcn-table/context/ST_TableContext';
 export * from '@/components/ui/shadcn-table/hooks/useShadcnTable';
 export * from '@/components/ui/shadcn-table/hooks/useST_MediaQuery';
 export * from '@/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer';
@@ -113,4 +113,6 @@ export { ST_HeaderFilterEditor } from '@/components/ui/shadcn-table/components/t
 export {
   ST_DefaultsProvider,
   useST_Defaults,
-} from '@/components/ui/shadcn-table/hooks/useST_Defaults';
+} from '@/components/ui/shadcn-table/context/ST_DefaultsContext';
+// spec 39
+export * from '@/components/ui/shadcn-table/hooks/useST_DebouncedCallback';

@@ -12,7 +12,7 @@ import {
 import { getST_SelectAllHandler } from '@/components/ui-radix/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-radix/shadcn-table/components/inputs/ST_SelectCheckbox';
-import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {

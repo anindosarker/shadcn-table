@@ -5,6 +5,7 @@ import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
 import { SidebarRootHeading } from '@/components/sidebar-root-heading';
 import { SidebarSectionTabs } from '@/components/sidebar-section-tabs';
+import { SidebarItem } from '@/components/sidebar-item';
 import { SiteNav } from '@/components/site-nav';
 import { IconLibraryProvider } from '@/components/icon-library-selector';
 
@@ -30,7 +31,11 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
             <SidebarRootHeading />
           </>
         ),
-        components: { Folder: SidebarSection, Separator: SidebarSeparator },
+        components: {
+          Folder: SidebarSection,
+          Separator: SidebarSeparator,
+          Item: SidebarItem,
+        },
       }}
     >
       {/* The install commands of a page share one icon library pick. */}

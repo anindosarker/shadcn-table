@@ -1,6 +1,5 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { listExampleFiles } from './example-files.mjs';
 import type { Base } from './install';
 
 export interface ExampleFile {
@@ -9,34 +8,48 @@ export interface ExampleFile {
   source: string;
 }
 
-/**
- * Strips the leading 'use client' directive: a Next.js requirement, not part
- * of the example.
- */
-const stripDirective = (src: string) =>
-  src.replace(/^'use client';\r?\n(\r?\n)?/, '');
+type ExampleSources = Record<string, ExampleFile[]>;
 
-/** examples/<base>/<name>: the base's hand-written source the code view shows. */
-export const exampleDir = (name: string, base: Base) =>
-  path.join(process.cwd(), 'examples', base, name);
+/**
+ * examples/.<base>/sources.json per base, written by lib/example-variants.mjs
+ * (before `build`, `predev` and `types:check`). One literal path per base, so
+ * the bundler resolves each file at build time instead of tracing the whole
+ * examples tree.
+ */
+const SOURCES: Record<Base, () => Promise<string>> = {
+  base: () =>
+    fs.readFile(
+      path.join(process.cwd(), 'examples/.base/sources.json'),
+      'utf8',
+    ),
+  radix: () =>
+    fs.readFile(
+      path.join(process.cwd(), 'examples/.radix/sources.json'),
+      'utf8',
+    ),
+  aria: () =>
+    fs.readFile(
+      path.join(process.cwd(), 'examples/.aria/sources.json'),
+      'utf8',
+    ),
+};
 
 /**
  * Every source file of examples/<base>/<name> the playground shows, in tree
- * order (see listExampleFiles): `TS.tsx` first, then folders before files.
- * The source imports `@/components/ui/...`, the path a user has after
- * install; the base's variant under examples/.<base>
- * (lib/example-variants.mjs) only feeds the live example.
+ * order (see listExampleFiles in lib/example-files.mjs): `TS.tsx` first, then
+ * folders before files, the leading 'use client' directive stripped. The
+ * source imports `@/components/ui/...`, the path a user has after install; the
+ * base's variant under examples/.<base> (lib/example-variants.mjs) only feeds
+ * the live example.
  */
 export async function readExampleFiles(
   name: string,
   base: Base,
 ): Promise<ExampleFile[]> {
-  const dir = exampleDir(name, base);
-  const paths = await listExampleFiles(dir);
-  return Promise.all(
-    paths.map(async (rel) => ({
-      path: rel,
-      source: stripDirective(await fs.readFile(path.join(dir, rel), 'utf8')),
-    })),
-  );
+  const sources = JSON.parse(await SOURCES[base]()) as ExampleSources;
+  const files = Object.hasOwn(sources, name) ? sources[name] : undefined;
+  if (!files) {
+    throw new Error(`No example "${name}" in examples/${base}`);
+  }
+  return files;
 }

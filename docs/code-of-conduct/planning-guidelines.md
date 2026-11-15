@@ -47,7 +47,10 @@ How to write an implementation plan for this repository. Applies to humans and a
     `Depends on`; `ownership.py` computes the edges (a listed dependency, or a shared file,
     lower epic number first) and the sprint columns of `sprints.md`. Milestones that share no
     file and list no dependency run in the same sprint. A file shared by two milestones of one
-    column is a script error, fixed in the epic.
+    column is a script error, fixed in the epic. A milestone that edits a registry source or an
+    example page's `description` lists the generated outputs (`apps/shadcn-table-docs/registry.json`,
+    `packages/shadcn-table/registry.json`, the `examples-<base>-diff.json` lists) in its
+    `Files owned` and regenerates them; `pnpm test validate-repo` fails on a stale one.
 
 ## Template
 

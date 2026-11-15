@@ -9,6 +9,178 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Fixed
+
+#### Spec 52 Docs filter facts
+
+- The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
+- The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
+- On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
+
+## 0.9.4 - 2026-11-13
+
+### Added
+
+#### Spec 39 Typed filters wait for you to finish typing
+
+- A new hook, `useST_DebouncedCallback(fn, wait)`, returns `run`, `flush`, `cancel` and `isPending`; it calls the latest `fn`, reads `wait` on each call and flushes a pending call on unmount. Typed column filters (text, number, autocomplete, each range end) and the global search use it (D88).
+- Table options `columnFilterDebounceMs` and `globalFilterDebounceMs` and column option `filterDebounceMs` set the wait; the default is 500 ms for both, with or without `manualFiltering` (was 200 ms, 400 ms for filters and 250 ms, 500 ms for search) (D88).
+- Enter and blur apply a typed filter or search at once. The field's clear button, Clear filters, Remove filter, the column menu clear, a stored view, the search clear button, Escape and closing the search drop the pending call, so a cleared filter no longer comes back (D88).
+- Date, datetime and time filters apply a complete value: a typed value applies on Enter, blur or when its chip editor closes, a value picked in the native picker at once, never a half-typed year (D88).
+- A controlled `state.columnFilters` rebuilt on every parent render (equal content, new array) no longer drops a typed filter inside the wait.
+- The chips mode editor focuses its input once when it opens, not on every table change: typing Min and then clicking Max no longer moves focus back to Min.
+- Select and multi-select filters apply the picked value at once instead of after a 1 ms timer.
+
+### Changed
+
+#### Spec 45 Filter Mode caption gap
+
+- The "Filter Mode: <mode>" caption under a filter input sits 6 px below it instead of 3 px (`mt-1.5`), in the text field, the range fields and the range slider on the three bases (D85).
+
+#### Spec 49 Home hero wording
+
+- The home hero line above the `shadcn-table` heading reads "The open-source shadcn data table for React, built on TanStack Table." and the sentence below it reads "A production-ready data table library built with TanStack Table and shadcn/ui. Sorting, filtering, pagination, grouping, pinning, virtualization, and more, all built in." (D90). The heading, the title tag and the meta description are unchanged.
+
+#### Fix D91
+
+- The table context and the defaults context move to a `context/` folder, one file per context (three bases). `hooks/stTableHook.tsx` becomes `context/ST_TableContext.tsx` (`tableContext`, `useTableContext`, `useSTContext`, `ST_TableProvider`) and its factory `createSTTableHook` moves to `hooks/createSTTableHook.ts`; `hooks/useST_Defaults.tsx` becomes `context/ST_DefaultsContext.tsx` (`ST_DefaultsContext`, `ST_DefaultsProvider`, `useST_Defaults`). Every exported name is unchanged, so imports through `index.ts` keep working; an import from one of the old file paths moves to the new one. A project that installed the library through the shadcn CLI keeps its two old files after an update until it deletes them.
+
+### Fixed
+
+#### Spec 40 Date filter compare
+
+- Date, datetime and time filters now work on columns that hold `Date` values (D81): `equals`, `notEquals`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `between` and `betweenInclusive` read a `YYYY-MM-DD` filter value as local midnight and compare by calendar day, an `HH:mm` value by time of day and a `YYYY-MM-DDTHH:mm` value to the minute (to the second when the value has seconds). Before, they compared the filter string with the date's text form, so "greater than" kept every row and "less than" none. A string row value holding a full ISO date and time (`2025-11-02T14:15:00.000Z`) compares the same way, as a date. Filter values stay strings; number columns and date-only `YYYY-MM-DD` string columns filter as before (three bases).
+- A column with `filterVariant: 'date'`, `'datetime'` or `'time'` and no `filterFn` filters by `equals` (by day for a date) instead of `fuzzy`, which matched no `Date` row.
+- `greaterThan`, `lessThan` and the other comparison modes on a column of ISO date-time strings (`2025-11-02T14:15:00.000Z`) now compare dates by local day, time or minute instead of comparing text; a date column of such strings without a `filterFn` matches by day instead of by prefix.
+
+#### Spec 40 React Query route dates
+
+- The React Query example's Last Login filter shows only matching rows in every mode it offers (D81). The example now offers the eight date comparison modes and sends the chosen mode with each filter; its mock route compares by that mode (it always kept later dates before), reads a `YYYY-MM-DD` value as local midnight, compares by calendar day, and keeps its random `lastLogin` dates for the life of the server instead of drawing new ones on every request (three bases).
+
+#### Spec 41 Range filter editors fit and accept input
+
+- In the chips mode, the value editor of a time, date or datetime range (the `*-range` variants or a between mode) is 308 px wide instead of 260 px, so both Min and Max fields and their picker icons lie inside it (capped at the viewport width less 1 rem); every other filter keeps the 260 px editor (D86, three bases). Typing into both fields applies the range on Enter or blur since spec 39.
+
+#### Spec 42 React Aria multi-select filter opens on click
+
+- On React Aria a click into the multi-select filter's input opens its option list, as on Base UI and Radix; before, only ArrowDown or the chevron opened it (D82).
+
+#### Spec 43 Escape closes the filter editor after a select pick
+
+- After a value is picked in a select filter, one Escape closes the chips mode value editor on Base UI and React Aria, as on Radix; an Escape while a select or combobox list is open closes only the list (D83).
+
+#### Spec 44 React Aria select filter chevron
+
+- On React Aria the select filter's chevron sits at the right end of its input instead of right after the placeholder (D87).
+
+#### Fix Q76
+
+- The docs app's type check (`types:check` and the one in `build`) no longer runs out of memory at Node's default heap. The three library copies declare the same `@tanstack/react-table` feature maps, so in one program every copy's types were compared with the first copy's (21.7M instantiations, about 4.3 GB of heap against a 4.2 GB limit). The build's program now holds the app and the radix copy; the new `types:bases` checks the base and aria copies with their examples, one copy per program as an install has it (14.4M instantiations, peak heap about 1.9 GB). The same files are checked as before.
+
+### Docs
+
+#### Spec 46 Live demo with ten columns
+
+- The live demo on the Introduction and Usage pages has ten columns (D84): First Name, Last Name, Email, City, State, Department, Age, Salary, Joined, Status. Department has a select filter and Salary a range filter shown in US dollars; the four filters of before work as they did. At the docs content width the table scrolls sideways, so pinning, hiding and reordering have columns to act on; no column is pinned by default (three bases).
+
+#### Spec 47 Comparison page
+
+- A Comparison page, last in Getting Started, compares shadcn-table with TanStack Table, the shadcn/ui data-table recipe, Material React Table and AG Grid; every cell is sourced from the project's own docs or repository, and the page `<title>` names the compared libraries through the new optional `searchTitle` frontmatter field (D71).
+
+## 0.9.3 - 2026-11-12
+
+### Added
+
+#### Spec 26 Home page Open Graph image
+
+- The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
+
+#### Spec 28 Security response headers
+
+- Every response of the docs site carries `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN` and `Permissions-Policy: camera=(), microphone=(), geolocation=()` (D57). No `Content-Security-Policy` yet.
+
+#### Spec 25 JSON-LD structured data
+
+- The home page and every docs page carry Schema.org JSON-LD: `/` a `WebSite` and a `SoftwareSourceCode`, each docs page a `TechArticle` and a `BreadcrumbList` (Docs > section > page, absolute URLs), typed with `schema-dts` (D54).
+
+### Changed
+
+#### Spec 30 API page payload
+
+- The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
+
+#### Spec 30 Home JavaScript
+
+- The home page loads less JavaScript: the nav and hero links prefetch the docs on hover, touch or focus instead of as soon as they show, so the docs route's scripts no longer download with the home page. Lighthouse (desktop) script transfer for `/` drops from 711 KB to 580 KB; `jspdf`, `jspdf-autotable` and `recharts` stay out of the home load (D59, D62).
+
+#### Spec 33 Home title, hero line and description
+
+- The home page title and `og:title` read "shadcn-table: React Data Table for shadcn/ui and TanStack"; docs page titles keep `<page> | shadcn-table`. The hero line says "The open-source React data table for shadcn/ui, built on TanStack Table."; the H1 stays "shadcn-table" (D73).
+- The search description of `/` (`description`, `og:description`, `twitter:description`) reads "Open-source React data table for shadcn/ui, built on TanStack Table. Sorting, filtering, pagination, grouping, pinning. Installs as source via shadcn CLI." (D73). It is one shared `siteDescription`, read by the root layout, the home page metadata and JSON-LD, the OG image and the `llms.txt` summary (D76).
+
+#### Spec 34 posthog-js loads after hydration
+
+- Analytics load after the page is interactive: posthog-js is fetched in its own chunk on the first idle moment or interaction, and events raised before that are queued and sent on init. The home page's first script load drops from 421 KB to 317 KB (Lighthouse desktop, before the deferred loads) (D70).
+
+#### Spec 35 Example sources are read per example
+
+- Docs builds no longer trace the whole examples tree: the example generator writes each base's code-view sources to one file, read from a fixed path, so the build's "file pattern matches 10568 files" warning is gone. The code view shows the same files (D69).
+
+#### Spec 36 validate-repo fails on a stale generated registry
+
+- The repository check (`pnpm test validate-repo`, run by CI) regenerates the registries with `pnpm -w registry:build`, `registry:items` and `registry:hosted` and fails on a diff, naming each stale tracked file, such as `apps/shadcn-table-docs/registry.json` after an example description changed without a regeneration (D68).
+
+### Fixed
+
+#### Spec 29 Markdown delivery and llms.txt shape
+
+- A docs page served as Markdown (`Accept: text/markdown` or `/llms.mdx/docs/.../content.md`) now answers `Vary: Accept` and `text/markdown; charset=utf-8`, so a cache no longer hands Markdown to a browser or HTML to an agent (D58).
+- `/llms.txt` follows llmstxt.org: the `# shadcn-table` heading, a one-line summary, then one section per docs folder (Getting Started, API Reference, Quick Examples, Guides) with a link and description per page, on absolute URLs (D58).
+- `/llms-full.txt`, the per-page Markdown and the "Copy page" button carry plain Markdown: MDX imports, JSX components and frontmatter are gone; headings, prose, component prose (a callout body) and code blocks stay (D58).
+
+#### Spec 24 Canonical URLs and trailing-slash redirect
+
+- Every docs site page names its canonical URL: the root metadata sets `alternates.canonical` to `./`, so `/` and each docs page carry one `<link rel="canonical">` with their own slash-less URL on `NEXT_PUBLIC_SITE_URL`. A path with a trailing slash answers 308 to the slash-less path; the PostHog proxy under `/ingest` keeps its slash (D53).
+
+#### Fix D66 The docs proxy runs only on docs paths
+
+- The docs site's `proxy.ts` (Markdown delivery for `Accept: text/markdown`) runs only on docs paths instead of on every request, so pages, assets and the `/ingest` proxy no longer pass through it; a docs URL still answers Markdown to an agent (D66).
+
+#### Fix Docs build type check
+
+- The docs builds and `types:check` read `tsconfig.build.json` (the preview build `tsconfig.preview.json`), which exclude the other build folders, so a stale `.next` or `.next-preview` folder naming deleted routes can no longer fail them.
+
+#### Fix D77 Filter mode menu position in the popover filter
+
+- With `columnFilterDisplayMode: 'popover'` on Base UI and Radix, the filter mode menu opens next to its "Change filter mode" button instead of several hundred pixels away; the menu's anchor renders in `document.body`, out of the popover's transformed positioner. React Aria was already right (D77).
+
+#### Fix D79 Docs app drops the unused zod dependency
+
+- The docs app no longer lists `zod` as a dependency; nothing in it imports `zod` since spec 32 removed the page byline (D79).
+
+#### Fix D80 Filter mode menu opened during the popover animation
+
+- A click on "Change filter mode" while the filter popover still animates in now opens the menu next to the button: the menu's anchor is measured again when an animation around it ends, and on React Aria it renders in `document.body` like on Base UI and Radix (D80). React Aria showed the menu about 117 px off before.
+
+### Docs
+
+#### Spec 31 Page frame and new pages
+
+- `/docs` redirects permanently (308) to the Introduction, and the sidebar's last entry links the changelog (D60).
+- New guide: "TanStack Table with shadcn/ui", last under Fundamentals (D60, D72).
+- The Introduction shows the install command and the basic example; the getting-started pages have new descriptions (D60).
+
+#### Spec 32 Docs wording
+
+- Inherited typos fixed on six pages: the Detail Panel, Lazy Detail Panel and Lazy Sub Rows example descriptions, and the Column Ordering, Editing and Column Size guides (D74).
+
+#### Fix D78 Richer live demo on Usage and Introduction
+
+- New example `live-demo` (registry item `example-live-demo`, all three bases): 20 members with text filters on First Name and Last Name, a select filter on State, a range filter on Age, a date filter on Joined and a multi-select filter on Status (D78).
+- The Usage page's Live Example and the Introduction's demo show it in place of the Basic Example; the tutorial steps and the Basic Example itself are unchanged (D78).
+
+## 0.9.2 - 2026-11-09
+
 ### Added
 
 #### Spec 21 Sitemap and robots for the docs site

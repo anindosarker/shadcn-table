@@ -12,12 +12,12 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 211, check);
+    await propTable(page, '#props-table', 213, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {
     await switcher(page, 'Column Options', 3, check);
-    await propTable(page, '#column-options-table', 65, check);
+    await propTable(page, '#column-options-table', 66, check);
     await codeToggle(page, 'column-options', 'ColumnOptionsTable', check);
   },
   '/docs/api/state-options': async ({ page, check }) => {
