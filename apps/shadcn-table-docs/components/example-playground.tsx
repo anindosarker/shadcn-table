@@ -35,7 +35,6 @@ import {
 import { BaseSwitch, useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
-import { useExamplePage } from '@/components/example-page-context';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 import { storybookExampleUrl } from '@/lib/storybook-map';
@@ -155,13 +154,8 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const [copied, setCopied] = useState<CopyTarget | null>(null);
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
-  const treePath = useTreePath();
-  // On the continuous examples page every block binds to its own page; a
-  // single page has no provider and reads the pathname as before.
-  const examplePage = useExamplePage();
-  const path = examplePage?.path ?? treePath;
-  const pageUrl = examplePage?.url ?? pathname;
-  const exampleSlug = /^\/docs\/examples\/([^/]+)$/.exec(pageUrl)?.[1];
+  const path = useTreePath();
+  const exampleSlug = /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1];
 
   useEffect(
     () => () => {
@@ -234,7 +228,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const section = path[0];
   const current = path[path.length - 1];
   const switcher =
-    pageUrl.startsWith('/docs/examples/') &&
+    pathname.startsWith('/docs/examples/') &&
     section?.type === 'folder' &&
     current?.type === 'page' ? (
       <ExampleSwitcher section={section} current={current} />

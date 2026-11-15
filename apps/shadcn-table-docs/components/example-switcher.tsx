@@ -10,9 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui-radix/tooltip';
-import { useExamplePage } from '@/components/example-page-context';
 import { PageSwitcher, sectionPages } from '@/components/page-switcher';
-import { EXAMPLES_URL, scrollStackTo } from '@/lib/examples-url';
 
 interface Props {
   section: PageTree.Folder;
@@ -51,11 +49,7 @@ export const ExampleSwitcher = ({ section, current }: Props) => {
   );
 };
 
-/**
- * Square previous / next button; disabled when there is no page that way.
- * On the examples stack it scrolls the stack to that example's block (the URL
- * follows as `#<slug>`); on a single page it navigates to the page.
- */
+/** Square previous / next button; disabled when there is no page that way. */
 function StepButton({
   direction,
   page,
@@ -64,7 +58,6 @@ function StepButton({
   page?: PageTree.Item;
 }) {
   const router = useRouter();
-  const onStack = useExamplePage() !== null;
   const Icon = direction === 'previous' ? ChevronLeftIcon : ChevronRightIcon;
   const verb = direction === 'previous' ? 'Previous' : 'Next';
 
@@ -85,14 +78,6 @@ function StepButton({
   }
 
   const label = `${verb}: ${typeof page.name === 'string' ? page.name : ''}`;
-  const go = () => {
-    const slug = page.url.startsWith(`${EXAMPLES_URL}/`)
-      ? page.url.slice(EXAMPLES_URL.length + 1)
-      : undefined;
-    if (onStack && slug && scrollStackTo(slug)) return;
-    router.push(page.url);
-  };
-
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -102,7 +87,7 @@ function StepButton({
           size="icon"
           aria-label={label}
           className="docs-playground-step"
-          onClick={go}
+          onClick={() => router.push(page.url)}
         >
           <Icon />
         </Button>
