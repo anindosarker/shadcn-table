@@ -22,10 +22,6 @@ kanban-plugin: basic
 - [ ] **LQ7** The examples list is hard to get through because the groups collapse #owner
 	- Owner, 2026-11-13, from screen recordings of real users: collapsed groups in the Examples sidebar hide the pages. The group labels (L8: small, flush left) stay as plain subheaders, but no group collapses, ever; every example page is visible at all times. Guides and API follow the same rule unless decided otherwise.
 	- Fix: drop the collapse from `components/sidebar-subgroup.tsx` (or render groups through the stock fumadocs separator, which has no collapse), keep the label style, no chevron.
-- [ ] **LQ8** Keep the live examples stack or replace the landing with a card grid #lead
-	- The stack (L2, L3, L4, L6) is SEO-neutral: search ranks the single pages; hash positions are not indexed; a crawler sees the intro, the titles and descriptions and 3 example bodies that duplicate 3 single pages. `perf-report.md` is still red on the stack (CLS 1.10, 19,383 nodes, 1.4 s clicks after a full scroll) and L6 virtualization is unbuilt. With L12 the stack grows from 42 to 121 blocks.
-	- Owner, 2026-11-16: after the screen recordings (LQ22 to LQ25) the owner questions whether the infinite scroll is worth it at all; the hash URLs may confuse visitors. The stack demo with L3 to L6 is built on wt1 `3f027846`, not yet seen in a browser.
-	- Options posted 2026-11-10: a card grid with a static capture per example (recommended; supersedes L2, L3, L4, L6, makes L5 unnecessary); finish the stack (L6, measured skeleton heights, block titles linking to their pages); stack the 42 docs examples only and cards for the 79 story pages.
 - [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
 	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
 	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
@@ -66,6 +62,8 @@ kanban-plugin: basic
 	- Decision: L11
 - [x] **LQ20** 594 Storybook stories are reachable only through one link per page #owner
 	- Decision: L12
+- [x] **LQ8** Keep the live examples stack or replace the landing with a card grid #lead
+	- Decision: L13
 
 ## Later
 

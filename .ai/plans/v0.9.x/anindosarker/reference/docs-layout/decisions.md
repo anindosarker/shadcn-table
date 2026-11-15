@@ -11,7 +11,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Owner accepted 2026-11-08.
 - Source: LQ9
 
-### L2 `/docs/examples` is one continuous page of every example, loaded on scroll
+### L2 `/docs/examples` is one continuous page of every example, loaded on scroll (superseded by L13)
 
 - The examples landing renders the index intro, then every example page in `meta.json` order under its subgroup heading: title, description, the page's MDX body with its playground. Single pages `/docs/examples/<slug>` stay unchanged (metadata, search, deep links).
 - Scroll-spy: as a block covers the upper 40 percent of the viewport the URL becomes `/docs/examples/<slug>` through `history.replaceState` (never `pushState`); back at the top it returns to `/docs/examples`. Sidebar highlight, breadcrumb and footer follow through `usePathname`. The spy strips Next's `__NA` and `_N` keys from the history state so the sync fires.
@@ -24,7 +24,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 ## Round 2: discussion, 2026-11-09
 - Source: LQ10
 
-### L3 The scroll-spy writes `/docs/examples#<slug>`, never the single page URL
+### L3 The scroll-spy writes `/docs/examples#<slug>`, never the single page URL (superseded by L13)
 
 - Supersedes the URL part of L2: the spy writes `/docs/examples#<slug>` through `replaceState` while a block covers the upper 40 percent of the viewport, and `/docs/examples` at the top. A reload or a shared link therefore opens the stack scrolled to that block.
 - Sidebar highlight keys on the hash while on `/docs/examples`; breadcrumb and prev/next stay on the examples index.
@@ -32,21 +32,21 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Owner accepted 2026-11-09.
 - Source: LQ11
 
-### L4 Sidebar example links scroll the stack while on `/docs/examples`
+### L4 Sidebar example links scroll the stack while on `/docs/examples` (superseded by L13)
 
 - On the examples stack the sidebar items under Examples link to `/docs/examples#<slug>`, so a click scrolls the stack to that block instead of leaving it. Anywhere else they link to `/docs/examples/<slug>` as today.
 - `/docs/examples/<slug>` stays the plain single page for search, metadata and old links; no banner.
 - Owner accepted 2026-11-09.
 - Source: LQ12
 
-### L5 A floating back-to-top button on the examples stack
+### L5 A floating back-to-top button on the examples stack (superseded by L13)
 
 - Bottom right of the viewport, shown once the page is scrolled past one viewport height, hidden at the top. Click scrolls smoothly to the top and resets the URL to `/docs/examples` (L3).
 - Tailwind utilities only, no library, no global CSS (v0.8.x P8). Only on `/docs/examples`.
 - Owner accepted 2026-11-09.
 - Source: LQ13
 
-### L6 The examples stack is virtualized with TanStack Virtual
+### L6 The examples stack is virtualized with TanStack Virtual (superseded by L13)
 
 - `useWindowVirtualizer` from `@tanstack/react-virtual` (already a dependency) over a flat list of items: intro, group headings, example blocks. `measureElement` for the variable heights, overscan 2. Far-away blocks leave the DOM; the virtualizer keeps their space.
 - Block bodies still arrive through `loadExampleBlock(slug)` on first approach (L2) and stay cached in state, so a remount is instant. The skeleton of an unmeasured block keeps `min-h-[560px]`; measured blocks reuse their height, so nothing shifts.
@@ -102,3 +102,14 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - The "View Extra Storybook Examples" line on example and guide pages goes away; the toolbar Storybook button (wt1 `0160f596`, `64f2cfb5`) replaces it.
 - Owner accepted 2026-11-10.
 - Source: LQ20
+
+## Round 4: discussion, 2026-11-16
+
+### L13 No examples stack; `/docs/examples` opens the first example
+
+- Supersedes L2, L3, L4, L5 and L6, and the last sentence of L12's docs bullet ("The pages join the examples stack"). The continuous page, the scroll-spy, hash URLs, sidebar scroll links, the virtualized list and the back-to-top button are removed from the preview branch.
+- Examples are single pages `/docs/examples/<slug>` only. `/docs/examples` redirects to the first example in `meta.json` order, so a table shows without a click (the need behind L2).
+- Switching examples is done through the per-section sidebar (L8, L9, L10) and the example picker in the toolbar, which keeps its left and right arrows; both open the example's page.
+- Why: the owner's PostHog screen recordings (LQ22 to LQ25) show visitors working on one example at a time and jumping to another by name; nobody was seen needing several examples on one screen. Longer descriptions and try-it steps (LQ23, LQ24) would push the stacked tables far apart. The stack demo with L3 to L6 was built on wt1 `3f027846` and never measured.
+- Owner accepted 2026-11-16.
+- Source: LQ8
