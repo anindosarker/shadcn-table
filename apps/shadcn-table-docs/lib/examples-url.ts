@@ -50,7 +50,7 @@ export function useLocationHash(): string {
 }
 
 /** Scrolls the mounted examples stack to a block; `''` is the top. */
-type StackScroller = (slug: string) => boolean;
+type StackScroller = (slug: string, options?: { smooth?: boolean }) => boolean;
 
 let stackScroller: StackScroller | null = null;
 
@@ -64,9 +64,13 @@ export function registerStackScroller(scroller: StackScroller) {
 
 /**
  * Scrolls the examples stack to the block `slug` (`''` for the top) and
- * points the URL at it. False when no stack is mounted or the slug is not
- * one of its blocks, so the caller can fall back to a plain navigation.
+ * points the URL at it. `smooth` applies to the top only. False when no
+ * stack is mounted or the slug is not one of its blocks, so the caller can
+ * fall back to a plain navigation.
  */
-export function scrollStackTo(slug: string): boolean {
-  return stackScroller?.(slug) ?? false;
+export function scrollStackTo(
+  slug: string,
+  options?: { smooth?: boolean },
+): boolean {
+  return stackScroller?.(slug, options) ?? false;
 }

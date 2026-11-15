@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { ArrowUpIcon } from 'lucide-react';
-import { EXAMPLES_URL, replaceExamplesUrl } from '@/lib/examples-url';
+import { scrollStackTo } from '@/lib/examples-url';
 
 function subscribe(listener: () => void) {
   window.addEventListener('scroll', listener, { passive: true });
@@ -33,10 +33,7 @@ export function BackToTop() {
       type="button"
       aria-label="Back to top"
       title="Back to top"
-      onClick={() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        replaceExamplesUrl(EXAMPLES_URL);
-      }}
+      onClick={() => scrollStackTo('', { smooth: true })}
       className="fixed right-6 bottom-6 z-40 inline-flex size-10 items-center justify-center rounded-md border bg-fd-background text-fd-muted-foreground shadow-md transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
     >
       <ArrowUpIcon className="size-4" />
