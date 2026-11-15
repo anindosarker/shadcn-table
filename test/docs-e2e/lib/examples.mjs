@@ -1,5 +1,5 @@
 /**
- * Examples page checks: /docs/examples and examples/*. Every example page
+ * Examples page checks: the /docs/examples redirect and examples/*. Every example page
  * renders its own example in one playground panel (the group tab strips only
  * survive inside guides), so a page asserts that single panel, its table
  * rows, the Code toggle and the example's own markers.
@@ -11,6 +11,7 @@ import {
   example,
   headerLabelsFit,
 } from './helpers.mjs';
+import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -452,12 +453,12 @@ const checks = {
     await chipsDefault(w, 'export-to-pdf', check);
     await headerLabelsFit(w, 'export-to-pdf', check);
   },
+  // no index page: the section opens its first example (docs-layout L13)
   '/docs/examples': async ({ page, check }) => {
-    const links = page.locator('main a[href^="/docs/examples/"]');
     check(
-      'example links',
-      (await links.count()) >= 40,
-      `n=${await links.count()}`,
+      'redirects to the first example',
+      new URL(page.url()).pathname === FIRST_EXAMPLE_URL,
+      page.url(),
     );
   },
   '/docs/examples/faceted-values': examplePage(
