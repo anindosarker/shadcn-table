@@ -9,6 +9,7 @@ kanban-plugin: basic
 - [ ] **LQ27** Guide sections start at h3 where they should be h2 #owner
 	- Owner, 2026-11-16, on the v3 guide preview (wt1 `343f6f3d`): every section in a guide is an h3; the sections should be h2, so all guide headings need a bump up by one level.
 	- Fact: `content/docs/guides/column-pinning.mdx` and `virtualization.mdx` use `###` for their sections and `####` below; no `##` on the page. Not verified for the other 44 guides, the API pages or the "On this page" list depth setting.
+	- Owner, 2026-11-16: `/docs/guides/production-ready-tables` needs proper heading sizes too. Fact: all 8 of its sections are `###` (`production-ready-tables.mdx:30` to `:371`), none `##`.
 	- The added Example section (LQ22) follows the guide's section level, so it moves with this fix.
 - [ ] **LQ22** First-time visitors land on Guides and see no example #owner
 	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
