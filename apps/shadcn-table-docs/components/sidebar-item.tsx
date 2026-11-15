@@ -12,8 +12,8 @@ import {
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
- * External links ("external:[Name](url)" in meta.json) sit at the top level
- * of the tree, so they render like the section labels beside them: the same
+ * External links ("external:[Name](url)" in the top-level meta.json) close
+ * every section (lib/source.ts), so they render like a section label: the same
  * small muted label, with the external-link icon at the right end where the
  * sections show their chevron. fumadocs' default puts that icon before the
  * name, which breaks the row's alignment with the labels.

@@ -42,6 +42,32 @@ export const source = loader({
             ? { ...node, name: 'Overview' }
             : node;
         },
+        // The sidebar shows only the current root folder's children
+        // (fumadocs-ui contexts/tree), so a top-level external row such as
+        // Changelog (D60) would show in no section. Move each one to the end
+        // of every root folder.
+        root(node) {
+          const shared = node.children.filter(
+            (child) => child.type === 'page' && child.external,
+          );
+          if (shared.length === 0) return node;
+          return {
+            ...node,
+            children: node.children
+              .filter((child) => !shared.includes(child))
+              .map((child) =>
+                child.type === 'folder' && child.root
+                  ? {
+                      ...child,
+                      children: [
+                        ...child.children,
+                        ...shared.map((row) => ({ ...row })),
+                      ],
+                    }
+                  : child,
+              ),
+          };
+        },
       },
     ],
   },

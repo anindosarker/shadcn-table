@@ -46,7 +46,8 @@ function groupPages(section: PageTree.Folder): PageGroup[] {
       if (node.type === 'separator') {
         groups.push({ label: textOf(node.name), pages: [] });
       } else if (node.type === 'page') {
-        push(node);
+        // external rows (Changelog, lib/source.ts) are not section pages
+        if (!node.external) push(node);
       } else {
         if (node.index) push(node.index);
         visit(node.children);
