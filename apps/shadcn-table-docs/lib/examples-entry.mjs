@@ -21,3 +21,19 @@ if (!firstSlug)
 
 /** The first example page, `/docs/examples/<slug>`. */
 export const FIRST_EXAMPLE_URL = `${EXAMPLES_URL}/${firstSlug}`;
+
+/**
+ * Preview-only comparison pages: `<slug>-new-format.mdx` shows a rewrite of
+ * `<slug>.mdx` next to it in the sidebar. It renders the original's example,
+ * so lookups keyed on the page slug (Storybook story, registry page) resolve
+ * it to the original.
+ */
+const PREVIEW_SUFFIX = '-new-format';
+
+/** True for a preview-only comparison page slug. */
+export const isPreviewPage = (/** @type {string} */ slug) =>
+  slug.endsWith(PREVIEW_SUFFIX);
+
+/** The example page a slug stands for: a preview page's original, else itself. */
+export const examplePageSlug = (/** @type {string} */ slug) =>
+  isPreviewPage(slug) ? slug.slice(0, -PREVIEW_SUFFIX.length) : slug;

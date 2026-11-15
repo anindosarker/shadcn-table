@@ -4,6 +4,7 @@
   "defaultOpen": true,
   "pages": [
     "basic",
+    "basic-new-format",
     "minimal",
     "advanced",
     "custom-headless",
@@ -15,6 +16,7 @@
     "column-ordering",
     "row-ordering",
     "row-dragging",
+    "row-dragging-new-format",
     "---Editing (CRUD) Examples---",
     "editing-crud",
     "editing-crud-inline-row",
@@ -28,6 +30,7 @@
     "customized-grouping",
     "aggregation-and-grouping",
     "detail-panel",
+    "detail-panel-new-format",
     "chart-detail-panel",
     "---Filtering Examples---",
     "filter-variants",
