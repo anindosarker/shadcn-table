@@ -5,8 +5,10 @@ import {
   ExampleBlockBody,
   type DocsPage,
 } from '@/components/example-block-body';
-import { ExamplesScrollSpy } from '@/components/examples-scroll-spy';
-import { LazyBlock } from '@/components/lazy-block';
+import {
+  ExamplesVirtualList,
+  type StackItem,
+} from '@/components/examples-virtual-list';
 import { LazyMount } from '@/components/lazy-mount';
 import { ExampleSkeleton } from '@/components/example-skeleton';
 
@@ -69,16 +71,16 @@ function examplePages(indexUrl: string): StackEntry[] {
   return out;
 }
 
-/** Blocks whose body renders on the server; the rest load on scroll. */
+/** Blocks whose body the server renders; the rest load on approach. */
 const EAGER_BLOCKS = 3;
 
 /**
  * The continuous examples page: the index intro, then every example page as a
- * block. The server renders every title, description and a skeleton per
- * block, but only the first EAGER_BLOCKS bodies (each in its own Suspense
- * boundary, LazyMount deferring the live table); every other body loads
- * through LazyBlock when it nears the viewport. The scroll spy keeps the
- * address bar on the block in view.
+ * block under its subgroup heading, as one window-virtualized list. The first
+ * EAGER_BLOCKS bodies are rendered here (each in its own Suspense boundary,
+ * LazyMount deferring the live table); every other body is fetched when its
+ * block nears the viewport. Every title and description is also in a plain
+ * list outside the virtualized one, so the HTML carries them all.
  */
 export function ExamplesStack({
   index,
@@ -88,43 +90,42 @@ export function ExamplesStack({
   intro: ReactNode;
 }) {
   const entries = examplePages(index.url);
+  const items: StackItem[] = [{ kind: 'intro', content: intro }];
+  entries.forEach(({ page, group, groupStart }, i) => {
+    const slug = page.slugs.slice(1).join('/');
+    if (groupStart)
+      items.push({ kind: 'heading', key: `group:${slug}`, label: group });
+    items.push({
+      kind: 'block',
+      slug,
+      url: page.url,
+      title: page.data.title,
+      description: page.data.description,
+      body:
+        i < EAGER_BLOCKS ? (
+          <Suspense fallback={<ExampleSkeleton />}>
+            <LazyMount>
+              <ExampleBlockBody page={page} />
+            </LazyMount>
+          </Suspense>
+        ) : undefined,
+    });
+  });
 
   return (
-    <ExamplesScrollSpy introUrl={index.url}>
-      <div data-spy-url={index.url}>{intro}</div>
-      {entries.map(({ page, group, groupStart }, i) => {
-        const slug = page.slugs.slice(1).join('/');
-        return (
-          <div key={page.url}>
-            {groupStart && (
-              <p className="docs-eyebrow mt-16">
-                <span aria-hidden="true">{'//'}</span> {group}
-              </p>
-            )}
-            <section
-              id={slug}
-              data-spy-url={`${index.url}#${slug}`}
-              className="scroll-mt-24 pt-6"
-            >
-              <h2>{page.data.title}</h2>
-              {page.data.description && (
-                <p className="text-fd-muted-foreground">
-                  {page.data.description}
-                </p>
-              )}
-              {i < EAGER_BLOCKS ? (
-                <Suspense fallback={<ExampleSkeleton />}>
-                  <LazyMount>
-                    <ExampleBlockBody page={page} />
-                  </LazyMount>
-                </Suspense>
-              ) : (
-                <LazyBlock slug={slug} url={page.url} title={page.data.title} />
-              )}
-            </section>
-          </div>
-        );
-      })}
-    </ExamplesScrollSpy>
+    <>
+      <ExamplesVirtualList items={items} introUrl={index.url} />
+      {/* Plain anchors, not next/link: a Link would prefetch every page. */}
+      <nav aria-label="Every example" className="sr-only">
+        <ul>
+          {entries.map(({ page }) => (
+            <li key={page.url}>
+              <a href={page.url}>{page.data.title}</a>
+              {page.data.description && <p>{page.data.description}</p>}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }
