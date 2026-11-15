@@ -3,8 +3,20 @@ title: 'Detail Panel Example'
 description: 'A Shadcn Table example showing how to use expandable rows to show additional information about a row.'
 ---
 
-Shadcn Table has multiple types of "expanding" row features. In its simplest form, you can use the `renderDetailPanel` option to render a component when a row is clicked. This is useful for showing additional information about a row, such as a list of nested data. Learn more in the [Detail Panel Feature Guide](/docs/guides/detail-panel).
+The `renderDetailPanel` option renders extra content below a row when you expand it. This table lists five people, and the panel shows a person's address, city, state and country. Rows 3 (Ervin) and 5 (Branson) have no address in the data, so the example renders no panel for them and their expand arrow is greyed out.
+
+## Try it
+
+1. Click the arrow at the start of row 1 (Dylan). A panel opens below the row with the address 261 Erdman Ford, East Daphne, Kentucky, United States.
+2. Click the arrow on row 2 (Raquel). Her panel opens and Dylan's closes, because this example allows one open panel at a time.
+3. Click the arrow on row 2 again. The panel closes.
+4. Click the greyed arrow on row 3 (Ervin) or row 5 (Branson). Nothing happens: these rows have no address, so they have no panel to open.
 
 <EnableDetailPanelConditionallyExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
+
+## Related guides
+
+- [Detail Panel Feature Guide](/docs/guides/detail-panel)
+- [Expanding Sub-Rows](/docs/guides/expanding-sub-rows)
