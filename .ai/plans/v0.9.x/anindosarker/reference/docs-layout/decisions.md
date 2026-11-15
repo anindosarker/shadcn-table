@@ -113,3 +113,14 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Why: the owner's PostHog screen recordings (LQ22 to LQ25) show visitors working on one example at a time and jumping to another by name; nobody was seen needing several examples on one screen. Longer descriptions and try-it steps (LQ23, LQ24) would push the stacked tables far apart. The stack demo with L3 to L6 was built on wt1 `3f027846` and never measured.
 - Owner accepted 2026-11-16.
 - Source: LQ8
+
+### L14 Example pages add "Try it" steps and related guides; the existing text stays
+
+- Page order: title and description (unchanged); the page's existing body text, word for word; `### Try it`; the live example; `## Related guides`.
+- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component (`components/mdx/try-it.tsx`): one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
+- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address"; covers LQ21).
+- Related guides: a list of links to the guide pages for the feature, below the example; every link resolves.
+- The "View Extra Storybook Examples" line is removed from the page (L12); the toolbar Storybook button replaces it.
+- Not part of this decision: rewording titles, descriptions or body text (LQ26).
+- Owner accepted on the preview 2026-11-16: wt1 `10bd63f3`, pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
+- Source: LQ23, LQ24
