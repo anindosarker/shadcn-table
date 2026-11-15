@@ -3,13 +3,20 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { usePathname } from 'next/navigation';
 import { ExternalLinkIcon } from 'lucide-react';
-import { SidebarItem as BaseSidebarItem } from 'fumadocs-ui/components/sidebar/base';
+import {
+  SidebarItem as BaseSidebarItem,
+  useSidebar,
+} from 'fumadocs-ui/components/sidebar/base';
 import {
   ITEM_CLASS,
   SECTION_CLASS,
   SECTION_LABEL_CLASS,
 } from '@/components/sidebar-section';
-import { EXAMPLES_URL, useLocationHash } from '@/lib/examples-url';
+import {
+  EXAMPLES_URL,
+  scrollStackTo,
+  useLocationHash,
+} from '@/lib/examples-url';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -18,10 +25,13 @@ import { EXAMPLES_URL, useLocationHash } from '@/lib/examples-url';
  * small muted label, with the external-link icon at the right end where the
  * sections show their chevron. fumadocs' default puts that icon before the
  * name, which breaks the row's alignment with the labels.
+ * On the examples stack the example rows link to their block
+ * (`/docs/examples#<slug>`) and scroll the stack instead of leaving it.
  */
 export function SidebarItem({ item }: { item: PageTree.Item }) {
   const pathname = usePathname();
   const hash = useLocationHash();
+  const { setOpen } = useSidebar();
 
   if (item.external) {
     return (
@@ -43,9 +53,25 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
     );
   }
 
+  const page = normalize(item.url);
+  const onStack = normalize(pathname) === EXAMPLES_URL;
+  // '' is the Overview row (the top of the stack), undefined any other page.
+  const block = page === EXAMPLES_URL ? '' : exampleSlug(page);
+  const stackLink = onStack && block !== undefined;
+
   return (
     <BaseSidebarItem
-      href={item.url}
+      href={stackLink && block ? `${EXAMPLES_URL}#${block}` : item.url}
+      onClick={(event) => {
+        if (!onStack || block === undefined || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+        if (!scrollStackTo(block)) return;
+        event.preventDefault();
+        // The mobile drawer closes on a pathname change, which a hash is not.
+        setOpen(false);
+      }}
       active={isActive({ url: item.url, pathname, hash })}
       icon={item.icon}
       className={ITEM_CLASS}

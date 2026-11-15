@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
-import { replaceExamplesUrl } from '@/lib/examples-url';
+import { registerStackScroller, replaceExamplesUrl } from '@/lib/examples-url';
 
 /** The spy watches the upper 40 percent of the viewport. */
 const SPY_LINE = 0.4;
@@ -12,7 +12,8 @@ const SPY_LINE = 0.4;
  * and its url (`/docs/examples#<slug>`) replaces the address bar entry, which
  * the sidebar highlight follows. Until the first block reaches that line the
  * page is on its intro and reads as `/docs/examples`. A load with a hash
- * scrolls to that block once the page has mounted.
+ * scrolls to that block once the page has mounted, and the sidebar scrolls
+ * the stack through `scrollStackTo`.
  */
 export function ExamplesScrollSpy({
   children,
@@ -54,8 +55,22 @@ export function ExamplesScrollSpy({
       if (url) replaceExamplesUrl(url);
     };
 
+    const scrollTo = (slug: string) => {
+      if (!slug) {
+        window.scrollTo({ top: 0 });
+        replaceExamplesUrl(introUrl);
+        return true;
+      }
+      const block = document.getElementById(slug);
+      if (!block?.dataset.spyUrl) return false;
+      block.scrollIntoView();
+      replaceExamplesUrl(block.dataset.spyUrl);
+      return true;
+    };
+    const unregister = registerStackScroller(scrollTo);
+
     const hash = decodeURIComponent(window.location.hash.slice(1));
-    if (hash) document.getElementById(hash)?.scrollIntoView();
+    if (hash) scrollTo(hash);
 
     // The observer keeps the set of targets in the upper band; the scroll
     // listener re-picks within that set, since the covering block can change
@@ -83,6 +98,7 @@ export function ExamplesScrollSpy({
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
+      unregister();
       observer.disconnect();
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frame);
