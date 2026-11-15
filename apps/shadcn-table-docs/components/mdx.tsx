@@ -5,6 +5,7 @@ import { InitCommand, InstallCommand } from './mdx/install-command';
 import { AgentPrompt } from './mdx/agent-prompt';
 import { StorybookLink } from './mdx/storybook-link';
 import { TryIt } from './mdx/try-it';
+import { GuideExamples } from './mdx/guide-examples';
 import { OrDivider } from './or-divider';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
@@ -36,6 +37,7 @@ export function getMDXComponents(components?: MDXComponents) {
     AgentPrompt,
     StorybookLink,
     TryIt,
+    GuideExamples,
     OrDivider,
     Step,
     Steps,
