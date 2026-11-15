@@ -1,29 +1,18 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
+import { replaceExamplesUrl } from '@/lib/examples-url';
 
 /** The spy watches the upper 40 percent of the viewport. */
 const SPY_LINE = 0.4;
 
 /**
- * Next skips its `usePathname` sync when the state carries its own markers
- * (`__NA`, `_N`), treating the call as internal. Drop them and keep the rest;
- * Next copies its router tree back onto the state.
- */
-function userHistoryState(): Record<string, unknown> | null {
-  const state: unknown = window.history.state;
-  if (!state || typeof state !== 'object') return null;
-  const { __NA: _na, _N: _n, ...rest } = state as Record<string, unknown>;
-  return rest;
-}
-
-/**
  * Wraps the continuous examples page. Every child marked `data-spy-url` is a
  * target; the one covering the line at 40 percent of the viewport height wins
- * and its url replaces the address bar entry. Next's App Router syncs
- * `usePathname` with `replaceState`, so the sidebar highlight and breadcrumb
- * follow. Until the first block reaches that line the page is on its intro
- * and reads as `/docs/examples`.
+ * and its url (`/docs/examples#<slug>`) replaces the address bar entry, which
+ * the sidebar highlight follows. Until the first block reaches that line the
+ * page is on its intro and reads as `/docs/examples`. A load with a hash
+ * scrolls to that block once the page has mounted.
  */
 export function ExamplesScrollSpy({
   children,
@@ -62,11 +51,11 @@ export function ExamplesScrollSpy({
 
     const update = () => {
       const url = pick();
-      if (url && url !== window.location.pathname) {
-        // Never pushState: scrolling must not add history entries.
-        window.history.replaceState(userHistoryState(), '', url);
-      }
+      if (url) replaceExamplesUrl(url);
     };
+
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (hash) document.getElementById(hash)?.scrollIntoView();
 
     // The observer keeps the set of targets in the upper band; the scroll
     // listener re-picks within that set, since the covering block can change

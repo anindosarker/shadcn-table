@@ -103,7 +103,7 @@ export function ExamplesStack({
             )}
             <section
               id={slug}
-              data-spy-url={page.url}
+              data-spy-url={`${index.url}#${slug}`}
               className="scroll-mt-24 pt-6"
             >
               <h2>{page.data.title}</h2>
