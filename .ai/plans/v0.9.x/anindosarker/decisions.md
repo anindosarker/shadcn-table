@@ -5,6 +5,16 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #R5
+	- Replaces L1, L7, L10, L23.
+	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
+	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
+	- The section tabs form a row directly under the top bar on every docs page, left aligned with the brand: mono, uppercase, letter-spaced, muted; the active tab in the accent colour with a 2px underline. The space inside a label is tighter than the gap between tabs, so "GET STARTED" reads as one tab. A dashed rule runs below the row; there is no line between the top bar and the row. Top bar and row stay in place together when the page scrolls.
+	- The row starts with the sidebar's hide and show button (L25), close to the first tab, with no divider. On the mobile layout the button is not shown and the row scrolls sideways when the tabs do not fit.
+	- The top bar holds the brand on the left, the search box in the centre (from the `lg` width up; an icon in the right group below it), then GitHub, Discord, the base selector and the theme toggle on the right.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ9, LQ15, LQ18
+	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #R5
 
 ## In progress
 
