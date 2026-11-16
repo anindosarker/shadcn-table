@@ -211,6 +211,33 @@ function parseB(md) {
       }
     }
   }
+  // Owner's Featured group (docs-layout discussion 2026-11-16): six docs
+  // examples lead the sidebar under short names; each leaves its own group.
+  // Docs rows drop the word "Example"; the old unlabelled rows become "Starter".
+  const FEATURED = [
+    ['basic', 'Basic'],
+    ['filter-variants', 'Column Filters'],
+    ['react-query', 'Server-Side Pagination'],
+    ['editing-crud-inline-row', 'Inline Editing'],
+    ['virtualized', 'Virtualization'],
+    ['advanced', 'Advanced'],
+  ];
+  const docsGroups = groups.filter((g) => !g.more);
+  const featured = { name: 'Featured', label: true, rows: [] };
+  for (const [slug, name] of FEATURED) {
+    const from = docsGroups.find((g) => g.rows.some((r) => r.docs === slug));
+    if (!from) throw new Error(`featured example not found: ${slug}`);
+    const row = from.rows.splice(
+      from.rows.findIndex((r) => r.docs === slug),
+      1,
+    )[0];
+    featured.rows.push({ ...row, name });
+  }
+  for (const g of docsGroups) {
+    if (g.label === false) Object.assign(g, { name: 'Starter', label: true });
+    for (const r of g.rows) r.name = r.name.replace(/ Example$/, '');
+  }
+  groups.unshift(featured);
   return groups;
 }
 
