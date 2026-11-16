@@ -8,6 +8,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui-radix/collapsible';
+import { SidebarGroupContext } from '@/components/sidebar-group-context';
 
 /**
  * A "---Label---" sub-group inside a section: the label toggles the pages
@@ -43,7 +44,7 @@ export function SidebarSubgroup({
         data-subgroup-list
         className="mt-1 flex flex-col gap-1"
       >
-        {children}
+        <SidebarGroupContext value>{children}</SidebarGroupContext>
       </CollapsibleContent>
     </Collapsible>
   );
