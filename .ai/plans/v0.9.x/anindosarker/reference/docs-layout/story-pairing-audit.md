@@ -64,3 +64,92 @@ No story shows the feature of these examples.
 | 6 | react-query | `react-query` | No story fetches its rows or uses react-query |
 | 7 | remote | `remote` | No story fetches its rows with manual paging, sorting and filtering together |
 | 8 | dynamic-columns | `dynamic-columns` | No story builds its columns from fetched data |
+
+## 4. Same-table story pairs
+
+Two stories show the same table when their bodies are the same with the play removed: the story function or `render`, the meta's `args` and `render` where the story has none, its own `args` and every other field (`beforeEach`, `parameters`), and `name`, `tags` and the play left out. A `render` or function that only mounts another story of the file (`render: ChipsSeeded`, `() => <MaxVirtualization />`) counts as that story. Stories in different files never pair: each file has its own rows and columns.
+
+The copied story is the group's story without a play, else its first story in file order; each other story of the group is a row against it. "Merge" follows 1.6.3: the copied story has no check of its own, so the copy's play moves onto it and the copy is deleted. In a group with several copies every copy is a row against the same copied story.
+
+| # | Copy | Copy has a check | Copied story | Copied story has its own check |
+|---|---|---|---|---|
+| 1 | `Basic.stories.tsx` RendersRows | yes | Default | no: merge, the play moves onto Default |
+| 2 | `features/CellActions.stories.tsx` RightClickOpensMenu | yes | CellActionsEnabled | no: merge, the play moves onto CellActionsEnabled |
+| 3 | `features/CellActions.stories.tsx` MenuItemRuns | yes | CellActionsEnabled | no: merge, the play moves onto CellActionsEnabled |
+| 4 | `features/ClickToCopy.stories.tsx` ClickCopiesValue | yes | ClickToCopyEnabled | no: merge, the play moves onto ClickToCopyEnabled |
+| 5 | `features/ColumnActions.stories.tsx` LabelOpensMenu | yes | MenuSortStacks | yes: both stay |
+| 6 | `features/ColumnDragging.stories.tsx` ColumnDraggingCancelled | yes | ColumnDraggingEnabled | yes: both stay |
+| 7 | `features/ColumnDragging.stories.tsx` DropHighlightsColumn | yes | ColumnDraggingEnabled | yes: both stay |
+| 8 | `features/ColumnGrouping.stories.tsx` GroupedHeaderHasIconReorder | yes | ColumnGroupingEnabledReorder | no: merge, the play moves onto ColumnGroupingEnabledReorder |
+| 9 | `features/ColumnGrouping.stories.tsx` GroupByBanner | yes | ColumnGroupingEnabledReorder | no: merge, the play moves onto ColumnGroupingEnabledReorder |
+| 10 | `features/ColumnGrouping.stories.tsx` GroupedHeaderHasIcon | yes | GroupingColumnModeRemove | no: merge, the play moves onto GroupingColumnModeRemove |
+| 11 | `features/ColumnGrouping.stories.tsx` GroupedHeaderAlignsStart | yes | GroupingColumnModeRemove | no: merge, the play moves onto GroupingColumnModeRemove |
+| 12 | `features/ColumnOrdering.stories.tsx` ColumnOrderingWithPinning | no | ColumnOrderingEnabled | no: merge, nothing to move |
+| 13 | `features/ColumnOrdering.stories.tsx` LockedColumnStaysPut | yes | ColumnOrderingDisabledPerColumn | no: merge, the play moves onto ColumnOrderingDisabledPerColumn |
+| 14 | `features/ColumnPinning.stories.tsx` UnpinRestores | yes | ColumnPinningInitial | no: merge, the play moves onto ColumnPinningInitial |
+| 15 | `features/ColumnPinning.stories.tsx` PinnedEdgeShadow | yes | ColumnPinningInitial | no: merge, the play moves onto ColumnPinningInitial |
+| 16 | `features/ColumnResizing.stories.tsx` ResizeGuidesMeetEdgeOnEnd | yes | ColumnResizingEnabledOnEnd | no: merge, the play moves onto ColumnResizingEnabledOnEnd |
+| 17 | `features/ColumnResizing.stories.tsx` DragPreviewRTL | yes | ColumnResizingEnabledOnEndRTL | no: merge, the play moves onto ColumnResizingEnabledOnEndRTL |
+| 18 | `features/ColumnResizing.stories.tsx` DragResizesColumn | yes | ResizeGuidesMeetEdge | yes: both stay |
+| 19 | `features/ColumnResizing.stories.tsx` DoubleClickResetsWidth | yes | ResizeGuidesMeetEdge | yes: both stay |
+| 20 | `features/ColumnResizing.stories.tsx` ResizeMenuItemResets | yes | ResizeGuidesMeetEdge | yes: both stay |
+| 21 | `features/DensePadding.stories.tsx` ToggleChangesRowHeight | yes | DensePaddingToggleEnabledDefault | no: merge, the play moves onto DensePaddingToggleEnabledDefault |
+| 22 | `features/Editing.stories.tsx` ModalEditSaves | yes | EditingEnabledEditModeModalDefault | yes: both stay |
+| 23 | `features/Editing.stories.tsx` RowEditSaveCancel | yes | EditingEnabledEditModeRow | no: merge, the play moves onto EditingEnabledEditModeRow |
+| 24 | `features/Editing.stories.tsx` CellEditSaves | yes | EditingEnabledEditModeCell | no: merge, the play moves onto EditingEnabledEditModeCell |
+| 25 | `features/FilterChips.stories.tsx` AddThroughPicker | yes | ChipsDefault | no: merge, the play moves onto ChipsDefault |
+| 26 | `features/FilterChips.stories.tsx` FilterModePicker | yes | ChipsDefault | no: merge, the play moves onto ChipsDefault |
+| 27 | `features/FilterChips.stories.tsx` RemoveAndClear | yes | ChipsSeeded | no: merge, the play moves onto ChipsSeeded |
+| 28 | `features/FilterChips.stories.tsx` ClearFiltersClickableWithEditorOpen | yes | ChipsSeeded | no: merge, the play moves onto ChipsSeeded |
+| 29 | `features/FilterChips.stories.tsx` AriaEditorLocksPageScroll | yes | ChipsSeeded | no: merge, the play moves onto ChipsSeeded |
+| 30 | `features/FilterChips.stories.tsx` HiddenColumnNotice | yes | ChipsHiddenColumn | no: merge, the play moves onto ChipsHiddenColumn |
+| 31 | `features/FilterChips.stories.tsx` HeaderAnchoredEditor | yes | ChipsHeaderEditor | no: merge, the play moves onto ChipsHeaderEditor |
+| 32 | `features/FilterChips.stories.tsx` HeaderEditorWithCustomToolbar | yes | ChipsCustomToolbar | no: merge, the play moves onto ChipsCustomToolbar |
+| 33 | `features/Filtering.stories.tsx` ModeMenuNextToButtonPopover | yes | ModePickerByDefaultPopover | yes: both stay |
+| 34 | `features/Filtering.stories.tsx` ModeMenuNextToButtonDuringPopoverAnimation | yes | ModePickerByDefaultPopover | yes: both stay |
+| 35 | `features/Filtering.stories.tsx` ChipEditorEscapeKeepsTypedText | yes | TypeThenClearFiltersStaysCleared | yes: both stay |
+| 36 | `features/Filtering.stories.tsx` ChipEditorEscapeKeepsTypedDate | yes | TypeThenClearFiltersStaysCleared | yes: both stay |
+| 37 | `features/Filtering.stories.tsx` HalfTypedYearAppliesNothing | yes | TypeThenEnterAppliesAtOnce | yes: both stay |
+| 38 | `features/FullScreen.stories.tsx` ToggleFullScreen | yes | FullScreenToggleEnabledDefault | no: merge, the play moves onto FullScreenToggleEnabledDefault |
+| 39 | `features/LayoutMode.stories.tsx` GridGrowsColumns | yes | DefaultGrid | no: merge, the play moves onto DefaultGrid |
+| 40 | `features/LayoutMode.stories.tsx` SemanticLayoutRenders | yes | Semantic | no: merge, the play moves onto Semantic |
+| 41 | `features/LayoutMode.stories.tsx` GridWithResizing | no | Grid | no: merge, nothing to move |
+| 42 | `features/LayoutMode.stories.tsx` GridNoGrowWithResizing | no | GridNoGrow | no: merge, nothing to move |
+| 43 | `features/Loading.stories.tsx` SkeletonsWhileLoading | yes | Loading | no: merge, the play moves onto Loading |
+| 44 | `features/Loading.stories.tsx` ProgressBarShown | yes | ReloadingExample | no: merge, the play moves onto ReloadingExample |
+| 45 | `features/Pagination.stories.tsx` NextPageChangesRows | yes | PaginationEnabled | no: merge, the play moves onto PaginationEnabled |
+| 46 | `features/Pagination.stories.tsx` CustomPaginationPagesDisplayMode | no | PaginationPagesDisplayMode | no: merge, nothing to move |
+| 47 | `features/Pagination.stories.tsx` PagesModeNumbers | yes | CustomPaginationPagesDisplayModeMoreData | no: merge, the play moves onto CustomPaginationPagesDisplayModeMoreData |
+| 48 | `features/Pagination.stories.tsx` PageSizeChangesCount | yes | CustomizePaginationComponents | no: merge, the play moves onto CustomizePaginationComponents |
+| 49 | `features/RowOrdering.stories.tsx` DropNoSlideReducedMotion | yes | DropSlidesRows | yes: both stay |
+| 50 | `features/RowOrdering.stories.tsx` DragReordersRows | yes | DropSlidesRows | yes: both stay |
+| 51 | `features/RowPinning.stories.tsx` PinRowSticky | yes | RowPinningStickyDefaultEnabled | no: merge, the play moves onto RowPinningStickyDefaultEnabled |
+| 52 | `features/RowPinning.stories.tsx` UnpinRow | yes | RowPinningStickyDefaultEnabled | no: merge, the play moves onto RowPinningStickyDefaultEnabled |
+| 53 | `features/RowPinning.stories.tsx` PinRowTopMode | yes | RowPinningTopMode | no: merge, the play moves onto RowPinningTopMode |
+| 54 | `features/Search.stories.tsx` ToggleClearsAndCloses | yes | SearchEnabledDefault | no: merge, the play moves onto SearchEnabledDefault |
+| 55 | `features/Search.stories.tsx` EscapeClearsThenCloses | yes | SearchEnabledDefault | no: merge, the play moves onto SearchEnabledDefault |
+| 56 | `features/Search.stories.tsx` TypingFiltersRows | yes | SearchContains | no: merge, the play moves onto SearchContains |
+| 57 | `features/SortPopover.stories.tsx` PickerThenEditor | yes | SortPopoverDefault | no: merge, the play moves onto SortPopoverDefault |
+| 58 | `features/SortPopover.stories.tsx` ReorderRemoveDelete | yes | SortPopoverSeeded | no: merge, the play moves onto SortPopoverSeeded |
+| 59 | `features/SortPopover.stories.tsx` SingleSortHasNoAdd | yes | SortPopoverSingleSort | no: merge, the play moves onto SortPopoverSingleSort |
+| 60 | `features/SubRowTree.stories.tsx` ExpandShowsChildren | yes | SubRowTreeEnabledDefault | no: merge, the play moves onto SubRowTreeEnabledDefault |
+| 61 | `features/SubRowTree.stories.tsx` ExpandAllCollapseAll | yes | SubRowTreeEnabledDefault | no: merge, the play moves onto SubRowTreeEnabledDefault |
+| 62 | `features/Toolbar.stories.tsx` InternalButtonsOrder | yes | ToolbarEnabledDefault | no: merge, the play moves onto ToolbarEnabledDefault |
+| 63 | `features/Toolbar.stories.tsx` BottomToolbarAlertBanner | yes | ToolbarAlertBannerBottom | no: merge, the play moves onto ToolbarAlertBannerBottom |
+| 64 | `features/ViewSettings.stories.tsx` PanelRowsAndRowNumbers | yes | ViewSettingsDefault | no: merge, the play moves onto ViewSettingsDefault |
+| 65 | `features/ViewSettings.stories.tsx` PinUnpinAndSteppers | yes | ViewSettingsDefault | no: merge, the play moves onto ViewSettingsDefault |
+| 66 | `features/ViewSettings.stories.tsx` ResetView | yes | ViewSettingsSeeded | no: merge, the play moves onto ViewSettingsSeeded |
+| 67 | `features/ViewSettings.stories.tsx` ToolbarGroupOrder | yes | ViewSettingsSeeded | no: merge, the play moves onto ViewSettingsSeeded |
+| 68 | `features/Virtualization.stories.tsx` EnableRowVirtualizationWithColumnResizing | no | EnableRowVirtualizationTallContent | no: merge, nothing to move |
+| 69 | `features/Virtualization.stories.tsx` ScrollRendersFurtherRows | yes | MaxVirtualization | yes: both stay |
+| 70 | `features/Virtualization.stories.tsx` ColumnVirtualizationScrollsHeaders | yes | MaxVirtualization | yes: both stay |
+| 71 | `fixed-bugs/HeadlessFullScreen.stories.tsx` PointerClickThenEscape | yes | EscapeLeavesFullScreen | yes: both stay |
+| 72 | `fixed-bugs/HeadlessFullScreen.stories.tsx` EscapeInSearchKeepsFullScreen | yes | TableLayoutPointerClickThenEscape | yes: both stay |
+| 73 | `fixed-bugs/MenuFocusReturn.stories.tsx` ShowHideColumnsMenu | yes | ColumnActionMenu | yes: both stay |
+| 74 | `fixed-bugs/MenuOpeners.stories.tsx` ShowHideColumns | yes | ColumnActions | yes: both stay |
+| 75 | `fixed-bugs/PinnedItemsCustomToolbar.stories.tsx` PinInCustomToolbar | yes | CustomTopToolbar | no: merge, the play moves onto CustomTopToolbar |
+| 76 | `fixed-bugs/PinnedItemsCustomToolbar.stories.tsx` PinsInStockToolbarOrder | yes | StockToolbar | no: merge, the play moves onto StockToolbar |
+| 77 | `fixed-bugs/SearchField.stories.tsx` OpenCloseAndEscape | yes | PositionRight | no: merge, the play moves onto PositionRight |
+| 78 | `fixed-bugs/SearchField.stories.tsx` RingAfterPointerOpen | yes | PositionRight | no: merge, the play moves onto PositionRight |
+| 79 | `fixed-bugs/SearchField.stories.tsx` ToggleClearsAndCloses | yes | PositionRight | no: merge, the play moves onto PositionRight |
+| 80 | `styling/RenderCounts.stories.tsx` ColumnsHoldWhileDragging | yes | ColumnsHoldWhileResizing | yes: both stay |
