@@ -232,22 +232,79 @@ function parseB(md) {
     )[0];
     featured.rows.push({ ...row, name });
   }
-  for (const g of docsGroups) {
-    if (g.label === false)
-      Object.assign(g, { name: 'Customization', label: true });
-    for (const r of g.rows) r.name = r.name.replace(/ Example$/, '');
-  }
-  // Customization sits after the feature groups, just above "More examples".
-  const custom = groups.splice(
-    groups.findIndex((g) => g.name === 'Customization'),
-    1,
-  )[0];
-  groups.splice(
-    groups.findIndex((g) => g.more),
-    0,
-    custom,
+  // The other docs examples regroup by demand under short labels
+  // (docs-layout discussion 2026-11-16, item 19); same 42 pages, new order.
+  const REGROUP = [
+    [
+      'Filtering',
+      [
+        'filter-variants',
+        'faceted-values',
+        'filter-switching',
+        'popover-filters',
+        'subheader-filters',
+        'custom-filter-ui',
+      ],
+    ],
+    [
+      'Server Data',
+      ['remote', 'dynamic-columns', 'lazy-detail-panel', 'lazy-sub-rows'],
+    ],
+    [
+      'Pinning',
+      [
+        'sticky-header',
+        'column-pinning',
+        'sticky-row-pinning',
+        'static-row-pinning',
+        'sticky-row-selection',
+      ],
+    ],
+    [
+      'Virtualization',
+      ['row-virtualization', 'column-virtualization', 'infinite-scrolling'],
+    ],
+    [
+      'Editing',
+      [
+        'editing-crud',
+        'editing-crud-inline-cell',
+        'editing-crud-inline-table',
+        'editing-crud-tree',
+      ],
+    ],
+    [
+      'Grouping',
+      ['column-grouping', 'customized-grouping', 'aggregation-and-grouping'],
+    ],
+    [
+      'Expanding',
+      [
+        'expanding-tree',
+        'expanding-tree-flat-parse',
+        'detail-panel',
+        'chart-detail-panel',
+      ],
+    ],
+    ['Drag and Drop', ['column-ordering', 'row-ordering', 'row-dragging']],
+    ['Export', ['export-csv', 'export-pdf']],
+    ['Customization', ['minimal', 'custom-headless', 'persistent-view']],
+  ];
+  const left = new Map(
+    docsGroups.flatMap((g) => g.rows).map((r) => [r.docs, r]),
   );
-  groups.unshift(featured);
+  const regrouped = REGROUP.map(([name, slugs]) => ({
+    name,
+    label: true,
+    rows: slugs.map((slug) => {
+      const row = left.get(slug);
+      if (!row) throw new Error(`docs example not found: ${slug}`);
+      left.delete(slug);
+      return { ...row, name: row.name.replace(/ Example$/, '') };
+    }),
+  }));
+  if (left.size) throw new Error(`ungrouped: ${[...left.keys()].join(', ')}`);
+  return [featured, ...regrouped, ...groups.filter((g) => g.more)];
   return groups;
 }
 
