@@ -1,6 +1,6 @@
 # 53: Guides overview anchors match the live site, tracker
 
-Status: done
+Status: merged (f36ff8ec)
 Branch `v0.9/guides-overview-anchors`, worktree 09
 Checks:
 - Check: typecheck, `pnpm test typecheck --base radix` at 3b42b236: pass
