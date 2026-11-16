@@ -7,7 +7,7 @@ import { PREVIEW_SECTIONS } from '@/preview-examples-ab/entries.mjs';
 
 /** Section links, rendered by the sidebar section tabs (components/sidebar-section-tabs.tsx). */
 export const NAV_LINKS = [
-  { text: 'Docs', url: '/docs/getting-started/introduction' },
+  { text: 'Get Started', url: '/docs/getting-started/introduction' },
   { text: 'Examples', url: '/docs/examples' },
   { text: 'Guides', url: '/docs/guides' },
   { text: 'API', url: '/docs/api' },
