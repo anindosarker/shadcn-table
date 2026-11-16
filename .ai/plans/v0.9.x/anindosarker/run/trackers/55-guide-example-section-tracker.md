@@ -9,6 +9,8 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base radix` at 3ad894e9: pass
 - Check: lint, `pnpm test lint` at 3ad894e9: pass (9 warnings, none in owned files)
 - Check: format, `pnpm format` at 3ad894e9: pass (no changes)
+- Check: validate-repo, `pnpm test validate-repo` at 3ad894e9 (verifier): pass (bases identical, icon maps, tailwind, registry valid and fresh, 40 unit tests; tree clean after)
+- Check: Acceptance 1.2 grep, `grep -L "GuideExamples" apps/shadcn-table-docs/content/docs/guides/*.mdx` at 3ad894e9 (verifier): 49 files listed, expected at this milestone (the Example sections are milestone "Guide pages"); heading check (task 5), diff check (task 6) and the judges have nothing to check before "Guide pages"; docs-e2e taken from the 3ad894e9 record above, not rerun
 
 - Task 1 unique element id: done, bfbbeb00
 - Task 2 cleanup: done, 3ad894e9
