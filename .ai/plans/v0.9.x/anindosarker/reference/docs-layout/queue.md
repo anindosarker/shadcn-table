@@ -6,14 +6,8 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
-	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
-	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
-	- Fix: widen the existing radius-0 rule in the docs `global.css` to those frames; leave the table frame.
 - [ ] **LQ4** The filter-variants example blocks the main thread for 6.6 s on mount #lookup
 	- In the stack it loads in 7.8 s, the longest task is 6.7 s, of which 6.58 s is forced style and layout inside React render (`perf-report.md`, scroll run). Attribution by timing only; profile the example on its single page first. Likely the example itself, not the stack.
-- [ ] **LQ1** The home footer's Storybook link ignores the selected base #lead
-	- `components/dev-home/v12/footer.tsx:40-41` always uses `storybookUrl.radix`; `StorybookLink` (`components/mdx/storybook-link.tsx:24-35`) and the toolbar button (L12) follow the selected base.
 
 ## Decided
 
@@ -82,6 +76,14 @@ kanban-plugin: basic
 - [x] **LQ3** Two hand-kept route lists must both be edited for every new page #lead
 	- Decision: L16
 	- `content/docs/*/meta.json` drives the sidebar; `lib/routes.ts:11` is a second list (examples block :107, Storybook entry :392) feeding `TableOfContentsList`. After wt1 `b9d619f6` the guides and api overviews no longer render that list; `routes.ts` is still read by the component and by the home page.
+- [x] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
+	- Decision: L18
+	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
+	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
+	- Fix: widen the existing radius-0 rule in the docs `global.css` to those frames; leave the table frame.
+- [x] **LQ1** The home footer's Storybook link ignores the selected base #lead
+	- Decision: L17
+	- `components/dev-home/v12/footer.tsx:40-41` always uses `storybookUrl.radix`; `StorybookLink` (`components/mdx/storybook-link.tsx:24-35`) and the toolbar button (L12) follow the selected base.
 
 ## Later
 

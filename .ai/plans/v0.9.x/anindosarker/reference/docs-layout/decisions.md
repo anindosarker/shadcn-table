@@ -147,3 +147,17 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - The group headings carry the anchors `usage.mdx:184` links to (`#fundamentals`, `#feature-guides`), or that link is corrected to the anchors that exist.
 - Owner accepted 2026-11-16.
 - Source: LQ3
+
+### L17 The home footer's Storybook link follows the selected base
+
+- `components/dev-home/v12/footer.tsx:40-41` always opens the radix Storybook; it uses the selected base like `StorybookLink` and the toolbar Storybook button do.
+- Settled by the lead 2026-11-16: a defect with one right answer, not a choice.
+- Source: LQ1
+
+### L18 The remaining rounded content frames go square
+
+- The docs' radius-0 rule in `global.css` is widened to the frames the audit of 2026-11-10 still found rounded: fumadocs `Tabs` frame and panel, `CodeBlockTabs` frame, the code block copy chip, the agent bar (`components/agent-bar.tsx:105`), prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
+- Stays rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and the fumadocs scroll controls.
+- The fumadocs class positions are re-read from the installed package when this is built; they were not rechecked on 2026-11-16.
+- Settled by the lead 2026-11-16: brings the leftovers in line with the square dashed style the owner already accepted, not a new choice.
+- Source: LQ6
