@@ -4,7 +4,7 @@ import { ThemeControls } from '@/components/theme-controls';
 import { DiscordIcon } from '@/components/discord-icon';
 import { gitConfig } from './shared';
 
-/** Section links, rendered by the sidebar section tabs (components/sidebar-section-tabs.tsx). */
+/** Section links, rendered by the sidebar section tabs (components/section-tabs.tsx). */
 export const NAV_LINKS = [
   { text: 'Get Started', url: '/docs/getting-started/introduction' },
   { text: 'Examples', url: '/docs/examples' },
