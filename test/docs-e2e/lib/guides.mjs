@@ -13,6 +13,7 @@ import {
   paginationControls,
   panelOf,
   propTable,
+  sectionFrame,
 } from './helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
@@ -835,8 +836,15 @@ const checks = {
   },
   // content/docs/guides/index.mdx is served at /docs/guides (fumadocs index).
   '/docs/guides': async ({ page, check }) => {
-    const links = await page.locator('main a[href^="/docs/guides/"]').count();
-    check('guides toc links', links > 10, `links=${links}`);
+    // every guide of meta.json under its group heading (spec 53 1.6.3)
+    const links = await page.locator('main a.docs-index-link').count();
+    check('guides list links', links === 46, `links=${links}`);
+    for (const id of ['fundamentals', 'customization-guides'])
+      check(
+        `guides list heading #${id}`,
+        (await page.locator(`main h3[id="${id}"]`).count()) === 1,
+      );
+    await sectionFrame(page, check, 'Guides');
   },
   '/docs/guides/localization': async ({ page, check, base }) => {
     await propTable(page, TABLE, check);
