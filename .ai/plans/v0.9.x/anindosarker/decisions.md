@@ -82,6 +82,19 @@ kanban-plugin: basic
 	- Source: LQ22, LQ27, LQ28
 	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #R5
+	- Replaces L12, L19, L20, L21.
+	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
+	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
+	- Text: the docs page owns the details, the Try it steps and the related guides (L27). A story's description carries a link to its docs page and nothing more. No Storybook toolbar addon is built.
+	- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source. How the docs mount a story for each base is settled in the plan.
+	- Story pages that have no text yet start with the table and the Storybook button; their text is written in the docs and goes through the owner's wording review (LQ26).
+	- Test stories: a story that shows the same table as another and only adds an automated check is not listed on its own; its check moves onto the story it copies and the copy is deleted. First case: "Renders Rows" in the Basic stories, a copy of "Default". A test story with its own different table stays listed like any other story; none is hidden or sorted by hand.
+	- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs, as a whole; no story is moved out of it. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
+	- Every story group name is Title Case with spaces and without the word "Examples" ("sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "Aggregation Examples" "Aggregation"); the misspelt "click-propogation" becomes "Click Propagation". The change is made in the story files, so Storybook and the docs follow together, and the docs links to stories are regenerated in the same change. No two groups in one folder end up with the same name.
+	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
+	- Source: LQ20
+	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #R5
 
 ## In progress
 
