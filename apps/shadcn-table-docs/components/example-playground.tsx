@@ -1,7 +1,10 @@
 'use client';
 
 import {
+  useCallback,
   useEffect,
+  useId,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -125,6 +128,49 @@ const writeMode = (next: Mode) => {
 const getModeSnapshot = () => sessionMode ?? readMode();
 const getModeServerSnapshot = () => DEFAULT_MODE;
 
+/* Which mount holds the id `example-<name>` on the page. A guide may show
+ * an example in its Example section and again further down; the first
+ * mount keeps the plain id, a further one takes a suffixed id so no two
+ * elements share one. Layout effects run in document order on hydration,
+ * so the first panel on the page claims the id first. The server render
+ * and hydration use the plain id. */
+const idOwners = new Map<string, symbol>();
+const idListeners = new Set<() => void>();
+
+const subscribeIds = (onChange: () => void) => {
+  idListeners.add(onChange);
+  return () => {
+    idListeners.delete(onChange);
+  };
+};
+
+const notifyIds = () => {
+  for (const listener of idListeners) listener();
+};
+
+/** Element id of this mount: `example-<name>`, or a suffixed one when another mount holds it. */
+const useExampleId = (name: string) => {
+  const base = `example-${name}`;
+  const suffix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const [token] = useState(() => Symbol(name));
+  const getSnapshot = useCallback(() => {
+    const owner = idOwners.get(name);
+    return owner === undefined || owner === token ? base : `${base}-${suffix}`;
+  }, [base, name, suffix, token]);
+  const getServerSnapshot = useCallback(() => base, [base]);
+  const id = useSyncExternalStore(subscribeIds, getSnapshot, getServerSnapshot);
+  useLayoutEffect(() => {
+    if (!idOwners.has(name)) idOwners.set(name, token);
+    notifyIds();
+    return () => {
+      if (idOwners.get(name) !== token) return;
+      idOwners.delete(name);
+      notifyIds();
+    };
+  }, [name, token]);
+  return id;
+};
+
 type CopyTarget = 'install' | 'prompt';
 
 /** How long a copy action reads "Copied" after a click. */
@@ -145,6 +191,7 @@ const COPIED_MS = 1500;
 export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const base = useBase();
   const { files, githubUrl, installCommand, prompt } = variants[base];
+  const elementId = useExampleId(name);
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,
@@ -279,7 +326,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
     <div
       // Prefixed like the registry item so a guide heading whose slug is
       // the example name ("Customize Filter Modes") cannot share the id.
-      id={`example-${name}`}
+      id={elementId}
       data-mode={mode}
       data-fullscreen={fullscreen || undefined}
       className={cn(
