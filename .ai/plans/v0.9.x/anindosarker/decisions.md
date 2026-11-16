@@ -53,6 +53,18 @@ kanban-plugin: basic
 	- Source: LQ8, LQ10
 	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #R5
+	- Replaces L14.
+	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
+	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
+	- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address").
+	- Related guides: an h2 heading and a list of links to the guide pages for the feature, below the example; every link resolves.
+	- The "View Extra Storybook Examples" line is removed from the page; the toolbar Storybook button replaces it.
+	- Text check: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
+	- Not part of this decision: rewording titles, descriptions or body text (LQ26, LQ29).
+	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
+	- Source: LQ21, LQ23, LQ24
+	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #R5
 
 ## In progress
 
