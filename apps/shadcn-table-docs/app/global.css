@@ -290,6 +290,29 @@ html > body[data-scroll-locked] {
   display: none;
 }
 
+/* sticky group labels (components/sidebar-separator.tsx) stick at the top of
+   the scroll area, so its top fade (fumadocs SidebarViewport mask) goes; the
+   bottom fade stays */
+:is(#nd-sidebar, #nd-sidebar-mobile)
+  [role='presentation']
+  > [data-id$='-viewport'] {
+  mask-image: linear-gradient(to bottom, white calc(100% - 12px), transparent);
+}
+
+/* the stuck label gets the dashed rule below it; the transparent rule keeps
+   its height the same stuck or not */
+.sidebar-sticky-label {
+  container-type: scroll-state;
+}
+.sidebar-sticky-label > * {
+  border-bottom: 1px dashed transparent;
+}
+@container scroll-state(stuck: top) {
+  .sidebar-sticky-label > * {
+    border-bottom-color: var(--docs-dash);
+  }
+}
+
 /* ---------- full-width layout ---------- */
 
 /* notebook layout boxes the grid to --fd-layout-width (97rem) and centres it;

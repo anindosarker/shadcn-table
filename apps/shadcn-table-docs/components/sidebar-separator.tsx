@@ -13,13 +13,21 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   const siblings = findSiblings(root, item);
   if (!siblings || !separatorHasPages(item, siblings)) return null;
 
+  // Sticky in the sidebar scroll area: the label of the group at the top of
+  // the list stays there until the next label slides over it (labels and rows
+  // are siblings of one list). Opaque so rows do not show through; the dashed
+  // line shows only while stuck (app/global.css .sidebar-sticky-label). Inside
+  // a folder with a sticky heading, --sidebar-stick-top puts it below that;
+  // -1rem cancels the scroll area padding (fumadocs SidebarViewport p-4).
   return (
     <p
       data-subgroup
-      className="mb-1 mt-3 inline-flex items-center gap-2 px-2 font-mono text-[9px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground"
+      className="sidebar-sticky-label sticky top-[calc(var(--sidebar-stick-top,0px)-1rem)] z-10 mt-2 flex w-full bg-fd-background"
     >
-      {item.icon}
-      {item.name}
+      <span className="flex w-full items-center gap-2 px-2 py-1 font-mono text-[9px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground">
+        {item.icon}
+        {item.name}
+      </span>
     </p>
   );
 }
