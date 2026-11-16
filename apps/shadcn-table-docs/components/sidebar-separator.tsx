@@ -5,6 +5,8 @@ import type * as PageTree from 'fumadocs-core/page-tree';
 import { useTreeContext } from 'fumadocs-ui/contexts/tree';
 import {
   findSiblings,
+  groupCount,
+  isNumberedRoot,
   separatorHasPages,
   separatorPages,
 } from '@/lib/page-tree-utils';
@@ -40,7 +42,14 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
       >
         <span className="flex w-full items-center gap-2 px-2 py-1 font-mono text-[9px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground">
           {item.icon}
-          {item.name}
+          {isNumberedRoot(root) ? (
+            // one flex item, so the label's gap stays out of "Featured (5)"
+            <span>
+              {item.name} ({groupCount(item, siblings)})
+            </span>
+          ) : (
+            item.name
+          )}
         </span>
       </p>
       <SidebarGroupContext value>

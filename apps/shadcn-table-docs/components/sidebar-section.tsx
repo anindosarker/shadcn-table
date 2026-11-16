@@ -3,6 +3,7 @@
 import { Children, Fragment, useState } from 'react';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { usePathname } from 'next/navigation';
+import { useTreeContext } from 'fumadocs-ui/contexts/tree';
 import { ChevronDownIcon } from 'lucide-react';
 import { SidebarItem } from 'fumadocs-ui/components/sidebar/base';
 import {
@@ -11,7 +12,14 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui-radix/collapsible';
 import { SidebarSubgroup } from '@/components/sidebar-subgroup';
-import { containsUrl, groupBySeparator, hasPages } from '@/lib/page-tree-utils';
+import {
+  containsUrl,
+  groupBySeparator,
+  groupCount,
+  hasPages,
+  isNumberedRoot,
+  rowNumber,
+} from '@/lib/page-tree-utils';
 
 /**
  * Renders a top-level folder as a collapsible section: a small muted label
@@ -33,6 +41,7 @@ export function SidebarSection({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { root } = useTreeContext();
   // A folder with meta.json `defaultOpen: false` (the Examples "More
   // examples", D103) starts closed unless it holds the current page, opens when the
   // visitor navigates into it, else keeps the state they left; its
@@ -46,6 +55,7 @@ export function SidebarSection({
     if (closable && active) setOpen(true);
   }
   if (!hasPages(item)) return null;
+  const indexNumber = item.index && rowNumber(root, item.index.url);
   const rendered = Children.toArray(children);
 
   return (
@@ -55,7 +65,14 @@ export function SidebarSection({
         // sticky sub-group labels (sidebar-separator.tsx) right below it
         className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS} ${closable ? 'sticky -top-4 z-20 bg-fd-background' : ''}`}
       >
-        {item.name}
+        {isNumberedRoot(root) ? (
+          // Examples folders end with the count of every row inside (D103)
+          <span>
+            {item.name} ({groupCount(item, [])})
+          </span>
+        ) : (
+          item.name
+        )}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>
       <CollapsibleContent
@@ -68,7 +85,11 @@ export function SidebarSection({
             active={pathname === item.index.url}
             className={ITEM_CLASS}
           >
-            Overview
+            {indexNumber === undefined ? (
+              'Overview'
+            ) : (
+              <span>{indexNumber}. Overview</span>
+            )}
           </SidebarItem>
         ) : null}
         {groupBySeparator(item.children).map((group, g) => {
