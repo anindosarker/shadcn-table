@@ -907,9 +907,11 @@ html:has(#nd-notebook-layout) ::selection {
    and its previous / next steps, view modes, copy prompt, full screen), top bar search and theme pill,
    their menus (.docs-menu, fumadocs popovers and the copy page menu), the
    search dialog, sidebar items and scroll thumb, inline code, the dashed
-   boxes above, page tab triggers. Square, dashed rule border, fg 6% on hover,
-   accent when selected. The ST tables keep the library's own look (none of
-   these selectors reach them). */
+   boxes above, page tab triggers, the fumadocs tab frames and panels, the
+   code tab frames, the code block copy chip and the agent bar's buttons
+   (D107). Square, dashed rule
+   border, fg 6% on hover, accent when selected. The ST tables keep the
+   library's own look (none of these selectors reach them). */
 :is(.docs-page-bar, .docs-playground > header, .site-nav)
   :is(button, a, kbd, [role='group'], [role='combobox'], [role='tab']),
 .site-nav-search,
@@ -928,7 +930,12 @@ html:has(#nd-notebook-layout) ::selection {
 #nd-page .prose > .not-prose > .border,
 #nd-page [id^='props-'] > .justify-end > button,
 #nd-page .divide-y.divide-fd-border,
-#nd-page .prose [data-slot='tabs-trigger'] {
+#nd-page .prose [data-slot='tabs-trigger'],
+#nd-page .rounded-xl:has(> [role='tablist'], > [role='tabpanel']),
+#nd-page [role='tabpanel'].rounded-xl,
+#nd-page figure.shiki > .absolute,
+#nd-page figure.shiki button,
+#nd-page [data-slot='agent-bar'] button {
   border-radius: 0;
 }
 
