@@ -1,4 +1,4 @@
-import { publicSource } from '@/lib/source';
+import { source } from '@/lib/source';
 import { createFromSource } from 'fumadocs-core/search/server';
 
-export const { GET } = createFromSource(publicSource);
+export const { GET } = createFromSource(source);

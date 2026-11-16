@@ -1,6 +1,6 @@
 import type { Folder, Node, Root } from 'fumadocs-core/page-tree';
 import { siteDescription, siteName, siteUrl } from './shared';
-import { publicSource, source } from './source';
+import { source } from './source';
 
 const fenceOpen = /^\s*(`{3,}|~{3,})/;
 
@@ -175,7 +175,7 @@ export function toPlainMarkdown(text: string): string {
 }
 
 function pageLine(url: string): string | undefined {
-  const page = publicSource.getPageByUrl(url);
+  const page = source.getPageByUrl(url);
   if (!page) return undefined;
   const { title, description } = page.data;
   const link = `- [${title}](${siteUrl}${page.url})`;
