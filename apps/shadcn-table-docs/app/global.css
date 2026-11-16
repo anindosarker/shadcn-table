@@ -305,18 +305,14 @@ html > body[data-scroll-locked] {
   mask-image: linear-gradient(to bottom, white calc(100% - 12px), transparent);
 }
 
-/* the stuck label gets the dashed rule below it; the transparent rule keeps
-   its height the same stuck or not */
-.sidebar-sticky-label {
-  container-type: scroll-state;
-}
+/* the stuck label (data-stuck, components/sidebar-separator.tsx) gets the
+   dashed rule below it; the transparent rule keeps its height the same stuck
+   or not */
 .sidebar-sticky-label > * {
   border-bottom: 1px dashed transparent;
 }
-@container scroll-state(stuck: top) {
-  .sidebar-sticky-label > * {
-    border-bottom-color: var(--docs-dash);
-  }
+.sidebar-sticky-label[data-stuck] > * {
+  border-bottom-color: var(--docs-dash);
 }
 
 /* ---------- full-width layout ---------- */
