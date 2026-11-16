@@ -169,5 +169,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Text: the docs page owns the details, the Try it steps and the related guides (L14). Nothing is written once for both sides. This replaces L12's "one source for descriptions" in the story files.
 - Storybook: a story's description carries a link to its docs page. The toolbar addon and its three parameters from L12 are not built.
 - Story pages that have no text yet start with the table and the Storybook button; their details and Try it steps are written in the docs and go through the owner's wording review with LQ26.
-- Open: where the story pages sit in the sidebar.
+- Story pages use the same page format as the written examples (L14), one page per story file with its stories as tabs (L12).
+- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source.
+- Not decided here: where the story pages sit in the sidebar; that needs its own careful discussion.
 - Owner accepted 2026-11-16.
