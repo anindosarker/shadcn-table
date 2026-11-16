@@ -14,13 +14,20 @@ import meta from '../content/docs/examples/meta.json' with { type: 'json' };
 /** The section's URL; it has no page of its own. */
 export const EXAMPLES_URL = '/docs/examples';
 
-/** First page slug in meta.json, skipping "---Label---" separators. */
-const firstSlug = meta.pages.find((entry) => /^[a-z0-9-]+$/.test(entry));
-if (!firstSlug)
-  throw new Error('content/docs/examples/meta.json lists no page');
+/**
+ * The entry of a section without an index page: `<url>/<first slug>`, the
+ * first page in its meta.json, skipping "---Label---" separators.
+ * @param {string} url the section's URL, e.g. `/docs/examples`
+ * @param {{ pages: string[] }} sectionMeta its meta.json
+ */
+export function sectionEntryUrl(url, sectionMeta) {
+  const slug = sectionMeta.pages.find((entry) => /^[a-z0-9-]+$/.test(entry));
+  if (!slug) throw new Error(`${url}: meta.json lists no page`);
+  return `${url}/${slug}`;
+}
 
 /** The first example page, `/docs/examples/<slug>`. */
-export const FIRST_EXAMPLE_URL = `${EXAMPLES_URL}/${firstSlug}`;
+export const FIRST_EXAMPLE_URL = sectionEntryUrl(EXAMPLES_URL, meta);
 
 /**
  * Preview-only comparison pages: `<slug>-new-format.mdx` and

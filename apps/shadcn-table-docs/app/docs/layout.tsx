@@ -3,7 +3,6 @@ import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
-import { SidebarRootHeading } from '@/components/sidebar-root-heading';
 import { SidebarSectionTabs } from '@/components/sidebar-section-tabs';
 import { SidebarItem } from '@/components/sidebar-item';
 import { SiteNav } from '@/components/site-nav';
@@ -24,11 +23,10 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
       tree={source.getPageTree()}
       sidebar={{
         collapsible: false,
-        // the section switcher (L7), then the current section's name
+        // the section switcher (L7)
         banner: (
           <>
             <SidebarSectionTabs />
-            <SidebarRootHeading />
           </>
         ),
         components: {

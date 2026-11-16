@@ -4,7 +4,6 @@
   "root": true,
   "defaultOpen": true,
   "pages": [
-    "index",
     "---Showcase (5)---",
     "advanced",
     "editing-crud",
