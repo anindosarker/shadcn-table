@@ -12,6 +12,9 @@ Checks:
 - `pnpm test validate-repo` at 97a837cb: pass (40 unit tests, registry fresh, no tracked file changed)
 - `pnpm --filter shadcn-table-docs build` at 97a837cb: pass
 - `pnpm test docs-e2e --base radix` at 97a837cb: pass (110 pages, examples 941 passed, 0 failed); server stopped. Bases base and aria left to the verifier
+- `pnpm test docs-e2e --base base` at f81e8667 (verifier; only plan files changed since 97a837cb): pass (110 pages; getting-started 262, api 111, guides 705, examples 941 passed, 0 failed); server stopped
+- `pnpm test docs-e2e --base aria` at f81e8667 (verifier): pass (110 pages; getting-started 262, api 111, guides 705, examples 941 passed, 0 failed); server stopped
+- Acceptance 1.2 at f81e8667 (verifier): pass. 24 `ref-`/`new-` frame pairs all present; spot judge of `examples-basic-1440-open` and `guides-column-pinning-920-hidden`: same tab row and labels minus EX A/EX B, no line between top bar and tab row, dashed rule below, hide button first in the row, no heading row, flush groups. Local CI line of this milestone all green (typecheck radix, lint, validate-repo, docs-e2e base/radix/aria). The Examples numbers part belongs to milestone "Example row numbers"
 - Task 1 reference captures: f517d677
 - Task 2 merge the preview: a2b70b5d
 - Task 3 remove the demo sections: 4b86658e
