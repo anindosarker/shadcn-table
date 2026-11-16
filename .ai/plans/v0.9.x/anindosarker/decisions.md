@@ -5,6 +5,14 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D108** Every reorder drag works by touch on phones and tablets #R5
+	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
+	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
+	- It works the same on all three bases (Base UI, Radix, React Aria).
+	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
+	- Mouse dragging, column resize and the range slider stay as they are today.
+	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
+	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
+	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
 
 ## In progress
