@@ -186,7 +186,14 @@ function parseB(md) {
       file = byTitle.get(title.toLowerCase());
       if (!file) throw new Error(`story file not found: ${title}`);
       // Storybook groups sit in the collapsible "More examples" folder.
-      groups.push({ name: title, label: true, more: true, rows: [] });
+      // The Storybook folder "Fixed Bugs" shows as "Miscellaneous" (owner,
+      // 2026-11-17); story ids still come from the real title.
+      groups.push({
+        name: title.replace(/^Fixed Bugs\//, 'Miscellaneous/'),
+        label: true,
+        more: true,
+        rows: [],
+      });
     } else if (part && groups.length && isRow(line)) {
       const c = cells(line);
       if (part === 1) {
