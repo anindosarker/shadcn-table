@@ -1,4 +1,5 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
+import { docsRoute } from './shared';
 
 /** A page node with the sidebar label set from frontmatter `sidebarTitle` (lib/source.ts). */
 export type SidebarTreeItem = PageTree.Item & { sidebarName?: string };
@@ -124,6 +125,76 @@ export function groupedPages(
   visit(root.children);
   groupedCache.set(root, set);
   return set;
+}
+
+/**
+ * Sections whose sidebar rows carry a running number and whose group labels
+ * carry a row count (D103: Examples only), by URL prefix of their pages.
+ */
+const NUMBERED_SECTIONS = [`${docsRoute}/examples/`];
+
+/** The sidebar rows under `node` in sidebar order: folder index first, external links skipped. */
+function pageRows(node: PageTree.Root | PageTree.Folder): PageTree.Item[] {
+  const rows: PageTree.Item[] = [];
+  const visit = (current: PageTree.Root | PageTree.Folder) => {
+    if ('index' in current && current.index && !current.index.external)
+      rows.push(current.index);
+    for (const child of current.children) {
+      if (child.type === 'folder') visit(child);
+      else if (child.type === 'page' && !child.external) rows.push(child);
+    }
+  };
+  visit(node);
+  return rows;
+}
+
+const numberCache = new WeakMap<object, Map<string, number> | null>();
+
+/** Row numbers by URL of a numbered section, null for any other root; cached per tree. */
+function sectionNumbers(
+  root: PageTree.Root | PageTree.Folder,
+): Map<string, number> | null {
+  let numbers = numberCache.get(root);
+  if (numbers === undefined) {
+    const rows = pageRows(root);
+    numbers = isNumberedSection(rows)
+      ? new Map(rows.map((row, i) => [row.url, i + 1]))
+      : null;
+    numberCache.set(root, numbers);
+  }
+  return numbers;
+}
+
+/** Row number of a page inside its root section, 1-based, or undefined outside a numbered section. */
+export function rowNumber(
+  root: PageTree.Root | PageTree.Folder,
+  url: string,
+): number | undefined {
+  return sectionNumbers(root)?.get(url);
+}
+
+/** True when the section's sidebar shows row numbers and group counts. */
+export function isNumberedRoot(root: PageTree.Root | PageTree.Folder): boolean {
+  return sectionNumbers(root) !== null;
+}
+
+function isNumberedSection(rows: PageTree.Item[]): boolean {
+  return (
+    rows.length > 0 &&
+    rows.every((row) =>
+      NUMBERED_SECTIONS.some((prefix) => row.url.startsWith(prefix)),
+    )
+  );
+}
+
+/** Number of page rows under a separator group or a folder. */
+export function groupCount(
+  node: PageTree.Separator | PageTree.Folder,
+  siblings: PageTree.Node[],
+): number {
+  return node.type === 'folder'
+    ? pageRows(node).length
+    : separatorPages(node, siblings).length;
 }
 
 /** Find the sibling list that contains `node` (by reference) anywhere in the tree. */
