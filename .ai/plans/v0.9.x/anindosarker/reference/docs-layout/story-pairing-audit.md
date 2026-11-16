@@ -2,6 +2,16 @@
 
 Spec 56, milestone "Story pairing audit" (D106). Read on `origin/claude/review` at `8ba6b03c`: the 42 example pages under `apps/shadcn-table-docs/content/docs/examples/*.mdx` (each renders one `examples/base/<name>/TS.tsx`), and the 652 stories in the 81 files under `packages/shadcn-table/stories/`. A pair is exact only when options, columns and data are the same; otherwise it is close (same feature, a different table) or has no partner (no story of that feature). Stories are named `<file under stories/> <export>`.
 
+## Counts
+
+Every count is counted from the lists below.
+
+- Example pages: 42 (exact 0, close 34, no partner 8).
+- Stories today: 652 in 81 files.
+- New stories to build: 42 (the rows of lists 2 and 3).
+- Copies to merge: 59 (the rows of list 4 whose copied story has no check of its own; 80 rows in 59 groups). 54 of them move a play onto the copied story and 5 copies have no play (pure duplicates). 12 copied stories receive two or more plays.
+- Story pages that result: 593 (652 stories, minus 59 merged copies, plus 42 new stories, minus the 42 that are example pages).
+
 ## 1. Exact pairs
 
 None. No story renders the table of a docs example: the examples keep their own fixed rows in `makeData.ts` or in `TS.tsx` (or fetch them from `/api/data`), and no story imports or repeats those rows with the same columns and options. The nearest is `basic` (list 2, row 1): the same table, inside a bug story that adds an app bar around it.
