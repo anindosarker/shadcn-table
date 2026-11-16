@@ -828,3 +828,64 @@ export async function liveDemoFilters(page, w, check) {
     .waitFor({ timeout: 30000 })
     .catch(() => {});
 }
+
+/**
+ * The docs frame (D101, D102): the section tab row lists Get Started,
+ * Examples, Guides, API in that order and marks `section` active; with
+ * `toggle`, the hide button leads the row, hides the sidebar, keeps it
+ * hidden over a reload and brings it back.
+ */
+export async function sectionFrame(
+  page,
+  check,
+  section,
+  { toggle = false } = {},
+) {
+  const row = page.locator('nav[aria-label="Sections"]');
+  const tabs = (await row.locator('a').allTextContents()).map((t) => t.trim());
+  check(
+    'frame: tab order',
+    tabs.join(',') === 'Get Started,Examples,Guides,API',
+    tabs.join(','),
+  );
+  const active = (await row.locator('a[data-active]').allTextContents()).map(
+    (t) => t.trim(),
+  );
+  check(
+    `frame: ${section} tab active`,
+    active.join(',') === section,
+    active.join(','),
+  );
+  if (!toggle) return;
+  const rowStart = await page.evaluate(() => {
+    const nav = document.querySelector('nav[aria-label="Sections"]');
+    const first = nav?.parentElement?.querySelector('button');
+    return first?.getAttribute('aria-label') ?? '';
+  });
+  check(
+    'frame: hide button leads the row',
+    rowStart === 'Hide sidebar',
+    rowStart,
+  );
+  const sidebarShown = () =>
+    page.evaluate(() => {
+      const box = document
+        .querySelector('#nd-sidebar')
+        ?.getBoundingClientRect();
+      return !!box && box.width > 0 && box.right > 1;
+    });
+  check('frame: sidebar shown', await sidebarShown());
+  await page.getByRole('button', { name: 'Hide sidebar' }).click();
+  await page.waitForTimeout(600);
+  check('frame: hide hides the sidebar', !(await sidebarShown()));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+  const show = page.getByRole('button', { name: 'Show sidebar' });
+  check(
+    'frame: hidden over a reload',
+    (await show.count()) === 1 && !(await sidebarShown()),
+  );
+  await show.click();
+  await page.waitForTimeout(600);
+  check('frame: show brings it back', await sidebarShown());
+}
