@@ -42,6 +42,11 @@ publishes the section as the GitHub release notes.
 - Storybook story groups are in Title Case with spaces and without the word "Examples" ("Features/Aggregation Examples" is "Features/Aggregation", "sticky-footer" is "Sticky Footer", "useEffects" is "Use Effects"); the folder "Fixed Bugs" is "Miscellaneous" (D106).
 - Story links follow the new names: the docs toolbar Storybook button opens the same story as before, and the Storybook GitHub link opens the folder of the story shown (D106).
 
+#### Spec 53 Example row numbers
+
+- Each Examples sidebar row starts with its running number ("1. Basic"), counted through the whole section in sidebar order, and each Examples group label ends with its row count ("Featured (5)"); both are computed from the sidebar's order and show in the sidebar only, never in Get Started, Guides or API (D103).
+- The sticky sidebar labels check their dashed line only on a scroll of the sidebar, no longer on every page or table scroll, and again after a move to another section.
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

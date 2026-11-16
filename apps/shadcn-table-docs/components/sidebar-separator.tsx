@@ -5,6 +5,8 @@ import type * as PageTree from 'fumadocs-core/page-tree';
 import { useTreeContext } from 'fumadocs-ui/contexts/tree';
 import {
   findSiblings,
+  groupCount,
+  isNumberedRoot,
   separatorHasPages,
   separatorPages,
 } from '@/lib/page-tree-utils';
@@ -18,7 +20,7 @@ import { SidebarItem } from '@/components/sidebar-item';
  */
 export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   const { root } = useTreeContext();
-  const label = useStuckLabel();
+  const label = useStuckLabel(item);
   const siblings = findSiblings(root, item);
   if (!siblings || !separatorHasPages(item, siblings)) return null;
 
@@ -40,7 +42,14 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
       >
         <span className="flex w-full items-center gap-2 px-2 py-1 font-mono text-[9px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground">
           {item.icon}
-          {item.name}
+          {isNumberedRoot(root) ? (
+            // one flex item, so the label's gap stays out of "Featured (5)"
+            <span>
+              {item.name} ({groupCount(item, siblings)})
+            </span>
+          ) : (
+            item.name
+          )}
         </span>
       </p>
       <SidebarGroupContext value>
@@ -78,18 +87,35 @@ function schedule() {
 }
 
 /**
+ * Only a scroll of an element that holds a label can move one: the page and
+ * the example tables scroll often and hold none, so they are skipped.
+ */
+function onScroll(event: Event) {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  for (const el of labels) {
+    if (target.contains(el)) {
+      schedule();
+      return;
+    }
+  }
+}
+
+/**
  * Sets `data-stuck` on the sticky label while it is stuck, for the dashed
  * line below it (app/global.css). CSS `scroll-state(stuck)` container
  * queries run in Chromium only; this works in every engine. One capture
- * scroll listener serves every label.
+ * scroll listener serves every label. fumadocs keys sidebar rows by index,
+ * so after a client navigation to another section the same label shows a
+ * new `item`; the flags are checked again then, without waiting for a scroll.
  */
-function useStuckLabel() {
+function useStuckLabel(item: PageTree.Separator) {
   const ref = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (labels.size === 0) {
-      document.addEventListener('scroll', schedule, {
+      document.addEventListener('scroll', onScroll, {
         capture: true,
         passive: true,
       });
@@ -100,10 +126,10 @@ function useStuckLabel() {
     return () => {
       labels.delete(el);
       if (labels.size === 0) {
-        document.removeEventListener('scroll', schedule, { capture: true });
+        document.removeEventListener('scroll', onScroll, { capture: true });
         window.removeEventListener('resize', schedule);
       }
     };
-  }, []);
+  }, [item]);
   return ref;
 }
