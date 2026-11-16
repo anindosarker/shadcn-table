@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D108** Every reorder drag works by touch on phones and tablets #R5
+	- Source: Q90
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
