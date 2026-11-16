@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { NAV_LINKS, PREVIEW_NAV_LINKS } from '@/lib/layout.shared';
 
 /**
- * The section switcher (L7): Docs, Examples, Guides, API at the top of the
+ * The section switcher (L7): Get Started, Examples, Guides, API at the top of the
  * sidebar (the `sidebar.banner` slot, above the section heading), the active
  * section underlined. One line; scrolls sideways when narrow. The type is
  * the old header links' (.site-nav-link before L7); the sidebar link rules
@@ -35,7 +35,7 @@ export function SidebarSectionTabs() {
 }
 
 /** Active anywhere in the link's docs section (/docs/<section>/...), so
- * "Docs" (/docs/getting-started/introduction) lights up on every getting-started page. */
+ * "Get Started" (/docs/getting-started/introduction) lights up on every getting-started page. */
 function isActive(url: string, pathname: string) {
   const section = url.split('/').slice(0, 3).join('/');
   return pathname === section || pathname.startsWith(`${section}/`);
