@@ -12,7 +12,7 @@ import {
   SECTION_LABEL_CLASS,
 } from '@/components/sidebar-section';
 import { SidebarGroupContext } from '@/components/sidebar-group-context';
-import { groupedPages, sidebarName } from '@/lib/page-tree-utils';
+import { groupedPages, rowNumber, sidebarName } from '@/lib/page-tree-utils';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -49,6 +49,8 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
     );
   }
 
+  // Examples rows start with their running number (D103), sidebar only.
+  const number = rowNumber(root, item.url);
   return (
     <BaseSidebarItem
       href={item.url}
@@ -56,7 +58,14 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
       icon={item.icon}
       className={ITEM_CLASS}
     >
-      {sidebarName(item)}
+      {number === undefined ? (
+        sidebarName(item)
+      ) : (
+        // one flex item, so the row's gap stays out of "1. Basic"
+        <span>
+          {number}. {sidebarName(item)}
+        </span>
+      )}
     </BaseSidebarItem>
   );
 }
