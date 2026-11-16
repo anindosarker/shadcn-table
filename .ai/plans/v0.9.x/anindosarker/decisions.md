@@ -65,6 +65,23 @@ kanban-plugin: basic
 	- Source: LQ21, LQ23, LQ24
 	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #R5
+	- Replaces L15.
+	- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
+	- The rules, in the owner's words of 2026-11-17:
+	  - Every guide gets an Example section. No guide is left without one.
+	  - The example in it is the best one for that guide.
+	  - A table that was already in the guide is removed only when both hold: the same example is now shown in the Example section, and the table is not part of the guide's story or writing. Then removing it breaks nothing. A table the writing depends on stays, even when the Example section shows the same example. A table that shows a different example stays.
+	  - After the implementation there is a short checklist, one line per guide, so the owner can check every guide by hand: which example the section shows, and which table was removed, if any. Nothing is released without the owner's approval of that checklist.
+	- The Example section is a heading "Example" at the guide's section level and the live example block, nothing else.
+	- The example's toolbar names the example in its left slot. One example: the example page title followed by the arrow-up-right icon, together the link to the example page. Several examples: the example picker (arrows and dropdown) listing only this guide's examples; it swaps the table in place without changing the URL, and an "Open example page" button beside it follows the selection.
+	- On guide pages the toolbar stays on one row: the name truncates, and Storybook and Copy prompt show only their icons when the column is narrow. Example pages are unchanged.
+	- Guide sections are h2 and their sub-sections h3; every guide heading moves up one level.
+	- Guide text is not reworded (LQ26).
+	- An example shown twice on one page must not repeat its element id.
+	- Owner accepted on the preview 2026-11-16: pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
+	- Source: LQ22, LQ27, LQ28
+	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #R5
 
 ## In progress
 
