@@ -42,7 +42,7 @@ kanban-plugin: basic
 	- Decision: old L6 (not built, archived)
 	- `perf-report.md`: CLS 1.10 during the scroll, 26.2 s blocking, 1,448 ms sort click and 19,383 DOM nodes after a full scroll, 276 MB heap.
 - [x] **LQ15** The section switcher's place: header centre, a row under the header, or the sidebar #owner
-	- Decision: L24, amended by L24
+	- Decision: L24
 - [x] **LQ16** Subgroups indented with a guide line, labels too large, section titled "Quick Examples" #owner
 	- Decision: L25
 - [x] **LQ17** One sidebar for the whole site, three levels deep #owner
