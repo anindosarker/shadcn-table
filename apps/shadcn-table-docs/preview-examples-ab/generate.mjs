@@ -236,7 +236,8 @@ function write(key, groups) {
   let rows = 0;
 
   for (const g of groups) {
-    if (g.label !== false) pages.push(`---${g.name}---`);
+    // Group labels carry their row count, rows a running number, so the size is visible.
+    if (g.label !== false) pages.push(`---${g.name} (${g.rows.length})---`);
     for (const r of g.rows) {
       let slug = kebab(r.name);
       if (counts.get(slug) > 1 || used.has(slug))
@@ -256,7 +257,7 @@ function write(key, groups) {
         r.storyId && r.docs ? 'Both' : r.docs ? 'Docs' : 'Storybook';
       fs.writeFileSync(
         path.join(out, `${slug}.mdx`),
-        `---\ntitle: ${yaml(r.name)}\ndescription: ${yaml(`Preview stub in ${g.name.replace(/ \(no group label\)$/, '')}. Today in: ${where}.`)}\n---\n\n${links.join(' | ')}\n`,
+        `---\ntitle: ${yaml(`${String(rows).padStart(3, '0')} ${r.name}`)}\ndescription: ${yaml(`Preview stub in ${g.name.replace(/ \(no group label\)$/, '')}. Today in: ${where}.`)}\n---\n\n${links.join(' | ')}\n`,
       );
     }
   }
