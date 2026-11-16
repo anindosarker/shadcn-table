@@ -211,12 +211,11 @@ function parseB(md) {
       }
     }
   }
-  // Owner's Featured group (docs-layout discussion 2026-11-16): six docs
+  // Owner's Featured group (docs-layout discussion 2026-11-16): five docs
   // examples lead the sidebar under short names; each leaves its own group.
   // Docs rows drop the word "Example"; the old unlabelled rows become "Starter".
   const FEATURED = [
     ['basic', 'Basic'],
-    ['filter-variants', 'Column Filters'],
     ['react-query', 'Server-Side Pagination'],
     ['editing-crud-inline-row', 'Inline Editing'],
     ['virtualized', 'Virtualization'],
