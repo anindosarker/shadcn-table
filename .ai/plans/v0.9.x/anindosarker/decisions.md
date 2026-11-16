@@ -29,6 +29,30 @@ kanban-plugin: basic
 	- Source: LQ16, LQ17, LQ7, LQ25
 	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #R5
+	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
+	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
+	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
+	- Groups, in this order, labels without the word "Examples":
+	  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). A filter example is not featured, because the basic table already filters.
+	  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
+	  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
+	  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
+	  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
+	  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
+	  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
+	  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
+	  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
+	  - Export: `export-csv`, `export-pdf`.
+	  - Customization: `minimal`, `custom-headless`, `persistent-view`.
+	  - More examples: every Storybook group as a labelled sub-group, with its stories as rows (L29).
+	- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar; page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
+	- Numbers, Examples only: every row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included, no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the order, never typed into a page, and show in the sidebar only.
+	- "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels do not collapse.
+	- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Old against new position of every page: `sidebar-regroup-checklist.md`.
+	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
+	- Source: LQ8, LQ10
+	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #R5
 
 ## In progress
 
