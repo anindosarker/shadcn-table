@@ -14,6 +14,7 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
+- [ ] **D109** E14 builds on its own branch so patch releases keep going #R5
 
 ## In progress
 
