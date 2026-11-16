@@ -4,7 +4,21 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #R5
+## In progress
+
+- [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
+	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
+	- Source: Q77
+- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
+	- Source: Q78
+- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
+	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
+	- Source: Q80
+- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
+	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
+	- Source: Q86
+- [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #E14 #R5
 	- Replaces L1, L7, L10, L23.
 	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
 	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
@@ -14,7 +28,7 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-17.
 	- Source: LQ9, LQ15, LQ18
 	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #R5
+- [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #E14 #R5
 	- Replaces L8, L9, and the general parts of L22.
 	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
 	- No heading row with the section's name at the top of the list; the active tab names the section.
@@ -28,7 +42,7 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-17.
 	- Source: LQ16, LQ17, LQ7, LQ25
 	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #R5
+- [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
 	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
 	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
 	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
@@ -52,7 +66,7 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
 	- Source: LQ8, LQ10
 	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #R5
+- [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #E14 #R5
 	- Replaces L14.
 	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
 	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
@@ -64,7 +78,7 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
 	- Source: LQ21, LQ23, LQ24
 	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #R5
+- [ ] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #E14 #R5
 	- Replaces L15.
 	- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
 	- The rules, in the owner's words of 2026-11-17:
@@ -81,7 +95,7 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-16: pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
 	- Source: LQ22, LQ27, LQ28
 	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #R5
+- [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #E14 #R5
 	- Replaces L12, L19, L20, L21.
 	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
 	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
@@ -94,28 +108,13 @@ kanban-plugin: basic
 	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
 	- Source: LQ20
 	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #R5
+- [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
 	- Replaces L17, L18.
 	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
 	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
 	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
 	- Source: LQ1, LQ6
 	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-
-## In progress
-
-- [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
-	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
-	- Source: Q77
-- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
-	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
-	- Source: Q78
-- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
-	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
-	- Source: Q80
-- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
-	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
-	- Source: Q86
 
 ## Done
 

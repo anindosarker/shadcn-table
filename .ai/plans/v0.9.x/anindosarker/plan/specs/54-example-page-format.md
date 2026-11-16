@@ -1,4 +1,5 @@
 # 54: Example pages get Try it steps
+- Epic: E14
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
