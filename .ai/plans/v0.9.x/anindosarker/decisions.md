@@ -15,6 +15,20 @@ kanban-plugin: basic
 	- Source: LQ9, LQ15, LQ18
 	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #R5
+	- Replaces L8, L9, and the general parts of L22.
+	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
+	- No heading row with the section's name at the top of the list; the active tab names the section.
+	- Group labels and their pages share one left edge: no indent, no guide line. Labels are small, mono, uppercase and muted.
+	- Groups never collapse. The one exception is "More examples" in the Examples sidebar (L26).
+	- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Only one label shows at a time.
+	- Hide and show: the button at the start of the tab row hides the whole sidebar and brings it back. Its icon carries an arrow pointing left when the sidebar is open and right when it is hidden; the tooltip reads "Hide sidebar" or "Show sidebar". The sidebar slides in about 200 ms and the content follows; no animation on reload, while resizing, or for visitors who ask for reduced motion. The state survives a reload.
+	- Resize: dragging the sidebar's right edge changes its width between 220 and 480 px; a double click resets it; arrow keys work; the width survives a reload.
+	- The header's text links never show as rows in the sidebar, at any width; the tab row replaces them, also on the mobile layout.
+	- Guides and API: their labels, groups and order stay as they are today.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ16, LQ17, LQ7, LQ25
+	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #R5
 
 ## In progress
 
