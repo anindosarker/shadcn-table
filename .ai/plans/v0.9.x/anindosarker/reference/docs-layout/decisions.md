@@ -214,5 +214,6 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - The whole sidebar can be collapsed with a button right after the brand in the header, and resized by dragging its right edge (220 to 480 px, double click resets); both states survive a reload.
 - The header's text links no longer render as rows in the sidebar below 1024 px; the section tabs replace them there and in the mobile drawer.
 - Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Checklist of old against new position: `sidebar-regroup-checklist.md`.
-- Not part of this decision: the row numbers and group counts in the EX B demo (aids for the review); page titles, descriptions and URLs (LQ29).
+- Numbers, as in the EX B demo: every example row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included; no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the sidebar order, never typed into a page; they show in the sidebar only, not in the page title (in the demo's stub pages the number is part of the title, which the real pages do not copy).
+- Not part of this decision: page titles, descriptions and URLs (LQ29).
 - Owner accepted on the preview 2026-11-17: the real Examples section at wt1 `2e6f8be2`, "More examples" in the EX B demo at wt1 `cfbe4df3`.
