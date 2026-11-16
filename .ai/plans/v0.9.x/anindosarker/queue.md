@@ -42,6 +42,7 @@ kanban-plugin: basic
 	- Tested 2026-11-16, headless Chromium Pixel 7 emulation with CDP touch events on storybook.shadcn-table.com (base, radix, aria): column resize works (180 to 260 px, no page scroll); range slider thumb moves (30 to 40); column reorder by grip or header fires dragstart/drop but the order never changes; row reorder never starts a drag (pointercancel). Same script with a mouse reorders columns and rows, so the harness is valid. Emulation only, no real iOS or Android device.
 - [ ] **Q91** Story pages with no text yet would be listed in search engines and the sitemap
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
+	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
 
 ## Decided
 
