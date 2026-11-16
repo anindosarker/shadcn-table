@@ -12,52 +12,42 @@ import { examplePageSlug } from '@/lib/examples-entry.mjs';
  */
 export const storybookStoryId: Record<string, string> = {
   basic: 'basic--default',
-  'column-ordering':
-    'features-column-ordering-examples--column-ordering-enabled',
-  'row-ordering': 'features-row-ordering-examples--row-ordering-enabled',
-  'row-dragging': 'features-row-dragging-examples--row-dragging-enabled',
-  'editing-crud':
-    'features-editing-examples--editing-enabled-edit-mode-modal-default',
+  'column-ordering': 'features-column-ordering--column-ordering-enabled',
+  'row-ordering': 'features-row-ordering--row-ordering-enabled',
+  'row-dragging': 'features-row-dragging--row-dragging-enabled',
+  'editing-crud': 'features-editing--editing-enabled-edit-mode-modal-default',
   'editing-crud-inline-row':
-    'features-editing-examples--editing-enabled-edit-mode-modal-default',
+    'features-editing--editing-enabled-edit-mode-modal-default',
   'editing-crud-inline-cell':
-    'features-editing-examples--editing-enabled-edit-mode-modal-default',
+    'features-editing--editing-enabled-edit-mode-modal-default',
   'editing-crud-inline-table':
-    'features-editing-examples--editing-enabled-edit-mode-modal-default',
+    'features-editing--editing-enabled-edit-mode-modal-default',
   'editing-crud-tree':
-    'features-editing-examples--editing-enabled-edit-mode-modal-default',
-  'expanding-tree':
-    'features-sub-row-tree-examples--sub-row-tree-enabled-default',
+    'features-editing--editing-enabled-edit-mode-modal-default',
+  'expanding-tree': 'features-sub-row-tree--sub-row-tree-enabled-default',
   'expanding-tree-flat-parse':
-    'features-sub-row-tree-examples--sub-row-tree-enabled-default',
-  'column-grouping':
-    'features-column-grouping-examples--column-grouping-enabled',
-  'customized-grouping':
-    'features-column-grouping-examples--column-grouping-enabled',
-  'aggregation-and-grouping': 'features-aggregation-examples--aggregation',
-  'detail-panel':
-    'features-detail-panel-examples--detail-panel-enabled-semantic',
-  'chart-detail-panel':
-    'features-detail-panel-examples--detail-panel-enabled-semantic',
-  'lazy-detail-panel':
-    'features-detail-panel-examples--detail-panel-enabled-semantic',
-  'filter-variants': 'features-filtering-examples--filtering-enabled-default',
-  'faceted-values': 'features-filtering-examples--filtering-enabled-default',
-  'filter-switching': 'features-filtering-examples--filtering-enabled-default',
-  'popover-filters': 'features-filtering-examples--filtering-enabled-default',
-  'subheader-filters': 'features-filtering-examples--filtering-enabled-default',
-  'custom-filter-ui': 'features-filtering-examples--filtering-enabled-default',
-  'sticky-header':
-    'styling-sticky-header-examples--sticky-header-disabled-default',
-  'column-pinning': 'features-column-pinning-examples--column-pinning-enabled',
+    'features-sub-row-tree--sub-row-tree-enabled-default',
+  'column-grouping': 'features-column-grouping--column-grouping-enabled',
+  'customized-grouping': 'features-column-grouping--column-grouping-enabled',
+  'aggregation-and-grouping': 'features-aggregation--aggregation',
+  'detail-panel': 'features-detail-panel--detail-panel-enabled-semantic',
+  'chart-detail-panel': 'features-detail-panel--detail-panel-enabled-semantic',
+  'lazy-detail-panel': 'features-detail-panel--detail-panel-enabled-semantic',
+  'filter-variants': 'features-filtering--filtering-enabled-default',
+  'faceted-values': 'features-filtering--filtering-enabled-default',
+  'filter-switching': 'features-filtering--filtering-enabled-default',
+  'popover-filters': 'features-filtering--filtering-enabled-default',
+  'subheader-filters': 'features-filtering--filtering-enabled-default',
+  'custom-filter-ui': 'features-filtering--filtering-enabled-default',
+  'sticky-header': 'styling-sticky-header--sticky-header-disabled-default',
+  'column-pinning': 'features-column-pinning--column-pinning-enabled',
   'sticky-row-pinning':
-    'features-row-pinning-examples--row-pinning-sticky-default-enabled',
+    'features-row-pinning--row-pinning-sticky-default-enabled',
   'static-row-pinning':
-    'features-row-pinning-examples--row-pinning-sticky-default-enabled',
+    'features-row-pinning--row-pinning-sticky-default-enabled',
   'sticky-row-selection':
-    'features-row-pinning-examples--row-pinning-sticky-default-enabled',
-  'lazy-sub-rows':
-    'features-sub-row-tree-examples--sub-row-tree-enabled-default',
+    'features-row-pinning--row-pinning-sticky-default-enabled',
+  'lazy-sub-rows': 'features-sub-row-tree--sub-row-tree-enabled-default',
   virtualized: 'features-virtualization--enable-row-virtualization-dense',
   'row-virtualization':
     'features-virtualization--enable-row-virtualization-dense',
