@@ -26,6 +26,11 @@ publishes the section as the GitHub release notes.
 - The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
 - The Guides overview lists every guide under its group heading again, read from the sidebar's order.
 
+#### Spec 53 Example row numbers
+
+- Each Examples sidebar row starts with its running number ("1. Basic"), counted through the whole section in sidebar order, and each Examples group label ends with its row count ("Featured (5)"); both are computed from the sidebar's order and show in the sidebar only, never in Get Started, Guides or API (D103).
+- The sticky sidebar labels check their dashed line only on a scroll of the sidebar, no longer on every page or table scroll, and again after a move to another section.
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
