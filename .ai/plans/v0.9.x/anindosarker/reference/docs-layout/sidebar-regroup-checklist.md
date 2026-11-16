@@ -2,45 +2,45 @@
 
 Deployed site first, new grouping second. Same 42 pages; titles and URLs do not change. Each line reads: Deployed: group / label | New: group / label.
 
-- [ ] Deployed: (no group label) / Basic Example | New: Featured / **Basic**
-- [ ] Deployed: Remote Data Fetching Examples / React Query Example | New: Featured / **Server-Side Pagination**
-- [ ] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Row Example | New: Featured / **Inline Editing**
-- [ ] Deployed: Virtualized Examples / Virtualized Example | New: Featured / **Virtualization**
-- [ ] Deployed: (no group label) / Advanced Example | New: Featured / **Advanced**
-- [ ] Deployed: Filtering Examples / Filter Variants Example | New: Filtering / **Filter Variants**
-- [ ] Deployed: Filtering Examples / Faceted Values Example | New: Filtering / **Faceted Values**
-- [ ] Deployed: Filtering Examples / Filter Switching Example | New: Filtering / **Filter Switching**
-- [ ] Deployed: Filtering Examples / Popover Filters Example | New: Filtering / **Popover Filters**
-- [ ] Deployed: Filtering Examples / Subheader Filters Example | New: Filtering / **Subheader Filters**
-- [ ] Deployed: Filtering Examples / Custom Filter UI Example | New: Filtering / **Custom Filter UI**
-- [ ] Deployed: Remote Data Fetching Examples / Remote Data Fetching Example | New: Server Data / **Remote Data Fetching**
-- [ ] Deployed: Remote Data Fetching Examples / Dynamic Columns Example | New: Server Data / **Dynamic Columns**
-- [ ] Deployed: Remote Data Fetching Examples / Lazy Detail Panel Example | New: Server Data / **Lazy Detail Panel**
-- [ ] Deployed: Remote Data Fetching Examples / Lazy Sub-Rows Example | New: Server Data / **Lazy Sub-Rows**
-- [ ] Deployed: Sticky Pinning Examples / Sticky Header Example | New: Pinning / **Sticky Header**
-- [ ] Deployed: Sticky Pinning Examples / Column Pinning Example | New: Pinning / **Column Pinning**
-- [ ] Deployed: Sticky Pinning Examples / Sticky Row Pinning Example | New: Pinning / **Sticky Row Pinning**
-- [ ] Deployed: Sticky Pinning Examples / Static Row Pinning Example | New: Pinning / **Static Row Pinning**
-- [ ] Deployed: Sticky Pinning Examples / Sticky Row Selection Example | New: Pinning / **Sticky Row Selection**
-- [ ] Deployed: Virtualized Examples / Row Virtualization Example | New: Virtualization / **Row Virtualization**
-- [ ] Deployed: Virtualized Examples / Column Virtualization Example | New: Virtualization / **Column Virtualization**
-- [ ] Deployed: Virtualized Examples / Infinite Scrolling Example | New: Virtualization / **Infinite Scrolling**
-- [ ] Deployed: Editing (CRUD) Examples / Editing CRUD Example | New: Editing / **Editing CRUD**
-- [ ] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Cell Example | New: Editing / **Editing CRUD Inline Cell**
-- [ ] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Table Example | New: Editing / **Editing CRUD Inline Table**
-- [ ] Deployed: Editing (CRUD) Examples / Editing CRUD Tree Example | New: Editing / **Editing CRUD Tree**
-- [ ] Deployed: Expanding / Grouping Examples / Column Grouping Example | New: Grouping / **Column Grouping**
-- [ ] Deployed: Expanding / Grouping Examples / Customized Grouping Example | New: Grouping / **Customized Grouping**
-- [ ] Deployed: Expanding / Grouping Examples / Aggregation and Grouping Example | New: Grouping / **Aggregation and Grouping**
-- [ ] Deployed: Expanding / Grouping Examples / Expanding Tree Example | New: Expanding / **Expanding Tree**
-- [ ] Deployed: Expanding / Grouping Examples / Expanding Parsed Tree Example | New: Expanding / **Expanding Parsed Tree**
-- [ ] Deployed: Expanding / Grouping Examples / Detail Panel Example | New: Expanding / **Detail Panel**
-- [ ] Deployed: Expanding / Grouping Examples / Chart Detail Panel Example | New: Expanding / **Chart Detail Panel**
-- [ ] Deployed: Dragging / Ordering Examples / Column DnD Ordering Example | New: Drag and Drop / **Column DnD Ordering**
-- [ ] Deployed: Dragging / Ordering Examples / Row DnD Ordering Example | New: Drag and Drop / **Row DnD Ordering**
-- [ ] Deployed: Dragging / Ordering Examples / Row Dragging Example | New: Drag and Drop / **Row Dragging**
-- [ ] Deployed: Data Export Examples / CSV Export Example | New: Export / **CSV Export**
-- [ ] Deployed: Data Export Examples / PDF Export Example | New: Export / **PDF Export**
-- [ ] Deployed: (no group label) / Minimal Example | New: Customization / **Minimal**
-- [ ] Deployed: (no group label) / Custom Headless Example | New: Customization / **Custom Headless**
-- [ ] Deployed: (no group label) / Persistent View Example | New: Customization / **Persistent View**
+- [X] Deployed: (no group label) / Basic Example | New: Featured / **Basic**
+- [X] Deployed: Remote Data Fetching Examples / React Query Example | New: Featured / **Server-Side Pagination**
+- [X] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Row Example | New: Featured / **Inline Editing**
+- [X] Deployed: Virtualized Examples / Virtualized Example | New: Featured / **Virtualization**
+- [X] Deployed: (no group label) / Advanced Example | New: Featured / **Advanced**
+- [X] Deployed: Filtering Examples / Filter Variants Example | New: Filtering / **Filter Variants**
+- [X] Deployed: Filtering Examples / Faceted Values Example | New: Filtering / **Faceted Values**
+- [X] Deployed: Filtering Examples / Filter Switching Example | New: Filtering / **Filter Switching**
+- [X] Deployed: Filtering Examples / Popover Filters Example | New: Filtering / **Popover Filters**
+- [X] Deployed: Filtering Examples / Subheader Filters Example | New: Filtering / **Subheader Filters**
+- [X] Deployed: Filtering Examples / Custom Filter UI Example | New: Filtering / **Custom Filter UI**
+- [X] Deployed: Remote Data Fetching Examples / Remote Data Fetching Example | New: Server Data / **Remote Data Fetching**
+- [X] Deployed: Remote Data Fetching Examples / Dynamic Columns Example | New: Server Data / **Dynamic Columns**
+- [X] Deployed: Remote Data Fetching Examples / Lazy Detail Panel Example | New: Server Data / **Lazy Detail Panel**
+- [X] Deployed: Remote Data Fetching Examples / Lazy Sub-Rows Example | New: Server Data / **Lazy Sub-Rows**
+- [X] Deployed: Sticky Pinning Examples / Sticky Header Example | New: Pinning / **Sticky Header**
+- [X] Deployed: Sticky Pinning Examples / Column Pinning Example | New: Pinning / **Column Pinning**
+- [X] Deployed: Sticky Pinning Examples / Sticky Row Pinning Example | New: Pinning / **Sticky Row Pinning**
+- [X] Deployed: Sticky Pinning Examples / Static Row Pinning Example | New: Pinning / **Static Row Pinning**
+- [X] Deployed: Sticky Pinning Examples / Sticky Row Selection Example | New: Pinning / **Sticky Row Selection**
+- [X] Deployed: Virtualized Examples / Row Virtualization Example | New: Virtualization / **Row Virtualization**
+- [X] Deployed: Virtualized Examples / Column Virtualization Example | New: Virtualization / **Column Virtualization**
+- [X] Deployed: Virtualized Examples / Infinite Scrolling Example | New: Virtualization / **Infinite Scrolling**
+- [X] Deployed: Editing (CRUD) Examples / Editing CRUD Example | New: Editing / **Editing CRUD**
+- [X] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Cell Example | New: Editing / **Editing CRUD Inline Cell**
+- [X] Deployed: Editing (CRUD) Examples / Editing CRUD Inline Table Example | New: Editing / **Editing CRUD Inline Table**
+- [X] Deployed: Editing (CRUD) Examples / Editing CRUD Tree Example | New: Editing / **Editing CRUD Tree**
+- [X] Deployed: Expanding / Grouping Examples / Column Grouping Example | New: Grouping / **Column Grouping**
+- [X] Deployed: Expanding / Grouping Examples / Customized Grouping Example | New: Grouping / **Customized Grouping**
+- [X] Deployed: Expanding / Grouping Examples / Aggregation and Grouping Example | New: Grouping / **Aggregation and Grouping**
+- [X] Deployed: Expanding / Grouping Examples / Expanding Tree Example | New: Expanding / **Expanding Tree**
+- [X] Deployed: Expanding / Grouping Examples / Expanding Parsed Tree Example | New: Expanding / **Expanding Parsed Tree**
+- [X] Deployed: Expanding / Grouping Examples / Detail Panel Example | New: Expanding / **Detail Panel**
+- [X] Deployed: Expanding / Grouping Examples / Chart Detail Panel Example | New: Expanding / **Chart Detail Panel**
+- [X] Deployed: Dragging / Ordering Examples / Column DnD Ordering Example | New: Drag and Drop / **Column DnD Ordering**
+- [X] Deployed: Dragging / Ordering Examples / Row DnD Ordering Example | New: Drag and Drop / **Row DnD Ordering**
+- [X] Deployed: Dragging / Ordering Examples / Row Dragging Example | New: Drag and Drop / **Row Dragging**
+- [X] Deployed: Data Export Examples / CSV Export Example | New: Export / **CSV Export**
+- [X] Deployed: Data Export Examples / PDF Export Example | New: Export / **PDF Export**
+- [X] Deployed: (no group label) / Minimal Example | New: Customization / **Minimal**
+- [X] Deployed: (no group label) / Custom Headless Example | New: Customization / **Custom Headless**
+- [X] Deployed: (no group label) / Persistent View Example | New: Customization / **Persistent View**
