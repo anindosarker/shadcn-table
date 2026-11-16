@@ -33,8 +33,8 @@ export function SidebarSection({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  // A folder with meta.json `defaultOpen: false` (preview-examples-ab "More
-  // examples") starts closed unless it holds the current page, opens when the
+  // A folder with meta.json `defaultOpen: false` (the Examples "More
+  // examples", D103) starts closed unless it holds the current page, opens when the
   // visitor navigates into it, else keeps the state they left; its
   // "---Label---" sub-groups are plain labels.
   const closable = item.defaultOpen === false;

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_LINKS, PREVIEW_NAV_LINKS } from '@/lib/layout.shared';
+import { NAV_LINKS } from '@/lib/layout.shared';
 import { SidebarCollapseButton } from '@/components/sidebar-collapse-button';
 
 /**
@@ -30,8 +30,7 @@ export function SectionTabs() {
         aria-label="Sections"
         className="flex min-w-0 flex-1 items-stretch overflow-x-auto [scrollbar-width:none]"
       >
-        {/* preview-examples-ab: EX A and EX B after API */}
-        {[...NAV_LINKS, ...PREVIEW_NAV_LINKS].map((l) => (
+        {NAV_LINKS.map((l) => (
           <Link
             key={l.url}
             href={l.url}
