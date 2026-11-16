@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Dense Padding Examples',
+  title: 'Features/Dense Padding',
 };
 
 export default meta;

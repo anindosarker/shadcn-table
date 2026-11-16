@@ -9,7 +9,7 @@ import { UserIcon } from 'lucide-react';
 // menu, and Escape hands focus back to it.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Menu Openers',
+  title: 'Miscellaneous/Menu Openers',
 };
 
 export default meta;

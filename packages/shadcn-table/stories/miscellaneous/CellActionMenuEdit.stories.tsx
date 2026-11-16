@@ -9,7 +9,7 @@ import { UserIcon } from 'lucide-react';
 // had just opened blurred and unmounted.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Cell Action Menu Edit',
+  title: 'Miscellaneous/Cell Action Menu Edit',
 };
 
 export default meta;

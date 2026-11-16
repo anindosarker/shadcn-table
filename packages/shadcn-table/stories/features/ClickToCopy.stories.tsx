@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Click to Copy Examples',
+  title: 'Features/Click To Copy',
 };
 
 export default meta;

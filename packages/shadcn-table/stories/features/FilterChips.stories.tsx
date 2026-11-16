@@ -12,7 +12,7 @@ import { ST_BASE } from '../../.storybook/themes';
 // Chips mode: filters live as chips in the toolbar, added from the column
 // picker, edited in one value editor that stays where it was opened.
 const meta: Meta = {
-  title: 'Features/Filter Chips Examples',
+  title: 'Features/Filter Chips',
 };
 
 export default meta;

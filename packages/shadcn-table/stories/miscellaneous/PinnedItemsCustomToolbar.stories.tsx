@@ -13,7 +13,7 @@ import {
 // ST_ViewSettingsButton in a custom toolbar too, and once, in the D8 order,
 // in the stock toolbar.
 const meta: Meta = {
-  title: 'Fixed Bugs/Pinned Items Custom Toolbar',
+  title: 'Miscellaneous/Pinned Items Custom Toolbar',
 };
 
 export default meta;

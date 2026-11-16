@@ -8,7 +8,7 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 // chip editor and in the subheader filter row (F31).
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Filter Editor Focus Ring',
+  title: 'Miscellaneous/Filter Editor Focus Ring',
 };
 
 export default meta;

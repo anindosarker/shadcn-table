@@ -5,7 +5,7 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Pagination Examples',
+  title: 'Features/Pagination',
 };
 
 export default meta;

@@ -17,6 +17,20 @@ import './preview.css';
 
 const channel = addons.getChannel();
 
+const STORIES_GITHUB_ROOT =
+  'https://github.com/anindosarker/shadcn-table/tree/main/packages/shadcn-table/stories';
+
+/**
+ * The GitHub folder of a story's file. The folder follows the first segment
+ * of the title ('Features/Aggregation' lives in stories/features); a title
+ * without a folder ('Basic') lives in stories itself.
+ */
+function storiesGitHubUrl(title: string) {
+  const slash = title.indexOf('/');
+  if (slash === -1) return STORIES_GITHUB_ROOT;
+  return `${STORIES_GITHUB_ROOT}/${title.slice(0, slash).toLowerCase()}`;
+}
+
 /** Apply the Tailwind v4 `.dark` variant root class to the preview <html>. */
 function applyHtmlClass(isDark: boolean) {
   const root = document.documentElement;
@@ -111,7 +125,7 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story) => {
+    (Story, { title }) => {
       useStorybookDarkMode();
       return (
         <div className="bg-background p-4 text-foreground">
@@ -146,7 +160,7 @@ const preview: Preview = {
           <p className="pb-4 text-sm text-muted-foreground dark:text-foreground">
             View Source code for these examples in the code tab below or{' '}
             <a
-              href="https://github.com/anindosarker/shadcn-table/tree/main/packages/shadcn-table/stories/features"
+              href={storiesGitHubUrl(title)}
               target="_blank"
               rel="noopener"
               className="underline"

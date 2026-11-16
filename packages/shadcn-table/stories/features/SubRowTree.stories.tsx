@@ -9,7 +9,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { CakeIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Sub Row Tree Examples',
+  title: 'Features/Sub Row Tree',
 };
 
 export default meta;

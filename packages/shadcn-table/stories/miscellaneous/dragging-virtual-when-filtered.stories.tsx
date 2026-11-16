@@ -10,7 +10,7 @@ import {
 import { CakeIcon, HashIcon, MailIcon, MapIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/dragging virtual when filtered',
+  title: 'Miscellaneous/Dragging Virtual When Filtered',
 };
 
 export default meta;

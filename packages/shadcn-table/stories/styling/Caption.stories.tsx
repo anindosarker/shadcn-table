@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Caption Examples',
+  title: 'Styling/Caption',
 };
 
 export default meta;

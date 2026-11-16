@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Pinning Examples',
+  title: 'Features/Row Pinning',
 };
 
 export default meta;

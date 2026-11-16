@@ -7,7 +7,7 @@ import { expect, waitFor } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Number Examples',
+  title: 'Features/Row Number',
 };
 
 export default meta;

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Table Dimensions Examples',
+  title: 'Styling/Table Dimensions',
 };
 
 export default meta;

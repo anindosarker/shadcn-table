@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Filtering Examples',
+  title: 'Features/Filtering',
 };
 
 export default meta;
