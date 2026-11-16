@@ -26,6 +26,11 @@ publishes the section as the GitHub release notes.
 - The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
 - The Guides overview lists every guide under its group heading again, read from the sidebar's order.
 
+#### Spec 53 Footer link and square corners
+
+- The home page footer's Storybook link opens the Storybook of the selected base, no longer always the Radix one; its first Docs link reads "Get Started" (D107, D101).
+- The last rounded frames in the docs content are square: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar and inline code in the prop tables. The table frame and the scroll controls stay rounded (D107).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
