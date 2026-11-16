@@ -10,10 +10,6 @@
     "inline-editing",
     "virtualization",
     "advanced",
-    "---Starter (3)---",
-    "minimal",
-    "custom-headless",
-    "persistent-view",
     "---Data Export Examples (2)---",
     "csv-export",
     "pdf-export",
@@ -56,6 +52,10 @@
     "row-virtualization",
     "column-virtualization",
     "infinite-scrolling",
+    "---Customization (3)---",
+    "minimal",
+    "custom-headless",
+    "persistent-view",
     "more"
   ]
 }

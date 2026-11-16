@@ -213,7 +213,7 @@ function parseB(md) {
   }
   // Owner's Featured group (docs-layout discussion 2026-11-16): five docs
   // examples lead the sidebar under short names; each leaves its own group.
-  // Docs rows drop the word "Example"; the old unlabelled rows become "Starter".
+  // Docs rows drop the word "Example"; the old unlabelled rows become "Customization".
   const FEATURED = [
     ['basic', 'Basic'],
     ['react-query', 'Server-Side Pagination'],
@@ -233,9 +233,20 @@ function parseB(md) {
     featured.rows.push({ ...row, name });
   }
   for (const g of docsGroups) {
-    if (g.label === false) Object.assign(g, { name: 'Starter', label: true });
+    if (g.label === false)
+      Object.assign(g, { name: 'Customization', label: true });
     for (const r of g.rows) r.name = r.name.replace(/ Example$/, '');
   }
+  // Customization sits after the feature groups, just above "More examples".
+  const custom = groups.splice(
+    groups.findIndex((g) => g.name === 'Customization'),
+    1,
+  )[0];
+  groups.splice(
+    groups.findIndex((g) => g.more),
+    0,
+    custom,
+  );
   groups.unshift(featured);
   return groups;
 }
