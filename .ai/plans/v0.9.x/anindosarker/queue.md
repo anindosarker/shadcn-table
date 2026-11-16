@@ -43,6 +43,7 @@ kanban-plugin: basic
 - [ ] **Q91** Story pages with no text yet would be listed in search engines and the sitemap
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
 	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
+	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
 
 ## Decided
 
