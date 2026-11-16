@@ -40,6 +40,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-16: 'dragging doesn't work reliably on mobile.' Which drag (column reorder, row reorder, column resize, something in the date demo), page, device and browser: not stated yet.
 	- Code (all three bases alike): column reorder (whole th draggable, ST_TableHeadCell.tsx:276-278; grip ST_GrabHandleButton.tsx:47), row reorder (ST_TableBodyRowGrabHandle.tsx:68-69), show/hide menu reorder, sort popover rule reorder (ST_SortPopover.tsx:202) and the grouping drop zone use HTML5 drag and drop only: no touch or pointer handlers, no touch-none on grips (28px) or th. Resize uses getResizeHandler with onTouchStart plus touch-none (ST_TableHeadCellResizeHandle.tsx:61,73, 8px wide). Range slider is the base primitive with touch-none. v0.8.x D37 already records 'touch screens have no drag (unchanged)'. MRT has the same HTML5 grab handle; no touch stories or tests exist.
 	- Tested 2026-11-16, headless Chromium Pixel 7 emulation with CDP touch events on storybook.shadcn-table.com (base, radix, aria): column resize works (180 to 260 px, no page scroll); range slider thumb moves (30 to 40); column reorder by grip or header fires dragstart/drop but the order never changes; row reorder never starts a drag (pointercancel). Same script with a mouse reorders columns and rows, so the harness is valid. Emulation only, no real iOS or Android device.
+- [ ] **Q91** Story pages with no text yet would be listed in search engines and the sitemap
 
 ## Decided
 
