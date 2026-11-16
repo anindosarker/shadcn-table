@@ -2,7 +2,7 @@
 
 Deployed site on the left, new grouping on the right. Same 42 pages; titles and URLs do not change.
 
-| OK | Now: group | Now: label | New: group | New: label |
+| OK | Deployed: group | Deployed: label | New: group | New: label |
 |---|---|---|---|---|
 | [ ] | (no group label) | Basic Example | Featured | Basic |
 | [ ] | Remote Data Fetching Examples | React Query Example | Featured | Server-Side Pagination |
