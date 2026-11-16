@@ -178,7 +178,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 
 - A story that shows the same table as another story and only adds an automated check (a `play` function) is not listed as its own story. Its check moves onto the story it copies, and the copy is deleted. The check keeps running; the sidebar shows one entry.
 - First case: `packages/shadcn-table/stories/Basic.stories.tsx` "Renders Rows" (`:52`) is "Default" (`:49`) plus a row-count and cell-text check; nothing else references it.
-- Applies to every such story (about 270 stories carry a `play` function; how many are plain copies comes out of the L19 audit). A test story that sets the table up differently from every example is not covered by this decision.
+- Applies to every such story (about 270 stories carry a `play` function; how many are plain copies comes out of the L19 audit). A test story that sets the table up differently from every example stays listed like any other story, in Storybook and in the docs: all stories show in the docs (L19, L21), and none is hidden or sorted by hand.
 - Owner accepted 2026-11-17.
 
 ### L21 "Fixed Bugs" becomes "Miscellaneous"; story group names share one style
