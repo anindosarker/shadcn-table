@@ -51,12 +51,16 @@ export function SidebarSection({
   return (
     <Collapsible open={open} onOpenChange={setOpen} className={SECTION_CLASS}>
       <CollapsibleTrigger
-        className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS}`}
+        // a closable folder's heading sticks while its rows scroll, with its
+        // sticky sub-group labels (sidebar-separator.tsx) right below it
+        className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS} ${closable ? 'sticky -top-4 z-20 bg-fd-background' : ''}`}
       >
         {item.name}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="flex flex-col gap-1">
+      <CollapsibleContent
+        className={`flex flex-col gap-1 ${closable ? '[--sidebar-stick-top:1.5rem]' : ''}`}
+      >
         {item.index ? (
           <SidebarItem
             href={item.index.url}
