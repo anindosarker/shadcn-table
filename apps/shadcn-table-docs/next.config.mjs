@@ -1,4 +1,5 @@
 import { createMDX } from 'fumadocs-mdx/next';
+import { EXAMPLES_URL, FIRST_EXAMPLE_URL } from './lib/examples-entry.mjs';
 
 const withMDX = createMDX({ agentRules: false });
 
@@ -98,6 +99,13 @@ const config = {
     {
       source: '/docs',
       destination: '/docs/getting-started/introduction',
+      permanent: true,
+    },
+    // The Examples section has no index page; its entry is the first example
+    // (lib/examples-entry.mjs, docs-layout L13).
+    {
+      source: EXAMPLES_URL,
+      destination: FIRST_EXAMPLE_URL,
       permanent: true,
     },
     // The getting-started overview was two links; the sidebar lists them.

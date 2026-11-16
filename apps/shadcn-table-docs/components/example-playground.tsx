@@ -8,14 +8,17 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  ArrowUpRightIcon,
   CheckIcon,
   ChevronDownIcon,
+  BookOpenIcon,
   ExternalLinkIcon,
   MaximizeIcon,
   MinimizeIcon,
   SparklesIcon,
   TerminalIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTreePath } from 'fumadocs-ui/contexts/tree';
 import { Button } from '@/components/ui-radix/button';
@@ -34,12 +37,15 @@ import {
 import { BaseSwitch, useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
+import { useGuideExamples } from '@/components/guide-example-switch';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
+import { storybookExampleUrl } from '@/lib/storybook-map';
 import type { Base } from '@/lib/install';
 import {
   trackExampleCodeOpened,
   trackInstallCommandCopied,
+  trackStorybookOpened,
 } from '@/lib/analytics';
 
 /** What differs per base: the base's sources, their GitHub folder and the commands. */
@@ -129,11 +135,11 @@ const COPIED_MS = 1500;
  * (the example, then its code below) view, a file tree code explorer, Copy
  * prompt, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
- * pages the header also carries the example switcher (previous / next and
- * the page combobox), so the reader can step through examples without
- * leaving the panel. Copy prompt writes the agent prompt to the clipboard;
- * the caret menu next to it copies the install command or opens the
- * example in GitHub. Code, prompt and command are those of the selected
+ * pages the header also carries the example switcher (the page combobox),
+ * so the reader can move between examples without leaving the panel. Copy
+ * prompt writes the agent prompt to the clipboard; the caret menu next to it
+ * copies the install command or opens the example in GitHub; Storybook opens
+ * the example's story in the selected base's Storybook. Code, prompt and command are those of the selected
  * base (the header switch), as is the live example.
  */
 export const ExamplePlayground = ({ children, name, variants }: Props) => {
@@ -152,6 +158,12 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const path = useTreePath();
+  // Inside a guide's <GuideExamples>: its example list and the one on show.
+  const guide = useGuideExamples();
+  const guidePage = guide?.pages[guide.index];
+  const exampleSlug =
+    /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1] ??
+    guidePage?.url.slice(guidePage.url.lastIndexOf('/') + 1);
 
   useEffect(
     () => () => {
@@ -219,16 +231,49 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
 
   const showCode = mode !== 'preview' && files.length > 0;
 
-  // Only example pages get the switcher: inside a guide the panel is one of
-  // several and switching would navigate away from the guide.
+  // Example pages get the section switcher. A guide's plain example panel
+  // gets nothing (switching would navigate away from the guide); one inside
+  // <GuideExamples> gets its example page's link, or with several examples
+  // the switcher over that list, swapping the example in place.
   const section = path[0];
   const current = path[path.length - 1];
-  const switcher =
+  let switcher: ReactNode = null;
+  if (
     pathname.startsWith('/docs/examples/') &&
     section?.type === 'folder' &&
-    current?.type === 'page' ? (
-      <ExampleSwitcher section={section} current={current} />
-    ) : null;
+    current?.type === 'page'
+  ) {
+    switcher = <ExampleSwitcher section={section} current={current} />;
+  } else if (guide && guidePage && guide.pages.length > 1) {
+    switcher = (
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <ExampleSwitcher
+          pages={guide.pages}
+          current={guidePage}
+          onSelect={(page) =>
+            guide.select(guide.pages.findIndex((p) => p.url === page.url))
+          }
+        />
+        <Button asChild variant="ghost" size="icon-sm">
+          <Link href={guidePage.url} aria-label="Open example page">
+            <ArrowUpRightIcon />
+          </Link>
+        </Button>
+      </div>
+    );
+  } else if (guidePage) {
+    switcher = (
+      <div className="flex min-w-0 flex-1 items-center">
+        <Link
+          href={guidePage.url}
+          className="inline-flex min-w-0 items-center gap-1 text-sm font-medium text-fd-foreground underline-offset-4 hover:underline"
+        >
+          <span className="truncate">{guidePage.name}</span>
+          <ArrowUpRightIcon className="size-3.5 shrink-0" />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -239,17 +284,29 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
       data-fullscreen={fullscreen || undefined}
       className={cn(
         'docs-playground not-prose my-8 scroll-mt-24 overflow-hidden rounded-lg bg-fd-background',
+        // Guide panels sit in the narrower column beside "On this page":
+        // their toolbar keeps one row by container width (below).
+        guide && '@container',
         fullscreen && 'fixed inset-0 z-50 my-0 flex flex-col rounded-none',
       )}
     >
       <header
         className={cn(
           'flex min-h-12 flex-wrap items-center justify-between gap-x-4 gap-y-2 px-3 py-1.5',
+          // Guide panels: one row from 36rem, the example link or picker
+          // takes the space left and truncates; below 48rem Storybook and
+          // Copy prompt show their icons only. Example pages are unchanged.
+          guide && '@xl:flex-nowrap',
           fullscreen && 'shrink-0',
         )}
       >
         {switcher}
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div
+          className={cn(
+            'ml-auto flex flex-wrap items-center gap-2',
+            guide && '@xl:shrink-0',
+          )}
+        >
           <div
             role="group"
             aria-label="View mode"
@@ -269,12 +326,33 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </Button>
             ))}
           </div>
-          <BaseSwitch surface="example" />
+          {/* dashed like the other groups on this row */}
+          <BaseSwitch
+            surface="example"
+            className="border-dashed border-(--docs-dash)"
+          />
           <div
             role="group"
             aria-label="Open example"
             className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           >
+            {/* The selected base's Storybook at the example's story
+                (lib/storybook-map.ts). */}
+            <Button asChild variant="ghost" size="sm" className="px-2.5">
+              <a
+                href={storybookExampleUrl(base, exampleSlug)}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackStorybookOpened({ base, surface: 'example' })
+                }
+              >
+                <BookOpenIcon data-icon="inline-start" />
+                <span className={cn(guide && '@max-3xl:sr-only')}>
+                  Storybook
+                </span>
+              </a>
+            </Button>
             <Button
               type="button"
               variant="ghost"
@@ -289,7 +367,12 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               )}
               {/* Both labels share one cell so the button keeps its width
                   while it reads "Copied"; the hidden one is not announced. */}
-              <span className="grid justify-items-start">
+              <span
+                className={cn(
+                  'grid justify-items-start',
+                  guide && '@max-3xl:sr-only',
+                )}
+              >
                 <span
                   className={cn(
                     'col-start-1 row-start-1',

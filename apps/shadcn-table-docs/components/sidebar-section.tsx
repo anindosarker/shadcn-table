@@ -33,19 +33,34 @@ export function SidebarSection({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(true);
+  // A folder with meta.json `defaultOpen: false` (the Examples "More
+  // examples", D103) starts closed unless it holds the current page, opens when the
+  // visitor navigates into it, else keeps the state they left; its
+  // "---Label---" sub-groups are plain labels.
+  const closable = item.defaultOpen === false;
+  const active = containsUrl(item, pathname);
+  const [open, setOpen] = useState(!closable || active);
+  const [wasActive, setWasActive] = useState(active);
+  if (active !== wasActive) {
+    setWasActive(active);
+    if (closable && active) setOpen(true);
+  }
   if (!hasPages(item)) return null;
   const rendered = Children.toArray(children);
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className={SECTION_CLASS}>
       <CollapsibleTrigger
-        className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS}`}
+        // a closable folder's heading sticks while its rows scroll, with its
+        // sticky sub-group labels (sidebar-separator.tsx) right below it
+        className={`group/section mb-1 cursor-pointer justify-between ${SECTION_LABEL_CLASS} ${closable ? 'sticky -top-4 z-20 bg-fd-background' : ''}`}
       >
         {item.name}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="flex flex-col gap-1">
+      <CollapsibleContent
+        className={`flex flex-col gap-1 ${closable ? '[--sidebar-stick-top:1.5rem]' : ''}`}
+      >
         {item.index ? (
           <SidebarItem
             href={item.index.url}
@@ -58,6 +73,15 @@ export function SidebarSection({
         ) : null}
         {groupBySeparator(item.children).map((group, g) => {
           const nodes = group.indices.map((i) => rendered[i]);
+          // the separator renders its own group (sidebar-separator.tsx)
+          if (closable)
+            return group.separator ? (
+              <Fragment key={g}>
+                {rendered[item.children.indexOf(group.separator)]}
+              </Fragment>
+            ) : (
+              <Fragment key={g}>{nodes}</Fragment>
+            );
           return group.separator ? (
             <SidebarSubgroup
               key={g}

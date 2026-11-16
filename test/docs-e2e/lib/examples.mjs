@@ -1,5 +1,5 @@
 /**
- * Examples page checks: /docs/examples and examples/*. Every example page
+ * Examples page checks: the /docs/examples redirect and examples/*. Every example page
  * renders its own example in one playground panel (the group tab strips only
  * survive inside guides), so a page asserts that single panel, its table
  * rows, the Code toggle and the example's own markers.
@@ -10,7 +10,9 @@ import {
   codeToggle,
   example,
   headerLabelsFit,
+  sectionFrame,
 } from './helpers.mjs';
+import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -266,29 +268,29 @@ const checks = {
     await singleExample(page, check);
     await storedIconLibrary(page, check);
     // Example switcher: previous is disabled on the first example, next
-    // steps to Minimal.
+    // steps to the second Featured row, React Query (D103).
     const header = w.locator('header');
     const prev = header.locator('button[aria-label^="Previous"]');
     const next = header.locator('button[aria-label^="Next"]');
     check(
-      'switcher: label',
-      (await header.getByText('Select example').count()) === 1,
+      'switcher: no label',
+      (await header.getByText('Select example').count()) === 0,
     );
     check(
       'switcher: prev disabled',
       await prev.isDisabled().catch(() => false),
     );
     check(
-      'switcher: next names Minimal',
-      /^Next: Minimal/.test((await next.getAttribute('aria-label')) ?? ''),
+      'switcher: next names React Query',
+      /^Next: React Query/.test((await next.getAttribute('aria-label')) ?? ''),
     );
     await next.click();
     await page
-      .waitForURL('**/docs/examples/minimal', { timeout: 30000 })
+      .waitForURL('**/docs/examples/react-query', { timeout: 30000 })
       .catch(() => {});
     check(
-      'switcher: next goes to minimal',
-      new URL(page.url()).pathname === '/docs/examples/minimal',
+      'switcher: next goes to react-query',
+      new URL(page.url()).pathname === '/docs/examples/react-query',
       page.url(),
     );
   },
@@ -452,13 +454,14 @@ const checks = {
     await chipsDefault(w, 'export-to-pdf', check);
     await headerLabelsFit(w, 'export-to-pdf', check);
   },
+  // no index page: the section opens its first example (docs-layout L13)
   '/docs/examples': async ({ page, check }) => {
-    const links = page.locator('main a[href^="/docs/examples/"]');
     check(
-      'example links',
-      (await links.count()) >= 40,
-      `n=${await links.count()}`,
+      'redirects to the first example',
+      new URL(page.url()).pathname === FIRST_EXAMPLE_URL,
+      page.url(),
     );
+    await sectionFrame(page, check, 'Examples');
   },
   '/docs/examples/faceted-values': examplePage(
     'enable-filter-facet-values',

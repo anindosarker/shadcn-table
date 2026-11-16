@@ -18,7 +18,7 @@ import {
   gitConfig,
   siteName,
 } from '@/lib/shared';
-import { findSectionName } from '@/lib/page-tree-utils';
+import { findSectionName, footerNeighbours } from '@/lib/page-tree-utils';
 import { JsonLd } from '@/components/json-ld';
 import { breadcrumbJsonLd, techArticleJsonLd } from '@/lib/structured-data';
 
@@ -43,6 +43,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         page.data.toc.length === 0
       }
       slots={{ breadcrumb: NoBreadcrumb }}
+      // prev / next across section edges (sections are root folders)
+      footer={{ items: footerNeighbours(source.getPageTree(), page.url) }}
     >
       <JsonLd data={techArticleJsonLd(page)} />
       <JsonLd data={breadcrumbJsonLd(page)} />

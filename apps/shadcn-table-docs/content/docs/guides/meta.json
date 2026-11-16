@@ -1,7 +1,9 @@
 {
   "title": "Guides",
+  "root": true,
   "defaultOpen": true,
   "pages": [
+    "index",
     "---Fundamentals---",
     "production-ready-tables",
     "best-practices",
@@ -29,6 +31,9 @@
     "async-loading",
     "pagination",
     "virtualization",
+    "virtualization-new-format",
+    "virtualization-new-format-2",
+    "virtualization-new-format-3",
     "---Data Mutation Guides---",
     "row-selection",
     "editing",
@@ -45,6 +50,8 @@
     "---Sticky Pinning / Freezing Guides---",
     "sticky-header",
     "column-pinning",
+    "column-pinning-new-format",
+    "column-pinning-new-format-3",
     "scroll-cues",
     "row-pinning",
     "---Sort / Order / DnD Guides---",

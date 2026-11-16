@@ -14,9 +14,9 @@ const COLUMNS = [
     head: 'Docs',
     links: [
       { label: 'Get started', href: '/docs/getting-started/install' },
-      { label: 'API', href: '/docs/api' },
-      { label: 'Guides', href: '/docs/guides' },
       { label: 'Examples', href: '/docs/examples' },
+      { label: 'Guides', href: '/docs/guides' },
+      { label: 'API', href: '/docs/api' },
     ],
   },
   {

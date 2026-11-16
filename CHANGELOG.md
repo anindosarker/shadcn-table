@@ -17,6 +17,15 @@ publishes the section as the GitHub release notes.
 - The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 - On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
 
+### Docs
+
+#### Spec 53 Preview lands on review
+
+- The docs have four sections, Get Started, Examples, Guides and API, in a tab row under the top bar; the row starts with the sidebar's hide and show button and has a dashed rule below it (D101).
+- Each section has its own sidebar: flush groups, sticky group labels with a dashed line while stuck (also in Firefox and Safari), no heading row; the sidebar hides, resizes between 220 and 480 px and keeps both over a reload (D102).
+- The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
+- The Guides overview lists every guide under its group heading again, read from the sidebar's order.
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

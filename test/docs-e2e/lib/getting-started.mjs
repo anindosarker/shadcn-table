@@ -17,6 +17,7 @@ import {
   headerBaseLabel,
   headerBaseMenu,
   liveDemoFilters,
+  sectionFrame,
 } from './helpers.mjs';
 
 // D29's 300 ms budget holds on a local machine, but GitHub runners took 342 to
@@ -1384,6 +1385,7 @@ const checks = {
     );
     const w = await example(page, 'live-demo', check);
     await liveDemoFilters(page, w, check);
+    await sectionFrame(page, check, 'Get Started', { toggle: true });
   },
   '/docs': async ({ page, check }) => {
     check(
@@ -1542,17 +1544,9 @@ const checks = {
         ',shadcn-table,TanStack Table,shadcn/ui data-table recipe,Material React Table,AG Grid',
       header,
     );
-    const group = page
-      .locator('[data-slot="collapsible"]', {
-        has: page.locator('[data-slot="collapsible-trigger"]', {
-          hasText: 'Getting Started',
-        }),
-      })
-      .first();
+    // the Get Started sidebar lists only its own pages (D102)
     const items = (
-      await group
-        .locator('[data-slot="collapsible-content"] > a')
-        .allTextContents()
+      await page.locator('#nd-sidebar a[href^="/docs/"]').allTextContents()
     ).map((t) => t.trim());
     check(
       'sidebar order',
