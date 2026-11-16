@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Pinning Examples',
+  title: 'Features/Column Pinning',
 };
 
 export default meta;

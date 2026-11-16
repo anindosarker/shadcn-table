@@ -12,7 +12,7 @@ import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Editing Examples',
+  title: 'Features/Editing',
 };
 
 export default meta;

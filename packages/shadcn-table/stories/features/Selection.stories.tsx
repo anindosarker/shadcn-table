@@ -15,7 +15,7 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
-  title: 'Features/Selection Examples',
+  title: 'Features/Selection',
 };
 
 export default meta;

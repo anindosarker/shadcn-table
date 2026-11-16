@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Sorting Examples',
+  title: 'Features/Sorting',
 };
 
 export default meta;

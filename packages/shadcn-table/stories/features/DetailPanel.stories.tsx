@@ -5,7 +5,7 @@ import { expect, waitFor } from 'storybook/test';
 import { CakeIcon, HashIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Detail Panel Examples',
+  title: 'Features/Detail Panel',
 };
 
 export default meta;

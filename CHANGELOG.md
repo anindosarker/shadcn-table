@@ -37,6 +37,11 @@ publishes the section as the GitHub release notes.
 - The home page footer's Storybook link opens the Storybook of the selected base, no longer always the Radix one; its first Docs link reads "Get Started" (D107, D101).
 - The last rounded frames in the docs content are square: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar and inline code in the prop tables. The table frame and the scroll controls stay rounded (D107).
 
+#### Spec 56 Story group names
+
+- Storybook story groups are in Title Case with spaces and without the word "Examples" ("Features/Aggregation Examples" is "Features/Aggregation", "sticky-footer" is "Sticky Footer", "useEffects" is "Use Effects"); the folder "Fixed Bugs" is "Miscellaneous" (D106).
+- Story links follow the new names: the docs toolbar Storybook button opens the same story as before, and the Storybook GitHub link opens the folder of the story shown (D106).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

@@ -17,7 +17,7 @@ import { UserIcon } from 'lucide-react';
 // base, and Escape in the search field keeps full screen.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Headless Full Screen',
+  title: 'Miscellaneous/Headless Full Screen',
 };
 
 export default meta;

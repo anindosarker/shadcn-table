@@ -9,7 +9,7 @@ import { UserIcon } from 'lucide-react';
 // it once the collapse is over.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Panel Collapse',
+  title: 'Miscellaneous/Panel Collapse',
 };
 
 export default meta;

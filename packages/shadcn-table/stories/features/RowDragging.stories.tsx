@@ -12,7 +12,7 @@ import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { CakeIcon, HashIcon, MailIcon, MapIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Dragging Examples',
+  title: 'Features/Row Dragging',
 };
 
 export default meta;

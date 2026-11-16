@@ -8,7 +8,7 @@ import { UserIcon } from 'lucide-react';
 // empty field and hands focus back to the toggle.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Search Field',
+  title: 'Miscellaneous/Search Field',
 };
 
 export default meta;

@@ -9,7 +9,7 @@ import { Building2Icon, UserIcon } from 'lucide-react';
 // in RTL.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/RTL',
+  title: 'Miscellaneous/RTL',
 };
 
 export default meta;

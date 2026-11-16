@@ -5,7 +5,7 @@ import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { CalendarClockIcon, CalendarIcon, ClockIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/mobile date pickers',
+  title: 'Miscellaneous/Mobile Date Pickers',
 };
 
 export default meta;
