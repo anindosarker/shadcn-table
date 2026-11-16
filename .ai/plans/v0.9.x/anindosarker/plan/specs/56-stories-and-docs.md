@@ -94,7 +94,7 @@ flowchart LR
 - `reference/docs-layout/story-pairing-audit.md`: four lists. (1) exact pairs: example slug, story file and story, same options, columns and data. (2) close pairs: example slug, the closest story, what differs. (3) no partner: example pages without a story. (4) same-table story pairs: both stories, and whether the copied story has a check of its own. A header with the counts: new stories to build, copies to merge, story pages that result.
 - `CHANGELOG.md` (P9): `#### Spec 56 <milestone>` blocks under `## Unreleased`: story groups renamed (D106), an exact story per docs example (D106), every story has a docs page with a description, steps and guides (D106, D104). The six text milestones add no block of their own; "Story text checklist" writes the one for the texts.
 - `reference/docs-layout/story-text-checklist.md`: one line per story page with its description and steps, for the owner's wording review.
-- `packages/shadcn-table/package.json`, `apps/shadcn-table-docs/package.json` and `pnpm-lock.yaml`: every dependency E14 adds (1.7), added by the milestone "Exact stories and merged copies", the first that needs one, which owns the three files for E14 (P6).
+- `packages/shadcn-table/package.json`, `apps/shadcn-table-docs/package.json` and `pnpm-lock.yaml`: every dependency E14 adds (1.7), added by the milestone "Exact stories and merged copies", the first that needs one, which owns the three files for E14 (P6). "Story pages in the docs" later edits the `scripts` lines of `apps/shadcn-table-docs/package.json` only; "Exact stories and merged copies" has merged a sprint earlier by then, so P6 holds.
 - `content/docs/examples/more/**`: committed pages, written by `lib/story-pages.mjs`; a page's body is never overwritten once it holds text.
 
 #### 1.6.2 Story group names (D106)
@@ -166,10 +166,10 @@ sidebarTitle: 'Aggregation Default'
 
 - Each page gets the three parts of the example page format (D104): a `description` in the frontmatter, one or two plain sentences on what this story's table is set up to show; `### Try it` with a `<TryIt>` list of 2 to 4 steps directly above `<StoryExample>`; `## Related guides` with a link list below it.
 - A step is one short line, an action and a few words of result, with on-screen labels and typed values in backticks, the exact label the table shows (`locales/en.ts`).
-- Every step is true to the story's code and data on base, radix and aria. For a story with a play, the steps follow actions its play performs and asserts, so `pnpm test storybook-tests` on the three bases proves them. For a story without a play, each step is run once in a browser.
+- Every step is true to the story's code and data on base, radix and aria. For a story with a play, the steps follow actions its play performs and asserts, so `pnpm test storybook-tests` on the three bases proves them. For a story without a play, each step is run once in a browser on base and its labels are read in the radix and aria library copies.
 - Related guides: the guide pages for the story's feature; every link resolves.
 - The four-point text check of D104 runs inside each text milestone; a text that fails one criterion is rewritten.
-- The pages are cut by Storybook folder and group into six milestones that run side by side, each owning its own page files; no page has two owners.
+- The pages are cut by Storybook folder and group (a page whose story id starts `basic--` goes with A to C) into six milestones that run side by side, each owning its own page files; no page has two owners.
 - A last milestone writes `reference/docs-layout/story-text-checklist.md` from the pages: one line per story page in sidebar order, `- [ ] <group> / <story name>: <description> Try it: <steps joined by " / ">`, and makes the three parts a rule of the parity check (1.6.5).
 - Does NOT change a story, an example page, a page title or URL, or the `StoryExample` tag.
 
@@ -220,11 +220,11 @@ sidebarTitle: 'Aggregation Default'
 
 ### Milestone: Story pages in the docs
 
-- Files owned: `apps/shadcn-table-docs/lib/story-pages.mjs`, `apps/shadcn-table-docs/lib/story-variants.mjs`, `apps/shadcn-table-docs/components/story-example.tsx`, `apps/shadcn-table-docs/components/example-playground.tsx`, `apps/shadcn-table-docs/components/mdx.tsx`, `apps/shadcn-table-docs/content/docs/examples/meta.json`, `apps/shadcn-table-docs/content/docs/examples/more/**`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `packages/shadcn-table/.storybook/preview.tsx`, `test/validate-repo/lib/story-pages.mjs`, `test/validate-repo/test.mjs`, `test/storybook-static/test.mjs`, `test/docs-e2e/lib/examples.mjs`
+- Files owned: `apps/shadcn-table-docs/lib/story-pages.mjs`, `apps/shadcn-table-docs/lib/story-variants.mjs`, `apps/shadcn-table-docs/components/story-example.tsx`, `apps/shadcn-table-docs/components/example-playground.tsx`, `apps/shadcn-table-docs/components/mdx.tsx`, `apps/shadcn-table-docs/content/docs/examples/meta.json`, `apps/shadcn-table-docs/content/docs/examples/more/**`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `apps/shadcn-table-docs/package.json`, `packages/shadcn-table/.storybook/preview.tsx`, `test/validate-repo/lib/story-pages.mjs`, `test/validate-repo/test.mjs`, `test/storybook-static/test.mjs`, `test/docs-e2e/lib/examples.mjs`
 - Depends on: Exact stories and merged copies, Example row numbers, Guide example block, Example page format
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`, `pnpm test docs-e2e --base radix`, `pnpm test docs-e2e --base aria`, `pnpm test storybook-static --base base`
-- Task 1: The per-base story copies (1.6.4). Checks: `node lib/story-variants.mjs` writes one copy per story file and base; `pnpm --filter shadcn-table-docs types:check`
+- Task 1: The per-base story copies (1.6.4); the `build`, `predev` and `types:check` scripts of `apps/shadcn-table-docs/package.json` run `node lib/story-variants.mjs`, as they run `node lib/example-variants.mjs` (`package.json:10,11,15`). Checks: `node lib/story-variants.mjs` writes one copy per story file and base; `pnpm --filter shadcn-table-docs types:check`; `pnpm --filter shadcn-table-docs build` passes on a clean checkout with `stories/.base` absent; `git diff origin/claude/review -- apps/shadcn-table-docs/package.json` shows only the three script lines
 - Task 2: `StoryExample` in the playground: Preview, Code, Both, the base selector, the Storybook button (1.6.4). Checks: on a production build a story page renders its table on each base; the Code tab shows the story file; the built client chunks of a story page contain no `@testing-library` and no `storybook/test` code (a grep of `.next/static`, the command in the tracker)
 - Task 3: `lib/story-pages.mjs`: the pages and `more/meta.json`, "more" in the Examples `meta.json` (1.6.4). Checks: the page count equals the "story pages" count of the audit; a second run changes nothing; a page with body text keeps it after a run; `/docs/examples/more/<id>` returns 200 for the first and the last story
 - Task 4: The sidebar: "More examples" and its sub-groups, numbers and counts (1.6.4). Checks: on a production build the last Examples row number equals 42 plus the page count; "More examples" shows that page count in brackets and each sub-group label its own count; on `/docs/examples/basic` the folder is closed; on a page inside it the folder is open; closed by hand on `/docs/examples/basic`, it is still closed after a reload, and opened by hand it is still open after a reload; a sub-group label inside it has no toggle and a click on it hides nothing; the Guides and API sidebars are unchanged; the captures for the judges of 1.2
@@ -235,13 +235,13 @@ sidebarTitle: 'Aggregation Default'
 
 ### Milestone: Story texts A to C
 
-- Files owned: `apps/shadcn-table-docs/content/docs/examples/more/features-[a-c]*.mdx`
+- Files owned: `apps/shadcn-table-docs/content/docs/examples/more/features-[a-c]*.mdx`, `apps/shadcn-table-docs/content/docs/examples/more/basic-*.mdx`
 - Depends on: Story pages in the docs
 - Review: none
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`
 - Task 1: Site table: per page of this milestone, its story's columns, options and play actions, the labels its steps will name, and the guide pages for its feature. Checks: one row per page file the glob matches
 - Task 2: The three parts on every page (1.6.7). Checks: `grep -L "TryIt" <the glob>` and `grep -L "## Related guides" <the glob>` print nothing; every page has a non-empty `description`; each page has 2 to 4 steps directly above `<StoryExample>`; `git diff origin/claude/review --stat` lists only files the glob matches
-- Task 3: Step truth (1.6.7). Checks: for a story with a play, each step names an action of that play, and `pnpm test storybook-tests --base base`, `--base radix` and `--base aria` are green; for a story without one, each step run once on a production build with base selected, on a P6 port; the server stopped
+- Task 3: Step truth (1.6.7). Checks: for a story with a play, each step names an action of that play, and `pnpm test storybook-tests --base base`, `--base radix` and `--base aria` are green; for a story without one, each step run once on a production build with base selected, on a P6 port, and the labels it names read in the radix and aria library copies (`components/ui-radix`, `components/ui-aria`); the server stopped
 - Task 4: The text check of D104 by three judges on every description, step and guide line (1.2). Checks: every line passes by majority; a failed line is rewritten and judged again
 - Task 5: Cleanup: `pnpm format`. Checks: every Related guides link of these pages returns 200 on a production build; `pnpm --filter shadcn-table-docs build` passes
 
