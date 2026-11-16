@@ -6,6 +6,24 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **LQ30** No example page for column resizing, the most viewed react-table question #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: The most viewed react-table question on Stack Overflow is about column width and resizing (about 183,000 views). The guide `content/docs/guides/column-resizing.mdx` gets clicks in Search Console and example code exists, but `content/docs/examples` has no page for it. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ31** No example keeps the table state in the URL #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Demand for saved views is mostly about table state in the URL (sorting, filters, page). `persistent-view` saves to the browser's local storage only. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ32** No example for clicking a row #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Row click (open or select a row by clicking it) shows demand in the research and has no example page. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ33** No example for responsive tables #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Columns that collapse or stack on small screens show demand in the research and have no example page. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ34** No example for cursor-based pagination #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Asked for around TanStack Table; lower counts than the items above. The server-side examples page by offset only (not rechecked in the code). Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ35** No example for server-side grouping #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Asked for around TanStack Table; lower counts. The grouping examples group in the browser. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
 
 ## Decided
 
