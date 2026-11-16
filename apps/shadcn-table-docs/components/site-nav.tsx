@@ -2,27 +2,27 @@
 
 import type { ComponentProps } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { SidebarIcon } from 'lucide-react';
 import { useNotebookLayout } from 'fumadocs-ui/layouts/notebook';
 import { BaseSwitch } from '@/components/base-selector';
 import { GitHubIcon } from '@/components/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
 import { cn } from '@/lib/cn';
-import { DISCORD_URL, GITHUB_URL, NAV_LINKS } from '@/lib/layout.shared';
+import { DISCORD_URL, GITHUB_URL } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
+import { SectionTabs } from '@/components/section-tabs';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
- * "// shadcn-table" wordmark, mono caps links, GitHub, the base select and
- * the theme pill), plus the search and sidebar triggers the docs need. Keeps fumadocs'
- * `#nd-subnav` id and grid area so the layout and the sticky offsets still
- * apply. Below lg the links wrap to a second row, as on the landing page.
+ * "// shadcn-table" wordmark, GitHub, the base select and the theme pill),
+ * plus the search and sidebar triggers the docs need; the section tabs
+ * (components/section-tabs.tsx, L7) are its second row. Keeps
+ * fumadocs' `#nd-subnav` id and grid area so the layout and the sticky
+ * offsets still apply.
  * Styles: app/global.css ("landing look").
  */
 export function SiteNav(props: ComponentProps<'header'>) {
   const { slots } = useNotebookLayout();
-  const pathname = usePathname();
 
   return (
     <header
@@ -31,36 +31,31 @@ export function SiteNav(props: ComponentProps<'header'>) {
       className={cn('site-nav [grid-area:header]', props.className)}
     >
       <div className="site-nav-row">
-        <Link href="/" className="site-nav-brand">
-          <span aria-hidden="true" className="site-nav-slash">
-            {'//'}
-          </span>
-          <span>shadcn-table</span>
-        </Link>
-        <nav aria-label="Primary" className="site-nav-links">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.url}
-              href={l.url}
-              data-active={isActive(l.url, pathname) || undefined}
-              className="site-nav-link"
-            >
-              {l.text}
-            </Link>
-          ))}
-        </nav>
+        {/* the wordmark; the sidebar collapse button leads the tab row */}
+        <div className="flex min-w-0 items-center gap-2 [grid-area:brand]">
+          <Link href="/" className="site-nav-brand">
+            <span aria-hidden="true" className="site-nav-slash">
+              {'//'}
+            </span>
+            <span>shadcn-table</span>
+          </Link>
+        </div>
+        {/* from lg: the search field in the centre, max 28rem */}
+        {slots.searchTrigger && (
+          <div className="hidden min-w-0 justify-center [grid-area:search] lg:flex">
+            <slots.searchTrigger.full
+              hideIfDisabled
+              className="site-nav-search"
+            />
+          </div>
+        )}
         <div className="site-nav-actions">
+          {/* below lg: the search icon with the actions */}
           {slots.searchTrigger && (
-            <>
-              <slots.searchTrigger.full
-                hideIfDisabled
-                className="site-nav-search"
-              />
-              <slots.searchTrigger.sm
-                hideIfDisabled
-                className="site-nav-icon site-nav-search-sm"
-              />
-            </>
+            <slots.searchTrigger.sm
+              hideIfDisabled
+              className="site-nav-icon site-nav-search-sm"
+            />
           )}
           <a
             href={GITHUB_URL}
@@ -103,13 +98,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
           )}
         </div>
       </div>
+      <SectionTabs />
     </header>
   );
-}
-
-/** Active anywhere in the link's docs section (/docs/<section>/...), so
- * "Docs" (/docs/getting-started/introduction) lights up on every getting-started page. */
-function isActive(url: string, pathname: string) {
-  const section = url.split('/').slice(0, 3).join('/');
-  return pathname === section || pathname.startsWith(`${section}/`);
 }

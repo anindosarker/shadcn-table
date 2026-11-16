@@ -9,6 +9,7 @@ import { Fragment, useMemo } from 'react';
 import { docsRoute } from '@/lib/shared';
 import { cn } from '@/lib/cn';
 import { PageSwitcher } from '@/components/page-switcher';
+import { firstPageUrl } from '@/lib/page-tree-utils';
 
 /** Passed to the DocsPage breadcrumb slot: the page renders its own in the bar. */
 export function NoBreadcrumb() {
@@ -29,13 +30,18 @@ export function DocsBreadcrumb({
   ...props
 }: BreadcrumbProps) {
   const path = useTreePath();
-  const { root } = useTreeContext();
+  const { root, full } = useTreeContext();
   const items = useMemo(
     () => [
       { name: 'Docs', url: docsRoute },
-      ...getBreadcrumbItemsFromPath(root, path, { includePage: true }),
+      // Each section is a root folder, whose crumb fumadocs drops; name it
+      // and link its first page (Overview, or Introduction).
+      ...getBreadcrumbItemsFromPath(root, path, {
+        includePage: true,
+        includeRoot: root === full ? false : { url: firstPageUrl(root) ?? '' },
+      }),
     ],
-    [path, root],
+    [path, root, full],
   );
   const section = path[0];
   const current = path[path.length - 1];

@@ -11,6 +11,7 @@ import LocaleExamples from './LocaleExamples';
 import OptionsSwitcher from './OptionsSwitcher';
 import RemoteFetchingExamples from './RemoteFetchingExamples';
 import StickyPinningExamples from './StickyPinningExamples';
+import VirtualizationGuideExamples from './VirtualizationGuideExamples';
 import VirtualizedExamples from './VirtualizedExamples';
 
 export const exampleComponents = {
@@ -26,5 +27,6 @@ export const exampleComponents = {
   OptionsSwitcher,
   RemoteFetchingExamples,
   StickyPinningExamples,
+  VirtualizationGuideExamples,
   VirtualizedExamples,
 };

@@ -1,5 +1,13 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
 
+/** A page node with the sidebar label set from frontmatter `sidebarTitle` (lib/source.ts). */
+export type SidebarTreeItem = PageTree.Item & { sidebarName?: string };
+
+/** The sidebar row label of a page: its `sidebarName` when set, else `name` (the page title). */
+export function sidebarName(item: PageTree.Item): PageTree.Item['name'] {
+  return (item as SidebarTreeItem).sidebarName ?? item.name;
+}
+
 /** True when the node is a page, or a folder with at least one page below it. */
 export function hasPages(node: PageTree.Node): boolean {
   if (node.type === 'page') return true;
@@ -72,6 +80,52 @@ export function groupBySeparator(nodes: PageTree.Node[]): SiblingGroup[] {
   );
 }
 
+/**
+ * The pages a "---X---" separator labels: the pages after it among
+ * `siblings`, up to the next separator, folder or external link (the shared
+ * Changelog row, lib/source.ts, stays loose at the end).
+ */
+export function separatorPages(
+  separator: PageTree.Separator,
+  siblings: PageTree.Node[],
+): PageTree.Item[] {
+  const pages: PageTree.Item[] = [];
+  for (let i = siblings.indexOf(separator) + 1; i < siblings.length; i++) {
+    const node = siblings[i];
+    if (node.type !== 'page' || node.external) break;
+    pages.push(node);
+  }
+  return pages;
+}
+
+const groupedCache = new WeakMap<object, Set<PageTree.Node>>();
+
+/**
+ * Every page under `root` that follows a separator (separatorPages), cached
+ * per tree. The sidebar renders those inside their separator's group.
+ */
+export function groupedPages(
+  root: Pick<PageTree.Root, 'children'>,
+): Set<PageTree.Node> {
+  let set = groupedCache.get(root);
+  if (set) return set;
+  set = new Set();
+  const visit = (list: PageTree.Node[]) => {
+    let grouped = false;
+    for (const node of list) {
+      if (node.type === 'separator') grouped = true;
+      else if (node.type === 'folder') {
+        grouped = false;
+        visit(node.children);
+      } else if (node.type === 'page' && node.external) grouped = false;
+      else if (grouped) set.add(node);
+    }
+  };
+  visit(root.children);
+  groupedCache.set(root, set);
+  return set;
+}
+
 /** Find the sibling list that contains `node` (by reference) anywhere in the tree. */
 export function findSiblings(
   root: Pick<PageTree.Root, 'children'>,
@@ -89,6 +143,21 @@ export function findSiblings(
   return visit(root.children);
 }
 
+/** URL of the first page under `node`, in tree order. */
+export function firstPageUrl(
+  node: PageTree.Root | PageTree.Folder,
+): string | undefined {
+  if ('index' in node && node.index) return node.index.url;
+  for (const child of node.children) {
+    if (child.type === 'page') return child.url;
+    if (child.type === 'folder') {
+      const url = firstPageUrl(child);
+      if (url) return url;
+    }
+  }
+  return undefined;
+}
+
 /** Name of the top-level folder that holds the page at `url`, if any. */
 export function findSectionName(
   root: Pick<PageTree.Root, 'children'>,
@@ -98,4 +167,33 @@ export function findSectionName(
     (node): node is PageTree.Folder =>
       node.type === 'folder' && containsUrl(node, url),
   )?.name;
+}
+
+type FooterItem = Pick<PageTree.Item, 'name' | 'description' | 'url'>;
+
+/**
+ * Previous and next page for the page footer across the whole docs tree.
+ * Each section is a root folder, so fumadocs' own footer stops at the
+ * section edge; this walks every section in meta.json order (L1) with the
+ * same rule as fumadocs (folder index first, then children; pages only,
+ * external links skipped), so within a section the neighbours are unchanged.
+ */
+export function footerNeighbours(
+  tree: PageTree.Root,
+  url: string,
+): { previous?: FooterItem; next?: FooterItem } {
+  const list: PageTree.Item[] = [];
+  function onNode(node: PageTree.Node) {
+    if (node.type === 'folder') {
+      if (node.index) onNode(node.index);
+      for (const child of node.children) onNode(child);
+    } else if (node.type === 'page' && !node.external) list.push(node);
+  }
+  for (const child of tree.children) onNode(child);
+
+  const idx = list.findIndex((item) => item.url === url);
+  if (idx === -1) return {};
+  const pick = (item?: PageTree.Item): FooterItem | undefined =>
+    item && { name: item.name, description: item.description, url: item.url };
+  return { previous: pick(list[idx - 1]), next: pick(list[idx + 1]) };
 }

@@ -1,4 +1,6 @@
 import { createMDX } from 'fumadocs-mdx/next';
+import { EXAMPLES_URL, FIRST_EXAMPLE_URL } from './lib/examples-entry.mjs';
+import { PREVIEW_SECTIONS } from './preview-examples-ab/entries.mjs';
 
 const withMDX = createMDX({ agentRules: false });
 
@@ -100,6 +102,19 @@ const config = {
       destination: '/docs/getting-started/introduction',
       permanent: true,
     },
+    // The Examples section has no index page; its entry is the first example
+    // (lib/examples-entry.mjs, docs-layout L13).
+    {
+      source: EXAMPLES_URL,
+      destination: FIRST_EXAMPLE_URL,
+      permanent: true,
+    },
+    // preview-examples-ab: EX A and EX B open their first row the same way
+    ...PREVIEW_SECTIONS.map(({ section, url }) => ({
+      source: section,
+      destination: url,
+      permanent: false,
+    })),
     // The getting-started overview was two links; the sidebar lists them.
     {
       source: '/docs/getting-started',
