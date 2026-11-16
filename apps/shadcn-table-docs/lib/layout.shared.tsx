@@ -3,6 +3,7 @@ import { Logo } from '@/components/logo';
 import { ThemeControls } from '@/components/theme-controls';
 import { DiscordIcon } from '@/components/discord-icon';
 import { gitConfig } from './shared';
+import { PREVIEW_SECTIONS } from '@/preview-examples-ab/entries.mjs';
 
 /** Top bar links, shared by the fumadocs layouts and components/site-nav.tsx. */
 export const NAV_LINKS = [
@@ -12,11 +13,11 @@ export const NAV_LINKS = [
   { text: 'API', url: '/docs/api' },
 ] as const;
 
-/** preview-examples-ab: sidebar-only tabs for the two preview Examples sections. Delete with the demo. */
-export const PREVIEW_NAV_LINKS = [
-  { text: 'EX A', url: '/docs/examples-a' },
-  { text: 'EX B', url: '/docs/examples-b' },
-] as const;
+/** preview-examples-ab: sidebar-only tabs for the two preview Examples sections, linking their first row. Delete with the demo. */
+export const PREVIEW_NAV_LINKS = PREVIEW_SECTIONS.map(({ text, url }) => ({
+  text,
+  url,
+}));
 
 export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 /** Official Discord server: questions and help. */
