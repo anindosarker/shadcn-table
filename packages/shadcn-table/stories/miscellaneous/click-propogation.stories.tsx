@@ -7,7 +7,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Click Propagation',
+  title: 'Miscellaneous/Click Propagation',
 };
 
 export default meta;

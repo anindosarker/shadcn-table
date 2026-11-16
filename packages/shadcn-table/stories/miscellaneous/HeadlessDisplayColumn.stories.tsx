@@ -15,7 +15,7 @@ import { UserIcon } from 'lucide-react';
 // `state` for `ST_SelectCheckbox` to read.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Headless Display Column',
+  title: 'Miscellaneous/Headless Display Column',
 };
 
 export default meta;

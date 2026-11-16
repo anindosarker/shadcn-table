@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Aggregation Examples',
+  title: 'Features/Aggregation',
 };
 
 export default meta;

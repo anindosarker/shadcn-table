@@ -17,7 +17,7 @@ import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/t
 // The view settings panel: one row per table preference with a pin toggle
 // that places it in the toolbar, and "Reset view".
 const meta: Meta = {
-  title: 'Features/View Settings Examples',
+  title: 'Features/View Settings',
 };
 
 export default meta;

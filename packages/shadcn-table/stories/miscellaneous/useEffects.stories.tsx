@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/useEffects',
+  title: 'Miscellaneous/Use Effects',
 };
 
 export default meta;

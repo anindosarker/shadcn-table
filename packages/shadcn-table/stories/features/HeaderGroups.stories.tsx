@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Header Groups Examples',
+  title: 'Features/Header Groups',
 };
 
 export default meta;

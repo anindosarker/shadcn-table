@@ -8,7 +8,7 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 // states now keeps the rows in either state; a column of arrays still keeps
 // the rows that share any picked value.
 const meta: Meta = {
-  title: 'Fixed Bugs/Multi Select Filter',
+  title: 'Miscellaneous/Multi Select Filter',
 };
 
 export default meta;

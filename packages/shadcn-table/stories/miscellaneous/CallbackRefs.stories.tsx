@@ -17,7 +17,7 @@ import { UserIcon } from 'lucide-react';
 // `null` when the callback returned none.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Callback Refs',
+  title: 'Miscellaneous/Callback Refs',
 };
 
 export default meta;

@@ -8,7 +8,7 @@ import {
 import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/AppBar overlaps with Fullscreen Modal',
+  title: 'Miscellaneous/App Bar Overlaps With Full Screen Modal',
 };
 
 export default meta;

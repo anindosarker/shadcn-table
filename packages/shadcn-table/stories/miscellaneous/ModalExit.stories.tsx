@@ -7,7 +7,7 @@ import { UserIcon } from 'lucide-react';
 // dialog's exit state before the popup unmounts.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Modal Exit',
+  title: 'Miscellaneous/Modal Exit',
 };
 
 export default meta;

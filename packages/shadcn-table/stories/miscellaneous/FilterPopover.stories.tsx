@@ -14,7 +14,7 @@ import {
 // name.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Filter Popover',
+  title: 'Miscellaneous/Filter Popover',
 };
 
 export default meta;

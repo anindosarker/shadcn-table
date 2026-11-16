@@ -8,7 +8,7 @@ import { UserIcon } from 'lucide-react';
 // still filtered rows with every filter flag off. v8 showed all rows in both.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Pagination Disabled',
+  title: 'Miscellaneous/Pagination Disabled',
 };
 
 export default meta;
