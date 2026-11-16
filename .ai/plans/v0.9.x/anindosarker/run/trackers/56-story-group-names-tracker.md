@@ -1,6 +1,6 @@
 # 56: Story group names, tracker
 
-Status: done
+Status: merged (8215fa6)
 Branch `v0.9/story-group-names`, worktree 08
 Checks:
 - Check: Task 1 title checks (grep count 0, segment regex, 81 unique titles, ls stories), at cb9163b1: pass
