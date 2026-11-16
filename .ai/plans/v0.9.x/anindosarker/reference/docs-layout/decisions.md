@@ -216,7 +216,6 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Checklist of old against new position: `sidebar-regroup-checklist.md`.
 - Numbers, as in the EX B demo: every example row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included; no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the sidebar order, never typed into a page; they show in the sidebar only, not in the page title (in the demo's stub pages the number is part of the title, which the real pages do not copy).
 - Row numbers and group counts are for the Examples section only (owner 2026-11-17). Guides and API show neither.
-- Guides sidebar labels: rows and group labels drop the word "Guide" or "Guides" ("Column Pinning", "Filtering / Hiding"). Sidebar only, through the same `sidebarTitle` field: guide page titles, URLs and text stay, and the grouping and order of the guides do not change.
-- API sidebar: labels, groups and order stay as they are.
+- Guides and API sidebars: labels, groups and order stay as they are today (owner 2026-11-17: nothing was changed there in the demo either). They share only what the sidebar component gives every section: sticky group labels, no heading row, collapse and resize.
 - Not part of this decision: page titles, descriptions and URLs (LQ29).
 - Owner accepted on the preview 2026-11-17: the real Examples section at wt1 `2e6f8be2`, "More examples" in the EX B demo at wt1 `cfbe4df3`.
