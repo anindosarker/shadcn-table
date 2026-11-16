@@ -13,7 +13,7 @@ const COLUMNS = [
   {
     head: 'Docs',
     links: [
-      { label: 'Get started', href: '/docs/getting-started/install' },
+      { label: 'Get Started', href: '/docs/getting-started/install' },
       { label: 'Examples', href: '/docs/examples' },
       { label: 'Guides', href: '/docs/guides' },
       { label: 'API', href: '/docs/api' },
@@ -38,7 +38,7 @@ const COLUMNS = [
       { label: 'shadcn/ui', href: 'https://ui.shadcn.com' },
       {
         label: 'Storybook',
-        href: storybookUrl.radix,
+        href: storybookUrl,
         track: (base: Base) =>
           trackStorybookOpened({ base, surface: 'footer' }),
       },
@@ -72,23 +72,27 @@ export function Footer() {
           <nav key={col.head} aria-label={col.head} className="v4-footer-col">
             <h2>{col.head}</h2>
             <ul>
-              {col.links.map((l) => (
-                <li key={l.label}>
-                  {l.href.startsWith('http') ? (
-                    <a
-                      href={l.href}
-                      className="v4-footer-link"
-                      onClick={'track' in l ? () => l.track(base) : undefined}
-                    >
-                      {l.label}
-                    </a>
-                  ) : (
-                    <Link href={l.href} className="v4-footer-link">
-                      {l.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
+              {col.links.map((l) => {
+                // the Storybook link carries one URL per base and opens the selected one
+                const href = typeof l.href === 'string' ? l.href : l.href[base];
+                return (
+                  <li key={l.label}>
+                    {href.startsWith('http') ? (
+                      <a
+                        href={href}
+                        className="v4-footer-link"
+                        onClick={'track' in l ? () => l.track(base) : undefined}
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link href={href} className="v4-footer-link">
+                        {l.label}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         ))}
