@@ -46,6 +46,8 @@ kanban-plugin: basic
 	- reference/docs-layout/story-pairing-audit.md lists 1 to 3: exact 0, close 34, no partner 8 (minimal, advanced, export-csv, export-pdf, custom-filter-ui, react-query, remote, dynamic-columns). Spec 56 1.3 assumed 33 linked pages and 9 without a story. Resulting count: 652 - 59 + 42 - 42 = 593 story pages. Found by the run's audit milestone, recounted by its verifier.
 - [ ] **Q94** An example shown twice on a guide page still has the same id in the page source until the page has loaded
 	- apps/shadcn-table-docs/components/example-playground.tsx (useExampleId, merged 2a509c87 on v0.9/docs-layout): the second mount gets a different id only after hydration; the served HTML of /docs/guides/virtualization-new-format-3 carries id="example-enable-row-virtualization" twice. D105 says the id must not repeat; the spec 55 check (hydrated DOM, no duplicate) passes. Keep (unique after load) or require unique ids in the served HTML. Found by the run's reviewer, measured with curl on a production build.
+- [ ] **Q95** Two story group names were chosen by the builder where D106 gives no example
+	- Merged 8215fa6b on v0.9/docs-layout (spec 56 Story group names): 'AppBar overlaps with Fullscreen Modal' is now 'Miscellaneous/App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is now 'Click To Copy'; 'RTL' and 'Custom Filter Fns' are kept as they were. Keep or revert each.
 
 ## Decided
 
