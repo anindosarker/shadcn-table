@@ -93,7 +93,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Agents still may stop a server they started themselves earlier; never one they did not start.
 - Source: LQ19
 
-### L12 Storybook stories become docs example pages; Storybook links back
+### L12 Storybook stories become docs example pages; Storybook links back (amended by L19)
 
 - Roles: the docs carry description and the rendered table; Storybook carries the table with its interactions (plays); each links to the other.
 - One source for descriptions: a JSDoc comment above each story export and a one-line `description` in each story file's meta, in `packages/shadcn-table/stories`. Storybook autodocs and the docs build both read them.
@@ -161,3 +161,13 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - The fumadocs class positions are re-read from the installed package when this is built; they were not rechecked on 2026-11-16.
 - Settled by the lead 2026-11-16: brings the leftovers in line with the square dashed style the owner already accepted, not a new choice.
 - Source: LQ6
+
+### L19 Docs examples and stories pair one to one; the docs page owns the text
+
+- Amends L12. Still true from L12: every story becomes a docs example page, and the toolbar Storybook button opens the page's story.
+- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner (docs examples without a story; story files without a docs page). After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain.
+- Text: the docs page owns the details, the Try it steps and the related guides (L14). Nothing is written once for both sides. This replaces L12's "one source for descriptions" in the story files.
+- Storybook: a story's description carries a link to its docs page. The toolbar addon and its three parameters from L12 are not built.
+- Story pages that have no text yet start with the table and the Storybook button; their details and Try it steps are written in the docs and go through the owner's wording review with LQ26.
+- Open: where the story pages sit in the sidebar.
+- Owner accepted 2026-11-16.
