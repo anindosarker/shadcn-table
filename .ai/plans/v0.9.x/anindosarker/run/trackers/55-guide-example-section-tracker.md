@@ -6,5 +6,4 @@ Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 unique element id: planned
-- Task 2 example without a page: planned
-- Task 3 cleanup: planned
+- Task 2 cleanup: planned

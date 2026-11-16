@@ -7,6 +7,7 @@ Checks:
 
 - Task 1 dependencies and ignore entries: planned
 - Task 2 a story per example: planned
-- Task 3 storybook map: planned
-- Task 4 copies merged: planned
-- Task 5 cleanup: planned
+- Task 3 guide example plan and guide stories: planned
+- Task 4 storybook map: planned
+- Task 5 copies merged: planned
+- Task 6 cleanup: planned

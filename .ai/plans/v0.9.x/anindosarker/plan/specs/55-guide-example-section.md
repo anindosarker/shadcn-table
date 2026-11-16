@@ -18,9 +18,9 @@ This spec uses the preview as the reference only: the pages `column-pinning-new-
 - Guide sections are h2 and their sub-sections h3 (D105).
 - No guide sentence is reworded (D105).
 - An example shown twice on one page has two different element ids (D105).
-- `reference/docs-layout/guide-checklist.md` lists every guide on one line: the example its section shows and the table removed, if any (D105). The spec produces it; the owner's approval of it gates a later release, not this merge.
+- `reference/docs-layout/guide-checklist.md` lists every guide on one line: the page its Example section links to and the table removed, if any (D105). The spec produces it; the owner's approval of it gates a later release, not this merge.
 - The five guide comparison pages and `VirtualizationGuideExamples.tsx` are gone.
-- Acceptance: programmatic, plus judges on the removals. `grep -L "GuideExamples" apps/shadcn-table-docs/content/docs/guides/*.mdx` prints only `index.mdx`; the heading check of task 4 passes; the diff check of task 5 shows no changed sentence; `pnpm test docs-e2e --base base` green. Three judges read every removed table against the rule of D105 (same example in the Example section, and no sentence of the guide points at the table or builds on it), next to the guide on `origin/claude/review`; a majority "part of the writing" puts the table back.
+- Acceptance: programmatic, plus judges on the removals. `grep -L "GuideExamples" apps/shadcn-table-docs/content/docs/guides/*.mdx` prints only `index.mdx`; the heading check of task 5 passes; the diff check of task 6 shows no changed sentence; `pnpm test docs-e2e --base base` green. Three judges read every removed table against the rule of D105 (same example in the Example section, and no sentence of the guide points at the table or builds on it), next to the guide on `origin/claude/review`; a majority "part of the writing" puts the table back.
 
 ### 1.3 Current structure
 
@@ -43,7 +43,7 @@ test/docs-e2e/lib/guides.mjs                         ← per-guide checks
 ```
 
 - 40 guides embed at least one live example tag; 6 embed none: `best-practices`, `table-event-listeners`, `accessibility`, `tanstack-table-with-shadcn-ui`, `column-size`, `full-screen-toggle`.
-- Several guides embed an example that has no example page (for example `row-numbers` with `EnableRowNumbersStaticExample`); `GuideExamples` resolves example pages only.
+- Several guides embed an example that has no example page (for example `row-numbers` with `EnableRowNumbersStaticExample`); `GuideExamples` resolves example pages only. The owner ruled on 2026-11-17 that a guide's Example section always shows a table that has its own page, so the toolbar name is always a link: an example page that already shows the feature, else a story page under "More examples" (D106), with a missing one added as a story. Spec 56 lists the page per guide and builds the missing stories.
 - The id `example-<name>` is used by the docs E2E helpers only; no content anchor or script reads it.
 - No table-of-contents depth setting exists; the page passes `page.data.toc` unfiltered.
 - 26 guides carry the "View Extra Storybook Examples" line. D104 removes it from example pages only; it stays on the guides.
@@ -53,7 +53,7 @@ test/docs-e2e/lib/guides.mjs                         ← per-guide checks
 ```
 apps/shadcn-table-docs/
 ├── components/example-playground.tsx                ← unique element id per mount
-├── components/mdx/guide-examples.tsx                ← also shows an example that has no example page
+├── components/mdx/guide-examples.tsx                ← resolves an example page or a story page under More examples
 ├── content/docs/guides/<46 guides>.mdx              ← + Example section, headings one level up, tables removed by the rule
 ├── content/docs/guides/meta.json                    ← 46 guides only
 └── example-groups/map.tsx                           ← regenerated without VirtualizationGuideExamples
@@ -67,7 +67,7 @@ apps/shadcn-table-docs/
 #### 1.6.1 Data artifacts
 
 - `CHANGELOG.md` (P9): `#### Spec 55 <milestone>` under `## Unreleased`, `### Changed`: every guide opens with a live example (D105).
-- `reference/docs-layout/guide-checklist.md`: one line per guide in `meta.json` order, `- [ ] <guide title>: Example shows <example name>; removed: <heading of the removed table, or none>`.
+- `reference/docs-layout/guide-checklist.md`: one line per guide in `meta.json` order, `- [ ] <guide title>: Example links <page title> (<page URL>); removed: <heading of the removed table, or none>`.
 - `example-groups/map.tsx`: regenerated with `node lib/example-map.mjs` after the group file is deleted.
 
 #### 1.6.2 Guide example block (D105)
@@ -75,7 +75,7 @@ apps/shadcn-table-docs/
 `components/example-playground.tsx`, `components/mdx/guide-examples.tsx`, `components/guide-example-switch.tsx`, status `refactor`.
 
 - The first mount of an example on a page keeps the id `example-<name>`; a further mount of the same example on that page gets a different id.
-- `GuideExamples` also takes an example that has no example page, by its example folder name. Its toolbar slot then shows the example's name without a link; an example that has a page keeps the name link or the picker of D105.
+- `GuideExamples` takes page slugs of two kinds: an example page (`column-pinning`) or a story page under "More examples" (`more/<story id>`, D106). The toolbar name always links to that page; with several slugs the picker lists both kinds and the "Open example page" button follows the selection. This part is built by the milestone "Guide pages", after the story pages exist.
 - Does NOT change the toolbar on example pages, the picker's behaviour, or the playground's look.
 
 **Usage:**
@@ -83,7 +83,7 @@ apps/shadcn-table-docs/
 ```mdx
 <GuideExamples slugs={['column-pinning']} />
 <GuideExamples slugs={['row-virtualization', 'column-virtualization']} />
-<GuideExamples names={['enable-row-numbers-static']} />
+<GuideExamples slugs={['more/features-row-numbers--row-numbers-static']} />
 ```
 
 #### 1.6.3 Guide pages (D105)
@@ -91,7 +91,7 @@ apps/shadcn-table-docs/
 `content/docs/guides/<slug>.mdx`, 46 files, status `refactor`.
 
 - Adds a heading "Example" at the guide's section level and one `<GuideExamples>` block directly under the intro paragraph. Nothing else is in the section.
-- The example is the best one for that guide: the guide's own example when it has one, otherwise the example that shows the guide's feature most directly. A guide with several fitting examples lists them in the picker, the plainest first. No guide is left without the section, the six guides without a table included.
+- The example is the best one for that guide, in this order: an existing example page that already shows the feature; an existing story; a new story. Spec 56 fixes the choice per guide in `reference/docs-layout/guide-example-plan.md` (its milestone "Exact stories and merged copies") and builds the stories that are missing; this spec follows that file. A guide with several fitting pages lists them in the picker, the plainest first. No guide is left without the section, the six guides without a table included.
 - Removes a table already in the guide only under the rule of D105, together with its own heading; a table that a sentence introduces stays.
 - Moves every heading up one level: the top-level sections become h2, their sub-sections h3. Lines inside fenced code blocks are not headings.
 - Does NOT reword, reorder or delete any other sentence; does NOT change the frontmatter, the "View Extra Storybook Examples" line, or any example page.
@@ -115,26 +115,26 @@ apps/shadcn-table-docs/
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test docs-e2e --base base`
 - Task 1: Unique element id per mount (1.6.2). Checks: on a production build of the branch, `/docs/guides/virtualization-new-format-3` has no two elements with the same id (`document.querySelectorAll('[id]')` grouped by id); `/docs/examples/basic` still has `#example-basic`
-- Task 2: `GuideExamples` shows an example without an example page, name without a link (1.6.2). Checks: `pnpm --filter shadcn-table-docs types:check`; a scratch guide page with `names`, uncommitted and deleted before the commit, renders the table and the name, with no link; `/docs/guides/column-pinning-new-format-3` still shows the name link and `/docs/guides/virtualization-new-format-3` the picker
-- Task 3: Cleanup: `pnpm format`, the changelog block, the docs E2E helpers select the first mount. Checks: 2.2
+- Task 2: Cleanup: `pnpm format`, the changelog block, the docs E2E helpers select the first mount. Checks: 2.2
 
 ### Milestone: Guide pages
 
-- Files owned: `apps/shadcn-table-docs/content/docs/guides/**`, `apps/shadcn-table-docs/example-groups/map.tsx`, `apps/shadcn-table-docs/example-groups/VirtualizationGuideExamples.tsx`, `test/docs-e2e/lib/guides.mjs`, `.ai/plans/v0.9.x/anindosarker/reference/docs-layout/guide-checklist.md`
-- Depends on: Guide example block
-- Review: none
+- Files owned: `apps/shadcn-table-docs/content/docs/guides/**`, `apps/shadcn-table-docs/components/mdx/guide-examples.tsx`, `apps/shadcn-table-docs/components/guide-example-switch.tsx`, `apps/shadcn-table-docs/components/example-playground.tsx`, `apps/shadcn-table-docs/example-groups/map.tsx`, `apps/shadcn-table-docs/example-groups/VirtualizationGuideExamples.tsx`, `test/docs-e2e/lib/guides.mjs`, `.ai/plans/v0.9.x/anindosarker/reference/docs-layout/guide-checklist.md`
+- Depends on: Guide example block, Story pages in the docs
+- Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`
-- Task 1: Site table: per guide, the example tags it embeds with their lines, whether a sentence points at each table, the example pages for its feature, and the example chosen for its section. Checks: 46 rows; they become the checklist of task 6
-- Task 2: Comparison pages removed (1.6.4). Checks: `ls apps/shadcn-table-docs/content/docs/guides | grep -c new-format` prints 0; `grep -rn "VirtualizationGuideExamples" apps/shadcn-table-docs` prints nothing
-- Task 3: The Example section on the 46 guides, tables removed by the rule (1.6.3). Checks: the `grep -L` line of 1.2; each section sits between the intro paragraph and the guide's first own heading; every guide page returns 200 on a production build and shows a table in its Example section
-- Task 4: Headings one level up (1.6.3). Checks: outside fenced code, every heading of a guide is exactly one level higher than on `origin/claude/review`; `tanstack-table-with-shadcn-ui` is unchanged; the Example heading is `##`; the "On this page" list of `/docs/guides/column-pinning` shows the sections with their sub-sections nested
-- Task 5: Nothing else changed. Checks: with heading markers and the lines of the Example section stripped, `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/<guide>.mdx` shows only the removed tables and their headings
-- Task 6: The checklist (1.6.1), from the site table and the diff. Checks: 46 lines in `meta.json` order; every "removed" entry matches a removed tag in the diff, and every removed tag has an entry
-- Task 7: The removals judged by three judges (1.2). Checks: every removal passes by majority; a failed one is put back and the checklist line corrected
-- Task 8: Cleanup: `pnpm format`, the changelog block, docs E2E per-guide checks follow the new page order. Checks: 2.2
+- Task 1: `GuideExamples` resolves a story page under "More examples" beside an example page; the name links to the page, the picker lists both kinds (1.6.2). Checks: `pnpm --filter shadcn-table-docs types:check`; a scratch guide page with one `more/<story id>` slug, uncommitted and deleted before the commit, shows the story's table and its name as a link to `/docs/examples/more/<story id>`; one with an example slug and a story slug shows the picker with both; `/docs/guides/column-pinning-new-format-3` still shows the name link
+- Task 2: Site table: per guide, the example tags it embeds with their lines, whether a sentence points at each table, and its page from `reference/docs-layout/guide-example-plan.md`. Checks: 46 rows; every page of the plan returns 200 on a production build; they become the checklist of task 7
+- Task 3: Comparison pages removed (1.6.4). Checks: `ls apps/shadcn-table-docs/content/docs/guides | grep -c new-format` prints 0; `grep -rn "VirtualizationGuideExamples" apps/shadcn-table-docs` prints nothing
+- Task 4: The Example section on the 46 guides, tables removed by the rule (1.6.3). Checks: the `grep -L` line of 1.2; each section sits between the intro paragraph and the guide's first own heading; every Example section's name is a link that returns 200; every guide page returns 200 on a production build and shows a table in its Example section
+- Task 5: Headings one level up (1.6.3). Checks: outside fenced code, every heading of a guide is exactly one level higher than on `origin/claude/review`; `tanstack-table-with-shadcn-ui` is unchanged; the Example heading is `##`; the "On this page" list of `/docs/guides/column-pinning` shows the sections with their sub-sections nested
+- Task 6: Nothing else changed. Checks: with heading markers and the lines of the Example section stripped, `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/<guide>.mdx` shows only the removed tables and their headings
+- Task 7: The checklist (1.6.1), from the site table and the diff. Checks: 46 lines in `meta.json` order; every "removed" entry matches a removed tag in the diff, and every removed tag has an entry
+- Task 8: The removals judged by three judges (1.2). Checks: every removal passes by majority; a failed one is put back and the checklist line corrected
+- Task 9: Cleanup: `pnpm format`, the changelog block, docs E2E per-guide checks follow the new page order. Checks: 2.2
 
 ### 2.2 Checks
 
 - `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base` green; every server stopped
 - The Acceptance checks of 1.2
-- Review: fable on "Guide example block" (the shared playground component); none on "Guide pages" (content; the judges and the diff check cover it)
+- Review: fable on "Guide example block" (the shared playground component) and on "Guide pages" (it changes `GuideExamples` and the playground's toolbar slot; the judges and the diff check cover the content)

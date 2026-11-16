@@ -114,6 +114,7 @@ flowchart LR
 - An example that fetches from the docs app's `/api/data` gets a story that serves the same rows from a function inside the story. The stories for `react-query`, `export-csv` and `export-pdf` use the packages their examples use (1.7).
 - `lib/storybook-map.ts` maps all 42 example slugs, each to its exact story; no slug shares a story.
 - Merged copies, the strict reading of D106: a pair of audit list 4 is merged only when the copied story has no check of its own. The copy's check moves onto the story it copies and the copy is deleted. The pairs where both stories carry their own check stay as they are and stay listed.
+- Guides (D105): `reference/docs-layout/guide-example-plan.md` names, for each of the 46 guides, the page its Example section shows, chosen in this order: an existing example page that already shows the guide's feature; an existing story; a new story. Where an existing example shows the feature once one option is enabled (the owner's case: row numbers), the option is enabled on that example and on its exact story, only when that changes no sentence and no Try it step of the example's page; otherwise a story is used. A story a guide needs and that does not exist is built here, in the group of its feature; it becomes a page under "More examples" (1.6.4) and gets its text from the text milestones (1.6.7).
 - Every new story file has a play (coding standards, Checks).
 - Does NOT change a docs example, delete a story that has its own table, or hide any story.
 
@@ -174,7 +175,7 @@ sidebarTitle: 'Aggregation Default'
 - A last milestone writes `reference/docs-layout/story-text-checklist.md` from the pages: one line per story page in sidebar order, `- [ ] <group> / <story name>: <description> Try it: <steps joined by " / ">`, and makes the three parts a rule of the parity check (1.6.5).
 - Does NOT change a story, an example page, a page title or URL, or the `StoryExample` tag.
 
-**Stays unchanged:** `packages/shadcn-table/registry/**`, `apps/shadcn-table-docs/examples/**`, the 42 example pages' text, `components/ui-<base>/`.
+**Stays unchanged:** `packages/shadcn-table/registry/**`, the 42 example pages' text, `apps/shadcn-table-docs/examples/**` except an option enabled for a guide (1.6.3), `components/ui-<base>/`.
 
 ### 1.7 Dependencies and env
 
@@ -209,15 +210,16 @@ sidebarTitle: 'Aggregation Default'
 
 ### Milestone: Exact stories and merged copies
 
-- Files owned: `packages/shadcn-table/stories/**`, `apps/shadcn-table-docs/lib/storybook-map.ts`, `apps/shadcn-table-docs/lib/examples-entry.mjs`, `packages/shadcn-table/package.json`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`, `apps/shadcn-table-docs/.gitignore`, `apps/shadcn-table-docs/eslint.config.mjs`, `apps/shadcn-table-docs/tsconfig.json`, `apps/shadcn-table-docs/tsconfig.build.json`, `.prettierignore`
+- Files owned: `packages/shadcn-table/stories/**`, `apps/shadcn-table-docs/lib/storybook-map.ts`, `apps/shadcn-table-docs/lib/examples-entry.mjs`, `.ai/plans/v0.9.x/anindosarker/reference/docs-layout/guide-example-plan.md`, `apps/shadcn-table-docs/examples/**`, `apps/shadcn-table-docs/registry.json`, `packages/shadcn-table/registry.json`, `tools/registry/examples-base-diff.json`, `tools/registry/examples-aria-diff.json`, `packages/shadcn-table/package.json`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`, `apps/shadcn-table-docs/.gitignore`, `apps/shadcn-table-docs/eslint.config.mjs`, `apps/shadcn-table-docs/tsconfig.json`, `apps/shadcn-table-docs/tsconfig.build.json`, `.prettierignore`
 - Depends on: Story pairing audit, Story group names, Example page format
 - Review: none
 - Local CI: `pnpm test storybook-tests --base base`, `pnpm test storybook-tests --base radix`, `pnpm test storybook-tests --base aria`, `pnpm test typecheck --base base`, `pnpm test typecheck --base radix`, `pnpm test typecheck --base aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`, `pnpm test storybook-static --base base`
 - Task 1: Every dependency of 1.7 with one `pnpm install`, and the ignore entries for the per-base story copies (1.7). Checks: `pnpm install --frozen-lockfile` passes on a clean checkout of the branch; `git diff origin/claude/review -- packages/shadcn-table/package.json apps/shadcn-table-docs/package.json` shows only the packages of 1.7; `pnpm test lint` and `pnpm --filter shadcn-table-docs types:check` pass with an empty `stories/.base/` folder present
 - Task 2: A story for each example of audit lists 2 and 3 (1.6.3), in file sets by story folder. Checks: per new story, its columns, options and data read against `examples/base/<name>/TS.tsx`; each new story file has a play; the story renders on the three bases (`pnpm test storybook-tests`)
-- Task 3: `lib/storybook-map.ts` maps the 42 slugs to their exact stories; the dead preview suffix helper leaves `lib/examples-entry.mjs` and the map (1.6.3). Checks: 42 keys, 42 different values, each in `storybook-static/base/index.json`; `grep -rn "PREVIEW_SUFFIX\|examplePageSlug" apps/shadcn-table-docs` prints nothing; on a production build the Storybook button of `/docs/examples/editing-crud-inline-cell` links the inline cell story
-- Task 4: The copies of audit list 4 whose copied story has no check are merged (1.6.3). Checks: the merged story's play passes on the three bases; the copy's export is gone; `grep -rn "<copy id>"` over the repo outside `.ai/` prints nothing
-- Task 5: Cleanup: `pnpm format`, the changelog block. Checks: 2.2
+- Task 3: The guide example plan and the stories guides need (1.6.3). Checks: `guide-example-plan.md` has 46 lines in the order of `content/docs/guides/meta.json`, each naming an example page slug or a story id and one of "example page", "example page, option enabled", "existing story", "new story"; every named story id is in `storybook-static/base/index.json` after `pnpm --filter shadcn-table storybook:build:base`; for an example whose option was enabled, the three base copies are in step, its exact story matches, its page's text and Try it steps are unchanged and still true, and `pnpm test validate-repo` is green with the generated registry files regenerated
+- Task 4: `lib/storybook-map.ts` maps the 42 slugs to their exact stories; the dead preview suffix helper leaves `lib/examples-entry.mjs` and the map (1.6.3). Checks: 42 keys, 42 different values, each in `storybook-static/base/index.json`; `grep -rn "PREVIEW_SUFFIX\|examplePageSlug" apps/shadcn-table-docs` prints nothing; on a production build the Storybook button of `/docs/examples/editing-crud-inline-cell` links the inline cell story
+- Task 5: The copies of audit list 4 whose copied story has no check are merged (1.6.3). Checks: the merged story's play passes on the three bases; the copy's export is gone; `grep -rn "<copy id>"` over the repo outside `.ai/` prints nothing
+- Task 6: Cleanup: `pnpm format`, the changelog block. Checks: 2.2
 
 ### Milestone: Story pages in the docs
 
