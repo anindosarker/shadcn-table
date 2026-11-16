@@ -26,6 +26,11 @@ publishes the section as the GitHub release notes.
 - The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
 - The Guides overview lists every guide under its group heading again, read from the sidebar's order.
 
+#### Spec 56 Story group names
+
+- Storybook story groups are in Title Case with spaces and without the word "Examples" ("Features/Aggregation Examples" is "Features/Aggregation", "sticky-footer" is "Sticky Footer", "useEffects" is "Use Effects"); the folder "Fixed Bugs" is "Miscellaneous" (D106).
+- Story links follow the new names: the docs toolbar Storybook button opens the same story as before, and the Storybook GitHub link opens the folder of the story shown (D106).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
