@@ -1,6 +1,6 @@
 # 56: Story pairing audit, tracker
 
-Status: merged 7022d816
+Status: merged (7022d816)
 Branch `v0.9/story-pairing-audit`, worktree 05
 Checks:
 - Check: rows of lists 1 to 3, `grep -c "^| [0-9]" story-pairing-audit.md` at Task 1 commit: pass (42: exact 0, close 34, no partner 8)
