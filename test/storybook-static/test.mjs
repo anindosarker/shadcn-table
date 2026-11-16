@@ -23,7 +23,7 @@ import { DEFAULT_BASE } from '../../tools/registry/bases.mjs';
 import { portFor, run as exec, spawnServer } from '../lib/exec.mjs';
 
 const CI_PORT = 5343;
-const STORY_ID = 'features-pagination-examples--pagination-compact-more-data';
+const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
 /** The story's render (play, then afterEach) settles within this. */
 const FINISH_TIMEOUT = 90_000;
