@@ -1,5 +1,13 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
 
+/** A page node with the sidebar label set from frontmatter `sidebarTitle` (lib/source.ts). */
+export type SidebarTreeItem = PageTree.Item & { sidebarName?: string };
+
+/** The sidebar row label of a page: its `sidebarName` when set, else `name` (the page title). */
+export function sidebarName(item: PageTree.Item): PageTree.Item['name'] {
+  return (item as SidebarTreeItem).sidebarName ?? item.name;
+}
+
 /** True when the node is a page, or a folder with at least one page below it. */
 export function hasPages(node: PageTree.Node): boolean {
   if (node.type === 'page') return true;
