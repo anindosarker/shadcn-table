@@ -33,7 +33,18 @@ export function SidebarSection({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(true);
+  // A folder with meta.json `defaultOpen: false` (preview-examples-ab "More
+  // examples") starts closed unless it holds the current page, opens when the
+  // visitor navigates into it, else keeps the state they left; its
+  // "---Label---" sub-groups are plain labels.
+  const closable = item.defaultOpen === false;
+  const active = containsUrl(item, pathname);
+  const [open, setOpen] = useState(!closable || active);
+  const [wasActive, setWasActive] = useState(active);
+  if (active !== wasActive) {
+    setWasActive(active);
+    if (closable && active) setOpen(true);
+  }
   if (!hasPages(item)) return null;
   const rendered = Children.toArray(children);
 
@@ -58,6 +69,14 @@ export function SidebarSection({
         ) : null}
         {groupBySeparator(item.children).map((group, g) => {
           const nodes = group.indices.map((i) => rendered[i]);
+          if (closable)
+            return (
+              <Fragment key={g}>
+                {group.separator &&
+                  rendered[item.children.indexOf(group.separator)]}
+                {nodes}
+              </Fragment>
+            );
           return group.separator ? (
             <SidebarSubgroup
               key={g}
