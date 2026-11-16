@@ -91,7 +91,7 @@ Updated: 2026-11-17 02:47
 | E14 54 Example page format |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
 | E14 55 Guide example block |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
 | E14 55 Guide pages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
-| E14 56 Story pairing audit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |
+| E14 56 Story pairing audit |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |
 | E14 56 Story group names |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |
 | E14 56 Exact stories and merged copies |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
 | E14 56 Story pages in the docs |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
