@@ -5,11 +5,14 @@ import { source } from '@/lib/source';
 import { isPreviewPage } from '@/lib/examples-entry.mjs';
 import { containsUrl, separatorPages } from '@/lib/page-tree-utils';
 
-/** Heading id of a "---Label---" group: "Size / Width Guides" → "size-width-guides". */
-export function groupId(label: string): string {
+/**
+ * Heading id of a "---Label---" group, one hyphen per replaced character:
+ * "Size / Width Guides" → "size---width-guides", the ids the live site links.
+ */
+function groupId(label: string): string {
   return label
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/[^a-z0-9]/g, '-')
     .replace(/^-|-$/g, '');
 }
 
