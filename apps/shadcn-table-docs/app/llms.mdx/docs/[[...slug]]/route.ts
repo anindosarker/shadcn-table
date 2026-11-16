@@ -1,4 +1,4 @@
-import { docsLlms, source } from '@/lib/source';
+import { docsLlms, publicSource, source } from '@/lib/source';
 import { getPageMarkdownUrl } from '@/lib/shared';
 import { notFound } from 'next/navigation';
 
@@ -21,7 +21,7 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
+  return publicSource.getPages().map((page) => ({
     lang: page.locale,
     slug: getPageMarkdownUrl(page).segments,
   }));

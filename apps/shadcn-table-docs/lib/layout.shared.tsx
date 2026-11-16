@@ -12,6 +12,12 @@ export const NAV_LINKS = [
   { text: 'API', url: '/docs/api' },
 ] as const;
 
+/** preview-examples-ab: sidebar-only tabs for the two preview Examples sections. Delete with the demo. */
+export const PREVIEW_NAV_LINKS = [
+  { text: 'EX A', url: '/docs/examples-a' },
+  { text: 'EX B', url: '/docs/examples-b' },
+] as const;
+
 export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 /** Official Discord server: questions and help. */
 export const DISCORD_URL = 'https://discord.gg/hsF37t6EKe';

@@ -73,7 +73,23 @@ export const source = loader({
   },
 });
 
-export const docsLlms = llms(source, {
+// preview-examples-ab: the generated preview sections (EX A, EX B) stay out
+// of search, sitemap, llms output and OG images. Delete with the demo.
+const PREVIEW_SECTIONS = ['examples-a', 'examples-b'];
+const isPublic = (page?: { slugs: string[] }) =>
+  !!page && !PREVIEW_SECTIONS.includes(page.slugs[0]);
+
+/** `source` without the preview sections, for indexes and generated lists. */
+export const publicSource: typeof source = {
+  ...source,
+  getPages: (...args) => source.getPages(...args).filter(isPublic),
+  getPageByUrl: (...args) => {
+    const page = source.getPageByUrl(...args);
+    return isPublic(page) ? page : undefined;
+  },
+};
+
+export const docsLlms = llms(publicSource, {
   renderPage: async (page) => `# ${page.data.title} (${page.url})
 
 ${toPlainMarkdown(await page.data.getText('processed'))}`,
