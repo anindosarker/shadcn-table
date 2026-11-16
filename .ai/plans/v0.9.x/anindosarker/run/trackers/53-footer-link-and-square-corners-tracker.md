@@ -1,6 +1,6 @@
 # 53: Footer link and square corners, tracker
 
-Status: built
+Status: merged (702fa247)
 Branch `v0.9/footer-link-square-corners`, worktree 05
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` and eslint on footer.tsx at 99a3fa84: pass
