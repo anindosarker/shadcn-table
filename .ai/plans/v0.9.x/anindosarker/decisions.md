@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #R5
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
