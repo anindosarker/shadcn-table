@@ -14,14 +14,6 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
-- [ ] **D109** E14 builds on its own branch so patch releases keep going #R5
-	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
-	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
-	- `v0.9/docs-layout` merges into `claude/review` only on the owner's explicit word, after the owner's reviews (the guide checklist of D105, the Try it texts of D104, the story texts of D106). It lands as one merge.
-	- After each patch release `claude/review` is merged into `v0.9/docs-layout`, so the branch stays close.
-	- Plan files, trackers, the grid and decisions stay on `claude/review` as before.
-	- Why the whole epic: the sidebar, tab row and page formats are also not released yet, and without the texts `claude/review` would carry about 650 story pages with no text.
-	- Owner recorded 2026-11-17.
 
 ## In progress
 
@@ -699,6 +691,14 @@ kanban-plugin: basic
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
 	- Recorded in `process.md` P4. Owner, 2026-11-14: "If I ask it to hold, then it should hold. Otherwise if I explicitly say yes or during the plan that release is part of it, then yes.", "record it".
 	- Source: Q89
+- [x] **D109** E14 builds on its own branch so patch releases keep going #R5
+	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
+	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
+	- `v0.9/docs-layout` merges into `claude/review` only on the owner's explicit word, after the owner's reviews (the guide checklist of D105, the Try it texts of D104, the story texts of D106). It lands as one merge.
+	- After each patch release `claude/review` is merged into `v0.9/docs-layout`, so the branch stays close.
+	- Plan files, trackers, the grid and decisions stay on `claude/review` as before.
+	- Why the whole epic: the sidebar, tab row and page formats are also not released yet, and without the texts `claude/review` would carry about 650 story pages with no text.
+	- Owner recorded 2026-11-17.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
