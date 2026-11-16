@@ -12,7 +12,7 @@ import {
   SECTION_LABEL_CLASS,
 } from '@/components/sidebar-section';
 import { SidebarGroupContext } from '@/components/sidebar-group-context';
-import { groupedPages } from '@/lib/page-tree-utils';
+import { groupedPages, sidebarName } from '@/lib/page-tree-utils';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -56,7 +56,7 @@ export function SidebarItem({ item }: { item: PageTree.Item }) {
       icon={item.icon}
       className={ITEM_CLASS}
     >
-      {item.name}
+      {sidebarName(item)}
     </BaseSidebarItem>
   );
 }

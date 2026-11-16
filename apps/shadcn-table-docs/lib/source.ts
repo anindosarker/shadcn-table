@@ -4,12 +4,17 @@ import { docsContentRoute, docsImageRoute, docsRoute } from './shared';
 import { toPlainMarkdown } from './llms';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
+import type { SidebarTreeItem } from './page-tree-utils';
 
 // `searchTitle`: an optional `<title>` for search results that differs from
-// the heading and the sidebar label (`title`). Built with the zod methods of
+// the heading and the sidebar label (`title`). `sidebarTitle`: an optional
+// sidebar row label; it sets only the tree node's `sidebarName` (transformer
+// below), so the heading, breadcrumb, page switcher, prev / next, metadata,
+// structured data and llms output keep `title`. Built with the zod methods of
 // fumadocs' own `pageSchema`, so the docs app needs no zod dependency.
 const docsPageSchema = pageSchema.extend({
   searchTitle: pageSchema.shape.title.optional(),
+  sidebarTitle: pageSchema.shape.title.optional(),
 });
 
 const docs = defineDocs({
@@ -38,9 +43,20 @@ export const source = loader({
         // index; its index page is listed as the first page and reads
         // "Overview" in the sidebar.
         file(node, path) {
-          return path && /^[^/]+\/index\.mdx?$/.test(path)
-            ? { ...node, name: 'Overview' }
-            : node;
+          if (!path) return node;
+          if (/^[^/]+\/index\.mdx?$/.test(path)) {
+            return { ...node, name: 'Overview' };
+          }
+          // Frontmatter `sidebarTitle`: the sidebar row label only
+          // (components/sidebar-item.tsx); `name` stays the page title.
+          const file = this.storage.read(path);
+          const sidebarName =
+            file?.format === 'page' && 'sidebarTitle' in file.data
+              ? file.data.sidebarTitle
+              : undefined;
+          if (typeof sidebarName !== 'string') return node;
+          const item: SidebarTreeItem = { ...node, sidebarName };
+          return item;
         },
         // The sidebar shows only the current root folder's children
         // (fumadocs-ui contexts/tree), so a top-level external row such as
