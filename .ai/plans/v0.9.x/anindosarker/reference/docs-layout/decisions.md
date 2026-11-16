@@ -121,6 +121,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address"; covers LQ21).
 - Related guides: a list of links to the guide pages for the feature, below the example; every link resolves.
 - The "View Extra Storybook Examples" line is removed from the page (L12); the toolbar Storybook button replaces it.
+- Text check, owner 2026-11-17: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, no padding, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
 - Not part of this decision: rewording titles, descriptions or body text (LQ26).
 - Owner accepted on the preview 2026-11-16: wt1 `10bd63f3`, pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
 - Source: LQ23, LQ24
