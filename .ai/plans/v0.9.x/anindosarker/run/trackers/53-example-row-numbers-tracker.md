@@ -12,6 +12,12 @@ Checks:
 - `pnpm test lint` at 6fc50cfa: pass (0 errors, 9 warnings)
 - `pnpm test validate-repo` at 6fc50cfa: pass (40 unit tests, registry fresh, no tracked file changed)
 - `pnpm test docs-e2e --base base` at 6fc50cfa: pass (110 pages; getting-started 262, api 111, guides 705, examples 941 passed, 0 failed); server stopped. Bases radix and aria left to the verifier
+- Verifier, `pnpm --filter shadcn-table-docs build` at 6fc50cfa from a clean tree: pass; served by `next start -p 5342` for the three lines below, server stopped
+- Verifier, `pnpm test docs-e2e --base radix --url http://localhost:5342` at 6fc50cfa: pass (110 pages; getting-started 262, api 111, guides 705, examples 941 passed, 0 failed)
+- Verifier, `pnpm test docs-e2e --base aria --url http://localhost:5342` at 6fc50cfa: pass (110 pages; getting-started 262, api 111, guides 705, examples 941 passed, 0 failed)
+- Verifier, Acceptance 1.2 (numbers) rerun at 6fc50cfa, Chromium 1440 px: `/docs/examples/basic` 48 numbered rows `1. Basic` to `48.`, 12 counted labels `Featured (5)` to `Format previews (6)` summing to 48, heading `Basic Example`, title `Basic Example | shadcn-table`; Guides, API, Get Started pages: 0 numbered rows, 0 counted labels: pass. Judge captures as recorded above; Local CI line green (typecheck, lint, docs-e2e base by the builder)
+- Verifier: `git merge-tree --write-tree HEAD origin/v0.9/docs-layout` (2a509c87) exits 0, no conflict
+- Verifier: tsc, lint, validate-repo, docs-e2e base not rerun (recorded at HEAD 6fc50cfa)
 
 - Task 1 row number and group count helpers: ddc97751
 - Task 2 rows and labels show them: cd581c29
