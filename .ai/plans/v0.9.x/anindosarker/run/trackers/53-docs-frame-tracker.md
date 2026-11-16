@@ -1,9 +1,8 @@
 # 53: Preview lands on review, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/docs-frame`, worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 reference captures: planned
 - Task 2 merge the preview: planned
