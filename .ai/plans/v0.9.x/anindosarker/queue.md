@@ -46,6 +46,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
 - [ ] **Q92** The story audit finds 59 copied stories to merge, not the 2 the plan assumed
 	- reference/docs-layout/story-pairing-audit.md list 4: 80 rows in 59 same-table groups; under the strict rule of spec 56 1.6.3 (merge when the copied story has no check of its own) 59 copies merge, 54 moving a play and 5 with no play; 12 stories would each take two or more plays. Spec 56 1.3 assumed 24 pairs and 2 merges. Found by the run's audit milestone, recounted by its verifier.
+- [ ] **Q93** No docs example has an exact story, so all 42 need a new one
+	- reference/docs-layout/story-pairing-audit.md lists 1 to 3: exact 0, close 34, no partner 8 (minimal, advanced, export-csv, export-pdf, custom-filter-ui, react-query, remote, dynamic-columns). Spec 56 1.3 assumed 33 linked pages and 9 without a story. Resulting count: 652 - 59 + 42 - 42 = 593 story pages. Found by the run's audit milestone, recounted by its verifier.
 
 ## Decided
 
