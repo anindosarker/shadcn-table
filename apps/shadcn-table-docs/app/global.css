@@ -321,6 +321,36 @@ html > body[data-scroll-locked] {
   --fd-layout-width: 100%;
 }
 
+/* sidebar width the visitor dragged (components/sidebar-resize-handle.tsx);
+   fumadocs' default is 268px from md. No column transition while dragging. */
+@media (min-width: 768px) {
+  #nd-notebook-layout {
+    --fd-sidebar-width: var(--docs-sidebar-width, 268px);
+  }
+}
+html[data-sidebar-resizing] #nd-notebook-layout {
+  transition: none;
+}
+html[data-sidebar-resizing] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* collapsed before hydration (components/sidebar-collapse-button.tsx): the
+   layout's inline script sets the attribute; until fumadocs' own state is
+   collapsed, keep the column closed and the expanded sidebar hidden */
+@media (min-width: 768px) {
+  html[data-sidebar-collapsed]
+    #nd-notebook-layout:not([data-sidebar-collapsed='true']) {
+    --fd-sidebar-col: 0px !important;
+  }
+  html[data-sidebar-collapsed]
+    #nd-notebook-layout:not([data-sidebar-collapsed='true'])
+    #nd-sidebar {
+    visibility: hidden;
+  }
+}
+
 /* ---------- content column ---------- */
 
 /* centre the content column between sidebar and TOC */
