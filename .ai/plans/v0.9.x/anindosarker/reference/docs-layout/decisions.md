@@ -72,7 +72,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Owner accepted on the 5342 preview, 2026-11-10 (wt1 `d74def4d`).
 - Source: LQ16
 
-### L9 One sidebar per section
+### L9 One sidebar per section (amended by L22)
 
 - Each section folder (`getting-started`, `examples`, `guides`, `api`) is a fumadocs root (`"root": true`); the sidebar shows only the active section's pages. The section's name renders as a heading row at the top (`components/sidebar-root-heading.tsx`), then its Overview (the index page, listed explicitly in `meta.json` and named through a page-tree transformer in `lib/source.ts`), then its pages under their group labels (L8).
 - The prev/next footer crosses section boundaries in L1 order through `footerNeighbours` in `lib/page-tree-utils.ts` (fix of LF5); inside a section the neighbours are unchanged.
@@ -93,7 +93,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Agents still may stop a server they started themselves earlier; never one they did not start.
 - Source: LQ19
 
-### L12 Storybook stories become docs example pages; Storybook links back (amended by L19)
+### L12 Storybook stories become docs example pages; Storybook links back (amended by L19, L22)
 
 - Roles: the docs carry description and the rendered table; Storybook carries the table with its interactions (plays); each links to the other.
 - One source for descriptions: a JSDoc comment above each story export and a one-line `description` in each story file's meta, in `packages/shadcn-table/stories`. Storybook autodocs and the docs build both read them.
@@ -190,3 +190,29 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Two groups must not end up with the same name within one folder; a clash is resolved when the rename is built.
 - Shown on the preview: EX B, wt1 `apps/shadcn-table-docs/preview-examples-ab/generate.mjs` (display names only; the story files are not yet changed).
 - Owner accepted 2026-11-17.
+
+### L22 The Examples sidebar: Featured first, groups by demand, story groups under "More examples"
+
+- Amends L9 (no section heading row) and L12 (where the story pages sit). Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are.
+- Groups, in this order, labels without "Examples":
+  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). Basic is first, so `/docs/examples` opens it (L13). A filter example is not featured, because the basic table already filters.
+  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
+  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
+  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
+  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
+  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
+  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
+  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
+  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
+  - Export: `export-csv`, `export-pdf`.
+  - Customization: `minimal`, `custom-headless`, `persistent-view`.
+  - More examples: every Storybook group (L19, L21) as a labelled sub-group with its stories as rows.
+- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar, through the optional frontmatter field `sidebarTitle` (`lib/source.ts`); page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
+- Collapse: "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels and all other groups never collapse.
+- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Each group is its own block, so only one label shows.
+- No section heading row at the top of the sidebar list in any section; the active tab names the section.
+- The whole sidebar can be collapsed with a button right after the brand in the header, and resized by dragging its right edge (220 to 480 px, double click resets); both states survive a reload.
+- The header's text links no longer render as rows in the sidebar below 1024 px; the section tabs replace them there and in the mobile drawer.
+- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Checklist of old against new position: `sidebar-regroup-checklist.md`.
+- Not part of this decision: the row numbers and group counts in the EX B demo (aids for the review); page titles, descriptions and URLs (LQ29).
+- Owner accepted on the preview 2026-11-17: the real Examples section at wt1 `2e6f8be2`, "More examples" in the EX B demo at wt1 `cfbe4df3`.
