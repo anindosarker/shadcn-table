@@ -103,7 +103,7 @@ kanban-plugin: basic
 
 - [x] **LQ4** The filter-variants example blocks the main thread for 6.6 s on mount #lookup
 	- In the stack it loads in 7.8 s, the longest task is 6.7 s, of which 6.58 s is forced style and layout inside React render (`perf-report.md`, scroll run). Attribution by timing only; profile the example on its single page first. Likely the example itself, not the stack.
-	- Dropped 2026-11-17: the owner sees no freeze on `/docs/examples/filter-variants`. The 6.6 s was measured only inside the examples stack (scroll run of `perf-report.md`), which L13 removed; it was never reproduced on the single page.
+	- Dropped by the owner 2026-11-17: no freeze on `/docs/examples/filter-variants`, only the short placeholder every example page shows while the selected base's example code loads. The example uses fixed local data and fetches nothing. The 6.6 s was measured only inside the examples stack, which L13 removed.
 
 - [x] **LQ2** The example playground names a "Both" mode it never offers #lead
 	- `components/example-playground.tsx:69-70` named Preview, Code and Both while the tab list had two. The toolbar now shows all three (owner's screenshots, 2026-11-10, wt1 after the merge of `claude/review`); nothing to do.
