@@ -13,7 +13,7 @@ import { faker } from '@faker-js/faker';
 import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
-  title: 'Features/Column Hiding Examples',
+  title: 'Features/Column Hiding',
 };
 
 export default meta;

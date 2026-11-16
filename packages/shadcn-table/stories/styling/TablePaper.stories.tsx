@@ -5,7 +5,7 @@ import { expect, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Table Paper Examples',
+  title: 'Styling/Table Paper',
 };
 
 export default meta;

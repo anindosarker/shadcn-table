@@ -9,7 +9,7 @@ import { UserIcon } from 'lucide-react';
 // columns button.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Menu Focus Return',
+  title: 'Miscellaneous/Menu Focus Return',
 };
 
 export default meta;

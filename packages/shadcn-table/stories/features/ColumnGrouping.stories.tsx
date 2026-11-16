@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Grouping Examples',
+  title: 'Features/Column Grouping',
 };
 
 export default meta;

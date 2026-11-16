@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select';
 
 const meta: Meta = {
-  title: 'Features/Creating Examples',
+  title: 'Features/Creating',
 };
 
 export default meta;

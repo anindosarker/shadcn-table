@@ -5,7 +5,7 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Data Types',
+  title: 'Miscellaneous/Data Types',
 };
 
 export default meta;

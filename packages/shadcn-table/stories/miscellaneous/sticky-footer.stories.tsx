@@ -4,7 +4,7 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { DollarSignIcon, HashIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Fixed Bugs/sticky-footer',
+  title: 'Miscellaneous/Sticky Footer',
 };
 
 export default meta;

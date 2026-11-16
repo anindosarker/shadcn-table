@@ -10,7 +10,7 @@ const meta: Meta = {
       type: 'stable',
     },
   },
-  title: 'Styling/Sticky Header Examples',
+  title: 'Styling/Sticky Header',
 };
 
 export default meta;

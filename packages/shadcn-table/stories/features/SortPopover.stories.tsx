@@ -10,7 +10,7 @@ import {
 // The sort editor: the toolbar button opens the column picker while no sort
 // exists and the editor otherwise; a chip in the chip row opens the editor.
 const meta: Meta = {
-  title: 'Features/Sort Popover Examples',
+  title: 'Features/Sort Popover',
 };
 
 export default meta;

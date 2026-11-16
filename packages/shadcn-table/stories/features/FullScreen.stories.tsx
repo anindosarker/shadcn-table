@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Full Screen Examples',
+  title: 'Features/Full Screen',
 };
 
 export default meta;

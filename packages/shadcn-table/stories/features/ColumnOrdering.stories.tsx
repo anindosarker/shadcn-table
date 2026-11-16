@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Ordering Examples',
+  title: 'Features/Column Ordering',
 };
 
 export default meta;

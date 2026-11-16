@@ -13,7 +13,7 @@ import { CircleCheckIcon, MapIcon, UserIcon } from 'lucide-react';
 // tooltip triggers.
 
 const meta: Meta = {
-  title: 'Fixed Bugs/Aria Tooltips',
+  title: 'Miscellaneous/Aria Tooltips',
 };
 
 export default meta;

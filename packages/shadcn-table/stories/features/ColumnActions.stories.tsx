@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Action Examples',
+  title: 'Features/Column Action',
 };
 
 export default meta;

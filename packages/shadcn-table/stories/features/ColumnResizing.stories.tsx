@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Resizing Examples',
+  title: 'Features/Column Resizing',
 };
 
 export default meta;

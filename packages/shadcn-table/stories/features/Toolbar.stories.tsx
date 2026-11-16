@@ -19,7 +19,7 @@ import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import { ST_BASE } from '../../.storybook/themes';
 
 const meta: Meta = {
-  title: 'Features/Toolbar Examples',
+  title: 'Features/Toolbar',
 };
 
 export default meta;

@@ -25,7 +25,7 @@ import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
 
 const meta: Meta = {
-  title: 'Features/Cell Action Examples',
+  title: 'Features/Cell Action',
 };
 
 export default meta;
