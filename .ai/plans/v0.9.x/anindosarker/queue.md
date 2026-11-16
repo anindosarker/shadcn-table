@@ -44,6 +44,8 @@ kanban-plugin: basic
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
 	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
 	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
+- [ ] **Q92** The story audit finds 59 copied stories to merge, not the 2 the plan assumed
+	- reference/docs-layout/story-pairing-audit.md list 4: 80 rows in 59 same-table groups; under the strict rule of spec 56 1.6.3 (merge when the copied story has no check of its own) 59 copies merge, 54 moving a play and 5 with no play; 12 stories would each take two or more plays. Spec 56 1.3 assumed 24 pairs and 2 merges. Found by the run's audit milestone, recounted by its verifier.
 
 ## Decided
 
