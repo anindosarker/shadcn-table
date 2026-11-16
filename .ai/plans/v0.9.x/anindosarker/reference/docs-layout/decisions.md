@@ -173,3 +173,10 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source.
 - Not decided here: where the story pages sit in the sidebar; that needs its own careful discussion.
 - Owner accepted 2026-11-16.
+
+### L20 A test story that copies an example is folded into that example
+
+- A story that shows the same table as another story and only adds an automated check (a `play` function) is not listed as its own story. Its check moves onto the story it copies, and the copy is deleted. The check keeps running; the sidebar shows one entry.
+- First case: `packages/shadcn-table/stories/Basic.stories.tsx` "Renders Rows" (`:52`) is "Default" (`:49`) plus a row-count and cell-text check; nothing else references it.
+- Applies to every such story (about 270 stories carry a `play` function; how many are plain copies comes out of the L19 audit). A test story that sets the table up differently from every example is not covered by this decision.
+- Owner accepted 2026-11-17.
