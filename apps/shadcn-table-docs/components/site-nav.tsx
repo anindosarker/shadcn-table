@@ -11,12 +11,13 @@ import { cn } from '@/lib/cn';
 import { DISCORD_URL, GITHUB_URL } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
 import { SidebarCollapseButton } from '@/components/sidebar-collapse-button';
+import { SectionTabs } from '@/components/section-tabs';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
  * "// shadcn-table" wordmark, GitHub, the base select and the theme pill),
- * plus the search and sidebar triggers the docs need. The section links
- * live in the sidebar (components/sidebar-section-tabs.tsx, L7). Keeps
+ * plus the search and sidebar triggers the docs need; the section tabs
+ * (components/section-tabs.tsx, L7) are its second row. Keeps
  * fumadocs' `#nd-subnav` id and grid area so the layout and the sticky
  * offsets still apply.
  * Styles: app/global.css ("landing look").
@@ -99,6 +100,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
           )}
         </div>
       </div>
+      <SectionTabs />
     </header>
   );
 }

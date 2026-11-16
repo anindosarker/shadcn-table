@@ -3,7 +3,6 @@ import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
-import { SidebarSectionTabs } from '@/components/sidebar-section-tabs';
 import { SidebarItem } from '@/components/sidebar-item';
 import { SidebarResizeHandle } from '@/components/sidebar-resize-handle';
 import { SiteNav } from '@/components/site-nav';
@@ -31,13 +30,10 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
         sidebar={{
           // the header's SidebarCollapseButton toggles it (Cmd/Ctrl+B too)
           collapsible: true,
-          // the section switcher (L7); the resize handle positions itself on the sidebar's end edge
-          banner: (
-            <>
-              <SidebarResizeHandle />
-              <SidebarSectionTabs />
-            </>
-          ),
+          // the resize handle positions itself on the sidebar's end edge; as a
+          // component it replaces fumadocs' padded banner box, which would
+          // leave an empty gap above the first group
+          banner: SidebarResizeHandle,
           components: {
             Folder: SidebarSection,
             Separator: SidebarSeparator,
