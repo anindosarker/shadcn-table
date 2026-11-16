@@ -5,19 +5,21 @@ import { usePathname } from 'next/navigation';
 import { NAV_LINKS, PREVIEW_NAV_LINKS } from '@/lib/layout.shared';
 
 /**
- * The section switcher (L7): Get Started, Examples, Guides, API at the top of the
- * sidebar (the `sidebar.banner` slot, above the section heading), the active
- * section underlined. One line; scrolls sideways when narrow. The type is
- * the old header links' (.site-nav-link before L7); the sidebar link rules
- * in app/global.css are scoped to the page tree, so they leave these alone.
+ * The section switcher (L7): Get Started, Examples, Guides, API as the
+ * header's second row (components/site-nav.tsx), under the brand row, the
+ * active section underlined on the header's bottom rule. Left aligned with
+ * the brand (the row's padding minus the links' px-2); scrolls sideways
+ * without a scrollbar when narrow. The header's height
+ * (--fd-header-height, app/global.css) counts this row, so the sidebar, the
+ * TOC and the sticky offsets start below it.
  */
-export function SidebarSectionTabs() {
+export function SectionTabs() {
   const pathname = usePathname();
 
   return (
     <nav
       aria-label="Sections"
-      className="flex h-9 shrink-0 items-stretch overflow-x-auto [border-bottom:var(--docs-rule)] [scrollbar-width:none]"
+      className="flex min-h-0 flex-1 items-stretch overflow-x-auto px-2 [scrollbar-width:none] md:px-4"
     >
       {/* preview-examples-ab: EX A and EX B after API */}
       {[...NAV_LINKS, ...PREVIEW_NAV_LINKS].map((l) => (
