@@ -72,6 +72,52 @@ export function groupBySeparator(nodes: PageTree.Node[]): SiblingGroup[] {
   );
 }
 
+/**
+ * The pages a "---X---" separator labels: the pages after it among
+ * `siblings`, up to the next separator, folder or external link (the shared
+ * Changelog row, lib/source.ts, stays loose at the end).
+ */
+export function separatorPages(
+  separator: PageTree.Separator,
+  siblings: PageTree.Node[],
+): PageTree.Item[] {
+  const pages: PageTree.Item[] = [];
+  for (let i = siblings.indexOf(separator) + 1; i < siblings.length; i++) {
+    const node = siblings[i];
+    if (node.type !== 'page' || node.external) break;
+    pages.push(node);
+  }
+  return pages;
+}
+
+const groupedCache = new WeakMap<object, Set<PageTree.Node>>();
+
+/**
+ * Every page under `root` that follows a separator (separatorPages), cached
+ * per tree. The sidebar renders those inside their separator's group.
+ */
+export function groupedPages(
+  root: Pick<PageTree.Root, 'children'>,
+): Set<PageTree.Node> {
+  let set = groupedCache.get(root);
+  if (set) return set;
+  set = new Set();
+  const visit = (list: PageTree.Node[]) => {
+    let grouped = false;
+    for (const node of list) {
+      if (node.type === 'separator') grouped = true;
+      else if (node.type === 'folder') {
+        grouped = false;
+        visit(node.children);
+      } else if (node.type === 'page' && node.external) grouped = false;
+      else if (grouped) set.add(node);
+    }
+  };
+  visit(root.children);
+  groupedCache.set(root, set);
+  return set;
+}
+
 /** Find the sibling list that contains `node` (by reference) anywhere in the tree. */
 export function findSiblings(
   root: Pick<PageTree.Root, 'children'>,

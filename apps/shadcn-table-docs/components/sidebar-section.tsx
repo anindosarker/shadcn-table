@@ -73,13 +73,14 @@ export function SidebarSection({
         ) : null}
         {groupBySeparator(item.children).map((group, g) => {
           const nodes = group.indices.map((i) => rendered[i]);
+          // the separator renders its own group (sidebar-separator.tsx)
           if (closable)
-            return (
+            return group.separator ? (
               <Fragment key={g}>
-                {group.separator &&
-                  rendered[item.children.indexOf(group.separator)]}
-                {nodes}
+                {rendered[item.children.indexOf(group.separator)]}
               </Fragment>
+            ) : (
+              <Fragment key={g}>{nodes}</Fragment>
             );
           return group.separator ? (
             <SidebarSubgroup

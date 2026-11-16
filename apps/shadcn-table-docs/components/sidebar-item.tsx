@@ -1,7 +1,9 @@
 'use client';
 
 import type * as PageTree from 'fumadocs-core/page-tree';
+import { use } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTreeContext } from 'fumadocs-ui/contexts/tree';
 import { ExternalLinkIcon } from 'lucide-react';
 import { SidebarItem as BaseSidebarItem } from 'fumadocs-ui/components/sidebar/base';
 import {
@@ -9,6 +11,8 @@ import {
   SECTION_CLASS,
   SECTION_LABEL_CLASS,
 } from '@/components/sidebar-section';
+import { SidebarGroupContext } from '@/components/sidebar-group-context';
+import { groupedPages } from '@/lib/page-tree-utils';
 
 /**
  * Sidebar page row. Pages render like the notebook layout's own items.
@@ -20,6 +24,10 @@ import {
  */
 export function SidebarItem({ item }: { item: PageTree.Item }) {
   const pathname = usePathname();
+  const { root } = useTreeContext();
+  // A page after a "---Label---" renders inside its separator's group
+  // (components/sidebar-separator.tsx); skip it in fumadocs' flat list.
+  if (!use(SidebarGroupContext) && groupedPages(root).has(item)) return null;
 
   if (item.external) {
     return (
