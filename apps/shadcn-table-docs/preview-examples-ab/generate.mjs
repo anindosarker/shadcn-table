@@ -167,6 +167,24 @@ function parseA(md) {
 }
 
 /** B: part 1 "### Group" docs tables, part 2 "#### <story title> (n stories...)". */
+/**
+ * Display name of a Storybook group (docs-layout L21): "Fixed Bugs" shows as
+ * "Miscellaneous", names are Title Case with spaces, no "Examples" suffix.
+ */
+const groupLabel = (title) =>
+  title
+    .replace(/^Fixed Bugs\//, 'Miscellaneous/')
+    .split('/')
+    .map((part) =>
+      part
+        .replace(/ Examples$/, '')
+        .replace(/propogation/i, 'propagation')
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        .replace(/-/g, ' ')
+        .replace(/\b[a-z]/g, (c) => c.toUpperCase()),
+    )
+    .join('/');
+
 function parseB(md) {
   const groups = [];
   let part = 0;
@@ -186,10 +204,9 @@ function parseB(md) {
       file = byTitle.get(title.toLowerCase());
       if (!file) throw new Error(`story file not found: ${title}`);
       // Storybook groups sit in the collapsible "More examples" folder.
-      // The Storybook folder "Fixed Bugs" shows as "Miscellaneous" (owner,
-      // 2026-11-17); story ids still come from the real title.
+      // Story ids still come from the real title.
       groups.push({
-        name: title.replace(/^Fixed Bugs\//, 'Miscellaneous/'),
+        name: groupLabel(title),
         label: true,
         more: true,
         rows: [],
