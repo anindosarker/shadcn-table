@@ -334,8 +334,27 @@ html > body[data-scroll-locked] {
     --fd-sidebar-width: var(--docs-sidebar-width, 268px);
   }
 }
+/* collapse and restore: fumadocs transitions the grid column
+   (--fd-sidebar-col, a registered length) at 150ms and the sidebar's slide
+   at 250ms; both run 200ms ease-out here so the content column and the
+   sidebar move together. Off while dragging and for reduced motion. */
+#nd-notebook-layout {
+  transition:
+    --fd-sidebar-col 200ms ease-out,
+    --fd-ai-chat-col 300ms ease-in-out;
+}
+#nd-sidebar {
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
 html[data-sidebar-resizing] #nd-notebook-layout {
   transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #nd-notebook-layout,
+  #nd-sidebar {
+    transition: none;
+  }
 }
 html[data-sidebar-resizing] {
   cursor: col-resize;
