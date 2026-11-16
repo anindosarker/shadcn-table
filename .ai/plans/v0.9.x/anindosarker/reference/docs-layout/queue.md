@@ -87,6 +87,11 @@ kanban-plugin: basic
 
 ## Later
 
+- [ ] **LQ29** Example page titles, descriptions and URLs do not match what people search for #owner
+	- Owner, 2026-11-16: a separate item from the sidebar regrouping. Not an overhaul: page title, meta description and URL of example pages updated for SEO, after an SEO check. Related: LQ26 (body wording).
+	- Fact: the sidebar row "Server-Side Pagination" opens a page titled "React Query Example" at `/docs/examples/react-query`; "Inline Editing" opens "Editing CRUD Inline Row Example". Phrase evidence in `featured-examples-research.md`.
+	- A URL change needs a permanent redirect from the old URL.
+
 - [ ] **LQ28** Audit which guide tables are part of the guide and which are appended demos #lookup
 	- Owner, 2026-11-16 (L15): a table the guide text refers to stays in place; a table that only shows an example at the end is removed once the Example section shows it. Needs a pass over all 46 guides (40 embed a table); later.
 	- The same pass picks the best relevant example per guide: 27 guides have a matching example page, 13 embed a table without one, 6 have no table.
