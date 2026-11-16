@@ -9,7 +9,6 @@
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { isPreviewPage } from './examples-entry.mjs';
 
 /**
  * @typedef {{ slug: string; title?: string; description?: string } & Record<string, string>} ExamplePage
@@ -40,7 +39,7 @@ export function readFrontmatter(source) {
 }
 
 /**
- * Reads every `<pagesDir>/*.mdx` but preview pages, keyed by page slug and by the name of each
+ * Reads every `<pagesDir>/*.mdx`, keyed by page slug and by the name of each
  * `<SomethingExample />` component the page body renders (first page wins).
  * @param {string} pagesDir
  * @returns {Promise<{ bySlug: Map<string, ExamplePage>; byComponent: Map<string, ExamplePage> }>}
@@ -50,11 +49,7 @@ export async function loadExamplePages(pagesDir) {
   const bySlug = new Map();
   /** @type {Map<string, ExamplePage>} */
   const byComponent = new Map();
-  // Preview-only comparison pages (lib/examples-entry.mjs) render their
-  // original's example, so the original stays the example's page.
-  const files = (await fs.readdir(pagesDir)).filter(
-    (f) => f.endsWith('.mdx') && !isPreviewPage(f.replace(/\.mdx$/, '')),
-  );
+  const files = (await fs.readdir(pagesDir)).filter((f) => f.endsWith('.mdx'));
   for (const file of files) {
     const source = await fs.readFile(path.join(pagesDir, file), 'utf8');
     const page = {
