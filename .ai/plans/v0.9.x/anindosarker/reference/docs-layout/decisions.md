@@ -180,3 +180,13 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - First case: `packages/shadcn-table/stories/Basic.stories.tsx` "Renders Rows" (`:52`) is "Default" (`:49`) plus a row-count and cell-text check; nothing else references it.
 - Applies to every such story (about 270 stories carry a `play` function; how many are plain copies comes out of the L19 audit). A test story that sets the table up differently from every example is not covered by this decision.
 - Owner accepted 2026-11-17.
+
+### L21 "Fixed Bugs" becomes "Miscellaneous"; story group names share one style
+
+- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs. The folder is renamed as a whole; no story is moved out of it or sorted into example and test. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
+- Every story group name is Title Case with spaces: "sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "mobile date pickers" "Mobile Date Pickers", "gridLayout" "Grid Layout". The misspelt "click-propogation" becomes "Click Propagation".
+- Group names drop the word "Examples" ("Aggregation Examples" becomes "Aggregation"), the same rule as the docs sidebar labels.
+- The change is made in the story files (the meta `title`), so Storybook and the docs follow together. A renamed group changes its stories' Storybook addresses; the docs links to stories are regenerated in the same change.
+- Two groups must not end up with the same name within one folder; a clash is resolved when the rename is built.
+- Shown on the preview: EX B, wt1 `apps/shadcn-table-docs/preview-examples-ab/generate.mjs` (display names only; the story files are not yet changed).
+- Owner accepted 2026-11-17.
