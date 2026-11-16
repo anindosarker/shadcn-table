@@ -3,8 +3,8 @@
  * redirects (next.config.mjs) to the first example in
  * content/docs/examples/meta.json order. Site navigation (section tabs, top
  * nav, home page nav and footer) links `/docs/examples`, so its Examples link
- * stays active on every example page; page lists (lib/routes.ts) and content
- * links name an example page itself.
+ * stays active on every example page; content links name an example page
+ * itself.
  *
  * Plain ESM so next.config.mjs can import it; tsconfig has `allowJs`, so the
  * app imports it with types from the JSDoc.

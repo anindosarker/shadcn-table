@@ -1,95 +1,69 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { useBase } from '@/components/base-selector';
-import { storybookUrl } from '@/components/mdx/storybook-link';
-import { routes, type RouteItem } from '@/lib/routes';
-import { trackStorybookOpened } from '@/lib/analytics';
+import type * as PageTree from 'fumadocs-core/page-tree';
+import { source } from '@/lib/source';
+import { isPreviewPage } from '@/lib/examples-entry.mjs';
+import { containsUrl, separatorPages } from '@/lib/page-tree-utils';
 
-export const TableOfContentsListItem = ({
-  item,
-  isFooter = false,
-  index = 0,
-}: {
-  item: RouteItem;
-  isFooter?: boolean;
-  index?: number;
-}) => {
-  const base = useBase();
-  // The examples index lists the Storybook next to the example pages.
-  const onClick = item.href.startsWith(storybookUrl.radix)
-    ? () => trackStorybookOpened({ base, surface: 'nav' })
-    : undefined;
-  return isFooter ? (
-    <li>
-      <Link
-        href={item.href}
-        className="text-sm leading-[1.6rem] text-fd-muted-foreground no-underline hover:underline"
-        onClick={onClick}
-      >
-        {item.label}
-      </Link>
-    </li>
-  ) : (
-    <li>
-      <Link href={item.href} className="docs-index-link" onClick={onClick}>
-        <span className="docs-index-num">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <span className="docs-index-label">{item.label}</span>
-        <ArrowUpRight aria-hidden className="docs-index-arrow" />
-      </Link>
-    </li>
-  );
-};
-
-interface Props {
-  items?: Array<RouteItem>;
-  isFooter?: boolean;
-  variant?: 'list' | 'heading';
+/** Heading id of a "---Label---" group: "Size / Width Guides" → "size-width-guides". */
+export function groupId(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
-export const TableOfContentsList = ({
-  items = routes,
-  isFooter = false,
-  variant = 'list',
-}: Props) => {
-  if (variant === 'list') {
-    // secondary items are flattened into the list, so number the flat rows
-    const rows = items.flatMap((item) => item.secondaryItems ?? [item]);
-    return (
-      <ul className={isFooter ? 'list-none p-0' : 'docs-index not-prose'}>
-        {rows.map((item, index) => (
-          <TableOfContentsListItem
-            key={index}
-            item={item}
-            isFooter={isFooter}
-            index={index}
-          />
-        ))}
-      </ul>
+/**
+ * The overview list of a docs section (`/docs/guides`): every "---Label---"
+ * group of the section's meta.json as a heading with an id, its pages as
+ * numbered link rows. Read from the page tree, so meta.json is the only
+ * source; the preview-only comparison pages (lib/examples-entry.mjs) are
+ * left out.
+ */
+export function TableOfContentsList({ section }: { section: string }) {
+  const folder = source
+    .getPageTree()
+    .children.find(
+      (node): node is PageTree.Folder =>
+        node.type === 'folder' && containsUrl(node, section),
     );
-  }
-  if (variant === 'heading') {
-    return (
-      <>
-        {items.map((item, index) => (
-          <div key={index}>
-            <h3 id={item.href.split('#')[1]} className="docs-index-heading">
-              <Link href={item.href}>{item.label}</Link>
-            </h3>
-            {(item.items || item.secondaryItems) && (
-              <TableOfContentsList
-                items={item.secondaryItems ?? item.items ?? []}
-              />
-            )}
-          </div>
-        ))}
-      </>
-    );
-  }
-  return null;
-};
+  if (!folder) return null;
 
-export default TableOfContentsList;
+  const groups = folder.children
+    .filter((node) => node.type === 'separator')
+    .map((separator) => ({
+      label: String(separator.name),
+      pages: separatorPages(separator, folder.children).filter(
+        (page) => !isPreviewPage(page.url.split('/').pop() ?? ''),
+      ),
+    }))
+    .filter((group) => group.pages.length > 0);
+
+  return (
+    <>
+      {groups.map((group) => {
+        const id = groupId(group.label);
+        return (
+          <div key={id}>
+            <h3 id={id} className="docs-index-heading">
+              <Link href={`${section}#${id}`}>{group.label}</Link>
+            </h3>
+            <ul className="docs-index not-prose">
+              {group.pages.map((page, index) => (
+                <li key={page.url}>
+                  <Link href={page.url} className="docs-index-link">
+                    <span className="docs-index-num">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="docs-index-label">{page.name}</span>
+                    <ArrowUpRight aria-hidden className="docs-index-arrow" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </>
+  );
+}
