@@ -4,7 +4,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 
 ## Round 1: discussion, 2026-11-05
 
-### L1 Nav order is Docs, Examples, Guides, API Reference
+### L1 Nav order is Docs, Examples, Guides, API Reference (amended by L23)
 
 - Today the order is getting-started, api, examples, guides in the sidebar root (`content/docs/meta.json:3-8`), the top nav (`lib/layout.shared.tsx:8-13`), the home nav (`components/dev-home/v12/nav.tsx:12-15`) and the footer (`components/dev-home/v12/footer.tsx:16-19`).
 - New order in all four places: Docs (Getting Started: introduction, install, usage, agents), Examples, Guides, API Reference. `lib/routes.ts` follows the same order.
@@ -79,7 +79,7 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Owner accepted on the 5342 preview, 2026-11-10 (wt1 `11ff81ef`, `9f5a51ef`, `07b5f1eb`).
 - Source: LQ17
 
-### L10 Section tabs at the top of the sidebar, search in the header centre
+### L10 Section tabs at the top of the sidebar, search in the header centre (amended by L23)
 
 - Amends L7: the section switcher Docs, Examples, Guides, API (L1 order) is a one-line tab row at the top of the sidebar column (`components/sidebar-section-tabs.tsx`, sidebar banner slot, above the section heading), in the header links' former type: mono 11px uppercase, 0.12em tracking, muted, active in the accent colour with a 2px underline. No full-width row under the header; header height unchanged.
 - The header is brand left, the search box centred (max 28rem, `lg` and up; the icon stays with the right group below `lg`), then GitHub, Discord, base selector and theme toggle on the right.
@@ -219,3 +219,12 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Guides and API sidebars: labels, groups and order stay as they are today (owner 2026-11-17: nothing was changed there in the demo either). They share only what the sidebar component gives every section: sticky group labels, no heading row, collapse and resize.
 - Not part of this decision: page titles, descriptions and URLs (LQ29).
 - Owner accepted on the preview 2026-11-17: the real Examples section at wt1 `2e6f8be2`, "More examples" in the EX B demo at wt1 `cfbe4df3`.
+
+### L23 The section tabs sit in a row under the top bar; the first section is "Get Started"
+
+- Amends L1 (the first section's name) and L10 (where the tabs sit). The order stays Get Started, Examples, Guides, API.
+- The first section is labelled "Get Started", not "Docs", in the tab row and the home page menu: "Docs" says nothing next to "Guides", and the section's pages are the getting-started pages (its URLs already say `/docs/getting-started/`). The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
+- The tabs leave the sidebar. They form a row directly under the top bar on every docs page, left aligned with the brand, in the same type style as before, with the dashed rule below the row. There is no line between the top bar and the tab row: the two read as one block.
+- The row stays in place with the top bar when the page scrolls; sidebar, content and "On this page" start below both. On the mobile layout the row shows under the top bar too, so the drawer carries no tabs.
+- The sidebar list starts with its first group, with no reserved space above it; the sticky group labels (L22) stick at the very top of the sidebar.
+- Owner accepted on the preview 2026-11-17 (wt1, branch `v0.9/preview-docs-examples`, around `86e186b8`).
