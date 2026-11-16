@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-17 05:41
+Updated: 2026-11-17 05:52
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 | S16 | S17 | S18 | S19 | S20 | S21 | S22 | S23 | S24 | S25 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -87,7 +87,7 @@ Updated: 2026-11-17 05:41
 | E13 52 Docs filter facts |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E14 53 Preview lands on review |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E14 53 Example row numbers |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
-| E14 53 Footer link and square corners |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
+| E14 53 Footer link and square corners |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E14 53 Guides overview anchors match the live site |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E14 54 Example page format |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |
 | E14 55 Guide example block |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |

@@ -29,30 +29,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #E14 #R5
-	- Replaces L1, L7, L10, L23.
-	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
-	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
-	- The section tabs form a row directly under the top bar on every docs page, left aligned with the brand: mono, uppercase, letter-spaced, muted; the active tab in the accent colour with a 2px underline. The space inside a label is tighter than the gap between tabs, so "GET STARTED" reads as one tab. A dashed rule runs below the row; there is no line between the top bar and the row. Top bar and row stay in place together when the page scrolls.
-	- The row starts with the sidebar's hide and show button (L25), close to the first tab, with no divider. On the mobile layout the button is not shown and the row scrolls sideways when the tabs do not fit.
-	- The top bar holds the brand on the left, the search box in the centre (from the `lg` width up; an icon in the right group below it), then GitHub, Discord, the base selector and the theme toggle on the right.
-	- Owner accepted on the preview 2026-11-17.
-	- Source: LQ9, LQ15, LQ18
-	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #E14 #R5
-	- Replaces L8, L9, and the general parts of L22.
-	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
-	- No heading row with the section's name at the top of the list; the active tab names the section.
-	- Group labels and their pages share one left edge: no indent, no guide line. Labels are small, mono, uppercase and muted.
-	- Groups never collapse. The one exception is "More examples" in the Examples sidebar (L26).
-	- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Only one label shows at a time.
-	- Hide and show: the button at the start of the tab row hides the whole sidebar and brings it back. Its icon carries an arrow pointing left when the sidebar is open and right when it is hidden; the tooltip reads "Hide sidebar" or "Show sidebar". The sidebar slides in about 200 ms and the content follows; no animation on reload, while resizing, or for visitors who ask for reduced motion. The state survives a reload.
-	- Resize: dragging the sidebar's right edge changes its width between 220 and 480 px; a double click resets it; arrow keys work; the width survives a reload.
-	- The header's text links never show as rows in the sidebar, at any width; the tab row replaces them, also on the mobile layout.
-	- Guides and API: their labels, groups and order stay as they are today.
-	- Owner accepted on the preview 2026-11-17.
-	- Source: LQ16, LQ17, LQ7, LQ25
-	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
 	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
 	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
@@ -119,13 +95,6 @@ kanban-plugin: basic
 	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
 	- Source: LQ20
 	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
-	- Replaces L17, L18.
-	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
-	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
-	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
-	- Source: LQ1, LQ6
-	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 
 ## Done
 
@@ -691,6 +660,37 @@ kanban-plugin: basic
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
 	- Recorded in `process.md` P4. Owner, 2026-11-14: "If I ask it to hold, then it should hold. Otherwise if I explicitly say yes or during the plan that release is part of it, then yes.", "record it".
 	- Source: Q89
+- [x] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #E14 #R5
+	- Replaces L1, L7, L10, L23.
+	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
+	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
+	- The section tabs form a row directly under the top bar on every docs page, left aligned with the brand: mono, uppercase, letter-spaced, muted; the active tab in the accent colour with a 2px underline. The space inside a label is tighter than the gap between tabs, so "GET STARTED" reads as one tab. A dashed rule runs below the row; there is no line between the top bar and the row. Top bar and row stay in place together when the page scrolls.
+	- The row starts with the sidebar's hide and show button (L25), close to the first tab, with no divider. On the mobile layout the button is not shown and the row scrolls sideways when the tabs do not fit.
+	- The top bar holds the brand on the left, the search box in the centre (from the `lg` width up; an icon in the right group below it), then GitHub, Discord, the base selector and the theme toggle on the right.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ9, LQ15, LQ18
+	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #E14 #R5
+	- Replaces L8, L9, and the general parts of L22.
+	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
+	- No heading row with the section's name at the top of the list; the active tab names the section.
+	- Group labels and their pages share one left edge: no indent, no guide line. Labels are small, mono, uppercase and muted.
+	- Groups never collapse. The one exception is "More examples" in the Examples sidebar (L26).
+	- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Only one label shows at a time.
+	- Hide and show: the button at the start of the tab row hides the whole sidebar and brings it back. Its icon carries an arrow pointing left when the sidebar is open and right when it is hidden; the tooltip reads "Hide sidebar" or "Show sidebar". The sidebar slides in about 200 ms and the content follows; no animation on reload, while resizing, or for visitors who ask for reduced motion. The state survives a reload.
+	- Resize: dragging the sidebar's right edge changes its width between 220 and 480 px; a double click resets it; arrow keys work; the width survives a reload.
+	- The header's text links never show as rows in the sidebar, at any width; the tab row replaces them, also on the mobile layout.
+	- Guides and API: their labels, groups and order stay as they are today.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ16, LQ17, LQ7, LQ25
+	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
+	- Replaces L17, L18.
+	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
+	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
+	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
+	- Source: LQ1, LQ6
+	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [x] **D109** E14 builds on its own branch so patch releases keep going #R5
 	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
 	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
