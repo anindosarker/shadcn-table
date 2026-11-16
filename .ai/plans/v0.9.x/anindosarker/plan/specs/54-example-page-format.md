@@ -17,7 +17,7 @@ This spec uses the preview as the reference only: the pages `basic-new-format-2`
 - No example page carries the "View Extra Storybook Examples" line (D104).
 - The six comparison pages and the "Format previews" group are gone. The preview suffix helper is then dead code; spec 56 removes it with the Storybook map it rewrites.
 - No title, description or existing body sentence changes (D104).
-- Acceptance: judged, plus programmatic. Three judges read every Try it step and Related guides line against the four criteria of D104 (wording, no slop, no unnecessary jargon, simple and short enough), a majority fail on one line sends that line back; the three accepted `-new-format-2` pages are the reference for tone and size. Programmatic: the diff check of task 3 prints nothing; every step was run once in a browser on base and its result seen; `pnpm test docs-e2e --base base` green.
+- Acceptance: judged, plus programmatic. Three judges read every Try it step and Related guides line against the four criteria of D104 (wording, no slop, no unnecessary jargon, simple and short enough), a majority fail on one line sends that line back; the three accepted `-new-format-2` pages are the reference for tone and size. Programmatic: the diff check of task 4 shows nothing else; every step was run once in a browser on base and its result seen; `pnpm test docs-e2e --base base` green.
 
 ### 1.3 Current structure
 
@@ -65,7 +65,7 @@ apps/shadcn-table-docs/
 `content/docs/examples/<slug>.mdx`, 42 files, status `refactor`.
 
 - Adds `### Try it` and a `<TryIt>` list of 2 to 4 steps directly above the example tag: one short line each, an action and a few words of result; on-screen labels and typed values in backticks.
-- Adds `## Related guides` and a link list below the example: the guide and API pages for the feature, the guides the page text already links included; every link resolves.
+- Adds `## Related guides` and a link list below the example: the guide pages for the feature, the guides the page text already links included; every link resolves.
 - Removes the "View Extra Storybook Examples" line.
 - `basic`, `detail-panel` and `row-dragging` take their steps and guide links from the matching `-new-format-2` page unchanged.
 - A step carries a few words of reason only where the visitor would otherwise think the table is broken (D104; the detail panel rows without an address).
@@ -95,12 +95,12 @@ The pages fall into file sets by sidebar group (Featured and Filtering; Server D
 - Depends on: Preview lands on review
 - Review: none
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`
-- Task 1: Site table: per page, its example folder (`examples/map.tsx`), the controls and labels its steps will name (`locales/en.ts`, the example's columns and data), and the guide pages for its feature. Checks: 42 rows, in the tracker's Notes as one line per page only where a label or a guide was not obvious
-- Task 2: The format on the 42 pages (1.6.2). Checks: each page has one `### Try it` directly above its example tag with 2 to 4 `<TryIt>` steps and one `## Related guides` below; `grep -L "TryIt" apps/shadcn-table-docs/content/docs/examples/*.mdx` prints nothing; `grep -l "StorybookLink" apps/shadcn-table-docs/content/docs/examples/*.mdx` prints nothing; every Related guides link returns 200 on a production build
-- Task 3: Nothing else changed. Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/examples/*.mdx` shows, per original page, only added lines plus the one removed StorybookLink line; `git diff origin/claude/review --stat -- apps/shadcn-table-docs/registry.json packages/shadcn-table/registry.json` prints nothing
-- Task 4: Step truth. Each step run once in a browser on a production build with base selected, on a P6 port, its result seen; for an example listed in `tools/registry/examples-base-diff.json` or `examples-aria-diff.json` also on that base; the example code of the other bases read for the same labels. Checks: one line per page in the tracker only where a step was corrected; the server stopped
-- Task 5: The text check of D104 by three judges on every step and guide line (1.2). Checks: every line passes by majority; a failed line is rewritten and judged again
-- Task 6: Comparison pages removed (1.6.3). Checks: `ls apps/shadcn-table-docs/content/docs/examples | grep -c new-format` prints 0; `grep -rn "isPreviewPage\|Format previews" apps/shadcn-table-docs/lib/example-pages.mjs apps/shadcn-table-docs/content` prints nothing; the toolbar Storybook button of `/docs/examples/basic` still opens its story
+- Task 1: Site table: per page, its example folder (`examples/map.tsx`), the controls and labels its steps will name (`locales/en.ts`, the example's columns and data), and the guide pages for its feature; the steps and guide links of the three `-new-format-2` pages copied into it. Checks: 42 rows, in the tracker's Notes as one line per page only where a label or a guide was not obvious
+- Task 2: Comparison pages removed (1.6.3). Checks: `ls apps/shadcn-table-docs/content/docs/examples | grep -c new-format` prints 0; `grep -rn "isPreviewPage\|Format previews" apps/shadcn-table-docs/lib/example-pages.mjs apps/shadcn-table-docs/content` prints nothing; the toolbar Storybook button of `/docs/examples/basic` still opens its story
+- Task 3: The format on the 42 pages (1.6.2). Checks: each page has one `### Try it` directly above its example tag with 2 to 4 `<TryIt>` steps and one `## Related guides` below; `grep -L "TryIt" apps/shadcn-table-docs/content/docs/examples/*.mdx` prints nothing; `grep -l "StorybookLink" apps/shadcn-table-docs/content/docs/examples/*.mdx` prints nothing; every Related guides link returns 200 on a production build
+- Task 4: Nothing else changed. Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/examples/*.mdx` shows, per original page, only added lines plus the one removed StorybookLink line (the six deleted comparison pages aside); `git diff origin/claude/review --stat -- apps/shadcn-table-docs/registry.json packages/shadcn-table/registry.json` prints nothing
+- Task 5: Step truth. Each step run once in a browser on a production build with base selected, on a P6 port, its result seen; for an example listed in `tools/registry/examples-base-diff.json` or `examples-aria-diff.json` also on that base; the example code of the other bases read for the same labels. Checks: one line per page in the tracker only where a step was corrected; the server stopped
+- Task 6: The text check of D104 by three judges on every step and guide line (1.2). Checks: every line passes by majority; a failed line is rewritten and judged again
 - Task 7: Cleanup: `pnpm format`, the changelog block, docs E2E per-page checks follow the new page order. Checks: 2.2
 
 ### 2.2 Checks

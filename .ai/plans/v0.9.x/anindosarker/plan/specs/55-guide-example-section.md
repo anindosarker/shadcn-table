@@ -19,7 +19,7 @@ This spec uses the preview as the reference only: the pages `column-pinning-new-
 - An example shown twice on one page has two different element ids (D105).
 - `reference/docs-layout/guide-checklist.md` lists every guide on one line: the example its section shows and the table removed, if any (D105). The spec produces it; the owner's approval of it gates a later release, not this merge.
 - The five guide comparison pages and `VirtualizationGuideExamples.tsx` are gone.
-- Acceptance: programmatic, plus judges on the removals. `grep -L "GuideExamples" apps/shadcn-table-docs/content/docs/guides/*.mdx` prints only `index.mdx`; the heading check of task 3 passes; the diff check of task 4 shows no changed sentence; `pnpm test docs-e2e --base base` green. Three judges read every removed table against the rule of D105 (same example in the Example section, and no sentence of the guide points at the table or builds on it), next to the guide on `origin/claude/review`; a majority "part of the writing" puts the table back.
+- Acceptance: programmatic, plus judges on the removals. `grep -L "GuideExamples" apps/shadcn-table-docs/content/docs/guides/*.mdx` prints only `index.mdx`; the heading check of task 4 passes; the diff check of task 5 shows no changed sentence; `pnpm test docs-e2e --base base` green. Three judges read every removed table against the rule of D105 (same example in the Example section, and no sentence of the guide points at the table or builds on it), next to the guide on `origin/claude/review`; a majority "part of the writing" puts the table back.
 
 ### 1.3 Current structure
 
@@ -91,7 +91,7 @@ apps/shadcn-table-docs/
 
 - Adds a heading "Example" at the guide's section level and one `<GuideExamples>` block directly under the intro paragraph. Nothing else is in the section.
 - The example is the best one for that guide: the guide's own example when it has one, otherwise the example that shows the guide's feature most directly. A guide with several fitting examples lists them in the picker, the plainest first. No guide is left without the section, the six guides without a table included.
-- Removes a table already in the guide only under the rule of D105, together with its heading and a sentence that only introduced it.
+- Removes a table already in the guide only under the rule of D105, together with its own heading; a table that a sentence introduces stays.
 - Moves every heading up one level: the top-level sections become h2, their sub-sections h3. Lines inside fenced code blocks are not headings.
 - Does NOT reword, reorder or delete any other sentence; does NOT change the frontmatter, the "View Extra Storybook Examples" line, or any example page.
 
@@ -114,7 +114,7 @@ apps/shadcn-table-docs/
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test docs-e2e --base base`
 - Task 1: Unique element id per mount (1.6.2). Checks: on a production build of the branch, `/docs/guides/virtualization-new-format-3` has no two elements with the same id (`document.querySelectorAll('[id]')` grouped by id); `/docs/examples/basic` still has `#example-basic`
-- Task 2: `GuideExamples` shows an example without an example page, name without a link (1.6.2). Checks: `pnpm --filter shadcn-table-docs types:check`; a scratch guide page with `names` renders the table and the name, with no link; `/docs/guides/column-pinning-new-format-3` still shows the name link and `/docs/guides/virtualization-new-format-3` the picker
+- Task 2: `GuideExamples` shows an example without an example page, name without a link (1.6.2). Checks: `pnpm --filter shadcn-table-docs types:check`; a scratch guide page with `names`, uncommitted and deleted before the commit, renders the table and the name, with no link; `/docs/guides/column-pinning-new-format-3` still shows the name link and `/docs/guides/virtualization-new-format-3` the picker
 - Task 3: Cleanup: `pnpm format`, the changelog block, the docs E2E helpers select the first mount. Checks: 2.2
 
 ### Milestone: Guide pages
@@ -123,13 +123,13 @@ apps/shadcn-table-docs/
 - Depends on: Guide example block
 - Review: none
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`
-- Task 1: Site table: per guide, the example tags it embeds with their lines, whether a sentence points at each table, the example pages for its feature, and the example chosen for its section. Checks: 46 rows; they become the checklist of task 5
-- Task 2: The Example section on the 46 guides, tables removed by the rule (1.6.3). Checks: the `grep -L` line of 1.2; each section sits between the intro paragraph and the guide's first own heading; every guide page returns 200 on a production build and shows a table in its Example section
-- Task 3: Headings one level up (1.6.3). Checks: outside fenced code, no guide has a heading deeper than its deepest before minus one, and `grep -c '^## ' <guide>` is at least 1 for every guide; the "On this page" list of `/docs/guides/column-pinning` shows the sections with their sub-sections nested
-- Task 4: Nothing else changed. Checks: with heading markers and the lines of the Example section stripped, `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/<guide>.mdx` shows only the removed tables of the checklist
-- Task 5: The checklist (1.6.1), from the site table and the diff. Checks: 46 lines in `meta.json` order; every "removed" entry matches a removed tag in the diff, and every removed tag has an entry
-- Task 6: The removals judged by three judges (1.2). Checks: every removal passes by majority; a failed one is put back and the checklist line corrected
-- Task 7: Comparison pages removed (1.6.4). Checks: `ls apps/shadcn-table-docs/content/docs/guides | grep -c new-format` prints 0; `grep -rn "VirtualizationGuideExamples" apps/shadcn-table-docs` prints nothing
+- Task 1: Site table: per guide, the example tags it embeds with their lines, whether a sentence points at each table, the example pages for its feature, and the example chosen for its section. Checks: 46 rows; they become the checklist of task 6
+- Task 2: Comparison pages removed (1.6.4). Checks: `ls apps/shadcn-table-docs/content/docs/guides | grep -c new-format` prints 0; `grep -rn "VirtualizationGuideExamples" apps/shadcn-table-docs` prints nothing
+- Task 3: The Example section on the 46 guides, tables removed by the rule (1.6.3). Checks: the `grep -L` line of 1.2; each section sits between the intro paragraph and the guide's first own heading; every guide page returns 200 on a production build and shows a table in its Example section
+- Task 4: Headings one level up (1.6.3). Checks: outside fenced code, every heading of a guide is exactly one level higher than on `origin/claude/review`; `tanstack-table-with-shadcn-ui` is unchanged; the Example heading is `##`; the "On this page" list of `/docs/guides/column-pinning` shows the sections with their sub-sections nested
+- Task 5: Nothing else changed. Checks: with heading markers and the lines of the Example section stripped, `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/<guide>.mdx` shows only the removed tables and their headings
+- Task 6: The checklist (1.6.1), from the site table and the diff. Checks: 46 lines in `meta.json` order; every "removed" entry matches a removed tag in the diff, and every removed tag has an entry
+- Task 7: The removals judged by three judges (1.2). Checks: every removal passes by majority; a failed one is put back and the checklist line corrected
 - Task 8: Cleanup: `pnpm format`, the changelog block, docs E2E per-guide checks follow the new page order. Checks: 2.2
 
 ### 2.2 Checks

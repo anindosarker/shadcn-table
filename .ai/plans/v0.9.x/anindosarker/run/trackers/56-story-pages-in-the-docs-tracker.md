@@ -5,7 +5,7 @@ Branch `[branch]`, worktree [name]
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 dependencies and story copies: planned
+- Task 1 per-base story copies: planned
 - Task 2 StoryExample in the playground: planned
 - Task 3 story pages sync: planned
 - Task 4 sidebar: planned

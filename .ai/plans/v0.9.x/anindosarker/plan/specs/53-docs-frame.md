@@ -108,7 +108,7 @@ Status `new` on `claude/review`: every file of the preview outside the demo fold
 `lib/page-tree-utils.ts`, `components/sidebar-item.tsx`, `components/sidebar-separator.tsx`, `components/sidebar-section.tsx`, status `refactor`.
 
 - Each row of the Examples section shows `<n>. <label>`, n counted through the whole section in sidebar order, rows inside a closable folder included, no leading zeros.
-- Each group label of the Examples section ends with its row count in brackets; a closable folder shows the count of all rows inside it.
+- Each group label of the Examples section ends with its row count in brackets; a closable folder shows the count of all rows inside it, and a sub-group label inside it shows its own row count, as on the EX B capture.
 - Computed from the page tree at render; no page file carries a number.
 - Does NOT show numbers or counts in Get Started, Guides or API, in the page heading, the browser title, the breadcrumb, the prev/next footer or the example picker.
 
@@ -123,7 +123,7 @@ export function groupCount(node: PageTree.Separator | PageTree.Folder, siblings:
 
 #### 1.6.5 Footer link and square corners (D107)
 
-- `components/dev-home/v12/footer.tsx`: the Storybook link uses the selected base, read with `useBase()` as the toolbar Storybook button does.
+- `components/dev-home/v12/footer.tsx`: the Storybook link uses the selected base, read with `useBase()` as the toolbar Storybook button does. The first link of the "Docs" column reads "Get Started" (D101; it reads "Get started" at `:16` on the preview).
 - `app/global.css`: the square list covers the fumadocs tab frame and panel, the code tab frame, the code block figure and the copy chip; `components/agent-bar.tsx` and `components/prop-tables/inline-code.tsx` lose their rounded classes.
 - Does NOT square the table frame (`ST_TableLayout.tsx`) or the fumadocs scroll controls.
 
@@ -155,7 +155,7 @@ export function groupCount(node: PageTree.Separator | PageTree.Folder, siblings:
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test docs-e2e --base base`
 - Task 1: `rowNumber` and `groupCount` (1.6.4). Checks: `pnpm --filter shadcn-table-docs types:check`
 - Task 2: Rows and group labels of the Examples section show them (1.6.4). Checks: on a production build `/docs/examples/basic` shows `1. Basic` and `Featured (5)`, the last row's number equals the number of Examples rows; `/docs/guides/column-pinning`, `/docs/api` and `/docs/getting-started/introduction` show no number and no count; the page heading of `/docs/examples/basic` reads `Basic Example`
-- Task 3: Cleanup: `pnpm format`, the changelog block, a docs E2E check for the first and last row number. Checks: 2.2; the Examples sidebar captures next to the EX B captures for the judges
+- Task 3: Cleanup: `pnpm format`, the changelog block. Checks: 2.2; the Examples sidebar captures next to the EX B captures for the judges (the docs E2E check of the first and last row number is in spec 56, which owns `examples.mjs` by then)
 
 ### Milestone: Footer link and square corners
 
@@ -163,7 +163,7 @@ export function groupCount(node: PageTree.Separator | PageTree.Folder, siblings:
 - Depends on: Preview lands on review
 - Review: none
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test docs-e2e --base base`
-- Task 1: The footer Storybook link by base (1.6.5). Checks: on a production build, with each base selected the footer link's `href` is `https://storybook.shadcn-table.com/<base>/`
+- Task 1: The footer Storybook link by base and the "Get Started" label (1.6.5). Checks: on a production build, with each base selected the footer link's `href` is `https://storybook.shadcn-table.com/<base>/`; the home page footer shows "Get Started"
 - Task 2: The square corners (1.6.5). Checks: computed `border-radius` is `0px` on a tab frame and panel and a code tab frame of `/docs/getting-started/install`, a code block copy chip, the agent bar and a prop-table inline code; the table frame of `/docs/examples/basic` is still rounded
 - Task 3: Cleanup: `pnpm format`, the changelog block. Checks: 2.2
 
