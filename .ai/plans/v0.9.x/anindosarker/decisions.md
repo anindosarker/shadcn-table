@@ -95,6 +95,12 @@ kanban-plugin: basic
 	- Source: LQ20
 	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #R5
+	- Replaces L17, L18.
+	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
+	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
+	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
+	- Source: LQ1, LQ6
+	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 
 ## In progress
 
