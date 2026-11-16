@@ -17,6 +17,12 @@ publishes the section as the GitHub release notes.
 - The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 - On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
 
+### Changed
+
+#### Spec 55 Guide example block
+
+- An example shown twice on one docs page has two different element ids: the first keeps `example-<name>`, a further one gets a suffixed id (D105).
+
 ### Docs
 
 #### Spec 53 Preview lands on review

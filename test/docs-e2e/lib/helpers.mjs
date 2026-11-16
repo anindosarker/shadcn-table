@@ -32,8 +32,17 @@ export async function propTable(page, tableId, check) {
  * heading whose slug equals the id cannot resolve the locator to two nodes.
  */
 export function panelOf(page, id) {
-  return page.locator(`[id="example-${id}"], [id="props-${id}"]`);
+  return page.locator(`[id="example-${id}"], [id="props-${id}"]`).first();
 }
+
+/**
+ * The first mount of example `<id>` on the page: it keeps the id
+ * `example-<id>`, a further mount of the same example takes a suffixed id
+ * once hydrated (components/example-playground.tsx). `.first()` also holds
+ * before hydration, when every mount still carries the plain id.
+ */
+export const examplePanel = (page, id) =>
+  page.locator(`[id="example-${id}"]`).first();
 
 /**
  * Live example playground: panel `#example-<id>` present, table with rows.
@@ -41,7 +50,7 @@ export function panelOf(page, id) {
  * the Code toggle. Returns the panel locator.
  */
 export async function example(page, id, check) {
-  const panel = page.locator(`[id="example-${id}"]`);
+  const panel = examplePanel(page, id);
   check(`${id}: panel`, (await panel.count()) === 1);
   const rows = panel.locator('table tbody tr');
   await rows
@@ -424,7 +433,7 @@ export async function headerBaseMenu(page, check, current) {
 
 /** The base select in the toolbar of example `#example-<id>`. */
 export const toolbarBase = (page, id) =>
-  page.locator(`[id="example-${id}"] header button[aria-label="Base"]`);
+  examplePanel(page, id).locator('header button[aria-label="Base"]');
 
 /**
  * Picks a base by label through the toolbar select of example `#example-<id>`,
@@ -462,7 +471,7 @@ export const pickToolbarBase = async (page, id, label) => {
  * is read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
-  const panel = page.locator(`[id="example-${id}"]`);
+  const panel = examplePanel(page, id);
   const header = headerBase(page);
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
