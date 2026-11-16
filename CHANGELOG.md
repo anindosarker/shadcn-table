@@ -25,7 +25,6 @@ publishes the section as the GitHub release notes.
 - Each section has its own sidebar: flush groups, sticky group labels with a dashed line while stuck (also in Firefox and Safari), no heading row; the sidebar hides, resizes between 220 and 480 px and keeps both over a reload (D102).
 - The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
 - The Guides overview lists every guide under its group heading again, read from the sidebar's order.
-- Docs search works again with pages whose URL ends in `-<number>`.
 
 ## 0.9.4 - 2026-11-13
 
