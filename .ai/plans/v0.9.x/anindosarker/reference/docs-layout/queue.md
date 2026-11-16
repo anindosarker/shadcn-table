@@ -12,8 +12,6 @@ kanban-plugin: basic
 	- Fix: widen the existing radius-0 rule in the docs `global.css` to those frames; leave the table frame.
 - [ ] **LQ4** The filter-variants example blocks the main thread for 6.6 s on mount #lookup
 	- In the stack it loads in 7.8 s, the longest task is 6.7 s, of which 6.58 s is forced style and layout inside React render (`perf-report.md`, scroll run). Attribution by timing only; profile the example on its single page first. Likely the example itself, not the stack.
-- [ ] **LQ3** Two hand-kept route lists must both be edited for every new page #lead
-	- `content/docs/*/meta.json` drives the sidebar; `lib/routes.ts:11` is a second list (examples block :107, Storybook entry :392) feeding `TableOfContentsList`. After wt1 `b9d619f6` the guides and api overviews no longer render that list; `routes.ts` is still read by the component and by the home page.
 - [ ] **LQ1** The home footer's Storybook link ignores the selected base #lead
 	- `components/dev-home/v12/footer.tsx:40-41` always uses `storybookUrl.radix`; `StorybookLink` (`components/mdx/storybook-link.tsx:24-35`) and the toolbar button (L12) follow the selected base.
 
@@ -81,6 +79,9 @@ kanban-plugin: basic
 	- Fact: 46 guide pages. 40 embed a live example, first at about line 83 of the body (median), after 5 to 6 headings, mostly under a "Demo" heading near the end; 6 have code blocks only (accessibility, best-practices, column-size, full-screen-toggle, table-event-listeners, tanstack-table-with-shadcn-ui). 27 guides have a matching example page, 19 do not.
 	- Fact: a guide embeds a table with a bare tag such as `<EnableStickyHeaderExample />` (`examples/map.tsx`, `components/mdx/example-snippet.tsx:12-14`), the same tag the example page uses; moving it up needs no new component.
 	- Fact: `usage.mdx:184` links `/docs/guides#fundamentals` and `#feature-guides`; neither anchor exists.
+- [x] **LQ3** Two hand-kept route lists must both be edited for every new page #lead
+	- Decision: L16
+	- `content/docs/*/meta.json` drives the sidebar; `lib/routes.ts:11` is a second list (examples block :107, Storybook entry :392) feeding `TableOfContentsList`. After wt1 `b9d619f6` the guides and api overviews no longer render that list; `routes.ts` is still read by the component and by the home page.
 
 ## Later
 

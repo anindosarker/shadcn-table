@@ -135,5 +135,15 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Guide sections are h2 and their sub-sections h3; every guide heading moves up one level (LQ27).
 - Guide text is not reworded (LQ26).
 - To fix with the rollout: an example mounted twice on one page repeats its element id (`example-<name>`).
+- Judgment, owner 2026-11-16: the builder decides per guide, no owner round per guide. Every guide gets the best possible example. A table is removed from a guide only when it is not part of the guide's story, that is, when no text of the guide refers to it or builds on it.
+- Delivery of the rollout: the owner compares each guide before and after against the live site, and gets a list of what was removed from which guide (table, heading and any sentence that only introduced it).
 - Owner accepted on the preview 2026-11-16: wt1 `8f287c43`, pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
 - Source: LQ22, LQ27
+
+### L16 The Guides overview lists every guide, as on the live site
+
+- `/docs/guides` keeps its overview page: the guides as numbered link rows under their group headings ("Fundamentals" and so on), the look of the live site on 2026-11-16. The preview had reduced the page to one sentence (wt1 `b9d619f6`).
+- The list is built from the sidebar's own data (`content/docs/guides/meta.json` through the page tree), same groups and order, so it cannot go stale. The hand-kept `lib/routes.ts` is not its source and is deleted when nothing else reads it.
+- The group headings carry the anchors `usage.mdx:184` links to (`#fundamentals`, `#feature-guides`), or that link is corrected to the anchors that exist.
+- Owner accepted 2026-11-16.
+- Source: LQ3
