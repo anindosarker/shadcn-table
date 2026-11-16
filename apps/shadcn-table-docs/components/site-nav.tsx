@@ -10,7 +10,6 @@ import { DiscordIcon } from '@/components/discord-icon';
 import { cn } from '@/lib/cn';
 import { DISCORD_URL, GITHUB_URL } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
-import { SidebarCollapseButton } from '@/components/sidebar-collapse-button';
 import { SectionTabs } from '@/components/section-tabs';
 
 /**
@@ -32,7 +31,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
       className={cn('site-nav [grid-area:header]', props.className)}
     >
       <div className="site-nav-row">
-        {/* the wordmark, then (from md) the sidebar collapse button after it */}
+        {/* the wordmark; the sidebar collapse button leads the tab row */}
         <div className="flex min-w-0 items-center gap-2 [grid-area:brand]">
           <Link href="/" className="site-nav-brand">
             <span aria-hidden="true" className="site-nav-slash">
@@ -40,7 +39,6 @@ export function SiteNav(props: ComponentProps<'header'>) {
             </span>
             <span>shadcn-table</span>
           </Link>
-          <SidebarCollapseButton />
         </div>
         {/* from lg: the search field in the centre, max 28rem */}
         {slots.searchTrigger && (
