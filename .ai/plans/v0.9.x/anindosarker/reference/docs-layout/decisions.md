@@ -137,13 +137,12 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9 docs"
 - Guide text is not reworded (LQ26).
 - To fix with the rollout: an example mounted twice on one page repeats its element id (`example-<name>`).
 - Judgment, owner 2026-11-16: the builder decides per guide, no owner round per guide. Every guide gets the best possible example. A table is removed from a guide only when it is not part of the guide's story, that is, when no text of the guide refers to it or builds on it.
-- The judgment calls, written out (owner asked for them 2026-11-17):
-  - Which example is best: the guide's own example when it has one. Otherwise the example page that shows this guide's feature. When several fit, the one that shows the feature on its own with the least else going on comes first; the others follow in the picker, plainest first.
-  - No example shows the guide's topic (for example a guide about TypeScript practice or accessibility): the guide gets no Example section, and it is named in the delivery list as "no fitting example". An unrelated table is never added to fill the slot.
-  - Does a table stay: it stays when any sentence of the guide points at it ("the example below", "as shown here") or when it demonstrates the code the guide just walked through. It is removed when it sits at the end under a heading like "Demo" or "Example" and no sentence refers to it. In doubt, it stays.
-  - What goes with a removed table: its heading and a sentence that only introduced it. Nothing else in the guide changes.
-  - The best example is also a table that stays further down: the Example section still shows it, so the guide opens with a table; the repeated element id is fixed (see below).
-- Delivery of the rollout: the owner compares each guide before and after against the live site, and gets a list of what was removed from which guide (table, heading and any sentence that only introduced it).
+- The rules, in the owner's words of 2026-11-17 (they replace any looser reading above):
+  - Every guide gets an Example section. No guide is left without one.
+  - The example in it is the best one for that guide.
+  - A table that was already in the guide is removed only when both hold: the same example is now shown in the Example section, and the table is not part of the guide's story or writing. Then removing it breaks nothing. A table the writing depends on stays, even when the Example section shows the same example. A table that shows a different example stays.
+  - After the implementation there is a short checklist, one line per guide, so the owner can check every guide by hand: which example the section shows, and which table was removed, if any. Nothing is released without the owner's approval of that checklist.
+- The owner also compares each guide before and after against the live site.
 - Owner accepted on the preview 2026-11-16: wt1 `8f287c43`, pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
 - Source: LQ22, LQ27
 
