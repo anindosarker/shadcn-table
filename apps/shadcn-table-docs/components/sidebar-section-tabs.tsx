@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { NAV_LINKS } from '@/lib/layout.shared';
+import { NAV_LINKS, PREVIEW_NAV_LINKS } from '@/lib/layout.shared';
 
 /**
  * The section switcher (L7): Docs, Examples, Guides, API at the top of the
@@ -19,7 +19,8 @@ export function SidebarSectionTabs() {
       aria-label="Sections"
       className="flex h-9 shrink-0 items-stretch overflow-x-auto [border-bottom:var(--docs-rule)] [scrollbar-width:none]"
     >
-      {NAV_LINKS.map((l) => (
+      {/* preview-examples-ab: EX A and EX B after API */}
+      {[...NAV_LINKS, ...PREVIEW_NAV_LINKS].map((l) => (
         <Link
           key={l.url}
           href={l.url}
