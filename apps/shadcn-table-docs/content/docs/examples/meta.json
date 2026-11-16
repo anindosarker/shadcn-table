@@ -55,13 +55,6 @@
     "---Customization---",
     "minimal",
     "custom-headless",
-    "persistent-view",
-    "---Format previews---",
-    "basic-new-format",
-    "basic-new-format-2",
-    "detail-panel-new-format",
-    "detail-panel-new-format-2",
-    "row-dragging-new-format",
-    "row-dragging-new-format-2"
+    "persistent-view"
   ]
 }
