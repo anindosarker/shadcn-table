@@ -257,7 +257,7 @@ function write(key, groups) {
         r.storyId && r.docs ? 'Both' : r.docs ? 'Docs' : 'Storybook';
       fs.writeFileSync(
         path.join(out, `${slug}.mdx`),
-        `---\ntitle: ${yaml(`${String(rows).padStart(3, '0')} ${r.name}`)}\ndescription: ${yaml(`Preview stub in ${g.name.replace(/ \(no group label\)$/, '')}. Today in: ${where}.`)}\n---\n\n${links.join(' | ')}\n`,
+        `---\ntitle: ${yaml(`${rows} ${r.name}`)}\ndescription: ${yaml(`Preview stub in ${g.name.replace(/ \(no group label\)$/, '')}. Today in: ${where}.`)}\n---\n\n${links.join(' | ')}\n`,
       );
     }
   }
