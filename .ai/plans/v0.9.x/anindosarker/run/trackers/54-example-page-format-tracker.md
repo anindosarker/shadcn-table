@@ -1,9 +1,8 @@
 # 54: Example page format, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/example-page-format`, worktree 06
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 site table: planned
 - Task 2 comparison pages removed: planned
@@ -12,3 +11,7 @@ Checks:
 - Task 5 step truth: planned
 - Task 6 text check by judges: planned
 - Task 7 cleanup: planned
+
+## Notes
+
+## Attention
