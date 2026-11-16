@@ -168,6 +168,14 @@ export function groupCount(node: PageTree.Separator | PageTree.Folder, siblings:
 - Task 2: The square corners (1.6.5). Checks: computed `border-radius` is `0px` on a tab frame and panel and a code tab frame of `/docs/getting-started/install`, a code block copy chip, the agent bar and a prop-table inline code; the table frame of `/docs/examples/basic` is still rounded
 - Task 3: Cleanup: `pnpm format`, the changelog block. Checks: 2.2
 
+### Milestone: Guides overview anchors match the live site
+
+- Files owned: `apps/shadcn-table-docs/components/table-of-contents-list.tsx`, `apps/shadcn-table-docs/lib/layout.shared.tsx`
+- Depends on: Preview lands on review
+- Review: none
+- Starts: S20
+- Task 1: Guides overview anchors match the live site. Checks: pnpm test typecheck --base radix, pnpm test lint, pnpm test docs-e2e --base base
+
 ### 2.2 Checks
 
 - `pnpm test typecheck --base radix` (runs the docs `types:check`), `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base|radix|aria` green; every server stopped
