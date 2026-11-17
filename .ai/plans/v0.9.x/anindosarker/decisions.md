@@ -25,7 +25,12 @@ kanban-plugin: basic
 	- D116 is met. Spec 59 line 18 says so.
 	- Source: Q122
 - [ ] **D137** The More examples rows come from one list bundled in the docs script #R6
+	- Settled by the lead: a build deviation that keeps D116 and D103.
+	- Spec 59 described rows fetched from a JSON route; built from the folder's `meta.json` bundled once (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), because the breadcrumb, the page switcher and the row numbers need the full tree on the server render.
+	- Kept: the HTML carries only the current row, and the build fails if the bundled rows differ from the page tree.
 	- Source: Q123
+- [ ] **D138** Touch drag reuses the mouse drop handlers through marked drag events #R6
+	- Source: Q124
 
 ## In progress
 
