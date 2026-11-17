@@ -4,12 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
-	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
-	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
-	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
-	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
-	- Source: Q114
 - [ ] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
 	- Details D108 where it is silent; D108's five surfaces and three bases stand.
 	- A grip starts the drag at once.
@@ -861,6 +855,12 @@ kanban-plugin: basic
 	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
 	- Owner closed the card 2026-11-18.
 	- Source: Q109
+- [x] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
+	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
+	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
+	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
+	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
+	- Source: Q114
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
