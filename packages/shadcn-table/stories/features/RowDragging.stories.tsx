@@ -165,9 +165,66 @@ const TwoTables = () => {
   );
 };
 
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/** Drags the last row of table `from` by its grip onto table `to`'s first row. */
+const touchDragRow = async ({
+  from,
+  to,
+}: {
+  from: HTMLElement;
+  to: HTMLElement;
+}) => {
+  const grip = within(
+    [...from.querySelectorAll<HTMLElement>('tbody tr')].at(-1)!,
+  ).getByRole('button', { name: 'Move' });
+  const start = centreOf(grip);
+  const end = centreOf(to.querySelector<HTMLElement>('tbody td')!);
+  touch({ at: start, element: grip, type: 'pointerdown' });
+  touch({
+    at: { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 },
+    element: grip,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  touch({ at: end, element: grip, type: 'pointermove' });
+  await new Promise((done) => setTimeout(done, 50));
+  touch({ at: end, element: grip, type: 'pointerup' });
+  await waitFor(() => expect(ghost()).toBeNull());
+};
+
 /**
  * Dragging a row of the first table onto the second moves it: it leaves
- * the source table and appears at the end of the target.
+ * the source table and appears at the end of the target. The same by touch.
  */
 export const DragBetweenTables = {
   render: () => <TwoTables />,
@@ -201,6 +258,22 @@ export const DragBetweenTables = {
       fireEvent.drop(drop);
       fireEvent.dragEnd(grip);
     }
+    await waitFor(() =>
+      expect(ids(target!)).toEqual(
+        [...initData.slice(3, 5), initData[0]!].map((row) => row.id),
+      ),
+    );
+    expect(ids(source!)).toEqual(initData.slice(1, 3).map((row) => row.id));
+
+    // Touch: the row goes back by its grip, then over as the mouse moved it.
+    await touchDragRow({ from: target!, to: source! });
+    await waitFor(() =>
+      expect(ids(source!)).toEqual(
+        [...initData.slice(1, 3), initData[0]!].map((row) => row.id),
+      ),
+    );
+    expect(ids(target!)).toEqual(initData.slice(3, 5).map((row) => row.id));
+    await touchDragRow({ from: source!, to: target! });
     await waitFor(() =>
       expect(ids(target!)).toEqual(
         [...initData.slice(3, 5), initData[0]!].map((row) => row.id),
