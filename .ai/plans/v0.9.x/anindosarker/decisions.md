@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D135** The three renamed example pages rename the titles of their registry items too #R6
-	- Settled by the lead: follows D119. Registry item titles are generated from the page frontmatter (`tools/registry/examples.mjs:181`).
-	- The title lines of `example-react-query-*`, `example-editing-crud-row-*` and `example-virtualized-*` change on the three bases; item names and hosted paths do not (P7 holds).
-	- Kept; the regenerated `registry.json` is committed with spec 58.
-	- Source: Q120
 - [ ] **D136** The docs build size limit is measured without the build cache #R6
 	- Settled by the lead: a build measure, not an owner item.
 	- Spec 59's 900 MB limit is measured on `.next` without `.next/cache` (the turbopack build cache, not served, 518 MB before the change too). Measured: 583 MB, below the 644 MB from before the story pages; the story pages went from 1166 MB to 245 MB.
@@ -896,6 +891,11 @@ kanban-plugin: basic
 	- Spec 61 described absolute rows with a clamped offset; built as `position: sticky` in a grid track of their own (`ST_TableBody.tsx:84`, new optional prop `stickyGridRow` on `ST_TableBodyRowProps`), because an absolute row placed from the scroll offset lags and jumps.
 	- Kept as built (ee1c2837 on `claude/review`): play green on three bases, 0 jumps in the scroll measurement. Spec 61 1.5 and 1.6.3 are read with this decision.
 	- Source: Q119
+- [x] **D135** The three renamed example pages rename the titles of their registry items too #R6
+	- Settled by the lead: follows D119. Registry item titles are generated from the page frontmatter (`tools/registry/examples.mjs:181`).
+	- The title lines of `example-react-query-*`, `example-editing-crud-row-*` and `example-virtualized-*` change on the three bases; item names and hosted paths do not (P7 holds).
+	- Kept; the regenerated `registry.json` is committed with spec 58.
+	- Source: Q120
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
