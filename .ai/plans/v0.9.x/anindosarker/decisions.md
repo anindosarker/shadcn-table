@@ -24,6 +24,8 @@ kanban-plugin: basic
 	- Source: Q94
 - [ ] **D114** The column pinning example locks the ID column with the option that works #R6
 	- Source: Q98
+- [ ] **D115** The chart detail panel and editing stories match their examples exactly #R6
+	- Source: Q99
 
 ## In progress
 
