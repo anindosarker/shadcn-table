@@ -9,7 +9,9 @@ import {
   type ST_ColumnFiltersState,
   type ST_FilterOption,
   type ST_PaginationState,
+  type ST_RowData,
   type ST_SortingState,
+  type ST_Updater,
 } from '@/components/ui/shadcn-table';
 import {
   CalendarClockIcon,
@@ -34,6 +36,9 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 // The docs examples that fetch their rows from the docs app's /api/data:
 // react-query, remote and dynamic-columns. Each story builds the same table
 // and serves the same rows from getUsers below, in place of the fetch.
+// Production-Ready Table is the table of the Production-Ready Tables guide
+// (examples/<base>/server-side-data): it fetches /api/users, answered in
+// Storybook by a stand-in for the docs app's route.
 const meta: Meta = {
   title: 'Features/Server Data',
 };
@@ -945,6 +950,410 @@ export const DynamicColumns = {
     await step('Page 2 shows rows 11 to 20', async () => {
       await nextPage(canvasElement);
       await showsRows(canvasElement, rowNames(10, 20));
+    });
+  },
+};
+
+// production-ready table: the guide's example (examples/<base>/server-side-data),
+// its five files in one: service, query hook, table state hook and table.
+
+//lib/users.service.ts
+type ServerUser = {
+  firstName: string;
+  lastName: string;
+  address: string;
+  state: string;
+  phoneNumber: string;
+  lastLogin: string;
+};
+
+//the query params YOUR server accepts
+type UsersQueryParams = {
+  page: number; //1-based
+  limit: number;
+  search?: string;
+  sortBy?: string[]; //"lastName:desc"
+  filter?: string[]; //"state[$contains]=tex"
+};
+
+//the page shape YOUR server returns
+type PaginatedResponse<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+async function getServerUsers(
+  params: UsersQueryParams,
+): Promise<PaginatedResponse<ServerUser>> {
+  const url = new URL('/api/users', location.origin);
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) continue;
+    //arrays become repeated keys: sortBy=a&sortBy=b
+    for (const item of [value].flat()) {
+      url.searchParams.append(key, String(item));
+    }
+  }
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`GET /api/users: ${response.status}`);
+  return response.json();
+}
+
+//hooks/useUsersQuery.ts
+function useUsersQuery(params: UsersQueryParams) {
+  return useQuery({
+    queryKey: ['users', params], //new params, new cache entry, new request
+    queryFn: () => getServerUsers(params),
+    placeholderData: keepPreviousData, //keep the old page on screen while the next one loads
+  });
+}
+
+//hooks/useTableQueryParams.ts
+//filter values can be strings, numbers or Dates (date filters)
+const toParam = (value: unknown) =>
+  value instanceof Date ? value.toISOString() : String(value);
+
+function useTableQueryParams<TData extends ST_RowData>({
+  columns,
+  pageSize = 10,
+}: {
+  columns: ST_ColumnDef<TData>[];
+  pageSize?: number;
+}) {
+  const [pagination, setPagination] = useState<ST_PaginationState>({
+    pageIndex: 0,
+    pageSize,
+  });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState<ST_SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
+  //one filter mode per column, from the column's filterFn or 'contains'
+  const [columnFilterFns, setColumnFilterFns] =
+    useState<ST_ColumnFilterFnsState>(() =>
+      Object.fromEntries(
+        columns.map((column) => [
+          column.id ?? String(column.accessorKey),
+          typeof column.filterFn === 'string' ? column.filterFn : 'contains',
+        ]),
+      ),
+    );
+
+  //new search, sort or filter: the old page number means nothing, go back to page 1
+  const resetPageIndex = () =>
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+
+  const handlers = {
+    onPaginationChange: setPagination,
+    onGlobalFilterChange: (value: string | undefined) => {
+      setSearch(value ?? '');
+      resetPageIndex();
+    },
+    onSortingChange: (updater: ST_Updater<ST_SortingState>) => {
+      setSorting(updater);
+      resetPageIndex();
+    },
+    onColumnFiltersChange: (updater: ST_Updater<ST_ColumnFiltersState>) => {
+      setColumnFilters(updater);
+      resetPageIndex();
+    },
+    onColumnFilterFnsChange: (updater: ST_Updater<ST_ColumnFilterFnsState>) => {
+      setColumnFilterFns(updater);
+      resetPageIndex();
+    },
+  };
+
+  //translate table state into the params YOUR server accepts
+  const params: UsersQueryParams = {
+    page: pagination.pageIndex + 1, //table is 0-based, server is 1-based
+    limit: pagination.pageSize,
+    search: search || undefined,
+    sortBy: sorting.map(({ id, desc }) => `${id}:${desc ? 'desc' : 'asc'}`),
+    filter: columnFilters.map(
+      ({ id, value }) =>
+        `${id}[$${columnFilterFns[id] ?? 'contains'}]=${toParam(value)}`,
+    ),
+  };
+
+  return {
+    params,
+    handlers,
+    state: {
+      pagination,
+      globalFilter: search,
+      sorting,
+      columnFilters,
+      columnFilterFns,
+    },
+  };
+}
+
+//components/UsersTable.tsx
+const UsersTable = () => {
+  const columns = useMemo<ST_ColumnDef<ServerUser>[]>(
+    //column definitions...
+    () => [
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'address',
+        icon: MapPinIcon,
+        header: 'Address',
+      },
+      {
+        accessorKey: 'state',
+        icon: MapIcon,
+        header: 'State',
+      },
+      {
+        accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
+        header: 'Phone Number',
+      },
+      {
+        accessorFn: (row) => new Date(row.lastLogin),
+        id: 'lastLogin',
+        icon: CalendarClockIcon,
+        header: 'Last Login',
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleString(),
+        filterFn: 'greaterThan',
+        filterVariant: 'date',
+        columnFilterModeOptions: ['greaterThan', 'lessThan'],
+        enableGlobalFilter: false,
+      },
+    ],
+    [],
+    //end
+  );
+
+  const { params, handlers, state } = useTableQueryParams({ columns });
+  const { data, isError, isFetching, isLoading, refetch } =
+    useUsersQuery(params);
+
+  const table = useShadcnTable({
+    columns,
+    data: data?.data ?? [],
+    rowCount: data?.total ?? 0, //the server knows the total, the table does not
+    manualPagination: true, //turn off client-side pagination
+    manualSorting: true, //turn off client-side sorting
+    manualFiltering: true, //turn off client-side filtering
+    //only the operators the server understands
+    columnFilterModeOptions: [
+      'contains',
+      'startsWith',
+      'endsWith',
+      'equals',
+      'notEquals',
+    ],
+    initialState: { showColumnFilters: true },
+    ...handlers,
+    stToolbarAlertBannerProps: isError
+      ? {
+          className: 'border-destructive text-destructive',
+          children: 'Error loading data',
+        }
+      : undefined,
+    renderTopToolbarCustomActions: () => (
+      <ST_Tooltip title="Refresh Data">
+        <Button size="icon" variant="ghost" onClick={() => refetch()}>
+          <RefreshCw />
+        </Button>
+      </ST_Tooltip>
+    ),
+    state: {
+      ...state,
+      isLoading, //first load only: skeleton rows
+      showProgressBars: isFetching, //every later request: thin progress bar
+      showAlertBanner: isError,
+    },
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * The docs app's GET /api/users (app/api/users/route.ts) as a function, over
+ * the same rows: `filter=field[$operator]=value`, `search`, `sortBy=field:dir`
+ * and 1-based `page` with `limit`. Returns null for an invalid filter (the
+ * route's 400).
+ */
+const USER_OPERATORS: Record<
+  string,
+  (cell: string | Date, value: string) => boolean
+> = {
+  contains: (cell, value) => cellText(cell).includes(value.toLowerCase()),
+  startsWith: (cell, value) => cellText(cell).startsWith(value.toLowerCase()),
+  endsWith: (cell, value) => cellText(cell).endsWith(value.toLowerCase()),
+  equals: (cell, value) => cellText(cell) === value.toLowerCase(),
+  notEquals: (cell, value) => cellText(cell) !== value.toLowerCase(),
+  greaterThan: (cell, value) => compareCell(cell, value) > 0,
+  lessThan: (cell, value) => compareCell(cell, value) < 0,
+};
+
+const cellText = (cell: string | Date | undefined) =>
+  String(cell ?? '').toLowerCase();
+
+const compareCell = (cell: string | Date, value: string) =>
+  cell instanceof Date
+    ? cell.getTime() - new Date(value).getTime()
+    : cellText(cell).localeCompare(value.toLowerCase());
+
+const answerUsers = (url: URL) => {
+  const { searchParams } = url;
+  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
+  const limit = Math.max(1, parseInt(searchParams.get('limit') ?? '10') || 10);
+  const search = searchParams.get('search')?.toLowerCase();
+
+  let rows = [...dbRows];
+
+  for (const filter of searchParams.getAll('filter')) {
+    const match = /^(\w+)\[\$(\w+)\]=(.*)$/.exec(filter);
+    const test = match && USER_OPERATORS[match[2]];
+    if (!match || !test) return null;
+    const [, field, , value] = match;
+    rows = rows.filter((row) => test(row[field], value));
+  }
+
+  if (search) {
+    rows = rows.filter((row) =>
+      Object.values(row).some((cell) => cellText(cell).includes(search)),
+    );
+  }
+
+  //earlier sorts take priority
+  const sorts = searchParams.getAll('sortBy').map((sort) => {
+    const [field, direction] = sort.split(':');
+    return { field, desc: direction === 'desc' };
+  });
+  if (sorts.length) {
+    rows.sort((a, b) => {
+      for (const { field, desc } of sorts) {
+        if (isLessThan(a[field], b[field])) return desc ? 1 : -1;
+        if (isLessThan(b[field], a[field])) return desc ? -1 : 1;
+      }
+      return 0;
+    });
+  }
+
+  return {
+    data: rows.slice((page - 1) * limit, page * limit),
+    total: rows.length,
+    page,
+    limit,
+  };
+};
+
+/** The query string of every /api/users request the stand-in answered. */
+const usersRequests: string[] = [];
+
+/** Waits until `count` requests went out, then makes sure no other follows. */
+const sentRequests = async (count: number) => {
+  await waitFor(() => expect(usersRequests).toHaveLength(count), {
+    timeout: 5000,
+  });
+  // Longer than the search and filter debounce: a late second request shows.
+  await new Promise((resolve) => setTimeout(resolve, 800));
+  expect(usersRequests, usersRequests.join('\n')).toHaveLength(count);
+  return new URLSearchParams(usersRequests[count - 1]);
+};
+
+/**
+ * The Production-Ready Tables guide's table. In Storybook a stand-in for the
+ * docs app's /api/users answers its requests (`beforeEach`) and logs each
+ * one; in the docs the story renders without it and calls the real route.
+ */
+export const ProductionReadyTable = {
+  name: 'Production-Ready Table',
+  render: () => (
+    <WithQueryClient>
+      <UsersTable />
+    </WithQueryClient>
+  ),
+  beforeEach: () => {
+    usersRequests.length = 0;
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init) => {
+      const url = new URL(
+        input instanceof Request ? input.url : String(input),
+        location.origin,
+      );
+      if (url.pathname !== '/api/users') return realFetch(input, init);
+      usersRequests.push(url.search);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const body = answerUsers(url);
+      return body
+        ? Response.json(body)
+        : Response.json({ message: 'Invalid filter' }, { status: 400 });
+    };
+    return () => {
+      globalThis.fetch = realFetch;
+    };
+  },
+  play: async ({ canvasElement, step }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await showsRows(canvasElement, rowNames(0, 10));
+    await sentRequests(1);
+
+    await step('A page change sends one request', async () => {
+      await nextPage(canvasElement);
+      await showsRows(canvasElement, rowNames(10, 20));
+      const params = await sentRequests(2);
+      expect(params.get('page')).toBe('2');
+    });
+
+    await step('A sort sends one request', async () => {
+      const header = canvas.getByRole('columnheader', { name: /First Name/ });
+      await userEvent.click(
+        within(header).getAllByRole('button', {
+          hidden: true,
+          name: 'Column Actions',
+        })[0]!,
+      );
+      await userEvent.click(
+        await within(document.body).findByRole('menuitem', {
+          name: /^Sort ascending$/,
+        }),
+      );
+      const params = await sentRequests(3);
+      expect(params.getAll('sortBy')).toEqual(['firstName:asc']);
+      expect(params.get('page')).toBe('1');
+      await waitFor(() => {
+        const names = firstNames(canvasElement);
+        expect(names).toEqual([...names].sort());
+      });
+    });
+
+    await step('A search sends one request', async () => {
+      await userEvent.click(
+        canvas.getByRole('button', { name: 'Show/Hide search' }),
+      );
+      await userEvent.keyboard('Hermann');
+      await showsRows(canvasElement, ['Hermann']);
+      const params = await sentRequests(4);
+      expect(params.get('search')).toBe('Hermann');
+    });
+
+    await step('A filter change sends one request', async () => {
+      const body = within(document.body);
+      await userEvent.click(
+        canvas.getAllByRole('button', { name: 'Filter' })[0]!,
+      );
+      await userEvent.click(await body.findByRole('option', { name: 'State' }));
+      await userEvent.type(
+        await body.findByRole('textbox', { name: 'Filter by State' }),
+        'geo',
+      );
+      const params = await sentRequests(5);
+      expect(params.getAll('filter')).toEqual(['state[$contains]=geo']);
+      await showsRows(canvasElement, ['Hermann']);
     });
   },
 };
