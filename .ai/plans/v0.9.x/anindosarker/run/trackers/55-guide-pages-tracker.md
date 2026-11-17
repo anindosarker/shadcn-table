@@ -1,6 +1,6 @@
 # 55: Guide pages, tracker
 
-Status: done
+Status: merged (807fed50)
 Branch `v0.9/guide-pages`, worktree 11
 Checks:
 - Check: task 1 types, `pnpm --filter shadcn-table-docs types:check` + eslint on owned components at 23a4a171: pass
