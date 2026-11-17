@@ -52,6 +52,8 @@ kanban-plugin: basic
 	- content/docs/examples/basic.mdx step 1: the text the owner accepted on basic-new-format-2 (and the example in D104) reads `Sort by First Name ascending`; the column menu shows `Sort ascending` (ST_ColumnActionMenu.tsx:259, sortAscending in locales/en.ts). The builder of spec 54 wrote `Sort ascending`; three judges read it as correct. Keep `Sort ascending` or revert to the accepted text.
 - [ ] **Q97** Turning off Sticky header in View settings does not unstick the header on the sticky header example
 	- /docs/examples/sticky-header (table sets enableStickyHeader: true): with `View settings` > `Sticky header` switched off the switch shows off but thead stays sticky. Found by the builder of spec 54 while running the Try it steps in a browser; not fixed, no step uses the switch; not reproduced by a second agent.
+- [ ] **Q98** The column pinning example means to lock the ID column but uses an option name that does nothing
+	- apps/shadcn-table-docs/examples/{base,radix,aria}/enable-column-pinning/TS.tsx sets `enableColumnPinning: false` on the ID column; the column option is `enablePinning`, so ID can still be pinned while the page's comment says it cannot. Found by a story builder of spec 56; the exact story copies the example as it is.
 
 ## Decided
 
