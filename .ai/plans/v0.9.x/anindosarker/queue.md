@@ -62,6 +62,7 @@ kanban-plugin: basic
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 - [ ] **Q112** Storybook needs an upgrade to the current version
+	- Owner, 2026-11-17: 'need to upgrade storybook'. Installed: storybook ^10.6.2 (packages/shadcn-table/package.json:82); E14 added @storybook/react 10.6.2 and storybook 10.6.2 to the docs app on v0.9/docs-layout for composeStories.
 
 ## Decided
 
