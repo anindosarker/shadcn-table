@@ -1,6 +1,6 @@
 # 62: Reorder by touch, tracker
 
-Status: done (built; review and verifier next)
+Status: running
 Branch `v0.9/touch-drag-columns-rows`, worktree 06
 Checks:
 - Check: touch plays fail before the change (P11), `ST_BASE=base vitest run` ColumnDragging, RowOrdering, RowDragging at d120f52c: fail as expected, 6 failed (Column Dragging Enabled, Cancelled, Locked Column, With Grip, Drag Reorders Rows, Drag Between Tables; no ghost, no reorder), 14 passed
