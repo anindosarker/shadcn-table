@@ -20,7 +20,7 @@ import { SidebarItem } from '@/components/sidebar-item';
  */
 export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   const { root } = useTreeContext();
-  const label = useStuckLabel(item);
+  const label = useStuckLabel();
   const siblings = findSiblings(root, item);
   if (!siblings || !separatorHasPages(item, siblings)) return null;
 
@@ -105,11 +105,9 @@ function onScroll(event: Event) {
  * Sets `data-stuck` on the sticky label while it is stuck, for the dashed
  * line below it (app/global.css). CSS `scroll-state(stuck)` container
  * queries run in Chromium only; this works in every engine. One capture
- * scroll listener serves every label. fumadocs keys sidebar rows by index,
- * so after a client navigation to another section the same label shows a
- * new `item`; the flags are checked again then, without waiting for a scroll.
+ * scroll listener serves every label.
  */
-function useStuckLabel(item: PageTree.Separator) {
+function useStuckLabel() {
   const ref = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -130,6 +128,6 @@ function useStuckLabel(item: PageTree.Separator) {
         window.removeEventListener('resize', schedule);
       }
     };
-  }, [item]);
+  }, []);
   return ref;
 }
