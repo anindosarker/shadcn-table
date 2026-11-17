@@ -5,6 +5,7 @@ import {
   type DivProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
+import { isST_TouchDragEvent } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
 
 export type ST_ToolbarDropZoneProps = DivProps;
@@ -38,6 +39,17 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     setHoveredColumn({ id: 'drop-zone' });
   };
 
+  // A touch drag that leaves the zone, or is cancelled over it (no next
+  // target), no longer drops on it; a header it entered keeps its hover. A
+  // mouse drag keeps the zone as it was.
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    if (!isST_TouchDragEvent(e.nativeEvent)) return;
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    if (table.atoms.hoveredColumn.get()?.id === 'drop-zone') {
+      setHoveredColumn(null);
+    }
+  };
+
   // An accepted drop, so the dragend that follows is not read as cancelled.
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
@@ -64,6 +76,7 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
         showToolbarDropZone ? (
           <div
             onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             {...rest}
             className={toolbarDropZoneVariants({
