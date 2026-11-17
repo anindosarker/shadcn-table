@@ -35,6 +35,9 @@ kanban-plugin: basic
 	- Kept as built (fcd6af8f on `claude/review`). Spec 62 1.4 and 1.6.2 are read with this decision.
 	- Source: Q124
 - [ ] **D139** The two touch drag test stories stay and become docs pages #R6
+	- Settled by the lead: D106 says a test story with its own different table stays listed like any other story, and P11 needs a play that fails first for each fix.
+	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
+	- Spec 63's catch-up gives each its page under More examples and its text, which joins the owner's wording review.
 	- Source: Q125
 
 ## In progress
