@@ -34,6 +34,12 @@ publishes the section as the GitHub release notes.
 
 - The docs sidebar's saved width and collapsed state now apply when the docs are opened from the home page, and the browser console no longer reports a script tag on that step.
 
+#### Spec 57 Stories match their examples
+
+- The column pinning example and its story lock the ID column with `enablePinning: false`; the option it set before, `enableColumnPinning`, does nothing on a column, so the ID column could still be pinned (D114).
+- The chart detail panel story draws its chart with recharts and the five editing CRUD stories confirm a delete in a modal alert dialog, as their docs examples do. Both are story-only: nothing changes in what the registry ships (D115).
+- The first line above every Storybook story reads "View documentation for this example", the whole line one link to the story's docs page (D124).
+
 #### Spec 59 Example ids and 404 page
 
 - An example shown in a guide's Example section and again further down carries two different element ids already in the served HTML: `guide-example-<name>` in the Example section, `example-<name>` elsewhere; example pages and inline examples keep `example-<name>`, so links to `#example-<name>` still work (D113).
