@@ -778,6 +778,46 @@ export const GroupByBanner = {
         'Grouped by Gender, then by City, then by Last Name',
       ),
     );
+
+    // A narrow table scrolls sideways while the finger rests near its end
+    // edge, stays put while the finger is on the drop zone, and scrolls again
+    // once the finger is back over the table.
+    const firstName = headerCell(canvasElement, 'firstName')!;
+    const container = firstName.closest('[data-slot="st-scroll-wrapper"]')!
+      .firstElementChild as HTMLElement;
+    container.style.maxWidth = '320px';
+    try {
+      await waitFor(() =>
+        expect(container.scrollWidth - container.clientWidth).toBeGreaterThan(
+          300,
+        ),
+      );
+      container.scrollLeft = 0;
+      const box = container.getBoundingClientRect();
+      const edge = { x: box.right - 48, y: centreOf(firstName).y };
+      touch({ at: edge, element: firstName, type: 'pointerdown' });
+      await pause(400);
+      touch({ at: edge, element: firstName, type: 'pointermove' });
+      await waitFor(() => expect(ghost()).not.toBeNull());
+      await waitFor(() => expect(container.scrollLeft).toBeGreaterThan(0));
+      const zone = centreOf(await dropZone(canvasElement, 'First Name'));
+      touch({ at: zone, element: firstName, type: 'pointermove' });
+      const stopped = container.scrollLeft;
+      await pause(200);
+      expect(container.scrollLeft).toBe(stopped);
+      touch({ at: edge, element: firstName, type: 'pointermove' });
+      await waitFor(() =>
+        expect(container.scrollLeft).toBeGreaterThan(stopped),
+      );
+      touch({ at: edge, element: firstName, type: 'pointercancel' });
+      await waitFor(() => expect(ghost()).toBeNull());
+      expect(bannerText()).toBe(
+        'Grouped by Gender, then by City, then by Last Name',
+      );
+    } finally {
+      container.style.maxWidth = '';
+      container.scrollLeft = 0;
+    }
   },
 };
 
