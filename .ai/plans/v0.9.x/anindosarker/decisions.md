@@ -92,14 +92,6 @@ kanban-plugin: basic
 	- Descriptions and body text are not touched (docs-layout LQ26).
 	- Owner recorded 2026-11-17.
 	- Source: Q108
-- [ ] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
-	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
-	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
-	- Full screen still forces the sticky header on, as today.
-	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
-	- All three bases alike. MRT has no such switch.
-	- Owner recorded 2026-11-17.
-	- Source: Q97
 - [ ] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
 	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
 	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
@@ -138,22 +130,6 @@ kanban-plugin: basic
 	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
 	- Owner's wording, recorded 2026-11-18.
 	- Source: Q102
-- [ ] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
-	- Settled by the lead: a bug with one right behaviour, the one MRT has.
-	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
-	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
-	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
-	- Source: Q103
-- [ ] **D126** A column's resize grip can be dragged across its whole width #E15 #R6
-	- Settled by the lead: a bug with one right behaviour.
-	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
-	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
-	- Source: Q104
-- [ ] **D127** The Click to copy button fits its cell and shows its own tooltip #E15 #R6
-	- Settled by the lead: a bug with one right behaviour.
-	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
-	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
-	- Source: Q107
 - [ ] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
 	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
 	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
@@ -855,6 +831,30 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
+	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
+	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
+	- Full screen still forces the sticky header on, as today.
+	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
+	- All three bases alike. MRT has no such switch.
+	- Owner recorded 2026-11-17.
+	- Source: Q97
+- [x] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
+	- Settled by the lead: a bug with one right behaviour, the one MRT has.
+	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
+	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
+	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
+	- Source: Q103
+- [x] **D126** A column's resize grip can be dragged across its whole width #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
+	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
+	- Source: Q104
+- [x] **D127** The Click to copy button fits its cell and shows its own tooltip #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
+	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
+	- Source: Q107
 - [x] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
 	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
 	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
