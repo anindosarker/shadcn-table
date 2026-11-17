@@ -2,6 +2,7 @@
 
 import {
   Children,
+  createContext,
   Fragment,
   useEffect,
   useState,
@@ -74,6 +75,15 @@ export function SidebarSection({
   useEffect(() => {
     if (storageKey && choice !== undefined) writeFolderOpen(storageKey, choice);
   }, [storageKey, choice]);
+  // A closable folder lists its rows only in the browser: the server and the
+  // hydration render show the current row alone, with its number and its
+  // sub-group label, so the 596 story pages do not each carry the whole
+  // "More examples" list in their HTML (D116).
+  const listed = useSyncExternalStore(
+    subscribeNothing,
+    () => true,
+    () => false,
+  );
   if (!hasPages(item)) return null;
   const indexNumber = item.index && rowNumber(root, item.index.url);
   const rendered = Children.toArray(children);
@@ -115,6 +125,21 @@ export function SidebarSection({
         {groupBySeparator(item.children).map((group, g) => {
           const nodes = group.indices.map((i) => rendered[i]);
           // the separator renders its own group (sidebar-separator.tsx)
+          if (closable && !listed) {
+            const current = group.indices.filter((i) =>
+              containsUrl(item.children[i], pathname),
+            );
+            if (current.length === 0) return null;
+            // its own key, so the row mounts again once the list is in and
+            // fumadocs scrolls it into view (useAutoScroll) at its place
+            return (
+              <ActiveRowOnly key={`current-${g}`} value>
+                {group.separator
+                  ? rendered[item.children.indexOf(group.separator)]
+                  : current.map((i) => rendered[i])}
+              </ActiveRowOnly>
+            );
+          }
           if (closable)
             return group.separator ? (
               <Fragment key={g}>
@@ -140,6 +165,18 @@ export function SidebarSection({
       </CollapsibleContent>
     </Collapsible>
   );
+}
+
+/**
+ * True while a closable folder shows its current row alone (server render
+ * and hydration): the sub-group label in it (sidebar-separator.tsx) renders
+ * that row and no other.
+ */
+export const ActiveRowOnly = createContext(false);
+
+/** The store behind `listed`: nothing changes it after hydration. */
+function subscribeNothing() {
+  return () => {};
 }
 
 /** localStorage key of a closable folder's open state. */
