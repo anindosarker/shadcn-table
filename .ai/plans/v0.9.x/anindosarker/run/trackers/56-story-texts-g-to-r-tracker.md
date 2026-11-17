@@ -19,6 +19,7 @@ Checks:
 - Task 2 three parts on every page: done, 92e75aab, run d3a60a09
 - Task 3 step truth: done, 13a07e12, run d3a60a09 (two steps corrected by the browser run)
 - Task 4 text check by judges: judges: run by the workflow
+- Task 4 fixer round 1: four descriptions failed by the judges reworded (header groups resizing grid, pages footer row range, select all all mode, select all page mode), no step changed so no browser run, `pnpm format` clean, f1ad83c9, run d3a60a09
 - Task 5 cleanup: done, `pnpm format` clean, 13a07e12, run d3a60a09
 
 ## Attention
