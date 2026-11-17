@@ -295,6 +295,8 @@ async function uniqueExampleIds(page, check, label) {
  * Between the heading and the playground stands nothing, or, on a guide of
  * `EXPLAINERS` (D122), exactly the one explainer paragraph moved up with
  * the removed lower table.
+ * Spec 58 (D117): only the first intro paragraph stands above the heading,
+ * except on the guides of `INTRO_BLOCKS`.
  * Returns the section's playground.
  */
 async function exampleSection(page, check, explainer) {
@@ -317,7 +319,9 @@ async function exampleSection(page, check, explainer) {
       ...document.querySelectorAll('article [data-example]'),
     ].filter((el) => follows(heading, el) && (!next || follows(el, next)));
     const link = panels[0]?.querySelector('header a[href^="/docs/examples/"]');
+    const above = [...(heading.parentElement?.children ?? [])];
     return {
+      intro: above.slice(0, above.indexOf(heading)).map((el) => el.tagName),
       firstH2: document.querySelector('article h2') === heading,
       lead,
       panels: panels.length,
@@ -327,6 +331,12 @@ async function exampleSection(page, check, explainer) {
   check('example section: h2 "Example"', info !== null);
   if (!info) return null;
   check('example section: first h2 of the guide', info.firstH2);
+  const blocks = INTRO_BLOCKS[new URL(page.url()).pathname] ?? 1;
+  check(
+    `example section: follows ${blocks} intro block(s)`,
+    info.intro.length === blocks && (blocks !== 1 || info.intro[0] === 'P'),
+    info.intro.join(','),
+  );
   const lead = info.lead.map(({ tag, text }) => `${tag}:${text}`);
   check(
     explainer
@@ -1239,6 +1249,17 @@ const EXPLAINERS = {
     'Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.',
   '/docs/guides/production-ready-tables':
     'Open the network tab and click around. Every page, sort, search or filter change sends one request to /api/users.',
+};
+
+/*
+ * D117: guides whose Example section does not follow exactly one intro
+ * paragraph, by the number of blocks above it. Full Screen Toggle has no
+ * intro; Production-Ready Tables keeps its four-piece list, diagram and
+ * closing line in the intro, as D130 left it (spec 58, 1.3).
+ */
+const INTRO_BLOCKS = {
+  '/docs/guides/full-screen-toggle': 0,
+  '/docs/guides/production-ready-tables': 4,
 };
 
 /*
