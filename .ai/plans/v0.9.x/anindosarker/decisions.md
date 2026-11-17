@@ -26,6 +26,8 @@ kanban-plugin: basic
 	- Source: Q98
 - [ ] **D115** The chart detail panel and editing stories match their examples exactly #R6
 	- Source: Q99
+- [ ] **D116** Story pages no longer triple the size of the docs build #R6
+	- Source: Q101
 
 ## In progress
 
