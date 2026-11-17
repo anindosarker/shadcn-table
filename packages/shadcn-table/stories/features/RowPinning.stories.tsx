@@ -119,6 +119,7 @@ export const RowPinningSelectStickyMode = () => (
     enablePagination={false}
     enableRowPinning
     enableRowSelection
+    enableRowVirtualization
     stTableContainerProps={{
       style: {
         maxHeight: '600px',
@@ -128,9 +129,10 @@ export const RowPinningSelectStickyMode = () => (
   />
 );
 
-// Select all pins all 50 rows, more than the 600px container holds; the
-// pinned rows stay below the head, so the select-all box is still the
-// topmost element at its center and unselects them all.
+// Select all pins all 50 rows, more than the 600px container holds. The
+// table stays virtualized: it renders the rows in view, not every pinned
+// row. The pinned rows stay below the head, so the select-all box is still
+// the topmost element at its center and unselects them all.
 RowPinningSelectStickyMode.play = async ({
   canvas,
   canvasElement,
@@ -141,7 +143,14 @@ RowPinningSelectStickyMode.play = async ({
     name: 'Toggle select all',
   });
   await userEvent.click(selectAll);
-  await waitFor(() => expect(pinnedRows()).toHaveLength(data.length));
+  await waitFor(() => {
+    expect(pinnedRows().length).toBeGreaterThan(0);
+    expect(selectAll).toBeChecked();
+  });
+  // Let a render that would mount every pinned row settle first.
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  expect(bodyRows(canvasElement).length).toBeLessThan(data.length / 2);
+  expect(pinnedRows()).toHaveLength(bodyRows(canvasElement).length);
   // The visible box: the React Aria base's checkbox role is a visually hidden
   // input inside it.
   const selectAllBox = selectAll.closest<HTMLElement>(
