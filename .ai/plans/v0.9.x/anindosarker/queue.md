@@ -69,6 +69,8 @@ kanban-plugin: basic
 - [ ] **Q105** On guides with a note or several intro blocks the Example section comes after them, not right after the first paragraph
 	- Merged 807fed50 on v0.9/docs-layout (spec 55 Guide pages): the section sits directly before each guide's first own heading, so on 16 guides (virtualization, data-columns, editing and others) the NOTE or further intro blocks stand above it; on the accepted preview page virtualization-new-format-3 the section followed the first paragraph and the NOTE came after. Keep, or move the section up to after the first paragraph. Raised by the builder and the reviewer.
 	- production-ready-tables: the Example section (React Query) sits between the guide's own server-side-data table and 'Folder Layout', so the sentence 'Open the Code view above' now has the React Query panel nearest above it; the guide text may not be reworded (D105) and guide-example-plan.md fixes react-query for this guide.
+- [ ] **Q106** A pinned row does not stay in view on scroll when the rows are virtualized
+	- Story features-row-pinning--row-pinning-sticky-with-virtualization on a production docs build (base), branch v0.9/story-texts-g-r: a pinned virtual row does not stick while the table scrolls; the page's steps claim only that the row stays pinned. Found by the run's browser check of the Try it steps; not reproduced by a second agent.
 
 ## Decided
 
