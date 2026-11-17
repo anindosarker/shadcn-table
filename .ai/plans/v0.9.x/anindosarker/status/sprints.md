@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-18 03:59
+Updated: 2026-11-18 04:00
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 | S12 | S13 | S14 | S15 | S16 | S17 | S18 | S19 | S20 | S21 | S22 | S23 | S24 | S25 | S26 | S27 | S28 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -110,7 +110,7 @@ Updated: 2026-11-18 03:59
 | E15 58 Docs content fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |
 | E15 58.1 Basic page check walks step one |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |
 | E15 59 Example ids and 404 page |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |
-| E15 59 Lighter story pages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [~] |  |  |
+| E15 59 Lighter story pages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |
 | E15 60 Sticky header switch and resize grip |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E15 60 Sub-row selection and copy button |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E15 61 Pinned rows with row virtualization |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
