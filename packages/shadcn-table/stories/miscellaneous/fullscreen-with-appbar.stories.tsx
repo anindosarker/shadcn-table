@@ -144,5 +144,7 @@ FullscreenIsAboveAppbar.play = async ({ canvasElement }: StoryContext) => {
   const root = canvasElement.querySelector('[data-st-full-screen]')!;
   await waitFor(() => expect(root.contains(topmost())).toBe(true));
   expect(appBar.contains(topmost())).toBe(false);
+  // Escape leaves full screen and the app bar is on top again.
   await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(appBar.contains(topmost())).toBe(true));
 };
