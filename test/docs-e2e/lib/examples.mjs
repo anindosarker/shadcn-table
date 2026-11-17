@@ -13,6 +13,7 @@ import {
   sectionFrame,
 } from './helpers.mjs';
 import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
+import { BASE_LABELS } from '../../../tools/registry/bases.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -249,6 +250,84 @@ const examplePage =
     const w = await example(page, id, check);
     if (marker) await marker(page, w, check);
     await codeToggle(page, id, needle, check);
+  };
+
+/** A story page (spec 56, 1.6.4) and the last one in the sidebar. */
+const STORY_PAGE = 'features-aggregation--aggregation';
+const LAST_STORY_PAGE = 'styling-theming--custom-dark-theme';
+/** 42 example pages, then one row per story page under More examples. */
+const LAST_ROW = 636;
+
+/**
+ * Spec 56 (1.6.4, D103): a story page shows its story in the playground on
+ * the run's base (the toolbar names it, the table renders, Storybook opens
+ * that base's story), the Code tab shows the story file, and the page has no
+ * Copy prompt (a story has no registry item). The sidebar numbers the
+ * Examples rows from `1. Basic` through More examples, which is open on a
+ * page inside it.
+ */
+const storyPage =
+  (id, row) =>
+  async ({ page, check, base }) => {
+    // one panel; the Try it and Related guides parts come with the texts
+    const panels = await page.locator('article [data-mode]').count();
+    check(`${id}: single example panel`, panels === 1, `panels=${panels}`);
+    const panel = page.locator(`[id="example-${id}"]`);
+    const rows = panel.locator('[data-slot="preview"] tbody tr');
+    await rows
+      .first()
+      .waitFor({ timeout: 30000 })
+      .catch(() => {});
+    check(`${id}: table renders`, (await rows.count()) > 0);
+    const label = (
+      (await panel.locator('header button[aria-label="Base"]').textContent()) ??
+      ''
+    ).trim();
+    check(
+      `${id}: toolbar base is the run's base`,
+      label === BASE_LABELS[base],
+      label,
+    );
+    const href = await panel
+      .locator('header a', { hasText: 'Storybook' })
+      .getAttribute('href');
+    check(
+      `${id}: Storybook opens this story on the base`,
+      href === `https://storybook.shadcn-table.com/${base}/?path=/story/${id}`,
+      href ?? '',
+    );
+    check(
+      `${id}: no Copy prompt`,
+      (await panel.getByRole('button', { name: /Copy prompt/ }).count()) === 0,
+    );
+    await panel.getByRole('button', { name: 'Code', exact: true }).click();
+    const code = panel.locator('[data-slot="code"]');
+    await code.waitFor({ timeout: 10000 }).catch(() => {});
+    const text = (await code.textContent().catch(() => '')) ?? '';
+    check(
+      `${id}: Code shows the story file`,
+      text.includes('.stories.tsx') && text.includes('export default meta'),
+    );
+    await panel.getByRole('button', { name: 'Preview', exact: true }).click();
+    const more = page.locator(
+      '#nd-sidebar button[data-slot="collapsible-trigger"]',
+      {
+        hasText: 'More examples',
+      },
+    );
+    check(
+      'More examples open on a page inside it',
+      (await more.getAttribute('aria-expanded').catch(() => null)) === 'true',
+    );
+    const links = page.locator('#nd-sidebar a[href^="/docs/examples/"]');
+    const first = ((await links.first().textContent()) ?? '').trim();
+    check('first Examples row is 1. Basic', first === '1. Basic', first);
+    const active = (
+      (await page.locator('#nd-sidebar a[data-active="true"]').textContent()) ??
+      ''
+    ).trim();
+    if (row !== undefined)
+      check(`${id}: sidebar row ${row}`, active.startsWith(`${row}. `), active);
   };
 
 const checks = {
@@ -868,6 +947,11 @@ const checks = {
           .count()) > 0,
       );
     },
+  ),
+  [`/docs/examples/more/${STORY_PAGE}`]: storyPage(STORY_PAGE),
+  [`/docs/examples/more/${LAST_STORY_PAGE}`]: storyPage(
+    LAST_STORY_PAGE,
+    LAST_ROW,
   ),
 };
 

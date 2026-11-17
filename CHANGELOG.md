@@ -49,6 +49,13 @@ publishes the section as the GitHub release notes.
 - Storybook story groups are in Title Case with spaces and without the word "Examples" ("Features/Aggregation Examples" is "Features/Aggregation", "sticky-footer" is "Sticky Footer", "useEffects" is "Use Effects"); the folder "Fixed Bugs" is "Miscellaneous" (D106).
 - Story links follow the new names: the docs toolbar Storybook button opens the same story as before, and the Storybook GitHub link opens the folder of the story shown (D106).
 
+#### Spec 56 Story pages in the docs
+
+- Every Storybook story without an example page has a docs page under "More examples" (594 pages), in Storybook's groups and order; each shows the story itself in the example playground, its story file in the Code tab and a Storybook button to it, on the selected base (D106, D103).
+- "More examples" keeps the open or closed state the visitor left it in after a reload; its group labels have no toggle (D103).
+- Each Storybook story's intro line links its docs page (D106).
+- `pnpm test validate-repo` fails when a story has no docs page or a page has no story, and `pnpm test storybook-static` checks the pages against the built Storybook (D106).
+
 #### Spec 56 Exact stories and merged copies
 
 - Every docs example has one exact story with its columns, options and data, each with a play; new groups "Features/Customization", "Features/Export", "Features/Server Data" and "Features/Localization" hold the examples no group covered, and the server examples serve their rows from inside the story (D106).
