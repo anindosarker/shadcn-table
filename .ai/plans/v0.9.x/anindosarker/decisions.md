@@ -14,6 +14,8 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
+- [ ] **D110** All 59 copied stories merge into the story they copy #R6
+	- Source: Q92
 
 ## In progress
 
