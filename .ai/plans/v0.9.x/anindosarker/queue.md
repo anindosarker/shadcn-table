@@ -58,6 +58,7 @@ kanban-plugin: basic
 	- Lookup 2026-11-17 (code read, not run): copy Button is inline-flex shrink-0 whitespace-nowrap px-2.5 (ui/button.tsx sm, buttons/ST_CopyButton.tsx:16,74-80) inside ST_OverflowText's block truncate span, so in a narrow cell it overflows and isCutOff is true; aria's span opens its tooltip on its own pointer timer (aria body/ST_OverflowText.tsx:57-70); real bug (overflow in base, radix, aria; tooltip clash read on aria only); MRT has no overflow tooltip.
 - [ ] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally
 	- Owner, 2026-11-17, checking E14 on localhost:5320: the button cannot be verified locally. apps/shadcn-table-docs/components/mdx/storybook-link.tsx:15-17 on v0.9/docs-layout hardcodes https://storybook.shadcn-table.com/{radix,base,aria}/; the deployed Storybook does not have the stories E14 renamed or added. Local Storybook ports: base 6007, radix 6006, aria 6008 (packages/shadcn-table/package.json:14-16).
+- [ ] **Q110** The docs site needs its own 404 page in the site's look
 
 ## Decided
 
