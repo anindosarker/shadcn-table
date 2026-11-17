@@ -84,9 +84,12 @@ const isKnownLibraryError = (text) =>
 /**
  * The page checks of `sections` (every section when empty), merged in
  * section order; a route defined twice is an error, so no page runs twice.
+ * `status` holds the HTTP status a section expects for a route other than
+ * 200 (its named export `status`: the 404 page, site.mjs).
  */
 async function loadChecks(sections) {
   const merged = {};
+  const status = {};
   for (const section of sections.length ? sections : SECTIONS) {
     const file = path.join(CHECKS_DIR, `${section}.mjs`);
     const mod = await import(pathToFileURL(file).href);
@@ -94,8 +97,9 @@ async function loadChecks(sections) {
       if (merged[route]) throw new Error(`${section}.mjs redefines ${route}`);
       merged[route] = fn;
     }
+    Object.assign(status, mod.status ?? {});
   }
-  return merged;
+  return { checks: merged, status };
 }
 
 /**
@@ -114,7 +118,9 @@ export async function checkPages({
 }) {
   /** The stored value of the site-wide base tab group for `base`. */
   const baseTab = base ? TAB_VALUES[base] : '';
-  const PAGE_CHECKS = await loadChecks(routes.length ? [] : sections);
+  const { checks: PAGE_CHECKS, status: STATUS } = await loadChecks(
+    routes.length ? [] : sections,
+  );
   const pages = routes.length ? routes : Object.keys(PAGE_CHECKS);
   if (!pages.length) return { results: ['FAIL no pages to check'], pages };
   const byPage = pages.map(() => []);
@@ -127,6 +133,7 @@ export async function checkPages({
     }
   };
   const checkPage = async (route, results) => {
+    const expected = STATUS[route] ?? 200;
     for (const [i, width] of widths.entries()) {
       const label = `${route} @${width}`;
       const check = (name, ok, extra = '') =>
@@ -157,8 +164,10 @@ export async function checkPages({
       const errors = [];
       page.on('console', (m) => {
         if (m.type() !== 'error') return;
-        if (isExternalResourceError(m.text(), m.location()?.url ?? '', url))
-          return;
+        const at = m.location()?.url ?? '';
+        if (isExternalResourceError(m.text(), at, url)) return;
+        // The browser logs a page that answers with its expected error status.
+        if (expected !== 200 && at === url + route) return;
         errors.push(m.text());
       });
       page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
@@ -166,7 +175,7 @@ export async function checkPages({
         waitUntil: 'networkidle',
         timeout: 90000,
       });
-      check('status', res?.status() === 200, String(res?.status()));
+      check('status', res?.status() === expected, String(res?.status()));
       await page.waitForTimeout(1500);
       if (i === 0 && PAGE_CHECKS[route]) {
         try {
