@@ -1,6 +1,12 @@
 'use client';
 
-import { Children, Fragment, useState } from 'react';
+import {
+  Children,
+  Fragment,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { usePathname } from 'next/navigation';
 import { useTreeContext } from 'fumadocs-ui/contexts/tree';
@@ -44,22 +50,36 @@ export function SidebarSection({
   const { root } = useTreeContext();
   // A folder with meta.json `defaultOpen: false` (the Examples "More
   // examples", D103) starts closed unless it holds the current page, opens when the
-  // visitor navigates into it, else keeps the state they left; its
-  // "---Label---" sub-groups are plain labels.
+  // visitor navigates into it, else keeps the state they left, also across
+  // a reload (localStorage); its "---Label---" sub-groups are plain labels.
   const closable = item.defaultOpen === false;
   const active = containsUrl(item, pathname);
-  const [open, setOpen] = useState(!closable || active);
+  // the visitor's choice in this visit; a closable folder falls back to the
+  // stored one, then to closed
+  const [choice, setChoice] = useState<boolean | undefined>(
+    closable && active ? true : undefined,
+  );
   const [wasActive, setWasActive] = useState(active);
   if (active !== wasActive) {
     setWasActive(active);
-    if (closable && active) setOpen(true);
+    if (closable && active) setChoice(true);
   }
+  const storageKey = closable ? folderOpenKey(item) : undefined;
+  const stored = useSyncExternalStore(
+    subscribeFolderOpen,
+    () => (storageKey ? readFolderOpen(storageKey) : undefined),
+    () => undefined,
+  );
+  const open = closable ? (choice ?? stored ?? false) : (choice ?? true);
+  useEffect(() => {
+    if (storageKey && choice !== undefined) writeFolderOpen(storageKey, choice);
+  }, [storageKey, choice]);
   if (!hasPages(item)) return null;
   const indexNumber = item.index && rowNumber(root, item.index.url);
   const rendered = Children.toArray(children);
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className={SECTION_CLASS}>
+    <Collapsible open={open} onOpenChange={setChoice} className={SECTION_CLASS}>
       <CollapsibleTrigger
         // a closable folder's heading sticks while its rows scroll, with its
         // sticky sub-group labels (sidebar-separator.tsx) right below it
@@ -120,6 +140,43 @@ export function SidebarSection({
       </CollapsibleContent>
     </Collapsible>
   );
+}
+
+/** localStorage key of a closable folder's open state. */
+function folderOpenKey(item: PageTree.Folder) {
+  return `docs-sidebar-open:${item.$id ?? String(item.name)}`;
+}
+
+/** The stored open state, or undefined when none is stored or storage is blocked. */
+function readFolderOpen(key: string): boolean | undefined {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? undefined : value === '1';
+  } catch {
+    return undefined;
+  }
+}
+
+const folderListeners = new Set<() => void>();
+
+/** Other tabs' changes (the storage event) and this tab's writes. */
+function subscribeFolderOpen(onChange: () => void) {
+  folderListeners.add(onChange);
+  window.addEventListener('storage', onChange);
+  return () => {
+    folderListeners.delete(onChange);
+    window.removeEventListener('storage', onChange);
+  };
+}
+
+function writeFolderOpen(key: string, open: boolean) {
+  try {
+    if (localStorage.getItem(key) === (open ? '1' : '0')) return;
+    localStorage.setItem(key, open ? '1' : '0');
+  } catch {
+    return;
+  }
+  for (const listener of folderListeners) listener();
 }
 
 /** A top-level section block: the gap above it and between its rows. */
