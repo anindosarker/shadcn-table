@@ -7,7 +7,11 @@ One of the strengths of Shadcn Table is that it exposes a majority of all the un
 
 Additionally, in one of the sections below, you will learn [how to theme your table](#theming) to customize colors, typography, or any other default CSS that is used by Shadcn Table.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['minimal']} />
+
+## Relevant Table Options
 
 All props labeled `st...Props` get forwarded to shadcn/ui components. Here is a list of all the props that are exposed in both the root props and column options.
 
@@ -54,7 +58,7 @@ All props labeled `st...Props` get forwarded to shadcn/ui components. Here is a 
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 Some of the column options expose the same props as above, but on a per column basis.
 
@@ -76,13 +80,13 @@ Some of the column options expose the same props as above, but on a per column b
   }
 />
 
-### Props and Types
+## Props and Types
 
 Each prop can either be passed as an object or as a callback function where you get access to the underlying `table` instance and any other relevant callback parameters, such as `cell`, `row`, `column`, etc. This lets you easily run conditional logic on the props you pass. Let's take a look at a few examples.
 
 > All `st...Props` props are strongly typed and you should get ts hints as you write them. Each one forwards `className`, `style` and the props of the element or [shadcn/ui component](https://ui.shadcn.com/docs/components) it targets.
 
-#### Static Prop Objects
+### Static Prop Objects
 
 ```jsx
 const table = useShadcnTable({
@@ -98,7 +102,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Callback Functions to Dynamically Set Prop Values
+### Callback Functions to Dynamically Set Prop Values
 
 ```jsx
 const table = useShadcnTable({
@@ -115,7 +119,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Styling Components
+## Styling Components
 
 Each `st...Props` prop accepts `className` and `style`, which are forwarded to the underlying element. Since Shadcn Table is built with Tailwind CSS, the recommended way to style components is with Tailwind classes in `className`. They are merged with the default classes, and they can use the shadcn/ui CSS variables from your theme.
 
@@ -183,11 +187,11 @@ const table = useShadcnTable({
 
 You can learn more about utility classes in the official [Tailwind CSS Docs](https://tailwindcss.com/docs/styling-with-utility-classes) and about the theme variables in the [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming).
 
-### Conditional Styling
+## Conditional Styling
 
 Using the `style` or `className` props and the parameters from the callback functions (cell, column, row, table instance APIs, etc.), you can easily add conditional styling to your shadcn/ui components. Here's a few examples
 
-#### Style Selected Rows
+### Style Selected Rows
 
 ```jsx
 const table = useShadcnTable({
@@ -198,7 +202,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Style Expanded Rows
+### Style Expanded Rows
 
 ```jsx
 const table = useShadcnTable({
@@ -209,7 +213,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Style Pinned Columns
+### Style Pinned Columns
 
 ```jsx
 const table = useShadcnTable({
@@ -228,7 +232,7 @@ Pinned cells already have an opaque background and, on the inner edge of each pi
 
 There are hundreds of table, column, header, row, and cell instance APIs that you can use for conditional styling and other logic. See the [Table Instance APIs](/docs/api/table-instance-apis), [Column Instance APIs](/docs/api/column-instance-apis), [Row Instance APIs](/docs/api/row-instance-apis), and [Cell Instance APIs](/docs/api/cell-instance-apis) docs for more info.
 
-### Theming
+## Theming
 
 Shadcn Table respects your shadcn/ui theme. If you have already set up shadcn/ui with `shadcn init`, you should already be set. The table reads the CSS variables from your global stylesheet (`--background`, `--foreground`, `--primary`, `--border`, `--muted`, etc.), so changing them changes the table along with the rest of your app. If you have not set that up, you should visit the official [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming) to learn how.
 
@@ -245,7 +249,7 @@ Shadcn Table respects your shadcn/ui theme. If you have already set up shadcn/ui
 }
 ```
 
-#### Customize Theme Just for your Table
+### Customize Theme Just for your Table
 
 Because the theme is CSS variables, you can change it just for the `<ShadcnTable />` component by redefining the variables on an element around just your table (or on the table root through the `stTableLayoutProps` table option). The values only effect the `<ShadcnTable />` component, and not the rest of your site. Everything you do not redefine is inherited from your global theme, so you do not have to redefine everything again. You can just tweak the values you want to change.
 
@@ -258,11 +262,11 @@ return (
 );
 ```
 
-#### Custom Theme Example
+### Custom Theme Example
 
 <MuiThemeExample />
 
-### Table Theme Values
+## Table Theme Values
 
 The colors Shadcn Table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
 
@@ -271,7 +275,7 @@ The colors Shadcn Table uses internally come from the shadcn/ui theme variables,
 - dragging outlines and the drop highlight use `--primary`
 - filter match highlighting uses `--destructive` at 20% opacity (30% in dark mode), on the element with `data-slot="st-match-highlight"`
 
-### Customize Table Layout Styling
+## Customize Table Layout Styling
 
 The table renders as a layout element (`<ST_TableLayout />`) holding the top toolbar and, below it, a bordered frame (`data-slot="st-table-frame"`, `rounded-md border bg-background shadow`) that wraps the scrolling table and the bottom toolbar. You can customize both the props and the styles of the layout element by passing in a `stTableLayoutProps` table option. To restyle the frame, target it from there with a Tailwind arbitrary variant.
 
@@ -291,9 +295,9 @@ return <ShadcnTable table={table} />;
 
 To put the toolbar back inside a bordered box, give the layout element the border and padding instead, for example `className: 'rounded-md border p-2'`.
 
-### Customize Table Body, Rows, Columns, and Cells
+## Customize Table Body, Rows, Columns, and Cells
 
-#### Stripe Rows Example
+### Stripe Rows Example
 
 Alternating row colors are built in: users switch them on from the Alternating row colors row of the [view settings](/docs/guides/view-settings) panel, and you can start a table striped through the `viewSettings` state. The stripe color is the `--st-stripe` variable.
 
@@ -329,7 +333,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Stripe Columns Example
+### Stripe Columns Example
 
 Similarly, if you want to stripe the columns, you can do something like this:
 
@@ -349,7 +353,7 @@ const table = useShadcnTable({
 
 <CustomizeTableStylesExample />
 
-### Customize No Rows overlay
+## Customize No Rows overlay
 
 An empty table shows one muted row spanning the columns with the `noRecordsToDisplay` text, or `noResultsFound` while filters are active. As part of the customization options, we allow you to override the No Records overlay.
 

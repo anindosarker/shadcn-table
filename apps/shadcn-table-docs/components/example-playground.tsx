@@ -142,12 +142,14 @@ const getModeSnapshot = () => sessionMode ?? readMode();
 const getModeServerSnapshot = () => DEFAULT_MODE;
 
 /* Which mount holds the id `example-<name>` on the page. A guide may show
- * an example in its Example section and again further down; the first
- * mount keeps the plain id, a further one takes a suffixed id so no two
- * elements share one. Layout effects run in document order on hydration,
- * so the first panel on the page claims the id first. The server render
- * and hydration use the plain id. */
-const idOwners = new Map<string, symbol>();
+ * an example in its Example section and again further down; the mounts of a
+ * name are kept in mount order, the first one holds the plain id and every
+ * further one a suffixed id, so no two elements share one. When the holder
+ * unmounts (a picker swap), the next mount in the list takes the plain id
+ * over. Layout effects run in document order on hydration, so the first
+ * panel on the page is first in the list. The server render and hydration
+ * use the plain id. */
+const idMounts = new Map<string, symbol[]>();
 const idListeners = new Set<() => void>();
 
 const subscribeIds = (onChange: () => void) => {
@@ -161,23 +163,26 @@ const notifyIds = () => {
   for (const listener of idListeners) listener();
 };
 
-/** Element id of this mount: `example-<name>`, or a suffixed one when another mount holds it. */
+/** Element id of this mount: `example-<name>` for the first mount of the name, a suffixed one for a further mount. */
 const useExampleId = (name: string) => {
   const base = `example-${name}`;
   const suffix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const [token] = useState(() => Symbol(name));
   const getSnapshot = useCallback(() => {
-    const owner = idOwners.get(name);
-    return owner === undefined || owner === token ? base : `${base}-${suffix}`;
+    const head = idMounts.get(name)?.[0];
+    return head === undefined || head === token ? base : `${base}-${suffix}`;
   }, [base, name, suffix, token]);
   const getServerSnapshot = useCallback(() => base, [base]);
   const id = useSyncExternalStore(subscribeIds, getSnapshot, getServerSnapshot);
   useLayoutEffect(() => {
-    if (!idOwners.has(name)) idOwners.set(name, token);
+    const mounts = idMounts.get(name) ?? [];
+    mounts.push(token);
+    idMounts.set(name, mounts);
     notifyIds();
     return () => {
-      if (idOwners.get(name) !== token) return;
-      idOwners.delete(name);
+      const rest = (idMounts.get(name) ?? []).filter((t) => t !== token);
+      if (rest.length > 0) idMounts.set(name, rest);
+      else idMounts.delete(name);
       notifyIds();
     };
   }, [name, token]);
@@ -345,6 +350,9 @@ export const ExamplePlayground = ({
       // Prefixed like the registry item so a guide heading whose slug is
       // the example name ("Customize Filter Modes") cannot share the id.
       id={elementId}
+      // The example name whatever the id, so a check can find the mount
+      // that holds the plain id `example-<name>`.
+      data-example={name}
       data-mode={mode}
       data-fullscreen={fullscreen || undefined}
       className={cn(

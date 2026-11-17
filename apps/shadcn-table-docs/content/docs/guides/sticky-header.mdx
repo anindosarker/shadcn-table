@@ -5,13 +5,17 @@ description: 'How to use and customize the sticky header feature in Shadcn Table
 
 The sticky header and footer feature allows you to keep the header and footer of the table visible while scrolling through the table. This is useful when you have a large table and want to keep the header and footer visible at all times.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['sticky-header']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['enableStickyHeader', 'enableStickyFooter'])}
 />
 
-### Enable Sticky Header
+## Enable Sticky Header
 
 Enabling the sticky header is as simple as setting the `enableStickyHeader` table option to `true`. This will make the header of the table stick to the top and remain visible while scrolling through the table.
 
@@ -32,16 +36,12 @@ To change the cap, set the variable instead of a `maxHeight` style, for example 
 
 > Row virtualization forces the sticky header on. In that case the default cap is the full window height minus the toolbars (`clamp(350px, calc(100vh - toolbar height), 9999px)`), so a virtualized table does not shrink to 70vh; the same `--st-sticky-max-height` variable overrides it. In full screen the table fills the window and the cap does not apply.
 
-### Enable Sticky Footer
+## Enable Sticky Footer
 
 Similarly, enabling the sticky footer is as simple as setting the `enableStickyFooter` table option to `true`. This will make the footer of the table stick to the bottom of the table and always be visible, even before the table is scrolled to the bottom.
 
 ```tsx
 <ShadcnTable columns={columns} data={data} enableStickyFooter />
 ```
-
-### Enable Sticky Header and Footer Demo
-
-<EnableStickyHeaderExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

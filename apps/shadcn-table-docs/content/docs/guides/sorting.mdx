@@ -5,7 +5,11 @@ description: 'How to use, customize, or disable sorting features in Shadcn Table
 
 Shadcn Table supports almost any sorting scenario you may have. Client-side sorting is enabled by default, but you can opt to implement your own server-side sorting logic or even replace the default client-side sorting with your own implementation.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -26,7 +30,7 @@ Shadcn Table supports almost any sorting scenario you may have. Client-side sort
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -41,11 +45,11 @@ Shadcn Table supports almost any sorting scenario you may have. Client-side sort
   }
 />
 
-### Relevant State Options
+## Relevant State Options
 
 <StateOptionsTable onlyOptions={new Set(['sorting'])} />
 
-### Disable Sorting
+## Disable Sorting
 
 Sorting can be disabled globally by setting the `enableSorting` table option to `false`. This will disable sorting for all columns. You can also disable sorting for individual columns by setting the `enableSorting` column option to `false`.
 
@@ -65,7 +69,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Initial/Default Sorting
+## Initial/Default Sorting
 
 You can sort by a column or multiple columns by default by setting the `sorting` state option in either the `initialState` or `state` props.
 
@@ -88,13 +92,13 @@ const table = useShadcnTable({
 });
 ```
 
-### Default Sorting Features
+## Default Sorting Features
 
 Client-side sorting is enabled by default. When sorting is turned on for a column, the table will be sorted by the [`basic` sorting algorithm](https://tanstack.com/table/latest/docs/framework/react/guide/sorting#sorting-rowmodelfns) by default.
 
 Users sort from two places: the [column menu](/docs/guides/column-actions) (Sort ascending, Sort descending, Clear sort) and the [sort editor](/docs/guides/sort-editor) behind the sort button in the toolbar. Clicking a header label opens the column menu and does not sort. A sorted column shows a small arrow after its label; an unsorted column shows nothing.
 
-#### Multi-Sorting
+### Multi-Sorting
 
 Multi-sorting is also enabled by default, which means you can sort by multiple columns at once. No modifier key is needed: in the column menu, choosing a direction on a column that is already sorted replaces its direction, and choosing a direction on another column adds it after the current sorts. In the sort editor, "Add sort" adds a rule and the rules can be dragged into a new order. Set `showSortIndex: true` to show each sorted column's position next to its arrow while more than one sort is active.
 
@@ -110,7 +114,7 @@ const table = useShadcnTable({
 
 You can limit the number of columns that can be sorted at once by setting the `maxMultiSortColCount` prop, or you can disable multi-sorting entirely by setting the `enableMultiSort` table option to `false`.
 
-#### Sorting Removal
+### Sorting Removal
 
 By default, users can remove a sort on a column with "Clear sort" in the column menu, or with the remove button of its rule in the sort editor. You can disable removing a sort from the column menu by setting the `enableSortingRemoval` table option to `false`.
 
@@ -122,19 +126,19 @@ const table = useShadcnTable({
 });
 ```
 
-#### Sort Direction
+### Sort Direction
 
 By default, columns with `string` datatypes will sort alphabetically in ascending order, but columns with `number` datatypes will sort numerically in descending order. You can change the default sort direction per column by specifying the `sortDescFirst` column option to either `true` or `false`. You can also change the default sort direction globally by setting the `sortDescFirst` table option to either `true` or `false`.
 
 <MultiSortingExample />
 
-### Sorting Functions
+## Sorting Functions
 
 By default, Shadcn Table will use the `basic` sorting function for all columns.
 
 There are six built-in sorting functions you can choose from: ` alphanumeric`, `alphanumericCaseSensitive`, `text`, `textCaseSensitive`, `datetime`, and `basic`. You can learn more about these built-in sorting functions in the [TanStack Table Sorting docs](https://tanstack.com/table/latest/docs/framework/react/guide/sorting#sorting-rowmodelfns).
 
-#### Add Custom Sorting Functions
+### Add Custom Sorting Functions
 
 If none of these sorting functions meet your needs, you can add your own custom sorting functions by specifying more sorting functions in the `sortFns` table option.
 
@@ -149,7 +153,7 @@ const table = useShadcnTable({
 })
 ```
 
-#### Change Sorting Function Per Column
+### Change Sorting Function Per Column
 
 You can now choose a sorting function for each column by either passing a string value of the built-in sorting function names to the `sortFn` column option or by passing a custom sorting function to the `sortFn` column option.
 
@@ -169,7 +173,7 @@ const columns = [
 ];
 ```
 
-### Manual Server-Side Sorting
+## Manual Server-Side Sorting
 
 If you are working with large data sets, you may want to let your back-end APIs handle all of the sorting and pagination processing instead of doing it client-side. You can do this by setting the `manualSorting` table option to `true`. This will disable the default client-side sorting and pagination features and will let you implement your own sorting and pagination logic.
 
@@ -196,7 +200,7 @@ useEffect(() => {
 return <ShadcnTable table={table} />;
 ```
 
-#### Remote Sorting Example
+### Remote Sorting Example
 
 Here is the full Remote Data example showing how to implement server-side sorting, filtering, and pagination with Shadcn Table.
 

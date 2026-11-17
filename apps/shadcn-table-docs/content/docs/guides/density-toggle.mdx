@@ -5,17 +5,21 @@ description: 'How to use, customize, or disable the density toggle button featur
 
 Shadcn Table lets users switch between three density levels. By default the density control lives in the [view settings](/docs/guides/view-settings) panel as a select, and it is pinned to the toolbar as a button that cycles through the densities. This is a great feature to include to help with accessibility for different user preferences, but it can also easily be disabled if desired.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['enableDensityToggle', 'onDensityChange'])}
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['density'])} />
 
-### Default Density
+## Default Density
 
 By default, Shadcn Table will render with a medium `comfortable` density.
 
@@ -25,7 +29,7 @@ The Density row of the view settings panel picks one of the three from a select.
 
 > Cell text stays on one line at every density and is cut with an ellipsis, with a tooltip showing the full value when it is cut off. Turn on Wrap cell text in the view settings panel to show the full text instead. See the [Overflow Tooltip Guide](/docs/guides/overflow-tooltip).
 
-#### Change Default Density
+### Change Default Density
 
 If you want to change the default density, you can set it in either the `initialState` table option or the `state` table option.
 
@@ -39,7 +43,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Disable or Hide the Density Toggle
+## Disable or Hide the Density Toggle
 
 You can change the default density and disable the density toggle itself if you want. With `enableDensityToggle: false`, the Density row leaves the view settings panel and the pinned density button leaves the toolbar.
 

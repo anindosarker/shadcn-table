@@ -7,7 +7,11 @@ Shadcn Table has a built-in column resizing handle, and it is on by default.
 
 > The Column Size features was recently split into its own [Guide](/docs/guides/column-size). View that guide as a prerequisite to this one.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -25,7 +29,7 @@ Shadcn Table has a built-in column resizing handle, and it is on by default.
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -33,17 +37,17 @@ Shadcn Table has a built-in column resizing handle, and it is on by default.
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['columnSizing', 'columnResizing'])} />
 
-### Initial Column Sizes
+## Initial Column Sizes
 
 Column sizes will behave differently depending on which `layoutMode` you have set.
 
 See the [Column Size Guide](/docs/guides/column-size) for more information on layout modes and how to set initial column sizes properly for you use case.
 
-### Column Resizing Feature
+## Column Resizing Feature
 
 `enableColumnResizing` is the boolean table option that controls the column resizing feature. It is `true` by default.
 
@@ -63,7 +67,7 @@ return <ShadcnTable table={table} />;
 
 You can disable specific columns from being resizable by setting the `enableResizing` column option to false in their respective column definition.
 
-### Column Resize Mode
+## Column Resize Mode
 
 The default `columnResizeMode` is `onChange`, which means that the column resizing will occur immediately as the user drags the column resize handle. If you are running into performance issues because of many other enabled features, you might want to set the `columnResizeMode` to `onEnd` instead. This will make the column resizing only occur after the user has finished dragging the column resize handle and released their mouse.
 
@@ -77,7 +81,7 @@ const table = useShadcnTable({
 
 <EnableColumnResizingExample />
 
-### Column Growing
+## Column Growing
 
 Resizing does not change the layout mode. In the default `"grid"` layout, data columns share the spare width of the table in the ratio of their sizes, while display columns and pinned columns keep their set width. While spare width exists, a dragged edge moves a little faster than the pointer, because the column keeps its share of the spare width. Once the columns are wider than the table, every column renders at its set width and the table scrolls sideways.
 
@@ -107,7 +111,7 @@ const columns = [
 
 This is discussed in more detail in the [Column Size Guide](/docs/guides/column-size#column-grow).
 
-### Column Resize Direction
+## Column Resize Direction
 
 If you are displaying your table in a RTL (right-to-left) language, you can set the `columnResizeDirection` table option to `"rtl"` to make the column resize handle appear on the left side of the column instead of the right side.
 
@@ -131,7 +135,7 @@ return (
 
 <LocalizationI18nFaExample />
 
-### Enable Resizing on Built-in Display Columns
+## Enable Resizing on Built-in Display Columns
 
 As discussed further in the [Display Columns Guide](/docs/guides/display-columns), you can customize the options of the built-in columns that get generated under the hood by ST by enabling certain features.
 
