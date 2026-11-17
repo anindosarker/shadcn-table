@@ -38,6 +38,7 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
+- [ ] **Q116** Hovering a section tab shows a grey box behind it
 
 ## Decided
 
