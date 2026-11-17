@@ -1,8 +1,7 @@
 # 56: Story pages review fixes, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/story-pages-review-fixes`, worktree 10
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Story pages review fixes: running
