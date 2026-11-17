@@ -285,7 +285,7 @@ Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI ins
 `.github/workflows/pr.yml` runs these on every pull request, one job per test and base or scenario; run them first, from the repo root (`pnpm test --changed` runs only the tests whose paths you changed):
 
 ```bash
-pnpm test typecheck          # Typecheck (base), (radix), (aria); radix also the docs types:check
+pnpm test typecheck          # Typecheck (base), (radix), (aria); radix also the docs types:check and the story files
 pnpm test lint               # Lint: the package and the docs app
 pnpm test storybook-tests    # Storybook Tests (base), (radix), (aria)
 pnpm test docs-e2e           # Docs E2E Tests (base), (radix), (aria): builds the docs, checks every page

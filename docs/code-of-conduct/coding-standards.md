@@ -98,7 +98,7 @@ through one runner, `pnpm test <name>` (`--base <b>` or `--scenario <s>` for one
 
 ```sh
 pnpm format                             # prettier, once, before the commit
-pnpm test typecheck                     # Typecheck (<base>): tsc:<base> per base; radix also the docs types:check
+pnpm test typecheck                     # Typecheck (<base>): tsc:<base> per base; radix also the docs types:check and the story files
 pnpm test lint                          # Lint: the package and the docs app, zero warnings
 pnpm test storybook-tests               # Storybook Tests (<base>): every story and play per base, headless Chromium
 pnpm test docs-e2e                      # Docs E2E Tests (<base>): the docs app built and served, every page checked per base

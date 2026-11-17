@@ -64,10 +64,9 @@ const loose = (component: unknown) => component as LooseComponent;
 const AriaTable = loose(Table);
 const AriaTableHead = loose(TableHead);
 const AriaTableRow = loose(TableRow);
-const AriaDialog = loose(DialogParts.Dialog);
-// The Radix and Base UI dialog: `open` and DialogContent, which the React
-// Aria dialog lacks.
-const RadixDialog = loose(DialogParts.Dialog);
+// The dialog of every base: React Aria takes `isOpen`, Radix and Base UI take
+// `open` and DialogContent, which the React Aria dialog lacks.
+const LooseDialog = loose(DialogParts.Dialog);
 const RadixDialogContent = loose(
   (DialogParts as Record<string, unknown>).DialogContent,
 );
@@ -964,13 +963,13 @@ const AdvancedTable = () => {
     <>
       <ShadcnTable table={table} />
       {ST_BASE === 'aria' ? (
-        <AriaDialog isOpen={dialogOpen} onOpenChange={setDialogOpen}>
+        <LooseDialog isOpen={dialogOpen} onOpenChange={setDialogOpen}>
           {dialogBody}
-        </AriaDialog>
+        </LooseDialog>
       ) : (
-        <RadixDialog onOpenChange={setDialogOpen} open={dialogOpen}>
+        <LooseDialog onOpenChange={setDialogOpen} open={dialogOpen}>
           <RadixDialogContent>{dialogBody}</RadixDialogContent>
-        </RadixDialog>
+        </LooseDialog>
       )}
     </>
   );
