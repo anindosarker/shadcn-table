@@ -17,6 +17,11 @@ publishes the section as the GitHub release notes.
 - The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 - On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
 
+#### Spec 60 Sub-row selection and copy button
+
+- Ticking a parent row ticks all its sub-rows, unticking it unticks them, and ticking the last unticked sub-row ticks the parent; before, ticking a parent left its sub-rows unticked (D125).
+- The Click to copy button stays inside a narrow cell and truncates its text, and hovering it shows "Click to copy" instead of the cell's overflow tooltip on Base UI, Radix UI and React Aria (D127).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
