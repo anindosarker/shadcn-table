@@ -201,10 +201,9 @@ const firstNameCell = (canvasElement: HTMLElement) =>
     'tbody tr:first-child td[data-flip-column="firstName"]',
   )!;
 
-/** A right click on a cell opens its action menu with the copy item. */
-export const RightClickOpensMenu = {
-  render: () => <CellActionsEnabled />,
-  play: async ({ canvasElement }: StoryContext) => {
+CellActionsEnabled.play = async ({ canvasElement, step }: StoryContext) => {
+  // A right click on a cell opens its action menu with the copy item.
+  await step('Right Click Opens Menu', async () => {
     await within(canvasElement).findAllByText(data[0].firstName);
     expect(screen.queryByRole('menu')).toBeNull();
     fireEvent.contextMenu(firstNameCell(canvasElement));
@@ -216,13 +215,9 @@ export const RightClickOpensMenu = {
     ).toContain('Copy');
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
-  },
-};
-
-/** Choosing Copy writes the cell's value to the clipboard and closes the menu. */
-export const MenuItemRuns = {
-  render: () => <CellActionsEnabled />,
-  play: async ({ canvasElement }: StoryContext) => {
+  });
+  // Choosing Copy writes the cell's value to the clipboard and closes the menu.
+  await step('Menu Item Runs', async () => {
     const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
       undefined,
     );
@@ -238,5 +233,5 @@ export const MenuItemRuns = {
     } finally {
       writeText.mockRestore();
     }
-  },
+  });
 };
