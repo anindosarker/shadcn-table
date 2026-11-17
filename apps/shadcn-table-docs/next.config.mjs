@@ -134,6 +134,22 @@ const config = {
       destination: '/docs/guides/production-ready-tables',
       permanent: false,
     },
+    // Three example pages took the address of their sidebar name (D119).
+    {
+      source: '/docs/examples/react-query',
+      destination: '/docs/examples/server-side-pagination',
+      permanent: true,
+    },
+    {
+      source: '/docs/examples/editing-crud-inline-row',
+      destination: '/docs/examples/inline-editing',
+      permanent: true,
+    },
+    {
+      source: '/docs/examples/virtualized',
+      destination: '/docs/examples/virtualization',
+      permanent: true,
+    },
   ],
 };
 

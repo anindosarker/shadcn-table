@@ -5,9 +5,9 @@
   "pages": [
     "---Featured---",
     "basic",
-    "react-query",
-    "editing-crud-inline-row",
-    "virtualized",
+    "server-side-pagination",
+    "inline-editing",
+    "virtualization",
     "advanced",
     "---Filtering---",
     "filter-variants",
