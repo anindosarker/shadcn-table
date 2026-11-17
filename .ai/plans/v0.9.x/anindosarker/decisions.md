@@ -133,12 +133,6 @@ kanban-plugin: basic
 	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
 	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
-- [ ] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
-	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
-	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
-	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
-	- Owner closed the card 2026-11-18.
-	- Source: Q109
 
 ## In progress
 
@@ -839,6 +833,12 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
+	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
+	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
+	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
+	- Owner closed the card 2026-11-18.
+	- Source: Q109
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}

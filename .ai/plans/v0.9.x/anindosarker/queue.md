@@ -315,7 +315,7 @@ kanban-plugin: basic
 - [ ] **Q106** A pinned row does not stay in view on scroll when the rows are virtualized #D128
 	- Story features-row-pinning--row-pinning-sticky-with-virtualization on a production docs build (base), branch v0.9/story-texts-g-r: a pinned virtual row does not stick while the table scrolls; the page's steps claim only that the row stays pinned. Found by the run's browser check of the Try it steps; not reproduced by a second agent.
 	- Lookup 2026-11-17 (code read, not run): a virtual row is always position absolute with translateY and top 0; sticky top/bottom apply only when there is no virtualRow (body/ST_TableBodyRow.tsx:228-262); expected; base, radix, aria alike; MRT_TableBodyRow.tsx:181-218 does the same, so a virtual pinned row never sticks in MRT either.
-- [ ] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally #D129
+- [x] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally #D129
 	- Owner, 2026-11-17, checking E14 on localhost:5320: the button cannot be verified locally. apps/shadcn-table-docs/components/mdx/storybook-link.tsx:15-17 on v0.9/docs-layout hardcodes https://storybook.shadcn-table.com/{radix,base,aria}/; the deployed Storybook does not have the stories E14 renamed or added. Local Storybook ports: base 6007, radix 6006, aria 6008 (packages/shadcn-table/package.json:14-16).
 	- Fixed on v0.9/docs-layout: c8aaf443, merged 675337f9. Under pnpm dev (NODE_ENV development) every docs Storybook link goes to localhost 6007 (base), 6006 (radix), 6008 (aria); a production build keeps storybook.shadcn-table.com (hrefs read on a real build, no localhost string in .next/static).
 
