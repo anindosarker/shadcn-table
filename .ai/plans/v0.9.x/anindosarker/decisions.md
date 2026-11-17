@@ -142,6 +142,10 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-18.
 	- Source: Q113
 - [ ] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
+	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
+	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
+	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
+	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
 	- Source: Q114
 
 ## In progress
