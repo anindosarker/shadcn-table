@@ -56,6 +56,8 @@ kanban-plugin: basic
 	- apps/shadcn-table-docs/examples/{base,radix,aria}/enable-column-pinning/TS.tsx sets `enableColumnPinning: false` on the ID column; the column option is `enablePinning`, so ID can still be pinned while the page's comment says it cannot. Found by a story builder of spec 56; the exact story copies the example as it is.
 - [ ] **Q99** Two new exact stories differ from their docs examples because the library package lacks what the example uses
 	- Branch v0.9/exact-stories (spec 56): the chart-detail-panel story draws its three lines in inline SVG because the example uses recharts, which packages/shadcn-table does not depend on and spec 56 1.7 does not add; the five editing CRUD stories confirm a delete in an inline box under the table because the library registry has no AlertDialog, where the examples open a modal dialog. Keep, or add recharts and an alert dialog to the package's dev setup so the stories match exactly.
+- [ ] **Q100** Guide example plan: the choices to check before the guide pages are built
+	- reference/docs-layout/guide-example-plan.md (spec 56 lead, 46 guides): 44 example pages, 1 existing story (customize-icons), 1 new story (localization: new group Features/Localization, story Spanish). row-numbers shows the example page row-virtualization, so no example got an option enabled (the owner's stated case). 15 guides whose feature is on by default show basic; pagination shows remote; row-selection shows export-csv. Spec 55 Guide pages builds from this file.
 
 ## Decided
 
