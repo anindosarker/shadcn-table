@@ -1,9 +1,17 @@
+import { useMemo } from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
 import {
   Building2Icon,
+  GlobeIcon,
+  HashIcon,
   MailIcon,
   MapIcon,
   MapPinIcon,
@@ -223,4 +231,177 @@ ColumnPinningInitial.play = async ({ canvasElement, step }: StoryContext) => {
       getComputedStyle(bodyCell(canvasElement, 'email')).position,
     ).not.toBe('sticky');
   });
+};
+
+// The docs example "Column Pinning" (examples/base/enable-column-pinning): its
+// columns, options and rows.
+interface PinningPerson {
+  address: string;
+  city: string;
+  country: string;
+  firstName: string;
+  id: string;
+  lastName: string;
+  middleName: string;
+  state: string;
+}
+
+const pinningData: PinningPerson[] = [
+  {
+    id: '1',
+    firstName: 'Dylan',
+    middleName: 'Sprouse',
+    lastName: 'Murray',
+    address: '261 Erdman Ford',
+    city: 'East Daphne',
+    state: 'Kentucky',
+    country: 'United States',
+  },
+  {
+    id: '2',
+    firstName: 'Raquel',
+    middleName: 'Hakeem',
+    lastName: 'Kohler',
+    address: '769 Dominic Grove',
+    city: 'Columbus',
+    state: 'Ohio',
+    country: 'United States',
+  },
+  {
+    id: '3',
+    firstName: 'Ervin',
+    middleName: 'Kris',
+    lastName: 'Reinger',
+    address: '566 Brakus Inlet',
+    city: 'South Linda',
+    state: 'West Virginia',
+    country: 'United States',
+  },
+  {
+    id: '4',
+    firstName: 'Brittany',
+    middleName: 'Kathryn',
+    lastName: 'McCullough',
+    address: '722 Emie Stream',
+    city: 'Lincoln',
+    state: 'Nebraska',
+    country: 'United States',
+  },
+  {
+    id: '5',
+    firstName: 'Branson',
+    middleName: 'John',
+    lastName: 'Frami',
+    address: '32188 Larkin Turnpike',
+    city: 'Charleston',
+    state: 'South Carolina',
+    country: 'United States',
+  },
+  {
+    id: '6',
+    firstName: 'Brandon',
+    middleName: 'Joe',
+    lastName: 'Kutch',
+    address: '5660 Kuhn Village',
+    city: 'Vancouver',
+    state: 'British Columbia',
+    country: 'Canada',
+  },
+];
+
+const ColumnPinningTable = () => {
+  // As in the example: `enableColumnPinning` is not a column option (the
+  // column option is `enablePinning`), so the ID column stays pinnable; the
+  // inline column list keeps that line as the example has it.
+  const columns = useMemo<ST_ColumnDef<PinningPerson>[]>(
+    () => [
+      {
+        accessorKey: 'id',
+        icon: HashIcon,
+        enableColumnPinning: false,
+        header: 'ID',
+        size: 110,
+      },
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'middleName',
+        icon: UserIcon,
+        header: 'Middle Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'address',
+        icon: MapPinIcon,
+        header: 'Address',
+        size: 300,
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+      },
+      {
+        accessorKey: 'state',
+        icon: MapIcon,
+        header: 'State',
+      },
+      {
+        accessorKey: 'country',
+        icon: GlobeIcon,
+        header: 'Country',
+      },
+    ],
+    [],
+  );
+  const table = useShadcnTable({
+    columns,
+    data: pinningData,
+    enableColumnPinning: true,
+    enableRowActions: true,
+    layoutMode: 'grid-no-grow',
+    renderRowActionMenuItems: () => [
+      <DropdownMenuItem key="action">Action</DropdownMenuItem>,
+    ],
+    initialState: {
+      columnPinning: { start: ['st-row-actions', 'state'], end: ['city'] },
+    },
+  });
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * State starts pinned to the start and City to the end; Pin to start on
+ * First Name puts it beside State.
+ */
+export const ColumnPinning = {
+  render: () => <ColumnPinningTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const ids = headerIds(canvasElement);
+    expect(ids.slice(0, 2)).toEqual(['st-row-actions', 'state']);
+    expect(ids.filter((id) => !id?.startsWith('st-')).at(-1)).toBe('city');
+    for (const id of ['state', 'city']) {
+      expect(getComputedStyle(header(canvasElement, id)).position).toBe(
+        'sticky',
+      );
+    }
+    await columnMenuAction(canvasElement, 'firstName', 'Pin to start');
+    await waitFor(() =>
+      expect(headerIds(canvasElement).slice(0, 3)).toEqual([
+        'st-row-actions',
+        'state',
+        'firstName',
+      ]),
+    );
+  },
 };
