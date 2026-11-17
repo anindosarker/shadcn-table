@@ -25,6 +25,16 @@ Checks:
 - Check: `pnpm test typecheck --base radix` at 829eeca4: pass
 - Check: `pnpm test docs-e2e --base base` at 829eeca4: pass (getting-started 262, api 111, guides 705, examples 1096, 112 pages, 0 failed)
 - Check: every server stopped (5345 next start, 5346 serve; the test runner stopped its own)
+- Check (verifier): `pnpm test storybook-static --base base` at 829eeca4: pass (42 example stories in index.json, 594 story pages match index.json, reset pass); rerun because b8e770f8..HEAD touches `test/docs-e2e/lib/examples.mjs`
+- Check (verifier): `pnpm test typecheck --base base` at 829eeca4: pass (tsc clean)
+- Check (verifier): `pnpm test typecheck --base aria` at 829eeca4: pass (tsc clean)
+- Check (verifier): `pnpm test storybook-tests --base base` at 829eeca4: pass (85 files, 636 tests)
+- Check (verifier): `pnpm test storybook-tests --base radix` at 829eeca4: pass (85 files, 636 tests)
+- Check (verifier): `pnpm test storybook-tests --base aria` at 829eeca4: pass (85 files, 636 tests)
+- Check (verifier): `pnpm test docs-e2e --base radix` at 829eeca4: pass (getting-started 262, api 111, guides 705, examples 1096, 0 failed)
+- Check (verifier): `pnpm test docs-e2e --base aria` at 829eeca4: pass (getting-started 262, api 111, guides 705, examples 1096, 0 failed)
+- Check (verifier): Acceptance 1.2, programmatic, at 829eeca4: pass. storybook-tests and docs-e2e on base, radix, aria and validate-repo green (validate-repo and docs-e2e base as recorded above at HEAD); parity check of 1.6.5 green (validate-repo, storybook-static); `lib/storybook-map.ts` has 42 keys, one per example page, 42 different story ids, each a story in `storybook-static/base/index.json`; the toolbar button reads it (`example-playground.tsx:411`, `storybookExampleUrl`). Audit list 1 is empty (written before the exact stories were built), so the ids are read against the exact stories that milestone built, not against an audit row
+- Check (verifier): every server stopped (the test runner stopped its own; ports 5340 to 5360 free after the run), tree clean
 
 - Task 1 per-base story copies: done, 0ae6997a
 - Task 2 StoryExample in the playground: done, 35688a78
@@ -41,4 +51,5 @@ Checks:
 - The story copies under `stories/.<base>/` start with `// @ts-nocheck`: four story files do not pass `tsc` in their own package either (`FilterChips.stories.tsx:757`, `HeaderGroups.stories.tsx:295`, `ViewSettings.stories.tsx:398`, `miscellaneous/PinnedItemsCustomToolbar.stories.tsx:44`), and no gate type-checks `packages/shadcn-table/stories`. Revert the nocheck once those four are fixed.
 - Story pages have no Copy prompt and no "Copy install command": a story has no registry item. The Code tab shows the story file as written, the same on every base.
 - The Storybook intro line now reads "This story on the docs site: shadcn-table.com/docs/examples/..." in place of "Looking for the main docs site? Click here."; the wording is the builder's pick and can change freely.
+- Verifier: the judged parts of Acceptance 1.2 for this milestone (three judges on the "More examples" list against the EX B captures, three judges on "same table" for the three story pages against Storybook) were not run by the verifier; the captures are in `reference/docs-layout/captures/` (Task 4 line). The text judges belong to the six text milestones.
 - "More examples" stores its open state under `docs-sidebar-open:<folder id>` and also stores an automatic open (visiting a page inside it), so a reload shows the state the visitor last saw.
