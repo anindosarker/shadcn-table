@@ -306,6 +306,45 @@ export const ColumnDraggingEnabled = {
     await waitFor(() =>
       expect(within(document.body).queryByRole('menu')).toBeNull(),
     );
+
+    // Touch: the listener that keeps the page still is on the page before
+    // the finger goes down (WebKit ignores one added later), a swipe before
+    // the hold still scrolls, and after the hold the page stays still even
+    // when an element on the way stops the touchmove.
+    const held = headerCell(canvasElement, 'Last Name');
+    const at = centreOf(held);
+    /** Whether a touchmove on `element` would leave the page still. */
+    const keepsPageStill = (element: Element) => {
+      const event = new Event('touchmove', { bubbles: true, cancelable: true });
+      element.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    const stopTouchMove = (event: Event) => event.stopPropagation();
+    const added: string[] = [];
+    const addEventListener = window.addEventListener;
+    window.addEventListener = function (
+      this: Window,
+      ...args: Parameters<Window['addEventListener']>
+    ) {
+      added.push(args[0]);
+      return addEventListener.apply(this, args);
+    } as Window['addEventListener'];
+    canvasElement.addEventListener('touchmove', stopTouchMove);
+    try {
+      touch({ at, element: held, type: 'pointerdown' });
+      expect(keepsPageStill(held)).toBe(false);
+      await pause(400);
+      await waitFor(() => expect(ghost()).not.toBeNull());
+      expect(keepsPageStill(held)).toBe(true);
+      touch({ at, element: held, type: 'pointerup' });
+      await waitFor(() => expect(ghost()).toBeNull());
+      expect(keepsPageStill(held)).toBe(false);
+    } finally {
+      window.addEventListener = addEventListener;
+      canvasElement.removeEventListener('touchmove', stopTouchMove);
+    }
+    expect(added).not.toContain('touchmove');
+    expect(headerNames(canvasElement)[0]).toMatch(/^Last Name/);
   },
 };
 

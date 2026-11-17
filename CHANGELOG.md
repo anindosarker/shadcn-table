@@ -45,6 +45,10 @@ publishes the section as the GitHub release notes.
 
 - A column dragged out of a table that scrolls sideways, for example onto the grouping drop zone, no longer keeps scrolling the table from the last pointer or finger position inside it; the table scrolls again when the drag comes back over its edge, on Base UI, Radix UI and React Aria.
 
+#### Spec 62.2 Touch drag blocks page scroll from before the touch starts
+
+- A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a table that cannot drag by touch no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
