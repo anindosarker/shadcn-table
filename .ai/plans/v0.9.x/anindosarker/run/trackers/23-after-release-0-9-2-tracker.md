@@ -1,6 +1,6 @@
 # 23: Release 0.9.2, After release, tracker
 
-Status: merged (e4f4662d)
+Status: done (e4f4662d)
 Branch `master` (read), `claude/review` and `dev` (sync), main checkout
 Checks:
 - `gh run view 42677803985 --json status,conclusion,jobs`, run 42677803985: completed success; Check Release, Verify Deployment, Validate Production, Publish Release success

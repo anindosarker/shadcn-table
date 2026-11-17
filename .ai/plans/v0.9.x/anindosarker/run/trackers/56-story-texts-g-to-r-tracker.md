@@ -1,6 +1,6 @@
 # 56: Story texts G to R, tracker
 
-Status: merged (57f0e0ef)
+Status: done (57f0e0ef)
 Branch `v0.9/story-texts-g-r`, worktree 06 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 109 `features-[g-r]*.mdx` pages (description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links to existing guide files, no em dash) at 13a07e12: pass

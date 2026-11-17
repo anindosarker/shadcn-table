@@ -1,6 +1,6 @@
 # 53: Example row numbers, tracker
 
-Status: merged (7a80ce07)
+Status: done (7a80ce07)
 Branch `v0.9/example-row-numbers`, worktree 03
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at ddc97751: pass

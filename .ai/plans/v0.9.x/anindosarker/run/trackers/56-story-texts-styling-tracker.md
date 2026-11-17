@@ -1,6 +1,6 @@
 # 56: Story texts Styling, tracker
 
-Status: merged (3ca2156c)
+Status: done (3ca2156c)
 Branch `v0.9/story-texts-styling`, worktree 08 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 71 `styling-*.mdx` pages (non-empty single-quoted description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, one `## Related guides` with 1 to 4 links to existing guide files, no em dash) at e6eae48e: pass (161 steps, 28 guide slugs)

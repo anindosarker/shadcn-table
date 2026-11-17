@@ -1,6 +1,6 @@
 # 55: Guide example block, tracker
 
-Status: merged (2a509c87)
+Status: done (2a509c87)
 Branch `v0.9/guide-example-block`, worktree 07
 Checks:
 - Check: docs build, `pnpm --filter shadcn-table-docs build` at 3ad894e9: pass

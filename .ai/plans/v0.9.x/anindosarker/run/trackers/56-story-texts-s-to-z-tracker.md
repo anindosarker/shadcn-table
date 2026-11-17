@@ -1,6 +1,6 @@
 # 56: Story texts S to Z, tracker
 
-Status: merged (63344bb8)
+Status: done (63344bb8)
 Branch `v0.9/story-texts-s-z`, worktree 07 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 115 `features-[s-z]*.mdx` pages (description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links to existing guide files, no em dash, title/sidebarTitle/tag unchanged) at c73601b9: pass

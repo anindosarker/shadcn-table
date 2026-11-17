@@ -1,6 +1,6 @@
 # 56: Story pages in the docs, tracker
 
-Status: merged (06d58c57)
+Status: done (06d58c57)
 Branch `v0.9/story-pages`, worktree 03
 Checks:
 - Check: Task 1 `node lib/story-variants.mjs` at 35688a78: pass, one copy per story file and base (85 files x 3), with index.json and sources.json per base

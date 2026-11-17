@@ -1,6 +1,6 @@
 # 56: Story pages review fixes, tracker
 
-Status: merged (93464987)
+Status: done (93464987)
 Branch `v0.9/story-pages-review-fixes`, worktree 10
 Checks:
 

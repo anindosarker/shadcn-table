@@ -1,6 +1,6 @@
 # 56: Exact stories and merged copies, tracker
 
-Status: merged (b194eef9)
+Status: done (b194eef9)
 Branch `v0.9/exact-stories`, worktree 03
 Checks:
 - Check: Task 1 frozen lockfile, `pnpm install --frozen-lockfile` at 9efbaf7e: pass

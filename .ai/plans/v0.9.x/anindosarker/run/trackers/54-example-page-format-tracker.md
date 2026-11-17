@@ -1,6 +1,6 @@
 # 54: Example page format, tracker
 
-Status: merged (1d97c65d)
+Status: done (1d97c65d)
 Branch `v0.9/example-page-format`, worktree 06
 Checks:
 

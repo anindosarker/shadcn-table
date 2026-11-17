@@ -1,6 +1,6 @@
 # 56: Story texts Miscellaneous, tracker
 
-Status: merged (cd1daf88)
+Status: done (cd1daf88)
 Branch `v0.9/story-texts-misc`, worktree 09
 Checks:
 - Check: Task 2 `grep -L "TryIt"` and `grep -L "## Related guides"` over `more/miscellaneous-*.mdx` (63 files) at 3d9c8c5e: pass, both print nothing
