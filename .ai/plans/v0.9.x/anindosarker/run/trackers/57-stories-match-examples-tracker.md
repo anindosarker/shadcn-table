@@ -1,6 +1,6 @@
 # 57: Stories match their examples, tracker
 
-Status: running
+Status: done (92d314ac)
 Branch `v0.9/stories-match-examples`, worktree 08
 Checks:
 - Check: Task 1, `pnpm ls recharts --filter shadcn-table --filter shadcn-table-docs` at 4b9945a2: pass (2.15.4 both)
