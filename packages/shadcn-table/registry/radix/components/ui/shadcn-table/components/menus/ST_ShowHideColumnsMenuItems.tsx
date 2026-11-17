@@ -69,9 +69,13 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const rowRef = useRef<HTMLDivElement>(null);
 
   const [isDragging, setIsDragging] = useState(false);
+  // Read by the rows' dragenter, which a touch drag sends before the render
+  // that sets isDragging.
+  const draggingRef = useRef(false);
 
   const handleDragStart = (e: DragEvent<HTMLButtonElement>) => {
     setIsDragging(true);
+    draggingRef.current = true;
     try {
       e.dataTransfer.setDragImage(rowRef.current as HTMLElement, 0, 0);
     } catch (e) {
@@ -81,6 +85,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
 
   const endDrag = (cancelled: boolean) => {
     setIsDragging(false);
+    draggingRef.current = false;
     setHoveredColumn(null);
     if (hoveredColumn && !cancelled) {
       // The column slide reads where every header sat before the reorder,
@@ -101,11 +106,14 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const touchDrag = useST_TouchDrag({
     getGhostSource: () => rowRef.current,
     onEnd: (_event, cancelled) => endDrag(cancelled),
-    onStart: () => setIsDragging(true),
+    onStart: () => {
+      draggingRef.current = true;
+      setIsDragging(true);
+    },
   });
 
   const handleDragEnter = () => {
-    if (!isDragging && columnDef.enableColumnOrdering !== false) {
+    if (!draggingRef.current && columnDef.enableColumnOrdering !== false) {
       setHoveredColumn(column);
     }
   };
