@@ -39,9 +39,8 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     setHoveredColumn({ id: 'drop-zone' });
   };
 
-  // A touch drag that leaves the zone, or is cancelled over it (no next
-  // target), no longer drops on it; a header it entered keeps its hover. A
-  // mouse drag keeps the zone as it was.
+  // A touch drag that leaves the zone or is cancelled over it clears the
+  // zone's hover.
   const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     if (!isST_TouchDragEvent(e.nativeEvent)) return;
     if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
@@ -50,12 +49,14 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     }
   };
 
-  // An accepted drop, so the dragend that follows is not read as cancelled.
-  // The zone marks itself again: the column auto-scroll keeps hovering the
-  // header last under the pointer while the table scrolls.
+  // The drop is accepted and, for a touch drag, the zone takes the hover back
+  // from the column auto-scroll.
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
-    if (table.atoms.hoveredColumn.get()?.id !== 'drop-zone') {
+    if (
+      isST_TouchDragEvent(e.nativeEvent) &&
+      table.atoms.hoveredColumn.get()?.id !== 'drop-zone'
+    ) {
       setHoveredColumn({ id: 'drop-zone' });
     }
     if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
