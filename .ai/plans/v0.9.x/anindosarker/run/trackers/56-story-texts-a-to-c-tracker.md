@@ -14,6 +14,13 @@ Checks:
 - Check: `pnpm test typecheck --base radix` at f1417a08: not run (waiting on the build lock)
 - Check: `pnpm test lint` at f1417a08: not run (waiting on the build lock)
 - Check: `pnpm test validate-repo` at f1417a08: not run (waiting on the build lock)
+- Check (verifier, run d3a60a09): structure script over the 127 pages at 4a732ad7: pass (non-empty description without backticks, one `### Try it`, 2 to 4 steps directly above `<StoryExample>`, one `## Related guides` with 1 to 4 links to existing guide files, no em dash)
+- Check (verifier): `grep -L "TryIt"` and `grep -L "## Related guides"` over the globs at 4a732ad7: pass (print nothing)
+- Check (verifier): `git diff 06d58c57...HEAD --name-only` at 4a732ad7: pass (127 files, all matched by the globs; `origin/v0.9/docs-layout` is now cd1daf88 and touches none of them since 06d58c57)
+- Check (verifier): `pnpm test typecheck --base radix` at 4a732ad7: pass (tsc clean)
+- Check (verifier): `pnpm test lint` at 4a732ad7: pass (0 errors, 9 warnings)
+- Check (verifier): `pnpm test validate-repo` at 4a732ad7: pass (story pages match: 636 stories, 42 example pages, 594 story pages; 40 unit tests; tree clean after)
+- Check (verifier): build, `pnpm --filter shadcn-table-docs build` at 4a732ad7: pass (2125 static pages)
 
 - Task 1 site table: done by the writers, e519d0c8, run d3a60a09
 - Task 2 three parts on every page: done, e519d0c8 and f1417a08 (backticks taken out of 25 descriptions), run d3a60a09
