@@ -94,9 +94,10 @@ async function pageOrder(page, check) {
   const order = await page.evaluate(() => {
     const article = document.querySelector('article');
     const panel = article?.querySelector('[data-mode]');
+    // the heading's text also holds its hidden "Copy Anchor Link" label
     const heading = (tag, text) =>
-      [...(article?.querySelectorAll(tag) ?? [])].find(
-        (h) => h.textContent?.trim() === text,
+      [...(article?.querySelectorAll(tag) ?? [])].find((h) =>
+        h.textContent?.trim().startsWith(text),
       );
     const tryIt = heading('h3', 'Try it');
     const list = tryIt?.nextElementSibling;
