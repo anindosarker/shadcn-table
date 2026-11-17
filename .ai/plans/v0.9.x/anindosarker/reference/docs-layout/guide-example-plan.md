@@ -1,0 +1,50 @@
+# Guide example plan
+
+Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per guide, in the order of `apps/shadcn-table-docs/content/docs/guides/meta.json` on `v0.9/docs-layout` (the overview `index` and the five `new-format` comparison pages are not guides). Each line names the page the guide's Example section shows: an example page by its slug (`/docs/examples/<slug>`) or a story by its Storybook id (`/docs/examples/more/<id>`), then how it was chosen. Order of choice: an example page that already shows the guide's feature; an existing story; a new story. No example needed an option enabled.
+
+- production-ready-tables: `react-query`, example page. Server paging, sorting and filtering through React Query; the guide links it.
+- best-practices: `basic`, example page. Typed columns and stable data.
+- data-columns: `basic`, example page. Accessor columns, one with a nested key.
+- display-columns: `advanced`, example page. Selection, expand and row action columns.
+- table-event-listeners: `row-dragging`, example page. Drag listeners passed through the drag handle and layout props.
+- state-management: `persistent-view`, example page. Initial state and stored state; the guide links it.
+- accessibility: `basic`, example page. Keyboard navigation is on by default.
+- tanstack-table-with-shadcn-ui: `basic`, example page. The guide links it.
+- customize-components: `minimal`, example page. Table, row and cell props restyle the table.
+- customize-icons: `features-icons--provider-icon-set`, existing story. Features/Icons, "Provider Icon Set"; no example page swaps icons.
+- column-icons: `persistent-view`, example page. The guide already shows it.
+- localization: `features-localization--spanish`, new story. Group "Features/Localization", story "Spanish", file `packages/shadcn-table/stories/features/Localization.stories.tsx`, built from `examples/base/localization-i18n-es`. No example page is localized; the one story with a language (Features/Pagination, "Pagination Enabled Big Data Language") picks it from the browser.
+- tint-tokens: `sticky-row-selection`, example page. Starts with selected and pinned rows, so the tints show at once.
+- toolbar-customization: `advanced`, example page. Custom top toolbar with selection actions.
+- view-settings: `persistent-view`, example page. The guide already shows it.
+- column-size: `basic`, example page. Every column sets `size`.
+- column-resizing: `basic`, example page. Resizing is on by default.
+- density-toggle: `basic`, example page. The density button is in the toolbar by default.
+- full-screen-toggle: `basic`, example page. The full screen button is in the toolbar by default.
+- overflow-tooltip: `basic`, example page. The guide already shows it.
+- async-loading: `react-query`, example page. Skeletons and the progress bar while fetching; the guide already shows it.
+- pagination: `remote`, example page. Pages of 10 over 200 rows; the guide already shows it.
+- virtualization: `row-virtualization`, example page. Picker also `column-virtualization`, as on the accepted preview page.
+- row-selection: `export-csv`, example page. Checkbox selection with the selection banner on a plain client-side table.
+- editing: `editing-crud`, example page. Picker also `editing-crud-inline-row`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`, the guide's tab order.
+- column-filtering: `filter-variants`, example page. The guide's first example.
+- filter-chips: `basic`, example page. The guide already shows it.
+- global-filtering: `basic`, example page. Search is on by default.
+- column-hiding: `basic`, example page. Column hiding is on by default.
+- detail-panel: `detail-panel`, example page. The guide's first example.
+- expanding-sub-rows: `expanding-tree`, example page. The guide already shows it.
+- column-grouping: `column-grouping`, example page. The guide's first example.
+- aggregation: `aggregation-and-grouping`, example page. The guide's first example.
+- sticky-header: `sticky-header`, example page. The guide already shows it.
+- column-pinning: `column-pinning`, example page. As on the accepted preview page.
+- scroll-cues: `column-pinning`, example page. The guide already shows it.
+- row-pinning: `sticky-row-pinning`, example page. The guide's first example.
+- sorting: `basic`, example page. Sorting is on by default.
+- sort-editor: `basic`, example page. The sort button is in the toolbar by default.
+- row-ordering-dnd: `row-ordering`, example page. The guide's first example.
+- column-ordering-dnd: `column-ordering`, example page. The guide already shows it.
+- row-numbers: `row-virtualization`, example page. Row numbers are on, and its page already counts to row 10000 and links this guide.
+- column-actions: `basic`, example page. The column menu is on by default.
+- cell-actions: `editing-crud-inline-cell`, example page. Cell actions are on; its page links this guide.
+- row-actions: `advanced`, example page. A row action menu on every row.
+- click-to-copy: `advanced`, example page. Click to copy is on.
