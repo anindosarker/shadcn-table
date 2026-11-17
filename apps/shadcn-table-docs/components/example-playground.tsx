@@ -1,10 +1,7 @@
 'use client';
 
 import {
-  useCallback,
   useEffect,
-  useId,
-  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -141,54 +138,6 @@ const writeMode = (next: Mode) => {
 const getModeSnapshot = () => sessionMode ?? readMode();
 const getModeServerSnapshot = () => DEFAULT_MODE;
 
-/* Which mount holds the id `example-<name>` on the page. A guide may show
- * an example in its Example section and again further down; the mounts of a
- * name are kept in mount order, the first one holds the plain id and every
- * further one a suffixed id, so no two elements share one. When the holder
- * unmounts (a picker swap), the next mount in the list takes the plain id
- * over. Layout effects run in document order on hydration, so the first
- * panel on the page is first in the list. The server render and hydration
- * use the plain id. */
-const idMounts = new Map<string, symbol[]>();
-const idListeners = new Set<() => void>();
-
-const subscribeIds = (onChange: () => void) => {
-  idListeners.add(onChange);
-  return () => {
-    idListeners.delete(onChange);
-  };
-};
-
-const notifyIds = () => {
-  for (const listener of idListeners) listener();
-};
-
-/** Element id of this mount: `example-<name>` for the first mount of the name, a suffixed one for a further mount. */
-const useExampleId = (name: string) => {
-  const base = `example-${name}`;
-  const suffix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  const [token] = useState(() => Symbol(name));
-  const getSnapshot = useCallback(() => {
-    const head = idMounts.get(name)?.[0];
-    return head === undefined || head === token ? base : `${base}-${suffix}`;
-  }, [base, name, suffix, token]);
-  const getServerSnapshot = useCallback(() => base, [base]);
-  const id = useSyncExternalStore(subscribeIds, getSnapshot, getServerSnapshot);
-  useLayoutEffect(() => {
-    const mounts = idMounts.get(name) ?? [];
-    mounts.push(token);
-    idMounts.set(name, mounts);
-    notifyIds();
-    return () => {
-      const rest = (idMounts.get(name) ?? []).filter((t) => t !== token);
-      if (rest.length > 0) idMounts.set(name, rest);
-      else idMounts.delete(name);
-      notifyIds();
-    };
-  }, [name, token]);
-  return id;
-};
-
 type CopyTarget = 'install' | 'prompt';
 
 /** How long a copy action reads "Copied" after a click. */
@@ -214,7 +163,6 @@ export const ExamplePlayground = ({
 }: Props) => {
   const base = useBase();
   const { files, githubUrl, installCommand, prompt } = variants[base];
-  const elementId = useExampleId(name);
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,
@@ -230,6 +178,11 @@ export const ExamplePlayground = ({
   const path = useTreePath();
   // Inside a guide's <GuideExamples>: its example list and the one on show.
   const guide = useGuideExamples();
+  // The id follows the mount's place, known on the server (D113): the
+  // guide's Example section holds `guide-example-<name>`, an inline guide
+  // example and an example or story page keep `example-<name>`, so a guide
+  // that shows one example in both places repeats no id.
+  const elementId = guide ? `guide-example-${name}` : `example-${name}`;
   const guidePage = guide?.pages[guide.index];
   const exampleSlug =
     /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1] ??

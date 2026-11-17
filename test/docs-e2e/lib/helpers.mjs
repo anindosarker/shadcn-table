@@ -27,22 +27,27 @@ export async function propTable(page, tableId, check) {
 }
 
 /**
- * Example playground `#example-<id>` or prop-table source toggle
- * `#props-<id>` for a bare example or table id. Both carry a prefix so a
- * heading whose slug equals the id cannot resolve the locator to two nodes.
+ * Example playground `#example-<id>` (or `#guide-example-<id>` in a guide's
+ * Example section) or prop-table source toggle `#props-<id>` for a bare
+ * example or table id. All carry a prefix so a heading whose slug equals
+ * the id cannot resolve the locator to two nodes.
  */
 export function panelOf(page, id) {
-  return page.locator(`[id="example-${id}"], [id="props-${id}"]`).first();
+  return page
+    .locator(
+      `[id="guide-example-${id}"], [id="example-${id}"], [id="props-${id}"]`,
+    )
+    .first();
 }
 
 /**
- * The first mount of example `<id>` on the page: it keeps the id
- * `example-<id>`, a further mount of the same example takes a suffixed id
- * once hydrated (components/example-playground.tsx). `.first()` also holds
- * before hydration, when every mount still carries the plain id.
+ * The first mount of example `<id>` on the page. The id follows the mount's
+ * place (components/example-playground.tsx, D113): `guide-example-<id>` in
+ * a guide's Example section, `example-<id>` inline and on example and story
+ * pages, so a guide's Example section resolves first.
  */
 export const examplePanel = (page, id) =>
-  page.locator(`[id="example-${id}"]`).first();
+  page.locator(`[id="guide-example-${id}"], [id="example-${id}"]`).first();
 
 /**
  * Live example playground: panel `#example-<id>` present, table with rows.
@@ -234,7 +239,7 @@ export async function codeToggle(page, id, needle, check) {
             const pre = document.querySelector(sel)?.querySelector('pre');
             return !!pre && pre.textContent.replace(/\s+/g, '') !== prev;
           },
-          [`[id="example-${id}"]`, norm(txt)],
+          [`[id="guide-example-${id}"], [id="example-${id}"]`, norm(txt)],
           { timeout: 5000 },
         )
         .catch(() => {});
