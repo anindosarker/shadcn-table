@@ -39,6 +39,7 @@ kanban-plugin: basic
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 - [ ] **Q116** Hovering a section tab shows a grey box behind it
+	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
 
 ## Decided
 
