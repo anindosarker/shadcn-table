@@ -49,8 +49,22 @@ export const ST_TOUCH_GHOST_ATTR = 'data-st-touch-ghost';
 
 const touchDragEvents = new WeakSet<Event>();
 
-/** The part of a drag's data transfer the drop targets read and write. */
-export type ST_TouchDataTransfer = Pick<DataTransfer, 'dropEffect'>;
+/**
+ * The data transfer of a touch drag: the read surface of a `DataTransfer`,
+ * empty, so a listener outside the table reads it as it reads a mouse drag's.
+ */
+export type ST_TouchDataTransfer = Pick<
+  DataTransfer,
+  | 'clearData'
+  | 'dropEffect'
+  | 'effectAllowed'
+  | 'files'
+  | 'getData'
+  | 'items'
+  | 'setData'
+  | 'setDragImage'
+  | 'types'
+>;
 
 /**
  * A drag event the touch path sends to the element under the finger, so a
