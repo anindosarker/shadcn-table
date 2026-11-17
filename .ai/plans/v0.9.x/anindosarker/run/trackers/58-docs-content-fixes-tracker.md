@@ -1,6 +1,6 @@
 # 58: Guide placement, Basic steps and three page names, tracker
 
-Status: done (Tasks 1 to 5 and 7; Task 6, the three judges, runs in the workflow after verify)
+Status: running
 Branch `v0.9/docs-content-fixes`, worktree 03
 Checks:
 - Check: D122 hotfix on branch point, `git merge-base --is-ancestor 77a4a0c2 origin/v0.9/docs-layout` at d9bed58c: pass
