@@ -11,6 +11,7 @@ One line per finding, in the order raised. Status: open, in progress, fixed (com
 | 2 | `date-picker.tsx` | The `switch (props.mode)` has no `default`. Add one. | in progress |
 | 3 | whole folder | Remove unnecessary comments. | in progress |
 | 4 | `date-picker.tsx` | `void mode` in every case: what is it and why. It only silences the unused-variable lint after `const { mode, ...rest } = props`. Noise; remove. | in progress |
+| 5 | `modes/date.tsx` | `dropDoubleClick()`: why is this needed. It swallows the second click of a double click on a day, because the first click picks the day and closes the calendar, so the second would hit whatever is under it. Done with capture listeners on `window` and a 1 s timer; only the date mode has it; shadcn's own date picker has no such guard. Keep or remove: owner's call. | open |
 
 ## Carried from the refactor review, not yet raised by the owner
 
