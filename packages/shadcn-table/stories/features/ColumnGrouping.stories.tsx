@@ -665,11 +665,13 @@ const dropZone = (canvasElement: HTMLElement, header: string) =>
  * on, follows the finger and is gone after the `end` event.
  */
 const touchDragToDropZone = async ({
+  beforeEnd,
   canvasElement,
   end = 'pointerup',
   header,
   id,
 }: {
+  beforeEnd?: () => void;
   canvasElement: HTMLElement;
   end?: 'pointercancel' | 'pointerup';
   header: string;
@@ -690,6 +692,7 @@ const touchDragToDropZone = async ({
   touch({ at: target, element: cell, type: 'pointermove' });
   await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
   await pause(50);
+  beforeEnd?.();
   touch({ at: target, element: cell, type: end });
   await waitFor(() => expect(ghost()).toBeNull());
 };
@@ -752,7 +755,20 @@ export const GroupByBanner = {
     });
     await pause(100);
     expect(bannerText()).toBe('Grouped by Gender, then by City');
+    // The column auto-scroll re-sends a plain dragover to a header while the
+    // finger rests on the drop zone; the drop still groups.
     await touchDragToDropZone({
+      beforeEnd: () => {
+        const { x, y } = centreOf(headerCell(canvasElement, 'firstName')!);
+        headerCell(canvasElement, 'firstName')!.dispatchEvent(
+          new DragEvent('dragover', {
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y,
+          }),
+        );
+      },
       canvasElement,
       header: 'Last Name',
       id: 'lastName',
