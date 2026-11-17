@@ -1,9 +1,8 @@
 # 56: Story pages in the docs, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/story-pages`, worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 per-base story copies: planned
 - Task 2 StoryExample in the playground: planned
