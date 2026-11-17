@@ -5,11 +5,11 @@ description: 'How to use and customize the column ordering and drag and drop fea
 
 Whether you just want to change the default column order in your table or let columns be reordered by dragging and dropping, Shadcn Table has a simple API for this. Column ordering is on by default: users drag a header cell to move its column.
 
-### Example
+## Example
 
 <GuideExamples slugs={['column-ordering']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -24,19 +24,19 @@ Whether you just want to change the default column order in your table or let co
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={new Set(['enableColumnDragging', 'enableColumnOrdering'])}
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable
   onlyOptions={new Set(['columnOrder', 'draggingColumn', 'hoveredColumn'])}
 />
 
-### Change the Default Column Order
+## Change the Default Column Order
 
 By Default, Shadcn Table will order the columns in the order they are defined in the `columns` table option. And Display Columns such as Actions, Selection, Expansion, etc., get added to either the beginning or the end of the table. You can customize all of this by defining your own `columnOrder` state and passing it either to the `initialState` or `state` table options.
 
@@ -68,7 +68,7 @@ return <ShadcnTable table={table} />;
 
 > **Note:** If the number of `columns` and the length of the `columnOrder` state do not match, ST will automatically re-generate the `columnOrder` state internally.
 
-### Manage Column Order State
+## Manage Column Order State
 
 If you need easier access to the `columnOrder` state, you can store the column order in your own state management, and then pass it back into the ST `state` table option and sync back up internal mutations with the `onColumnOrderChange` callback.
 
@@ -97,7 +97,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Column Ordering with Drag and Drop
+## Column Ordering with Drag and Drop
 
 `enableColumnOrdering` is `true` by default. The header cell itself is the drag source: the cursor turns into a grab hand over a header that can be dragged, a click still opens the [column menu](/docs/guides/column-actions), and only a real drag moves the column. Any cell of another column is a drop target, and a column dropped on a pinned column takes that column's pinning. Display columns such as row numbers and selection are not draggable; the row actions column takes drops and moves through the columns menu, but its header is not a drag source.
 
@@ -117,7 +117,7 @@ const table = useShadcnTable({
 
 <EnableColumnOrderingExample />
 
-#### Show a Drag Handle
+### Show a Drag Handle
 
 The header needs no grip, but if you want a visible handle in each draggable header cell, set `showColumnDragHandle: true`. The header cell stays the drag source either way. Use `stColumnDragHandleProps` to customize the handle.
 
@@ -129,7 +129,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Locked Columns
+## Locked Columns
 
 A column with `enableColumnOrdering: false` in its column definition is locked. It looks like any other column at rest, shows no grab cursor and cannot be dragged. While another column is being dragged, every cell of the locked column shows diagonal stripes, its header shows a lock icon with "Fixed" (the icon alone on a narrow column), and the pointer shows that a drop is not allowed there. Its column menu lists a disabled "Fixed position" item with the lock icon.
 
@@ -148,7 +148,7 @@ const columns = [
 
 The "Fixed" and "Fixed position" texts come from the `fixed` and `fixedPosition` localization keys, and the lock from the `LockIcon` icon key.
 
-### Drag Animation
+## Drag Animation
 
 While a column is dragged, only the header row previews the move: the other headers slide aside to open a gap where the column will land, and the dragged header sits in that gap, faded with a dashed outline. The body does not move during the drag, and the column order changes only on drop. On drop the body columns slide to catch up with the header and the moved column flashes a tint for 600 ms. Dragging back over the column's own place restores the preview, and dropping there changes nothing. A cancelled drag slides the headers back. A move made in the columns menu slides the header and the body together and flashes the same way.
 

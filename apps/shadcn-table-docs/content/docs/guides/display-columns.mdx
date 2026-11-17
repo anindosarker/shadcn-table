@@ -7,17 +7,17 @@ Display columns are used to display non-data elements in a table. They only requ
 
 Display columns do not have any processing features, such as sorting, filtering, grouping, etc. enabled on them by default.
 
-### Example
+## Example
 
 <GuideExamples slugs={['advanced']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['displayColumnDefOptions', 'defaultDisplayColumn'])}
 />
 
-### Built-in ST Display Columns
+## Built-in ST Display Columns
 
 Shadcn Table has a few built-in display columns that are created automatically when certain features are enabled.
 
@@ -52,11 +52,11 @@ const defaultDisplayColumnDefOptions = {
 
 All of these values are able to be overridden if needed, and you'll learn about that in the next section down below.
 
-### Customize Built-in ST Display Columns
+## Customize Built-in ST Display Columns
 
 It is possible to change and override the default behavior of built-in display columns. Whether you want to change the default column width, add some styles, or enable some features, such as column actions or column drag and drop, you can do it with the `displayColumnDefOptions` table option.
 
-#### Default Display Column Table Option
+### Default Display Column Table Option
 
 First of all, if you want to enable or disable some feature for all display columns, you can just use the `defaultDisplayColumn` table option. This will apply to all display columns, including any custom display columns you create.
 
@@ -72,7 +72,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Display Column Definition Options Table Option
+### Display Column Definition Options Table Option
 
 Let's say you need to adjust the width of the Actions column to be wide enough to fit all of your action buttons. You could do that as follows:
 
@@ -118,7 +118,7 @@ Here is a full example and demo for customizing display columns.
 
 <CustomizeDisplayColumnsExample />
 
-### Create your own Display Columns
+## Create your own Display Columns
 
 You do not have to use the built in Row Actions feature. You can just create your own display columns instead. It is as easy as creating a normal column, only specifying the `columnDefType` as `display`.
 

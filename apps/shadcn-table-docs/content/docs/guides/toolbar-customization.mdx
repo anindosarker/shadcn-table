@@ -5,11 +5,11 @@ description: 'How to customize the Toolbars, add buttons to toolbars, or customi
 
 This guide shows you how to [hide](#hide-or-disable-toolbars), [customize](#customize-toolbar-buttons), or [override](#override-with-custom-toolbar-components) the top and bottom toolbars in Shadcn Table.
 
-### Example
+## Example
 
 <GuideExamples slugs={['advanced']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -38,13 +38,13 @@ This guide shows you how to [hide](#hide-or-disable-toolbars), [customize](#cust
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable
   onlyOptions={new Set(['showAlertBanner', 'showProgressBars'])}
 />
 
-### Toolbar Layout
+## Toolbar Layout
 
 The top toolbar is a plain row above the bordered table frame; the frame holds the scrolling table and the bottom toolbar. On the left of the top toolbar sit the sort chip, the [filter chips](/docs/guides/filter-chips) and anything you render with `renderTopToolbarCustomActions`. On the right sits one group of built-in buttons, in this order:
 
@@ -57,7 +57,7 @@ The top toolbar is a plain row above the bordered table frame; the frame holds t
 
 The buttons are small ghost icon buttons. The filter button turns to the `secondary` fill while any filter chip exists and the sort button while any sort exists; the search, full screen, view settings and pinned buttons stay ghost and show their state through their icon. With `enableViewSettings: false`, the separate columns button and density toggle return in place of the pinned items and the view settings button.
 
-### Hide or Disable Toolbars
+## Hide or Disable Toolbars
 
 There are `enableTopToolbar` and `enableBottomToolbar` table options that you can use to show or hide the toolbars.
 
@@ -90,15 +90,15 @@ return (
 
 Sub-components rendered outside `<ShadcnTable />` read the table from an `ST_TableProvider`. See [Compose with ST_TableProvider](#compose-with-st_tableprovider).
 
-#### No Toolbars Example
+### No Toolbars Example
 
 <MinimalExample />
 
-### Customize Toolbar buttons
+## Customize Toolbar buttons
 
 Everything in the toolbars are customizable. You can add your own buttons or change the order of the built-in buttons.
 
-#### Customize Built-In Internal Toolbar Button Area
+### Customize Built-In Internal Toolbar Button Area
 
 The `renderToolbarInternalActions` table option allows you to redefine the built-in buttons that usually reside in the top right of the top toolbar. You can reorder the icon buttons or even insert your own custom buttons. All of the built-in buttons are available to be imported from '@/components/ui/shadcn-table'.
 
@@ -137,7 +137,7 @@ return <ShadcnTable table={table} />;
 
 `ST_ViewSettingsItems` renders the pinned view settings buttons and `ST_FilterChips` the chips row; both take the `table` prop as well.
 
-#### Add Custom Toolbar Buttons/Components
+### Add Custom Toolbar Buttons/Components
 
 The `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` table options allow you to add your own custom buttons or components to the top and bottom toolbar areas. These props are functions that return a ReactNode. You can add your own buttons or whatever components you want.
 
@@ -168,11 +168,11 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Custom Toolbar Actions Example
+### Custom Toolbar Actions Example
 
 <CustomTopToolbarExample />
 
-### Position Toolbar Areas
+## Position Toolbar Areas
 
 The `positionToolbarAlertBanner`, `positionGlobalFilter`, `positionPagination`, and `positionToolbarDropZone` table options allow you to swap the default position of certain areas of the toolbars. Experiment moving them around until you find a layout that works for you.
 
@@ -190,11 +190,11 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Customize Toolbar Props and Styles
+## Customize Toolbar Props and Styles
 
 The `stTopToolbarProps`, `stBottomToolbarProps`, `stToolbarAlertBannerProps`, and `stToolbarAlertBannerChipProps` table options allow you to customize the props and styles of the underlying shadcn/ui components that make up the toolbar components. Remember that you can pass CSS overrides to their `className` or `style` props. Some have found this useful for forcing `position: absolute` on alerts, etc.
 
-### Customize Linear Progress Bars
+## Customize Linear Progress Bars
 
 The progress bars that display in both the top and bottom toolbars become visible when either the `isLoading` or `showProgressBars` state options are set to `true`. You can customize the progress bars by passing in props to the `stLinearProgressProps` table option. By default, the progress bars have a full animated progress bar, but you can set the `value` table option to a number between 0 and 100 to show real progress values if your table is doing some complicated long running tasks that you want to show progress for. Visit the [shadcn/ui Progress docs](https://ui.shadcn.com/docs/components/progress) to learn more.
 
@@ -218,7 +218,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Customize Toolbar Alert Banner
+## Customize Toolbar Alert Banner
 
 The toolbar alert banner is an internal component used to display alerts to the user. By default, it will automatically show messages around the number of selected rows or grouping state.
 
@@ -244,7 +244,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Override with Custom Toolbar Components
+## Override with Custom Toolbar Components
 
 If you want to completely override the default toolbar components, you can do so by passing in your own custom components to the `renderTopToolbar` and `renderBottomToolbar` props.
 
@@ -277,13 +277,13 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Build Your Own Toolbar
+## Build Your Own Toolbar
 
 Instead of overriding the toolbar components up above, you may want 100% control over the layout and styling of your table controls and where they are on the page. You can do this by just using a ST sub component such as `<ST_TableContainer />` for the table component, which does not have the internal toolbar components built-in. Optionally, build your own custom toolbar components using the other ST sub components.
 
 <ExternalToolbarExample />
 
-### Compose with ST_TableProvider
+## Compose with ST_TableProvider
 
 `<ShadcnTable />` puts its table on a context that every ST sub-component reads, so most sub-components take no `table` prop (the toolbar components `ST_SortPopover`, `ST_FilterChips`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems` and `ST_ScrollButtons` take it explicitly). Inside `render...` table options and custom `Cell` or `Header` renders, they work as is. Anywhere else, wrap them in `ST_TableProvider`:
 

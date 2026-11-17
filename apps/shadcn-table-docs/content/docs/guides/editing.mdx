@@ -7,11 +7,11 @@ If your tables need full CRUD functionality, you can enable editing features in 
 
 There are five visually distinct editing modes to choose from, whether you want to let users [edit data in a modal](#modal-edit-display-mode), [inline one row at a time](#row-edit-display-mode), [one cell at a time](#cell-edit-display-mode), or just always have [editing enabled for every cell](#table-edit-display-mode), or a [completely custom editing UI](#custom-edit-display-mode).
 
-### Example
+## Example
 
 <GuideExamples slugs={['editing-crud', 'editing-crud-inline-row', 'editing-crud-inline-cell', 'editing-crud-inline-table', 'editing-crud-tree']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -35,7 +35,7 @@ There are five visually distinct editing modes to choose from, whether you want 
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -49,13 +49,13 @@ There are five visually distinct editing modes to choose from, whether you want 
   }
 />
 
-### Relevant State Options
+## Relevant State Options
 
 <StateOptionsTable
   onlyOptions={new Set(['editingCell', 'editingRow', 'creatingRow'])}
 />
 
-### Enable Editing
+## Enable Editing
 
 To enable editing, you first need to set the `enableEditing` table option to `true`.
 
@@ -69,7 +69,7 @@ const table = useShadcnTable({
 
 However, this is just the first step. You will need to hook up logic and event listeners, but it depends on which `editDisplayMode` you want to use.
 
-### Disable Editing
+## Disable Editing
 
 Editing can be turned off on a per-column basis with the `enableEditing` column option.
 
@@ -99,11 +99,11 @@ const columns = [
 ];
 ```
 
-### Edit Display Modes
+## Edit Display Modes
 
 There are five different editDisplayModes to choose from. The default is `"modal"`, but you can also choose `"row"`, `"cell"`, `"table"`, or `"custom"`.
 
-#### Modal Edit Display Mode
+### Modal Edit Display Mode
 
 When using the default `"modal"` editDisplayMode, the user will be presented with a modal dialog where they can edit the data for one row at a time. No data is saved until the user clicks the save button. Clicking the cancel button clears out any changes that were made on that row.
 
@@ -135,7 +135,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Row Edit Display Mode
+### Row Edit Display Mode
 
 The `"row"` editDisplayMode works just like the default `"modal"` editDisplayMode, except that the editing components will render inline in the table instead of in a modal dialog. Only one row is made editable at a time.
 
@@ -158,7 +158,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Cell Edit Display Mode
+### Cell Edit Display Mode
 
 The `"cell"` editDisplayMode is a bit simpler visually. By default, a user can double-click a cell to activate editing mode, but only for that cell.
 
@@ -201,23 +201,23 @@ const table = useShadcnTable({
 });
 ```
 
-#### Table Edit Display Mode
+### Table Edit Display Mode
 
 The `"table"` editDisplayMode is similar to the `"cell"` editDisplayMode, but it simply has all of the data cells in the table become editable all at once. You will most likely wire up all of the logic the same way as the `"cell"` editDisplayMode.
 
-#### Custom Edit Display Mode
+### Custom Edit Display Mode
 
 There is another option if you don't like any of the built-in editDisplayModes UI. If you want to completely handle your own editing UI, you can use the `"custom"` editDisplayMode. This will give you access to the `editingCell`, `editingRow`, and `creatingRow` state options, but ST will not render any editing UI for you. This is common for rendering a form in a sidebar or similar.
 
-### Enable Creating
+## Enable Creating
 
 Shadcn Table offers new functionality to make creating new rows of data easier. It works just like the editing features, but with separate state options and callbacks. A Blank row is added to the table or modal for the user to fill out and submit.
 
-#### Create Display Modes
+### Create Display Modes
 
 There are just three different createDisplayModes to choose from. The default is `"modal"`, but you can also choose `"row"` or `"custom"`. They work exactly the same as their editDisplayMode counterparts.
 
-#### Position Creating Row
+### Position Creating Row
 
 By default, the creating row will be added to the top of the table. You can change this behavior with the `positionCreatingRow` table option.
 
@@ -233,7 +233,7 @@ const table = useShadcnTable({
 
 In advanced use cases, such as editing nested expanding sub-rows, you could even pass in a number to the `positionCreatingRow` table option to specify the index of the row to insert the creating row before.
 
-#### Trigger Create Mode
+### Trigger Create Mode
 
 To trigger a new blank row to be added to the table, we just need to just populate the `creatingRow` state option with a new blank row. This can be done with the `table.setCreatingRow` table instance API. You can either pass in `true` as an argument, or pass in row object with default values.
 
@@ -270,7 +270,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Customizing Editing Components
+## Customizing Editing Components
 
 You can pass any shadcn/ui TextField Props with the `stEditTextFieldProps` table option.
 
@@ -288,7 +288,7 @@ const columns = [
 ];
 ```
 
-#### Add Validation to Editing Components
+### Add Validation to Editing Components
 
 You can add validation to the editing components by using the `stEditTextFieldProps` events. You can write your validation logic and hook it up to the `onBlur`, `onChange`, etc., events, then set the `error` and `helperText` props accordingly.
 
@@ -326,7 +326,7 @@ const columns = [
 ];
 ```
 
-### Use Custom Editing Components
+## Use Custom Editing Components
 
 If you need to use a much more complicated Editing component than the built-in textfield, you can specify a custom editing component with the `Edit` column definition option.
 
@@ -351,7 +351,7 @@ const columns = [
 ];
 ```
 
-### Customize Actions/Edit Column
+## Customize Actions/Edit Column
 
 You can customize the actions column in a few different ways in the `displayColumnDefOptions` prop's `'st-row-actions'` section.
 
