@@ -5,7 +5,12 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D133** The sidebar state script runs from the page head #R6
+	- Settled by the lead: an owner-reported bug with one right behaviour, already fixed.
+	- Opening the docs from the home page showed a script tag error in the console and lost the saved sidebar width (`app/docs/layout.tsx:22`).
+	- Fixed as a hotfix on `v0.9/docs-layout`, merge bb8eec7a: the script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 	- Source: Q111
+- [ ] **D134** Pinned virtual rows are sticky rows in their own grid track #R6
+	- Source: Q119
 
 ## In progress
 
