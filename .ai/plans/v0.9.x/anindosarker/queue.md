@@ -60,6 +60,7 @@ kanban-plugin: basic
 	- Lookup 2026-11-17 (code read, not run): a virtual row is always position absolute with translateY and top 0; sticky top/bottom apply only when there is no virtualRow (body/ST_TableBodyRow.tsx:228-262); expected; base, radix, aria alike; MRT_TableBodyRow.tsx:181-218 does the same, so a virtual pinned row never sticks in MRT either.
 - [ ] **Q107** On React Aria the Click to copy button is wider than its cell, so hovering can show the cell's overflow tooltip instead
 	- Story features-click-to-copy--click-to-copy-disabled-per-column on aria in the vitest browser: the 57.5px copy button overflows its 50px overflow span, so a hover opens the name's overflow tooltip, not Click to copy; the play checks the tooltip through keyboard focus there. Seen only in the vitest browser, not at desktop width in the docs. Found by the builder of spec 56 Story text checklist; not reproduced by a second agent.
+	- Lookup 2026-11-17 (code read, not run): copy Button is inline-flex shrink-0 whitespace-nowrap px-2.5 (ui/button.tsx sm, buttons/ST_CopyButton.tsx:16,74-80) inside ST_OverflowText's block truncate span, so in a narrow cell it overflows and isCutOff is true; aria's span opens its tooltip on its own pointer timer (aria body/ST_OverflowText.tsx:57-70); real bug (overflow in base, radix, aria; tooltip clash read on aria only); MRT has no overflow tooltip.
 
 ## Decided
 
