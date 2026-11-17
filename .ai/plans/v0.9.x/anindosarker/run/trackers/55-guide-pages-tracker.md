@@ -18,6 +18,8 @@ Checks:
 - Check: lint, `pnpm test lint` at 8dd964ed: pass (9 warnings, none in owned files)
 - Check: validate-repo, `pnpm test validate-repo` at 8dd964ed: pass
 - Check: format, `pnpm format` at 8dd964ed: pass (no changes)
+- Verifier: every 2.2 check above is recorded at 8dd964ed = HEAD (clean tree), so typecheck, lint, validate-repo and docs-e2e were not rerun; the docs-e2e build (7a3354b4) differs from HEAD only in `test/docs-e2e/lib/guides.mjs`, so it stands for HEAD
+- Check: Acceptance rerun by the verifier at 8dd964ed: pass (`grep -L "GuideExamples" .../guides/*.mdx` prints only index.mdx; heading script against `origin/claude/review` and `origin/v0.9/docs-layout`: 46 guides, `## Example` on all 46, every other heading outside fences one level up, tanstack-table-with-shadcn-ui headings unchanged, 0 failures; diff script with heading markers and the Example section stripped: only 7 removed example tags and their headings, 0 other lines; docs-e2e `--base base` taken from the recorded run at the same content; judges are task 8, run by the workflow)
 
 - Task 1 GuideExamples resolves story pages: done, 23a4a171
 - Task 2 site table: done (46 rows, working file, the source of the checklist), 3c8515b5
