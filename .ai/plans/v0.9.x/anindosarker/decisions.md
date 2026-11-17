@@ -91,6 +91,14 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-18.
 	- Source: Q100
 - [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #R6
+	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
+	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
+	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
+	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
+	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
+	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
+	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
+	- Owner recorded 2026-11-18.
 	- Source: Q112
 
 ## In progress
