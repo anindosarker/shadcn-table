@@ -32,46 +32,93 @@ const panelOf = (canvasElement: HTMLElement) => {
   return { input, panel };
 };
 
-export const OpenCloseAndEscape = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    const toggle = canvas.getByRole('button', { name: 'Show/Hide search' });
+/** The toggle opens the field focused; Escape clears a value, then closes. */
+const openCloseAndEscape = async (canvasElement: HTMLElement) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  const toggle = canvas.getByRole('button', { name: 'Show/Hide search' });
 
-    expect(panelOf(canvasElement).panel.inert).toBe(true);
+  expect(panelOf(canvasElement).panel.inert).toBe(true);
 
-    await userEvent.click(toggle);
-    await waitFor(() =>
-      expect(document.activeElement).toBe(panelOf(canvasElement).input),
-    );
-    await waitFor(() => {
-      const { panel } = panelOf(canvasElement);
-      expect(panel.inert).toBe(false);
-      expect(panel.getBoundingClientRect().width).toBeGreaterThan(48);
-    });
+  await userEvent.click(toggle);
+  await waitFor(() =>
+    expect(document.activeElement).toBe(panelOf(canvasElement).input),
+  );
+  await waitFor(() => {
+    const { panel } = panelOf(canvasElement);
+    expect(panel.inert).toBe(false);
+    expect(panel.getBoundingClientRect().width).toBeGreaterThan(48);
+  });
 
-    await userEvent.click(toggle);
-    await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
+  await userEvent.click(toggle);
+  await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
 
-    await userEvent.click(toggle);
-    await waitFor(() =>
-      expect(document.activeElement).toBe(panelOf(canvasElement).input),
-    );
-    await userEvent.keyboard('Ma');
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(panelOf(canvasElement).input).toHaveValue(''));
-    expect(panelOf(canvasElement).panel.inert).toBe(false);
-    expect(document.activeElement).toBe(panelOf(canvasElement).input);
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
-    await waitFor(() => expect(document.activeElement).toBe(toggle));
-  },
+  await userEvent.click(toggle);
+  await waitFor(() =>
+    expect(document.activeElement).toBe(panelOf(canvasElement).input),
+  );
+  await userEvent.keyboard('Ma');
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(panelOf(canvasElement).input).toHaveValue(''));
+  expect(panelOf(canvasElement).panel.inert).toBe(false);
+  expect(document.activeElement).toBe(panelOf(canvasElement).input);
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
+  await waitFor(() => expect(document.activeElement).toBe(toggle));
+};
+
+/** Open, the toggle clears the value and closes the field in one click; no inline X by default. */
+const toggleClearsAndCloses = async (canvasElement: HTMLElement) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  const toggle = canvas.getByRole('button', { name: 'Show/Hide search' });
+
+  await userEvent.click(toggle);
+  await waitFor(() =>
+    expect(document.activeElement).toBe(panelOf(canvasElement).input),
+  );
+  await userEvent.keyboard('Lily');
+  await waitFor(() => expect(canvas.queryByText('Mason')).toBeNull());
+  expect(toggle).toBeEnabled();
+  expect(canvas.queryByRole('button', { name: 'Clear search' })).toBeNull();
+
+  await userEvent.click(toggle);
+  await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
+  await canvas.findByText('Mason');
+  expect(panelOf(canvasElement).input).toHaveValue('');
+};
+
+/** A pointer click on the toggle opens the field with the input focused and the group ring drawn. */
+const ringAfterPointerOpen = async (canvasElement: HTMLElement) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Show/Hide search' }),
+  );
+  const { input } = panelOf(canvasElement);
+  await waitFor(() => expect(document.activeElement).toBe(input));
+  const group = input.closest<HTMLElement>('[data-slot="input-group"]');
+  if (!group) throw new Error('input group not found');
+  await waitFor(() => {
+    const shadow = getComputedStyle(group).boxShadow;
+    expect(shadow).not.toBe('none');
+    expect(shadow).toMatch(/ 3px/);
+  });
 };
 
 /** The field beside the toolbar buttons, opening toward the start. */
 export const PositionRight = {
   render: () => <ShadcnTable columns={columns} data={data} />,
+  // Ordered so each step starts with the field closed and empty.
+  play: async ({ canvasElement, step }: StoryContext) => {
+    await step('OpenCloseAndEscape', () => openCloseAndEscape(canvasElement));
+    await step('ToggleClearsAndCloses', () =>
+      toggleClearsAndCloses(canvasElement),
+    );
+    await step('RingAfterPointerOpen', () =>
+      ringAfterPointerOpen(canvasElement),
+    );
+  },
 };
 
 /** The field on its own at the toolbar start, opening toward the end. */
@@ -79,51 +126,6 @@ export const PositionLeft = {
   render: () => (
     <ShadcnTable columns={columns} data={data} positionGlobalFilter="left" />
   ),
-};
-
-/** A pointer click on the toggle opens the field with the input focused and the group ring drawn. */
-export const RingAfterPointerOpen = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Show/Hide search' }),
-    );
-    const { input } = panelOf(canvasElement);
-    await waitFor(() => expect(document.activeElement).toBe(input));
-    const group = input.closest<HTMLElement>('[data-slot="input-group"]');
-    if (!group) throw new Error('input group not found');
-    await waitFor(() => {
-      const shadow = getComputedStyle(group).boxShadow;
-      expect(shadow).not.toBe('none');
-      expect(shadow).toMatch(/ 3px/);
-    });
-  },
-};
-
-/** Open, the toggle clears the value and closes the field in one click; no inline X by default. */
-export const ToggleClearsAndCloses = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    const toggle = canvas.getByRole('button', { name: 'Show/Hide search' });
-
-    await userEvent.click(toggle);
-    await waitFor(() =>
-      expect(document.activeElement).toBe(panelOf(canvasElement).input),
-    );
-    await userEvent.keyboard('Lily');
-    await waitFor(() => expect(canvas.queryByText('Mason')).toBeNull());
-    expect(toggle).toBeEnabled();
-    expect(canvas.queryByRole('button', { name: 'Clear search' })).toBeNull();
-
-    await userEvent.click(toggle);
-    await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
-    await canvas.findByText('Mason');
-    expect(panelOf(canvasElement).input).toHaveValue('');
-  },
 };
 
 /** `showClearSearchButton` brings back the inline X. */
