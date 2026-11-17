@@ -66,6 +66,8 @@ kanban-plugin: basic
 	- Story features-sub-row-tree--sub-row-tree-with-selection on base, production build of v0.9/story-texts-s-z: ticking a parent leaves its sub-rows unticked (the builder names getST_RowSelectionHandler unticking them once all are selected); ticking a sub-row ticks the parent. The story page text was written to match what happens. Found by the run's browser check of the Try it steps; not compared with MRT.
 - [ ] **Q104** A column's resize grip can only be dragged from its left half
 	- Seen on the virtualization and view settings stories on a production docs build (base): the right half of a column's resize grip is covered by the next header cell, so a drag starts only from the grip's left half. Found by the run's browser check while running Try it steps; not reproduced by a second agent.
+- [ ] **Q105** On guides with a note or several intro blocks the Example section comes after them, not right after the first paragraph
+	- Merged 807fed50 on v0.9/docs-layout (spec 55 Guide pages): the section sits directly before each guide's first own heading, so on 16 guides (virtualization, data-columns, editing and others) the NOTE or further intro blocks stand above it; on the accepted preview page virtualization-new-format-3 the section followed the first paragraph and the NOTE came after. Keep, or move the section up to after the first paragraph. Raised by the builder and the reviewer.
 
 ## Decided
 
