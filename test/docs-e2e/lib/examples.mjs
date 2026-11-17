@@ -260,7 +260,8 @@ const examplePage =
 
 /**
  * Spec 58 (D118): the Basic page's Try it steps, as written, on the base the
- * page opened on: column filtering (`Filter`, `State`, `Nebraska`) leaves two
+ * page opened on: `Sort ascending` from the `First Name` column menu shows the
+ * sort chip, column filtering (`Filter`, `State`, `Nebraska`) leaves two
  * rows, removing the filter brings back five, searching `Ohio` leaves one.
  */
 async function basicSteps(page, w, check) {
@@ -279,6 +280,12 @@ async function basicSteps(page, w, check) {
     steps.length === 4 && /^Try column filtering:/.test(steps[1] ?? ''),
     steps.join(' | ').slice(0, 160),
   );
+  check(
+    'Basic step 1: sorts through the column menu',
+    /Sort ascending/.test(steps[0] ?? ''),
+    (steps[0] ?? '').slice(0, 120),
+  );
+  await sortChip(page, w, 'Basic step 1', 'First Name', check);
   try {
     await w
       .getByRole('button', { name: 'Filter', exact: true })
