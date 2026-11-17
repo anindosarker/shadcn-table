@@ -125,6 +125,8 @@ kanban-plugin: basic
 	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
 	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
 	- Source: Q107
+- [ ] **D128** A pinned row stays in view while virtualized rows scroll #R6
+	- Source: Q106
 
 ## In progress
 
