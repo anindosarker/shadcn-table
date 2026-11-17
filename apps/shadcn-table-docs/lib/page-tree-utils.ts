@@ -128,10 +128,10 @@ export function groupedPages(
 }
 
 /**
- * Sections whose sidebar rows carry a running number and whose group labels
- * carry a row count (D103: Examples only), by URL prefix of their pages.
+ * URL prefix of the one section whose sidebar rows carry a running number and
+ * whose group labels carry a row count (D103: Examples only).
  */
-const NUMBERED_SECTIONS = [`${docsRoute}/examples/`];
+const NUMBERED_SECTION = `${docsRoute}/examples/`;
 
 /** The sidebar rows under `node` in sidebar order: folder index first, external links skipped. */
 function pageRows(node: PageTree.Root | PageTree.Folder): PageTree.Item[] {
@@ -180,10 +180,7 @@ export function isNumberedRoot(root: PageTree.Root | PageTree.Folder): boolean {
 
 function isNumberedSection(rows: PageTree.Item[]): boolean {
   return (
-    rows.length > 0 &&
-    rows.every((row) =>
-      NUMBERED_SECTIONS.some((prefix) => row.url.startsWith(prefix)),
-    )
+    rows.length > 0 && rows.every((row) => row.url.startsWith(NUMBERED_SECTION))
   );
 }
 
