@@ -1,6 +1,6 @@
 # 56: Story texts A to C, tracker
 
-Status: running
+Status: merged (030b0bbc)
 Branch `v0.9/story-texts-a-c`, worktree 03 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 127 `features-[a-c]*.mdx` and `basic-*.mdx` pages (non-empty description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, one `## Related guides` with 1 to 4 links to existing guide files, no em dash) at f1417a08: pass
