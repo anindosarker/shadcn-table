@@ -37,24 +37,6 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
-- [ ] **D113** An example shown twice on a page has different ids in the served HTML too #E15 #R6
-	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
-	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
-	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
-	- Source: Q94
-- [ ] **D116** Story pages no longer triple the size of the docs build #E15 #R6
-	- Settled by the lead: a build problem, not an owner item.
-	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
-	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
-	- Source: Q101
-- [ ] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
-	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
-	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
-	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
-	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
-	- Not part of this: a "Did you mean" suggestion.
-	- Owner recorded 2026-11-17.
-	- Source: Q110
 - [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
 	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
 	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
@@ -758,6 +740,11 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D113** An example shown twice on a page has different ids in the served HTML too #E15 #R6
+	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
+	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
+	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
+	- Source: Q94
 - [x] **D114** The column pinning example locks the ID column with the option that works #E15 #R6
 	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
 	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
@@ -767,6 +754,11 @@ kanban-plugin: basic
 	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
 	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
 	- Source: Q99
+- [x] **D116** Story pages no longer triple the size of the docs build #E15 #R6
+	- Settled by the lead: a build problem, not an owner item.
+	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
+	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
+	- Source: Q101
 - [x] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
 	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
 	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
@@ -805,6 +797,14 @@ kanban-plugin: basic
 	- All three bases alike. MRT has no such switch.
 	- Owner recorded 2026-11-17.
 	- Source: Q97
+- [x] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
+	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
+	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
+	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
+	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
+	- Not part of this: a "Did you mean" suggestion.
+	- Owner recorded 2026-11-17.
+	- Source: Q110
 - [x] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #E15 #R6
 	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
 	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
