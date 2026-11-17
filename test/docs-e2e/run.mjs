@@ -6,6 +6,7 @@ export default defineTest({
   paths: [
     'apps/shadcn-table-docs/**',
     'packages/shadcn-table/registry/**',
+    'packages/shadcn-table/stories/**',
     'tools/registry/**',
     'test/docs-e2e/**',
   ],
