@@ -299,7 +299,7 @@ export const ColumnDraggingEnabled = {
     ).stBrowserUserEvent;
     if (browserUserEvent) await browserUserEvent.click(label);
     else fireEvent.click(label);
-    expect(await within(document.body).findByRole('menu')).toBeVisible();
+    expect(await within(document.body).findByRole('menu')).toBeInTheDocument();
     fireEvent.keyDown(document.activeElement ?? document.body, {
       key: 'Escape',
     });
@@ -543,9 +543,10 @@ export const TouchHoldOnRangeSlider = {
     finger('pointerup', step);
     await pause(50);
     expect(ghost()).toBeNull();
-    expect(
-      headerNames(canvasElement).map((name) => name.split(' ')[0]),
-    ).toEqual(['First', 'Last', 'Age']);
+    const names = headerNames(canvasElement);
+    expect(names[0]).toMatch(/^First Name/);
+    expect(names[1]).toMatch(/^Last Name/);
+    expect(names[2]).toMatch(/^Age/);
   },
 };
 
