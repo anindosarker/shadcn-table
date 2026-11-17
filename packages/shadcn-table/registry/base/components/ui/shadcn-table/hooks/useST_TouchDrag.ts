@@ -60,6 +60,17 @@ const toHandlerEvent = (
     },
   }) as ST_TouchDragEvent;
 
+/** Touch drags under way: while one is on, the finger moves no page. */
+let activeDrags = 0;
+/** Mounted drag sources; the page listener below lives while there is one. */
+let mountedSources = 0;
+
+// WebKit on iOS lets a touchmove listener cancel the scroll only when it was
+// on the page before the touch began, so it stays while a source is mounted.
+const blockScroll = (event: TouchEvent) => {
+  if (activeDrags > 0 && event.cancelable) event.preventDefault();
+};
+
 /** An empty transfer whose `dropEffect` keeps what a drop target writes. */
 const createDataTransfer = (): ST_TouchDataTransfer => {
   // A constructed `DataTransfer` lends its empty file and item lists; its own
@@ -261,7 +272,6 @@ const trackFinger = ({
     window.removeEventListener('pointermove', handleMove, true);
     window.removeEventListener('pointerup', handleUp, true);
     window.removeEventListener('pointercancel', handleCancel, true);
-    window.removeEventListener('touchmove', handleTouchMove, true);
     window.removeEventListener('keydown', handleKeyDown, true);
     window.removeEventListener('dragstart', preventDefault, true);
     window.removeEventListener('contextmenu', preventDefault, true);
@@ -272,6 +282,7 @@ const trackFinger = ({
     active = false;
     detach();
     if (!wasActive) return;
+    activeDrags -= 1;
     if (cancelled && over) send('dragleave', over, null);
     // A finger that rests and lifts in place is a tap: its click stays.
     if (moved) guardClick(source);
@@ -283,6 +294,7 @@ const trackFinger = ({
       return finish(true);
     }
     active = true;
+    activeDrags += 1;
     startX = x;
     startY = y;
     const ghostSource = options.current.getGhostSource();
@@ -328,11 +340,6 @@ const trackFinger = ({
     finish(true);
   }
 
-  // Once the drag is on, the finger moves the item, not the page.
-  function handleTouchMove(event: TouchEvent) {
-    if (active && event.cancelable) event.preventDefault();
-  }
-
   function handleKeyDown(event: KeyboardEvent) {
     if (active && event.key === 'Escape') finish(true);
   }
@@ -345,10 +352,6 @@ const trackFinger = ({
   window.addEventListener('pointermove', handleMove, true);
   window.addEventListener('pointerup', handleUp, true);
   window.addEventListener('pointercancel', handleCancel, true);
-  window.addEventListener('touchmove', handleTouchMove, {
-    capture: true,
-    passive: false,
-  });
   window.addEventListener('keydown', handleKeyDown, true);
   window.addEventListener('dragstart', preventDefault, true);
   window.addEventListener('contextmenu', preventDefault, true);
@@ -373,12 +376,19 @@ export const useST_TouchDrag = (options: ST_TouchDragOptions) => {
   });
   const cancel = useRef<(() => void) | undefined>(undefined);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mountedSources += 1;
+    if (mountedSources === 1) {
+      window.addEventListener('touchmove', blockScroll, { passive: false });
+    }
+    return () => {
       cancel.current?.();
-    },
-    [],
-  );
+      mountedSources -= 1;
+      if (mountedSources === 0) {
+        window.removeEventListener('touchmove', blockScroll);
+      }
+    };
+  }, []);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType !== 'touch' || !event.isPrimary) return;
