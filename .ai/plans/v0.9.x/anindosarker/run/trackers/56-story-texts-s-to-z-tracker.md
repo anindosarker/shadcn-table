@@ -1,6 +1,6 @@
 # 56: Story texts S to Z, tracker
 
-Status: running
+Status: waiting (lead: Acceptance 1.2 rerun at 9b5228f9, storybook-tests and docs-e2e on three bases plus storybook-static base; every other check green at HEAD)
 Branch `v0.9/story-texts-s-z`, worktree 07 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 115 `features-[s-z]*.mdx` pages (description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links to existing guide files, no em dash, title/sidebarTitle/tag unchanged) at c73601b9: pass
@@ -13,6 +13,14 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base radix` at c73601b9: pass
 - Check: lint, `pnpm test lint` at c73601b9: pass (0 errors, 9 warnings, none in these pages)
 - Check: validate-repo, `pnpm test validate-repo` at c73601b9: pass
+- Check: verifier, Task 2 `grep -L "TryIt"` and `grep -L "## Related guides"` over `more/features-[s-z]*.mdx` (115 files) at 9b5228f9: pass, both print nothing
+- Check: verifier, Task 2 structure script: every page has a non-empty `description`, one `### Try it` with 2 to 4 steps directly above `<StoryExample` (304 steps), one `## Related guides` list of 1 to 4 links to existing guide files below it (214 links), no em dash; no title, sidebarTitle or `StoryExample` line changed, at 9b5228f9: pass
+- Check: verifier, Task 2 `git status` clean and `git diff origin/v0.9/docs-layout...HEAD --stat` at 9b5228f9: pass, only the 115 glob files (merge base 06d58c57; origin/v0.9/docs-layout moved on to cd1daf88, so the two-dot diff also lists that branch's newer commits)
+- Check: verifier, `pnpm test typecheck --base radix` at 9b5228f9: pass (tsc clean)
+- Check: verifier, `pnpm test lint` at 9b5228f9: pass (0 errors, 9 warnings)
+- Check: verifier, `pnpm test validate-repo` at 9b5228f9: pass (636 stories, 42 example pages, 594 story pages, story pages match, 40 unit tests), tree clean after
+- Check: verifier, `pnpm --filter shadcn-table-docs build` at 9b5228f9: pass (2125 static pages)
+- Check: verifier, Acceptance 1.2 rerun (storybook-tests base/radix/aria, storybook-static base, docs-e2e base/radix/aria, toolbar ids in `index.json`): not run; the shared build lock was held by another agent and the verifier had to return first. The judged text part passed in this workflow (Task 4)
 
 - Task 1 site table: done by the writers, 2f128832, run d3a60a09
 - Task 2 three parts on every page: done, 2f128832, run d3a60a09
