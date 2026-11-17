@@ -7,6 +7,8 @@ When a table is wider than its frame, two cues tell users that more columns are 
 
 ## Example
 
+Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.
+
 <GuideExamples slugs={['column-pinning']} />
 
 ## Relevant Table Options
@@ -45,11 +47,5 @@ The table tracks its sideways overflow without re-rendering on scroll: a passive
 You can style your own cues from them with Tailwind's data attribute variants, for example on an element inside the wrapper with `group-data-overflow-end/st-scroll:opacity-100` (the wrapper is the `group/st-scroll` group). The wrapper also carries the pinned widths as `--st-pin-start` and `--st-pin-end`.
 
 `ST_ScrollButtons` is exported and takes the table as a prop; it must render inside that wrapper.
-
-## Scroll Cues Example
-
-Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.
-
-<EnableColumnPinningExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
