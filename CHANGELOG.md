@@ -90,6 +90,10 @@ publishes the section as the GitHub release notes.
 - Each Examples sidebar row starts with its running number ("1. Basic"), counted through the whole section in sidebar order, and each Examples group label ends with its row count ("Featured (5)"); both are computed from the sidebar's order and show in the sidebar only, never in Get Started, Guides or API (D103).
 - The sticky sidebar labels check their dashed line only on a scroll of the sidebar, no longer on every page or table scroll.
 
+#### Spec 55 Click to Copy guide
+
+- The Click to Copy guide shows its own click to copy example on top, in place of the Advanced example, and no longer repeats it at the end; every cell of that example copies, since click to copy is on for the whole table (D122).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
