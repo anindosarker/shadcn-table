@@ -30,6 +30,13 @@ publishes the section as the GitHub release notes.
 
 - An example shown twice on one docs page has two different element ids: the first keeps `example-<name>`, a further one gets a suffixed id (D105).
 
+#### Spec 55 Guide pages
+
+- Every guide opens with a live example: an Example section right before its first section shows the best example for the guide, linked to its example page or its story page under More examples. A table the guide showed only as a copy of that example is removed; the guide's text is unchanged (D105).
+- Guide sections are h2 and their sub-sections h3.
+- When the plain id of an example passes from one mount to another (a picker swap), the next mount takes it over, so no two elements ever share it.
+- The five guide comparison pages are removed.
+
 ### Docs
 
 #### Spec 53 Preview lands on review

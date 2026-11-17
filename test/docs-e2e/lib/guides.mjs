@@ -246,6 +246,96 @@ async function themeParts(page, check) {
   }
 }
 
+/**
+ * Spec 55 (D105, finding 2 of the "Guide example block" review): no two
+ * elements share an example id. Every example playground carries its name
+ * in `data-example`; after hydration (polled, the suffixed ids are set in a
+ * layout effect) exactly one element carries the plain id `example-<name>`
+ * of each example on the page, and no id of a playground repeats.
+ */
+async function uniqueExampleIds(page, check, label) {
+  const probe = () => {
+    const panels = [...document.querySelectorAll('[data-example]')];
+    const names = [...new Set(panels.map((el) => el.dataset.example))];
+    const plain = names.filter(
+      (name) =>
+        document.querySelectorAll(`[id="example-${name}"]`).length !== 1,
+    );
+    const ids = panels.map((el) => el.id);
+    const repeated = ids.filter((id, i) => ids.indexOf(id) !== i);
+    return { ok: plain.length === 0 && repeated.length === 0, plain, repeated };
+  };
+  await page
+    .waitForFunction(
+      () => {
+        const panels = [...document.querySelectorAll('[data-example]')];
+        const ids = panels.map((el) => el.id);
+        return (
+          panels.length > 0 &&
+          new Set(ids).size === ids.length &&
+          panels.every(
+            (el) =>
+              document.querySelectorAll(`[id="example-${el.dataset.example}"]`)
+                .length === 1,
+          )
+        );
+      },
+      undefined,
+      { timeout: 10000 },
+    )
+    .catch(() => {});
+  const result = await page.evaluate(probe);
+  check(
+    `${label}: one element per plain example id`,
+    result.ok,
+    `plain=${result.plain.join(',')} repeated=${result.repeated.join(',')}`,
+  );
+}
+
+/**
+ * Spec 55 (D105): the guide's Example section. An h2 "Example" sits before
+ * every other h2 of the guide, with one example playground between it and
+ * the next heading; the playground's toolbar links its example page (one
+ * example: the name; several: "Open example page" beside the picker).
+ * Returns the section's playground.
+ */
+async function exampleSection(page, check) {
+  const info = await page.evaluate(() => {
+    const heading = document.querySelector('article h2#example');
+    if (!heading) return null;
+    const headings = [...document.querySelectorAll('article :is(h2, h3)')];
+    const next = headings[headings.indexOf(heading) + 1];
+    const follows = (a, b) =>
+      !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const panels = [
+      ...document.querySelectorAll('article [data-example]'),
+    ].filter((el) => follows(heading, el) && (!next || follows(el, next)));
+    const link = panels[0]?.querySelector('header a[href^="/docs/examples/"]');
+    return {
+      firstH2: document.querySelector('article h2') === heading,
+      panels: panels.length,
+      href: link?.getAttribute('href') ?? '',
+    };
+  });
+  check('example section: h2 "Example"', info !== null);
+  if (!info) return null;
+  check('example section: first h2 of the guide', info.firstH2);
+  check(
+    'example section: one playground',
+    info.panels === 1,
+    `panels=${info.panels}`,
+  );
+  check('example section: links its example page', info.href !== '', info.href);
+  await uniqueExampleIds(page, check, 'example section');
+  return page.locator('article h2#example ~ [data-example]').first();
+}
+
+/** Clicks the picker arrow `verb` ("Next", "Previous") of guide playground `w`. */
+async function pickExample(page, w, verb) {
+  await w.locator(`button[aria-label="${verb} example"]`).first().click();
+  await page.waitForTimeout(500);
+}
+
 const TABLE = '#relevant-props-table';
 const STATE = '#relevant-state-options-table';
 const COLUMN = '#relevant-column-options-table';
@@ -339,7 +429,7 @@ const checks = {
   },
 
   '/docs/guides/best-practices': async ({ page, check }) => {
-    // One h3 per section, as in MRT; the h2 repeating the title is dropped
+    // One h2 per section (spec 55); the h2 repeating the title is dropped
     // by the sync.
     check('headings', (await count(page, 'article :is(h2, h3)')) >= 3);
   },
@@ -690,19 +780,19 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
-    await exampleGroup(
-      page,
-      [
-        ['Modal', 'editing-crud-modal'],
-        ['Inline Row', 'editing-crud-row'],
-        ['Inline Cell', 'editing-crud-cell'],
-        ['Inline Table', 'editing-crud-table'],
-        ['Tree Editing', 'editing-crud-tree'],
-      ],
-      check,
-    );
-    const modalTab = page.locator('[role="tab"]', { hasText: 'Modal' }).first();
-    await modalTab.click();
+    // The Example section's picker lists the five editing examples in the
+    // guide's order and swaps them in place.
+    const section = page.locator('article h2#example ~ [data-example]').first();
+    for (const id of [
+      'editing-crud-row',
+      'editing-crud-cell',
+      'editing-crud-table',
+      'editing-crud-tree',
+    ]) {
+      await pickExample(page, section, 'Next');
+      await example(page, id, check);
+    }
+    await pickExample(page, section, 'Next');
     const w = await example(page, 'editing-crud-modal', check);
     // ST_Tooltip adds no aria-label to its trigger (MUI did); match the icon.
     await marker(
@@ -901,7 +991,7 @@ const checks = {
       'button:has(.lucide-refresh-cw)',
       check,
     );
-    check('steps', (await page.locator('article h3').count()) >= 4);
+    check('steps', (await page.locator('article h2').count()) >= 4);
     // Multi-file example: the code explorer lists every file in its tree.
     await w
       .locator('button', { hasText: /^Code$/ })
@@ -1034,9 +1124,10 @@ const checks = {
     );
   },
   '/docs/guides/table-event-listeners': async ({ page, check }) => {
-    // One h3 (shadcn components) with an h4 per listener example, as in MRT.
-    const headings = await page.locator('main h4').count();
-    check('event listener sections', headings > 3, `h4=${headings}`);
+    // One h2 (shadcn components) with an h3 per listener example (spec 55:
+    // guide sections are h2, their sub-sections h3).
+    const headings = await page.locator('article h3').count();
+    check('event listener sections', headings > 3, `h3=${headings}`);
   },
   '/docs/guides/tanstack-table-with-shadcn-ui': async ({ page, check }) => {
     const title = (
@@ -1056,9 +1147,9 @@ const checks = {
     await propTable(page, STATE, check);
     await example(page, 'minimal', check);
     const provider = await page
-      .locator('article h3', { hasText: 'Compose with ST_TableProvider' })
+      .locator('article h2', { hasText: 'Compose with ST_TableProvider' })
       .count();
-    check('table provider section', provider === 1, `h3=${provider}`);
+    check('table provider section', provider === 1, `h2=${provider}`);
     const custom = await example(page, 'custom-top-toolbar', check);
     await marker(
       custom,
@@ -1087,7 +1178,28 @@ const checks = {
       const rows = await w.locator('table tbody tr').count();
       check(`${id}: virtualized row window`, rows < 200, `rows=${rows}`);
     }
+    // The section's picker swaps row for column virtualization and back;
+    // each example also shows further down, so the plain id passes between
+    // mounts and must stay on exactly one element.
+    const section = page.locator('article h2#example ~ [data-example]').first();
+    await pickExample(page, section, 'Next');
+    await uniqueExampleIds(page, check, 'after picker swap');
+    await pickExample(page, section, 'Previous');
+    await uniqueExampleIds(page, check, 'after picker swap back');
   },
 };
+
+/*
+ * Every guide page opens with its Example section (spec 55, D105): its
+ * checks run first, then the page's own, in page order.
+ */
+for (const [path, run] of Object.entries(checks)) {
+  if (!/^\/docs\/guides\/[^/]+$/.test(path)) continue;
+  if (path === '/docs/guides/server-side-data') continue;
+  checks[path] = async (ctx) => {
+    await exampleSection(ctx.page, ctx.check);
+    await run(ctx);
+  };
+}
 
 export default checks;

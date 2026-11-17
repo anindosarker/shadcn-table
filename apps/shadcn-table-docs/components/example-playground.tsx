@@ -350,6 +350,9 @@ export const ExamplePlayground = ({
       // Prefixed like the registry item so a guide heading whose slug is
       // the example name ("Customize Filter Modes") cannot share the id.
       id={elementId}
+      // The example name whatever the id, so a check can find the mount
+      // that holds the plain id `example-<name>`.
+      data-example={name}
       data-mode={mode}
       data-fullscreen={fullscreen || undefined}
       className={cn(
