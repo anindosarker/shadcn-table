@@ -53,6 +53,8 @@ kanban-plugin: basic
 	- Same move, view-settings.mdx (as spec 58 1.3 lists it): the sentence 'set persistViewSettings: true' (line 6) is now separated from its code snippet (line 12) by the Example table; a nit from the run's review, visible on the preview.
 - [ ] **Q122** The docs build is 1107 MB against the 900 MB limit of spec 59, half of it the build cache
 	- Spec 59 Lighter story pages, branch v0.9/lighter-story-pages at 49cbea14, built and waiting on this: du -sm .next is 1107 MB (limit 900 in 1.2); 524 MB of it is the turbopack build cache .next/cache/turbopack, which was 518 MB at the branch point too; without the cache the build is 583 MB (2146 MB with cache at the branch point). The story pages are 245 MB (limit 250, was 1166). Whether the 644 MB 'before the story pages' of D116 included the cache is not recorded. Options named by the builder: measure without .next/cache, or turn the build cache off in next.config.mjs. Every other check of the milestone is green.
+- [ ] **Q123** The More examples rows are bundled in the docs script, not fetched from a JSON route as spec 59 says
+	- Spec 59 Lighter story pages (49cbea14), builder's deviation from 1.6.4, keep or revert: there is no /docs/more-examples.json route; the rows are rebuilt on the client from meta.json bundled once into the docs JS (lib/more-examples.ts, new components/docs-tree-layout.tsx), because the breadcrumb, page switcher and row numbers need the full tree on the server render. components/sidebar-separator.tsx, not in the milestone's files, was edited for it. A story page went from about 1.98 MB to 0.33 MB; no sidebar pixel differs in the captures.
 
 ## Decided
 
