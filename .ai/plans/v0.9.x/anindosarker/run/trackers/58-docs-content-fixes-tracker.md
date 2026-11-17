@@ -1,6 +1,6 @@
 # 58: Guide placement, Basic steps and three page names, tracker
 
-Status: running
+Status: done (1f91eca4)
 Branch `v0.9/docs-content-fixes`, worktree 03
 Checks:
 - Check: D122 hotfix on branch point, `git merge-base --is-ancestor 77a4a0c2 origin/v0.9/docs-layout` at d9bed58c: pass
