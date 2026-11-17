@@ -105,7 +105,7 @@ export const CustomGlobalFilterFn = () => (
     data={data}
     filterFns={{
       myCustomFilterFn: (row, id, filterValue) =>
-        row.getValue<string>(id).startsWith(filterValue),
+        String(row.getValue(id)).startsWith(filterValue),
     }}
     globalFilterFn="myCustomFilterFn"
   />
