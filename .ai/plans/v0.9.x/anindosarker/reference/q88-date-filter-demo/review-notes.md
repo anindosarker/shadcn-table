@@ -2,15 +2,16 @@
 
 Code under review: `test-projects/next-app/components/date-picker/` (branch `playground/header-demo-theming`, from `c27be55`).
 One line per finding, in the order raised. Status: open, in progress, fixed (commit).
+Nothing is implemented until the owner says go; a first builder pass on findings 1 to 4 was started without one and reverted uncommitted (it had also added a `types.ts` the owner did not ask for).
 
 ## 2026-11-18
 
 | # | File | Finding (owner) | Status |
 |---|---|---|---|
-| 1 | `date-picker.tsx` | `DatePickerProps` is six hand-written union lines. "fix the types. Use better typescript syntax", take the library's `types.ts` as the example. | in progress |
-| 2 | `date-picker.tsx` | The `switch (props.mode)` has no `default`. Add one. | in progress |
-| 3 | whole folder | Remove unnecessary comments. | in progress |
-| 4 | `date-picker.tsx` | `void mode` in every case: what is it and why. It only silences the unused-variable lint after `const { mode, ...rest } = props`. Noise; remove. | in progress |
+| 1 | `date-picker.tsx` | `DatePickerProps` is six hand-written union lines. "fix the types. Use better typescript syntax", take the library's `types.ts` as the example. | open |
+| 2 | `date-picker.tsx` | The `switch (props.mode)` has no `default`. Add one. | open |
+| 3 | whole folder | Remove unnecessary comments. | open |
+| 4 | `date-picker.tsx` | `void mode` in every case: what is it and why. It only silences the unused-variable lint after `const { mode, ...rest } = props`. Noise; remove. | open |
 | 5 | `modes/date.tsx` | `dropDoubleClick()`: why is this needed. It swallows the second click of a double click on a day, because the first click picks the day and closes the calendar, so the second would hit whatever is under it. Done with capture listeners on `window` and a 1 s timer; only the date mode has it; shadcn's own date picker has no such guard. Keep or remove: owner's call. | open |
 
 ## Carried from the refactor review, not yet raised by the owner
