@@ -14,11 +14,6 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
-- [ ] **D110** All 59 copied stories merge into the story they copy #R6
-	- Settled by the lead: D106's rule applied as written (a copy whose copied story has no check of its own merges; its check moves onto the story it copies).
-	- The audit of E14 (`reference/docs-layout/story-pairing-audit.md`, list 4) found 59 such copies in 59 same-table groups, not the 2 the plan assumed: 54 move a play, 5 had none; 12 stories now carry two or more plays.
-	- Kept as built in E14.
-	- Source: Q92
 - [ ] **D111** Each of the 42 docs examples gets a new exact story #R6
 	- Settled by the lead: D106 as written (every docs example has an exact story; a new story built from the example where none matches).
 	- The audit found exact 0, close 34, no partner 8, so all 42 examples get a new story. Story pages under More examples: 593.
@@ -738,6 +733,11 @@ kanban-plugin: basic
 	- Plan files, trackers, the grid and decisions stay on `claude/review` as before.
 	- Why the whole epic: the sidebar, tab row and page formats are also not released yet, and without the texts `claude/review` would carry about 650 story pages with no text.
 	- Owner recorded 2026-11-17.
+- [x] **D110** All 59 copied stories merge into the story they copy #R6
+	- Settled by the lead: D106's rule applied as written (a copy whose copied story has no check of its own merges; its check moves onto the story it copies).
+	- The audit of E14 (`reference/docs-layout/story-pairing-audit.md`, list 4) found 59 such copies in 59 same-table groups, not the 2 the plan assumed: 54 move a play, 5 had none; 12 stories now carry two or more plays.
+	- Kept as built in E14.
+	- Source: Q92
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
