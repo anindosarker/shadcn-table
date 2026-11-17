@@ -1,6 +1,6 @@
 # 59: Docs app: example ids, 404 page, lighter story pages, tracker
 
-Status: done
+Status: done (e0700242)
 Branch `v0.9/example-ids-404-page`, worktree 07
 Checks:
 - Check: Task 1 id check on the code before the fix, `pnpm test docs-e2e --base base --url <next start of d9bed58c + site.mjs> /sitemap.xml` at 2568a26d: fail as intended; served HTML repeats an example id on column-filtering, column-grouping, column-ordering-dnd, detail-panel, expanding-sub-rows, overflow-tooltip, row-ordering-dnd, row-pinning, virtualization (async-loading, pagination, scroll-cues already mount two different examples)
