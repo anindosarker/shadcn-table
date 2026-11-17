@@ -13,7 +13,11 @@ publishes the section as the GitHub release notes.
 
 #### Spec 62 Touch drag for columns and rows
 
-- Columns and rows reorder by touch on phones and tablets, on Base UI, Radix UI and React Aria: a finger on a grip drags at once, a finger resting on a draggable header cell for about 300 ms drags it, and a copy of the dragged header or row follows the finger until the drop. A drag from a grip does not scroll the page; a swipe anywhere else, and on a header cell before the hold, scrolls as before. The handlers passed in `stColumnDragHandleProps` and `stRowDragHandleProps` run for a touch drop too, with the pointer event in place of the drag event. Mouse dragging is unchanged (D108, D132).
+- Columns and rows reorder by touch on phones and tablets, on Base UI, Radix UI and React Aria: a finger on a grip drags at once, a finger resting on a draggable header cell for about 300 ms drags it, and a copy of the dragged header or row follows the finger until the drop. A drag from a grip does not scroll the page by itself: a row held near the top or bottom edge scrolls the table, or the page when the table has no scroll of its own, as a mouse drag does; a swipe anywhere else, and on a header cell before the hold, scrolls as before. The handlers passed in `stColumnDragHandleProps` and `stRowDragHandleProps` run for a touch drop too, with the pointer event in place of the drag event. Mouse dragging is unchanged (D108, D132).
+
+#### Spec 62 Touch drag in menus and toolbars
+
+- The columns in `Show/Hide columns`, the sort rules in the sort popover and a column dropped on the grouping drop zone reorder or group by touch too, on Base UI, Radix UI and React Aria: a finger on a menu grip or a sort rule handle drags at once, a copy of the menu row or rule follows the finger, and the menu or popover stays open. The drag does not scroll the page behind the popup. A touch drag that leaves the drop zone, or is cancelled over it, groups nothing. Mouse dragging is unchanged (D108, D132).
 
 ### Fixed
 
@@ -36,6 +40,10 @@ publishes the section as the GitHub release notes.
 #### Spec 61 Pinned rows with row virtualization
 
 - With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, a pinned row stays in view at the top or the bottom of the body while the other rows scroll, as it does without virtualization, also for several pinned rows, with the sticky header, and for a row far outside the rendered range; before, it scrolled away. The Row Pinning guide no longer says the two do not combine (D128).
+
+#### Spec 62.1 Column auto-scroll stops when the drag leaves the table
+
+- A column dragged out of a table that scrolls sideways, for example onto the grouping drop zone, no longer keeps scrolling the table from the last pointer or finger position inside it; the table scrolls again when the drag comes back over its edge, on Base UI, Radix UI and React Aria.
 
 ## 0.9.4 - 2026-11-13
 

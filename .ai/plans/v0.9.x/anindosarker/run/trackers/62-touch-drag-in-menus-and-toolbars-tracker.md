@@ -1,6 +1,6 @@
 # 62: Touch drag in menus and toolbars, tracker
 
-Status: running
+Status: done (3ff633ac)
 Branch `v0.9/touch-drag-menus-toolbars`, worktree 06
 Checks:
 - Check: touch plays fail before the change (P11), `ST_BASE=base vitest run` ColumnOrdering, SortPopover, ColumnGrouping at 7da8152e: fail as expected, 4 failed (Menu Reorder Moves Column, Locked Column Stays Put, Reorder Remove Delete: no ghost, no reorder; Group By Banner: a touch drag cancelled over the drop zone still groups), 40 passed
@@ -18,11 +18,23 @@ Checks:
 - Check: storybook-tests radix, `pnpm test storybook-tests --base radix` at 0295f70f: pass (654 passed)
 - Check: storybook-tests aria, `pnpm test storybook-tests --base aria` at 0295f70f: pass (654 passed)
 - Check: emulation at 0295f70f: the code is that of 5c1f5787 (0295f70f changes `CHANGELOG.md` only), so the three runs above stand
+- Check: review fix plays fail before the change (P11), `ST_BASE=base vitest run` ColumnOrdering "Menu Reorder Moves Column" with the tap step at a75180a2 (code of 0295f70f): fail as expected (a tap on the State grip, then Reset order, made 55 `animate` calls)
+- Check: same, ColumnGrouping "Group By Banner" with the auto-scroll dragover step, drop zone of 80a997f1 on base: fail as expected (the drop reordered, banner stayed "Grouped by Gender, then by City")
+- Check: ColumnOrdering plays, `ST_BASE=<base> vitest run` at 7f075050: pass on base, radix, aria (12 of 12 each)
+- Check: ColumnGrouping plays, `ST_BASE=<base> vitest run` at 4dc5318b: pass on base, radix, aria (25 of 25 each)
+- Check: typecheck, `pnpm test typecheck` (base, radix, aria) at 4dc5318b: pass (tsc clean x3)
+- Check: lint, `pnpm test lint` at 4dc5318b: pass (9 warnings, docs examples untouched by this branch)
+- Check: validate-repo, `pnpm test validate-repo` at 4dc5318b: pass (bases identical, registry fresh, 40 unit tests; tree clean after)
+- Check: storybook-tests, `pnpm test storybook-tests --base <base>` at 4dc5318b: pass on base, radix, aria (654 passed each)
+- Check (verifier): Local CI line of 2.2 at 4dc5318b = HEAD: typecheck x3, lint, validate-repo, storybook-tests x3 recorded green above at HEAD, not rerun; tree clean, branch contains `origin/claude/review` (3d3b4cd2, plan commits only past 39e1e6b9)
+- Check (verifier): Acceptance 1.2, touch plays recorded failing before the change (P11) above for all four surfaces; touch plays end in the mouse order and assert the ghost (D132), covered by storybook-tests at HEAD
+- Check (verifier): Acceptance 1.2 emulation rerun at 4dc5318b (code changed after the 5c1f5787 runs), same method, Storybook dev on ports 5346 (base), 5347 (radix), 5348 (aria) concurrently: pass, 4 of 4 per base (body swipe scrolls the page; menu grip drag reorders, page 60 to 60, menu scroll unchanged, menu open; sort rule drag reorders, page unchanged, popover open; held header onto the drop zone groups, 11 group rows, page 0); servers stopped
 
 - Task 1 Touch plays first: done (7da8152e)
 - Task 2 The three surfaces: done (80a997f1)
 - Task 3 Emulation run: done (5c1f5787)
 - Task 4 Cleanup: done (0295f70f)
+- Review fixes: done (a75180a2, 7f075050, 53ff9964, 4dc5318b)
 
 ## Notes
 
@@ -34,5 +46,6 @@ Checks:
 ## Attention
 
 - The grouping touch play drags a held header cell onto the drop zone, not a grip: no story of `ColumnGrouping.stories.tsx` sets `showColumnDragHandle`, and a new story export is ruled out (D106). The grip path to the drop zone is the column grip of the first milestone, already covered. Reverting means adding `showColumnDragHandle` to the `GroupByBanner` table, which changes that story's docs page.
-- `ST_ToolbarDropZone` marks itself hovered on every `dragover`, the mouse included: on a table narrower than its columns the column auto-scroll (`useST_DragAutoScroll`) keeps re-sending `dragover` to the header last under the pointer while it scrolls, which took the hover from the zone, so a drop on the zone reordered the column instead of grouping. For the mouse the only change is that a drop on the zone groups also while the auto-scroll runs.
+- `ST_ToolbarDropZone` takes the hover back on a touch `dragover` only: on a table narrower than its columns the column auto-scroll (`useST_DragAutoScroll`) re-sends `dragover` to the header last under the pointer while it scrolls, which took the hover from the zone. The mouse path is untouched; a mouse drop on the zone while the auto-scroll runs belongs to the `useST_DragAutoScroll` root-cause fix below.
 - Found, not fixed (outside this milestone's files): `useST_DragAutoScroll` keeps scrolling the table sideways from the last pointer position inside it after the pointer or finger has left the table for the drop zone, until the table reaches its end. Fix where it lives: stop the loop on a `dragover` outside the table container.
+- Found, not fixed: the columns menu grip's touch drag passes no `getScrollContainer`, so on a phone a column cannot be dragged to a menu row out of view (the mouse scrolls the menu through the browser's own drag auto-scroll). Passing the menu's scrolling popup is not enough: when the popup cannot scroll further, `useST_TouchDrag`'s page fallback would scroll the page behind it, which Task 3 rules out. Fix in `useST_TouchDrag` (first milestone's file): a container option that never falls back to the page, then pass the popup from the menu grip.
