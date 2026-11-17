@@ -97,18 +97,30 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   };
   const dragHandlers = getST_ColumnDragHandlers(column, tableHeadCellRef);
 
+  // A leaf header: the one cell per column the column slide moves.
+  const isLeaf = !header.isPlaceholder && !header.subHeaders.length;
+  const canOrderColumn =
+    enableColumnOrdering && columnDef.enableColumnOrdering !== false;
+  const canGroupColumn = enableGrouping && columnDef.enableGrouping !== false;
+  // Whether some state lets the cell drag; grouping by it can still stop it.
+  const mayDrag =
+    isLeaf &&
+    columnDefType !== 'group' &&
+    enableColumnDragging !== false &&
+    columnDef.enableColumnDragging !== false &&
+    !!(enableColumnDragging || canOrderColumn || canGroupColumn);
+
   // A finger drags the cell after it rests on it, so a swipe still scrolls;
   // a column resize holding the same finger keeps it.
   const touchDrag = useST_TouchDrag({
     canStart: () => !table.atoms.columnResizing.get().isResizingColumn,
     delay: ST_TOUCH_HOLD_MS,
+    enabled: mayDrag,
     getGhostSource: () => tableHeadCellRef.current,
     onEnd: dragHandlers.onDragEnd,
     onStart: dragHandlers.onDragStart,
   });
 
-  // A leaf header: the one cell per column the column slide moves.
-  const isLeaf = !header.isPlaceholder && !header.subHeaders.length;
   const isLocked =
     columnDefType !== 'group' &&
     (enableColumnOrdering === false ||
@@ -200,17 +212,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           enableColumnPinning && getCellPinning({ column, header });
 
         const canDrag =
-          isLeaf &&
-          columnDefType !== 'group' &&
-          enableColumnDragging !== false &&
-          columnDef.enableColumnDragging !== false &&
+          mayDrag &&
           !!(
             enableColumnDragging ||
-            (enableColumnOrdering &&
-              columnDef.enableColumnOrdering !== false) ||
-            (enableGrouping &&
-              columnDef.enableGrouping !== false &&
-              !grouping.includes(column.id))
+            canOrderColumn ||
+            (canGroupColumn && !grouping.includes(column.id))
           );
 
         const stickyHeader = isFullScreen || stickyHeaderSetting;
