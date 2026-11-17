@@ -70,6 +70,12 @@ publishes the section as the GitHub release notes.
 - 59 stories that only copied another story's table are gone; a copy's check, where it had one, is now a step of the play on the story it copied (D106).
 - The Localization guide's example is the new story "Features/Localization / Spanish" (D105).
 
+#### Spec 56 Story fixes
+
+- The Styling story pages under "More examples" show their styles (row and cell colors, stripes, widths, caption position); the docs style sheet now reads the story files.
+- Seven stories do what their names say: the custom global filter no longer throws on the Age column, the secondary color checkbox and the lime green sort arrow show on every base, the drag buttons of Columns Hold While Dragging sit below the table out of the drop zone's way, the custom aggregate cell counts each group, Click To Copy Disabled Per Column copies the other columns, and the two Original row number stories have their virtualization the right way round.
+- `pnpm test typecheck` type checks the story files, and the docs type check now covers the React Aria story copies too.
+
 #### Spec 53 Example row numbers
 
 - Each Examples sidebar row starts with its running number ("1. Basic"), counted through the whole section in sidebar order, and each Examples group label ends with its row count ("Featured (5)"); both are computed from the sidebar's order and show in the sidebar only, never in Get Started, Guides or API (D103).

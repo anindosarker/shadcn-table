@@ -117,7 +117,6 @@ export const enableRowNumbersOriginal = () => (
     columns={columns}
     data={data}
     enableRowNumbers
-    enableRowVirtualization
     rowNumberDisplayMode="original"
   />
 );
@@ -129,6 +128,7 @@ export const enableRowNumbersOriginalVirtual = () => (
     enableBottomToolbar={false}
     enablePagination={false}
     enableRowNumbers
+    enableRowVirtualization
     rowNumberDisplayMode="original"
   />
 );

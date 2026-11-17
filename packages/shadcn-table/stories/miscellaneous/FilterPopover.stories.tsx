@@ -168,6 +168,12 @@ export const EmptyModeChipClearHasName = {
     if (!(chip instanceof HTMLElement)) throw new Error('chip not found');
     const clear = within(chip).getByRole('button', { hidden: true });
     expect(clear).toHaveAccessibleName('Clear filter');
+    // The clear button removes the chip and gives the filter input back.
+    const input = canvas.getByLabelText('Filter by First Name');
+    expect(input).toBeDisabled();
+    await userEvent.click(clear);
+    await waitFor(() => expect(canvas.queryByText('Empty')).toBeNull());
+    await waitFor(() => expect(input).toBeEnabled());
   },
 };
 
