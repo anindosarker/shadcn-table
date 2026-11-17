@@ -6,6 +6,8 @@
  * stories/.<base>/<dir>-<Name>.stories.tsx (gitignored) with its imports
  * pointed at the docs app:
  *   - `@/components/ui/...` to the base's library copy, `@/components/ui-<base>/...`
+ *   - `@story-support/...` (story-only parts, packages/shadcn-table/stories/support)
+ *     to the docs app's own part of that base, `@/components/ui-<base>/...`
  *   - `@storybook/react-vite` (types only) to `@storybook/react`
  *   - `../../.storybook/themes` to ./themes, which names the base (`ST_BASE`)
  *   - a namespace import of a library part to a plain object (see rewriteStory)
@@ -41,6 +43,7 @@ const fileKey = (file) => file.slice(0, -SUFFIX.length).replaceAll('/', '-');
 const rewriteStory = (source, base) =>
   source
     .replace(/(['"])@\/components\/ui\//g, `$1@/components/ui-${base}/`)
+    .replace(/(['"])@story-support\//g, `$1@/components/ui-${base}/`)
     .replace(/(['"])@storybook\/react-vite\1/g, `$1@storybook/react$1`)
     .replace(/(['"])(?:\.\.\/)+\.storybook\/themes\1/g, `$1./themes$1`)
     // A namespace import of a library part is read through a plain object:
