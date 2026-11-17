@@ -10,6 +10,8 @@ kanban-plugin: basic
 	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
 	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
 	- Source: Q114
+- [ ] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
+	- Source: Q115
 
 ## In progress
 
