@@ -1,0 +1,23 @@
+---
+title: 'Production-Ready Table'
+sidebarTitle: 'Production-Ready Table'
+description: 'The table of the Production-Ready Tables guide. The server pages, sorts, searches and filters the rows, and the table asks `/api/users` for one page at a time.'
+---
+
+### Try it
+
+<TryIt>
+
+1. Open the network tab of your browser's developer tools.
+2. Click the next page button (`Go to next page`). One request to `/api/users` asks for `page=2`.
+3. Open the `First Name` column menu and choose `Sort ascending`. One request asks for `sortBy=firstName:asc` and `page=1`.
+4. Click the search button (`Show/Hide search`) and type `Hermann`. One request asks for `search=Hermann`.
+5. Click `Filter`, choose `State` and type `geo`. One request asks for `filter=state[$contains]=geo`.
+
+</TryIt>
+
+<StoryExample id="features-server-data--production-ready-table" />
+
+## Related guides
+
+- [Building Production-Ready Tables](/docs/guides/production-ready-tables)

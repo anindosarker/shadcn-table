@@ -421,6 +421,8 @@
     "features-selection--custom-alert-banner-head-overlay",
     "features-selection--multi-select-row-with-hold-shift",
     "features-selection--checkboxes-align-semantic",
+    "---Features/Server Data---",
+    "features-server-data--production-ready-table",
     "---Features/Sort Popover---",
     "features-sort-popover--sort-popover-default",
     "features-sort-popover--sort-popover-seeded",
