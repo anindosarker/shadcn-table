@@ -26,6 +26,9 @@ Checks:
 - Check: lint, `pnpm test lint` at 4dc5318b: pass (9 warnings, docs examples untouched by this branch)
 - Check: validate-repo, `pnpm test validate-repo` at 4dc5318b: pass (bases identical, registry fresh, 40 unit tests; tree clean after)
 - Check: storybook-tests, `pnpm test storybook-tests --base <base>` at 4dc5318b: pass on base, radix, aria (654 passed each)
+- Check (verifier): Local CI line of 2.2 at 4dc5318b = HEAD: typecheck x3, lint, validate-repo, storybook-tests x3 recorded green above at HEAD, not rerun; tree clean, branch contains `origin/claude/review` (3d3b4cd2, plan commits only past 39e1e6b9)
+- Check (verifier): Acceptance 1.2, touch plays recorded failing before the change (P11) above for all four surfaces; touch plays end in the mouse order and assert the ghost (D132), covered by storybook-tests at HEAD
+- Check (verifier): Acceptance 1.2 emulation rerun at 4dc5318b (code changed after the 5c1f5787 runs), same method, Storybook dev on ports 5346 (base), 5347 (radix), 5348 (aria) concurrently: pass, 4 of 4 per base (body swipe scrolls the page; menu grip drag reorders, page 60 to 60, menu scroll unchanged, menu open; sort rule drag reorders, page unchanged, popover open; held header onto the drop zone groups, 11 group rows, page 0); servers stopped
 
 - Task 1 Touch plays first: done (7da8152e)
 - Task 2 The three surfaces: done (80a997f1)
