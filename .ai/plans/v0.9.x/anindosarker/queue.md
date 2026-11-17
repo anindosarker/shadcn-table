@@ -64,6 +64,7 @@ kanban-plugin: basic
 - [ ] **Q112** Storybook needs an upgrade to the current version
 	- Owner, 2026-11-17: 'need to upgrade storybook'. Installed: storybook ^10.6.2 (packages/shadcn-table/package.json:82); E14 added @storybook/react 10.6.2 and storybook 10.6.2 to the docs app on v0.9/docs-layout for composeStories.
 	- Lookup 2026-11-17: claude/review and origin/v0.9/docs-layout both pin storybook, @storybook/react-vite, addon-a11y/docs/links/mcp ^10.6.2 and addon-vitest 10.6.2 (lock 10.6.2), @storybook/icons 2.2.0, storybook-dark-mode 5.0.0, vitest and @vitest/browser(-playwright) 4.1.12, playwright 1.64.1, vite = rolldown-vite 7.1.12; docs-layout docs app adds @storybook/react and storybook exact 10.6.2. npm latest is 10.6.7 (2026-11-10), next is 11.0.0-beta.3. All @storybook/* peers accept React 19, Vite 5 to 8, Vitest 4 to 5; storybook-dark-mode 5.0.0 peers storybook ^10.0.0.
+	- Lookup 2026-11-17: CHANGELOG 10.6.3 to 10.6.7 has no breaking changes or deprecations; MIGRATION.md has no section after 10.6.1 to 10.6.2, so the bump is a version-range change (npx storybook upgrade has no automigration to run). Docs app pins 10.6.2 exactly and needs a manual bump. Open issues: `#37409` glob 13 CVE via react-docgen-typescript in @storybook/react-vite 10.x; `#37498` (SB 11 QA) an addon with a ^10 peer, such as storybook-dark-mode, can install a second storybook@10 under 11. Not checked: a local install or test run.
 
 ## Decided
 
