@@ -42,6 +42,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     getIsSomeRowsPinned,
     getTopRows,
     options: {
+      enableRowPinning,
       enableStickyFooter,
       layoutMode,
       localization,
@@ -76,6 +77,42 @@ export const ST_TableBody = <TData extends ST_RowData>({
   const rowVirtualizer = useST_RowVirtualizer(table, rows);
 
   const { virtualRows } = rowVirtualizer ?? {};
+
+  // A sticky pinned virtual row leaves the absolute layout: it sits in its
+  // own grid track at its offset in the list, so the browser keeps it stuck
+  // between the head and the foot as it does a row without virtualization.
+  const stickyPinnedTracks = useMemo(() => {
+    if (
+      !virtualRows ||
+      !enableRowPinning ||
+      !rowPinningDisplayMode?.includes('sticky') ||
+      !pinnedRowIds.length
+    ) {
+      return undefined;
+    }
+    const gridRows = new Map<string, number>();
+    const tracks: string[] = [];
+    let end = 0;
+    for (const virtualRow of virtualRows) {
+      if (renderDetailPanel && virtualRow.index % 2 === 1) continue;
+      const row =
+        rows[renderDetailPanel ? virtualRow.index / 2 : virtualRow.index];
+      if (!row?.getIsPinned()) continue;
+      tracks.push(`${Math.max(virtualRow.start - end, 0)}px`, 'auto');
+      gridRows.set(row.id, tracks.length);
+      end = Math.max(end, virtualRow.end);
+    }
+    return gridRows.size
+      ? { gridRows, gridTemplateRows: tracks.join(' ') }
+      : undefined;
+  }, [
+    enableRowPinning,
+    pinnedRowIds,
+    renderDetailPanel,
+    rowPinningDisplayMode,
+    rows,
+    virtualRows,
+  ]);
 
   const commonRowProps = {
     columnVirtualizer,
@@ -117,6 +154,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
         row,
         rowVirtualizer,
         staticRowIndex,
+        stickyGridRow: stickyPinnedTracks?.gridRows.get(row.id),
         virtualRow: rowVirtualizer
           ? (rowOrVirtualRow as ST_VirtualItem)
           : undefined,
@@ -188,6 +226,10 @@ export const ST_TableBody = <TData extends ST_RowData>({
                 height: rowVirtualizer
                   ? `${rowVirtualizer.getTotalSize()}px`
                   : undefined,
+                // Start, not stretch: a stretched auto track grows the row it
+                // measures, which grows the body without end.
+                alignContent: stickyPinnedTracks ? 'start' : undefined,
+                gridTemplateRows: stickyPinnedTracks?.gridTemplateRows,
                 ...tableBodyProps?.style,
               }}
             >
