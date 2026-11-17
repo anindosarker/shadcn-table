@@ -172,6 +172,7 @@ export const ClickToCopyDisabledPerColumn = () => {
       },
     ],
     data,
+    enableClickToCopy: true,
   });
 
   return <ShadcnTable table={table} />;

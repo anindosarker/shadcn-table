@@ -49,7 +49,7 @@ export const ColorSortIcon = () => (
     data={data}
     stTableHeadCellProps={({ column }) => ({
       className: column.getIsSorted()
-        ? '[&_button[aria-label^=Sort]_svg]:text-[limegreen]!'
+        ? '[&_span[aria-label^=Sorted]_svg]:text-[limegreen]!'
         : undefined,
     })}
   />

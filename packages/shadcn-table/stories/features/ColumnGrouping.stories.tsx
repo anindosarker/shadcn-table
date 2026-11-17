@@ -217,9 +217,10 @@ export const ColumnGroupingEnabledCustomAggregate = () => (
       },
       {
         AggregatedCell: ({ cell }) => (
-          <div className="text-red-500">{cell.renderValue() as string}</div>
+          <div className="text-red-500">Count: {cell.getValue<number>()}</div>
         ),
         accessorKey: 'gender',
+        aggregationFn: 'count',
         header: 'Gender',
         icon: VenusAndMarsIcon,
       },
