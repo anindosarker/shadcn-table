@@ -62,6 +62,8 @@ kanban-plugin: basic
 	- Branch v0.9/story-pages (spec 56 Story pages in the docs, Task 7): pnpm --filter shadcn-table-docs build before (b194eef9) 57 s, .next 644 MB, RSS 3.61 GB; after 44 s, .next 1.9 GB, RSS 4.13 GB. 1.0 GB of the growth is the HTML and RSC of the 594 story pages, each carrying the open Examples sidebar of 636 rows. The build passes; whether the size is acceptable for the deploy is the owner's call.
 - [ ] **Q102** The line above each Storybook story now reads "This story on the docs site" with the page link
 	- packages/shadcn-table/.storybook/preview.tsx on v0.9/story-pages (spec 56 1.6.6): the intro line was 'Looking for the main docs site? Click here.'; it is now 'This story on the docs site: shadcn-table.com/docs/examples/...'. The wording is the builder's choice. Keep or give the wording.
+- [ ] **Q103** Ticking a parent row does not tick its sub-rows in the sub-row tree with selection
+	- Story features-sub-row-tree--sub-row-tree-with-selection on base, production build of v0.9/story-texts-s-z: ticking a parent leaves its sub-rows unticked (the builder names getST_RowSelectionHandler unticking them once all are selected); ticking a sub-row ticks the parent. The story page text was written to match what happens. Found by the run's browser check of the Try it steps; not compared with MRT.
 
 ## Decided
 
