@@ -178,6 +178,81 @@ export const ClickToCopyDisabledPerColumn = () => {
   return <ShadcnTable table={table} />;
 };
 
+interface Contact {
+  city: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+const contactColumns: ST_ColumnDef<Contact>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+    icon: UserIcon,
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+    icon: UserIcon,
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    icon: MailIcon,
+    stCopyButtonProps: {
+      className: 'w-full justify-start',
+    },
+  },
+  {
+    accessorKey: 'city',
+    header: 'City',
+    icon: Building2Icon,
+  },
+];
+
+const contacts: Contact[] = [
+  {
+    city: 'East Daphne',
+    email: 'dmurray@yopmail.com',
+    firstName: 'Dylan',
+    lastName: 'Murray',
+  },
+  {
+    city: 'Columbus',
+    email: 'rkholer33@yopmail.com',
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+  },
+  {
+    city: 'South Linda',
+    email: 'ereinger@mailinator.com',
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+  },
+  {
+    city: 'Lincoln',
+    email: 'bmccullough44@mailinator.com',
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+  },
+  {
+    city: 'New York',
+    email: 'bframi@yopmain.com',
+    firstName: 'Branson',
+    lastName: 'Frami',
+  },
+];
+
+/**
+ * The docs example of the Click to Copy guide (examples/<base>/
+ * enable-click-to-copy): click to copy on for the whole table, the Email
+ * copy button stretched to the cell's width.
+ */
+export const ClickToCopyEnabledWithCopyButtonProps = () => (
+  <ShadcnTable columns={contactColumns} data={contacts} enableClickToCopy />
+);
+
 /**
  * A click on a cell copies its text to the clipboard, and the tooltip says
  * it was copied.
@@ -237,6 +312,34 @@ ClickToCopyDisabledPerColumn.play = async ({ canvasElement }: StoryContext) => {
     expect(email!.closest('button')).toBeNull();
     await input.click(email!);
     expect(writeText).toHaveBeenCalledTimes(1);
+  } finally {
+    writeText.mockRestore();
+  }
+};
+
+/**
+ * Every column copies: a click on the first cell of each column copies that
+ * cell's text.
+ */
+ClickToCopyEnabledWithCopyButtonProps.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+    undefined,
+  );
+  try {
+    const canvas = within(canvasElement);
+    const input = pointerInput();
+    const first = contacts[0]!;
+    const values = [first.firstName, first.lastName, first.email, first.city];
+    for (const value of values) {
+      const [text] = await canvas.findAllByText(value);
+      const button = text!.closest<HTMLElement>('button');
+      expect(button).not.toBeNull();
+      await input.click(button!);
+      expect(writeText).toHaveBeenLastCalledWith(value);
+    }
+    expect(writeText).toHaveBeenCalledTimes(values.length);
   } finally {
     writeText.mockRestore();
   }
