@@ -18,6 +18,14 @@ Checks:
 - `pnpm test storybook-tests --base radix` at 4bcd5130: pass (636)
 - `pnpm test storybook-tests --base aria` at 4bcd5130: pass (636)
 - `pnpm test docs-e2e --base base` at 4bcd5130: pass (runs `pnpm --filter shadcn-table-docs build`; examples 1101 passed, 0 failed); no server left on 5340 to 5360
+- Check (verifier): `pnpm test typecheck --base base` at 4bcd5130: pass (tsc clean)
+- Check (verifier): `pnpm test typecheck --base aria` at 4bcd5130: pass (tsc clean)
+- Check (verifier): `pnpm test storybook-static --base base` at 4bcd5130: pass (example stories in index.json 42; story pages match index.json 594 pages; reset pass; server on 5340 stopped)
+- Check (verifier): `pnpm test docs-e2e --base radix` at 4bcd5130: pass (runs `pnpm --filter shadcn-table-docs build`; 112 pages: getting-started 262, api 111, guides 930, examples 1101, 0 failed)
+- Check (verifier): `pnpm test docs-e2e --base aria` at 4bcd5130: pass (build included; 112 pages: getting-started 262, api 111, guides 930, examples 1101, 0 failed)
+- Check (verifier): `pnpm --filter shadcn-table-docs build` at 4bcd5130: pass (inside each docs-e2e run above)
+- Check (verifier): section 2.2 complete at 4bcd5130: storybook-tests base, radix, aria; storybook-static base; typecheck base, radix, aria; lint; validate-repo; docs-e2e base, radix, aria all green; no server left on 5340 to 5360; worktree clean
+- Check (verifier): Acceptance 1.2 at 4bcd5130: pass, programmatic part. storybook-tests three bases, validate-repo (parity check 1.6.5) and docs-e2e three bases green (lines above); `lib/storybook-map.ts` 42 keys = the 42 pages of `content/docs/examples/`, 42 different ids, all in `storybook-static/base/index.json` (audit list 1 is empty, so the map is the exact-pair list checked). Judged parts: the D104 text judges passed in the six text milestones; the "More examples" and "same table" judges ran on the captures of milestone Story pages in the docs; not rerun here
 
 - Task 1 no page left bare: done (no change needed, 7e13af53)
 - Task 2 three parts in the parity check: done (08ab12e5)
