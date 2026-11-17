@@ -113,6 +113,8 @@ kanban-plugin: basic
 	- Source: Q103
 - [ ] **D126** A column's resize grip can be dragged across its whole width #R6
 	- Source: Q104
+- [ ] **D127** The Click to copy button fits its cell and shows its own tooltip #R6
+	- Source: Q107
 
 ## In progress
 
