@@ -24,6 +24,10 @@ Checks:
 - Check: Local CI `pnpm test validate-repo` at 49cbea14: pass (596 story pages match, 40 unit tests), tree clean after
 - Check: Local CI `pnpm test docs-e2e --base base --url <next start of 2814e174, app code equal to 49cbea14>` at 49cbea14: getting-started 264/1 (known flake P5 "theme: Shift+R returns to the default"), api 111/0, guides 974/0, examples 1101/0, site 58/0; getting-started rerun 265/0
 - Check: Acceptance 1.2 at 49cbea14 on that server: `/nope` and `/docs/examples/sticky-heder` 404; virtualization guide repeats no example id; `more` 245 MB (at most 250: pass); `.next` 1107 MB (at most 900: miss, see Attention); server stopped
+- Check: production build at 49cbea14 (`.next` removed first), measured without the build cache (spec 59 1.2): `du -sm -I cache .next` 582 MB (at most 900: pass; `.next` 1096 with `.next/cache` 514), `du -sm .next/server/app/docs/examples/more` 245 MB (at most 250: pass)
+- Check: merge 6ec25203 of the branch onto origin/v0.9/docs-layout 92d314ac (specs 57 and 58 merged): `pnpm test typecheck --base radix` pass, `pnpm test lint` pass (0 errors, 9 warnings), `pnpm test validate-repo` pass (596 story pages, 40 unit tests), tree clean
+- Check: production build of 6ec25203: `du -sm -I cache .next` 582 MB (pass), `more` 245 MB (pass); `next start` on 5341: `/nope` and `/docs/examples/sticky-heder` 404, virtualization guide carries `guide-example-enable-row-virtualization` once and no repeated id; `pnpm test docs-e2e --base base --url http://localhost:5341`: getting-started 265/0, api 111/0, guides 1020/0, examples 1107/0, site 58/0; server stopped
+- Merge: 6ec25203 `merge: Lighter story pages (59)` pushed to v0.9/docs-layout; branch deleted local and remote
 
 - Task 1 Baseline and measurement: done (e0700242, no commit)
 - Task 2 First means: done (02cdea98), sizes missed
@@ -33,8 +37,3 @@ Checks:
 - Task 6 Cleanup: done (49cbea14)
 
 ## Attention
-
-- `.next` stays above 900 MB: 1107 MB, of which 524 MB is `.next/cache/turbopack` (Next 16.3 build cache, not served, 518 MB at the branch point); the rest is 583 MB, below the 644 MB of 1.2. The story pages themselves are 245 MB (from 1166) and `server/chunks` 180 MB holds the compiled story MDX. Reaching 900 with the cache counted needs the cache off for builds (`next.config.mjs`, spec 58's file) or a measure without `.next/cache`; nothing in this milestone's files gets there.
-- The "More examples" rows come from the folder's meta.json bundled once in the docs JavaScript (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), not from a fetched `/docs/more-examples.json` route: the breadcrumb, the page switcher and the row numbers on a story page read the full tree on the server render, which a fetched list would only give after load. The HTML still carries only the current row; the build fails if the rows built from meta.json differ from the page tree.
-- `components/sidebar-separator.tsx` (not in the files owned) gained the `ActiveRowOnly` filter so a sub-group shows only the current row before the list renders; `components/docs-tree-layout.tsx` is new.
-
