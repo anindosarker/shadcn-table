@@ -45,6 +45,8 @@ kanban-plugin: basic
 	- Fixed on v0.9/docs-layout: c8aaf443, merged 675337f9. Under pnpm dev (NODE_ENV development) every docs Storybook link goes to localhost 6007 (base), 6006 (radix), 6008 (aria); a production build keeps storybook.shadcn-table.com (hrefs read on a real build, no localhost string in .next/static).
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
+- [ ] **Q113** The production-ready tables guide cannot show its own table in the Example section because that table has no page
+	- D122 keeps the table its line is true for ('Every page, sort, search or filter change sends one request to /api/users'). Request log on a production build of v0.9/guide-tables-once: the guide's own server-side-data table calls /api/users on page, sort, search and filter; the react-query table in the Example section calls /api/data. server-side-data has no example page and no story page, and GuideExamples only takes a page slug (D105, D106). The next section ('Open the Code view above to browse the files', the five-file server-side-data/ tree) also points at that table. The guide is left unchanged on the hotfix branch; the other three guides of D122 are done.
 
 ## Decided
 
