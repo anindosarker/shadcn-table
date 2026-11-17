@@ -32,15 +32,7 @@ export const FIRST_EXAMPLE_URL = sectionEntryUrl(EXAMPLES_URL, meta);
 /**
  * Preview-only comparison pages: `<slug>-new-format.mdx` and
  * `<slug>-new-format-<n>.mdx` show rewrites of `<slug>.mdx` next to it in the
- * sidebar. They render the original's example, so lookups keyed on the page
- * slug (Storybook story, registry page) resolve them to the original.
+ * sidebar. True for such a page slug.
  */
-const PREVIEW_SUFFIX = /-new-format(-\d+)?$/;
-
-/** True for a preview-only comparison page slug. */
 export const isPreviewPage = (/** @type {string} */ slug) =>
-  PREVIEW_SUFFIX.test(slug);
-
-/** The example page a slug stands for: a preview page's original, else itself. */
-export const examplePageSlug = (/** @type {string} */ slug) =>
-  slug.replace(PREVIEW_SUFFIX, '');
+  /-new-format(-\d+)?$/.test(slug);

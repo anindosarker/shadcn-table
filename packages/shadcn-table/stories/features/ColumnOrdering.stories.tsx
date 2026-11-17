@@ -5,6 +5,7 @@ import {
   type ST_ColumnDef,
   type ST_ColumnOrderState,
   ShadcnTable,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -136,10 +137,6 @@ export const ColumnOrderingWithSelect = () => (
   <ShadcnTable columns={columns} data={data} enableRowSelection />
 );
 
-export const ColumnOrderingWithPinning = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
-
 export const ColumnOrderingNoDragHandles = () => (
   <ShadcnTable columns={columns} data={data} enableColumnDragging={false} />
 );
@@ -256,13 +253,139 @@ export const MenuReorderMovesColumn = {
  * A column with `enableColumnOrdering: false` has no grip in the columns
  * menu, takes no drop, and keeps its index while other columns move.
  */
-export const LockedColumnStaysPut = {
-  render: () => <ColumnOrderingDisabledPerColumn />,
+ColumnOrderingDisabledPerColumn.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /First Name/,
+  });
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  const menu = await openColumnsMenu(canvasElement);
+  expect(
+    within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
+      'button',
+      { name: 'Move' },
+    ),
+  ).toBeNull();
+  // A drop on the locked row is refused.
+  menuDrag(menu, 'First Name', 'State');
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  expect(headerIds(canvasElement)[0]).toBe('firstName');
+  // Moving another column past it leaves it where it was.
+  menuDrag(menu, 'First Name', 'City');
+  await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+};
+
+// The docs example "Column DnD Ordering" (examples/base/enable-column-ordering):
+// its columns, options and rows.
+interface DndOrderingPerson {
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+}
+
+const dndOrderingData: DndOrderingPerson[] = [
+  {
+    firstName: 'Dylan',
+    lastName: 'Murray',
+    address: '261 Erdman Ford',
+    city: 'East Daphne',
+    state: 'Kentucky',
+  },
+  {
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+    address: '769 Dominic Grove',
+    city: 'Columbus',
+    state: 'Ohio',
+  },
+  {
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+    address: '566 Brakus Inlet',
+    city: 'South Linda',
+    state: 'West Virginia',
+  },
+  {
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+    address: '722 Emie Stream',
+    city: 'Lincoln',
+    state: 'Nebraska',
+  },
+  {
+    firstName: 'Branson',
+    lastName: 'Frami',
+    address: '32188 Larkin Turnpike',
+    city: 'Charleston',
+    state: 'South Carolina',
+  },
+];
+
+const dndOrderingColumns: ST_ColumnDef<DndOrderingPerson>[] = [
+  {
+    accessorKey: 'firstName',
+    icon: UserIcon,
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    icon: UserIcon,
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    icon: MapPinIcon,
+    header: 'Address',
+  },
+  {
+    accessorKey: 'city',
+    icon: Building2Icon,
+    header: 'City',
+  },
+  {
+    accessorKey: 'state',
+    icon: MapIcon,
+    enableColumnOrdering: false,
+    header: 'State',
+  },
+];
+
+/** The header ids without the display columns. */
+const dataHeaderIds = (canvasElement: HTMLElement) =>
+  headerIds(canvasElement).filter((id) => !id?.startsWith('st-'));
+
+const ColumnDndOrderingTable = () => {
+  const table = useShadcnTable({
+    columns: dndOrderingColumns,
+    data: dndOrderingData,
+    enableColumnOrdering: true,
+  });
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * City moves to the front from the columns menu; State, locked, has no grip
+ * and keeps its place.
+ */
+export const ColumnDndOrdering = {
+  name: 'Column DnD Ordering',
+  render: () => <ColumnDndOrderingTable />,
   play: async ({ canvasElement }: StoryContext) => {
     await within(canvasElement).findByRole('columnheader', {
       name: /First Name/,
     });
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    expect(dataHeaderIds(canvasElement)).toEqual([
+      'firstName',
+      'lastName',
+      'address',
+      'city',
+      'state',
+    ]);
     const menu = await openColumnsMenu(canvasElement);
     expect(
       within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
@@ -270,14 +393,16 @@ export const LockedColumnStaysPut = {
         { name: 'Move' },
       ),
     ).toBeNull();
-    // A drop on the locked row is refused.
-    menuDrag(menu, 'First Name', 'State');
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(headerIds(canvasElement)[0]).toBe('firstName');
-    // Moving another column past it leaves it where it was.
-    menuDrag(menu, 'First Name', 'City');
-    await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    menuDrag(menu, 'City', 'First Name');
+    await waitFor(() =>
+      expect(dataHeaderIds(canvasElement)).toEqual([
+        'city',
+        'firstName',
+        'lastName',
+        'address',
+        'state',
+      ]),
+    );
     expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
   },
 };

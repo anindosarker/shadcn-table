@@ -60,53 +60,47 @@ export const StockToolbar = () => (
   <ShadcnTable columns={columns} data={data} {...options} />
 );
 
-export const PinInCustomToolbar = {
-  render: CustomTopToolbar,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
-    expect(canvas.queryByRole('button', { name: 'Toggle density' })).toBeNull();
+CustomTopToolbar.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
+  expect(canvas.queryByRole('button', { name: 'Toggle density' })).toBeNull();
 
-    const settings = canvas.getByRole('button', { name: 'View settings' });
-    await userEvent.click(settings);
-    await userEvent.click(
-      await body.findByRole('button', { name: 'Pin to toolbar: Density' }),
-    );
+  const settings = canvas.getByRole('button', { name: 'View settings' });
+  await userEvent.click(settings);
+  await userEvent.click(
+    await body.findByRole('button', { name: 'Pin to toolbar: Density' }),
+  );
 
-    const density = await canvas.findByRole('button', {
+  const density = await canvas.findByRole('button', {
+    name: 'Toggle density',
+  });
+  // Beside the settings button: same parent, right before it.
+  expect(density.parentElement).toBe(settings.parentElement);
+  expect(
+    density.compareDocumentPosition(settings) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(
+    within(canvas.getByTestId('custom-toolbar')).getAllByRole('button', {
       name: 'Toggle density',
-    });
-    // Beside the settings button: same parent, right before it.
-    expect(density.parentElement).toBe(settings.parentElement);
-    expect(
-      density.compareDocumentPosition(settings) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(
-      within(canvas.getByTestId('custom-toolbar')).getAllByRole('button', {
-        name: 'Toggle density',
-      }),
-    ).toHaveLength(1);
-  },
+    }),
+  ).toHaveLength(1);
 };
 
-export const PinsInStockToolbarOrder = {
-  render: StockToolbar,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Plan audit log');
-    const names = [
-      'Show/Hide columns',
-      'Toggle density',
-      'Toggle full screen',
-      'View settings',
-    ];
-    // Each once, in the D8 order: pinned items, full screen, settings.
-    expect(
-      [...canvasElement.querySelectorAll<HTMLElement>('button[aria-label]')]
-        .map((button) => button.getAttribute('aria-label'))
-        .filter((name): name is string => names.includes(name ?? '')),
-    ).toEqual(names);
-  },
+StockToolbar.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Plan audit log');
+  const names = [
+    'Show/Hide columns',
+    'Toggle density',
+    'Toggle full screen',
+    'View settings',
+  ];
+  // Each once, in the D8 order: pinned items, full screen, settings.
+  expect(
+    [...canvasElement.querySelectorAll<HTMLElement>('button[aria-label]')]
+      .map((button) => button.getAttribute('aria-label'))
+      .filter((name): name is string => names.includes(name ?? '')),
+  ).toEqual(names);
 };

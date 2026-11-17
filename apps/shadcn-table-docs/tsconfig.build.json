@@ -22,6 +22,8 @@
     "examples/aria",
     "examples/.base",
     "examples/.aria",
+    "stories/.base",
+    "stories/.aria",
     "components/ui-base/shadcn-table",
     "components/ui-aria/shadcn-table",
     ".next/dev",
