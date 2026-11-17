@@ -94,6 +94,10 @@ publishes the section as the GitHub release notes.
 
 - The Async Loading, Pagination and Scroll Cues guides show their main table once, in the Example section at the top; the copy further down is gone, and its explainer line now sits between the Example heading and the table (D122).
 
+#### Spec 55 Click to Copy guide
+
+- The Click to Copy guide shows its own click to copy example on top, in place of the Advanced example, and no longer repeats it at the end; every cell of that example copies, since click to copy is on for the whole table (D122).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

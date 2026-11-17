@@ -25,6 +25,7 @@
     "features-click-to-copy--click-to-copy-enabled-with-column-resizing",
     "features-click-to-copy--click-to-copy-enabled-per-column",
     "features-click-to-copy--click-to-copy-disabled-per-column",
+    "features-click-to-copy--click-to-copy-enabled-with-copy-button-props",
     "---Features/Column Action---",
     "features-column-action--column-actions-enabled-default",
     "features-column-action--column-actions-disabled",
