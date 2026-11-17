@@ -1,6 +1,6 @@
 # 54: Example page format, tracker
 
-Status: built, checks green; Task 6 judges run by the workflow
+Status: merged (1d97c65d)
 Branch `v0.9/example-page-format`, worktree 06
 Checks:
 
