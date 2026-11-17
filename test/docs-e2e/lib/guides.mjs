@@ -247,48 +247,43 @@ async function themeParts(page, check) {
 }
 
 /**
- * Spec 55 (D105, finding 2 of the "Guide example block" review): no two
- * elements share an example id. Every example playground carries its name
- * in `data-example`; after hydration (polled, the suffixed ids are set in a
- * layout effect) exactly one element carries the plain id `example-<name>`
- * of each example on the page, and no id of a playground repeats.
+ * Spec 55 (D105, finding 2 of the "Guide example block" review), as D113
+ * builds it: no two elements share an example id. Every example playground
+ * carries its name in `data-example`; after hydration (polled) each example
+ * on the page has at most one element with `example-<name>` (a mount in the
+ * guide body) and at most one with `guide-example-<name>` (the Example
+ * section), at least one of the two, and no id of a playground repeats.
  */
 async function uniqueExampleIds(page, check, label) {
   const probe = () => {
+    const count = (id) => document.querySelectorAll(`[id="${id}"]`).length;
     const panels = [...document.querySelectorAll('[data-example]')];
     const names = [...new Set(panels.map((el) => el.dataset.example))];
-    const plain = names.filter(
-      (name) =>
-        document.querySelectorAll(`[id="example-${name}"]`).length !== 1,
-    );
+    const wrong = names.filter((name) => {
+      const plain = count(`example-${name}`);
+      const section = count(`guide-example-${name}`);
+      return plain > 1 || section > 1 || plain + section === 0;
+    });
     const ids = panels.map((el) => el.id);
     const repeated = ids.filter((id, i) => ids.indexOf(id) !== i);
-    return { ok: plain.length === 0 && repeated.length === 0, plain, repeated };
+    return {
+      ok: wrong.length === 0 && repeated.length === 0,
+      wrong,
+      repeated,
+    };
   };
   await page
     .waitForFunction(
-      () => {
-        const panels = [...document.querySelectorAll('[data-example]')];
-        const ids = panels.map((el) => el.id);
-        return (
-          panels.length > 0 &&
-          new Set(ids).size === ids.length &&
-          panels.every(
-            (el) =>
-              document.querySelectorAll(`[id="example-${el.dataset.example}"]`)
-                .length === 1,
-          )
-        );
-      },
+      `document.querySelector('[data-example]') && (${probe.toString()})().ok`,
       undefined,
       { timeout: 10000 },
     )
     .catch(() => {});
   const result = await page.evaluate(probe);
   check(
-    `${label}: one element per plain example id`,
+    `${label}: one element per example id`,
     result.ok,
-    `plain=${result.plain.join(',')} repeated=${result.repeated.join(',')}`,
+    `wrong=${result.wrong.join(',')} repeated=${result.repeated.join(',')}`,
   );
 }
 
