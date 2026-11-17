@@ -20,6 +20,7 @@ Checks:
 - Task 4 text check by judges: judges: run by the workflow
 - Task 4 fixer round 1: the 10 lines the judges failed rewritten (4 virtualization step 1 lines, dense and spacious step 1, search-disabled step 1, edition-icons step 2, two descriptions), 9d0d2deb, run d3a60a09; wording only, no action or result changed, so no browser rerun
 - Task 4 fixer round 2: the 2 lines the judges failed rewritten (persistence-keeps-page-index description, edition-icons step 2), f61a9cf4, run d3a60a09; wording only, no browser rerun
+- Task 4 fixer round 3: the 1 line the judges failed rewritten (persistence-keeps-page-index step 3, "stays on page 3" now "is back on page 3"), 9b5228f9, run d3a60a09; wording only, no browser rerun
 - Task 5 cleanup: done, `pnpm format` clean, c73601b9, run d3a60a09
 
 ## Attention
