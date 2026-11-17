@@ -209,14 +209,17 @@ const trackFinger = ({
     frame = 0;
     const box = active ? options.current.getScrollContainer?.() : null;
     if (!box) return;
+    // The edges of the part of the box on screen.
     const rect = box.getBoundingClientRect();
+    const top = Math.max(rect.top, 0);
+    const bottom = Math.min(rect.bottom, window.innerHeight);
     const depth = (distance: number) =>
       Math.min(1, Math.max(0, (EDGE_PX - distance) / EDGE_PX));
     const delta =
-      y < rect.top + EDGE_PX
-        ? -MAX_SPEED_PX * depth(y - rect.top)
-        : y > rect.bottom - EDGE_PX
-          ? MAX_SPEED_PX * depth(rect.bottom - y)
+      y < top + EDGE_PX
+        ? -MAX_SPEED_PX * depth(y - top)
+        : y > bottom - EDGE_PX
+          ? MAX_SPEED_PX * depth(bottom - y)
           : 0;
     if (!delta) return;
     const before = box.scrollTop;
