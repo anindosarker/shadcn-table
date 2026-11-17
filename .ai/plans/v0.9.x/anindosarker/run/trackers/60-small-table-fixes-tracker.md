@@ -1,8 +1,12 @@
-# 60: Four small table fixes, tracker
+# 60: Sticky header switch and resize grip, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/sticky-header-resize-grip`, worktree 06
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Two plays first: running
+- Task 2 Sticky header switch: planned
+- Task 3 Resize grip: planned
+- Task 4 Cleanup: planned
+
+## Attention
