@@ -1,8 +1,9 @@
 /**
  * Desktop sidebar state kept in localStorage: the width the visitor dragged
  * (components/sidebar-resize-handle.tsx) and whether it is collapsed
- * (components/sidebar-collapse-button.tsx). Plain module so the server layout
- * can inline SIDEBAR_STATE_SCRIPT, which applies both before the first paint.
+ * (components/sidebar-collapse-button.tsx). Plain module so the root layout
+ * (app/layout.tsx) can inline SIDEBAR_STATE_SCRIPT in <head>, which applies
+ * both before the first paint.
  */
 export const SIDEBAR_WIDTH_KEY = 'docs-sidebar-width';
 export const SIDEBAR_COLLAPSED_KEY = 'docs-sidebar-collapsed';

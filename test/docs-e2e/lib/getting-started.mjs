@@ -105,6 +105,61 @@ async function agentBar(page, check) {
 }
 
 /**
+ * The saved sidebar width reaches a docs page opened from the home page by a
+ * client navigation (spec 53): the inline state script sits in the root
+ * layout's <head>, so it ran on the home page's load; a script in the docs
+ * layout would never run on the client and log "Encountered a script tag".
+ * Runs in its own tab of the context with its own error listeners; the
+ * width keys are lib/sidebar-state.ts's.
+ */
+async function sidebarStateFromHome(page, check) {
+  const origin = new URL(page.url()).origin;
+  const home = await page.context().newPage();
+  const errors = [];
+  home.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  home.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+  try {
+    await home.goto(origin + '/', { waitUntil: 'networkidle', timeout: 90000 });
+    await home.evaluate(() => {
+      localStorage.setItem('docs-sidebar-width', '360');
+      localStorage.removeItem('docs-sidebar-collapsed');
+    });
+    await home.reload({ waitUntil: 'networkidle', timeout: 90000 });
+    // a full load would clear the marker; it survives a client navigation
+    await home.evaluate(() => (window.__stClientNav = true));
+    await home
+      .locator('a[href="/docs/getting-started/introduction"]:visible')
+      .first()
+      .click();
+    await home.waitForURL('**/docs/getting-started/introduction');
+    const sidebar = home.locator('#nd-sidebar');
+    await sidebar.waitFor({ state: 'visible' });
+    await home.waitForTimeout(500);
+    check(
+      'sidebar state: client navigation from /',
+      await home.evaluate(() => window.__stClientNav === true),
+    );
+    const width = Math.round((await sidebar.boundingBox())?.width ?? 0);
+    check(
+      'sidebar state: saved width applied after client navigation from /',
+      width === 360,
+      `width=${width}`,
+    );
+    const script = errors.filter((e) => /script tag/i.test(e));
+    check(
+      'sidebar state: no script tag error',
+      script.length === 0,
+      script.map((e) => e.split('\n')[0].slice(0, 160)).join(' || '),
+    );
+  } finally {
+    await home.evaluate(() => localStorage.removeItem('docs-sidebar-width'));
+    await home.close();
+  }
+}
+
+/**
  * The hero's command bar (components/agent-bar.tsx): the Command tab names the
  * site-wide base and its chevron menu sets it, so the command follows. Opens on
  * `base`, visits the other two, returns to it. The tab text is uppercased by
@@ -1386,6 +1441,7 @@ const checks = {
     const w = await example(page, 'live-demo', check);
     await liveDemoFilters(page, w, check);
     await sectionFrame(page, check, 'Get Started', { toggle: true });
+    await sidebarStateFromHome(page, check);
   },
   '/docs': async ({ page, check }) => {
     check(

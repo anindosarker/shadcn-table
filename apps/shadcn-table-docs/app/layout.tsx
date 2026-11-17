@@ -10,6 +10,7 @@ import { Inter } from 'next/font/google';
 import { archivo } from '@/lib/fonts';
 import { designSystemScript } from '@/lib/design-system/config';
 import { designSystemFontVariables } from '@/lib/design-system/fonts';
+import { SIDEBAR_STATE_SCRIPT } from '@/lib/sidebar-state';
 import { siteDescription, siteName, siteUrl } from '@/lib/shared';
 
 /** The home page title: the brand first, then the category words (D73). */
@@ -52,6 +53,14 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             the active style's sheet included (D29): lib/design-system/config.ts,
             kept in sync by DesignSystemProvider. */}
         <script dangerouslySetInnerHTML={{ __html: designSystemScript }} />
+        {/* Docs sidebar width and collapsed state from localStorage before
+            the first paint (components/sidebar-resize-handle.tsx,
+            components/sidebar-collapse-button.tsx), so the layout does not
+            jump. Here, not in app/docs/layout.tsx: a script there never runs
+            when the docs open by client navigation from the home page. It
+            only marks <html>; app/global.css reads the marks in the docs
+            layout alone. */}
+        <script dangerouslySetInnerHTML={{ __html: SIDEBAR_STATE_SCRIPT }} />
       </head>
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <style dangerouslySetInnerHTML={{ __html: searchHighlightStyle }} />
