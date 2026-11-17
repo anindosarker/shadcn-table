@@ -17,6 +17,15 @@ interface Props {
 /** Slug prefix of a story page under "More examples" (lib/story-pages.mjs). */
 const STORY_PREFIX = 'more/';
 
+/**
+ * Stories whose Code view in a guide shows a docs example folder in place of
+ * the story file: the guide's text walks through that folder's files
+ * (D131). The story's own page keeps the story source.
+ */
+const STORY_CODE_FROM: Record<string, string> = {
+  'features-server-data--production-ready-table': 'server-side-data',
+};
+
 type ExampleName = keyof typeof exampleComponents;
 
 const isExampleName = (name: string): name is ExampleName =>
@@ -58,7 +67,7 @@ export const GuideExamples = async ({ slugs }: Props) => {
     return {
       slug,
       title: title ?? id,
-      panel: <StoryExample key={slug} id={id} />,
+      panel: <StoryExample key={slug} id={id} codeFrom={STORY_CODE_FROM[id]} />,
     };
   };
 
