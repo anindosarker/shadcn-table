@@ -110,10 +110,20 @@ kanban-plugin: basic
 	- Owner's wording, recorded 2026-11-18.
 	- Source: Q102
 - [ ] **D125** Ticking a parent row ticks its sub-rows #R6
+	- Settled by the lead: a bug with one right behaviour, the one MRT has.
+	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
+	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
+	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
 	- Source: Q103
 - [ ] **D126** A column's resize grip can be dragged across its whole width #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
+	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
 	- Source: Q104
 - [ ] **D127** The Click to copy button fits its cell and shows its own tooltip #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
+	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
 	- Source: Q107
 
 ## In progress
