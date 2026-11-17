@@ -49,4 +49,14 @@ Every installed `@storybook/*` package has a 10.6.7 release; `@storybook/icons` 
 
 ## glob after the upgrade
 
-Filled in by Task 3.
+`pnpm why glob -r` at `3f35b7a4` (after the install):
+
+```
+shadcn-table@0.9.4 packages/shadcn-table (PRIVATE)
+devDependencies:
+@storybook/react-vite 10.6.7
+└─┬ @joshwooding/vite-plugin-react-docgen-typescript 0.7.0
+  └── glob 13.0.6
+```
+
+Unchanged by the upgrade, as issue 37409 says: `glob` 13.0.6 stays, only through Storybook's docgen plugin, in the package's dev dependencies. No override (see Known issues).
