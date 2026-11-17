@@ -1,6 +1,22 @@
 ---
 title: 'Hook Selector Skips State Renders'
 sidebarTitle: 'Hook Selector Skips State Renders'
+description: 'The table comes from useShadcnTable with a selector. The page around it updates only for the state it picks, here the page index shown above the table.'
 ---
 
+### Try it
+
+<TryIt>
+
+1. Click `Toggle density`. The rows change height; the index above stays `0`.
+2. Tick a row's checkbox. The row is selected; the index still reads `0`.
+3. Click `Go to next page`. The first row is `P06` and the index reads `1`.
+
+</TryIt>
+
 <StoryExample id="styling-render-counts--hook-selector-skips-state-renders" />
+
+## Related guides
+
+- [State Management](/docs/guides/state-management)
+- [Pagination](/docs/guides/pagination)
