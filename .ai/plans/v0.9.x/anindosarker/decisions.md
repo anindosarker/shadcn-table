@@ -50,6 +50,8 @@ kanban-plugin: basic
 	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
 	- Owner recorded 2026-11-17.
 	- Source: Q96
+- [ ] **D119** Three example pages get a title and address that match their sidebar name #R6
+	- Source: Q108
 
 ## In progress
 
