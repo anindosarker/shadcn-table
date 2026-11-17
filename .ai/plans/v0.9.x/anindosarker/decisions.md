@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D138** Touch drag reuses the mouse drop handlers through marked drag events #R6
-	- Settled by the lead: a build deviation that keeps D108 and D132.
-	- Spec 62 described drop target marks; built so the touch path (`hooks/useST_TouchDrag.ts`) dispatches marked dragenter, dragleave, dragover and drop events to the element under the finger, with a stand-in `dataTransfer`, so the existing mouse handlers serve it and the body cell and row files are untouched.
-	- Kept as built (fcd6af8f on `claude/review`). Spec 62 1.4 and 1.6.2 are read with this decision.
-	- Source: Q124
 - [ ] **D139** The two touch drag test stories stay and become docs pages #R6
 	- Settled by the lead: D106 says a test story with its own different table stays listed like any other story, and P11 needs a play that fails first for each fix.
 	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
@@ -896,6 +891,11 @@ kanban-plugin: basic
 	- Spec 59 described rows fetched from a JSON route; built from the folder's `meta.json` bundled once (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), because the breadcrumb, the page switcher and the row numbers need the full tree on the server render.
 	- Kept: the HTML carries only the current row, and the build fails if the bundled rows differ from the page tree.
 	- Source: Q123
+- [x] **D138** Touch drag reuses the mouse drop handlers through marked drag events #R6
+	- Settled by the lead: a build deviation that keeps D108 and D132.
+	- Spec 62 described drop target marks; built so the touch path (`hooks/useST_TouchDrag.ts`) dispatches marked dragenter, dragleave, dragover and drop events to the element under the finger, with a stand-in `dataTransfer`, so the existing mouse handlers serve it and the body cell and row files are untouched.
+	- Kept as built (fcd6af8f on `claude/review`). Spec 62 1.4 and 1.6.2 are read with this decision.
+	- Source: Q124
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
