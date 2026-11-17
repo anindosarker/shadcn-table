@@ -1,5 +1,12 @@
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
+import {
+  expect,
+  fireEvent,
+  spyOn,
+  userEvent,
+  waitFor,
+  within,
+} from 'storybook/test';
 import {
   type ST_ColumnDef,
   useShadcnTable,
@@ -218,4 +225,51 @@ export const ClickCopiesValue = {
       writeText.mockRestore();
     }
   },
+};
+
+// A copy column narrowed below the button's width keeps the button inside its
+// cell, and a pointer hover on the button shows "Click to copy" (D127).
+ClickToCopyEnabledWithColumnResizing.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].email);
+  // The resize renders the rows anew, so each step reads the cell again.
+  const cell = () =>
+    canvasElement.querySelector<HTMLElement>(
+      'tbody td[data-flip-column="email"]',
+    )!;
+  const button = () => cell().querySelector<HTMLElement>('button')!;
+  const value = button().textContent;
+  const buttonWidth = button().getBoundingClientRect().width;
+  const th = canvasElement.querySelector<HTMLElement>(
+    'thead th[data-flip-column="email"]',
+  )!;
+  const handle = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  const start = th.getBoundingClientRect();
+  const point = { clientX: start.right, clientY: start.top + 5 };
+  const end = { ...point, clientX: start.left + 60 };
+  fireEvent.mouseDown(handle, point);
+  fireEvent.mouseMove(document, end);
+  fireEvent.mouseUp(document, end);
+  await waitFor(() =>
+    expect(cell().getBoundingClientRect().width).toBeLessThan(buttonWidth),
+  );
+  const box = button().getBoundingClientRect();
+  const cellBox = cell().getBoundingClientRect();
+  expect(box.left).toBeGreaterThanOrEqual(cellBox.left);
+  expect(box.right).toBeLessThanOrEqual(cellBox.right);
+  const browserUserEvent = (
+    globalThis as {
+      stBrowserUserEvent?: { hover: (element: Element) => Promise<void> };
+    }
+  ).stBrowserUserEvent;
+  await (browserUserEvent ?? userEvent).hover(button());
+  const tooltips = () =>
+    [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+      (tooltip) => tooltip.textContent,
+    );
+  await waitFor(() => expect(tooltips()).toContain('Click to copy'), {
+    timeout: 3000,
+  });
+  expect(tooltips()).not.toContain(value);
 };
