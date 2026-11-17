@@ -141,6 +141,8 @@ kanban-plugin: basic
 	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
 	- Owner recorded 2026-11-18.
 	- Source: Q113
+- [ ] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
+	- Source: Q114
 
 ## In progress
 
