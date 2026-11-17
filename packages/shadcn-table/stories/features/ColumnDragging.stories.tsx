@@ -98,9 +98,87 @@ const dragOverSlot = (canvasElement: HTMLElement, target: HTMLElement) => {
   });
 };
 
+type TouchType = 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: TouchType;
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged header that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/**
+ * Drags `source` by touch onto the middle of `target`: a header cell after
+ * the finger rests (`hold`), a grip at once. The ghost shows while the drag
+ * is on, follows the finger and is gone after the `end` event.
+ */
+const touchDrag = async ({
+  end = 'pointerup',
+  hold = false,
+  source,
+  target,
+}: {
+  end?: 'pointercancel' | 'pointerup';
+  hold?: boolean;
+  source: HTMLElement;
+  target: HTMLElement;
+}) => {
+  const from = centreOf(source);
+  const to = centreOf(target);
+  touch({ at: from, element: source, type: 'pointerdown' });
+  if (hold) await pause(400);
+  touch({
+    at: { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 },
+    element: source,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  touch({ at: to, element: source, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  touch({ at: to, element: source, type: end });
+  await waitFor(() => expect(ghost()).toBeNull());
+};
+
+/** Waits until the column slide of the last drop has finished. */
+const settled = (canvasElement: HTMLElement) =>
+  waitFor(() =>
+    expect(canvasElement.getAnimations({ subtree: true }).length).toBe(0),
+  );
+
 /**
  * The header cell is the drag source: mid-drag only the headers slide, the
- * body stays still; the drop reorders and the body cells catch up.
+ * body stays still; the drop reorders and the body cells catch up. By touch
+ * the header drags after the finger rests on it; a swipe before that drags
+ * nothing.
  */
 export const ColumnDraggingEnabled = {
   render: () => (
@@ -122,6 +200,7 @@ export const ColumnDraggingEnabled = {
 
     const source = headerCell(canvasElement, 'First Name');
     fireEvent.dragStart(source);
+    expect(ghost()).toBeNull();
     dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
     await waitFor(() =>
       expect(
@@ -148,6 +227,58 @@ export const ColumnDraggingEnabled = {
       bodyCell(canvasElement, 'firstName').getAnimations().length,
     ).toBeGreaterThan(0);
     expect(headerCell(canvasElement, 'Last Name').style.translate).toBe('');
+    expect(ghost()).toBeNull();
+    await settled(canvasElement);
+
+    // Touch: a swipe that moves before the hold scrolls, it drags nothing.
+    const swiped = headerCell(canvasElement, 'Last Name');
+    const start = centreOf(swiped);
+    touch({ at: start, element: swiped, type: 'pointerdown' });
+    touch({
+      at: { x: start.x + 40, y: start.y },
+      element: swiped,
+      type: 'pointermove',
+    });
+    await pause(400);
+    expect(ghost()).toBeNull();
+    touch({
+      at: { x: start.x + 40, y: start.y },
+      element: swiped,
+      type: 'pointerup',
+    });
+
+    // Touch: the header after the hold, back and then as the mouse moved it.
+    await touchDrag({
+      hold: true,
+      source: headerCell(canvasElement, 'Last Name'),
+      target: headerCell(canvasElement, 'First Name'),
+    });
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'First Name',
+        'Last Name',
+        'Email Address',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
+    await settled(canvasElement);
+    await touchDrag({
+      hold: true,
+      source: headerCell(canvasElement, 'First Name'),
+      target: headerCell(canvasElement, 'Last Name'),
+    });
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'Last Name',
+        'First Name',
+        'Email Address',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
   },
 };
 
@@ -174,6 +305,26 @@ export const ColumnDraggingCancelled = {
     await waitFor(() =>
       expect(headerCell(canvasElement, 'City').style.translate).toBe(''),
     );
+    expect(headerNames(canvasElement)).toEqual([
+      'First Name',
+      'Last Name',
+      'Email Address',
+      'Address',
+      'City',
+      'State',
+    ]);
+
+    // Touch: a pointercancel mid-drag slides the headers back, no reorder.
+    const touched = headerCell(canvasElement, 'First Name');
+    const city = headerCell(canvasElement, 'City');
+    touch({ at: centreOf(touched), element: touched, type: 'pointerdown' });
+    await pause(400);
+    touch({ at: centreOf(city), element: touched, type: 'pointermove' });
+    await waitFor(() => expect(ghost()).not.toBeNull());
+    await waitFor(() => expect(city.style.translate).not.toBe(''));
+    touch({ at: centreOf(city), element: touched, type: 'pointercancel' });
+    await waitFor(() => expect(ghost()).toBeNull());
+    await waitFor(() => expect(city.style.translate).toBe(''));
     expect(headerNames(canvasElement)).toEqual([
       'First Name',
       'Last Name',
@@ -217,6 +368,20 @@ export const ColumnDraggingLockedColumn = {
     dragEnd(source, 'none');
     await waitFor(() => expect(overlay).toHaveClass('opacity-0'));
     expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
+
+    // Touch: a drop on the locked column leaves it in place.
+    const touched = headerCell(canvasElement, 'First Name');
+    touch({ at: centreOf(touched), element: touched, type: 'pointerdown' });
+    await pause(400);
+    touch({ at: centreOf(locked), element: touched, type: 'pointermove' });
+    await waitFor(() => expect(overlay).toHaveClass('opacity-100'));
+    expect(ghost()).not.toBeNull();
+    await pause(50);
+    touch({ at: centreOf(locked), element: touched, type: 'pointerup' });
+    await waitFor(() => expect(overlay).toHaveClass('opacity-0'));
+    expect(ghost()).toBeNull();
+    expect(headerNames(canvasElement)[0]).toMatch(/^First Name/);
+    expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
   },
 };
 
@@ -240,6 +405,42 @@ export const ColumnDraggingWithGrip = {
     fireEvent.dragOver(headers[2]);
     fireEvent.drop(headers[2]);
     fireEvent.dragEnd(handle);
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'Last Name',
+        'Email Address',
+        'First Name',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
+
+    // Touch: the grip drags at once, back and then as the mouse moved it.
+    const grip = (name: string) =>
+      within(headerCell(canvasElement, name)).getByRole('button', {
+        name: 'Move',
+      });
+    await settled(canvasElement);
+    await touchDrag({
+      source: grip('First Name'),
+      target: headerCell(canvasElement, 'Last Name'),
+    });
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'First Name',
+        'Last Name',
+        'Email Address',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
+    await settled(canvasElement);
+    await touchDrag({
+      source: grip('First Name'),
+      target: headerCell(canvasElement, 'Email Address'),
+    });
     await waitFor(() =>
       expect(headerNames(canvasElement)).toEqual([
         'Last Name',
