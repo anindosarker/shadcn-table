@@ -1,6 +1,25 @@
 ---
 title: 'Root Skips State Renders'
 sidebarTitle: 'Root Skips State Renders'
+description: 'The table is built from props and its outer part does not update for paging, sorting, density, selection, search or full screen. Static row numbers still follow the page.'
 ---
 
+### Try it
+
+<TryIt>
+
+1. Click `Go to next page`. The row numbers start at `6`.
+2. Click `Column Actions` on `Age` and choose `Sort ascending`.
+3. Click `Show/Hide search` and type `P2`. Only names starting with `P2` remain.
+4. Click `Toggle full screen` twice. The table fills the screen, then returns.
+
+</TryIt>
+
 <StoryExample id="styling-render-counts--root-skips-state-renders" />
+
+## Related guides
+
+- [Pagination](/docs/guides/pagination)
+- [Row Numbers](/docs/guides/row-numbers)
+- [Global Filtering/Search](/docs/guides/global-filtering)
+- [Full Screen Toggle](/docs/guides/full-screen-toggle)
