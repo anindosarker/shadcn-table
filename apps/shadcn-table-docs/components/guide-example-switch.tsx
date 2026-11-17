@@ -11,9 +11,9 @@ import {
 import type * as PageTree from 'fumadocs-core/page-tree';
 
 export interface GuideExampleItem {
-  /** Example page slug, /docs/examples/<slug>. */
+  /** Page slug, /docs/examples/<slug>: an example page or `more/<story id>`. */
   slug: string;
-  /** The example page's title. */
+  /** The page's title. */
   title: string;
 }
 

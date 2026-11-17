@@ -5,7 +5,11 @@ description: 'How to column width in Shadcn Table'
 
 Shadcn Table lets you easily change the default widths (sizes) of columns.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -18,17 +22,17 @@ Shadcn Table lets you easily change the default widths (sizes) of columns.
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={new Set(['grow', 'maxSize', 'minSize', 'size'])}
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['columnSizing'])} />
 
-### Layout Modes
+## Layout Modes
 
 Shadcn Table has 3 layout modes that affect how column widths are applied. The `layoutMode` table option picks one; the default is `"grid"`, and virtualization always uses `"grid"`.
 
@@ -38,7 +42,7 @@ Shadcn Table has 3 layout modes that affect how column widths are applied. The `
 
 If you want your columns to have an absolute width, you can use the `"grid-no-grow"` layout mode and set the `size` option on each column.
 
-### Column Size
+## Column Size
 
 You can change the width of any column by setting its `size` option on the column definition. There are `minSize` and `maxSize` column options available to enforce limits during resizing events.
 
@@ -68,7 +72,7 @@ const columns = [
 ];
 ```
 
-### Column Grow
+## Column Grow
 
 You can also set `grow` properties on the column definitions when using layoutMode `"grid"` or `"grid-no-grow"`.
 
@@ -80,7 +84,7 @@ If the layout mode of your table is `"grid-no-grow"` and you set `grow: 1` on on
 
 If the layout mode of your table is `"semantic"`, the `grow` column option will have no effect, but columns will size themselves to fit their own content better than the other layout modes.
 
-### But I Want My Columns to Have a Percentage Width
+## But I Want My Columns to Have a Percentage Width
 
 Shadcn Table is not designed to use percentage column widths well by default. This is because having horizontal scrollbars on tables is both a very common use case, and usually the best way to ensure that the actual content of the cells in each column is visible and not cutoff or wrapped excessively.
 
@@ -88,7 +92,7 @@ If you disagree with that, that's fair, and you're not out of luck. Shadcn Table
 
 If the above still does not get you to where you need to be, `stTableHeadCellProps`, `stTableBodyCellProps`, and `stTableFooterCellProps` (`className` or `style`) and more are all exposed and available to you to override with whatever custom CSS that you need. Just be aware that non of the built-in TanStack Table size APIs will be accurate anymore.
 
-#### Side Note: Just Make Your Scrollbars Prettier
+### Side Note: Just Make Your Scrollbars Prettier
 
 Making your scrollbars look better (especially on Windows and Linux) can go a long way to not letting a horizontal scrollbar ruin the look of your table.
 
@@ -113,7 +117,7 @@ Here's what this docs site uses in its global CSS to make scrollbars to more lik
 }
 ```
 
-### Default Column
+## Default Column
 
 By default, columns will have the following size properties defined:
 
@@ -135,7 +139,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Change Sizes of Built-in Display Columns
+## Change Sizes of Built-in Display Columns
 
 As discussed further in the [Display Columns Guide](/docs/guides/display-columns), you can customize the options of the built-in columns that get generated under the hood by ST by enabling certain features.
 

@@ -5,6 +5,10 @@ description: 'How shadcn-table joins TanStack Table v9 state and row models with
 
 TanStack Table and shadcn/ui solve two halves of the same problem. This guide explains what each half does, how shadcn-table connects them, and when you are better off with the shadcn/ui data-table recipe alone.
 
+## Example
+
+<GuideExamples slugs={['basic']} />
+
 ## What TanStack Table gives you
 
 TanStack Table is headless. It holds the table state (sorting, filters, pagination, selection, column order, sizing, pinning, grouping and expansion) and computes the rows from it through row models: the core rows, then the filtered, sorted, grouped, expanded and paginated rows. It renders nothing. Every header, cell, menu and button is yours to write.

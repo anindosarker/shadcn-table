@@ -9,13 +9,17 @@ The table can perform processing on the data of a data column, such as sorting, 
 
 The other type of column that you can make is a display column, which you can learn more about in the [next section](/docs/guides/display-columns).
 
-### Accessors (Connect a column to data)
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Accessors (Connect a column to data)
 
 Each column definition must have at least an `accessorKey` (or a combination of an `id` and `accessorFn`) and a `header` property. The `accessorKey`/`accessorFn` property is the key that will be used to join the data from the `data` keys. The `header` property is used to display the column header, but is also used in other places in the table.
 
 > Note: Do NOT have your accessors resolve JSX or markup. That's what custom [`Cell`](#custom-cell-render) renders are for. Accessors should only return primitive data so that the table can sort, filter, search, and group properly.
 
-#### Method 1 - Using an accessorKey (Recommended)
+### Method 1 - Using an accessorKey (Recommended)
 
 The simplest and most common way to define a column is to use the `accessorKey` column option. The `accessorKey` column option is the key that will be used to join the data from the `data` keys.
 
@@ -48,7 +52,7 @@ const columns = useMemo<ST_ColumnDef<Customer>[]>( //TS helps with the autocompl
 );
 ```
 
-#### Method 2 - Using an accessorFn and id
+### Method 2 - Using an accessorFn and id
 
 You can alternatively use the `accessorFn` column option. Here are at least three ways you can use it.
 
@@ -80,7 +84,7 @@ const columns = useMemo<ST_ColumnDef<Customer>[]>(
 );
 ```
 
-#### Method 3 - Using createSRTColumnHelper
+### Method 3 - Using createSRTColumnHelper
 
 Alternatively you can use the `createSRTColumnHelper` utility function to define your columns definitions in a slightly more type-safe way. Instantiate a `columnHelper` by passing in your `TData` type as a generic argument. Then the first argument of the `columnHelper.accessor()` method can be either an `accessorKey` or an `accessorFn`. Then you can specify the rest of the column options as the second argument.
 
@@ -102,7 +106,7 @@ const columns = [
 ];
 ```
 
-### Custom Header Render
+## Custom Header Render
 
 If you want to pass in custom JSX to render the header, you can pass in a `Header` option in addition to the `header` string property.
 
@@ -128,7 +132,7 @@ const columns = useMemo(
 );
 ```
 
-### Custom Cell Render
+## Custom Cell Render
 
 Similarly, the data cells in a column can have a custom JSX render with the `Cell` option. This is one of the most common features used in ST.
 
@@ -166,7 +170,7 @@ const columns = useMemo(
 );
 ```
 
-### Custom Footer Render
+## Custom Footer Render
 
 If you want to pass in custom JSX to render the footer, you can pass in a `Footer` option. If no custom markup is needed, you can just use the `footer` string property.
 
@@ -198,7 +202,7 @@ const columns = useMemo(
 
 > See the [Customize Components Guide](/docs/guides/customize-components) for more ways to style and customize header and cell components.
 
-### Set Column Widths
+## Set Column Widths
 
 This topic is covered in detail in the [Column Size Guide](/docs/guides/column-size), but here is a brief overview.
 
@@ -229,7 +233,7 @@ const columns = [
 
 There is a lot of different behaviors for column widths depending on what other features are enabled or how they are configured. See the [Column Size Guide](/docs/guides/column-size) for more details on the `layoutMode`s, and how and why they are enabled and how they affect column widths.
 
-### Set Column Alignment
+## Set Column Alignment
 
 By default, all columns are left-aligned. You can change the alignment of a column by setting the `align` option to either `"center"`, `"right"`, or `"justify"` in the `stTableHeadCellProps` and `stTableBodyCellProps` props/column options.
 
@@ -268,7 +272,7 @@ const columns = [
 
 <ColumnAlignmentExample />
 
-### Enable or Disable Features Per Column
+## Enable or Disable Features Per Column
 
 In the same way that you can pass props to the main `<ShadcnTable />` component to enable or disable features, you can also specify options on the column definitions to enable or disable features on a per-column basis.
 

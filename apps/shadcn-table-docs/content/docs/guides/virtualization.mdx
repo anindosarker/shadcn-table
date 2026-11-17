@@ -7,7 +7,11 @@ Virtualization is useful when you have a lot of data you want to display client-
 
 > NOTE: You should only enable row virtualization if you have a large number of rows. Depending on the size of the table, if you are rendering less than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have more than 50 rows or so at the same time with no pagination.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['row-virtualization', 'column-virtualization']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -22,13 +26,13 @@ Virtualization is useful when you have a lot of data you want to display client-
   }
 />
 
-### What is Virtualization?
+## What is Virtualization?
 
 Virtualization, or virtual scrolling, works by only rendering the rows or columns that are visible on the screen. This is useful for performance and user experience, as we can make it appear that there are hundreds, thousands, or even tens of thousands of rows in the table all at once, but in reality, the table will only render the couple dozen rows that are visible on the screen, or the handful of columns that are visible on the screen.
 
 For more reading on the concept of virtualization, we recommend this [blog post](https://blog.logrocket.com/virtual-scrolling-core-principles-and-basic-implementation-in-react/) by LogRocket.
 
-### Does Your Table Even Need Virtualization?
+## Does Your Table Even Need Virtualization?
 
 If your table is paginated or you are not going to render more than 50 rows at once, you probably do not need row virtualization.
 
@@ -36,7 +40,7 @@ If your table does not have more than 12 columns, you probably do not need colum
 
 There is a slight amount of extra overhead that gets added to your table's rendering when virtualization is enabled, so do not just enable it for every table. That being said, if your table does have well more than 100 rows that it is trying to render all at once without pagination, performance should improve significantly once it has been enabled.
 
-### Enable Row Virtualization
+## Enable Row Virtualization
 
 Enabling row virtualization is as simple as setting the `enableRowVirtualization` table option to `true`. However, you will probably also want to turn off pagination, which you can do by setting `enablePagination` to `false`.
 
@@ -53,7 +57,7 @@ Take a look at the example below with 10,000 rows!
 
 <EnableRowVirtualizationExample />
 
-### Enable Column Virtualization
+## Enable Column Virtualization
 
 Enabling column virtualization is also as simple as setting the `enableColumnVirtualization` table option to `true`.
 
@@ -67,21 +71,21 @@ Take a look at the example below with 500 columns!
 
 > WARNING: Do not enable row or column virtualization conditionally. This could break React's Rule of Hooks and/or cause other UI jumpiness.
 
-### Virtualization Side Effects
+## Virtualization Side Effects
 
 When either row or column virtualization is enabled, a few other props automatically get set internally.
 
-#### `layoutMode` Prop
+### `layoutMode` Prop
 
 In ST Versions 1.3 and earlier, a CSS `table-layout: fixed` style was automatically added to the `<table>` element to prevent columns from wiggling back and forth during scrolling due to body cells having varying widths.
 
 But now in ST Versions 1.4 and later, the `layoutMode` table option is automatically set to the `'grid'` value when either row or column virtualization is enabled, which means that all of the table markup will use CSS Grid and Flexbox instead of the traditional semantic styles that usually come with table tags. This is necessary to make the virtualization work properly with decent performance.
 
-#### `enableStickyHeader` Prop
+### `enableStickyHeader` Prop
 
 The `enableStickyHeader` table option is automatically set to `true` when row virtualization is enabled. This keeps the table header sticky and visible while scrolling and caps the table container at the full window height minus the toolbars (`clamp(350px, calc(100vh - toolbar height), 9999px)`), not the `70vh` a sticky header gets by choice. Set the `--st-sticky-max-height` CSS variable on the table layout or an ancestor to change the cap, see the [Sticky Header Guide](/docs/guides/sticky-header).
 
-### Customize Virtualizer Props
+## Customize Virtualizer Props
 
 You can adjust some of the virtualizer props that are used internally with the `rowVirtualizerOptions` and `columnVirtualizerOptions` props. The most useful virtualizer props are the `overscan` and `estimateSize` options. You may want to adjust these values if you have unusual row heights or column widths that are causing the default scrolling to behave strangely.
 
@@ -105,7 +109,7 @@ You can adjust some of the virtualizer props that are used internally with the `
 
 See the official TanStack [Virtualizer Options API Docs](https://tanstack.com/virtual/v3/docs/api/virtualizer#optional-options) for more information.
 
-### Access Underlying Virtualizer Instances
+## Access Underlying Virtualizer Instances
 
 In a similar way that you can [access the underlying table instance](/docs/guides/state-management#read-from-the-table-instance), you can also access the underlying virtualizer instances. This can be useful for accessing methods like the `scrollToIndex` method, which can be used to programmatically scroll to a specific row or column.
 
@@ -134,13 +138,13 @@ return (
 
 See the official TanStack [Virtualizer Instance API Docs](https://tanstack.com/virtual/v3/docs/api/virtualizer#virtualizer-instance) for more information.
 
-### Full Row and Column Virtualization Example
+## Full Row and Column Virtualization Example
 
 Try out the performance of the [fully virtualized example](/docs/examples/virtualized) with **10,000 rows** and over a dozen columns! Filtering, search, and sorting also maintain usable performance.
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
 
-### Headless Virtualization with ST Hooks
+## Headless Virtualization with ST Hooks
 
 If you are building a custom table in headless mode, you can still take advantage of some of the built-in virtualization functionality via the `useST_ColumnVirtualizer` and `useST_RowVirtualizer` hooks, which are wrappers for the TanStack Virtual `useVirtualizer` hook.
 
