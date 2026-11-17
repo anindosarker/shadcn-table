@@ -70,16 +70,32 @@ const ViewSettingsTable = (props: Partial<ST_TableOptions<Task>>) => {
   );
 };
 
-export const ViewSettingsDefault = () => <ViewSettingsTable />;
+export const ViewSettingsDefault = {
+  render: () => <ViewSettingsTable />,
+  play: async (context: StoryContext) => {
+    await context.step('PinUnpinAndSteppers', () =>
+      pinUnpinAndSteppers(context),
+    );
+    await context.step('PanelRowsAndRowNumbers', () =>
+      panelRowsAndRowNumbers(context),
+    );
+  },
+};
 
-export const ViewSettingsSeeded = () => (
-  <ViewSettingsTable
-    initialState={{
-      columnVisibility: { priority: false },
-      density: 'compact',
-    }}
-  />
-);
+export const ViewSettingsSeeded = {
+  render: () => (
+    <ViewSettingsTable
+      initialState={{
+        columnVisibility: { priority: false },
+        density: 'compact',
+      }}
+    />
+  ),
+  play: async (context: StoryContext) => {
+    await context.step('ToolbarGroupOrder', () => toolbarGroupOrder(context));
+    await context.step('ResetView', () => resetView(context));
+  },
+};
 
 export const ViewSettingsPersisted = (
   props: Partial<ST_TableOptions<Task>>,
@@ -113,123 +129,108 @@ const openPanel = async (canvasElement: HTMLElement) => {
   );
 };
 
-export const PanelRowsAndRowNumbers = {
-  render: ViewSettingsDefault,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
+const panelRowsAndRowNumbers = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
 
-    await openPanel(canvasElement);
+  await openPanel(canvasElement);
+  expect(
+    [...document.body.querySelectorAll<HTMLElement>('[data-view-setting]')].map(
+      (row) => row.dataset.viewSetting,
+    ),
+  ).toEqual([
+    'columns',
+    'density',
+    'wrapText',
+    'gridLines',
+    'stickyHeader',
+    'striped',
+    'rowNumbers',
+  ]);
+  expect(body.getByRole('button', { name: 'Reset view' })).toBeEnabled();
+
+  expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull();
+  await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
+  await canvas.findByRole('columnheader', { name: '#' });
+  await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
+  await waitFor(() =>
+    expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull(),
+  );
+};
+
+const pinUnpinAndSteppers = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
+
+  // Columns and Density are pinned by default; the toolbar buttons fade in
+  // from 0 opacity on mount (D70).
+  await waitFor(() => {
     expect(
-      [
-        ...document.body.querySelectorAll<HTMLElement>('[data-view-setting]'),
-      ].map((row) => row.dataset.viewSetting),
-    ).toEqual([
-      'columns',
-      'density',
-      'wrapText',
-      'gridLines',
-      'stickyHeader',
-      'striped',
-      'rowNumbers',
-    ]);
-    expect(body.getByRole('button', { name: 'Reset view' })).toBeEnabled();
-
-    expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull();
-    await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
-    await canvas.findByRole('columnheader', { name: '#' });
-    await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
-    await waitFor(() =>
-      expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull(),
-    );
-  },
-};
-
-export const PinUnpinAndSteppers = {
-  render: ViewSettingsDefault,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
-
-    // Columns and Density are pinned by default; the toolbar buttons fade in
-    // from 0 opacity on mount (D70).
-    await waitFor(() => {
-      expect(
-        canvas.getByRole('button', { name: 'Show/Hide columns' }),
-      ).toBeVisible();
-      expect(
-        canvas.getByRole('button', { name: 'Toggle density' }),
-      ).toBeVisible();
-    });
-    expect(canvas.queryByRole('button', { name: 'Grid lines' })).toBeNull();
-
-    await openPanel(canvasElement);
-    const pinGridLines = body.getByRole('button', {
-      name: 'Pin to toolbar: Grid lines',
-    });
-    expect(pinGridLines.getAttribute('aria-pressed')).toBe('false');
-    await userEvent.click(pinGridLines);
-    await canvas.findByRole('button', { name: 'Grid lines' });
-    await userEvent.click(
-      body.getByRole('button', { name: 'Unpin from toolbar: Density' }),
-    );
-    await waitFor(() =>
-      expect(
-        canvas.queryByRole('button', { name: 'Toggle density' }),
-      ).toBeNull(),
-    );
-    // A click outside closes the panel.
-    await userEvent.click(canvas.getByText('Plan audit log'));
-    await waitFor(() =>
-      expect(document.body.querySelector('[data-view-setting]')).toBeNull(),
-    );
-
-    // The pinned stepper moves to the next value.
-    const before = viewState(canvasElement);
-    await userEvent.click(canvas.getByRole('button', { name: 'Grid lines' }));
-    await waitFor(() => expect(viewState(canvasElement)).not.toBe(before));
-  },
-};
-
-export const ResetView = {
-  render: ViewSettingsSeeded,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
-    expect(viewState(canvasElement)).toContain('density=compact');
-    expect(canvas.queryByRole('columnheader', { name: /Priority/ })).toBeNull();
-
-    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide columns' }),
+    ).toBeVisible();
+    expect(
       canvas.getByRole('button', { name: 'Toggle density' }),
-    );
-    await waitFor(() =>
-      expect(viewState(canvasElement)).toContain('density=comfortable'),
-    );
-    await openPanel(canvasElement);
-    await userEvent.click(
-      body.getByRole('button', { name: 'Pin to toolbar: Sticky header' }),
-    );
-    await canvas.findByRole('button', { name: 'Sticky header' });
+    ).toBeVisible();
+  });
+  expect(canvas.queryByRole('button', { name: 'Grid lines' })).toBeNull();
 
-    await userEvent.click(body.getByRole('button', { name: 'Reset view' }));
-    await waitFor(() =>
-      expect(viewState(canvasElement)).toContain('density=compact'),
-    );
-    await waitFor(() =>
-      expect(
-        canvas.queryByRole('button', { name: 'Sticky header' }),
-      ).toBeNull(),
-    );
-    await waitFor(() =>
-      expect(
-        canvas.getByRole('button', { name: 'Toggle density' }),
-      ).toBeVisible(),
-    );
-    expect(canvas.queryByRole('columnheader', { name: /Priority/ })).toBeNull();
-  },
+  await openPanel(canvasElement);
+  const pinGridLines = body.getByRole('button', {
+    name: 'Pin to toolbar: Grid lines',
+  });
+  expect(pinGridLines.getAttribute('aria-pressed')).toBe('false');
+  await userEvent.click(pinGridLines);
+  await canvas.findByRole('button', { name: 'Grid lines' });
+  await userEvent.click(
+    body.getByRole('button', { name: 'Unpin from toolbar: Density' }),
+  );
+  await waitFor(() =>
+    expect(canvas.queryByRole('button', { name: 'Toggle density' })).toBeNull(),
+  );
+  // A click outside closes the panel.
+  await userEvent.click(canvas.getByText('Plan audit log'));
+  await waitFor(() =>
+    expect(document.body.querySelector('[data-view-setting]')).toBeNull(),
+  );
+
+  // The pinned stepper moves to the next value.
+  const before = viewState(canvasElement);
+  await userEvent.click(canvas.getByRole('button', { name: 'Grid lines' }));
+  await waitFor(() => expect(viewState(canvasElement)).not.toBe(before));
+};
+
+const resetView = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
+  expect(viewState(canvasElement)).toContain('density=compact');
+  expect(canvas.queryByRole('columnheader', { name: /Priority/ })).toBeNull();
+
+  await userEvent.click(canvas.getByRole('button', { name: 'Toggle density' }));
+  await waitFor(() =>
+    expect(viewState(canvasElement)).toContain('density=comfortable'),
+  );
+  await openPanel(canvasElement);
+  await userEvent.click(
+    body.getByRole('button', { name: 'Pin to toolbar: Sticky header' }),
+  );
+  await canvas.findByRole('button', { name: 'Sticky header' });
+
+  await userEvent.click(body.getByRole('button', { name: 'Reset view' }));
+  await waitFor(() =>
+    expect(viewState(canvasElement)).toContain('density=compact'),
+  );
+  await waitFor(() =>
+    expect(canvas.queryByRole('button', { name: 'Sticky header' })).toBeNull(),
+  );
+  await waitFor(() =>
+    expect(
+      canvas.getByRole('button', { name: 'Toggle density' }),
+    ).toBeVisible(),
+  );
+  expect(canvas.queryByRole('columnheader', { name: /Priority/ })).toBeNull();
 };
 
 export const Persistence = {
@@ -421,35 +422,32 @@ export const RowNumbersKeepAlignment = {
   },
 };
 
-export const ToolbarGroupOrder = {
-  render: ViewSettingsSeeded,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Plan audit log');
-    const labels = [
-      'Show/Hide search',
-      'Filter',
-      'Sort',
-      'Show/Hide columns',
-      'Toggle density',
-      'Toggle full screen',
-      'View settings',
-    ];
-    const buttons = labels.map((name) => canvas.getByRole('button', { name }));
-    buttons
-      .slice(1)
-      .forEach((button, index) =>
-        expect(
-          buttons[index].compareDocumentPosition(button) &
-            Node.DOCUMENT_POSITION_FOLLOWING,
-        ).toBeTruthy(),
-      );
-    // Only the filter button with filters and the sort button with sorts
-    // take the secondary fill; with neither, every button is ghost.
-    buttons.forEach((button) =>
-      expect(button.getAttribute('data-variant')).not.toBe('secondary'),
+const toolbarGroupOrder = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Plan audit log');
+  const labels = [
+    'Show/Hide search',
+    'Filter',
+    'Sort',
+    'Show/Hide columns',
+    'Toggle density',
+    'Toggle full screen',
+    'View settings',
+  ];
+  const buttons = labels.map((name) => canvas.getByRole('button', { name }));
+  buttons
+    .slice(1)
+    .forEach((button, index) =>
+      expect(
+        buttons[index].compareDocumentPosition(button) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy(),
     );
-  },
+  // Only the filter button with filters and the sort button with sorts
+  // take the secondary fill; with neither, every button is ghost.
+  buttons.forEach((button) =>
+    expect(button.getAttribute('data-variant')).not.toBe('secondary'),
+  );
 };
 
 // The view settings icons of the four icon editions (D75 keys, D77 picks):
