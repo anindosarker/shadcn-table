@@ -4,12 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D139** The two touch drag test stories stay and become docs pages #R6
-	- Settled by the lead: D106 says a test story with its own different table stays listed like any other story, and P11 needs a play that fails first for each fix.
-	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
-	- Spec 63's catch-up gives each its page under More examples and its text, which joins the owner's wording review.
-	- Source: Q125
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -896,6 +890,11 @@ kanban-plugin: basic
 	- Spec 62 described drop target marks; built so the touch path (`hooks/useST_TouchDrag.ts`) dispatches marked dragenter, dragleave, dragover and drop events to the element under the finger, with a stand-in `dataTransfer`, so the existing mouse handlers serve it and the body cell and row files are untouched.
 	- Kept as built (fcd6af8f on `claude/review`). Spec 62 1.4 and 1.6.2 are read with this decision.
 	- Source: Q124
+- [x] **D139** The two touch drag test stories stay and become docs pages #R6
+	- Settled by the lead: D106 says a test story with its own different table stays listed like any other story, and P11 needs a play that fails first for each fix.
+	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
+	- Spec 63's catch-up gives each its page under More examples and its text, which joins the owner's wording review.
+	- Source: Q125
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
