@@ -20,6 +20,14 @@ import {
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import {
   CakeIcon,
   HashIcon,
   MapIcon,
@@ -994,124 +1002,6 @@ const chartPeopleColumns: ST_ColumnDef<ChartPerson>[] = [
   },
 ];
 
-const chartLines = [
-  { key: 'Points', stroke: 'var(--primary)' },
-  { key: 'Assists', stroke: 'var(--secondary-foreground)' },
-  { key: 'Turnovers', stroke: 'var(--destructive)' },
-] as const;
-
-/**
- * The docs example draws this chart with recharts (a line per stat, y from 0
- * to 60, a tooltip on hover). The library does not depend on recharts, so the
- * story draws the same lines in plain SVG.
- */
-const GameChart = ({ person }: { person: ChartPerson }) => {
-  const [hovered, setHovered] = useState<number | null>(null);
-  const games = person.gamesPlayed.map((game, index) => ({
-    game,
-    Points: person.points[index]!,
-    Assists: person.assists[index]!,
-    Turnovers: person.turnovers[index]!,
-  }));
-  const width = 600;
-  const height = 250;
-  const pad = { bottom: 40, left: 40, right: 16, top: 12 };
-  const x = (index: number) =>
-    pad.left +
-    (games.length > 1
-      ? (index / (games.length - 1)) * (width - pad.left - pad.right)
-      : 0);
-  const y = (value: number) =>
-    height - pad.bottom - (value / 60) * (height - pad.top - pad.bottom);
-  const point = hovered === null ? null : games[hovered]!;
-  return (
-    <div className="relative w-full">
-      <svg
-        aria-label={`Games played by ${person.firstName}`}
-        className="h-[250px] w-full"
-        onPointerLeave={() => setHovered(null)}
-        onPointerMove={(event) => {
-          const box = event.currentTarget.getBoundingClientRect();
-          const at = ((event.clientX - box.left) / box.width) * width;
-          let nearest = 0;
-          games.forEach((_, index) => {
-            if (Math.abs(x(index) - at) < Math.abs(x(nearest) - at))
-              nearest = index;
-          });
-          setHovered(nearest);
-        }}
-        preserveAspectRatio="none"
-        role="img"
-        viewBox={`0 0 ${width} ${height}`}
-      >
-        {[0, 15, 30, 45, 60].map((tick) => (
-          <text
-            className="fill-muted-foreground text-xs"
-            key={tick}
-            textAnchor="end"
-            x={pad.left - 6}
-            y={y(tick) + 4}
-          >
-            {tick}
-          </text>
-        ))}
-        {games.map(({ game }, index) => (
-          <text
-            className="fill-muted-foreground text-xs"
-            key={game}
-            textAnchor="middle"
-            x={x(index)}
-            y={height - pad.bottom + 16}
-          >
-            #{game}
-          </text>
-        ))}
-        <text
-          className="fill-muted-foreground text-xs"
-          textAnchor="middle"
-          x={width / 2}
-          y={height - 4}
-        >
-          Games Played
-        </text>
-        {chartLines.map(({ key, stroke }) => (
-          <polyline
-            fill="none"
-            key={key}
-            points={games
-              .map((game, index) => `${x(index)},${y(game[key])}`)
-              .join(' ')}
-            stroke={stroke}
-            strokeWidth={2}
-          />
-        ))}
-        {hovered !== null && (
-          <line
-            className="stroke-muted-foreground"
-            x1={x(hovered)}
-            x2={x(hovered)}
-            y1={pad.top}
-            y2={height - pad.bottom}
-          />
-        )}
-      </svg>
-      {point && (
-        <div
-          className="absolute top-2 right-2 rounded-md border bg-popover p-2 text-sm text-popover-foreground shadow"
-          role="tooltip"
-        >
-          <p>{point.game}</p>
-          {chartLines.map(({ key, stroke }) => (
-            <p key={key} style={{ color: stroke }}>
-              {key} : {point[key]}
-            </p>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
 /** The docs example chart-detail-panel: a chart of each player's games. */
 export const ChartDetailPanel = {
   render: function ChartDetailPanelStory() {
@@ -1122,30 +1012,61 @@ export const ChartDetailPanel = {
       stTableBodyRowProps: ({ isDetailPanel }) => ({
         className: isDetailPanel ? 'bg-gray-100 dark:bg-gray-900' : undefined,
       }),
-      renderDetailPanel: ({ row }) => <GameChart person={row.original} />,
+      renderDetailPanel: ({ row }) => (
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart
+            data={row.original.gamesPlayed.map((game, index) => ({
+              game,
+              Points: row.original.points[index],
+              Assists: row.original.assists[index],
+              Turnovers: row.original.turnovers[index],
+            }))}
+          >
+            <XAxis
+              dataKey="game"
+              label={{ value: 'Games Played', position: 'insideBottom' }}
+              tickFormatter={(value) => `#${value}`}
+            />
+            <YAxis domain={[0, 60]} />
+            <Tooltip />
+            <Line
+              type="monotone"
+              dataKey="Points"
+              stroke="var(--primary)"
+              dot={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="Assists"
+              stroke="var(--secondary-foreground)"
+              dot={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="Turnovers"
+              stroke="var(--destructive)"
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      ),
     });
 
     return <ShadcnTable table={table} />;
   },
   play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const chart = await canvas.findByRole('img', {
-      name: 'Games played by Dylan',
-    });
-    const box = chart.getBoundingClientRect();
-    chart.dispatchEvent(
-      new PointerEvent('pointermove', {
-        bubbles: true,
-        clientX: box.left + box.width / 2,
-        clientY: box.top + box.height / 2,
-      }),
+    // Row 1 starts expanded: its panel draws the recharts chart, one line per
+    // stat. Expanding row 2 draws a second chart.
+    const surfaces = () =>
+      canvasElement.querySelectorAll('tbody svg.recharts-surface');
+    await waitFor(() => expect(surfaces()).toHaveLength(1));
+    await waitFor(() =>
+      expect(
+        surfaces()[0]!.querySelectorAll('.recharts-line-curve'),
+      ).toHaveLength(3),
     );
-    const tooltip = await canvas.findByRole('tooltip');
-    for (const stat of ['Points', 'Assists', 'Turnovers'])
-      expect(tooltip).toHaveTextContent(stat);
-
     await userEvent.click(expandButtonOf(canvasElement, '2'));
-    await canvas.findByRole('img', { name: 'Games played by Raquel' });
+    await waitFor(() => expect(surfaces()).toHaveLength(2));
   },
 };
 

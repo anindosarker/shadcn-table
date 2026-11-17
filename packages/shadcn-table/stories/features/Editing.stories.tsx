@@ -21,6 +21,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { DialogFooter, DialogTitle } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@story-support/alert-dialog';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
@@ -1314,9 +1323,8 @@ export const ModalEditSaves = {
 // The exact stories of the docs examples editing-crud, editing-crud-inline-row,
 // editing-crud-inline-cell, editing-crud-inline-table and editing-crud-tree:
 // the same columns, options and data. Each story gets its own QueryClient, so
-// one story's edits never show in another. The docs examples confirm a delete
-// in the docs app's AlertDialog; the library ships no AlertDialog, so these
-// stories ask the same question with the same buttons under the table.
+// one story's edits never show in another. A delete is confirmed in the alert
+// dialog the examples use (DeleteUserConfirm).
 
 function WithQueryClient({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -1332,6 +1340,12 @@ function WithQueryClient({ children }: { children: ReactNode }) {
 const disabledProps = (disabled: boolean) =>
   ST_BASE === 'aria' ? { isDisabled: disabled } : { disabled };
 
+/**
+ * The examples' delete confirm: the alert dialog of the base
+ * (`@story-support`, the docs app's own part in the docs copies). React Aria's
+ * alert dialog is the modal itself and reads `isOpen` and `onPress`, as the
+ * aria examples write it.
+ */
 function DeleteUserConfirm({
   onCancel,
   onDelete,
@@ -1341,23 +1355,35 @@ function DeleteUserConfirm({
   onDelete: () => void;
   open: boolean;
 }) {
-  if (!open) return null;
-  return (
-    <div
-      aria-label="Are you sure you want to delete this user?"
-      className="mt-4 flex flex-col gap-4 rounded-lg border p-4"
-      role="alertdialog"
-    >
-      <p className="font-medium">Are you sure you want to delete this user?</p>
-      <div className="flex justify-end gap-2">
-        <Button onClick={onCancel} variant="outline">
-          Cancel
-        </Button>
-        <Button onClick={onDelete} variant="destructive">
+  const aria = ST_BASE === 'aria';
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) onCancel();
+  };
+  const body = (
+    <>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Are you sure you want to delete this user?
+        </AlertDialogTitle>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction
+          variant="destructive"
+          {...(aria ? { onPress: onDelete } : { onClick: onDelete })}
+        >
           Delete
-        </Button>
-      </div>
-    </div>
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </>
+  );
+  return (
+    <AlertDialog
+      {...(aria ? { isOpen: open } : { open })}
+      onOpenChange={onOpenChange}
+    >
+      {aria ? body : <AlertDialogContent>{body}</AlertDialogContent>}
+    </AlertDialog>
   );
 }
 
@@ -2636,6 +2662,31 @@ const crudCell = (canvasElement: HTMLElement, rowId: string, column: string) =>
     )
     ?.querySelector<HTMLElement>(`td[data-flip-column="${column}"]`);
 
+/**
+ * Deletes the row whose Id cell reads `rowId` as the examples do: its Delete
+ * button, then Delete in the alert dialog. The row is gone after.
+ */
+const deleteThroughDialog = async (
+  canvasElement: HTMLElement,
+  rowId: string,
+) => {
+  const row = crudCell(canvasElement, rowId, 'id')!.closest('tr')!;
+  await userEvent.click(within(row).getByRole('button', { name: 'Delete' }));
+  const confirm = await screen.findByRole('alertdialog');
+  await waitFor(() =>
+    expect(
+      within(confirm).getByText('Are you sure you want to delete this user?'),
+    ).toBeVisible(),
+  );
+  await userEvent.click(
+    within(confirm).getByRole('button', { name: 'Delete' }),
+  );
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  await waitFor(() =>
+    expect(crudCell(canvasElement, rowId, 'id')).toBeUndefined(),
+  );
+};
+
 /** The docs example editing-crud: create and edit in a dialog. */
 export const EditingCrud = {
   name: 'Editing CRUD',
@@ -2658,6 +2709,8 @@ export const EditingCrud = {
       within(dialog).getByRole('button', { name: 'Cancel' }),
     );
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+
+    await deleteThroughDialog(canvasElement, '08m6rx');
 
     await userEvent.click(
       canvas.getByRole('button', { name: 'Create New User' }),
@@ -2695,6 +2748,8 @@ export const InlineEditing = {
         ).toHaveTextContent(/^Kevin$/),
       slow,
     );
+
+    await deleteThroughDialog(canvasElement, '08m6rx');
 
     await userEvent.click(
       canvas.getByRole('button', { name: 'Create New User' }),
@@ -2739,6 +2794,8 @@ export const EditingCrudInlineCell = {
     expect(crudCell(canvasElement, '9s41rp', 'firstName')).toHaveTextContent(
       /^Kevin$/,
     );
+
+    await deleteThroughDialog(canvasElement, '08m6rx');
   },
 };
 
@@ -2773,15 +2830,7 @@ export const EditingCrudInlineTable = {
       ),
     ).toHaveValue('Kevin');
 
-    const [firstRowDelete] = canvas.getAllByRole('button', { name: 'Delete' });
-    await userEvent.click(firstRowDelete!);
-    const confirm = await canvas.findByRole('alertdialog');
-    await userEvent.click(
-      within(confirm).getByRole('button', { name: 'Delete' }),
-    );
-    await waitFor(() =>
-      expect(crudCell(canvasElement, '9s41rp', 'firstName')).toBeUndefined(),
-    );
+    await deleteThroughDialog(canvasElement, '9s41rp');
   },
 };
 
@@ -2803,6 +2852,8 @@ export const EditingCrudTree = {
       within(rowOne).getByRole('button', { name: 'Expand' }),
     );
     await waitFor(() => expect(canvas.queryByText('Ervin')).toBeNull());
+
+    await deleteThroughDialog(canvasElement, '3.2');
 
     const rowTwo = crudCell(canvasElement, '2', 'id')!.closest('tr')!;
     const rowsBefore = canvasElement.querySelectorAll('tbody tr').length;
