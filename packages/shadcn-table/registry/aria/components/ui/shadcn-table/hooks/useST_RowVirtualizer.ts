@@ -22,8 +22,10 @@ export const useST_RowVirtualizer = <
   const {
     getRowModel,
     options: {
+      enableRowPinning,
       enableRowVirtualization,
       renderDetailPanel,
+      rowPinningDisplayMode,
       rowVirtualizerInstanceRef,
       rowVirtualizerOptions,
     },
@@ -41,6 +43,13 @@ export const useST_RowVirtualizer = <
   const expanded = useSelector(table.atoms.expanded, (value) =>
     enableRowVirtualization ? value : undefined,
   );
+  const stickyPinning =
+    !!enableRowVirtualization &&
+    !!enableRowPinning &&
+    !!rowPinningDisplayMode?.includes('sticky');
+  const rowPinning = useSelector(table.atoms.rowPinning, (value) =>
+    stickyPinning ? value : undefined,
+  );
 
   const rowVirtualizerProps = parseFromValuesOrFunc(rowVirtualizerOptions, {
     table,
@@ -56,14 +65,29 @@ export const useST_RowVirtualizer = <
     [realRows, draggingRowId],
   );
 
+  // Sticky pinned rows stay rendered wherever the scroll is, so they can
+  // stay in view at the top or the bottom of the body.
+  const pinnedRowIndexes = useMemo(() => {
+    if (!rowPinning?.top?.length && !rowPinning?.bottom?.length) return [];
+    return realRows.flatMap((row, index) =>
+      row.getIsPinned() ? [renderDetailPanel ? index * 2 : index] : [],
+    );
+  }, [realRows, renderDetailPanel, rowPinning]);
+
   const rowCount = realRows.length;
 
   const normalRowHeight =
     density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56;
 
   const rangeExtractor = useCallback(
-    (range: Range) => extraIndexRangeExtractor(range, draggingRowIndex),
-    [draggingRowIndex],
+    (range: Range) =>
+      extraIndexRangeExtractor(
+        range,
+        draggingRowIndex === undefined
+          ? pinnedRowIndexes
+          : [draggingRowIndex, ...pinnedRowIndexes],
+      ),
+    [draggingRowIndex, pinnedRowIndexes],
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'
