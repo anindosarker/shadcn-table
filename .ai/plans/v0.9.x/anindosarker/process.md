@@ -5,6 +5,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 ## P1 Branches
 
 - `claude/review`: the integration branch. Every worktree starts from it (branch `v<major>.<minor>/<slug>` created from `origin/claude/review`), and every finished milestone merges back into it.
+- `v0.9/docs-layout`: the integration branch of E14 and of every fix to E14's work (D109). Their worktrees start from `origin/v0.9/docs-layout` and their milestones merge into `v0.9/docs-layout`, never into `claude/review`; it merges into `claude/review` once, on the owner's explicit word, and `claude/review` is merged into it after each patch release. Plan files, trackers and the grid stay on `claude/review`.
 - `dev`: the staging branch. Untouched until a release spec runs; then fast-forwarded from `claude/review` once, and again after each fix milestone the integration run produces; the only other commit on it is `chore: version <v>` by Prepare Release on the release PR. Never pushed to by hand.
 - `master`: the release branch. Changes only by merging the release PR from `dev`; no other source branch, no direct push.
 
