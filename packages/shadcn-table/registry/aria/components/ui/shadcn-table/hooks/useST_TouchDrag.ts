@@ -126,10 +126,10 @@ const createGhost = (source: HTMLElement) => {
   return ghost;
 };
 
-/** Drops the next click the browser derives from the finger that dragged. */
-const guardClick = () => {
+/** Drops the next click the browser derives from the finger on `source`. */
+const guardClick = (source: HTMLElement) => {
   const swallow = (event: MouseEvent) => {
-    if (!event.isTrusted) return;
+    if (!event.isTrusted || !source.contains(event.target as Node)) return;
     event.preventDefault();
     event.stopPropagation();
     window.removeEventListener('click', swallow, true);
@@ -254,7 +254,7 @@ const trackFinger = ({
     detach();
     if (!wasActive) return;
     if (cancelled && over) send('dragleave', over, null);
-    guardClick();
+    guardClick(source);
     options.current.onEnd(toHandlerEvent(last, source), cancelled);
   };
 
