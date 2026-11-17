@@ -235,26 +235,41 @@ const trackFinger = ({
       event.defaultPrevented && readDropEffect(dataTransfer) !== 'none';
   };
 
+  /** The scroll speed for the finger between the edges `top` and `bottom`. */
+  const edgeDelta = (top: number, bottom: number) => {
+    const depth = (distance: number) =>
+      Math.min(1, Math.max(0, (EDGE_PX - distance) / EDGE_PX));
+    return y < top + EDGE_PX
+      ? -MAX_SPEED_PX * depth(y - top)
+      : y > bottom - EDGE_PX
+        ? MAX_SPEED_PX * depth(bottom - y)
+        : 0;
+  };
+
+  /** Whether `element` scrolled by `delta`. */
+  const scrollBy = (element: Element, delta: number) => {
+    if (!delta) return false;
+    const before = element.scrollTop;
+    element.scrollTop += delta;
+    return element.scrollTop !== before;
+  };
+
   const scrollStep = () => {
     frame = 0;
     const box = active ? options.current.getScrollContainer?.() : null;
     if (!box) return;
     // The edges of the part of the box on screen.
     const rect = box.getBoundingClientRect();
-    const top = Math.max(rect.top, 0);
-    const bottom = Math.min(rect.bottom, window.innerHeight);
-    const depth = (distance: number) =>
-      Math.min(1, Math.max(0, (EDGE_PX - distance) / EDGE_PX));
-    const delta =
-      y < top + EDGE_PX
-        ? -MAX_SPEED_PX * depth(y - top)
-        : y > bottom - EDGE_PX
-          ? MAX_SPEED_PX * depth(bottom - y)
-          : 0;
-    if (!delta) return;
-    const before = box.scrollTop;
-    box.scrollTop += delta;
-    if (box.scrollTop === before) return;
+    const boxDelta = edgeDelta(
+      Math.max(rect.top, 0),
+      Math.min(rect.bottom, window.innerHeight),
+    );
+    // A box that cannot scroll leaves it to the page, as a mouse drag does.
+    const page = document.scrollingElement;
+    const scrolled =
+      scrollBy(box, boxDelta) ||
+      (!!page && scrollBy(page, edgeDelta(0, window.innerHeight)));
+    if (!scrolled) return;
     hitTest();
     frame = requestAnimationFrame(scrollStep);
   };
