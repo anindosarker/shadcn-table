@@ -16,6 +16,10 @@ publishes the section as the GitHub release notes.
 - Every example page lists two to four Try it steps directly above its table and links its guides under Related guides below it; the View Extra Storybook line is gone, the toolbar's Storybook button replaces it. Titles, descriptions and the page text are unchanged (D104).
 - The six format comparison pages and the Format previews sidebar group are removed.
 
+#### Storybook upgrade
+
+- Storybook moves from 10.6.2 to 10.6.7: `storybook`, `@storybook/react-vite` and the a11y, docs, links, mcp and vitest addons in the package, `storybook` and `@storybook/react` in the docs app (Q112).
+
 ### Fixed
 
 #### Spec 52 Docs filter facts
