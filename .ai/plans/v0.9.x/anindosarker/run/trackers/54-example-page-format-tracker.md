@@ -22,6 +22,10 @@ Checks:
 - Verifier `git merge-tree --write-tree origin/v0.9/docs-layout HEAD` (6dba74da): clean
 - Verifier `pnpm test docs-e2e --base radix` at 3a74f49c (port 5340): pass (110 pages; getting-started 262, api 111, guides 705, examples 1067 passed, 0 failed); server stopped
 - Verifier `pnpm test docs-e2e --base aria` at 3a74f49c (port 5340, after radix): pass (getting-started 262, api 111, guides 705, examples 1067 passed, 0 failed); server stopped
+- Task 6 fixer: faceted-values steps 1 and 3, filter-switching step 3, filter-variants step 2 split or shortened (faceted-values and filter-variants now 4 steps, filter-switching 4; later steps renumbered only), virtualized step 3 names `State` and `Country` instead of `render`
+- Task 6 fixer step truth: each rewritten step run by a Playwright script with base selected on the production build at 3a74f49c (port 5340, stopped; text-only change since): `Filter by City` appears, opens with `Blacksburg (1)` to `San Francisco (2)`; after `Richmond` the `State` list offers only `Virginia (1)`; Age mode reads `between`, opens `Between`, `Greater Than`, `Less Than`; Age shows `Min` and `Max`, San Francisco then 40 to 45 leaves Tanner Linsley; scrolled right shows `State`, `Country`, `Pet Name`, `Age`. Labels from `shared/locales/en.ts` (`Filter by {column}`, `Min`, `Max`, `Between`, `Greater Than`, `Less Than`) and the four examples' code are the same in radix and aria
+- Task 6 fixer `pnpm format` at 86e7022c: no diff
+- Task 6 fixer `pnpm test docs-e2e --base base` at 86e7022c: pass (110 pages; examples 1067 passed, 0 failed); server stopped
 
 - Task 1 site table: 87ea42fe (notes below; no file)
 - Task 2 comparison pages removed: 87ea42fe
@@ -29,6 +33,7 @@ Checks:
 - Task 4 nothing else changed: ac223e33
 - Task 5 step truth: ac223e33
 - Task 6 text check by judges: run by the workflow
+- Task 6 fixer, the five lines the judges failed (spec 54 1.2): 86e7022c
 - Task 7 cleanup: 3a74f49c
 
 ## Notes
