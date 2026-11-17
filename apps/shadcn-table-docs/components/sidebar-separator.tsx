@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { use, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { useTreeContext } from 'fumadocs-ui/contexts/tree';
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/lib/page-tree-utils';
 import { SidebarGroupContext } from '@/components/sidebar-group-context';
 import { SidebarItem } from '@/components/sidebar-item';
+import { ActiveRowOnly } from '@/components/sidebar-section';
 
 /**
  * Sub-group label inside a section ("---Props and Options---" in meta.json),
@@ -21,6 +23,9 @@ import { SidebarItem } from '@/components/sidebar-item';
 export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   const { root } = useTreeContext();
   const label = useStuckLabel();
+  const pathname = usePathname();
+  // before the list is in, only the current row (sidebar-section.tsx)
+  const activeOnly = use(ActiveRowOnly);
   const siblings = findSiblings(root, item);
   if (!siblings || !separatorHasPages(item, siblings)) return null;
 
@@ -53,9 +58,11 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
         </span>
       </p>
       <SidebarGroupContext value>
-        {separatorPages(item, siblings).map((page) => (
-          <SidebarItem key={page.$id ?? page.url} item={page} />
-        ))}
+        {separatorPages(item, siblings)
+          .filter((page) => !activeOnly || page.url === pathname)
+          .map((page) => (
+            <SidebarItem key={page.$id ?? page.url} item={page} />
+          ))}
       </SidebarGroupContext>
     </div>
   );
