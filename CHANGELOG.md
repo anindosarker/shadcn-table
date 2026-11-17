@@ -9,6 +9,12 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Added
+
+#### Spec 59 Example ids and 404 page
+
+- A wrong address on the docs site shows the site's own 404 page with the HTTP status 404, inside the home page's top bar (with the base select) and footer: "404", "This page does not exist", the docs search box and links to Get Started, Examples, Guides and API, in light and dark and on phones (D121).
+
 ### Changed
 
 #### Spec 54
@@ -27,6 +33,10 @@ publishes the section as the GitHub release notes.
 #### Spec 53 Sidebar state script
 
 - The docs sidebar's saved width and collapsed state now apply when the docs are opened from the home page, and the browser console no longer reports a script tag on that step.
+
+#### Spec 59 Example ids and 404 page
+
+- An example shown in a guide's Example section and again further down carries two different element ids already in the served HTML: `guide-example-<name>` in the Example section, `example-<name>` elsewhere; example pages and inline examples keep `example-<name>`, so links to `#example-<name>` still work (D113).
 
 ### Changed
 
