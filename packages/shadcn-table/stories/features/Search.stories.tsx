@@ -111,6 +111,42 @@ export const CustomGlobalFilterFn = () => (
   />
 );
 
+/**
+ * The custom filter keeps a row when one of its cells starts with the typed
+ * text, case included: the start of a first name keeps its rows, the same
+ * letters in lower case keep none of them.
+ */
+CustomGlobalFilterFn.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByText(data[0]!.firstName);
+  const start = data[0]!.firstName.slice(0, 3);
+  // Cell texts, not getByText: the search highlights the match in its own
+  // element, which splits the name's text.
+  const cellTexts = (row: Element) =>
+    [...row.querySelectorAll('td')].map((cell) =>
+      (cell.textContent ?? '').trim(),
+    );
+  const startsAnyCell = (row: Element, text: string) =>
+    cellTexts(row).some((cellText) => cellText.startsWith(text));
+  const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+  const showsFirstPerson = () =>
+    rows().some((row) => cellTexts(row).includes(data[0]!.firstName));
+
+  await openSearch(canvasElement);
+  await userEvent.keyboard(start);
+  await waitFor(() => {
+    expect(showsFirstPerson()).toBe(true);
+    for (const row of rows()) expect(startsAnyCell(row, start)).toBe(true);
+  });
+
+  await userEvent.clear(searchInput(canvasElement));
+  await userEvent.type(searchInput(canvasElement), start.toLowerCase());
+  await waitFor(() => {
+    expect(showsFirstPerson()).toBe(false);
+    for (const row of rows()) expect(startsAnyCell(row, start)).toBe(false);
+  });
+};
+
 export const SearchGlobalFilterModes = () => (
   <ShadcnTable columns={columns} data={data} enableGlobalFilterModes />
 );

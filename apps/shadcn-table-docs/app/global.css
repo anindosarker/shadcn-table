@@ -11,11 +11,11 @@
    ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
    A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a style element
    (the word is spelled out here: `shadcn add` escapes a literal angle bracket in comments). */
+@source not inline("[&_::highlight(fd-search)]:underline [&_::highlight(fd-search)]:text-fd-primary");
 /* The story pages (examples/more) render the story files, whose classes
    (the Styling stories) Tailwind's source detection does not find on its own.
    The tracked files, not the git-ignored per-base copies in stories/.<base>. */
 @source '../../../packages/shadcn-table/stories';
-@source not inline("[&_::highlight(fd-search)]:underline [&_::highlight(fd-search)]:text-fd-primary");
 
 /* ---------- shadcn: `shadcn init` output for the radix-nova generation ----------
  * Verbatim from `shadcn init --preset nova --base radix` (neutral, css variables),
