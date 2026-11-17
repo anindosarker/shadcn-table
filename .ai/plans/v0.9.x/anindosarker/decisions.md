@@ -80,6 +80,15 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-17.
 	- Source: Q110
 - [ ] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #R6
+	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
+	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
+	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
+	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
+	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
+	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
+	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
+	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
+	- Owner recorded 2026-11-18.
 	- Source: Q100
 
 ## In progress
