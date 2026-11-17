@@ -126,6 +126,12 @@ kanban-plugin: basic
 	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
 	- Source: Q107
 - [ ] **D128** A pinned row stays in view while virtualized rows scroll #R6
+	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
+	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
+	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
+	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
+	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
+	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
 
 ## In progress
