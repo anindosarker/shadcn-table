@@ -134,6 +134,12 @@ kanban-plugin: basic
 	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
 - [ ] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #R6
+	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
+	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
+	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
+	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
+	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
+	- Owner recorded 2026-11-18.
 	- Source: Q113
 
 ## In progress
