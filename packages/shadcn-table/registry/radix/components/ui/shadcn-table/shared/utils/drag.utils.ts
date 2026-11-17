@@ -49,9 +49,14 @@ export const ST_TOUCH_GHOST_ATTR = 'data-st-touch-ghost';
 
 const touchDragEvents = new WeakSet<Event>();
 
+/** The part of a drag's data transfer the drop targets read and write. */
+export type ST_TouchDataTransfer = Pick<DataTransfer, 'dropEffect'>;
+
 /**
  * A drag event the touch path sends to the element under the finger, so a
- * touch drag reaches the same drop target handlers as a mouse drag.
+ * touch drag reaches the same drop target handlers as a mouse drag. Its
+ * `dataTransfer` is `dataTransfer`: a constructed `DataTransfer` ignores a
+ * written `dropEffect` outside a native drag.
  */
 export const createST_TouchDragEvent = ({
   dataTransfer,
@@ -60,7 +65,7 @@ export const createST_TouchDragEvent = ({
   x,
   y,
 }: {
-  dataTransfer: DataTransfer;
+  dataTransfer: ST_TouchDataTransfer;
   relatedTarget?: Element | null;
   type: 'dragenter' | 'dragleave' | 'dragover' | 'drop';
   x: number;
@@ -71,9 +76,9 @@ export const createST_TouchDragEvent = ({
     cancelable: true,
     clientX: x,
     clientY: y,
-    dataTransfer,
     relatedTarget,
   });
+  Object.defineProperty(event, 'dataTransfer', { value: dataTransfer });
   touchDragEvents.add(event);
   return event;
 };
