@@ -8,6 +8,7 @@ import {
 import {
   createST_TouchDragEvent,
   ST_TOUCH_GHOST_ATTR,
+  type ST_TouchDataTransfer,
 } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 
 /** How long a finger rests on a draggable header cell before it drags. */
@@ -60,7 +61,8 @@ const toHandlerEvent = (
   }) as ST_TouchDragEvent;
 
 /** Read through a call: a target's handler may set it during the dispatch. */
-const readDropEffect = (dataTransfer: DataTransfer) => dataTransfer.dropEffect;
+const readDropEffect = (dataTransfer: ST_TouchDataTransfer) =>
+  dataTransfer.dropEffect;
 
 /** A fixed copy of `source` that takes no pointer events. */
 const createGhost = (source: HTMLElement) => {
@@ -156,7 +158,7 @@ const trackFinger = ({
   options: RefObject<ST_TouchDragOptions>;
   source: HTMLElement;
 }) => {
-  const dataTransfer = new DataTransfer();
+  const dataTransfer: ST_TouchDataTransfer = { dropEffect: 'move' };
   const { pointerId } = down;
   let last = down;
   let x = down.clientX;
