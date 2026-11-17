@@ -1,6 +1,6 @@
 # 59: Lighter story pages, tracker
 
-Status: running
+Status: done (6ec25203)
 Branch `v0.9/lighter-story-pages`, worktree 07
 Checks:
 - Check: Task 1 load before the build (`top -l 1`, `memory_pressure`): CPU 42 percent idle, memory free 35 percent
