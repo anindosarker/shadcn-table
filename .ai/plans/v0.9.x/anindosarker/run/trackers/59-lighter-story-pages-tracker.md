@@ -1,6 +1,6 @@
 # 59: Lighter story pages, tracker
 
-Status: waiting (lead: the `.next` size of 1.2: 1107 MB against 900; 524 MB of it is the turbopack build cache `.next/cache/turbopack`, 518 MB at the branch point too; see Attention)
+Status: running
 Branch `v0.9/lighter-story-pages`, worktree 07
 Checks:
 - Check: Task 1 load before the build (`top -l 1`, `memory_pressure`): CPU 42 percent idle, memory free 35 percent
