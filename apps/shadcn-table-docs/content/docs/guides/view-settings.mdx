@@ -15,6 +15,10 @@ const table = useShadcnTable({
 
 The view settings panel collects the table's display preferences behind one button at the far right of the toolbar. Each setting can also be pinned to the toolbar as its own icon button. The panel is on by default (`enableViewSettings`).
 
+### Example
+
+<GuideExamples slugs={['persistent-view']} />
+
 ### Relevant Table Options
 
 <TableOptionsTable
@@ -146,9 +150,5 @@ const table = useShadcnTable({
 ```
 
 `ST_ViewSettingsButton` and `ST_ViewSettingsItems` (the pinned buttons) are exported and take the table as a prop, for a toolbar of your own. The panel's texts use the `viewSettings`, `columns`, `columnsShown`, `density`, `wrapCellText`, `singleLineCells`, `gridLines`, `stickyHeader`, `alternatingRowColors`, `rowNumbers`, `pinToToolbar`, `unpinFromToolbar` and `resetView` localization keys.
-
-### View Settings Example
-
-<PersistentViewExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
