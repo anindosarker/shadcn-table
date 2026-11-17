@@ -17,6 +17,13 @@ Checks:
 - Check: `pnpm test typecheck --base radix` at 685dc11f: pass (tsc clean)
 - Check: `pnpm test lint` at 685dc11f: pass (0 errors, 9 warnings)
 - Check: `pnpm test validate-repo` at 685dc11f: pass (story pages match, 40 unit tests), tree clean after
+- Check: verifier, Task 2 `grep -L "TryIt"` and `grep -L "## Related guides"` over `more/miscellaneous-*.mdx` (63 files) at 94dee38c: pass, both print nothing
+- Check: verifier, Task 2 every page has a non-empty `description`, one `### Try it` with 2 to 4 steps directly above `<StoryExample` (142 steps in all), one `## Related guides` list of 1 to 4 links below it, no em dash at 94dee38c: pass
+- Check: verifier, Task 2 `git status` clean and `git diff origin/v0.9/docs-layout...HEAD --stat` at 94dee38c: pass, only the 63 `more/miscellaneous-*.mdx` files (merge base 06d58c57; origin/v0.9/docs-layout moved on to 807fed50, so the two-dot diff also lists that branch's newer commits)
+- Check: verifier, `pnpm test typecheck --base radix` at 94dee38c: pass (tsc clean)
+- Check: verifier, `pnpm test lint` at 94dee38c: pass (0 errors, 9 warnings)
+- Check: verifier, `pnpm test validate-repo` at 94dee38c: pass (story pages match, 40 unit tests), tree clean after
+- Check: verifier, `pnpm --filter shadcn-table-docs build` at 94dee38c: pass (2125 static pages)
 
 - Task 1 site table: done by the writers (their notes in the run), run: workflow 56-texts-misc
 - Task 2 three parts on every page: done, 3d9c8c5e, run: workflow 56-texts-misc assembler
