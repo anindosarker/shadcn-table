@@ -164,6 +164,7 @@ const trackFinger = ({
   let x = down.clientX;
   let y = down.clientY;
   let active = false;
+  let moved = false;
   let accepted = false;
   let over: Element | null = null;
   let ghost: HTMLElement | null = null;
@@ -254,7 +255,8 @@ const trackFinger = ({
     detach();
     if (!wasActive) return;
     if (cancelled && over) send('dragleave', over, null);
-    guardClick(source);
+    // A finger that rests and lifts in place is a tap: its click stays.
+    if (moved) guardClick(source);
     options.current.onEnd(toHandlerEvent(last, source), cancelled);
   };
 
@@ -282,6 +284,7 @@ const trackFinger = ({
       }
       return;
     }
+    if (Math.hypot(x - startX, y - startY) > HOLD_SLOP_PX) moved = true;
     moveGhost();
     hitTest();
     if (!frame && options.current.getScrollContainer) {
