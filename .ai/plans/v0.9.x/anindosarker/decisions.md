@@ -63,6 +63,8 @@ kanban-plugin: basic
 	- Descriptions and body text are not touched (docs-layout LQ26).
 	- Owner recorded 2026-11-17.
 	- Source: Q108
+- [ ] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #R6
+	- Source: Q97
 
 ## In progress
 
