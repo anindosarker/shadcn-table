@@ -42,6 +42,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
 - [ ] **Q117** The Production-Ready Tables guide panel offers the install command and Copy prompt of the server-side-data example
 	- Hotfix Q113 (d9bed58c on v0.9/docs-layout), builder's addition beyond D131: in the guide, the Example panel that lists the five server-side-data files also shows Copy install command (example-server-side-data) and Copy prompt, as the guide's table had before D130; the story page has neither (D106). Keep or revert. If kept: the install copy event is tracked under the story id example-features-server-data--production-ready-table, not example-server-side-data (story-example.tsx:74, example-playground.tsx:255-261), found by the run's review.
+- [ ] **Q118** Select all in select-sticky mode makes a virtualized table render every row
+	- Spec 61 (ee1c2837 on claude/review), found by the run's review, not reproduced in a browser: every sticky pinned row is now kept rendered with no upper bound (hooks/useST_RowVirtualizer.ts:70, all three bases). In select-sticky mode Select all pins every row (row.utils.ts:60, 220), so a virtualized table then mounts all rows; before spec 61 the same action stayed virtualized. The code follows spec 61 1.6.2 as written; D128 asks only for several pinned rows.
 
 ## Decided
 
