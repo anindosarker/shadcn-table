@@ -258,6 +258,53 @@ const examplePage =
     await codeToggle(page, id, needle, check);
   };
 
+/**
+ * Spec 58 (D118): the Basic page's Try it steps, as written, on the base the
+ * page opened on: column filtering (`Filter`, `State`, `Nebraska`) leaves two
+ * rows, removing the filter brings back five, searching `Ohio` leaves one.
+ */
+async function basicSteps(page, w, check) {
+  const rows = () => w.locator('table tbody tr').count();
+  // the list follows the `Try it` h3 (pageOrder)
+  const steps = await page.evaluate(() => {
+    const h = [...document.querySelectorAll('article h3')].find((el) =>
+      el.textContent?.trim().startsWith('Try it'),
+    );
+    return [...(h?.nextElementSibling?.querySelectorAll('ol > li') ?? [])].map(
+      (li) => li.textContent?.trim() ?? '',
+    );
+  });
+  check(
+    'Basic Try it: four steps, the second on column filtering',
+    steps.length === 4 && /^Try column filtering:/.test(steps[1] ?? ''),
+    steps.join(' | ').slice(0, 160),
+  );
+  try {
+    await w
+      .getByRole('button', { name: 'Filter', exact: true })
+      .first()
+      .click();
+    await page.getByText('State', { exact: true }).last().click();
+    await page.getByPlaceholder('Filter by State').fill('Nebraska');
+    await page.waitForTimeout(800);
+    check('Basic step 2: two rows remain', (await rows()) === 2);
+    await page.keyboard.press('Escape');
+    await w
+      .getByText(/^State fuzzy/)
+      .first()
+      .click();
+    await page.getByText('Remove filter', { exact: true }).last().click();
+    await page.waitForTimeout(500);
+    check('Basic step 3: all five rows return', (await rows()) === 5);
+    await w.getByRole('button', { name: 'Show/Hide search' }).click();
+    await page.getByPlaceholder('Search', { exact: true }).last().fill('Ohio');
+    await page.waitForTimeout(800);
+    check('Basic step 4: one row remains', (await rows()) === 1);
+  } catch (e) {
+    check('Basic steps 2 to 4', false, String(e.message).split('\n')[0]);
+  }
+}
+
 /** A story page (spec 56, 1.6.4). */
 const STORY_PAGE = 'features-aggregation--aggregation';
 /** The story pages in sidebar order (more/meta.json, without its labels). */
@@ -442,6 +489,7 @@ const checks = {
     await singleExample(page, check);
     await storedIconLibrary(page, check);
     await moreExamplesState(page, check);
+    await basicSteps(page, w, check);
     // Example switcher: previous is disabled on the first example, next
     // steps to the second Featured row, Server-Side Pagination (D103, D119).
     const header = w.locator('header');
