@@ -68,6 +68,7 @@ kanban-plugin: basic
 	- Seen on the virtualization and view settings stories on a production docs build (base): the right half of a column's resize grip is covered by the next header cell, so a drag starts only from the grip's left half. Found by the run's browser check while running Try it steps; not reproduced by a second agent.
 - [ ] **Q105** On guides with a note or several intro blocks the Example section comes after them, not right after the first paragraph
 	- Merged 807fed50 on v0.9/docs-layout (spec 55 Guide pages): the section sits directly before each guide's first own heading, so on 16 guides (virtualization, data-columns, editing and others) the NOTE or further intro blocks stand above it; on the accepted preview page virtualization-new-format-3 the section followed the first paragraph and the NOTE came after. Keep, or move the section up to after the first paragraph. Raised by the builder and the reviewer.
+	- production-ready-tables: the Example section (React Query) sits between the guide's own server-side-data table and 'Folder Layout', so the sentence 'Open the Code view above' now has the React Query panel nearest above it; the guide text may not be reworded (D105) and guide-example-plan.md fixes react-query for this guide.
 
 ## Decided
 
