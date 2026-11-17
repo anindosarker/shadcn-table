@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_Column,
   type ST_ColumnDef,
@@ -621,9 +621,83 @@ export const GroupedHeaderHasIconReorder = {
   },
 };
 
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged header that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/** The drop zone that shows while column `header` is dragged. */
+const dropZone = (canvasElement: HTMLElement, header: string) =>
+  within(canvasElement).findByText(`Drop to group by ${header}`);
+
+/**
+ * Drags the header cell of column `id` by touch onto the drop zone, after the
+ * finger rests: these tables show no grip. The ghost shows while the drag is
+ * on, follows the finger and is gone after the `end` event.
+ */
+const touchDragToDropZone = async ({
+  canvasElement,
+  end = 'pointerup',
+  header,
+  id,
+}: {
+  canvasElement: HTMLElement;
+  end?: 'pointercancel' | 'pointerup';
+  header: string;
+  id: string;
+}) => {
+  const cell = headerCell(canvasElement, id)!;
+  const start = centreOf(cell);
+  touch({ at: start, element: cell, type: 'pointerdown' });
+  await pause(400);
+  touch({
+    at: { x: start.x, y: start.y - 10 },
+    element: cell,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  const target = centreOf(await dropZone(canvasElement, header));
+  touch({ at: target, element: cell, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  touch({ at: target, element: cell, type: end });
+  await waitFor(() => expect(ghost()).toBeNull());
+};
+
 /**
  * The banner names the grouped columns as chips, in grouping order; a chip
- * click ungroups that column.
+ * click ungroups that column. A column dragged onto the drop zone, with the
+ * mouse or by touch, groups the table by it.
  */
 export const GroupByBanner = {
   render: () => <ColumnGroupingEnabledReorder />,
@@ -634,9 +708,58 @@ export const GroupByBanner = {
     const chips = within(banner).getAllByRole('button');
     expect(chips.map((chip) => chip.textContent)).toEqual(['State', 'Gender']);
     await userEvent.click(chips[0]!);
+    const bannerText = () =>
+      canvas
+        .getByText(/^Grouped by/)
+        .closest('span')
+        ?.textContent?.replace(/\s+/g, ' ');
+    await waitFor(() => expect(bannerText()).toBe('Grouped by Gender'));
+
+    // The mouse: City dragged onto the drop zone groups by it, no ghost.
+    const ghosts: Element[] = [];
+    const observer = new MutationObserver((records) =>
+      records.forEach((record) =>
+        record.addedNodes.forEach((node) => {
+          if (
+            node instanceof Element &&
+            node.matches('[data-st-touch-ghost]')
+          ) {
+            ghosts.push(node);
+          }
+        }),
+      ),
+    );
+    observer.observe(document.body, { childList: true });
+    const city = headerCell(canvasElement, 'city')!;
+    fireEvent.dragStart(city);
+    const zone = await dropZone(canvasElement, 'City');
+    fireEvent.dragEnter(zone);
+    fireEvent.dragOver(zone);
+    fireEvent.dragEnd(city);
+    observer.disconnect();
+    expect(ghosts).toEqual([]);
     await waitFor(() =>
-      expect(canvas.getByText(/^Grouped by/).closest('span')).toHaveTextContent(
-        /^Grouped by Gender$/,
+      expect(bannerText()).toBe('Grouped by Gender, then by City'),
+    );
+
+    // Touch: a cancelled drag groups nothing; a header held and dropped on
+    // the drop zone groups by Last Name.
+    await touchDragToDropZone({
+      canvasElement,
+      end: 'pointercancel',
+      header: 'Last Name',
+      id: 'lastName',
+    });
+    await pause(100);
+    expect(bannerText()).toBe('Grouped by Gender, then by City');
+    await touchDragToDropZone({
+      canvasElement,
+      header: 'Last Name',
+      id: 'lastName',
+    });
+    await waitFor(() =>
+      expect(bannerText()).toBe(
+        'Grouped by Gender, then by City, then by Last Name',
       ),
     );
   },
