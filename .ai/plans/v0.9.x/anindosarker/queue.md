@@ -44,6 +44,8 @@ kanban-plugin: basic
 	- Hotfix Q113 (d9bed58c on v0.9/docs-layout), builder's addition beyond D131: in the guide, the Example panel that lists the five server-side-data files also shows Copy install command (example-server-side-data) and Copy prompt, as the guide's table had before D130; the story page has neither (D106). Keep or revert. If kept: the install copy event is tracked under the story id example-features-server-data--production-ready-table, not example-server-side-data (story-example.tsx:74, example-playground.tsx:255-261), found by the run's review.
 - [ ] **Q118** Select all in select-sticky mode makes a virtualized table render every row
 	- Spec 61 (ee1c2837 on claude/review), found by the run's review, not reproduced in a browser: every sticky pinned row is now kept rendered with no upper bound (hooks/useST_RowVirtualizer.ts:70, all three bases). In select-sticky mode Select all pins every row (row.utils.ts:60, 220), so a virtualized table then mounts all rows; before spec 61 the same action stayed virtualized. The code follows spec 61 1.6.2 as written; D128 asks only for several pinned rows.
+- [ ] **Q119** Pinned rows with virtualization were built as sticky rows, not the absolute rows spec 61 describes
+	- Spec 61 (ee1c2837), builder's deviation, keep or revert: spec 1.5 and 1.6.3 say a pinned virtual row keeps position absolute with a clamped offset; built as position sticky in its own grid track (ST_TableBody.tsx:84, new optional prop stickyGridRow on ST_TableBodyRowProps), because an absolute row placed from the scroll offset lags the scroll and jumps. The review found it sound and D128 met (play green on three bases, 0 jumps in the scroll measurement). Spec 61 1.5 and 1.6.3 text is now stale.
 
 ## Decided
 
