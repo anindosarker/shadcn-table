@@ -38,6 +38,10 @@ publishes the section as the GitHub release notes.
 
 - An example shown in a guide's Example section and again further down carries two different element ids already in the served HTML: `guide-example-<name>` in the Example section, `example-<name>` elsewhere; example pages and inline examples keep `example-<name>`, so links to `#example-<name>` still work (D113).
 
+#### Spec 59 Lighter story pages
+
+- The 596 story pages no longer each carry the whole "More examples" list of the Examples sidebar: the served page holds the current row with its number and sub-group label, and the browser lists every row right after. The docs build's story pages drop from 1166 MB to 245 MB; the sidebar looks as before (D116).
+
 ### Changed
 
 #### Spec 55 Guide example block
