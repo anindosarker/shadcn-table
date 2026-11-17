@@ -3,7 +3,10 @@
 // example page (apps/shadcn-table-docs/lib/storybook-map.ts) or a page under
 // content/docs/examples/more/, every page under more/ shows a story that
 // exists, the one whose id is its file name, and more/meta.json lists the
-// pages in the story files' order with one label per story file. The stories
+// pages in the story files' order with one label per story file. Every page
+// holds the three parts of the example page format (1.6.7, D104): a
+// description, 2 to 4 Try it steps directly above the story and Related guides
+// below it, read by the docs app's lib/story-text-checklist.mjs. The stories
 // are read with Storybook's own CSF parser through the docs app's
 // lib/story-pages.mjs, the script that writes the pages; every problem names
 // it. It prints one line and returns the problems; it never edits a file.
@@ -17,6 +20,7 @@ import {
   readExactStories,
   readStories,
 } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
+import { pageParts } from '../../../apps/shadcn-table-docs/lib/story-text-checklist.mjs';
 
 const FIX = 'run `node lib/story-pages.mjs` in apps/shadcn-table-docs';
 const STORY_TAG = /<StoryExample\s+id="([^"]+)"\s*\/>/g;
@@ -58,6 +62,10 @@ export const check = async (log) => {
     if (tags.length !== 1 || tags[0] !== id)
       problems.push(
         `page more/${id}.mdx must show <StoryExample id="${id}" /> once, found ${tags.length ? tags.join(', ') : 'none'}: ${FIX}`,
+      );
+    for (const problem of pageParts(text).problems)
+      problems.push(
+        `page more/${id}.mdx: ${problem}; write its description, Try it steps and Related guides in the example page format (spec 56, 1.6.7)`,
       );
   }
   const metaFile = path.join(MORE_DIR, 'meta.json');
