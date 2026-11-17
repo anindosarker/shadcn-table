@@ -395,7 +395,14 @@ export const RowNumbersKeepAlignment = {
   render: () => (
     <ViewSettingsTable
       initialState={{
-        viewSettings: { gridLines: 'all' },
+        viewSettings: {
+          gridLines: 'all',
+          pins: ['columns', 'density'],
+          rowNumbers: false,
+          stickyHeader: false,
+          striped: false,
+          wrapText: false,
+        },
       }}
       persistViewSettings={`${STORAGE_KEY}-alignment`}
     />

@@ -41,7 +41,16 @@ export const CustomTopToolbar = () => (
     columns={columns}
     data={data}
     {...options}
-    initialState={{ viewSettings: { pins: [] } }}
+    initialState={{
+      viewSettings: {
+        gridLines: 'rows',
+        pins: [],
+        rowNumbers: false,
+        stickyHeader: false,
+        striped: false,
+        wrapText: false,
+      },
+    }}
     renderTopToolbar={({ table }) => (
       <div
         className="flex items-center justify-between gap-2 p-2"
