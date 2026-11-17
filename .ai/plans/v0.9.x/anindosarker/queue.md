@@ -38,9 +38,6 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q116** Hovering a section tab shows a grey box behind it
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
-- [ ] **Q121** The Production-Ready Tables guide keeps four intro blocks above its Example section
-	- Spec 58 (1f91eca4 on v0.9/docs-layout), found by the run's review, keep or move: D117 puts the Example section right after the first intro paragraph on every guide; on production-ready-tables.mdx it stays after four blocks (paragraph, the 'You need four pieces:' list, the diagram, one line), as D130 left it and spec 58 1.3 says ('nothing moves'). Moving it would cut 'You need four pieces:' from its list. 16 of 17 guides moved. The changelog line 'On every guide the Example section follows the first intro paragraph' (CHANGELOG.md, Spec 58 Docs content fixes) is untrue for this guide and for full-screen-toggle (no intro paragraph); test/docs-e2e/lib/guides.mjs INTRO_BLOCKS pins both.
-	- Same move, view-settings.mdx (as spec 58 1.3 lists it): the sentence 'set persistViewSettings: true' (line 6) is now separated from its code snippet (line 12) by the Example table; a nit from the run's review, visible on the preview.
 
 ## Decided
 
@@ -395,6 +392,9 @@ kanban-plugin: basic
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
 	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
 	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
+- [x] **Q121** The Production-Ready Tables guide keeps four intro blocks above its Example section
+	- Spec 58 (1f91eca4 on v0.9/docs-layout), found by the run's review, keep or move: D117 puts the Example section right after the first intro paragraph on every guide; on production-ready-tables.mdx it stays after four blocks (paragraph, the 'You need four pieces:' list, the diagram, one line), as D130 left it and spec 58 1.3 says ('nothing moves'). Moving it would cut 'You need four pieces:' from its list. 16 of 17 guides moved. The changelog line 'On every guide the Example section follows the first intro paragraph' (CHANGELOG.md, Spec 58 Docs content fixes) is untrue for this guide and for full-screen-toggle (no intro paragraph); test/docs-e2e/lib/guides.mjs INTRO_BLOCKS pins both.
+	- Same move, view-settings.mdx (as spec 58 1.3 lists it): the sentence 'set persistViewSettings: true' (line 6) is now separated from its code snippet (line 12) by the Example table; a nit from the run's review, visible on the preview.
 
 ## Autofix
 
