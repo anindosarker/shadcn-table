@@ -43,8 +43,6 @@ kanban-plugin: basic
 - [ ] **Q121** The Production-Ready Tables guide keeps four intro blocks above its Example section
 	- Spec 58 (1f91eca4 on v0.9/docs-layout), found by the run's review, keep or move: D117 puts the Example section right after the first intro paragraph on every guide; on production-ready-tables.mdx it stays after four blocks (paragraph, the 'You need four pieces:' list, the diagram, one line), as D130 left it and spec 58 1.3 says ('nothing moves'). Moving it would cut 'You need four pieces:' from its list. 16 of 17 guides moved. The changelog line 'On every guide the Example section follows the first intro paragraph' (CHANGELOG.md, Spec 58 Docs content fixes) is untrue for this guide and for full-screen-toggle (no intro paragraph); test/docs-e2e/lib/guides.mjs INTRO_BLOCKS pins both.
 	- Same move, view-settings.mdx (as spec 58 1.3 lists it): the sentence 'set persistViewSettings: true' (line 6) is now separated from its code snippet (line 12) by the Example table; a nit from the run's review, visible on the preview.
-- [ ] **Q126** Touch drag on a real iPhone or iPad is unchecked and has one known risk
-	- Spec 62 (fcd6af8f): the real-device check D108 asks for is still owed; everything ran in Chromium touch emulation. Risk named by the run's review, not reproduced: the touchmove listener that stops page scroll is added on window during pointerdown (useST_TouchDrag.ts:327, now bubble phase, :399); WebKit on iOS is known to ignore for the current touch a touchmove listener added after touchstart, and the header cell has no touch-none, so after the 300 ms hold the page may scroll instead of the column dragging. An element between the finger and window that stops touchmove would have the same effect.
 
 ## Decided
 
@@ -451,6 +449,8 @@ kanban-plugin: basic
 	- Owner 2026-11-14: `hooks/stTableHook.tsx` and `hooks/useST_Defaults.tsx` are "bad coding patterns"; they are context providers and should live in a `context/` folder with context and provider names.
 - [x] **Q118** Select all in select-sticky mode makes a virtualized table render every row
 	- Spec 61 (ee1c2837 on claude/review), found by the run's review, not reproduced in a browser: every sticky pinned row is now kept rendered with no upper bound (hooks/useST_RowVirtualizer.ts:70, all three bases). In select-sticky mode Select all pins every row (row.utils.ts:60, 220), so a virtualized table then mounts all rows; before spec 61 the same action stayed virtualized. The code follows spec 61 1.6.2 as written; D128 asks only for several pinned rows.
+- [x] **Q126** Touch drag on a real iPhone or iPad is unchecked and has one known risk
+	- Spec 62 (fcd6af8f): the real-device check D108 asks for is still owed; everything ran in Chromium touch emulation. Risk named by the run's review, not reproduced: the touchmove listener that stops page scroll is added on window during pointerdown (useST_TouchDrag.ts:327, now bubble phase, :399); WebKit on iOS is known to ignore for the current touch a touchmove listener added after touchstart, and the header cell has no touch-none, so after the 300 ms hold the page may scroll instead of the column dragging. An element between the finger and window that stops touchmove would have the same effect.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
