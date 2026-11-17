@@ -11,6 +11,12 @@ kanban-plugin: basic
 	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
 	- Source: Q114
 - [ ] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
+	- Details D108 where it is silent; D108's five surfaces and three bases stand.
+	- A grip starts the drag at once.
+	- A header cell that is itself draggable, with no grip, starts the drag after the finger rests about 300 ms without moving; a swipe before that scrolls the table as today.
+	- While a touch drag is on, a ghost copy of the dragged column header, row, menu item or sort rule follows the finger, on all five surfaces. The dragged item keeps the same dragging style as with the mouse and the drop target is marked as with the mouse.
+	- The ghost is removed on drop and on cancel, does not take touches, and does not show on mouse drags, where the browser draws its own.
+	- Owner recorded 2026-11-18.
 	- Source: Q115
 
 ## In progress
