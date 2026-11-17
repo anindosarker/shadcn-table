@@ -14,6 +14,9 @@ Checks:
 - `pnpm test lint`, 67bfa573: pass
 - `pnpm test validate-repo`, 67bfa573: pass
 - `pnpm test storybook-tests --base base`, 67bfa573: 652 passed (first run 1 failed, `ClickToCopy` "Click Copies Value", known flake P5; rerun green)
+- `pnpm test storybook-tests --base radix`, 67bfa573, verifier: 652 passed (first run 1 failed, `ClickToCopy` "Click Copies Value", known flake P5; rerun green)
+- `pnpm test storybook-tests --base aria`, 67bfa573, verifier: 652 passed
+- Acceptance (1.2), 67bfa573, verifier: green. storybook-tests base, radix, aria; typecheck base, radix, aria; lint; validate-repo all pass at HEAD; the plays failed on the pre-fix code (c022e0f3, b6fda0c8 above); hairline at the same pixel (probe above). Typecheck, lint, validate-repo and storybook base were recorded at HEAD by the builder, not rerun
 
 - Task 1 Two plays first: c022e0f3
 - Task 2 Sticky header switch: b6fda0c8
