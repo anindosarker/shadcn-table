@@ -1,6 +1,6 @@
 # 61: Pinned rows stay in view with row virtualization, tracker
 
-Status: built (cd3eb075), for review and verify
+Status: done (ee1c2837)
 Branch `v0.9/pinned-rows-virtualized`, worktree 06
 Checks:
 
