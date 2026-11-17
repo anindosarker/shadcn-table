@@ -134,6 +134,10 @@ kanban-plugin: basic
 	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
 - [ ] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
+	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
+	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
+	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
+	- Owner closed the card 2026-11-18.
 	- Source: Q109
 
 ## In progress
