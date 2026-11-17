@@ -279,6 +279,33 @@ export const ColumnDraggingEnabled = {
         'State',
       ]),
     );
+    // Touch: a hold and a lift in place stays a tap; the click it brings
+    // opens the column menu as before.
+    await settled(canvasElement);
+    const label = within(headerCell(canvasElement, 'Email Address')).getByRole(
+      'button',
+      { name: 'Email Address column menu' },
+    );
+    touch({ at: centreOf(label), element: label, type: 'pointerdown' });
+    await pause(400);
+    await waitFor(() => expect(ghost()).not.toBeNull());
+    touch({ at: centreOf(label), element: label, type: 'pointerup' });
+    await waitFor(() => expect(ghost()).toBeNull());
+    expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    if (browserUserEvent) await browserUserEvent.click(label);
+    else fireEvent.click(label);
+    expect(await within(document.body).findByRole('menu')).toBeVisible();
+    fireEvent.keyDown(document.activeElement ?? document.body, {
+      key: 'Escape',
+    });
+    await waitFor(() =>
+      expect(within(document.body).queryByRole('menu')).toBeNull(),
+    );
   },
 };
 
@@ -451,6 +478,74 @@ export const ColumnDraggingWithGrip = {
         'State',
       ]),
     );
+  },
+};
+
+type AgedPerson = Person & { age: number };
+
+const agedData: AgedPerson[] = data.map((row, index) => ({
+  ...row,
+  age: 20 + (index % 50),
+}));
+
+/**
+ * A finger that rests on a subheader range slider and then slides moves the
+ * slider, never the column: no ghost, no header slide, no reorder (D108).
+ */
+export const TouchHoldOnRangeSlider = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={[
+        { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+        { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+        { accessorKey: 'age', filterVariant: 'range-slider', header: 'Age' },
+      ]}
+      data={agedData}
+      enableColumnDragging
+      enableColumnOrdering
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const age = await waitFor(() => {
+      const cell = headerCell(canvasElement, 'Age');
+      expect(cell).toHaveAttribute('draggable', 'true');
+      return cell;
+    });
+    const thumb = await waitFor(() => {
+      const found = age.querySelector('[data-slot="slider-thumb"]');
+      expect(found).not.toBeNull();
+      return found as HTMLElement;
+    });
+    const start = centreOf(thumb);
+    const step = { x: start.x - 40, y: start.y };
+    // Pointer 1 exists in the page, so a slider may capture it.
+    const finger = (type: TouchType, at: { x: number; y: number }) =>
+      fireEvent(
+        thumb,
+        new PointerEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          clientX: at.x,
+          clientY: at.y,
+          isPrimary: true,
+          pointerId: 1,
+          pointerType: 'touch',
+        }),
+      );
+    finger('pointerdown', start);
+    await pause(400);
+    finger('pointermove', step);
+    await pause(50);
+    expect(ghost()).toBeNull();
+    expect(headerCell(canvasElement, 'Last Name').style.translate).toBe('');
+    finger('pointerup', step);
+    await pause(50);
+    expect(ghost()).toBeNull();
+    expect(
+      headerNames(canvasElement).map((name) => name.split(' ')[0]),
+    ).toEqual(['First', 'Last', 'Age']);
   },
 };
 
