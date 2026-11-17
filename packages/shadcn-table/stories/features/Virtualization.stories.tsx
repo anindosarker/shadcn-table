@@ -205,18 +205,6 @@ export const VirtualizationConditionallyWontToggle = () => {
   );
 };
 
-export const EnableRowVirtualizationWithColumnResizing = () => (
-  <ShadcnTable
-    columns={longColumns}
-    data={longData}
-    enableBottomToolbar={false}
-    enableColumnResizing
-    enablePagination={false}
-    enableRowNumbers
-    enableRowVirtualization
-  />
-);
-
 export const EnableRowVirtualizationWithDetailPanel = () => (
   <ShadcnTable
     columns={longColumns}
