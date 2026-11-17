@@ -1,6 +1,6 @@
 # 56: Story texts Styling, tracker
 
-Status: waiting (lead: typecheck radix, lint, validate-repo, docs build and Acceptance 1.2 rerun at bf5d4fcb; Task 2 checks green at HEAD)
+Status: verified at bf5d4fcb (Local CI, docs build and Task 2 checks green; Acceptance 1.2 runs once in the milestone "Story text checklist")
 Branch `v0.9/story-texts-styling`, worktree 08 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 71 `styling-*.mdx` pages (non-empty single-quoted description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, one `## Related guides` with 1 to 4 links to existing guide files, no em dash) at e6eae48e: pass (161 steps, 28 guide slugs)
@@ -18,6 +18,12 @@ Checks:
 - Check (verifier): `grep -L "TryIt"` and `grep -L "## Related guides"` over the glob at bf5d4fcb: pass (print nothing)
 - Check (verifier): `git diff origin/v0.9/docs-layout...HEAD --stat` at bf5d4fcb: pass, 71 files, all matched by the glob (merge base 06d58c57; origin/v0.9/docs-layout is now 030b0bbc); tree clean
 - Check (verifier): `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm --filter shadcn-table-docs build` and Acceptance 1.2 (storybook-tests base/radix/aria, storybook-static base, docs-e2e base/radix/aria) at bf5d4fcb: not run; the verifier was made to return while typecheck had just started, run stopped and build lock released. The lines at e6eae48e above are stale for HEAD (e6eae48e..HEAD touches 8 page files of the glob, text only). The judged text part passed in this workflow (Task 4)
+- Check (verifier, rerun, run d3a60a09): `pnpm test typecheck --base radix` at bf5d4fcb: pass (tsc clean)
+- Check (verifier, rerun): `pnpm test lint` at bf5d4fcb: pass (0 errors, 9 warnings, same as before the milestone)
+- Check (verifier, rerun): `pnpm test validate-repo` at bf5d4fcb: pass (story pages match, 40 unit tests; tree clean after)
+- Check (verifier, rerun): `pnpm --filter shadcn-table-docs build` at bf5d4fcb: pass (2125 static pages; tree clean after)
+- Check (verifier, rerun): Task 2 greps, step count and diff stat: not rerun, recorded above at bf5d4fcb = HEAD
+- Acceptance 1.2 (storybook-tests, storybook-static, docs-e2e): not run here by instruction; runs once on the merged pages in the milestone "Story text checklist"
 
 - Task 1 site table: done by the writers, 20bd1a7a, run d3a60a09
 - Task 2 three parts on every page: done, 20bd1a7a and e6eae48e (backticks taken out of 11 descriptions, as in A to C), run d3a60a09
