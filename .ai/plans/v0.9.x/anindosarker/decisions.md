@@ -22,6 +22,8 @@ kanban-plugin: basic
 	- Source: Q95
 - [ ] **D113** An example shown twice on a page has different ids in the served HTML too #R6
 	- Source: Q94
+- [ ] **D114** The column pinning example locks the ID column with the option that works #R6
+	- Source: Q98
 
 ## In progress
 
