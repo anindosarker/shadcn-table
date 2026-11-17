@@ -109,6 +109,8 @@ kanban-plugin: basic
 	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
 	- Owner's wording, recorded 2026-11-18.
 	- Source: Q102
+- [ ] **D125** Ticking a parent row ticks its sub-rows #R6
+	- Source: Q103
 
 ## In progress
 
