@@ -38,8 +38,6 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
-- [ ] **Q113** The production-ready tables guide cannot show its own table in the Example section because that table has no page
-	- D122 keeps the table its line is true for ('Every page, sort, search or filter change sends one request to /api/users'). Request log on a production build of v0.9/guide-tables-once: the guide's own server-side-data table calls /api/users on page, sort, search and filter; the react-query table in the Example section calls /api/data. server-side-data has no example page and no story page, and GuideExamples only takes a page slug (D105, D106). The next section ('Open the Code view above to browse the files', the five-file server-side-data/ tree) also points at that table. The guide is left unchanged on the hotfix branch; the other three guides of D122 are done.
 
 ## Decided
 
@@ -319,6 +317,8 @@ kanban-plugin: basic
 - [x] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally #D129
 	- Owner, 2026-11-17, checking E14 on localhost:5320: the button cannot be verified locally. apps/shadcn-table-docs/components/mdx/storybook-link.tsx:15-17 on v0.9/docs-layout hardcodes https://storybook.shadcn-table.com/{radix,base,aria}/; the deployed Storybook does not have the stories E14 renamed or added. Local Storybook ports: base 6007, radix 6006, aria 6008 (packages/shadcn-table/package.json:14-16).
 	- Fixed on v0.9/docs-layout: c8aaf443, merged 675337f9. Under pnpm dev (NODE_ENV development) every docs Storybook link goes to localhost 6007 (base), 6006 (radix), 6008 (aria); a production build keeps storybook.shadcn-table.com (hrefs read on a real build, no localhost string in .next/static).
+- [ ] **Q113** The production-ready tables guide cannot show its own table in the Example section because that table has no page #D130
+	- D122 keeps the table its line is true for ('Every page, sort, search or filter change sends one request to /api/users'). Request log on a production build of v0.9/guide-tables-once: the guide's own server-side-data table calls /api/users on page, sort, search and filter; the react-query table in the Example section calls /api/data. server-side-data has no example page and no story page, and GuideExamples only takes a page slug (D105, D106). The next section ('Open the Code view above to browse the files', the five-file server-side-data/ tree) also points at that table. The guide is left unchanged on the hotfix branch; the other three guides of D122 are done.
 
 ## Later
 

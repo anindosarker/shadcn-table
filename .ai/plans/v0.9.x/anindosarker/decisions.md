@@ -133,6 +133,8 @@ kanban-plugin: basic
 	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
 	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
+- [ ] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #R6
+	- Source: Q113
 
 ## In progress
 
