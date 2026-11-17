@@ -101,6 +101,13 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-18.
 	- Source: Q112
 - [ ] **D124** The first line above each Storybook story reads View documentation for this example #R6
+	- The three lines above every story, in this order:
+	-   1. View documentation for this example
+	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
+	-   3. View Source code for these examples in the code tab below or here on GitHub.
+	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
+	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
+	- Owner's wording, recorded 2026-11-18.
 	- Source: Q102
 
 ## In progress
