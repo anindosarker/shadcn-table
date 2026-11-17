@@ -60,6 +60,24 @@ const toHandlerEvent = (
     },
   }) as ST_TouchDragEvent;
 
+/** An empty transfer whose `dropEffect` keeps what a drop target writes. */
+const createDataTransfer = (): ST_TouchDataTransfer => {
+  // A constructed `DataTransfer` lends its empty file and item lists; its own
+  // `dropEffect` ignores writes outside a native drag.
+  const blank = new DataTransfer();
+  return {
+    clearData: () => {},
+    dropEffect: 'move',
+    effectAllowed: 'move',
+    files: blank.files,
+    getData: () => '',
+    items: blank.items,
+    setData: () => {},
+    setDragImage: () => {},
+    types: [],
+  };
+};
+
 /** Read through a call: a target's handler may set it during the dispatch. */
 const readDropEffect = (dataTransfer: ST_TouchDataTransfer) =>
   dataTransfer.dropEffect;
@@ -158,7 +176,7 @@ const trackFinger = ({
   options: RefObject<ST_TouchDragOptions>;
   source: HTMLElement;
 }) => {
-  const dataTransfer: ST_TouchDataTransfer = { dropEffect: 'move' };
+  const dataTransfer = createDataTransfer();
   const { pointerId } = down;
   let last = down;
   let x = down.clientX;
