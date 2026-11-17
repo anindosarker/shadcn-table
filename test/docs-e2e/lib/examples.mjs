@@ -81,6 +81,55 @@ async function singleExample(page, check) {
     .locator('article [role="tablist"]:not([aria-label="Source files"])')
     .count();
   check('no group tab strip', strips === 0, `tablists=${strips}`);
+  await pageOrder(page, check);
+}
+
+/**
+ * Spec 54 (D104): the page order around the example. A `Try it` h3 and its
+ * list of 2 to 4 steps sit directly above the example panel, a `Related
+ * guides` h2 with its links follows the panel, and the page has no "View
+ * Extra Storybook" line.
+ */
+async function pageOrder(page, check) {
+  const order = await page.evaluate(() => {
+    const article = document.querySelector('article');
+    const panel = article?.querySelector('[data-mode]');
+    // the heading's text also holds its hidden "Copy Anchor Link" label
+    const heading = (tag, text) =>
+      [...(article?.querySelectorAll(tag) ?? [])].find((h) =>
+        h.textContent?.trim().startsWith(text),
+      );
+    const tryIt = heading('h3', 'Try it');
+    const list = tryIt?.nextElementSibling;
+    const next = list?.nextElementSibling;
+    const guides = heading('h2', 'Related guides');
+    return {
+      steps: list?.querySelectorAll('ol > li').length ?? 0,
+      aboveExample: !!(
+        panel &&
+        next &&
+        (next === panel || next.contains(panel))
+      ),
+      guidesBelow: !!(
+        panel &&
+        guides &&
+        panel.compareDocumentPosition(guides) & Node.DOCUMENT_POSITION_FOLLOWING
+      ),
+      links: guides?.nextElementSibling?.querySelectorAll('li a').length ?? 0,
+      storybookLine: /View Extra Storybook/.test(article?.textContent ?? ''),
+    };
+  });
+  check(
+    'Try it steps directly above the example',
+    order.steps >= 2 && order.steps <= 4 && order.aboveExample,
+    `steps=${order.steps} above=${order.aboveExample}`,
+  );
+  check(
+    'Related guides below the example',
+    order.guidesBelow && order.links > 0,
+    `links=${order.links}`,
+  );
+  check('no Storybook examples line', !order.storybookLine);
 }
 
 /**

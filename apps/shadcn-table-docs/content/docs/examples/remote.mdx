@@ -8,6 +8,21 @@ You will most likely be using a remote data source for your table, which is full
 
 Also, be sure to check out the [React Query Example](/docs/examples/react-query), which is very similar to this one, except it uses react-query to simplify much of the state management needed for fetching data, so that you don't need to fetch from a `useEffect` hook.
 
+### Try it
+
+<TryIt>
+
+1. Click page `2`. The server sends rows 11 to 20.
+2. Click `First Name` and choose `Sort ascending`. The server sorts all 200 rows.
+3. Tick a row, go to page `3` and back. The row is still ticked.
+
+</TryIt>
+
 <RemoteExample />
 
-View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
+## Related guides
+
+- [Building Production-Ready Tables](/docs/guides/production-ready-tables)
+- [Pagination](/docs/guides/pagination)
+- [Row Selection](/docs/guides/row-selection)
+- [Async Loading UI](/docs/guides/async-loading)
