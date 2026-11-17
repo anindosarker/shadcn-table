@@ -14,6 +14,14 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base radix` at 13a07e12: pass
 - Check: lint, `pnpm test lint` at 13a07e12: pass (0 errors, 9 warnings, none in these pages)
 - Check: validate-repo, `pnpm test validate-repo` at 13a07e12: pass (594 story pages match; tree clean after)
+- Check: verifier rerun at f39d47e5 (HEAD; 21 pages changed since 13a07e12), from a clean tree, run d3a60a09:
+  - Task 2 greps, `grep -L "TryIt"` and `grep -L "## Related guides"` over the glob: pass (print nothing)
+  - Task 2 structure script over the 109 pages (non-empty description, one `### Try it`, 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links, no em dash): pass (257 steps, 0 failures)
+  - Task 2 diff, `git diff origin/v0.9/docs-layout...HEAD --stat` and `git diff 06d58c57 --stat`: pass (109 files, all matched by the glob)
+  - typecheck, `pnpm test typecheck --base radix`: pass (tsc clean)
+  - lint, `pnpm test lint`: pass (0 errors, 9 warnings)
+  - validate-repo, `pnpm test validate-repo`: pass (594 story pages match; tree clean after)
+  - build, `pnpm --filter shadcn-table-docs build`: pass
 
 - Task 1 site table: done by the writers, 92e75aab, run d3a60a09
 - Task 2 three parts on every page: done, 92e75aab, run d3a60a09
