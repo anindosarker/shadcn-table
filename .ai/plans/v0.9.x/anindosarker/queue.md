@@ -63,6 +63,7 @@ kanban-plugin: basic
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 - [ ] **Q112** Storybook needs an upgrade to the current version
 	- Owner, 2026-11-17: 'need to upgrade storybook'. Installed: storybook ^10.6.2 (packages/shadcn-table/package.json:82); E14 added @storybook/react 10.6.2 and storybook 10.6.2 to the docs app on v0.9/docs-layout for composeStories.
+	- Lookup 2026-11-17: claude/review and origin/v0.9/docs-layout both pin storybook, @storybook/react-vite, addon-a11y/docs/links/mcp ^10.6.2 and addon-vitest 10.6.2 (lock 10.6.2), @storybook/icons 2.2.0, storybook-dark-mode 5.0.0, vitest and @vitest/browser(-playwright) 4.1.12, playwright 1.64.1, vite = rolldown-vite 7.1.12; docs-layout docs app adds @storybook/react and storybook exact 10.6.2. npm latest is 10.6.7 (2026-11-10), next is 11.0.0-beta.3. All @storybook/* peers accept React 19, Vite 5 to 8, Vitest 4 to 5; storybook-dark-mode 5.0.0 peers storybook ^10.0.0.
 
 ## Decided
 
