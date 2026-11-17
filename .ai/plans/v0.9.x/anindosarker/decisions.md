@@ -20,6 +20,8 @@ kanban-plugin: basic
 	- Source: Q93
 - [ ] **D112** Story group names with no example in D106 follow its Title Case rule #R6
 	- Source: Q95
+- [ ] **D113** An example shown twice on a page has different ids in the served HTML too #R6
+	- Source: Q94
 
 ## In progress
 

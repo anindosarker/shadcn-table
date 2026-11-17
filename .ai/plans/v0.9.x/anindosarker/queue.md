@@ -40,8 +40,6 @@ kanban-plugin: basic
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
 	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
 	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
-- [ ] **Q94** An example shown twice on a guide page still has the same id in the page source until the page has loaded
-	- apps/shadcn-table-docs/components/example-playground.tsx (useExampleId, merged 2a509c87 on v0.9/docs-layout): the second mount gets a different id only after hydration; the served HTML of /docs/guides/virtualization-new-format-3 carries id="example-enable-row-virtualization" twice. D105 says the id must not repeat; the spec 55 check (hydrated DOM, no duplicate) passes. Keep (unique after load) or require unique ids in the served HTML. Found by the run's reviewer, measured with curl on a production build.
 - [ ] **Q96** The Basic example's first Try it step names a menu label the table does not show
 	- content/docs/examples/basic.mdx step 1: the text the owner accepted on basic-new-format-2 (and the example in D104) reads `Sort by First Name ascending`; the column menu shows `Sort ascending` (ST_ColumnActionMenu.tsx:259, sortAscending in locales/en.ts). The builder of spec 54 wrote `Sort ascending`; three judges read it as correct. Keep `Sort ascending` or revert to the accepted text.
 - [ ] **Q97** Turning off Sticky header in View settings does not unstick the header on the sticky header example
@@ -299,6 +297,8 @@ kanban-plugin: basic
 	- reference/docs-layout/story-pairing-audit.md lists 1 to 3: exact 0, close 34, no partner 8 (minimal, advanced, export-csv, export-pdf, custom-filter-ui, react-query, remote, dynamic-columns). Spec 56 1.3 assumed 33 linked pages and 9 without a story. Resulting count: 652 - 59 + 42 - 42 = 593 story pages. Found by the run's audit milestone, recounted by its verifier.
 - [ ] **Q95** Two story group names were chosen by the builder where D106 gives no example #D112
 	- Merged 8215fa6b on v0.9/docs-layout (spec 56 Story group names): 'AppBar overlaps with Fullscreen Modal' is now 'Miscellaneous/App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is now 'Click To Copy'; 'RTL' and 'Custom Filter Fns' are kept as they were. Keep or revert each.
+- [ ] **Q94** An example shown twice on a guide page still has the same id in the page source until the page has loaded #D113
+	- apps/shadcn-table-docs/components/example-playground.tsx (useExampleId, merged 2a509c87 on v0.9/docs-layout): the second mount gets a different id only after hydration; the served HTML of /docs/guides/virtualization-new-format-3 carries id="example-enable-row-virtualization" twice. D105 says the id must not repeat; the spec 55 check (hydrated DOM, no duplicate) passes. Keep (unique after load) or require unique ids in the served HTML. Found by the run's reviewer, measured with curl on a production build.
 
 ## Later
 
