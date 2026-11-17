@@ -39,11 +39,12 @@ const columns: ST_ColumnDef<Task>[] = [
   { accessorKey: 'priority', header: 'Priority', icon: FlagIcon },
 ];
 
-const options: Partial<ST_TableOptions<Task>> = {
+// Not tied to Task: the range stories spread it over the trips table too.
+const options = {
   columnFilterDisplayMode: 'chips',
   enableSortPopover: true,
   enableViewSettings: true,
-};
+} satisfies Partial<ST_TableOptions<Task>>;
 
 export const ChipsDefault = {
   render: () => <ShadcnTable columns={columns} data={data} {...options} />,
