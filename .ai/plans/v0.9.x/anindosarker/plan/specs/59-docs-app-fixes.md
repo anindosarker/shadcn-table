@@ -15,7 +15,7 @@ Branch: each milestone's branch is created from `origin/v0.9/docs-layout` and me
 
 - A guide page that shows one example in its Example section and again further down carries two different example ids in the served HTML, before any script runs (D113, D105).
 - A missing address answers with HTTP 404 and our own page inside the site frame: top bar, footer, theme and base selector, the line "404" with "This page does not exist", the docs search box, and links to Get Started, Examples, Guides and API in that order; light, dark and the mobile layout (D121, D101).
-- The docs build output is at most 900 MB (`.next`; 644 MB before the story pages, 1.9 GB today) and `server/app/docs/examples/more` at most 250 MB (1.0 GB today). What a visitor sees in the sidebar stays as D102 and D103 say: the same rows, numbers, counts, sticky labels, and "More examples" open on a story page (D116).
+- The docs build output is at most 900 MB (`.next` without `.next/cache`, the build cache that is not served and was 518 MB before the change too; 644 MB before the story pages, 1.9 GB today) and `server/app/docs/examples/more` at most 250 MB (1.0 GB today). What a visitor sees in the sidebar stays as D102 and D103 say: the same rows, numbers, counts, sticky labels, and "More examples" open on a story page (D116).
 - Acceptance: programmatic. `pnpm test docs-e2e --base base` and `pnpm test validate-repo` green; `curl` of a production build for the id and the 404 status; `du -sm` of the build output for the two sizes; the reference for the sidebar is `v0.9/docs-layout` before this spec (captures of the Examples sidebar on `/docs/examples/basic` and on one story page, light and dark, desktop and mobile, taken in Task 1 of the second milestone and compared after).
 
 ### 1.3 Current structure
@@ -111,7 +111,7 @@ test/docs-e2e/lib/site.mjs                  ← new: id, 404 and sidebar checks,
 
 ### Milestone: Lighter story pages
 
-- Files owned: `apps/shadcn-table-docs/app/docs/layout.tsx`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/more-examples.ts`, `apps/shadcn-table-docs/app/docs/more-examples.json/route.ts`, `test/docs-e2e/test.mjs`, `test/docs-e2e/lib/site.mjs`
+- Files owned: `apps/shadcn-table-docs/app/docs/layout.tsx`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/more-examples.ts`, `apps/shadcn-table-docs/app/docs/more-examples.json/route.ts`, `test/docs-e2e/test.mjs`, `test/docs-e2e/lib/site.mjs`, `apps/shadcn-table-docs/components/sidebar-separator.tsx`, `apps/shadcn-table-docs/components/docs-tree-layout.tsx`
 - Depends on: Example ids and 404 page
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`
