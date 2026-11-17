@@ -71,6 +71,8 @@ kanban-plugin: basic
 	- All three bases alike. MRT has no such switch.
 	- Owner recorded 2026-11-17.
 	- Source: Q97
+- [ ] **D121** A wrong address on the docs site shows our own 404 page #R6
+	- Source: Q110
 
 ## In progress
 

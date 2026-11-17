@@ -58,8 +58,6 @@ kanban-plugin: basic
 	- Lookup 2026-11-17 (code read, not run): copy Button is inline-flex shrink-0 whitespace-nowrap px-2.5 (ui/button.tsx sm, buttons/ST_CopyButton.tsx:16,74-80) inside ST_OverflowText's block truncate span, so in a narrow cell it overflows and isCutOff is true; aria's span opens its tooltip on its own pointer timer (aria body/ST_OverflowText.tsx:57-70); real bug (overflow in base, radix, aria; tooltip clash read on aria only); MRT has no overflow tooltip.
 - [ ] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally
 	- Owner, 2026-11-17, checking E14 on localhost:5320: the button cannot be verified locally. apps/shadcn-table-docs/components/mdx/storybook-link.tsx:15-17 on v0.9/docs-layout hardcodes https://storybook.shadcn-table.com/{radix,base,aria}/; the deployed Storybook does not have the stories E14 renamed or added. Local Storybook ports: base 6007, radix 6006, aria 6008 (packages/shadcn-table/package.json:14-16).
-- [ ] **Q110** The docs site needs its own 404 page in the site's look
-	- Owner, 2026-11-17: 'need a custom 404 page that matches our docs site's theme'. apps/shadcn-table-docs/app has no not-found or error file on claude/review or v0.9/docs-layout, so a missing address shows the framework's default 404.
 
 ## Decided
 
@@ -311,6 +309,8 @@ kanban-plugin: basic
 - [ ] **Q97** Turning off Sticky header in View settings does not unstick the header on the sticky header example #D120
 	- /docs/examples/sticky-header (table sets enableStickyHeader: true): with `View settings` > `Sticky header` switched off the switch shows off but thead stays sticky. Found by the builder of spec 54 while running the Try it steps in a browser; not fixed, no step uses the switch; not reproduced by a second agent.
 	- Lookup 2026-11-17 (code read, not run): every sticky check ORs the enableStickyHeader option with the View settings value, so the option wins: head/ST_TableHeadCell.tsx:183 and ST_TableHead.tsx:72 (enableStickyHeader || isFullScreen || stickyHeaderSetting), also ST_TableBodyRow.tsx:181, ST_TableBody.tsx:154, ST_TableContainer.tsx:152; real bug; base, radix, aria alike; MRT has no sticky header view setting (enableStickyHeader || isFullScreen only).
+- [ ] **Q110** The docs site needs its own 404 page in the site's look #D121
+	- Owner, 2026-11-17: 'need a custom 404 page that matches our docs site's theme'. apps/shadcn-table-docs/app has no not-found or error file on claude/review or v0.9/docs-layout, so a missing address shows the framework's default 404.
 
 ## Later
 
