@@ -27,6 +27,7 @@ import {
   TableOptionsSource,
 } from './prop-tables/prop-table-source';
 import { exampleComponents } from '@/example-groups/map';
+import { StoryExample } from './story-example';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -60,6 +61,7 @@ export function getMDXComponents(components?: MDXComponents) {
     RowInstanceAPIsSource,
     CellInstanceAPIsSource,
     ...exampleComponents,
+    StoryExample,
     ...components,
   } satisfies MDXComponents;
 }
