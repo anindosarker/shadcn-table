@@ -541,12 +541,28 @@ export const DragReordersRows = {
   play: async ({ canvasElement }: StoryContext) => {
     await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
     const before = bodyRows(canvasElement).map(rowNum);
+    // A mouse drag draws no ghost at any moment of the drag.
+    const ghosts: Element[] = [];
+    const observer = new MutationObserver((records) =>
+      records.forEach((record) =>
+        record.addedNodes.forEach((node) => {
+          if (
+            node instanceof Element &&
+            node.matches('[data-st-touch-ghost]')
+          ) {
+            ghosts.push(node);
+          }
+        }),
+      ),
+    );
+    observer.observe(document.body, { childList: true });
     await dragFirstRowTwoDown(canvasElement);
+    observer.disconnect();
+    expect(ghosts).toEqual([]);
     const moved = [before[1], before[2], before[0], ...before.slice(3)];
     await waitFor(() =>
       expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
     );
-    expect(ghost()).toBeNull();
 
     // Touch: the grip drags at once, back and then as the mouse moved it.
     await touchDragRow({ canvasElement, from: 2, to: 0 });
@@ -557,5 +573,39 @@ export const DragReordersRows = {
     await waitFor(() =>
       expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
     );
+  },
+};
+
+/**
+ * A table without a scroll of its own on a page that scrolls: a finger held
+ * near the bottom of the screen scrolls the page, as a mouse drag does.
+ */
+export const TouchDragScrollsPage = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={initData}
+      enablePagination={false}
+      enableRowOrdering
+      enableSorting={false}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(100));
+    const page = document.scrollingElement as HTMLElement;
+    page.scrollTop = 0;
+    expect(page.scrollHeight).toBeGreaterThan(window.innerHeight);
+    const grip = within(bodyRows(canvasElement)[0]).getByRole('button', {
+      name: 'Move',
+    });
+    const start = centreOf(grip);
+    const edge = { x: start.x, y: window.innerHeight - 4 };
+    touch({ at: start, element: grip, type: 'pointerdown' });
+    touch({ at: edge, element: grip, type: 'pointermove' });
+    await waitFor(() => expect(ghost()).not.toBeNull());
+    await waitFor(() => expect(page.scrollTop).toBeGreaterThan(0));
+    touch({ at: edge, element: grip, type: 'pointercancel' });
+    await waitFor(() => expect(ghost()).toBeNull());
+    page.scrollTop = 0;
   },
 };
