@@ -1,8 +1,9 @@
 # 61: Pinned rows stay in view with row virtualization, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/pinned-rows-virtualized`, worktree 06
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- `ST_BASE=base vitest run stories/features/RowPinning.stories.tsx`, afc48d1e on the pre-fix library: fail as required (P11). `Row Pinning Sticky With Virtualization`: after the scroll to the middle "row 0 rendered" is undefined (the pinned row left the rendered range); the other 17 plays pass
+
+- Task 1 The play first: afc48d1e
