@@ -3,7 +3,7 @@
  * mobile widths; fails on any console.error or uncaught page error, in
  * particular React hydration mismatches. The pages and their assertions live
  * in one list per docs section (D89), lib/<section>.mjs: getting-started,
- * api, guides, examples (default export: { '/docs/path': async ({ page,
+ * api, guides, examples, site (default export: { '/docs/path': async ({ page,
  * check, base }) => void }, where `base` is the one the page opened on);
  * lib/helpers.mjs holds the shared assertions and is not a section. Add an
  * entry to the page's section for every new page that renders live examples
@@ -38,7 +38,13 @@ const CHECKS_DIR = path.join(
   'lib',
 );
 /** The docs sections, in run order; lib/<section>.mjs each (D89). */
-export const SECTIONS = ['getting-started', 'api', 'guides', 'examples'];
+export const SECTIONS = [
+  'getting-started',
+  'api',
+  'guides',
+  'examples',
+  'site',
+];
 /** Browser contexts per section (D91); --workers overrides. */
 const WORKERS = 4;
 const CI_PORT = 5320;
