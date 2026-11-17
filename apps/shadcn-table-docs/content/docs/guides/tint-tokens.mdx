@@ -5,15 +5,15 @@ description: 'The four CSS variables Shadcn Table reads for striped, hovered and
 
 Every tint the table paints comes from four CSS variables. The table root declares them with Tailwind utilities, each mixed from your shadcn/ui theme variables, so the table follows your theme in light and dark mode without any stylesheet of its own. A library install never touches your `globals.css`.
 
-### Example
+## Example
 
 <GuideExamples slugs={['sticky-row-selection']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['stTableLayoutProps'])} />
 
-### The Four Tokens
+## The Four Tokens
 
 | Variable           | Used for                                    | Light default                             | Dark default                            |
 | ------------------ | ------------------------------------------- | ----------------------------------------- | --------------------------------------- |
@@ -24,11 +24,11 @@ Every tint the table paints comes from four CSS variables. The table root declar
 
 Every default is an opaque mix with `--background`, so pinned cells can use the same color and never turn see-through while the table scrolls under them. Where the browser has no relative color syntax, `--st-edge-shadow` falls back to `--border`.
 
-### The Order Rule
+## The Order Rule
 
 The defaults keep one order, and overrides should too: the hover tint replaces the stripe on a hovered row and reads stronger than it, and selection reads stronger than hover. The header has no tint (it stays `--background`), and grid lines stay `--border`.
 
-### Override the Tokens
+## Override the Tokens
 
 Set a variable on the table root through `stTableLayoutProps.className`, with a Tailwind arbitrary property and a `dark:` twin where the dark value differs. The table merges your classes over its own, so your value replaces the default for that variable (and the `dark:` twin for dark mode).
 
@@ -47,7 +47,7 @@ Variables declared on an ancestor do not reach the cells, because the table root
 
 There is no table option for the tokens and no stylesheet to import: every style of the table is a Tailwind utility on a component element, and the tokens follow the same rule.
 
-### Tint Tokens Example
+## Tint Tokens Example
 
 Select a few rows and hover them to see `--st-selected` and `--st-hover`. Turn on Alternating row colors in the view settings panel for `--st-stripe`.
 

@@ -5,25 +5,25 @@ description: 'How to use and customize the column pinning features of Shadcn Tab
 
 Column pinning lets users pin (freeze) columns to the start or end of the table (left and right in a left-to-right layout). Pinned columns do not scroll horizontally with the rest of the columns, so they always stay visible to the user. Column pinning is on by default: the column menu has Pin to start, Pin to end and Unpin items.
 
-### Example
+## Example
 
 <GuideExamples slugs={['column-pinning']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['enableColumnPinning', 'onColumnPinningChange'])}
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable onlyOptions={new Set(['enablePinning'])} />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['columnPinning'])} />
 
-### Turn Column Pinning Off
+## Turn Column Pinning Off
 
 Column pinning is enabled by default. Set the `enableColumnPinning` table option to `false` to remove the pin items from the column menu. To keep one column from being pinned, set `enablePinning: false` in its column definition.
 
@@ -37,7 +37,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Pin (Freeze) Columns By Default
+## Pin (Freeze) Columns By Default
 
 Columns can start out pinned in your table by setting the `columnPinning` states in `initialState` or `state`. The pinning sides are `start` and `end`.
 
@@ -53,7 +53,7 @@ return <ShadcnTable table={table} />;
 
 When `enableRowActions` is on, the row actions column is pinned to the end by default. That default applies only while you give no `columnPinning` of your own, so include `'st-row-actions'` in `end` if you set `columnPinning` and still want it pinned. See the [Row Actions Guide](/docs/guides/row-actions).
 
-### Pinned Column Widths and the Edge Shadow
+## Pinned Column Widths and the Edge Shadow
 
 In the default `'grid'` layout, pinned columns keep their set width while the other data columns share the spare width, so a pinned column never changes width while the table scrolls.
 

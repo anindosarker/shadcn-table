@@ -5,15 +5,15 @@ description: 'How to show an icon before a column label in the header, the filte
 
 A column can show a small icon before its label, for example a calendar for a date column or a hash for a number column. The icon is optional: a column without one renders exactly as before, and the library ships no icon per column type.
 
-### Example
+## Example
 
 <GuideExamples slugs={['persistent-view']} />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable onlyOptions={new Set(['icon', 'Header'])} />
 
-### Add an Icon to a Column
+## Add an Icon to a Column
 
 Set `icon` in the column definition to an icon component (such as a Lucide icon) or to an element. A component is rendered small and slightly muted, and hidden from screen readers; an element is rendered as you give it.
 
@@ -39,7 +39,7 @@ const columns = [
 ];
 ```
 
-### Where the Icon Shows
+## Where the Icon Shows
 
 Wherever the chrome names the column by its label:
 
@@ -49,7 +49,7 @@ Wherever the chrome names the column by its label:
 
 The columns menu and the column menu list the column by its label only.
 
-### Anything Beyond an Icon
+## Anything Beyond an Icon
 
 For a header with more than an icon and a label, write a custom `Header` render as before. A custom `Header` replaces the label but not the icon, so leave `icon` unset if your `Header` draws its own.
 

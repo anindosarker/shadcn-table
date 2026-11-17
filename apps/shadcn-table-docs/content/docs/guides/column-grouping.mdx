@@ -5,11 +5,11 @@ description: 'How to use and customize the column grouping features of Shadcn Ta
 
 Shadcn Table has built-in column grouping features. There are options for both automatic client-side grouping as well as manual server-side grouping. This guide will walk you through the different options and how to use and customize them.
 
-### Example
+## Example
 
 <GuideExamples slugs={['column-grouping']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -26,7 +26,7 @@ Shadcn Table has built-in column grouping features. There are options for both a
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -39,11 +39,11 @@ Shadcn Table has built-in column grouping features. There are options for both a
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['grouping', 'expanded'])} />
 
-### Enable Grouping
+## Enable Grouping
 
 To enable grouping, set the `enableGrouping` table option to `true`. This makes the header cells draggable, so that columns can be dragged to the dropzone to be grouped, and adds an item to the column menu to group or ungroup a column.
 
@@ -55,7 +55,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Grouped Column Mode
+## Grouped Column Mode
 
 The `groupedColumnMode` table option controls how grouped columns are displayed once a column has been grouped. There are three options:
 
@@ -74,7 +74,7 @@ const table = useShadcnTable({
 
 <EnableColumnGroupingExample />
 
-#### Disable Grouping Per Column
+### Disable Grouping Per Column
 
 ```jsx
 const columns = [
@@ -98,7 +98,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Turn Off Header Dragging for Grouping
+### Turn Off Header Dragging for Grouping
 
 With grouping on, users can drag a header cell onto the grouping drop zone above the table to group by that column. If you do not want headers to be draggable, you can turn dragging off without disabling the grouping feature by setting the `enableColumnDragging` table option to `false`. This also stops column reordering by drag, which is on by default.
 
@@ -113,7 +113,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Group Columns by Default
+## Group Columns by Default
 
 If you want columns to be grouped by default, you can set the `grouping` state in either the `initialState` or `state` table option.
 
@@ -128,7 +128,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Expand Grouped Rows by Default
+## Expand Grouped Rows by Default
 
 In addition to grouping columns by default, you may also want those grouped rows to be expanded and visible by default, too. You can do this by setting the `expanded` state to `true` in either the `initialState` or `state` table option.
 
@@ -146,7 +146,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Customize Expand Column
+## Customize Expand Column
 
 You can customize the expand column by using the `displayColumnDefOptions` table option.
 
@@ -195,7 +195,7 @@ const table = useShadcnTable({
 
 <CustomizeRemoveColumnGroupingExample />
 
-### Manual Grouping
+## Manual Grouping
 
 Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want Shadcn Table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.
 

@@ -5,11 +5,11 @@ description: 'How the default filter chips, the column picker and the filter edi
 
 By default, column filters live in the toolbar as chips: one chip per filtered column, showing the column's icon, its label and a summary of the value. There are no filter inputs under the headers. This is the `'chips'` filter display mode, the default of the `columnFilterDisplayMode` table option.
 
-### Example
+## Example
 
 <GuideExamples slugs={['basic']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -23,7 +23,7 @@ By default, column filters live in the toolbar as chips: one chip per filtered c
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -37,11 +37,11 @@ By default, column filters live in the toolbar as chips: one chip per filtered c
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['columnFilters', 'filterChips'])} />
 
-### Add a Filter
+## Add a Filter
 
 There are three ways to start filtering a column, and all of them open the same value editor:
 
@@ -51,13 +51,13 @@ There are three ways to start filtering a column, and all of them open the same 
 
 Every entry point adds the column's chip to the chip row in the background and flashes it, so you can see where the filter went. Chips appear in the order they were added. A chip exists before it has a value: an empty value keeps the chip.
 
-### The Filter Editor
+## The Filter Editor
 
 The editor shows the column name on its top line, the column's filter input (the same input its `filterVariant` renders in other modes) and "Remove filter". Clicking a chip opens the same editor on the chip.
 
 When a column has filter modes (the default) and filter mode options, the top line also has a mode picker ("Name contains"), a dropdown of the filter modes with their symbols. "Is empty" and "is not empty" hide the value input and keep the filter active. The in-field mode button and the "Filter Mode" line of the other modes do not render in chips mode.
 
-### Remove Filters
+## Remove Filters
 
 - "Remove filter" in a chip's editor clears that column's value and removes its chip.
 - "Clear filters", next to the chips, clears every filter value and removes every chip. It shows only while a chip exists.
@@ -66,13 +66,13 @@ When a column has filter modes (the default) and filter mode options, the top li
 
 Removing a filter also puts its filter mode back to the column's first mode option.
 
-### Chip Summaries
+## Chip Summaries
 
 A chip reads like a sentence: the column label, the filter mode when one is picked, and the value, for example "Name contains: Jo", "Age: 20 to 40", "Email is empty", or just "Name" while the chip has no value. Ranges use the `rangeSummary` localization key (`'{min} to {max}'`), checkboxes `yes` and `no`, and date bounds `beforeValue` and `afterValue`.
 
 A chip for a hidden column stays in the row. Its editor says "Show the column to edit this filter." instead of showing the input.
 
-### Filter Chips State
+## Filter Chips State
 
 The `filterChips` state holds the chip order and the open editor: `columnIds` (the chips, in the order added), `openColumnId` and `openAnchor` (`'chip'`, `'toolbar'` or `'header'`, where the open editor is anchored). A column that gets a filter value from `initialState`, from `state` or from your own code joins the chip row on its own. Set `filterChips` in `initialState` to show empty chips on load.
 
@@ -91,7 +91,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Other Filter Display Modes
+## Other Filter Display Modes
 
 The chips are one of four `columnFilterDisplayMode` values. The filter functions, filter variants and filter inputs are the same in every mode.
 

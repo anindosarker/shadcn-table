@@ -7,11 +7,11 @@ Shadcn Table has multiple kinds of expanding features. This guide will show you 
 
 If you are looking for how to expand multiple rows from a tree data structure, see the [Expanding Sub-Rows](/docs/guides/expanding-sub-rows) guide.
 
-### Example
+## Example
 
 <GuideExamples slugs={['detail-panel']} />
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -27,11 +27,11 @@ If you are looking for how to expand multiple rows from a tree data structure, s
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['expanded'])} />
 
-### Render Detail Panel
+## Render Detail Panel
 
 To add a detail panel to a row, all you need to do is add a `renderDetailPanel` table option.
 
@@ -39,7 +39,7 @@ The recommended way to access the row data for the detail panel is to pull from 
 
 > Using `row.getValue('columnId')` will not work for data that does not have its own column. Using `row.original.columnId` is recommended for detail panels since the data in the detail panel usually does not have its own column.
 
-### Disable Expand All Button
+## Disable Expand All Button
 
 If you don't want to show the expand all button, you can set the `enableExpandAll` table option to `false`.
 
@@ -51,7 +51,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Enable Detail Panel Conditionally Per Row
+## Enable Detail Panel Conditionally Per Row
 
 If the return value of your `renderDetailPanel` function returns `null` or a falsy value for a row, the expand button will be disabled for that row.
 
@@ -66,7 +66,7 @@ const table = useShadcnTable({
 
 One thing to note about the implementation of conditional detail panels is that additional `<tr>` elements will still be created for all rows, even if they do not have detail panel content. It is implemented this way in order to avoid bugs with row virtualization, or striped row CSS.
 
-### Only Allow One Detail Panel Open At A Time
+## Only Allow One Detail Panel Open At A Time
 
 If you want to only allow one detail panel to be open at a time, all you have to do is add your own `onClick` logic to the `stExpandButtonProps` table option.
 
@@ -84,11 +84,11 @@ const table = useShadcnTable({
 });
 ```
 
-### Rotate Expand Icon
+## Rotate Expand Icon
 
 If you don't like the default rotation styles for the expand icons, you can pass in custom CSS to the `stExpandButtonProps` and `stExpandAllButtonProps` table options.
 
-### Replace Expand Icon
+## Replace Expand Icon
 
 You can easily use a custom expand icon either by following the [Custom Icons Guide](/docs/guides/customize-icons) or by passing in custom `children` to the `stExpandButtonProps` and `stExpandAllButtonProps` table options.
 
@@ -103,7 +103,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Customize or Style Detail Panel
+## Customize or Style Detail Panel
 
 You can use the `stDetailPanelProps` table option to pass in custom props to the detail panel. These props are passed to the `<td>` element that contains the detail panel content.
 
@@ -128,7 +128,7 @@ const table = useShadcnTable({
 
 <EnableDetailPanelConditionallyExample />
 
-### Expand Detail Panel By Default
+## Expand Detail Panel By Default
 
 If you want some or all rows to be expanded by default, you can specify that in the `initialState.expanded` table option. Pass `true` to expand all rows, or specify which rowIds should be expanded.
 
@@ -147,7 +147,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Position Expand Column Last
+## Position Expand Column Last
 
 If you want to position the expand column last, you can set the `positionExpandColumn` table option to `'last'`.
 
@@ -155,13 +155,13 @@ Alternatively though, you could use the [Column Pinning Feature](/docs/guides/co
 
 <AlternateDetailPanelExample />
 
-### Detail Panel With Charts
+## Detail Panel With Charts
 
 The detail panel can be used to show a variety of content. Here's an example of a detail panel rendering charts with the [Recharts](https://recharts.org/) library.
 
 <ChartDetailPanelExample />
 
-### Detail Panels with Virtualization
+## Detail Panels with Virtualization
 
 If you are using row virtualization, detail panels will now work more properly as of version 2.6.0. However, there are some caveats to be aware of. In order for row virtualization to work well, many of the animation/transitions have been disabled. This means that the detail panel will not animate open and closed. It will simply appear and disappear.
 
@@ -196,7 +196,7 @@ const table = useShadcnTable({
 
 <EnableDetailPanelVirtualizedExample />
 
-### Lazy Detail Panels
+## Lazy Detail Panels
 
 Fetching the additional data for the detail panels only after the user clicks to expand the row can be a good way to improve performance, and it is pretty easy to implement. It's even easier if you are using React Query.
 
