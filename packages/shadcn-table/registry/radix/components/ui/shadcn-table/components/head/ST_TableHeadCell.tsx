@@ -55,7 +55,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       enableColumnPinning,
       enableGrouping,
       enableMultiSort,
-      enableStickyHeader,
       layoutMode,
       localization,
       showColumnDragHandle,
@@ -179,8 +178,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               !grouping.includes(column.id))
           );
 
-        const stickyHeader =
-          enableStickyHeader || isFullScreen || stickyHeaderSetting;
+        const stickyHeader = isFullScreen || stickyHeaderSetting;
 
         const showSubheaderFilter =
           columnFilterDisplayMode === 'subheader' && column.getCanFilter();
