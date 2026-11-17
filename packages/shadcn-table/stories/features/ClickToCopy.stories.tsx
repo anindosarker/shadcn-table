@@ -263,7 +263,11 @@ ClickToCopyEnabledWithColumnResizing.play = async ({
       stBrowserUserEvent?: { hover: (element: Element) => Promise<void> };
     }
   ).stBrowserUserEvent;
-  await (browserUserEvent ?? userEvent).hover(button());
+  const input = browserUserEvent ?? userEvent;
+  // React Aria opens a hover tooltip only once an earlier pointer move has
+  // set the pointer modality, as any real pointer does on its way in.
+  await input.hover(th);
+  await input.hover(button());
   const tooltips = () =>
     [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
       (tooltip) => tooltip.textContent,
