@@ -221,59 +221,92 @@ export const EditingFeatureEnabledConditionally = () => {
   );
 };
 
-export const EditingEnabledEditModeRow = () => {
-  const [tableData, setTableData] = useState(data);
+/**
+ * Row mode: Cancel throws the typed value away and the row shows its old
+ * value; Save keeps the typed value.
+ */
+export const EditingEnabledEditModeRow = {
+  render: function EditingEnabledEditModeRowStory() {
+    const [tableData, setTableData] = useState(data);
 
-  const handleSaveRow: ST_TableOptions<Person>['onEditingRowSave'] = ({
-    exitEditingMode,
-    row,
-    values,
-  }) => {
-    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
-    exitEditingMode();
-  };
+    const handleSaveRow: ST_TableOptions<Person>['onEditingRowSave'] = ({
+      exitEditingMode,
+      row,
+      values,
+    }) => {
+      setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
+      exitEditingMode();
+    };
 
-  return (
-    <ShadcnTable
-      columns={[
-        {
-          accessorKey: 'firstName',
-          header: 'First Name',
-          icon: UserIcon,
-        },
-        {
-          accessorKey: 'lastName',
-          header: 'Last Name',
-          icon: UserIcon,
-        },
-        {
-          accessorKey: 'address',
-          header: 'Address',
-          icon: MapPinIcon,
-        },
-        {
-          accessorKey: 'state',
-          header: 'State',
-          icon: MapIcon,
-        },
-        {
-          accessorKey: 'phoneNumber',
-          enableEditing: false,
-          header: 'Phone Number',
-          icon: PhoneIcon,
-        },
-      ]}
-      createDisplayMode="row"
-      data={tableData}
-      editDisplayMode="row"
-      enableEditing
-      onCreatingRowSave={() => {}}
-      onEditingRowSave={handleSaveRow}
-      renderTopToolbarCustomActions={({ table }) => (
-        <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
-      )}
-    />
-  );
+    return (
+      <ShadcnTable
+        columns={[
+          {
+            accessorKey: 'firstName',
+            header: 'First Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'lastName',
+            header: 'Last Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'address',
+            header: 'Address',
+            icon: MapPinIcon,
+          },
+          {
+            accessorKey: 'state',
+            header: 'State',
+            icon: MapIcon,
+          },
+          {
+            accessorKey: 'phoneNumber',
+            enableEditing: false,
+            header: 'Phone Number',
+            icon: PhoneIcon,
+          },
+        ]}
+        createDisplayMode="row"
+        data={tableData}
+        editDisplayMode="row"
+        enableEditing
+        onCreatingRowSave={() => {}}
+        onEditingRowSave={handleSaveRow}
+        renderTopToolbarCustomActions={({ table }) => (
+          <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
+        )}
+      />
+    );
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const edit = async () => {
+      const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
+      await userEvent.click(firstRowEdit!);
+      const input = await within(firstNameCell(canvasElement)).findByRole(
+        'textbox',
+      );
+      await userEvent.clear(input);
+      await userEvent.type(input, 'Zelda');
+    };
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(data[0].firstName);
+
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/),
+    );
+  },
 };
 
 export const EditingValidationHelperText = () => {
@@ -461,62 +494,81 @@ export const EditingEnabledEditModeRowVirtualized = () => {
   );
 };
 
-export const EditingEnabledEditModeCell = () => {
-  const [tableData, setTableData] = useState(data);
+/** Cell mode: double click, type, blur; the cell shows the new value. */
+export const EditingEnabledEditModeCell = {
+  render: function EditingEnabledEditModeCellStory() {
+    const [tableData, setTableData] = useState(data);
 
-  const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
-    setTableData(
-      tableData.map((r, i) =>
-        i === cell.row.index ? { ...r, [cell.column.id]: value } : r,
-      ),
+    const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
+      setTableData(
+        tableData.map((r, i) =>
+          i === cell.row.index ? { ...r, [cell.column.id]: value } : r,
+        ),
+      );
+    };
+
+    return (
+      <ShadcnTable
+        columns={[
+          {
+            accessorKey: 'firstName',
+            header: 'First Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'lastName',
+            header: 'Last Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'address',
+            header: 'Address',
+            icon: MapPinIcon,
+          },
+          {
+            accessorKey: 'state',
+            header: 'State',
+            icon: MapIcon,
+          },
+          {
+            accessorKey: 'phoneNumber',
+            enableEditing: false,
+            header: 'Phone Number',
+            icon: PhoneIcon,
+          },
+        ]}
+        createDisplayMode="row"
+        data={tableData}
+        editDisplayMode="cell"
+        enableEditing
+        onCreatingRowSave={() => {}}
+        renderTopToolbarCustomActions={({ table }) => (
+          <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
+        )}
+        stEditTextFieldProps={({ cell }) => ({
+          onBlur: (event) => {
+            handleSaveCell(cell, event.target.value);
+          },
+        })}
+      />
     );
-  };
-
-  return (
-    <ShadcnTable
-      columns={[
-        {
-          accessorKey: 'firstName',
-          header: 'First Name',
-          icon: UserIcon,
-        },
-        {
-          accessorKey: 'lastName',
-          header: 'Last Name',
-          icon: UserIcon,
-        },
-        {
-          accessorKey: 'address',
-          header: 'Address',
-          icon: MapPinIcon,
-        },
-        {
-          accessorKey: 'state',
-          header: 'State',
-          icon: MapIcon,
-        },
-        {
-          accessorKey: 'phoneNumber',
-          enableEditing: false,
-          header: 'Phone Number',
-          icon: PhoneIcon,
-        },
-      ]}
-      createDisplayMode="row"
-      data={tableData}
-      editDisplayMode="cell"
-      enableEditing
-      onCreatingRowSave={() => {}}
-      renderTopToolbarCustomActions={({ table }) => (
-        <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
-      )}
-      stEditTextFieldProps={({ cell }) => ({
-        onBlur: (event) => {
-          handleSaveCell(cell, event.target.value);
-        },
-      })}
-    />
-  );
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    await userEvent.dblClick(firstNameCell(canvasElement));
+    const input = await within(firstNameCell(canvasElement)).findByRole(
+      'textbox',
+    );
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Zelda');
+    input.blur();
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
+  },
 };
 
 export const EditingEnabledEditModeCellWithRowActions = () => {
@@ -1211,62 +1263,6 @@ const firstNameCell = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>(
     'tbody tr:first-child td[data-flip-column="firstName"]',
   )!;
-
-/** Cell mode: double click, type, blur; the cell shows the new value. */
-export const CellEditSaves = {
-  render: () => <EditingEnabledEditModeCell />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    await userEvent.dblClick(firstNameCell(canvasElement));
-    const input = await within(firstNameCell(canvasElement)).findByRole(
-      'textbox',
-    );
-    await userEvent.clear(input);
-    await userEvent.type(input, 'Zelda');
-    input.blur();
-    await waitFor(() =>
-      expect(
-        within(firstNameCell(canvasElement)).queryByRole('textbox'),
-      ).toBeNull(),
-    );
-    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
-  },
-};
-
-/**
- * Row mode: Cancel throws the typed value away and the row shows its old
- * value; Save keeps the typed value.
- */
-export const RowEditSaveCancel = {
-  render: () => <EditingEnabledEditModeRow />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByText(data[0].firstName);
-    const edit = async () => {
-      const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
-      await userEvent.click(firstRowEdit!);
-      const input = await within(firstNameCell(canvasElement)).findByRole(
-        'textbox',
-      );
-      await userEvent.clear(input);
-      await userEvent.type(input, 'Zelda');
-    };
-    await edit();
-    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
-    await waitFor(() =>
-      expect(
-        within(firstNameCell(canvasElement)).queryByRole('textbox'),
-      ).toBeNull(),
-    );
-    expect(firstNameCell(canvasElement)).toHaveTextContent(data[0].firstName);
-
-    await edit();
-    await userEvent.click(canvas.getByRole('button', { name: 'Save' }));
-    await waitFor(() =>
-      expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/),
-    );
-  },
-};
 
 /** Modal mode: the dialog's Save writes the typed value into the row. */
 export const ModalEditSaves = {
