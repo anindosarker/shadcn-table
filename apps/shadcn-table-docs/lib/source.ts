@@ -5,7 +5,13 @@ import { toPlainMarkdown } from './llms';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 import type * as PageTree from 'fumadocs-core/page-tree';
-import type { SidebarTreeItem } from './page-tree-utils';
+import { sidebarName, type SidebarTreeItem } from './page-tree-utils';
+import {
+  type LightMoreExamples,
+  MORE_EXAMPLES_URL,
+  moreExamplesRows,
+  slugLabel,
+} from './more-examples';
 
 // `searchTitle`: an optional `<title>` for search results that differs from
 // the heading and the sidebar label (`title`). `sidebarTitle`: an optional
@@ -117,7 +123,7 @@ function trimNode(node: PageTree.Node): PageTree.Node {
       icon: node.icon,
     });
   }
-  return defined({
+  const folder: PageTree.Folder = defined({
     $id: node.$id,
     type: 'folder',
     name: node.name,
@@ -128,6 +134,48 @@ function trimNode(node: PageTree.Node): PageTree.Node {
     index: node.index && trimPage(node.index),
     children: node.children.map(trimNode),
   });
+  return isMoreExamples(node) ? lightMoreExamples(folder) : folder;
+}
+
+/** The "More examples" folder: the one whose pages are the story pages. */
+function isMoreExamples(folder: PageTree.Folder): boolean {
+  return folder.children.some(
+    (child) => child.type === 'page' && child.url.startsWith(MORE_EXAMPLES_URL),
+  );
+}
+
+/**
+ * The "More examples" folder without its rows (lib/more-examples.ts): the
+ * browser builds them from the folder's meta.json. Carries the labels that
+ * differ from the slug, and fails the build when the rows built from
+ * meta.json differ from the folder's (names, URLs, group labels, order).
+ */
+function lightMoreExamples(folder: PageTree.Folder): LightMoreExamples {
+  const moreLabels: Record<string, string> = {};
+  for (const child of folder.children) {
+    if (child.type !== 'page') continue;
+    const slug = child.url.slice(MORE_EXAMPLES_URL.length);
+    if (typeof child.name !== 'string') {
+      throw new Error(`sidebarTree: ${child.url} has no plain-text name`);
+    }
+    if (child.name !== slugLabel(slug)) moreLabels[slug] = child.name;
+  }
+  const shape = (nodes: PageTree.Node[]) =>
+    JSON.stringify(
+      nodes.map((n) => [
+        n.type,
+        n.name,
+        n.type === 'page' ? n.url : '',
+        n.type === 'page' ? sidebarName(n) : '',
+      ]),
+    );
+  const built = moreExamplesRows(moreLabels);
+  if (shape(built) !== shape(folder.children)) {
+    throw new Error(
+      'sidebarTree: the "More examples" rows built from content/docs/examples/more/meta.json differ from the page tree',
+    );
+  }
+  return { ...folder, children: [], moreLabels };
 }
 
 function trimPage(page: PageTree.Item): PageTree.Item {
