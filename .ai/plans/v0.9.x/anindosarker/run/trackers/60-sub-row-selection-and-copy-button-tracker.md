@@ -1,6 +1,6 @@
 # 60: Sub-row selection and copy button, tracker
 
-Status: done (built; ready for merge into claude/review)
+Status: done (38508a1f)
 Branch `v0.9/sub-row-selection-copy-button`, worktree 07
 Checks:
 
