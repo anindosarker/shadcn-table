@@ -3,9 +3,14 @@ import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
   type ST_TableOptions,
+  ST_TableHeadCellFilterContainer,
+  ST_TableProvider,
   ShadcnTable,
+  useST_MediaQuery,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
   NativeSelect,
   NativeSelectOption,
@@ -15,10 +20,12 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { ST_BASE } from '../../.storybook/themes';
 import {
+  Building2Icon,
   CakeIcon,
   CalendarIcon,
   CircleCheckIcon,
   ClockIcon,
+  DollarSignIcon,
   HashIcon,
   MapIcon,
   MapPinIcon,
@@ -1703,5 +1710,901 @@ export const CustomFilterDebounce = {
       { timeout: 1500 },
     );
     expect(performance.now() - typedAt).toBeGreaterThanOrEqual(800);
+  },
+};
+
+// The exact stories of the docs examples filter-variants, faceted-values,
+// filter-switching, popover-filters, subheader-filters and custom-filter-ui:
+// the same columns, options and data.
+
+type VariantsPerson = {
+  isActive: boolean;
+  name: string;
+  hireDate: string;
+  arrivalTime: string;
+  departureTime: Date;
+  age: number;
+  salary: number;
+  city: string;
+  state: string;
+};
+
+//seeded so that server and client render the same times
+const variantsCreateRandom = (seed: number) => {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const variantsRandom = variantsCreateRandom(314);
+
+const variantsRandomInt = (max: number) =>
+  Math.floor(variantsRandom() * (max + 1));
+
+//random time on a fixed day, so the rows do not depend on the build date
+const variantsToday = () => {
+  const today = new Date(2024, 0, 15);
+  today.setHours(variantsRandomInt(23));
+  today.setMinutes(variantsRandomInt(59));
+  today.setSeconds(variantsRandomInt(59));
+  return today;
+};
+
+const variantsData = [
+  {
+    isActive: true,
+    name: 'Tanner Linsley',
+    hireDate: '2016-02-23T18:25:43.511Z',
+    arrivalTime: '2016-02-23T18:25:43.511Z',
+    departureTime: variantsToday(),
+    age: 42,
+    salary: 100_000,
+    city: 'San Francisco',
+    state: 'California',
+  },
+  {
+    isActive: true,
+    name: 'Maya Patel',
+    hireDate: '2019-02-23T18:21:43.335',
+    arrivalTime: '2019-02-23T18:21:43.335',
+    departureTime: variantsToday(),
+    age: 51,
+    salary: 80_000,
+    city: 'Richmond',
+    state: 'Virginia',
+  },
+  {
+    isActive: false,
+    name: 'John Doe',
+    hireDate: '2014-02-23T18:25:43.511Z',
+    arrivalTime: '2014-02-23T18:25:43.511Z',
+    departureTime: variantsToday(),
+    age: 27,
+    salary: 120_000,
+    city: 'Riverside',
+    state: 'South Carolina',
+  },
+  {
+    isActive: true,
+    name: 'Jane Doe',
+    hireDate: '2015-02-25T18:25:43.511Z',
+    arrivalTime: '2015-02-25T18:25:43.511Z',
+    departureTime: variantsToday(),
+    age: 32,
+    salary: 150_000,
+    city: 'San Francisco',
+    state: 'California',
+  },
+  {
+    isActive: false,
+    name: 'John Smith',
+    hireDate: '2023-06-11T18:25:43.511Z',
+    arrivalTime: '2023-06-11T18:25:43.511Z',
+    departureTime: variantsToday(),
+    age: 42,
+    salary: 75_000,
+    city: 'Los Angeles',
+    state: 'California',
+  },
+  {
+    isActive: true,
+    name: 'Jane Smith',
+    hireDate: '2019-02-23T18:21:43.335',
+    arrivalTime: '2019-02-23T18:21:43.335',
+    departureTime: variantsToday(),
+    age: 51,
+    salary: 56_000,
+    city: 'Blacksburg',
+    state: 'Virginia',
+  },
+  {
+    isActive: false,
+    name: 'Samuel Jackson',
+    hireDate: '2010-02-23T18:25:43.511Z',
+    arrivalTime: '2010-02-23T18:25:43.511Z',
+    departureTime: variantsToday(),
+    age: 27,
+    salary: 90_000,
+    city: 'New York',
+    state: 'New York',
+  },
+];
+
+const variantsCities = [
+  'San Francisco',
+  'Richmond',
+  'Riverside',
+  'Los Angeles',
+  'Blacksburg',
+  'New York',
+];
+
+const variantsStates = [
+  'California',
+  'Virginia',
+  'South Carolina',
+  'New York',
+  'Texas',
+];
+
+const FilterVariantsTable = () => {
+  const columns = useMemo<ST_ColumnDef<VariantsPerson>[]>(
+    () => [
+      {
+        header: 'Status',
+        accessorFn: (originalRow) => (originalRow.isActive ? 'true' : 'false'), //must be strings
+        id: 'isActive',
+        icon: CircleCheckIcon,
+        filterVariant: 'checkbox',
+        Cell: ({ cell }) =>
+          cell.getValue() === 'true' ? 'Active' : 'Inactive',
+        size: 170,
+      },
+      {
+        accessorKey: 'name',
+        icon: UserIcon,
+        header: 'Name',
+        filterVariant: 'text', // default
+        size: 200,
+      },
+      {
+        accessorKey: 'salary',
+        icon: DollarSignIcon,
+        header: 'Salary',
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }),
+        filterVariant: 'range-slider',
+        filterFn: 'betweenInclusive', // default (or between)
+        stFilterSliderProps: {
+          max: 200_000, //custom max (as opposed to faceted max)
+          min: 30_000, //custom min (as opposed to faceted min)
+          step: 10_000,
+        },
+      },
+      {
+        accessorKey: 'age',
+        icon: CakeIcon,
+        header: 'Age',
+        filterVariant: 'range',
+        filterFn: 'between',
+        size: 110,
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+        filterVariant: 'select',
+        filterSelectOptions: variantsCities, //custom options list (as opposed to faceted list)
+      },
+      {
+        accessorKey: 'state',
+        icon: MapIcon,
+        header: 'State',
+        filterVariant: 'multi-select',
+        filterSelectOptions: variantsStates, //custom options list (as opposed to faceted list)
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.hireDate), //convert to date for sorting and filtering
+        id: 'hireDate',
+        icon: CalendarIcon,
+        header: 'Hire Date',
+        filterVariant: 'date-range',
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), // convert back to string for display
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.arrivalTime), //convert to date for sorting and filtering
+        id: 'arrivalTime',
+        icon: ClockIcon,
+        header: 'Arrival Time',
+        filterVariant: 'datetime-range',
+        Cell: ({ cell }) =>
+          `${cell.getValue<Date>().toLocaleDateString()} ${cell
+            .getValue<Date>()
+            .toLocaleTimeString()}`, // convert back to string for display
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.departureTime), //convert to date for sorting and filtering
+        id: 'departureTime',
+        icon: ClockIcon,
+        header: 'Departure Time',
+        filterVariant: 'time-range',
+        // 'Departure Time' needs about 110 px beside the icon and the chevron
+        size: 200,
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleTimeString(), // convert back to string for display
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: variantsData,
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+type FacetedPerson = {
+  isActive: boolean;
+  name: string;
+  age: number;
+  salary: number;
+  city: string;
+  state: string;
+};
+
+const facetedData = [
+  {
+    isActive: true,
+    name: 'Tanner Linsley',
+    age: 42,
+    salary: 100_000,
+    city: 'San Francisco',
+    state: 'California',
+  },
+  {
+    isActive: true,
+    name: 'Maya Patel',
+    age: 51,
+    salary: 80_000,
+    city: 'Richmond',
+    state: 'Virginia',
+  },
+  {
+    isActive: false,
+    name: 'John Doe',
+    age: 27,
+    salary: 120_000,
+    city: 'Riverside',
+    state: 'South Carolina',
+  },
+  {
+    isActive: true,
+    name: 'Jane Doe',
+    age: 32,
+    salary: 150_000,
+    city: 'San Francisco',
+    state: 'California',
+  },
+  {
+    isActive: false,
+    name: 'John Smith',
+    age: 42,
+    salary: 75_000,
+    city: 'Los Angeles',
+    state: 'California',
+  },
+  {
+    isActive: true,
+    name: 'Jane Smith',
+    age: 51,
+    salary: 56_000,
+    city: 'Blacksburg',
+    state: 'Virginia',
+  },
+  {
+    isActive: false,
+    name: 'Samuel Jackson',
+    age: 27,
+    salary: 90_000,
+    city: 'New York',
+    state: 'New York',
+  },
+];
+
+const FacetedValuesTable = () => {
+  const columns = useMemo<ST_ColumnDef<FacetedPerson>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        icon: UserIcon,
+        header: 'Name',
+        filterVariant: 'autocomplete', // default
+        size: 110,
+      },
+      {
+        accessorKey: 'salary',
+        icon: DollarSignIcon,
+        header: 'Salary',
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }),
+        filterVariant: 'range-slider',
+        filterFn: 'betweenInclusive', // default (or between)
+        stFilterSliderProps: {
+          //no need to specify min/max/step if using faceted values
+          step: 5_000,
+        },
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+        filterVariant: 'select',
+        //no need to specify filterSelectOptions if using faceted values
+      },
+      {
+        accessorKey: 'state',
+        icon: MapIcon,
+        header: 'State',
+        filterVariant: 'multi-select',
+        //no need to specify filterSelectOptions if using faceted values
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: facetedData,
+    enableFacetedValues: true,
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+type ModesPerson = {
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  age: number;
+};
+
+const modesData = [
+  {
+    id: 1,
+    firstName: 'Hugh',
+    middleName: 'Jay',
+    lastName: 'Mungus',
+    age: 42,
+  },
+  {
+    id: 2,
+    firstName: 'Leroy',
+    middleName: 'Leroy',
+    lastName: 'Jenkins',
+    age: 51,
+  },
+  {
+    id: 3,
+    firstName: 'Candice',
+    middleName: 'Denise',
+    lastName: 'Nutella',
+    age: 27,
+  },
+  {
+    id: 4,
+    firstName: 'Micah',
+    middleName: 'Henry',
+    lastName: 'Johnson',
+    age: 32,
+  },
+];
+
+const FilterSwitchingTable = () => {
+  const columns = useMemo<ST_ColumnDef<ModesPerson>[]>(
+    () => [
+      {
+        accessorKey: 'id',
+        icon: HashIcon,
+        enableColumnFilterModes: false, //disable changing filter mode for this column
+        filterFn: 'equals', //set filter mode to equals
+        header: 'ID',
+      },
+      {
+        accessorKey: 'firstName', //normal, all filter modes are enabled
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'middleName',
+        icon: UserIcon,
+        enableColumnFilterModes: false, //disable changing filter mode for this column
+        filterFn: 'startsWith', //even though changing the mode is disabled, you can still set the default filter mode
+        header: 'Middle Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+        //if you do not want to use the default filter modes, you can provide your own and render your own menu
+        renderColumnFilterModeMenuItems: ({ onSelectFilterMode }) => [
+          <DropdownMenuItem
+            key="0"
+            onClick={() => onSelectFilterMode('contains')}
+          >
+            <div>Contains</div>
+          </DropdownMenuItem>,
+          <DropdownMenuItem
+            key="1"
+            onClick={() => onSelectFilterMode('customFilterFn')}
+          >
+            <div>Custom Filter Fn</div>
+          </DropdownMenuItem>,
+        ],
+      },
+      {
+        accessorKey: 'age',
+        icon: CakeIcon,
+        columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
+        filterFn: 'between',
+        header: 'Age',
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: modesData,
+    filterFns: {
+      customFilterFn: (row, id, filterValue) => {
+        return row.getValue(id) === filterValue;
+      },
+    },
+    localization: {
+      filterCustomFilterFn: 'Custom Filter Fn',
+    } as Record<string, string>, //a label for the custom mode, not a stock key
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+type GenderPerson = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  age: number;
+};
+
+const genderData = [
+  {
+    id: 1,
+    firstName: 'Hugh',
+    lastName: 'Mungus',
+    gender: 'Male',
+    age: 42,
+  },
+  {
+    id: 2,
+    firstName: 'Leroy',
+    lastName: 'Jenkins',
+    gender: 'Male',
+    age: 51,
+  },
+  {
+    id: 3,
+    firstName: 'Candice',
+    lastName: 'Nutella',
+    gender: 'Female',
+    age: 27,
+  },
+  {
+    id: 4,
+    firstName: 'Micah',
+    lastName: 'Johnson',
+    gender: 'Other',
+    age: 32,
+  },
+];
+
+const PopoverFiltersTable = () => {
+  const columns = useMemo<ST_ColumnDef<GenderPerson>[]>(
+    () => [
+      {
+        accessorKey: 'id',
+        icon: HashIcon,
+        header: 'ID',
+      },
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
+        header: 'Gender',
+        filterFn: 'equals',
+        filterSelectOptions: ['Male', 'Female', 'Other'],
+        filterVariant: 'select',
+      },
+      {
+        accessorKey: 'age',
+        icon: CakeIcon,
+        header: 'Age',
+        filterVariant: 'range',
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: genderData,
+    columnFilterDisplayMode: 'popover',
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+const SubheaderFiltersTable = () => {
+  const columns = useMemo<ST_ColumnDef<VariantsPerson>[]>(
+    () => [
+      {
+        header: 'Status',
+        accessorFn: (originalRow) => (originalRow.isActive ? 'true' : 'false'), //must be strings
+        id: 'isActive',
+        icon: CircleCheckIcon,
+        filterVariant: 'checkbox',
+        Cell: ({ cell }) =>
+          cell.getValue() === 'true' ? 'Active' : 'Inactive',
+        size: 170,
+      },
+      {
+        accessorKey: 'name',
+        icon: UserIcon,
+        header: 'Name',
+        filterVariant: 'text', // default
+        size: 200,
+      },
+      {
+        accessorKey: 'salary',
+        icon: DollarSignIcon,
+        header: 'Salary',
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }),
+        filterVariant: 'range-slider',
+        filterFn: 'betweenInclusive', // default (or between)
+        stFilterSliderProps: {
+          max: 200_000, //custom max (as opposed to faceted max)
+          min: 30_000, //custom min (as opposed to faceted min)
+          step: 10_000,
+        },
+        size: 220,
+      },
+      {
+        accessorKey: 'age',
+        icon: CakeIcon,
+        header: 'Age',
+        filterVariant: 'range',
+        filterFn: 'between',
+        size: 240,
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+        filterVariant: 'select',
+        filterSelectOptions: variantsCities, //custom options list (as opposed to faceted list)
+        size: 180,
+      },
+      {
+        accessorKey: 'state',
+        icon: MapIcon,
+        header: 'State',
+        filterVariant: 'multi-select',
+        filterSelectOptions: variantsStates, //custom options list (as opposed to faceted list)
+        size: 200,
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.hireDate), //convert to date for sorting and filtering
+        id: 'hireDate',
+        icon: CalendarIcon,
+        header: 'Hire Date',
+        filterVariant: 'date-range',
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), // convert back to string for display
+        size: 380,
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.arrivalTime), //convert to date for sorting and filtering
+        id: 'arrivalTime',
+        icon: ClockIcon,
+        header: 'Arrival Time',
+        filterVariant: 'datetime-range',
+        Cell: ({ cell }) =>
+          `${cell.getValue<Date>().toLocaleDateString()} ${cell
+            .getValue<Date>()
+            .toLocaleTimeString()}`, // convert back to string for display
+        size: 480,
+      },
+      {
+        accessorFn: (originalRow) => new Date(originalRow.departureTime), //convert to date for sorting and filtering
+        id: 'departureTime',
+        icon: ClockIcon,
+        header: 'Departure Time',
+        filterVariant: 'time-range',
+        Cell: ({ cell }) => cell.getValue<Date>().toLocaleTimeString(), // convert back to string for display
+        size: 320,
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: variantsData,
+    columnFilterDisplayMode: 'subheader', //a filter row under the headers, each text filter with its mode picker
+    initialState: { showColumnFilters: true }, //the filter row starts open
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+const CustomFilterUiTable = () => {
+  const isMobile = useST_MediaQuery('(max-width: 1000px)');
+
+  const columns = useMemo<ST_ColumnDef<GenderPerson>[]>(
+    () => [
+      {
+        accessorKey: 'id',
+        icon: HashIcon,
+        header: 'ID',
+      },
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+        filterVariant: 'autocomplete',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
+        header: 'Gender',
+        filterFn: 'equals',
+        filterSelectOptions: ['Male', 'Female', 'Other'],
+        filterVariant: 'select',
+      },
+      {
+        accessorKey: 'age',
+        icon: CakeIcon,
+        header: 'Age',
+        filterVariant: 'range',
+      },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({
+    columns,
+    data: genderData,
+    columnFilterDisplayMode: 'custom', //we will render our own filtering UI
+    enableFacetedValues: true,
+    stFilterTextFieldProps: ({ column }) => ({
+      placeholder: `Filter by ${column.columnDef.header}`,
+    }),
+  });
+
+  return (
+    <ST_TableProvider table={table}>
+      <div
+        className={`flex gap-2 ${isMobile ? 'flex-col-reverse' : 'flex-row'}`}
+      >
+        <div className="min-w-0 flex-1">
+          <ShadcnTable table={table} />
+        </div>
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="flex flex-col gap-2 p-2">
+            {table
+              .getLeafHeaders()
+              .map(
+                (header) =>
+                  header.column.getCanFilter() && (
+                    <ST_TableHeadCellFilterContainer
+                      key={header.id}
+                      header={header}
+                      open
+                    />
+                  ),
+              )}
+          </div>
+        </div>
+      </div>
+    </ST_TableProvider>
+  );
+};
+
+const exampleRows = (canvasElement: HTMLElement) =>
+  canvasElement.querySelectorAll('tbody tr');
+
+/** "+ Filter" (or the Filter button), then the column in the picker. */
+const addChip = async (canvasElement: HTMLElement, column: string) => {
+  const [addFilter] = within(canvasElement).getAllByRole('button', {
+    name: 'Filter',
+  });
+  await userEvent.click(addFilter!);
+  await userEvent.click(
+    await within(document.body).findByRole('option', { name: column }),
+  );
+};
+
+/** Opens the select of the open chip editor and picks `option`. */
+const pickInChipEditor = async (option: RegExp) => {
+  const body = within(document.body);
+  const removeFilter = await body.findByRole('button', {
+    name: 'Remove filter',
+  });
+  const trigger = removeFilter
+    .closest('[data-slot="popover-content"]')!
+    .querySelector<HTMLElement>('[data-slot="select-trigger"]')!;
+  await userEvent.click(trigger);
+  await userEvent.click(await body.findByRole('option', { name: option }));
+};
+
+/** The docs example filter-variants: one filter variant per column. */
+export const FilterVariants = {
+  render: () => <FilterVariantsTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Tanner Linsley');
+    expect(exampleRows(canvasElement)).toHaveLength(7);
+    await addChip(canvasElement, 'City');
+    await pickInChipEditor(/^San Francisco/);
+    await waitFor(() => expect(exampleRows(canvasElement)).toHaveLength(2));
+  },
+};
+
+/** The docs example faceted-values: filter options come from the rows. */
+export const FacetedValues = {
+  render: () => <FacetedValuesTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Tanner Linsley');
+    const rows = exampleRows(canvasElement).length;
+    await addChip(canvasElement, 'City');
+    await pickInChipEditor(/^Richmond/);
+    await waitFor(() => expect(exampleRows(canvasElement)).toHaveLength(1));
+    expect(rows).toBeGreaterThan(1);
+  },
+};
+
+/** The docs example filter-switching: filter modes per column. */
+export const FilterSwitching = {
+  render: () => <FilterSwitchingTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Micah');
+    await addChip(canvasElement, 'First Name');
+    expect(
+      (await body.findByRole('button', { name: 'Change filter mode' }))
+        .textContent,
+    ).toContain('fuzzy');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(body.queryByRole('button', { name: 'Remove filter' })).toBeNull(),
+    );
+
+    await addChip(canvasElement, 'Age');
+    const modeButton = await body.findByRole('button', {
+      name: 'Change filter mode',
+    });
+    expect(modeButton.textContent).toContain('between');
+    await userEvent.click(modeButton);
+    await waitFor(() =>
+      expect(
+        body.getAllByRole('menuitemradio').map((item) => item.textContent),
+      ).toHaveLength(3),
+    );
+    const modes = body
+      .getAllByRole('menuitemradio')
+      .map((item) => item.textContent ?? '');
+    for (const [index, mode] of [
+      'Between',
+      'Greater Than',
+      'Less Than',
+    ].entries())
+      expect(modes[index]).toContain(mode);
+  },
+};
+
+/** The docs example popover-filters: each column's filter in a popover. */
+export const PopoverFilters = {
+  render: () => <PopoverFiltersTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Candice');
+    const gender = canvas.getByRole('columnheader', { name: /Gender/ });
+    await userEvent.click(
+      within(gender).getByRole('button', { name: /Filter/ }),
+    );
+    const removeOrTrigger = await waitFor(() => {
+      const trigger = document.querySelector<HTMLElement>(
+        '[data-slot="popover-content"] [data-slot="select-trigger"]',
+      );
+      expect(trigger).not.toBeNull();
+      return trigger!;
+    });
+    await userEvent.click(removeOrTrigger);
+    await userEvent.click(await body.findByRole('option', { name: /^Female/ }));
+    await waitFor(() => expect(exampleRows(canvasElement)).toHaveLength(1));
+    expect(canvas.getByText('Candice')).toBeVisible();
+  },
+};
+
+/** The docs example subheader-filters: a filter row under the headers. */
+export const SubheaderFilters = {
+  render: () => <SubheaderFiltersTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Tanner Linsley');
+    const input = canvas.getByRole('textbox', { name: 'Filter by Name' });
+    await userEvent.type(input, 'Doe');
+    await waitFor(() => expect(exampleRows(canvasElement)).toHaveLength(2));
+    // The match is highlighted, so the name spans several elements.
+    const names = [...exampleRows(canvasElement)].map((row) => row.textContent);
+    expect(names.some((name) => name?.includes('John Doe'))).toBe(true);
+    expect(names.some((name) => name?.includes('Jane Doe'))).toBe(true);
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide filters' }),
+    );
+    await waitFor(() =>
+      expect(
+        canvas.queryByRole('textbox', { name: 'Filter by Name' }),
+      ).toBeNull(),
+    );
+  },
+};
+
+/** The docs example custom-filter-ui: the filters in a panel of their own. */
+export const CustomFilterUi = {
+  name: 'Custom Filter UI',
+  render: () => <CustomFilterUiTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Hugh');
+    const input = canvas.getByRole('combobox', {
+      name: 'Filter by First Name',
+    });
+    await userEvent.type(input, 'Le');
+    await waitFor(() => expect(exampleRows(canvasElement)).toHaveLength(1));
+    expect(exampleRows(canvasElement)[0]).toHaveTextContent('Leroy');
   },
 };
