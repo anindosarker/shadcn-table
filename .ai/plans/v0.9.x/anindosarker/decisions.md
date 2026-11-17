@@ -79,6 +79,8 @@ kanban-plugin: basic
 	- Not part of this: a "Did you mean" suggestion.
 	- Owner recorded 2026-11-17.
 	- Source: Q110
+- [ ] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #R6
+	- Source: Q100
 
 ## In progress
 
