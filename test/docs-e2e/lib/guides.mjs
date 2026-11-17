@@ -458,10 +458,23 @@ const checks = {
   '/docs/guides/click-to-copy': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
-    const w = await example(page, 'enable-click-to-copy', check);
+    // The Example section's story turns click to copy on for the whole
+    // table: every cell of the first row holds a copy button.
+    const w = page.locator('article h2#example ~ [data-example]').first();
+    const cells = w.locator('table tbody tr').first().locator('td');
+    await cells
+      .first()
+      .waitFor({ timeout: 30000 })
+      .catch(() => {});
+    const copy = await w
+      .locator('table tbody tr')
+      .first()
+      .locator('td:has(button)')
+      .count();
     check(
-      'enable-click-to-copy: copy buttons in cells',
-      (await count(w, 'table tbody button')) > 0,
+      'click to copy example: a copy button in every cell',
+      copy > 0 && copy === (await cells.count()),
+      `copy=${copy} cells=${await cells.count()}`,
     );
   },
 
