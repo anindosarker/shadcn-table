@@ -40,8 +40,6 @@ kanban-plugin: basic
 	- Spec 56 (E14, D106): story pages under More examples start with the table and the Storybook button only, no text. The spec lists them in the sitemap, the docs search and the llms output like the 42 example pages; no noindex or exclusion. About 600 pages. Raised by the docs session with SPECS E14, 2026-11-17.
 	- Owner, 2026-11-17: the story pages are meant to get text (D106). Lead: E14 is not released, so no textless page is live; this does not block the E14 go. It matters only if a release ships before the story page text is written.
 	- Owner, 2026-11-17: 'The epic should contain a stage where the texts are also written.' So E14 writes the story page text; spec 56 has no such milestone yet. E14 go held until the spec has it. Open: which text each story page gets.
-- [ ] **Q93** No docs example has an exact story, so all 42 need a new one
-	- reference/docs-layout/story-pairing-audit.md lists 1 to 3: exact 0, close 34, no partner 8 (minimal, advanced, export-csv, export-pdf, custom-filter-ui, react-query, remote, dynamic-columns). Spec 56 1.3 assumed 33 linked pages and 9 without a story. Resulting count: 652 - 59 + 42 - 42 = 593 story pages. Found by the run's audit milestone, recounted by its verifier.
 - [ ] **Q94** An example shown twice on a guide page still has the same id in the page source until the page has loaded
 	- apps/shadcn-table-docs/components/example-playground.tsx (useExampleId, merged 2a509c87 on v0.9/docs-layout): the second mount gets a different id only after hydration; the served HTML of /docs/guides/virtualization-new-format-3 carries id="example-enable-row-virtualization" twice. D105 says the id must not repeat; the spec 55 check (hydrated DOM, no duplicate) passes. Keep (unique after load) or require unique ids in the served HTML. Found by the run's reviewer, measured with curl on a production build.
 - [ ] **Q95** Two story group names were chosen by the builder where D106 gives no example
@@ -299,6 +297,8 @@ kanban-plugin: basic
 	- Tested 2026-11-16, headless Chromium Pixel 7 emulation with CDP touch events on storybook.shadcn-table.com (base, radix, aria): column resize works (180 to 260 px, no page scroll); range slider thumb moves (30 to 40); column reorder by grip or header fires dragstart/drop but the order never changes; row reorder never starts a drag (pointercancel). Same script with a mouse reorders columns and rows, so the harness is valid. Emulation only, no real iOS or Android device.
 - [ ] **Q92** The story audit finds 59 copied stories to merge, not the 2 the plan assumed #D110
 	- reference/docs-layout/story-pairing-audit.md list 4: 80 rows in 59 same-table groups; under the strict rule of spec 56 1.6.3 (merge when the copied story has no check of its own) 59 copies merge, 54 moving a play and 5 with no play; 12 stories would each take two or more plays. Spec 56 1.3 assumed 24 pairs and 2 merges. Found by the run's audit milestone, recounted by its verifier.
+- [ ] **Q93** No docs example has an exact story, so all 42 need a new one #D111
+	- reference/docs-layout/story-pairing-audit.md lists 1 to 3: exact 0, close 34, no partner 8 (minimal, advanced, export-csv, export-pdf, custom-filter-ui, react-query, remote, dynamic-columns). Spec 56 1.3 assumed 33 linked pages and 9 without a story. Resulting count: 652 - 59 + 42 - 42 = 593 story pages. Found by the run's audit milestone, recounted by its verifier.
 
 ## Later
 

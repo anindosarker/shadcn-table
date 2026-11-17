@@ -16,6 +16,8 @@ kanban-plugin: basic
 	- Source: Q90
 - [ ] **D110** All 59 copied stories merge into the story they copy #R6
 	- Source: Q92
+- [ ] **D111** Each of the 42 docs examples gets a new exact story #R6
+	- Source: Q93
 
 ## In progress
 
