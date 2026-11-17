@@ -1,9 +1,8 @@
 # 55: Guide pages, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/guide-pages`, worktree 11
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 GuideExamples resolves story pages: planned
 - Task 2 site table: planned
@@ -14,3 +13,5 @@ Checks:
 - Task 7 checklist: planned
 - Task 8 removals judged: planned
 - Task 9 cleanup: planned
+
+## Attention
