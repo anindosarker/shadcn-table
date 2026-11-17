@@ -111,6 +111,8 @@ kanban-plugin: basic
 	- Source: Q102
 - [ ] **D125** Ticking a parent row ticks its sub-rows #R6
 	- Source: Q103
+- [ ] **D126** A column's resize grip can be dragged across its whole width #R6
+	- Source: Q104
 
 ## In progress
 
