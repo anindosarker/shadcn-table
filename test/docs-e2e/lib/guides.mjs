@@ -297,12 +297,23 @@ async function uniqueExampleIds(page, check, label) {
  * every other h2 of the guide, with one example playground between it and
  * the next heading; the playground's toolbar links its example page (one
  * example: the name; several: "Open example page" beside the picker).
+ * Between the heading and the playground stands nothing, or, on a guide of
+ * `EXPLAINERS` (D122), exactly the one explainer paragraph moved up with
+ * the removed lower table.
  * Returns the section's playground.
  */
-async function exampleSection(page, check) {
+async function exampleSection(page, check, explainer) {
   const info = await page.evaluate(() => {
     const heading = document.querySelector('article h2#example');
     if (!heading) return null;
+    const lead = [];
+    for (
+      let el = heading.nextElementSibling;
+      el && !el.matches('[data-example], h2, h3');
+      el = el.nextElementSibling
+    ) {
+      lead.push({ tag: el.tagName, text: el.textContent ?? '' });
+    }
     const headings = [...document.querySelectorAll('article :is(h2, h3)')];
     const next = headings[headings.indexOf(heading) + 1];
     const follows = (a, b) =>
@@ -313,6 +324,7 @@ async function exampleSection(page, check) {
     const link = panels[0]?.querySelector('header a[href^="/docs/examples/"]');
     return {
       firstH2: document.querySelector('article h2') === heading,
+      lead,
       panels: panels.length,
       href: link?.getAttribute('href') ?? '',
     };
@@ -320,6 +332,14 @@ async function exampleSection(page, check) {
   check('example section: h2 "Example"', info !== null);
   if (!info) return null;
   check('example section: first h2 of the guide', info.firstH2);
+  const lead = info.lead.map(({ tag, text }) => `${tag}:${text}`);
+  check(
+    explainer
+      ? 'example section: explainer line, then the playground'
+      : 'example section: playground right under the heading',
+    lead.join('|') === (explainer ? `P:${explainer}` : ''),
+    lead.join('|').slice(0, 120),
+  );
   check(
     'example section: one playground',
     info.panels === 1,
@@ -1192,6 +1212,20 @@ const checks = {
 };
 
 /*
+ * D122: the guides whose lower copy of the Example section's table was
+ * removed and whose explainer line moved up into the section, as rendered
+ * text.
+ */
+const EXPLAINERS = {
+  '/docs/guides/async-loading':
+    'Here is a copy of the full React Query example.',
+  '/docs/guides/pagination':
+    'Here is the full Remote Data example showing off server-side filtering, pagination, and sorting.',
+  '/docs/guides/scroll-cues':
+    'Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.',
+};
+
+/*
  * Every guide page opens with its Example section (spec 55, D105): its
  * checks run first, then the page's own, in page order.
  */
@@ -1199,7 +1233,7 @@ for (const [path, run] of Object.entries(checks)) {
   if (!/^\/docs\/guides\/[^/]+$/.test(path)) continue;
   if (path === '/docs/guides/server-side-data') continue;
   checks[path] = async (ctx) => {
-    await exampleSection(ctx.page, ctx.check);
+    await exampleSection(ctx.page, ctx.check, EXPLAINERS[path]);
     await run(ctx);
   };
 }
