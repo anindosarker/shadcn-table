@@ -1,4 +1,4 @@
-import { source } from '@/lib/source';
+import { sidebarTree } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
@@ -20,7 +20,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
       tabs={false}
       // the landing page's top bar (components/site-nav.tsx)
       slots={{ ...base.slots, header: SiteNav }}
-      tree={source.getPageTree()}
+      tree={sidebarTree()}
       sidebar={{
         // the header's SidebarCollapseButton toggles it (Cmd/Ctrl+B too)
         collapsible: true,
