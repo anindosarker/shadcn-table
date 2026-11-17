@@ -1,6 +1,6 @@
 # 60: Sticky header switch and resize grip, tracker
 
-Status: done
+Status: done (099bebd8)
 Branch `v0.9/sticky-header-resize-grip`, worktree 06
 Checks:
 
