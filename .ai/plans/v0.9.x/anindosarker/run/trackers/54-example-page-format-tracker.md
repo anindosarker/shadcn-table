@@ -16,6 +16,12 @@ Checks:
 - `pnpm test validate-repo` at 1dfd6c99: pass (40 unit tests, registry fresh, no tracked file changed)
 - `pnpm test docs-e2e --base base` at 3a74f49c: pass (110 pages; getting-started 262, api 111, guides 705, examples 1067 passed, 0 failed); server stopped. Bases radix and aria left to the verifier
 - Task 6 judges: run by the workflow
+- Verifier, at 3a74f49c (HEAD): not rerun, recorded green: lint and docs-e2e base (at HEAD); typecheck radix and validate-repo (1dfd6c99, since then only `test/docs-e2e/lib/examples.mjs`; CI is the second run); Task 5 step truth on all three bases (ac223e33, since then only the changelog and that test file)
+- Verifier `pnpm format` at 3a74f49c: no diff
+- Verifier Acceptance (1.2) programmatic at 3a74f49c, against `origin/v0.9/docs-layout...HEAD` (docs-layout moved to 6dba74da; merge base a65e2856): `--diff-filter=M` examples `*.mdx` 42 files, +568 -42, every deletion the StorybookLink line; registry `--stat` nothing; deleted only the six `-new-format` pages; `grep -c new-format` 0; `isPreviewPage|Format previews` nothing; `grep -L TryIt` and `grep -l StorybookLink` nothing; docs-e2e base green at HEAD (builder). Pass. Judges: by the workflow
+- Verifier `git merge-tree --write-tree origin/v0.9/docs-layout HEAD` (6dba74da): clean
+- Verifier `pnpm test docs-e2e --base radix` at 3a74f49c (port 5340): pass (110 pages; getting-started 262, api 111, guides 705, examples 1067 passed, 0 failed); server stopped
+- Verifier `pnpm test docs-e2e --base aria` at 3a74f49c (port 5340, after radix): pass (getting-started 262, api 111, guides 705, examples 1067 passed, 0 failed); server stopped
 
 - Task 1 site table: 87ea42fe (notes below; no file)
 - Task 2 comparison pages removed: 87ea42fe
