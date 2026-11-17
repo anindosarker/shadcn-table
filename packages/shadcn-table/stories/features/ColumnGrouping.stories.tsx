@@ -217,9 +217,10 @@ export const ColumnGroupingEnabledCustomAggregate = () => (
       },
       {
         AggregatedCell: ({ cell }) => (
-          <div className="text-red-500">{cell.renderValue() as string}</div>
+          <div className="text-red-500">Count: {cell.getValue<number>()}</div>
         ),
         accessorKey: 'gender',
+        aggregationFn: 'count',
         header: 'Gender',
         icon: VenusAndMarsIcon,
       },
@@ -950,6 +951,17 @@ const AriaRadioGroup = RadioGroup as unknown as ComponentType<{
   value: string;
 }>;
 
+/**
+ * The Radix and Base UI radio group takes `onValueChange`, which the React
+ * Aria one lacks.
+ */
+const RadixRadioGroup = RadioGroup as unknown as ComponentType<{
+  children?: ReactNode;
+  className?: string;
+  onValueChange: (value: string) => void;
+  value: string;
+}>;
+
 const DemoRadioGroup = ({
   groupedColumnMode,
   setGroupedColumnMode,
@@ -994,13 +1006,13 @@ const DemoRadioGroup = ({
   return (
     <div className="mx-auto text-center">
       <Label>Grouped Column Mode</Label>
-      <RadioGroup
+      <RadixRadioGroup
         className="flex"
         onValueChange={onChange}
         value={String(groupedColumnMode)}
       >
         {items}
-      </RadioGroup>
+      </RadixRadioGroup>
     </div>
   );
 };

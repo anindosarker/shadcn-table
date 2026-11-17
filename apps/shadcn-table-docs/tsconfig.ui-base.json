@@ -1,7 +1,7 @@
 // The base copy of the library, its example variants and its story copies,
 // checked in a program of their own by `types:bases` (`types:check` and
-// `build`): see tsconfig.build.json. The React Aria story copies are not
-// type-checked (lib/story-variants.mjs).
+// `build`): see tsconfig.build.json. The React Aria story copies are checked
+// by tsconfig.ui-aria.json.
 {
   "extends": "./tsconfig.json",
   "include": [

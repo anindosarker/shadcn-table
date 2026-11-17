@@ -339,7 +339,7 @@ export const SelectCheckboxSecondaryColor = () => (
     enableRowSelection
     stSelectCheckboxProps={{
       className:
-        'data-[state=checked]:border-secondary data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground',
+        'data-checked:border-secondary data-checked:bg-secondary data-checked:text-secondary-foreground dark:data-checked:bg-secondary data-selected:border-secondary data-selected:bg-secondary data-selected:text-secondary-foreground dark:data-selected:bg-secondary',
     }}
   />
 );
