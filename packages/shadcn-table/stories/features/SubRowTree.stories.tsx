@@ -304,3 +304,107 @@ export const ExpandAllCollapseAll = {
     );
   },
 };
+
+/** The select control (checkbox or radio) of each body row, in order. */
+const selectControls = (canvasElement: HTMLElement) =>
+  [
+    ...canvasElement.querySelectorAll<HTMLElement>(
+      'tbody td[data-flip-column="st-row-select"]',
+    ),
+  ].map(
+    (cell) =>
+      within(cell).queryByRole('checkbox') ?? within(cell).getByRole('radio'),
+  );
+
+/**
+ * Opens the first parent row that has sub-rows and returns its index and the
+ * number of its direct sub-rows, which then sit right under it.
+ */
+const expandFirstParent = async (canvasElement: HTMLElement) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const index = data.findIndex((person) => person.subRows.length > 0);
+  const count = data[index]!.subRows.length;
+  const parent =
+    canvasElement.querySelectorAll<HTMLElement>('tbody tr')[index]!;
+  await userEvent.click(within(parent).getByRole('button', { name: 'Expand' }));
+  await waitFor(() =>
+    expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(
+      data.length + count,
+    ),
+  );
+  return { count, index };
+};
+
+const isChecked = (control: HTMLElement) =>
+  control.matches(':checked, [aria-checked="true"], [data-checked]');
+
+/** The checked state of the parent and of each of its direct sub-rows. */
+const parentAndSubRows = (
+  canvasElement: HTMLElement,
+  index: number,
+  count: number,
+) =>
+  selectControls(canvasElement)
+    .slice(index, index + count + 1)
+    .map(isChecked);
+
+// Ticking a parent ticks its sub-rows, unticking it unticks them, and ticking
+// the last unticked sub-row ticks the parent (D125).
+SubRowTreeWithSelection.play = async ({ canvasElement }: StoryContext) => {
+  const { count, index } = await expandFirstParent(canvasElement);
+  await userEvent.click(selectControls(canvasElement)[index]!);
+  await waitFor(() =>
+    expect(parentAndSubRows(canvasElement, index, count)).toEqual(
+      Array(count + 1).fill(true),
+    ),
+  );
+  await userEvent.click(selectControls(canvasElement)[index]!);
+  await waitFor(() =>
+    expect(parentAndSubRows(canvasElement, index, count)).toEqual(
+      Array(count + 1).fill(false),
+    ),
+  );
+  for (let child = 1; child <= count; child++) {
+    await userEvent.click(selectControls(canvasElement)[index + child]!);
+    await waitFor(() =>
+      expect(parentAndSubRows(canvasElement, index, count)).toEqual([
+        child === count,
+        ...Array.from({ length: count }, (_, i) => i < child),
+      ]),
+    );
+  }
+};
+
+// Without sub-row selection, ticking a parent ticks that row alone.
+SubRowTreeWithSelectionNoSubRowSelection.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const { count, index } = await expandFirstParent(canvasElement);
+  await userEvent.click(selectControls(canvasElement)[index]!);
+  await waitFor(() =>
+    expect(parentAndSubRows(canvasElement, index, count)).toEqual([
+      true,
+      ...Array(count).fill(false),
+    ]),
+  );
+};
+
+// Single selection: one row at a time, a parent included.
+SubRowTreeWithSingleSelection.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const { count, index } = await expandFirstParent(canvasElement);
+  await userEvent.click(selectControls(canvasElement)[index + 1]!);
+  await waitFor(() =>
+    expect(selectControls(canvasElement).map(isChecked)).toEqual(
+      selectControls(canvasElement).map((_, i) => i === index + 1),
+    ),
+  );
+  await userEvent.click(selectControls(canvasElement)[index]!);
+  await waitFor(() =>
+    expect(parentAndSubRows(canvasElement, index, count)).toEqual([
+      true,
+      ...Array(count).fill(false),
+    ]),
+  );
+};

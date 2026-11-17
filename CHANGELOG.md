@@ -22,6 +22,11 @@ publishes the section as the GitHub release notes.
 - `enableStickyHeader` sets how the table starts; the `Sticky header` switch in `View settings` then turns the sticky header off and on, also when the option is `true`. Full screen still keeps the header sticky (D120).
 - A column's resize grip starts a drag from anywhere on it, its right half included, on pinned and sticky header cells too; the hairline is drawn at the same pixel as before (D126).
 
+#### Spec 60 Sub-row selection and copy button
+
+- Ticking a parent row ticks all its sub-rows, unticking it unticks them, and ticking the last unticked sub-row ticks the parent; before, ticking a parent left its sub-rows unticked (D125).
+- The Click to copy button stays inside a narrow cell and truncates its text, and hovering it shows "Click to copy" instead of the cell's overflow tooltip on Base UI, Radix UI and React Aria (D127).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
