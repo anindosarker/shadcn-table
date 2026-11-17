@@ -42,15 +42,6 @@ kanban-plugin: basic
 	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
 	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
 	- Source: Q94
-- [ ] **D114** The column pinning example locks the ID column with the option that works #E15 #R6
-	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
-	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
-	- Source: Q98
-- [ ] **D115** The chart detail panel and editing stories match their examples exactly #E15 #R6
-	- Settled by the lead: D106 says the story is the same table as the example.
-	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
-	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
-	- Source: Q99
 - [ ] **D116** Story pages no longer triple the size of the docs build #E15 #R6
 	- Settled by the lead: a build problem, not an owner item.
 	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
@@ -74,15 +65,6 @@ kanban-plugin: basic
 	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
 	- Owner recorded 2026-11-18.
 	- Source: Q112
-- [ ] **D124** The first line above each Storybook story reads View documentation for this example #E15 #R6
-	- The three lines above every story, in this order:
-	-   1. View documentation for this example
-	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
-	-   3. View Source code for these examples in the code tab below or here on GitHub.
-	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
-	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
-	- Owner's wording, recorded 2026-11-18.
-	- Source: Q102
 - [ ] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
 	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
 	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
@@ -776,6 +758,15 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D114** The column pinning example locks the ID column with the option that works #E15 #R6
+	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
+	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
+	- Source: Q98
+- [x] **D115** The chart detail panel and editing stories match their examples exactly #E15 #R6
+	- Settled by the lead: D106 says the story is the same table as the example.
+	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
+	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
+	- Source: Q99
 - [x] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
 	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
 	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
@@ -825,6 +816,15 @@ kanban-plugin: basic
 	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
 	- Owner recorded 2026-11-18.
 	- Source: Q100
+- [x] **D124** The first line above each Storybook story reads View documentation for this example #E15 #R6
+	- The three lines above every story, in this order:
+	-   1. View documentation for this example
+	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
+	-   3. View Source code for these examples in the code tab below or here on GitHub.
+	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
+	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
+	- Owner's wording, recorded 2026-11-18.
+	- Source: Q102
 - [x] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
 	- Settled by the lead: a bug with one right behaviour, the one MRT has.
 	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
