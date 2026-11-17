@@ -72,6 +72,12 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-17.
 	- Source: Q97
 - [ ] **D121** A wrong address on the docs site shows our own 404 page #R6
+	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
+	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
+	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
+	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
+	- Not part of this: a "Did you mean" suggestion.
+	- Owner recorded 2026-11-17.
 	- Source: Q110
 
 ## In progress
