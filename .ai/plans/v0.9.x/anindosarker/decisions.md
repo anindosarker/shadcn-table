@@ -64,6 +64,12 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-17.
 	- Source: Q108
 - [ ] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #R6
+	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
+	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
+	- Full screen still forces the sticky header on, as today.
+	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
+	- All three bases alike. MRT has no such switch.
+	- Owner recorded 2026-11-17.
 	- Source: Q97
 
 ## In progress
