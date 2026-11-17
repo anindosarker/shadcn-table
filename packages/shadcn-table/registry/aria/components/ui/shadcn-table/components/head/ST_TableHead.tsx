@@ -31,11 +31,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
 }: ST_TableHeadProps) => {
   const table = useSTContext<TData>();
   const {
-    options: {
-      layoutMode,
-      stTableHeadProps,
-      positionToolbarAlertBanner,
-    },
+    options: { layoutMode, stTableHeadProps, positionToolbarAlertBanner },
     refs: { tableHeadRef },
   } = table;
 

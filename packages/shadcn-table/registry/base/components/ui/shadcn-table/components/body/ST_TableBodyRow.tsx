@@ -234,9 +234,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        (stickyHeader || isFullScreen
-                          ? tableHeadHeight - 1
-                          : 0)
+                        (stickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
                       }px`
                     : undefined,
                 bottom:
