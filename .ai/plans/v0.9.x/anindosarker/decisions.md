@@ -28,6 +28,8 @@ kanban-plugin: basic
 	- Source: Q99
 - [ ] **D116** Story pages no longer triple the size of the docs build #R6
 	- Source: Q101
+- [ ] **D117** The guide Example section sits right after the first intro paragraph #R6
+	- Source: Q105
 
 ## In progress
 
