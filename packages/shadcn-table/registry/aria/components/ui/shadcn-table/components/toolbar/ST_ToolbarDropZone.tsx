@@ -51,8 +51,13 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   };
 
   // An accepted drop, so the dragend that follows is not read as cancelled.
+  // The zone marks itself again: the column auto-scroll keeps hovering the
+  // header last under the pointer while the table scrolls.
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
+    if (table.atoms.hoveredColumn.get()?.id !== 'drop-zone') {
+      setHoveredColumn({ id: 'drop-zone' });
+    }
     if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
   };
 
