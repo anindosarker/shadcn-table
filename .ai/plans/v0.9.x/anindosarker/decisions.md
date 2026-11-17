@@ -14,11 +14,6 @@ kanban-plugin: basic
 	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
-- [ ] **D112** Story group names with no example in D106 follow its Title Case rule #R6
-	- Settled by the lead: D106's naming rule (Title Case with spaces) applied where D106 gives no example.
-	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
-	- Kept as built in E14.
-	- Source: Q95
 - [ ] **D113** An example shown twice on a page has different ids in the served HTML too #R6
 	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
 	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
@@ -738,6 +733,11 @@ kanban-plugin: basic
 	- The audit found exact 0, close 34, no partner 8, so all 42 examples get a new story. Story pages under More examples: 593.
 	- Kept as built in E14.
 	- Source: Q93
+- [x] **D112** Story group names with no example in D106 follow its Title Case rule #R6
+	- Settled by the lead: D106's naming rule (Title Case with spaces) applied where D106 gives no example.
+	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
+	- Kept as built in E14.
+	- Source: Q95
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
