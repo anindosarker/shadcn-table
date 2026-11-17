@@ -18,6 +18,8 @@ kanban-plugin: basic
 	- Source: Q92
 - [ ] **D111** Each of the 42 docs examples gets a new exact story #R6
 	- Source: Q93
+- [ ] **D112** Story group names with no example in D106 follow its Title Case rule #R6
+	- Source: Q95
 
 ## In progress
 
