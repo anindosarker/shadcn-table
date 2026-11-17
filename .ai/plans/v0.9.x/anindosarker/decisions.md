@@ -38,6 +38,8 @@ kanban-plugin: basic
 	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
 	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
 	- Source: Q105
+- [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #R6
+	- Source: Q96
 
 ## In progress
 
