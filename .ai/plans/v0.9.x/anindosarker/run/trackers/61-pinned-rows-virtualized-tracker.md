@@ -16,6 +16,10 @@ Checks:
 - `pnpm test storybook-tests --base base`, cd3eb075: 652 passed
 - `pnpm test storybook-tests --base radix`, cd3eb075: 652 passed
 - `pnpm test storybook-tests --base aria`, cd3eb075: 652 passed
+- Verifier, cd3eb075: lint, validate-repo, storybook-tests base/radix/aria recorded at HEAD, not rerun
+- Verifier, cd3eb075: `pnpm test typecheck --base base|radix|aria` rerun (an mdx file changed after 9fb9bff0): tsc clean on all three
+- Verifier, cd3eb075, Acceptance (1.2) rerun: `ST_BASE=<b> vitest run stories/features/RowPinning.stories.tsx` base, radix, aria each 18 passed (incl. `Row Pinning Sticky With Virtualization`, `PinRowSticky`, `PinRowTopMode`, `UnpinRow`); pre-fix failure recorded at afc48d1e (P11); all Acceptance commands green at HEAD
+- Verifier: origin/claude/review is at d8a67b87 (plan-only commits past c520d014); `git merge-tree` HEAD with it: clean
 
 - Task 1 The play first: afc48d1e
 - Task 2 Pinned rows stay rendered and placed: 9fb9bff0
