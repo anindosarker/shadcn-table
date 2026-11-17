@@ -27,6 +27,7 @@ Checks:
 - Check: production build at 49cbea14 (`.next` removed first), measured without the build cache (spec 59 1.2): `du -sm -I cache .next` 582 MB (at most 900: pass; `.next` 1096 with `.next/cache` 514), `du -sm .next/server/app/docs/examples/more` 245 MB (at most 250: pass)
 - Check: merge 6ec25203 of the branch onto origin/v0.9/docs-layout 92d314ac (specs 57 and 58 merged): `pnpm test typecheck --base radix` pass, `pnpm test lint` pass (0 errors, 9 warnings), `pnpm test validate-repo` pass (596 story pages, 40 unit tests), tree clean
 - Check: production build of 6ec25203: `du -sm -I cache .next` 582 MB (pass), `more` 245 MB (pass); `next start` on 5341: `/nope` and `/docs/examples/sticky-heder` 404, virtualization guide carries `guide-example-enable-row-virtualization` once and no repeated id; `pnpm test docs-e2e --base base --url http://localhost:5341`: getting-started 265/0, api 111/0, guides 1020/0, examples 1107/0, site 58/0; server stopped
+- Check (verifier): HEAD 6ec25203 = origin/v0.9/docs-layout; Local CI (typecheck radix, lint, validate-repo, docs-e2e base all sections) and Acceptance 1.2 (404s, example id, `.next` without cache 582 MB, `more` 245 MB) all recorded at 6ec25203; nothing rerun
 - Merge: 6ec25203 `merge: Lighter story pages (59)` pushed to v0.9/docs-layout; branch deleted local and remote
 
 - Task 1 Baseline and measurement: done (e0700242, no commit)
