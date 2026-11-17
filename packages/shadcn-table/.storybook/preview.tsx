@@ -11,6 +11,8 @@ import {
   ST_OTHER_BASES,
   staticBaseRoot,
 } from './themes';
+// The docs app's map of example pages to their exact stories, read as text.
+import storybookMapSource from '../../../apps/shadcn-table-docs/lib/storybook-map.ts?raw';
 // Resolved inside the tree ST_BASE selects (vite.config.ts).
 import '@/index.css';
 import './preview.css';
@@ -29,6 +31,34 @@ function storiesGitHubUrl(title: string) {
   const slash = title.indexOf('/');
   if (slash === -1) return STORIES_GITHUB_ROOT;
   return `${STORIES_GITHUB_ROOT}/${title.slice(0, slash).toLowerCase()}`;
+}
+
+const DOCS_ORIGIN = 'https://www.shadcn-table.com';
+
+/**
+ * Story id to example page slug: the `'<slug>': '<story id>'` lines of
+ * `storybookStoryId` in apps/shadcn-table-docs/lib/storybook-map.ts, the one
+ * hand-kept list (spec 56, D106).
+ */
+const exampleSlugs = (() => {
+  const body = storybookMapSource.slice(
+    storybookMapSource.indexOf('storybookStoryId'),
+  );
+  const block = body.slice(body.indexOf('{') + 1, body.indexOf('};'));
+  return new Map(
+    [...block.matchAll(/^\s*'?([\w-]+)'?:\s*'([^']+)',?\s*$/gm)].map(
+      (match) => [match[2]!, match[1]!],
+    ),
+  );
+})();
+
+/**
+ * A story's docs page: the example page of an exact story, else its page
+ * under More examples, /docs/examples/more/<story id> (spec 56, 1.6.6).
+ */
+function docsPageUrl(id: string) {
+  const slug = exampleSlugs.get(id);
+  return `${DOCS_ORIGIN}/docs/examples/${slug ?? `more/${id}`}`;
 }
 
 /** Apply the Tailwind v4 `.dark` variant root class to the preview <html>. */
@@ -125,19 +155,19 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story, { title }) => {
+    (Story, { id, title }) => {
       useStorybookDarkMode();
       return (
         <div className="bg-background p-4 text-foreground">
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
-            Looking for the main docs site? Click{' '}
+            This story on the docs site:{' '}
             <a
-              href="https://shadcn-table.com"
+              href={docsPageUrl(id)}
               target="_blank"
               rel="noopener"
               className="underline"
             >
-              here.
+              {docsPageUrl(id).slice('https://www.'.length)}
             </a>
           </p>
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
