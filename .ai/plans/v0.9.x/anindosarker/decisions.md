@@ -39,6 +39,16 @@ kanban-plugin: basic
 	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
 	- Source: Q105
 - [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #R6
+	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
+	- The steps, four in all:
+	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
+	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
+	-   3. Remove the filter. All five rows return.
+	-   4. Open search and type `Ohio`. One row remains.
+	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
+	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
+	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
+	- Owner recorded 2026-11-17.
 	- Source: Q96
 
 ## In progress
