@@ -13,6 +13,7 @@ import {
   type TableBodyProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { getPinnedStackOverflows } from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
 import { ST_OverflowTooltipProvider } from '@/components/ui/shadcn-table/components/body/ST_OverflowText';
 import { ST_TableBodyRow } from '@/components/ui/shadcn-table/components/body/ST_TableBodyRow';
 import { useSTContext } from '@/components/ui/shadcn-table/context/ST_TableContext';
@@ -81,12 +82,22 @@ export const ST_TableBody = <TData extends ST_RowData>({
   // A sticky pinned virtual row leaves the absolute layout: it sits in its
   // own grid track at its offset in the list, so the browser keeps it stuck
   // between the head and the foot as it does a row without virtualization.
+  // A stack higher than the scroll container keeps the absolute layout, as
+  // the virtualizer then keeps no pinned row outside its range.
+  const pinnedStackOverflows =
+    !!rowVirtualizer &&
+    getPinnedStackOverflows({
+      pinnedCount: pinnedRowIds.length,
+      rowHeight: rowVirtualizer.options.estimateSize(0),
+      table,
+    });
   const stickyPinnedTracks = useMemo(() => {
     if (
       !virtualRows ||
       !enableRowPinning ||
       !rowPinningDisplayMode?.includes('sticky') ||
-      !pinnedRowIds.length
+      !pinnedRowIds.length ||
+      pinnedStackOverflows
     ) {
       return undefined;
     }
@@ -108,6 +119,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
   }, [
     enableRowPinning,
     pinnedRowIds,
+    pinnedStackOverflows,
     renderDetailPanel,
     rowPinningDisplayMode,
     rows,

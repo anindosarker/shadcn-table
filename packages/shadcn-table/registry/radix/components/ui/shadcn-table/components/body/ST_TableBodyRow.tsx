@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getIsRowSelected } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { getPinnedStackOverflows } from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
 import { ST_TableBodyCell } from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
 import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/body/ST_TableDetailPanel';
 
@@ -76,7 +77,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       renderDetailPanel,
       rowPinningDisplayMode,
     },
-    refs: { tableContainerRef, tableFooterRef, tableHeadRef },
+    refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
   } = table;
 
@@ -195,12 +196,11 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
         // With more sticky pinned rows than the scrollport holds, the bottom
         // inset pulls a row up over the head. Dropping it keeps the row at its
         // flow position below the head, sticking at the top inset on scroll.
-        const pinnedStackOverflows =
-          !!pinnedRowIds &&
-          pinnedRowIds.length * rowHeight +
-            (tableHeadRef.current?.clientHeight || 0) +
-            tableFooterHeight >
-            (tableContainerRef.current?.clientHeight ?? Infinity);
+        const pinnedStackOverflows = getPinnedStackOverflows({
+          pinnedCount: pinnedRowIds?.length ?? 0,
+          rowHeight,
+          table,
+        });
 
         const isSticky =
           !!rowPinningDisplayMode?.includes('sticky') && !!isRowPinned;

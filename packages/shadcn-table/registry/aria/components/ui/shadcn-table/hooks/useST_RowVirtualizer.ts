@@ -8,7 +8,10 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { extraIndexRangeExtractor } from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
+import {
+  extraIndexRangeExtractor,
+  getPinnedStackOverflows,
+} from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
 
 export const useST_RowVirtualizer = <
   TData extends ST_RowData,
@@ -65,19 +68,35 @@ export const useST_RowVirtualizer = <
     [realRows, draggingRowId],
   );
 
-  // Sticky pinned rows stay rendered wherever the scroll is, so they can
-  // stay in view at the top or the bottom of the body.
-  const pinnedRowIndexes = useMemo(() => {
-    if (!rowPinning?.top?.length && !rowPinning?.bottom?.length) return [];
-    return realRows.flatMap((row, index) =>
-      row.getIsPinned() ? [renderDetailPanel ? index * 2 : index] : [],
-    );
-  }, [realRows, renderDetailPanel, rowPinning]);
-
   const rowCount = realRows.length;
 
   const normalRowHeight =
     density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56;
+
+  const pinnedRows = useMemo(
+    () =>
+      rowPinning?.top?.length || rowPinning?.bottom?.length
+        ? realRows.flatMap((row, index) => (row.getIsPinned() ? [index] : []))
+        : [],
+    [realRows, rowPinning],
+  );
+
+  // Sticky pinned rows stay rendered wherever the scroll is, so they can
+  // stay in view at the top or the bottom of the body. When they stack
+  // higher than the scroll container holds (Select all in select-sticky
+  // mode pins every row), they are not kept, so the table stays virtualized.
+  const pinnedStackOverflows = getPinnedStackOverflows({
+    pinnedCount: pinnedRows.length,
+    rowHeight: rowVirtualizerProps?.estimateSize?.(0) ?? normalRowHeight,
+    table,
+  });
+  const pinnedRowIndexes = useMemo(
+    () =>
+      pinnedStackOverflows
+        ? []
+        : pinnedRows.map((index) => (renderDetailPanel ? index * 2 : index)),
+    [pinnedRows, pinnedStackOverflows, renderDetailPanel],
+  );
 
   const rangeExtractor = useCallback(
     (range: Range) =>
