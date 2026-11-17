@@ -319,6 +319,14 @@ sidebarTitle: 'Aggregation Default'
 - Task 3: The checklist (1.6.7), written by `node lib/story-text-checklist.mjs`. Checks: one line per page file, in the order of `more/meta.json`; a second run changes nothing
 - Task 4: Cleanup: `pnpm format`, the changelog block. Checks: 2.2; `pnpm --filter shadcn-table-docs build` passes
 
+### Milestone: Story pages review fixes
+
+- Files owned: `test/docs-e2e/lib/examples.mjs`, `test/docs-e2e/run.mjs`, `test/validate-repo/run.mjs`, `test/storybook-static/run.mjs`, `CONTRIBUTING.md`, `apps/shadcn-table-docs/lib/story-pages.mjs`, `apps/shadcn-table-docs/lib/story-variants.mjs`, `apps/shadcn-table-docs/next.config.mjs`, `packages/shadcn-table/.storybook/preview.tsx`, `packages/shadcn-table/stories/features/FilterChips.stories.tsx`, `packages/shadcn-table/stories/features/HeaderGroups.stories.tsx`, `packages/shadcn-table/stories/features/ViewSettings.stories.tsx`, `packages/shadcn-table/stories/miscellaneous/PinnedItemsCustomToolbar.stories.tsx`
+- Depends on: Filtering, Storybook reset, Persistent view page size, Stored view page size, CRUD dialog check waits for the rows, Icon library select, Page index play, Canonical and slash redirect, Security headers, Page frame and new pages, Bundle analyzer wrap, Registry fresh check, Filter editor fixes, React Aria filter popups modal again (D97), Preview lands on review, Example page format, Story group names, Story pages in the docs
+- Review: none
+- Starts: S20
+- Task 1: Story pages review fixes. Checks: pnpm test typecheck --base radix, pnpm test lint, pnpm test validate-repo, pnpm test storybook-static --base base, pnpm test storybook-tests --base base, pnpm test docs-e2e --base base
+
 ### 2.2 Checks
 
 - `pnpm test storybook-tests --base base|radix|aria`, `pnpm test storybook-static --base base`, `pnpm test typecheck --base base|radix|aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base|radix|aria` green; every server stopped
