@@ -10,7 +10,12 @@ kanban-plugin: basic
 	- Fixed as a hotfix on `v0.9/docs-layout`, merge bb8eec7a: the script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 	- Source: Q111
 - [ ] **D134** Pinned virtual rows are sticky rows in their own grid track #R6
+	- Settled by the lead: a build deviation that keeps D128.
+	- Spec 61 described absolute rows with a clamped offset; built as `position: sticky` in a grid track of their own (`ST_TableBody.tsx:84`, new optional prop `stickyGridRow` on `ST_TableBodyRowProps`), because an absolute row placed from the scroll offset lags and jumps.
+	- Kept as built (ee1c2837 on `claude/review`): play green on three bases, 0 jumps in the scroll measurement. Spec 61 1.5 and 1.6.3 are read with this decision.
 	- Source: Q119
+- [ ] **D135** The three renamed example pages rename the titles of their registry items too #R6
+	- Source: Q120
 
 ## In progress
 
