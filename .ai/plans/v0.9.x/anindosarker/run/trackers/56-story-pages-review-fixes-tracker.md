@@ -13,6 +13,16 @@ Checks:
 - `pnpm test storybook-static --base base` at c1845265: pass
 - `pnpm test storybook-tests --base base` at c1845265: pass (636)
 - `pnpm test docs-e2e --base base` at c1845265: pass (examples 1101 passed, 0 failed; the five More examples state checks pass)
+- Verifier (56-fixes), all at c1845265; base-base runs above are at HEAD and not rerun:
+  - `pnpm test typecheck --base base`: pass (verifier)
+  - `pnpm test typecheck --base aria`: pass (verifier)
+  - `pnpm test storybook-tests --base radix`: pass, 636 (verifier)
+  - `pnpm test storybook-tests --base aria`: pass, 636 (verifier)
+  - `pnpm test docs-e2e --base radix`: first run 1 fail, getting-started "theme: Shift+R returns to the default" (P5 known flake under load); rerun once: pass, examples 1101 passed, 0 failed (verifier)
+  - `pnpm test docs-e2e --base aria`: pass, examples 1101 passed, 0 failed (verifier)
+  - Acceptance 1.2 parity check (1.6.5): covered by `validate-repo` and `storybook-static --base base` green at HEAD
+  - Acceptance 1.2 toolbar ids: all 42 entries of `apps/shadcn-table-docs/lib/storybook-map.ts` are story entries in `storybook-static/base/index.json`, one per example page, no duplicates (verifier); the audit lists no exact pairs (it predates the new stories), so the map is the exact-pair list checked
+  - Every server started was stopped (verifier)
 
 - Task 1 Story pages review fixes: done (c1845265)
 
