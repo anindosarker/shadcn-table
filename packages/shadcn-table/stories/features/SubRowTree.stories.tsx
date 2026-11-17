@@ -92,9 +92,17 @@ const data = [...Array(5)].map(() => ({
   })),
 }));
 
-export const SubRowTreeEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} enableExpanding />
-);
+export const SubRowTreeEnabledDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} enableExpanding />,
+  play: async (context: StoryContext) => {
+    await context.step('ExpandAllCollapseAll', () =>
+      expandAllCollapseAll(context),
+    );
+    await context.step('ExpandShowsChildren', () =>
+      expandShowsChildren(context),
+    );
+  },
+};
 
 export const SubRowTreeLayoutGrid = () => (
   <ShadcnTable
@@ -259,48 +267,40 @@ const rowFirstNames = (canvasElement: HTMLElement) =>
   ].map((cell) => (cell.textContent ?? '').trim());
 
 /** Expanding a parent row shows its direct children right under it. */
-export const ExpandShowsChildren = {
-  render: () => <SubRowTreeEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    expect(rowFirstNames(canvasElement)).toEqual(
-      data.map((person) => person.firstName),
-    );
-    const index = data.findIndex((person) => person.subRows.length > 0);
-    const parent =
-      canvasElement.querySelectorAll<HTMLElement>('tbody tr')[index]!;
-    await userEvent.click(
-      within(parent).getByRole('button', { name: 'Expand' }),
-    );
-    const children = data[index]!.subRows.map((child) => child.firstName);
-    await waitFor(() =>
-      expect(rowFirstNames(canvasElement)).toEqual([
-        ...data.slice(0, index + 1).map((person) => person.firstName),
-        ...children,
-        ...data.slice(index + 1).map((person) => person.firstName),
-      ]),
-    );
-  },
+const expandShowsChildren = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  expect(rowFirstNames(canvasElement)).toEqual(
+    data.map((person) => person.firstName),
+  );
+  const index = data.findIndex((person) => person.subRows.length > 0);
+  const parent =
+    canvasElement.querySelectorAll<HTMLElement>('tbody tr')[index]!;
+  await userEvent.click(within(parent).getByRole('button', { name: 'Expand' }));
+  const children = data[index]!.subRows.map((child) => child.firstName);
+  await waitFor(() =>
+    expect(rowFirstNames(canvasElement)).toEqual([
+      ...data.slice(0, index + 1).map((person) => person.firstName),
+      ...children,
+      ...data.slice(index + 1).map((person) => person.firstName),
+    ]),
+  );
 };
 
 /** Expand all opens every level in tree order; collapse all closes them. */
-export const ExpandAllCollapseAll = {
-  render: () => <SubRowTreeEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByText(data[0].firstName);
-    const flat = (nodes: Node[]): string[] =>
-      nodes.flatMap((node) => [node.firstName, ...flat(node.subRows ?? [])]);
-    await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
-    // Expanded rows paginate: the first page holds the first ten in order.
-    await waitFor(() =>
-      expect(rowFirstNames(canvasElement)).toEqual(flat(data).slice(0, 10)),
-    );
-    await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
-    await waitFor(() =>
-      expect(rowFirstNames(canvasElement)).toEqual(
-        data.map((person) => person.firstName),
-      ),
-    );
-  },
+const expandAllCollapseAll = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByText(data[0].firstName);
+  const flat = (nodes: Node[]): string[] =>
+    nodes.flatMap((node) => [node.firstName, ...flat(node.subRows ?? [])]);
+  await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+  // Expanded rows paginate: the first page holds the first ten in order.
+  await waitFor(() =>
+    expect(rowFirstNames(canvasElement)).toEqual(flat(data).slice(0, 10)),
+  );
+  await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+  await waitFor(() =>
+    expect(rowFirstNames(canvasElement)).toEqual(
+      data.map((person) => person.firstName),
+    ),
+  );
 };
