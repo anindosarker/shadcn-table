@@ -1,7 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -156,4 +156,81 @@ StickyHeaderShorterTable.play = async ({ canvasElement }: StoryContext) => {
       ),
     ).toBeLessThanOrEqual(1),
   );
+};
+
+const isStuck = (canvasElement: HTMLElement) => {
+  const thead = canvasElement.querySelector<HTMLElement>('thead')!;
+  const th = thead.querySelector<HTMLElement>('th')!;
+  return (
+    getComputedStyle(thead).position === 'sticky' ||
+    getComputedStyle(th).position === 'sticky'
+  );
+};
+
+/**
+ * Starts a pointer drag on the right half of a column's resize grip, on
+ * whatever element is drawn there, and expects the column to grow.
+ */
+const dragGripRightHalf = async (
+  canvasElement: HTMLElement,
+  columnId: string,
+  dx: number,
+) => {
+  const th = canvasElement.querySelector<HTMLElement>(
+    `thead th[data-flip-column="${columnId}"]`,
+  )!;
+  const grip = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  grip.scrollIntoView({ block: 'nearest', inline: 'center' });
+  const before = th.getBoundingClientRect().width;
+  const box = grip.getBoundingClientRect();
+  const point = {
+    clientX: box.left + box.width * 0.75,
+    clientY: box.top + box.height / 2,
+  };
+  const hit = document.elementFromPoint(point.clientX, point.clientY)!;
+  fireEvent.mouseDown(hit, point);
+  fireEvent.mouseMove(document, { ...point, clientX: point.clientX + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: point.clientX + dx });
+  await waitFor(() =>
+    expect(th.getBoundingClientRect().width - before).toBeGreaterThanOrEqual(
+      dx / 2,
+    ),
+  );
+};
+
+// The option sets how the table starts; the View settings switch then turns
+// the sticky header off and on (D120). Full screen keeps it sticky with the
+// switch off. With the header sticky, a resize drag starts from the right
+// half of the grip too (D126).
+EnableStickyHeader.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findAllByText(data[0]!.firstName);
+  expect(isStuck(canvasElement)).toBe(true);
+
+  await userEvent.click(canvas.getByRole('button', { name: 'View settings' }));
+  const toggle = await body.findByRole('switch', { name: 'Sticky header' });
+  expect(toggle).toBeChecked();
+  await userEvent.click(toggle);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
+  await userEvent.click(toggle);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(true));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() =>
+    expect(body.queryByRole('switch', { name: 'Sticky header' })).toBeNull(),
+  );
+
+  await dragGripRightHalf(canvasElement, 'lastName', 60);
+
+  await userEvent.click(canvas.getByRole('button', { name: 'View settings' }));
+  await userEvent.click(
+    await body.findByRole('switch', { name: 'Sticky header' }),
+  );
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
+  await userEvent.keyboard('{Escape}');
+  const fullScreen = canvas.getByRole('button', { name: 'Toggle full screen' });
+  await userEvent.click(fullScreen);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(true));
+  await userEvent.click(fullScreen);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
 };
