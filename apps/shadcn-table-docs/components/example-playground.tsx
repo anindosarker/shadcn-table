@@ -61,6 +61,13 @@ export interface ExampleVariantData {
    */
   installCommand?: string;
   /**
+   * Registry item `installCommand` adds, sent with its copy event. Defaults
+   * to `example-<name>`; a story panel that shows a docs example's files
+   * (components/story-example.tsx, `codeFrom`) names that example's item,
+   * since its `name` is the story id.
+   */
+  installItem?: string;
+  /**
    * Prompt for a coding agent: install, import, docs to read, verify. A story
    * page has none, so Copy prompt is left out.
    */
@@ -162,7 +169,8 @@ export const ExamplePlayground = ({
   storyId,
 }: Props) => {
   const base = useBase();
-  const { files, githubUrl, installCommand, prompt } = variants[base];
+  const { files, githubUrl, installCommand, installItem, prompt } =
+    variants[base];
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,
@@ -207,7 +215,7 @@ export const ExamplePlayground = ({
     copiedTimer.current = setTimeout(() => setCopied(null), COPIED_MS);
     if (target === 'install') {
       trackInstallCommandCopied({
-        item: `example-${name}`,
+        item: installItem ?? `example-${name}`,
         base,
         package_manager: 'pnpm',
         surface: 'example',
