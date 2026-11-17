@@ -100,6 +100,8 @@ kanban-plugin: basic
 	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
 	- Owner recorded 2026-11-18.
 	- Source: Q112
+- [ ] **D124** The first line above each Storybook story reads View documentation for this example #R6
+	- Source: Q102
 
 ## In progress
 
