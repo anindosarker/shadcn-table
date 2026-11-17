@@ -15,20 +15,43 @@ kanban-plugin: basic
 	- Owner picked option 1 of Q90, 2026-11-17.
 	- Source: Q90
 - [ ] **D110** All 59 copied stories merge into the story they copy #R6
+	- Settled by the lead: D106's rule applied as written (a copy whose copied story has no check of its own merges; its check moves onto the story it copies).
+	- The audit of E14 (`reference/docs-layout/story-pairing-audit.md`, list 4) found 59 such copies in 59 same-table groups, not the 2 the plan assumed: 54 move a play, 5 had none; 12 stories now carry two or more plays.
+	- Kept as built in E14.
 	- Source: Q92
 - [ ] **D111** Each of the 42 docs examples gets a new exact story #R6
+	- Settled by the lead: D106 as written (every docs example has an exact story; a new story built from the example where none matches).
+	- The audit found exact 0, close 34, no partner 8, so all 42 examples get a new story. Story pages under More examples: 593.
+	- Kept as built in E14.
 	- Source: Q93
 - [ ] **D112** Story group names with no example in D106 follow its Title Case rule #R6
+	- Settled by the lead: D106's naming rule (Title Case with spaces) applied where D106 gives no example.
+	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
+	- Kept as built in E14.
 	- Source: Q95
 - [ ] **D113** An example shown twice on a page has different ids in the served HTML too #R6
+	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
+	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
+	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
 	- Source: Q94
 - [ ] **D114** The column pinning example locks the ID column with the option that works #R6
+	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
+	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
 	- Source: Q98
 - [ ] **D115** The chart detail panel and editing stories match their examples exactly #R6
+	- Settled by the lead: D106 says the story is the same table as the example.
+	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
+	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
 	- Source: Q99
 - [ ] **D116** Story pages no longer triple the size of the docs build #R6
+	- Settled by the lead: a build problem, not an owner item.
+	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
+	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
 	- Source: Q101
 - [ ] **D117** The guide Example section sits right after the first intro paragraph #R6
+	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
+	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
+	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
 	- Source: Q105
 
 ## In progress
