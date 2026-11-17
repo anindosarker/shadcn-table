@@ -190,15 +190,7 @@ ClickToCopyEnabled.play = async ({ canvasElement }: StoryContext) => {
     const value = data[0].name.firstName;
     const [text] = await within(canvasElement).findAllByText(value);
     const button = text!.closest<HTMLElement>('button')!;
-    const browserUserEvent = (
-      globalThis as {
-        stBrowserUserEvent?: {
-          click: (element: Element) => Promise<void>;
-          tab: (options?: { shift?: boolean }) => Promise<void>;
-        };
-      }
-    ).stBrowserUserEvent;
-    const input = browserUserEvent ?? userEvent;
+    const input = pointerInput();
     await input.click(button);
     expect(writeText).toHaveBeenCalledWith(value);
     // The press closes the tooltip. Keyboard focus opens it at once, inside
@@ -207,13 +199,65 @@ ClickToCopyEnabled.play = async ({ canvasElement }: StoryContext) => {
     await input.tab({ shift: true });
     expect(document.activeElement).toBe(button);
     await waitFor(() =>
-      expect(
-        [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
-          (tooltip) => tooltip.textContent,
-        ),
-      ).toContain('Copied to clipboard'),
+      expect(tooltipTexts()).toContain('Copied to clipboard'),
     );
   } finally {
     writeText.mockRestore();
   }
 };
+
+/**
+ * With click to copy on for the table and off for Email Address: a First
+ * Name cell shows the Click to copy tooltip and copies on a click;
+ * an Email Address cell has no copy button and copies nothing.
+ */
+ClickToCopyDisabledPerColumn.play = async ({ canvasElement }: StoryContext) => {
+  const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+    undefined,
+  );
+  try {
+    const canvas = within(canvasElement);
+    const value = data[0]!.name.firstName;
+    const [text] = await canvas.findAllByText(value);
+    const button = text!.closest<HTMLElement>('button');
+    expect(button).not.toBeNull();
+    const input = pointerInput();
+    // Keyboard focus opens the tooltip at once, without the hover delay; on
+    // React Aria a hover over a name the copy button cuts off opens the
+    // cell's overflow tooltip instead.
+    button!.focus();
+    await input.tab();
+    await input.tab({ shift: true });
+    expect(document.activeElement).toBe(button);
+    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'));
+    await input.click(button!);
+    expect(writeText).toHaveBeenCalledWith(value);
+
+    const [email] = canvas.getAllByText(data[0]!.email);
+    expect(email!.closest('button')).toBeNull();
+    await input.click(email!);
+    expect(writeText).toHaveBeenCalledTimes(1);
+  } finally {
+    writeText.mockRestore();
+  }
+};
+
+/** The open tooltips' texts. */
+const tooltipTexts = () =>
+  [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+    (tooltip) => tooltip.textContent,
+  );
+
+/**
+ * The real browser pointer and keyboard under vitest (.storybook/vitest.setup.ts),
+ * else Storybook's simulated events.
+ */
+const pointerInput = () =>
+  (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (element: Element) => Promise<void>;
+        tab: (options?: { shift?: boolean }) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent ?? userEvent;
