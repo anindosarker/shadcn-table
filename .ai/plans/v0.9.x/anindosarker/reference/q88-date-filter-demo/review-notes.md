@@ -13,6 +13,7 @@ Nothing is implemented until the owner says go; a first builder pass on findings
 | 3 | whole folder | Remove unnecessary comments. | open |
 | 4 | `date-picker.tsx` | `void mode` in every case: what is it and why. It only silences the unused-variable lint after `const { mode, ...rest } = props`. Noise; remove. | open |
 | 5 | `modes/date.tsx` | `dropDoubleClick()`: why is this needed. It swallows the second click of a double click on a day, because the first click picks the day and closes the calendar, so the second would hit whatever is under it. Done with capture listeners on `window` and a 1 s timer; only the date mode has it; shadcn's own date picker has no such guard. Keep or remove: owner's call. | open |
+| 6 | `components/single-calendar.tsx`, `range-calendar.tsx`, `time-picker.tsx` | "Why did we create a new popover wrapper?" Three components wrap the stock popover: `SingleCalendarPopover`, `RangeCalendarPopover`, `TimePickerPopover` (trigger button, `PopoverContent`, fixed align and offsets). The agreed rule was no popover wrapper; modes should compose stock `Popover` directly. They came from the old code's popover files and were kept as second exports. | open |
 
 ## Carried from the refactor review, not yet raised by the owner
 
