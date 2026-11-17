@@ -39,3 +39,8 @@ CLAUDE.md
 /examples/.radix/
 /examples/.base/
 /examples/.aria/
+
+# generated story copies per base (lib/story-variants.mjs)
+/stories/.radix/
+/stories/.base/
+/stories/.aria/
