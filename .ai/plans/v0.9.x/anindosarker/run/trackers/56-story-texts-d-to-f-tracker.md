@@ -19,6 +19,7 @@ Checks:
 - Task 3 step truth: done (52cd0934), run text-run.js
 - Task 4 text check by judges: judges: run by the workflow
 - Task 4 fix round 1: 7 failed lines rewritten (2f224958); `disable-full-screen-toggle` step 2 run on `next start` port 5341, base, build of 52cd0934 (story code unchanged): Salary filter opens, table not fixed, server stopped; `pnpm format` pass
+- Task 4 fix round 2: 2 failed lines rewritten (b4b2ae7f), the `iso-date-time-string-column-by-day` description and `disable-full-screen-toggle` step 2 (now `View settings`); step 2 run on `next start` port 5340, base, build of the rewrite: no `Toggle full screen` button, `View settings` menu lists `Columns`, `Density` and the rest with no full screen row, server stopped; `pnpm format` pass
 - Task 5 cleanup: done (52cd0934, format and build without change), run text-run.js
 
 ## Attention
