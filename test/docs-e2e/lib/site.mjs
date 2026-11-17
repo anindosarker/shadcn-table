@@ -11,6 +11,13 @@
  *   four sections in order (each answering 200), the docs search box opening
  *   the search dialog, the base select and the theme toggle in the bar, light
  *   and dark, and no sideways scroll at 390 px.
+ * - A story page under "More examples" (D116, D102, D103): its served HTML
+ *   holds the folder open with the current row, its number and its
+ *   sub-group label, and no other story row; in the browser the folder is
+ *   open, its label ends with the count in brackets, it lists that many
+ *   rows, the current row is marked with its running number, and a sub-group
+ *   label is no toggle. On `/docs/examples/basic` the folder starts closed,
+ *   opens on a click and stays open after a reload.
  */
 
 /** The sections of D101, in their order. */
@@ -160,7 +167,132 @@ async function notFoundPage(page, check) {
   );
 }
 
+/** A story page in the middle of "More examples" (spec 59, D116). */
+const STORY_ROUTE =
+  '/docs/examples/more/features-column-pinning--column-pinning-initial';
+/** Its sub-group label in the sidebar, without the count. */
+const STORY_GROUP = 'Features/Column Pinning';
+
+/** The visible text of an HTML fragment, tags dropped. */
+const textOf = (html) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+
+/**
+ * D116: the served story page HTML (no scripts run) carries "More examples"
+ * open with only the current row, numbered, under its sub-group label.
+ */
+async function servedStoryRow(page, check) {
+  const origin = new URL(page.url()).origin;
+  const html = await (await fetch(origin + STORY_ROUTE)).text();
+  const start = html.indexOf('<aside');
+  const aside = html.slice(start, html.indexOf('</aside>', start));
+  const storyLinks = aside.match(/href="\/docs\/examples\/more\//g) ?? [];
+  check(
+    'served HTML: one story row, the current one',
+    storyLinks.length === 1 && aside.includes(`href="${STORY_ROUTE}"`),
+    `story links=${storyLinks.length}`,
+  );
+  const active = /<a [^>]*data-active="true"[^>]*>([\s\S]*?)<\/a>/.exec(aside);
+  check(
+    'served HTML: current row with its number',
+    active !== null && /^\d+\. Column Pinning Initial$/.test(textOf(active[1])),
+    active ? textOf(active[1]) : 'none',
+  );
+  check(
+    'served HTML: More examples open, with its sub-group label',
+    /aria-expanded="true"[^>]*>(?:<[^>]*>)*More examples/.test(aside) &&
+      textOf(aside).includes(STORY_GROUP),
+  );
+}
+
+/** The "More examples" trigger of the desktop sidebar. */
+const moreTrigger = (page) =>
+  page.locator('#nd-sidebar button[data-slot="collapsible-trigger"]', {
+    hasText: 'More examples',
+  });
+
+/**
+ * D102, D103 in the browser: the story page's folder is open and lists all
+ * its rows, numbered, the current one marked; sub-group labels are no
+ * toggle. Then `/docs/examples/basic`: closed, opened by a click, still open
+ * after a reload (the stored state is cleared first and restored after).
+ */
+async function moreExamplesSidebar(page, check) {
+  const more = moreTrigger(page);
+  check(
+    'More examples open on a story page',
+    (await more.getAttribute('aria-expanded').catch(() => null)) === 'true',
+  );
+  const label = ((await more.textContent()) ?? '').trim();
+  const count = Number(/\((\d+)\)$/.exec(label)?.[1] ?? NaN);
+  check('More examples label ends with its count', count > 0, label);
+  const rows = page.locator('#nd-sidebar a[href^="/docs/examples/more/"]');
+  const texts = (await rows.allTextContents()).map((t) => t.trim());
+  check(
+    'More examples lists as many rows as its count',
+    texts.length === count,
+    `rows=${texts.length} count=${count}`,
+  );
+  const first = Number(/^(\d+)\./.exec(texts[0] ?? '')?.[1] ?? NaN);
+  const numbered = texts.every((t, i) => t.startsWith(`${first + i}. `));
+  check('More examples rows numbered in order', numbered, texts[0] ?? '');
+  const hrefs = await rows.evaluateAll((els) =>
+    els.map((el) => el.getAttribute('href')),
+  );
+  const index = hrefs.indexOf(STORY_ROUTE);
+  const active = (
+    (await page.locator('#nd-sidebar a[data-active="true"]').textContent()) ??
+    ''
+  ).trim();
+  check(
+    'current row marked with its running number',
+    index >= 0 && active === texts[index],
+    active,
+  );
+  const subgroup = page
+    .locator('#nd-sidebar [data-subgroup]', { hasText: STORY_GROUP })
+    .first();
+  check(
+    'sub-group label is no toggle',
+    (await subgroup.count()) === 1 &&
+      (await subgroup.locator('button').count()) === 0 &&
+      (await subgroup.evaluate((el) => el.closest('button') === null)),
+  );
+
+  const origin = new URL(page.url()).origin;
+  const clearStored = () =>
+    page.evaluate(() => {
+      for (const key of Object.keys(localStorage))
+        if (key.startsWith('docs-sidebar-open:')) localStorage.removeItem(key);
+    });
+  await clearStored();
+  await page.goto(origin + '/docs/examples/basic', {
+    waitUntil: 'networkidle',
+    timeout: 90000,
+  });
+  const expanded = async () =>
+    (await moreTrigger(page)
+      .getAttribute('aria-expanded')
+      .catch(() => null)) === 'true';
+  check('basic: More examples starts closed', !(await expanded()));
+  await moreTrigger(page).click();
+  check(
+    'basic: More examples opens on a click',
+    (await expanded()) && (await rows.count()) === count,
+    `rows=${await rows.count()}`,
+  );
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  await moreTrigger(page)
+    .waitFor({ timeout: 10000 })
+    .catch(() => {});
+  check('basic: More examples still open after a reload', await expanded());
+  await clearStored();
+}
+
 const checks = {
+  [STORY_ROUTE]: async ({ page, check }) => {
+    await servedStoryRow(page, check);
+    await moreExamplesSidebar(page, check);
+  },
   '/sitemap.xml': async ({ page, check }) => guideIdsUnique(page, check),
   ...Object.fromEntries(
     MISSING.map((route) => [
