@@ -677,7 +677,7 @@
     {
       "name": "example-editing-crud-row-base",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Row Example",
+      "title": "Inline Editing Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
@@ -2627,7 +2627,7 @@
     {
       "name": "example-react-query-base",
       "type": "registry:block",
-      "title": "React Query Example",
+      "title": "Server-Side Pagination Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
@@ -2802,7 +2802,7 @@
     {
       "name": "example-virtualized-base",
       "type": "registry:block",
-      "title": "Virtualized Example",
+      "title": "Virtualization Example",
       "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
@@ -3497,7 +3497,7 @@
     {
       "name": "example-editing-crud-row-radix",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Row Example",
+      "title": "Inline Editing Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
@@ -5447,7 +5447,7 @@
     {
       "name": "example-react-query-radix",
       "type": "registry:block",
-      "title": "React Query Example",
+      "title": "Server-Side Pagination Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
@@ -5622,7 +5622,7 @@
     {
       "name": "example-virtualized-radix",
       "type": "registry:block",
-      "title": "Virtualized Example",
+      "title": "Virtualization Example",
       "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
@@ -6318,7 +6318,7 @@
     {
       "name": "example-editing-crud-row-aria",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Row Example",
+      "title": "Inline Editing Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
       "files": [
         {
@@ -8268,7 +8268,7 @@
     {
       "name": "example-react-query-aria",
       "type": "registry:block",
-      "title": "React Query Example",
+      "title": "Server-Side Pagination Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "files": [
         {
@@ -8443,7 +8443,7 @@
     {
       "name": "example-virtualized-aria",
       "type": "registry:block",
-      "title": "Virtualized Example",
+      "title": "Virtualization Example",
       "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "files": [
         {
@@ -9138,7 +9138,7 @@
     {
       "name": "example-editing-crud-row",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Row Example",
+      "title": "Inline Editing Example",
       "description": "Alias of example-editing-crud-row-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-row installs the Base UI copy.",
       "files": [
         {
@@ -11088,7 +11088,7 @@
     {
       "name": "example-react-query",
       "type": "registry:block",
-      "title": "React Query Example",
+      "title": "Server-Side Pagination Example",
       "description": "Alias of example-react-query-base: the GitHub shorthand anindosarker/shadcn-table/example-react-query installs the Base UI copy.",
       "files": [
         {
@@ -11263,7 +11263,7 @@
     {
       "name": "example-virtualized",
       "type": "registry:block",
-      "title": "Virtualized Example",
+      "title": "Virtualization Example",
       "description": "Alias of example-virtualized-base: the GitHub shorthand anindosarker/shadcn-table/example-virtualized installs the Base UI copy.",
       "files": [
         {

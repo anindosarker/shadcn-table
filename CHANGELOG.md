@@ -11,6 +11,12 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### Spec 58 Docs content fixes
+
+- On every guide the Example section follows the first intro paragraph; notes and further intro blocks come after it, word for word (D117).
+- The Basic example's Try it steps add a column filtering step and end with a search for `Ohio` (D118).
+- Three example pages take their sidebar name as title and address: Server-Side Pagination Example at `/docs/examples/server-side-pagination`, Inline Editing Example at `/docs/examples/inline-editing` and Virtualization Example at `/docs/examples/virtualization`. The old addresses `react-query`, `editing-crud-inline-row` and `virtualized` redirect permanently (D119).
+
 #### Spec 54
 
 - Every example page lists two to four Try it steps directly above its table and links its guides under Related guides below it; the View Extra Storybook line is gone, the toolbar's Storybook button replaces it. Titles, descriptions and the page text are unchanged (D104).
