@@ -170,14 +170,8 @@ const guardClick = (source: HTMLElement) => {
   );
 };
 
-/**
- * Follows one finger from its pointerdown on a drag source and returns the
- * function that cancels it. The element under the finger receives the drag
- * events a mouse drag sends (`dragenter`, `dragleave`, `dragover`, `drop`),
- * so every drop target keeps its own handlers; a target takes the drop as
- * with a mouse, by `preventDefault` on `dragover` without `dropEffect`
- * `none`.
- */
+// The element under the finger receives the drag events a mouse drag sends,
+// so every drop target keeps its own handlers.
 const trackFinger = ({
   down,
   options,
@@ -202,11 +196,15 @@ const trackFinger = ({
   let frame = 0;
   let holdTimer: ReturnType<typeof setTimeout> | undefined;
 
-  const send = (
-    type: 'dragenter' | 'dragleave' | 'dragover' | 'drop',
-    target: Element,
-    relatedTarget?: Element | null,
-  ) => {
+  const send = ({
+    relatedTarget,
+    target,
+    type,
+  }: {
+    relatedTarget?: Element | null;
+    target: Element;
+    type: 'dragenter' | 'dragleave' | 'dragover' | 'drop';
+  }) => {
     const event = createST_TouchDragEvent({
       dataTransfer,
       relatedTarget,
@@ -221,8 +219,9 @@ const trackFinger = ({
   const hitTest = () => {
     const target = document.elementFromPoint(x, y);
     if (target !== over) {
-      if (target) send('dragenter', target, over);
-      if (over) send('dragleave', over, target);
+      if (target) send({ relatedTarget: over, target, type: 'dragenter' });
+      if (over)
+        send({ relatedTarget: target, target: over, type: 'dragleave' });
       over = target;
     }
     if (!target) {
@@ -230,7 +229,7 @@ const trackFinger = ({
       return;
     }
     dataTransfer.dropEffect = 'move';
-    const event = send('dragover', target);
+    const event = send({ target, type: 'dragover' });
     accepted =
       event.defaultPrevented && readDropEffect(dataTransfer) !== 'none';
   };
@@ -298,7 +297,8 @@ const trackFinger = ({
     detach();
     if (!wasActive) return;
     activeDrags -= 1;
-    if (cancelled && over) send('dragleave', over, null);
+    if (cancelled && over)
+      send({ relatedTarget: null, target: over, type: 'dragleave' });
     // A finger that rests and lifts in place is a tap: its click stays.
     if (moved) guardClick(source);
     options.current.onEnd(toHandlerEvent(last, source), cancelled);
@@ -344,7 +344,7 @@ const trackFinger = ({
     y = event.clientY;
     if (active) {
       hitTest();
-      if (accepted && over) send('drop', over);
+      if (accepted && over) send({ target: over, type: 'drop' });
     }
     finish(!accepted);
   }
@@ -381,8 +381,10 @@ const trackFinger = ({
 /**
  * Reorder by touch for one drag source: a finger on the source drags it,
  * at once or after `delay`, with a ghost copy under the finger, and ends in
- * `onEnd` as a mouse drag ends in `onDragEnd`. Mouse and pen pointers are
- * left to the HTML5 drag the source already has.
+ * `onEnd` as a mouse drag ends in `onDragEnd`. A drop target takes a touch
+ * drop as it takes a mouse drop: by `preventDefault` on `dragover` without
+ * `dropEffect` `none`. Mouse and pen pointers are left to the HTML5 drag the
+ * source already has.
  */
 export const useST_TouchDrag = (options: ST_TouchDragOptions) => {
   const latest = useRef(options);
