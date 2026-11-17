@@ -1,8 +1,9 @@
 # 56: Story and docs fixes found while writing the story texts, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/story-fixes`, worktree 03 (from `origin/v0.9/docs-layout` at 3ca2156c, D109)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Story and docs fixes found while writing the story texts: running
+
+## Attention
