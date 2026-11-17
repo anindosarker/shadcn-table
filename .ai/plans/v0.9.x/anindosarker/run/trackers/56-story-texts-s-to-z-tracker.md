@@ -1,6 +1,6 @@
 # 56: Story texts S to Z, tracker
 
-Status: waiting (lead: Acceptance 1.2 rerun at 9b5228f9, storybook-tests and docs-e2e on three bases plus storybook-static base; every other check green at HEAD)
+Status: ready to merge (every check of this milestone green at 9b5228f9; storybook-tests, storybook-static and docs-e2e run once on the merged pages in milestone Story text checklist)
 Branch `v0.9/story-texts-s-z`, worktree 07 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
 - Check: three parts, structure script over the 115 `features-[s-z]*.mdx` pages (description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links to existing guide files, no em dash, title/sidebarTitle/tag unchanged) at c73601b9: pass
@@ -21,6 +21,9 @@ Checks:
 - Check: verifier, `pnpm test validate-repo` at 9b5228f9: pass (636 stories, 42 example pages, 594 story pages, story pages match, 40 unit tests), tree clean after
 - Check: verifier, `pnpm --filter shadcn-table-docs build` at 9b5228f9: pass (2125 static pages)
 - Check: verifier, Acceptance 1.2 rerun (storybook-tests base/radix/aria, storybook-static base, docs-e2e base/radix/aria, toolbar ids in `index.json`): not run; the shared build lock was held by another agent and the verifier had to return first. The judged text part passed in this workflow (Task 4)
+- Check: verifier 2, at HEAD 9b5228f9: Local CI (typecheck radix, lint, validate-repo), `pnpm --filter shadcn-table-docs build` and the Task 2 checks (greps, structure and step count, diff stat) already recorded green at HEAD, not rerun; tree clean
+- Check: verifier 2, Related guides 200 check (at 2f128832) still valid: `git diff 2f128832..HEAD` changes no `/docs/guides/` link
+- Check: verifier 2, Acceptance 1.2 rerun (storybook-tests, storybook-static, docs-e2e): moved to milestone Story text checklist by the run, not run here
 
 - Task 1 site table: done by the writers, 2f128832, run d3a60a09
 - Task 2 three parts on every page: done, 2f128832, run d3a60a09
