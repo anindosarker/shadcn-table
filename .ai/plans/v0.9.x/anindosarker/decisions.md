@@ -20,7 +20,12 @@ kanban-plugin: basic
 	- Kept; the regenerated `registry.json` is committed with spec 58.
 	- Source: Q120
 - [ ] **D136** The docs build size limit is measured without the build cache #R6
+	- Settled by the lead: a build measure, not an owner item.
+	- Spec 59's 900 MB limit is measured on `.next` without `.next/cache` (the turbopack build cache, not served, 518 MB before the change too). Measured: 583 MB, below the 644 MB from before the story pages; the story pages went from 1166 MB to 245 MB.
+	- D116 is met. Spec 59 line 18 says so.
 	- Source: Q122
+- [ ] **D137** The More examples rows come from one list bundled in the docs script #R6
+	- Source: Q123
 
 ## In progress
 
