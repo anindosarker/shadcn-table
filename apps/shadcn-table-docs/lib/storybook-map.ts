@@ -10,9 +10,9 @@ import { storybookUrl } from '@/components/mdx/storybook-link';
  */
 export const storybookStoryId: Record<string, string> = {
   basic: 'basic--basic',
-  'react-query': 'features-server-data--server-side-pagination',
-  'editing-crud-inline-row': 'features-editing--inline-editing',
-  virtualized: 'features-virtualization--virtualization',
+  'server-side-pagination': 'features-server-data--server-side-pagination',
+  'inline-editing': 'features-editing--inline-editing',
+  virtualization: 'features-virtualization--virtualization',
   advanced: 'features-customization--advanced',
   'filter-variants': 'features-filtering--filter-variants',
   'faceted-values': 'features-filtering--faceted-values',

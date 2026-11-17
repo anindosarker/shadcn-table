@@ -443,7 +443,7 @@ const checks = {
     await storedIconLibrary(page, check);
     await moreExamplesState(page, check);
     // Example switcher: previous is disabled on the first example, next
-    // steps to the second Featured row, React Query (D103).
+    // steps to the second Featured row, Server-Side Pagination (D103, D119).
     const header = w.locator('header');
     const prev = header.locator('button[aria-label^="Previous"]');
     const next = header.locator('button[aria-label^="Next"]');
@@ -456,16 +456,18 @@ const checks = {
       await prev.isDisabled().catch(() => false),
     );
     check(
-      'switcher: next names React Query',
-      /^Next: React Query/.test((await next.getAttribute('aria-label')) ?? ''),
+      'switcher: next names Server-Side Pagination',
+      /^Next: Server-Side Pagination/.test(
+        (await next.getAttribute('aria-label')) ?? '',
+      ),
     );
     await next.click();
     await page
-      .waitForURL('**/docs/examples/react-query', { timeout: 30000 })
+      .waitForURL('**/docs/examples/server-side-pagination', { timeout: 30000 })
       .catch(() => {});
     check(
-      'switcher: next goes to react-query',
-      new URL(page.url()).pathname === '/docs/examples/react-query',
+      'switcher: next goes to server-side-pagination',
+      new URL(page.url()).pathname === '/docs/examples/server-side-pagination',
       page.url(),
     );
   },
@@ -574,7 +576,7 @@ const checks = {
     await headerLabelsFit(w, 'editing-crud-cell', check);
     await deleteDialog(page, w, 'editing-crud-cell', check);
   },
-  '/docs/examples/editing-crud-inline-row': async ({ page, check }) => {
+  '/docs/examples/inline-editing': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-row', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-row', /Create New User/, check);
@@ -861,7 +863,7 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/virtualized': examplePage(
+  '/docs/examples/virtualization': examplePage(
     'virtualized',
     'enableColumnVirtualization: true',
     async (page, w, check) => {
@@ -873,7 +875,7 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/react-query': examplePage(
+  '/docs/examples/server-side-pagination': examplePage(
     'react-query',
     'useQuery',
     async (page, w, check) => {
