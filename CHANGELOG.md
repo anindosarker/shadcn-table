@@ -41,6 +41,10 @@ publishes the section as the GitHub release notes.
 
 - With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, a pinned row stays in view at the top or the bottom of the body while the other rows scroll, as it does without virtualization, also for several pinned rows, with the sticky header, and for a row far outside the rendered range; before, it scrolled away. The Row Pinning guide no longer says the two do not combine (D128).
 
+#### Spec 62.1 Column auto-scroll stops when the drag leaves the table
+
+- A column dragged out of a table that scrolls sideways, for example onto the grouping drop zone, no longer keeps scrolling the table from the last pointer or finger position inside it; the table scrolls again when the drag comes back over its edge, on Base UI, Radix UI and React Aria.
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
