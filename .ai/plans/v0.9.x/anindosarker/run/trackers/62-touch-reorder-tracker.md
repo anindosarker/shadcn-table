@@ -27,6 +27,11 @@ Checks:
 - Check: storybook-tests base, `pnpm test storybook-tests --base base` at 0d7985c4: pass (654 passed)
 - Check: storybook-tests radix, `pnpm test storybook-tests --base radix` at 0d7985c4: pass (654 passed)
 - Check: storybook-tests aria, `pnpm test storybook-tests --base aria` at 0d7985c4: pass (654 passed)
+- Check (verifier): Local CI line of 2.2 (typecheck x3, lint, validate-repo, storybook-tests x3) recorded green at HEAD 0d7985c4 above; not rerun, CI is the second run
+- Check (verifier): emulation base, Pixel 7 Chromium with CDP touch events on local Storybook dev port 5344 at 0d7985c4: pass (all five), server stopped
+- Check (verifier): emulation radix, same method, port 5345, at 0d7985c4: pass (all five) on two solo reruns; the first run, concurrent with base and aria, missed "header hold reorders, no scroll" (timing of the 300 ms hold under load), server stopped
+- Check (verifier): emulation aria, same method, port 5346, at 0d7985c4: pass (all five), server stopped
+- Check (verifier): Acceptance of 1.2 at 0d7985c4: pass (gates green at HEAD, P11 failures recorded, emulation green on three bases; real-device check of D108 still owed to the release)
 
 - Task 1 Touch plays first: done (d120f52c)
 - Task 2 Touch path: done (343ea5b1)
