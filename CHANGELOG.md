@@ -9,6 +9,13 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Changed
+
+#### Spec 54
+
+- Every example page lists two to four Try it steps directly above its table and links its guides under Related guides below it; the View Extra Storybook line is gone, the toolbar's Storybook button replaces it. Titles, descriptions and the page text are unchanged (D104).
+- The six format comparison pages and the Format previews sidebar group are removed.
+
 ### Fixed
 
 #### Spec 52 Docs filter facts
