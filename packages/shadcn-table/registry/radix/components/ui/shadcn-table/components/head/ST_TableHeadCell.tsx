@@ -118,8 +118,15 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     event: ReactPointerEvent<HTMLTableCellElement>,
   ) => {
     tableCellProps?.onPointerDown?.(event);
+    // A finger on a field or a slider keeps its own gesture; a portal (a
+    // menu, a filter popover) is a React child but not part of the cell.
     const target = event.target as Element;
-    if (!target.closest('input, select, textarea, [contenteditable="true"]')) {
+    if (
+      event.currentTarget.contains(target) &&
+      !target.closest(
+        'input, select, textarea, [contenteditable="true"], [role="slider"], [data-slot="slider"]',
+      )
+    ) {
       touchDrag.onPointerDown(event);
     }
   };
