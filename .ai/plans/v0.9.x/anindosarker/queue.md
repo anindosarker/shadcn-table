@@ -59,6 +59,7 @@ kanban-plugin: basic
 - [ ] **Q109** The docs Storybook button always opens the deployed Storybook, also when the docs run locally
 	- Owner, 2026-11-17, checking E14 on localhost:5320: the button cannot be verified locally. apps/shadcn-table-docs/components/mdx/storybook-link.tsx:15-17 on v0.9/docs-layout hardcodes https://storybook.shadcn-table.com/{radix,base,aria}/; the deployed Storybook does not have the stories E14 renamed or added. Local Storybook ports: base 6007, radix 6006, aria 6008 (packages/shadcn-table/package.json:14-16).
 - [ ] **Q110** The docs site needs its own 404 page in the site's look
+	- Owner, 2026-11-17: 'need a custom 404 page that matches our docs site's theme'. apps/shadcn-table-docs/app has no not-found or error file on claude/review or v0.9/docs-layout, so a missing address shows the framework's default 404.
 
 ## Decided
 
