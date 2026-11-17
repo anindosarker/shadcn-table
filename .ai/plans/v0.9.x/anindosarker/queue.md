@@ -48,6 +48,8 @@ kanban-plugin: basic
 	- apps/shadcn-table-docs/components/example-playground.tsx (useExampleId, merged 2a509c87 on v0.9/docs-layout): the second mount gets a different id only after hydration; the served HTML of /docs/guides/virtualization-new-format-3 carries id="example-enable-row-virtualization" twice. D105 says the id must not repeat; the spec 55 check (hydrated DOM, no duplicate) passes. Keep (unique after load) or require unique ids in the served HTML. Found by the run's reviewer, measured with curl on a production build.
 - [ ] **Q95** Two story group names were chosen by the builder where D106 gives no example
 	- Merged 8215fa6b on v0.9/docs-layout (spec 56 Story group names): 'AppBar overlaps with Fullscreen Modal' is now 'Miscellaneous/App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is now 'Click To Copy'; 'RTL' and 'Custom Filter Fns' are kept as they were. Keep or revert each.
+- [ ] **Q96** The Basic example's first Try it step names a menu label the table does not show
+	- content/docs/examples/basic.mdx step 1: the text the owner accepted on basic-new-format-2 (and the example in D104) reads `Sort by First Name ascending`; the column menu shows `Sort ascending` (ST_ColumnActionMenu.tsx:259, sortAscending in locales/en.ts). The builder of spec 54 wrote `Sort ascending`; three judges read it as correct. Keep `Sort ascending` or revert to the accepted text.
 
 ## Decided
 
