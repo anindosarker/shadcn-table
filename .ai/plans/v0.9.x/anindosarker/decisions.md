@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D137** The More examples rows come from one list bundled in the docs script #R6
-	- Settled by the lead: a build deviation that keeps D116 and D103.
-	- Spec 59 described rows fetched from a JSON route; built from the folder's `meta.json` bundled once (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), because the breadcrumb, the page switcher and the row numbers need the full tree on the server render.
-	- Kept: the HTML carries only the current row, and the build fails if the bundled rows differ from the page tree.
-	- Source: Q123
 - [ ] **D138** Touch drag reuses the mouse drop handlers through marked drag events #R6
 	- Settled by the lead: a build deviation that keeps D108 and D132.
 	- Spec 62 described drop target marks; built so the touch path (`hooks/useST_TouchDrag.ts`) dispatches marked dragenter, dragleave, dragover and drop events to the element under the finger, with a stand-in `dataTransfer`, so the existing mouse handlers serve it and the body cell and row files are untouched.
@@ -896,6 +891,11 @@ kanban-plugin: basic
 	- Spec 59's 900 MB limit is measured on `.next` without `.next/cache` (the turbopack build cache, not served, 518 MB before the change too). Measured: 583 MB, below the 644 MB from before the story pages; the story pages went from 1166 MB to 245 MB.
 	- D116 is met. Spec 59 line 18 says so.
 	- Source: Q122
+- [x] **D137** The More examples rows come from one list bundled in the docs script #R6
+	- Settled by the lead: a build deviation that keeps D116 and D103.
+	- Spec 59 described rows fetched from a JSON route; built from the folder's `meta.json` bundled once (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), because the breadcrumb, the page switcher and the row numbers need the full tree on the server render.
+	- Kept: the HTML carries only the current row, and the build fails if the bundled rows differ from the page tree.
+	- Source: Q123
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
