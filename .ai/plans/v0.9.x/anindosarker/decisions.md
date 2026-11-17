@@ -56,36 +56,6 @@ kanban-plugin: basic
 	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
 	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
 	- Source: Q101
-- [ ] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
-	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
-	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
-	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
-	- Source: Q105
-- [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
-	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
-	- The steps, four in all:
-	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
-	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
-	-   3. Remove the filter. All five rows return.
-	-   4. Open search and type `Ohio`. One row remains.
-	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
-	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
-	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
-	- Owner recorded 2026-11-17.
-	- Source: Q96
-- [ ] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
-	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
-	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
-	- The three that change:
-	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
-	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
-	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
-	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
-	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
-	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
-	- Descriptions and body text are not touched (docs-layout LQ26).
-	- Owner recorded 2026-11-17.
-	- Source: Q108
 - [ ] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
 	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
 	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
@@ -806,6 +776,36 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
+	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
+	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
+	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
+	- Source: Q105
+- [x] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
+	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
+	- The steps, four in all:
+	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
+	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
+	-   3. Remove the filter. All five rows return.
+	-   4. Open search and type `Ohio`. One row remains.
+	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
+	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
+	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
+	- Owner recorded 2026-11-17.
+	- Source: Q96
+- [x] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
+	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
+	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
+	- The three that change:
+	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
+	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
+	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
+	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
+	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
+	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
+	- Descriptions and body text are not touched (docs-layout LQ26).
+	- Owner recorded 2026-11-17.
+	- Source: Q108
 - [x] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
 	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
 	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
