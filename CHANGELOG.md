@@ -17,6 +17,11 @@ publishes the section as the GitHub release notes.
 - The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 - On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
 
+#### Spec 60 Sticky header switch and resize grip
+
+- `enableStickyHeader` sets how the table starts; the `Sticky header` switch in `View settings` then turns the sticky header off and on, also when the option is `true`. Full screen still keeps the header sticky (D120).
+- A column's resize grip starts a drag from anywhere on it, its right half included, on pinned and sticky header cells too; the hairline is drawn at the same pixel as before (D126).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

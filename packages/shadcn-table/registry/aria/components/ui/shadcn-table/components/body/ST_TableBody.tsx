@@ -43,7 +43,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
     getTopRows,
     options: {
       enableStickyFooter,
-      enableStickyHeader,
       layoutMode,
       localization,
       renderDetailPanel,
@@ -151,7 +150,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     >
       {({ columnFilters, globalFilter, isFullScreen, stickyHeader }) => {
         const tableHeadHeight =
-          ((enableStickyHeader || stickyHeader || isFullScreen) &&
+          ((stickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =

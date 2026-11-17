@@ -68,7 +68,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableRowOrdering,
       enableRowPinning,
       enableStickyFooter,
-      enableStickyHeader,
       layoutMode,
       stTableBodyRowProps,
       renderDetailPanel,
@@ -178,9 +177,8 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 pinnedRowIds.indexOf(row.id),
               ];
 
-        const isStickyHeader = enableStickyHeader || stickyHeader;
         const tableHeadHeight =
-          ((isStickyHeader || isFullScreen) &&
+          ((stickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =
@@ -236,9 +234,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        (isStickyHeader || isFullScreen
-                          ? tableHeadHeight - 1
-                          : 0)
+                        (stickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
                       }px`
                     : undefined,
                 bottom:
