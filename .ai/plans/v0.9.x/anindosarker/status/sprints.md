@@ -109,7 +109,7 @@ Updated: 2026-11-18 03:07
 | E15 57 Stories match their examples |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
 | E15 58 Docs content fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
 | E15 59 Example ids and 404 page |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |
-| E15 59 Lighter story pages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |
+| E15 59 Lighter story pages |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |
 | E15 60 Sticky header switch and resize grip |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E15 60 Sub-row selection and copy button |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | E15 61 Pinned rows with row virtualization |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |
