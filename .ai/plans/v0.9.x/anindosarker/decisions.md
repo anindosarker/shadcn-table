@@ -4,15 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
-	- Details D108 where it is silent; D108's five surfaces and three bases stand.
-	- A grip starts the drag at once.
-	- A header cell that is itself draggable, with no grip, starts the drag after the finger rests about 300 ms without moving; a swipe before that scrolls the table as today.
-	- While a touch drag is on, a ghost copy of the dragged column header, row, menu item or sort rule follows the finger, on all five surfaces. The dragged item keeps the same dragging style as with the mouse and the drop target is marked as with the mouse.
-	- The ghost is removed on drop and on cancel, does not take touches, and does not show on mouse drags, where the browser draws its own.
-	- Owner recorded 2026-11-18.
-	- Source: Q115
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -27,16 +18,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D108** Every reorder drag works by touch on phones and tablets #E15 #R5
-	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
-	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
-	- It works the same on all three bases (Base UI, Radix, React Aria).
-	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
-	- Mouse dragging, column resize and the range slider stay as they are today.
-	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
-	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
-	- Owner picked option 1 of Q90, 2026-11-17.
-	- Source: Q90
 - [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
 	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
 	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
@@ -717,6 +698,16 @@ kanban-plugin: basic
 	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
 	- Source: LQ1, LQ6
 	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D108** Every reorder drag works by touch on phones and tablets #E15 #R5
+	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
+	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
+	- It works the same on all three bases (Base UI, Radix, React Aria).
+	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
+	- Mouse dragging, column resize and the range slider stay as they are today.
+	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
+	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
+	- Owner picked option 1 of Q90, 2026-11-17.
+	- Source: Q90
 - [x] **D109** E14 builds on its own branch so patch releases keep going #E15 #R5
 	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
 	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
@@ -861,6 +852,14 @@ kanban-plugin: basic
 	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
 	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
 	- Source: Q114
+- [x] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
+	- Details D108 where it is silent; D108's five surfaces and three bases stand.
+	- A grip starts the drag at once.
+	- A header cell that is itself draggable, with no grip, starts the drag after the finger rests about 300 ms without moving; a swipe before that scrolls the table as today.
+	- While a touch drag is on, a ghost copy of the dragged column header, row, menu item or sort rule follows the finger, on all five surfaces. The dragged item keeps the same dragging style as with the mouse and the drop target is marked as with the mouse.
+	- The ghost is removed on drop and on cancel, does not take touches, and does not show on mouse drags, where the browser draws its own.
+	- Owner recorded 2026-11-18.
+	- Source: Q115
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
