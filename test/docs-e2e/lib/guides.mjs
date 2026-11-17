@@ -330,9 +330,12 @@ async function exampleSection(page, check) {
   return page.locator('article h2#example ~ [data-example]').first();
 }
 
-/** Clicks the picker arrow `verb` ("Next", "Previous") of guide playground `w`. */
+/**
+ * Clicks the picker arrow `verb` ("Next", "Previous") of guide playground
+ * `w`; an enabled arrow is labelled `<verb>: <example title>`.
+ */
 async function pickExample(page, w, verb) {
-  await w.locator(`button[aria-label="${verb} example"]`).first().click();
+  await w.locator(`header button[aria-label^="${verb}: "]`).first().click();
   await page.waitForTimeout(500);
 }
 
@@ -780,6 +783,15 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
+    const w = await example(page, 'editing-crud-modal', check);
+    // ST_Tooltip adds no aria-label to its trigger (MUI did); match the icon.
+    await marker(
+      w,
+      'editing-crud-modal',
+      'edit button',
+      'tbody button:has(.lucide-pencil)',
+      check,
+    );
     // The Example section's picker lists the five editing examples in the
     // guide's order and swaps them in place.
     const section = page.locator('article h2#example ~ [data-example]').first();
@@ -792,16 +804,6 @@ const checks = {
       await pickExample(page, section, 'Next');
       await example(page, id, check);
     }
-    await pickExample(page, section, 'Next');
-    const w = await example(page, 'editing-crud-modal', check);
-    // ST_Tooltip adds no aria-label to its trigger (MUI did); match the icon.
-    await marker(
-      w,
-      'editing-crud-modal',
-      'edit button',
-      'tbody button:has(.lucide-pencil)',
-      check,
-    );
   },
   '/docs/guides/expanding-sub-rows': async ({ page, check }) => {
     await propTable(page, TABLE, check);
