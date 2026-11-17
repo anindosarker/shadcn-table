@@ -1,12 +1,26 @@
 # 56: Story texts S to Z, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/story-texts-s-z`, worktree 07 (from `origin/v0.9/docs-layout` at 06d58c57, D109)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: three parts, structure script over the 115 `features-[s-z]*.mdx` pages (description, one `### Try it` with 2 to 4 steps directly above `<StoryExample>`, 1 to 4 Related guides links to existing guide files, no em dash, title/sidebarTitle/tag unchanged) at c73601b9: pass
+- Check: `grep -L "TryIt"` and `grep -L "## Related guides"` over the glob at c73601b9: pass (print nothing)
+- Check: `git diff origin/v0.9/docs-layout --stat` lists only files the glob matches, at c73601b9: pass (115 files)
+- Check: build, `pnpm --filter shadcn-table-docs build` at 2f128832: pass
+- Check: step truth, Playwright run of every step of the 81 no-play pages on `next start -p 5342`, base selected, at 2f128832 plus the two rewritten pages at c73601b9: pass except `features-search--custom-global-filter-fn` (see Attention); server stopped
+- Check: labels in `components/ui-radix` and `components/ui-aria`: `shared/locales/en.ts` identical to base apart from the import path: pass
+- Check: Related guides, all 28 `/docs/guides/<slug>` links of these pages return 200 on the production build at 2f128832: pass
+- Check: typecheck, `pnpm test typecheck --base radix` at c73601b9: pass
+- Check: lint, `pnpm test lint` at c73601b9: pass (0 errors, 9 warnings, none in these pages)
+- Check: validate-repo, `pnpm test validate-repo` at c73601b9: pass
 
-- Task 1 site table: planned
-- Task 2 three parts on every page: planned
-- Task 3 step truth: planned
-- Task 4 text check by judges: planned
-- Task 5 cleanup: planned
+- Task 1 site table: done by the writers, 2f128832, run d3a60a09
+- Task 2 three parts on every page: done, 2f128832, run d3a60a09
+- Task 3 step truth: done, c73601b9, run d3a60a09 (two pages rewritten, one page untrue until its story changes)
+- Task 4 text check by judges: judges: run by the workflow
+- Task 5 cleanup: done, `pnpm format` clean, c73601b9, run d3a60a09
+
+## Attention
+
+- `features-search--custom-global-filter-fn`: the story's filter calls `startsWith` on the number column `Age` and throws on every search (`e.getValue(...).startsWith is not a function`), so no row is ever filtered. Its two steps describe the set-up, but they are not true until `Search.stories.tsx` changes (for example `String(row.getValue(id)).startsWith(filterValue)`). This milestone does not own the story file. Recommended: a story fix in the review-fixes milestone, then rerun the two steps.
+- `features-sub-row-tree--sub-row-tree-with-selection`: on base, ticking a parent does not tick its sub-rows (`getST_RowSelectionHandler` unticks them again once all are selected). The writer's text said it does. The page now says that ticking a sub-row also ticks its parent's box, which is what happens. Recommended: the lead checks this against MRT; if MRT selects the sub-rows, it is a library bug and the page text changes back.
