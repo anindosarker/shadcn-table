@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D133** The sidebar state script runs from the page head #R6
+	- Source: Q111
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
