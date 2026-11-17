@@ -56,36 +56,6 @@ kanban-plugin: basic
 	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
 	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
 	- Source: Q101
-- [ ] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
-	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
-	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
-	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
-	- Source: Q105
-- [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
-	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
-	- The steps, four in all:
-	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
-	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
-	-   3. Remove the filter. All five rows return.
-	-   4. Open search and type `Ohio`. One row remains.
-	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
-	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
-	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
-	- Owner recorded 2026-11-17.
-	- Source: Q96
-- [ ] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
-	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
-	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
-	- The three that change:
-	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
-	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
-	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
-	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
-	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
-	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
-	- Descriptions and body text are not touched (docs-layout LQ26).
-	- Owner recorded 2026-11-17.
-	- Source: Q108
 - [ ] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
 	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
 	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
@@ -94,17 +64,6 @@ kanban-plugin: basic
 	- Not part of this: a "Did you mean" suggestion.
 	- Owner recorded 2026-11-17.
 	- Source: Q110
-- [ ] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #E15 #R6
-	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
-	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
-	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
-	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
-	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
-	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
-	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
-	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
-	- Owner recorded 2026-11-18.
-	- Source: Q100
 - [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
 	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
 	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
@@ -132,14 +91,6 @@ kanban-plugin: basic
 	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
 	- Owner tested the story locally and recorded 2026-11-18.
 	- Source: Q106
-- [ ] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #E15 #R6
-	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
-	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
-	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
-	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
-	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
-	- Owner recorded 2026-11-18.
-	- Source: Q113
 
 ## Done
 
@@ -825,6 +776,36 @@ kanban-plugin: basic
 	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
 	- Kept as built in E14.
 	- Source: Q95
+- [x] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
+	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
+	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
+	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
+	- Source: Q105
+- [x] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
+	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
+	- The steps, four in all:
+	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
+	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
+	-   3. Remove the filter. All five rows return.
+	-   4. Open search and type `Ohio`. One row remains.
+	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
+	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
+	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
+	- Owner recorded 2026-11-17.
+	- Source: Q96
+- [x] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
+	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
+	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
+	- The three that change:
+	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
+	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
+	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
+	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
+	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
+	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
+	- Descriptions and body text are not touched (docs-layout LQ26).
+	- Owner recorded 2026-11-17.
+	- Source: Q108
 - [x] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
 	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
 	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
@@ -833,6 +814,17 @@ kanban-plugin: basic
 	- All three bases alike. MRT has no such switch.
 	- Owner recorded 2026-11-17.
 	- Source: Q97
+- [x] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #E15 #R6
+	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
+	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
+	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
+	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
+	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
+	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
+	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
+	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
+	- Owner recorded 2026-11-18.
+	- Source: Q100
 - [x] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
 	- Settled by the lead: a bug with one right behaviour, the one MRT has.
 	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
@@ -855,6 +847,14 @@ kanban-plugin: basic
 	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
 	- Owner closed the card 2026-11-18.
 	- Source: Q109
+- [x] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #E15 #R6
+	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
+	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
+	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
+	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
+	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
+	- Owner recorded 2026-11-18.
+	- Source: Q113
 - [x] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
 	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
 	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
