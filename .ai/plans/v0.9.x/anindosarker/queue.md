@@ -60,6 +60,8 @@ kanban-plugin: basic
 	- reference/docs-layout/guide-example-plan.md (spec 56 lead, 46 guides): 44 example pages, 1 existing story (customize-icons), 1 new story (localization: new group Features/Localization, story Spanish). row-numbers shows the example page row-virtualization, so no example got an option enabled (the owner's stated case). 15 guides whose feature is on by default show basic; pagination shows remote; row-selection shows export-csv. Spec 55 Guide pages builds from this file.
 - [ ] **Q101** The docs build grows from 644 MB to 1.9 GB with the story pages
 	- Branch v0.9/story-pages (spec 56 Story pages in the docs, Task 7): pnpm --filter shadcn-table-docs build before (b194eef9) 57 s, .next 644 MB, RSS 3.61 GB; after 44 s, .next 1.9 GB, RSS 4.13 GB. 1.0 GB of the growth is the HTML and RSC of the 594 story pages, each carrying the open Examples sidebar of 636 rows. The build passes; whether the size is acceptable for the deploy is the owner's call.
+- [ ] **Q102** The line above each Storybook story now reads "This story on the docs site" with the page link
+	- packages/shadcn-table/.storybook/preview.tsx on v0.9/story-pages (spec 56 1.6.6): the intro line was 'Looking for the main docs site? Click here.'; it is now 'This story on the docs site: shadcn-table.com/docs/examples/...'. The wording is the builder's choice. Keep or give the wording.
 
 ## Decided
 
