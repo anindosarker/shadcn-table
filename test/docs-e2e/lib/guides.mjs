@@ -1018,7 +1018,13 @@ const checks = {
     );
   },
   '/docs/guides/production-ready-tables': async ({ page, check }) => {
-    const w = await example(page, 'server-side-data', check);
+    // The Example section shows the guide's table as a story; its Code view
+    // lists the server-side-data example's files (D130, D131).
+    const w = await example(
+      page,
+      'features-server-data--production-ready-table',
+      check,
+    );
     await marker(
       w,
       'server-side-data',
@@ -1236,6 +1242,8 @@ const EXPLAINERS = {
     'Here is the full Remote Data example showing off server-side filtering, pagination, and sorting.',
   '/docs/guides/scroll-cues':
     'Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.',
+  '/docs/guides/production-ready-tables':
+    'Open the network tab and click around. Every page, sort, search or filter change sends one request to /api/users.',
 };
 
 /*

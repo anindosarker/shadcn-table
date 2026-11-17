@@ -1,6 +1,8 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { bases, type Base } from '@/lib/install';
+import { buildExamplePrompt } from '@/lib/example-prompt';
+import { readExampleFiles } from '@/lib/example-source';
+import { bases, exampleAddCommand, type Base } from '@/lib/install';
 import { gitConfig } from '@/lib/shared';
 import {
   ExamplePlayground,
@@ -36,9 +38,19 @@ const readJson = async <T,>(name: 'index.json' | 'sources.json') =>
  * written in packages/shadcn-table/stories; the Storybook button opens the
  * story. A story has no registry item, so the panel has no install command
  * and no Copy prompt. The story's play and Storybook's decorator never run
- * here.
+ * here. With `codeFrom`, the Code tab shows the files of that docs example
+ * (examples/<base>/<codeFrom>) in place of the story file, for a guide
+ * whose text walks through those files (D131), and the panel carries that
+ * example's install command and Copy prompt, so it installs the files it
+ * lists.
  */
-export async function StoryExample({ id }: { id: string }) {
+export async function StoryExample({
+  id,
+  codeFrom,
+}: {
+  id: string;
+  codeFrom?: string;
+}) {
   const index = await readJson<Record<string, StoryEntry>>('index.json');
   const story = Object.hasOwn(index, id) ? index[id] : undefined;
   if (!story)
@@ -49,8 +61,26 @@ export async function StoryExample({ id }: { id: string }) {
     files: [{ path: fileName, source: sources[story.key] ?? '', lang: 'tsx' }],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/packages/shadcn-table/stories/${story.file}`,
   };
+  const exampleData = async (
+    name: string,
+    base: Base,
+  ): Promise<ExampleVariantData> => ({
+    files: (await readExampleFiles(name, base)).map((file) => ({
+      path: file.path,
+      source: file.source,
+      lang: path.extname(file.path).slice(1) || 'text',
+    })),
+    githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}/tree/${gitConfig.branch}/apps/shadcn-table-docs/examples/${base}/${name}`,
+    installCommand: exampleAddCommand(name, base),
+    prompt: await buildExamplePrompt({ name, base }),
+  });
   const variants = Object.fromEntries(
-    bases.map((base) => [base, data] as const),
+    await Promise.all(
+      bases.map(
+        async (base) =>
+          [base, codeFrom ? await exampleData(codeFrom, base) : data] as const,
+      ),
+    ),
   ) as Record<Base, ExampleVariantData>;
 
   return (
