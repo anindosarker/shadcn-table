@@ -27,6 +27,10 @@ publishes the section as the GitHub release notes.
 - Ticking a parent row ticks all its sub-rows, unticking it unticks them, and ticking the last unticked sub-row ticks the parent; before, ticking a parent left its sub-rows unticked (D125).
 - The Click to copy button stays inside a narrow cell and truncates its text, and hovering it shows "Click to copy" instead of the cell's overflow tooltip on Base UI, Radix UI and React Aria (D127).
 
+#### Spec 61 Pinned rows with row virtualization
+
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, a pinned row stays in view at the top or the bottom of the body while the other rows scroll, as it does without virtualization, also for several pinned rows, with the sticky header, and for a row far outside the rendered range; before, it scrolled away. The Row Pinning guide no longer says the two do not combine (D128).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
