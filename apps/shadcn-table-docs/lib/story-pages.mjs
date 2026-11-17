@@ -68,12 +68,13 @@ export async function readStories() {
     }).parse();
     const title = csf.meta.title;
     if (!title) throw new Error(`${file}: the meta has no title`);
-    for (const story of csf.stories) {
+    // `_stories` is keyed by export name, in export order, like `stories`
+    for (const [exportName, story] of Object.entries(csf._stories)) {
       stories.push({
         id: story.id,
         name: story.name ?? story.id,
         title,
-        exportName: story.exportName ?? '',
+        exportName,
         file,
       });
     }
