@@ -16,7 +16,9 @@
  * --ci, else on a free agent port (5340 to 5360), then stopped. With --url
  * the story is opened on `<origin>/<base>/` (the deployed site) instead.
  * Both ways it also checks the docs story pages against the index.json of
- * that Storybook (checkPages).
+ * that Storybook (checkPages), and the intro line above the story (D124): a
+ * link "View documentation for this example" to the story's docs page, and
+ * no "This story on the docs site" text.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -31,6 +33,9 @@ import {
 const CI_PORT = 5343;
 const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
+const DOCS_ORIGIN = 'https://www.shadcn-table.com';
+const INTRO_TEXT = 'View documentation for this example';
+const OLD_INTRO_TEXT = 'This story on the docs site';
 /** The story's render (play, then afterEach) settles within this. */
 const FINISH_TIMEOUT = 90_000;
 /** Then the initial state shows within this. */
@@ -92,6 +97,13 @@ async function checkPages(root) {
   return results;
 }
 
+/**
+ * A story's docs page, as .storybook/preview.tsx links it: the example page
+ * of an exact story, else /docs/examples/more/<story id>.
+ */
+const docsPageUrl = (id) =>
+  `${DOCS_ORIGIN}/docs/examples/${readExactStories().get(id) ?? `more/${id}`}`;
+
 /** The PASS and FAIL lines of one story check against `storyUrl`. */
 async function checkStory(storyUrl) {
   const results = [];
@@ -147,6 +159,22 @@ async function checkStory(storyUrl) {
       state.filter ? `"${state.filter}"` : '',
     );
     check('window.__ST_STATIC__ is true', state.isStatic);
+    const intro = await page.evaluate(
+      ({ text, oldText }) => ({
+        hrefs: [...document.querySelectorAll('a')]
+          .filter((a) => a.textContent?.trim() === text)
+          .map((a) => a.href),
+        hasOld: document.body.textContent?.includes(oldText) ?? false,
+      }),
+      { text: INTRO_TEXT, oldText: OLD_INTRO_TEXT },
+    );
+    const expectedDocs = docsPageUrl(STORY_ID);
+    check(
+      'intro links to the docs page',
+      intro.hrefs.length === 1 && intro.hrefs[0] === expectedDocs,
+      `${JSON.stringify(intro.hrefs)} (expected "${expectedDocs}")`,
+    );
+    check('old intro text absent', !intro.hasOld);
   } finally {
     await browser.close();
   }

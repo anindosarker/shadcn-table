@@ -161,14 +161,13 @@ const preview: Preview = {
       return (
         <div className="bg-background p-4 text-foreground">
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
-            This story on the docs site:{' '}
             <a
               href={docsPageUrl(id)}
               target="_blank"
               rel="noopener"
               className="underline"
             >
-              {docsPageUrl(id).slice('https://www.'.length)}
+              View documentation for this example
             </a>
           </p>
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">

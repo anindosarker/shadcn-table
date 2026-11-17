@@ -310,15 +310,12 @@ const pinningData: PinningPerson[] = [
 ];
 
 const ColumnPinningTable = () => {
-  // As in the example: `enableColumnPinning` is not a column option (the
-  // column option is `enablePinning`), so the ID column stays pinnable; the
-  // inline column list keeps that line as the example has it.
   const columns = useMemo<ST_ColumnDef<PinningPerson>[]>(
     () => [
       {
         accessorKey: 'id',
         icon: HashIcon,
-        enableColumnPinning: false,
+        enablePinning: false, //disable column pinning for this column
         header: 'ID',
         size: 110,
       },
@@ -379,7 +376,7 @@ const ColumnPinningTable = () => {
 
 /**
  * State starts pinned to the start and City to the end; Pin to start on
- * First Name puts it beside State.
+ * First Name puts it beside State. The ID column menu has no pin items.
  */
 export const ColumnPinning = {
   render: () => <ColumnPinningTable />,
@@ -402,6 +399,20 @@ export const ColumnPinning = {
         'state',
         'firstName',
       ]),
+    );
+    await userEvent.click(
+      within(header(canvasElement, 'id')).getByRole('button', {
+        name: 'Column Actions',
+      }),
+    );
+    const menu = await within(document.body).findByRole('menu');
+    expect(within(menu).getAllByRole('menuitem').length).toBeGreaterThan(0);
+    expect(
+      within(menu).queryAllByRole('menuitem', { name: /^(Pin to|Unpin)/ }),
+    ).toHaveLength(0);
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
   },
 };
