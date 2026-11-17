@@ -2,7 +2,7 @@
 
 Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `apps/shadcn-table-docs/content/docs/guides/meta.json` on `v0.9/docs-layout`: the page its Example section links to, and the heading of the table removed from the guide, if any. Tick a line once the guide is checked by hand.
 
-- [ ] Building Production-Ready Tables: Example links React Query Example (/docs/examples/react-query); removed: none : **Table duplicated twice** ![1794937426891](image/guide-checklist/1794937426891.png)
+- [ ] Building Production-Ready Tables: Example links Production-Ready Table (/docs/examples/more/features-server-data--production-ready-table), the guide's own server-side data table, shown once; its Code view lists the five server-side-data files; removed: the guide's inline table and the React Query Example (D130, D131, d9bed58c) : **Table duplicated twice** ![1794937426891](image/guide-checklist/1794937426891.png)
 - [X] Best Practices (TypeScript): Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Data (Accessor) Columns: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Display (Built-in) Columns: Example links Advanced Example (/docs/examples/advanced); removed: none

@@ -2,7 +2,7 @@
 
 Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per guide, in the order of `apps/shadcn-table-docs/content/docs/guides/meta.json` on `v0.9/docs-layout` (the overview `index` and the five `new-format` comparison pages are not guides). Each line names the page the guide's Example section shows: an example page by its slug (`/docs/examples/<slug>`) or a story by its Storybook id (`/docs/examples/more/<id>`), then how it was chosen. Order of choice: an example page that already shows the guide's feature; an existing story; a new story. No example needed an option enabled.
 
-- production-ready-tables: `react-query`, example page. Server paging, sorting and filtering through React Query; the guide links it.
+- production-ready-tables: `more/features-server-data--production-ready-table`, new story. The guide's own server-side data table (every page, sort, search and filter change sends one request to `/api/users`); in the guide its Code view shows the five files of `server-side-data/` (D130, D131).
 - best-practices: `basic`, example page. Typed columns and stable data.
 - data-columns: `basic`, example page. Accessor columns, one with a nested key.
 - display-columns: `advanced`, example page. Selection, expand and row action columns.
