@@ -90,6 +90,8 @@ kanban-plugin: basic
 	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
 	- Owner recorded 2026-11-18.
 	- Source: Q100
+- [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #R6
+	- Source: Q112
 
 ## In progress
 
