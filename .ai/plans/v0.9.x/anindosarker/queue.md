@@ -61,6 +61,7 @@ kanban-plugin: basic
 	- Fixed on v0.9/docs-layout: c8aaf443, merged 675337f9. Under pnpm dev (NODE_ENV development) every docs Storybook link goes to localhost 6007 (base), 6006 (radix), 6008 (aria); a production build keeps storybook.shadcn-table.com (hrefs read on a real build, no localhost string in .next/static).
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
+- [ ] **Q112** Storybook needs an upgrade to the current version
 
 ## Decided
 
