@@ -54,6 +54,8 @@ kanban-plugin: basic
 	- /docs/examples/sticky-header (table sets enableStickyHeader: true): with `View settings` > `Sticky header` switched off the switch shows off but thead stays sticky. Found by the builder of spec 54 while running the Try it steps in a browser; not fixed, no step uses the switch; not reproduced by a second agent.
 - [ ] **Q98** The column pinning example means to lock the ID column but uses an option name that does nothing
 	- apps/shadcn-table-docs/examples/{base,radix,aria}/enable-column-pinning/TS.tsx sets `enableColumnPinning: false` on the ID column; the column option is `enablePinning`, so ID can still be pinned while the page's comment says it cannot. Found by a story builder of spec 56; the exact story copies the example as it is.
+- [ ] **Q99** Two new exact stories differ from their docs examples because the library package lacks what the example uses
+	- Branch v0.9/exact-stories (spec 56): the chart-detail-panel story draws its three lines in inline SVG because the example uses recharts, which packages/shadcn-table does not depend on and spec 56 1.7 does not add; the five editing CRUD stories confirm a delete in an inline box under the table because the library registry has no AlertDialog, where the examples open a modal dialog. Keep, or add recharts and an alert dialog to the package's dev setup so the stories match exactly.
 
 ## Decided
 
