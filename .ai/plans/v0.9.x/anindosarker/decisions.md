@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D133** The sidebar state script runs from the page head #R6
-	- Settled by the lead: an owner-reported bug with one right behaviour, already fixed.
-	- Opening the docs from the home page showed a script tag error in the console and lost the saved sidebar width (`app/docs/layout.tsx:22`).
-	- Fixed as a hotfix on `v0.9/docs-layout`, merge bb8eec7a: the script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
-	- Source: Q111
 - [ ] **D134** Pinned virtual rows are sticky rows in their own grid track #R6
 	- Settled by the lead: a build deviation that keeps D128.
 	- Spec 61 described absolute rows with a clamped offset; built as `position: sticky` in a grid track of their own (`ST_TableBody.tsx:84`, new optional prop `stickyGridRow` on `ST_TableBodyRowProps`), because an absolute row placed from the scroll offset lags and jumps.
@@ -896,6 +891,11 @@ kanban-plugin: basic
 	- The ghost is removed on drop and on cancel, does not take touches, and does not show on mouse drags, where the browser draws its own.
 	- Owner recorded 2026-11-18.
 	- Source: Q115
+- [x] **D133** The sidebar state script runs from the page head #R6
+	- Settled by the lead: an owner-reported bug with one right behaviour, already fixed.
+	- Opening the docs from the home page showed a script tag error in the console and lost the saved sidebar width (`app/docs/layout.tsx:22`).
+	- Fixed as a hotfix on `v0.9/docs-layout`, merge bb8eec7a: the script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
+	- Source: Q111
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
