@@ -51,6 +51,17 @@ kanban-plugin: basic
 	- Owner recorded 2026-11-17.
 	- Source: Q96
 - [ ] **D119** Three example pages get a title and address that match their sidebar name #R6
+	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
+	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
+	- The three that change:
+	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
+	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
+	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
+	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
+	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
+	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
+	- Descriptions and body text are not touched (docs-layout LQ26).
+	- Owner recorded 2026-11-17.
 	- Source: Q108
 
 ## In progress
