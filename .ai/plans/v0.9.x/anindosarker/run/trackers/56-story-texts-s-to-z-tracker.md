@@ -18,6 +18,7 @@ Checks:
 - Task 2 three parts on every page: done, 2f128832, run d3a60a09
 - Task 3 step truth: done, c73601b9, run d3a60a09 (two pages rewritten, one page untrue until its story changes)
 - Task 4 text check by judges: judges: run by the workflow
+- Task 4 fixer round 1: the 10 lines the judges failed rewritten (4 virtualization step 1 lines, dense and spacious step 1, search-disabled step 1, edition-icons step 2, two descriptions), 9d0d2deb, run d3a60a09; wording only, no action or result changed, so no browser rerun
 - Task 5 cleanup: done, `pnpm format` clean, c73601b9, run d3a60a09
 
 ## Attention
