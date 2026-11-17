@@ -20,6 +20,7 @@ Checks:
 - Task 4 text check by judges: judges: run by the workflow
 - Task 5 cleanup: done, `pnpm format` clean, build and guide links checked, e6eae48e, run d3a60a09
 - Task 4 fix round 2: 8 lines failed by the judges rewritten on 8 pages, changed steps run on a production build (base, port 5340), 3408833c, run d3a60a09
+- Task 4 fix round 3: Color Sort Icon description rewritten in plain words and true to the code (the class misses the arrow, it stays gray); steps unchanged, so no browser run, bf5d4fcb, run d3a60a09
 
 ## Attention
 
