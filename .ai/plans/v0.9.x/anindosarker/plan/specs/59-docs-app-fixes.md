@@ -51,6 +51,9 @@ apps/shadcn-table-docs/
 ├── components/not-found-page.tsx           ← new: frame, message, search trigger, section links
 ├── components/example-playground.tsx       ← the id comes from the mount's place, decided on the server
 ├── app/docs/layout.tsx, components/sidebar-section.tsx, components/sidebar-subgroup.tsx   ← lighter "More examples"
+├── lib/source.ts                           ← second means only: the tree for DocsLayout without the "More examples" rows
+├── lib/more-examples.ts                    ← new, second means only: the row list of "More examples" built from `source` (label, address, number, sub-group)
+├── app/docs/more-examples.json/route.ts    ← new, second means only: a static route that serves that list once at `/docs/more-examples.json`
 test/docs-e2e/lib/site.mjs                  ← new: id, 404 and sidebar checks, registered in test.mjs
 ```
 
@@ -67,7 +70,7 @@ test/docs-e2e/lib/site.mjs                  ← new: id, 404 and sidebar checks,
 
 - The id is fixed by where the example is mounted, not by mount order: the mount inside the guide Example section renders `guide-example-<name>`; an inline mount and a story page mount keep `example-<name>`. Both are known on the server, so the served HTML and the hydrated page agree.
 - `useExampleId`'s mount-order registry and its layout effect are removed.
-- `test/docs-e2e/lib/helpers.mjs` selectors that target the Example section follow the new id.
+- The helper in `test/docs-e2e/lib/helpers.mjs` that finds an example matches both ids, so the checks in `guides.mjs` (owned by spec 58 in the same sprint) keep passing; `guides.mjs` is not edited here.
 - Does NOT change the id of an example page or of an inline guide example, so existing links to `#example-<name>` keep working.
 
 #### 1.6.3 404 page (D121)
@@ -81,7 +84,7 @@ test/docs-e2e/lib/site.mjs                  ← new: id, 404 and sidebar checks,
 
 - Task 1 measures first: for one story page and one example page, the bytes of the HTML and of the RSC payload, split into the sidebar part and the rest, and the bytes one sidebar row costs in each.
 - First means, no visible change: trim what one row costs (markup and serialized props of a row in the closed or open folder). The sizes of 1.2 reached: stop.
-- Second means, only when the first does not reach the sizes: the tree handed to `DocsLayout` carries "More examples" without its rows; the folder shows its label and count from the tree, and its rows come from one static JSON that the folder's client component loads when the folder is open (at once on a story page, on first open elsewhere). On a story page the current row, its number and its sub-group label are rendered on the server, so the active row never waits for the list.
+- Second means, only when the first does not reach the sizes: the tree handed to `DocsLayout` carries "More examples" without its rows; the folder shows its label and count from the tree, and its rows come from one static JSON, `/docs/more-examples.json` (built at build time by `app/docs/more-examples.json/route.ts` from `lib/more-examples.ts`, never typed by hand), that the folder's client component loads when the folder is open (at once on a story page, on first open elsewhere). On a story page the current row, its number and its sub-group label are rendered on the server, so the active row never waits for the list.
 - Either way the rows, their numbers, the counts in brackets, the sticky labels, the non-collapsing sub-groups and the remembered open state stay as D102 and D103 say.
 - Does NOT remove a story page, change `generateStaticParams`, or take the story pages out of the sitemap, search or llms output.
 
@@ -107,7 +110,7 @@ test/docs-e2e/lib/site.mjs                  ← new: id, 404 and sidebar checks,
 
 ### Milestone: Lighter story pages
 
-- Files owned: `apps/shadcn-table-docs/app/docs/layout.tsx`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/more-examples.ts`, `test/docs-e2e/test.mjs`, `test/docs-e2e/lib/site.mjs`
+- Files owned: `apps/shadcn-table-docs/app/docs/layout.tsx`, `apps/shadcn-table-docs/components/sidebar-section.tsx`, `apps/shadcn-table-docs/components/sidebar-subgroup.tsx`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/more-examples.ts`, `apps/shadcn-table-docs/app/docs/more-examples.json/route.ts`, `test/docs-e2e/test.mjs`, `test/docs-e2e/lib/site.mjs`
 - Depends on: Example ids and 404 page
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`

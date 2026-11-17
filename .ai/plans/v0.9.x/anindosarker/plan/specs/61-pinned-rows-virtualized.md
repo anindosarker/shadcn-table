@@ -68,7 +68,7 @@ flowchart LR
 
 #### 1.6.4 Guide line
 
-- `row-pinning.mdx:77`: the sentence "Sticky Row Pinning is not currently compatible with row virtualization." is removed, because it is no longer true. No other sentence changes.
+- `row-pinning.mdx:77`: the blockquote line "Sticky Row Pinning is not currently compatible with row virtualization." is removed, because it is no longer true: line 77 and one blank line beside it. No other sentence changes.
 
 **Stays unchanged:** `stConfigFeature.ts`, `types.ts`, `index.ts`, every other guide.
 
@@ -84,10 +84,10 @@ flowchart LR
 - Depends on: Sticky header switch and resize grip
 - Review: fable
 - Local CI: `pnpm test typecheck --base base`, `pnpm test typecheck --base radix`, `pnpm test typecheck --base aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test storybook-tests --base base`, `pnpm test storybook-tests --base radix`, `pnpm test storybook-tests --base aria`
-- Task 1: The play first (P11), on `RowPinningStickyWithVirtualization`: pin a row near the top to the top and one to the bottom; scroll the body to the middle and to the end; after each scroll both rows are in the DOM and their boxes lie inside the body's visible box, the top one directly under the header, the bottom one at the lower edge; unpin one, it scrolls with the rest again. It runs on the code before the fix and fails. Checks: the failure in the tracker
+- Task 1: The play first (P11), on `RowPinningStickyWithVirtualization`, with the sticky header on (switched on in the play through `View settings` when the story does not start sticky): pin two rows to the top and two to the bottom; scroll the body to the middle and to the end; after each scroll all four rows are in the DOM and their boxes lie inside the body's visible box, the top two stacked directly under the sticky header in their order, the bottom two stacked at the lower edge; unpin one, it scrolls with the rest again. It runs on the code before the fix and fails. Checks: the failure in the tracker
 - Task 2: Pinned rows stay rendered and placed (1.6.2, 1.6.3) on base, radix and aria. Checks: the play passes on the three bases; `PinRowTopMode`, `PinRowSticky` and `UnpinRow` still pass; the `Features/Virtualization` plays still pass
 - Task 3: Same as without virtualization: in a browser on a P6 port, `PinRowSticky` and `RowPinningStickyWithVirtualization` side by side, two rows pinned at the top and two at the bottom, scrolled slowly end to end: the pinned rows stop at the same places and in the same order, and no row jumps while scrolling. Checks: one line in the tracker per base; the server stopped
-- Task 4: The guide line (1.6.4). Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/row-pinning.mdx` shows one removed sentence
+- Task 4: The guide line (1.6.4). Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/row-pinning.mdx` shows line 77 and one blank line removed, nothing else
 - Task 5: Cleanup: `pnpm format`, the changelog block, `pnpm registry:build` leaves `registry.json` unchanged. Checks: 2.2
 
 ### 2.2 Checks

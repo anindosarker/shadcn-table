@@ -14,7 +14,7 @@ Branch: each milestone's branch is created from `origin/claude/review` and merge
 
 ### 1.2 Goals
 
-- A finger or a pen reorders, as a mouse does today: columns by the grip and by the header cell, rows by the grip, the columns in the show/hide menu, the sort rules in the sort popover, and a column dropped on the grouping drop zone (D108).
+- A finger reorders, as a mouse does today: columns by the grip and by the header cell, rows by the grip, the columns in the show/hide menu, the sort rules in the sort popover, and a column dropped on the grouping drop zone (D108).
 - The same on base, radix and aria (D108).
 - A touch that starts on a grip does not scroll the page; a touch anywhere else scrolls as before (D108).
 - Mouse dragging, column resize and the range slider are unchanged (D108).
@@ -63,7 +63,7 @@ L/shared/utils/drag.utils.ts               ← + the drop target marks the touch
 
 ```mermaid
 flowchart LR
-  D[pointerdown, touch or pen, on a grip] --> S[same drag state as the mouse path: draggingColumn or draggingRow, or the surface's local state]
+  D[pointerdown, touch, on a grip] --> S[same drag state as the mouse path: draggingColumn or draggingRow, or the surface's local state]
   S --> M[pointermove: the element under the finger, its nearest drop target mark]
   M --> H[same hover state: hoveredColumn or hoveredRow, or local]
   M --> A[auto scroll near an edge]
@@ -81,10 +81,10 @@ flowchart LR
 
 #### 1.6.2 The touch path (`useST_TouchDrag`)
 
-- Pointer events with `pointerType` `touch` or `pen` only; a mouse never enters it, so the HTML5 path stays the mouse path, untouched.
+- Pointer events with `pointerType` `touch` only (D108 states a finger); a mouse never enters it, so the HTML5 path stays the mouse path, untouched.
 - It writes the same state the mouse path writes and ends in the same drop routine, so highlights, the slide animation, the drop zone, a locked column and a cancelled drag behave the same. The drop routine no longer needs `dataTransfer` to tell a cancel when the drag came from touch.
 - The drop target under the finger is found from the element at the pointer's position and a mark on each drop target; near an edge of the scroll container it scrolls as `useST_DragAutoScroll` does for a mouse.
-- The handlers an app passed for the grip (`onDragStart`, `onDragEnd`) are called at the same moments as on the mouse path.
+- The handlers an app passed for the grip (`onDragStart`, `onDragEnd`) are called at the same moments as on the mouse path. On touch they receive the pointer event of that moment in place of the drag event: it has the same `target` and `currentTarget` and no `dataTransfer`. The documented reorder pattern reads only the table's dragging and hovered state, so it works unchanged. `types.ts` is unchanged: no prop type is added, removed or narrowed (P7).
 - Start: on a grip the drag starts at once and the grip carries `touch-none`. On a header cell that is itself draggable (no grip) it starts after the finger has rested about 300 ms without moving; a swipe before that scrolls the table as today.
 - Internal: not exported from `index.ts`, no new public option or type.
 
@@ -100,7 +100,7 @@ flowchart LR
 
 #### 1.6.5 Guide line
 
-- `column-ordering-dnd.mdx:158`: the sentence "Touch screens have no column drag." is removed, because it is no longer true. No other sentence changes.
+- `column-ordering-dnd.mdx:158`: the bullet line "Touch screens have no column drag." is removed, because it is no longer true. No other sentence changes.
 
 **Stays unchanged:** the features' state and setters, `types.ts`, `index.ts`, the resize handle, the range slider.
 
@@ -116,11 +116,11 @@ flowchart LR
 - Depends on: Pinned rows with row virtualization
 - Review: fable
 - Local CI: `pnpm test typecheck --base base`, `pnpm test typecheck --base radix`, `pnpm test typecheck --base aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test storybook-tests --base base`, `pnpm test storybook-tests --base radix`, `pnpm test storybook-tests --base aria`
-- Task 1: Touch plays first (P11), with pointer events of `pointerType: 'touch'`: on `ColumnDraggingWithGrip` a column moved by its grip; on `ColumnDraggingEnabled` a column moved by its header after the rest; on `ColumnDraggingLockedColumn` a locked column stays; on `ColumnDraggingCancelled` a `pointercancel` leaves the order; on `DragReordersRows` a row moved by its grip; on `DragBetweenTables` a row moved to the second table. Each ends in the order its mouse play ends in. They run on the code before the change and fail. Checks: the failures in the tracker
+- Task 1: Touch plays first (P11), with pointer events of `pointerType: 'touch'`. The touch steps are appended to the existing play of the named story; no new story export is added, because a new export becomes a docs page on `v0.9/docs-layout` (D106). On `ColumnDraggingWithGrip` a column moved by its grip; on `ColumnDraggingEnabled` a column moved by its header after the rest; on `ColumnDraggingLockedColumn` a locked column stays; on `ColumnDraggingCancelled` a `pointercancel` leaves the order; on `DragReordersRows` a row moved by its grip; on `DragBetweenTables` a row moved to the second table. Each ends in the order its mouse play ends in. They run on the code before the change and fail. Checks: the failures in the tracker
 - Task 2: The touch path and the drop target marks (1.6.2). Checks: `pnpm test typecheck --base base|radix|aria`; the hook file is identical on the three bases (`pnpm test validate-repo`)
 - Task 3: Columns and rows (1.6.3) on base, radix and aria. Checks: the touch plays of Task 1 pass on the three bases; every mouse play of the three story files still passes (`RowOrdering` "Drag Reorders Rows" on aria is a known flake under load, P5: rerun once)
 - Task 4: Scrolling: with touch emulation in a browser on a P6 port (the method of card Q90: Chromium device emulation with CDP touch events, on the local Storybook), a drag that starts on a grip does not scroll the page or the table; a swipe on a body cell and a quick swipe on a header cell scroll as before; a row dragged to the edge of a virtualized body scrolls it. Checks: one line per base in the tracker; the server stopped
-- Task 5: The guide line (1.6.5). Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/column-ordering-dnd.mdx` shows one removed sentence
+- Task 5: The guide line (1.6.5). Checks: `git diff origin/claude/review -- apps/shadcn-table-docs/content/docs/guides/column-ordering-dnd.mdx` shows the bullet line 158 removed, nothing else
 - Task 6: Cleanup: `pnpm format`, the changelog block, `pnpm registry:build` and the regenerated `registry.json` committed. Checks: 2.2
 
 ### Milestone: Touch drag in menus and toolbars
@@ -129,7 +129,7 @@ flowchart LR
 - Depends on: Touch drag for columns and rows
 - Review: fable
 - Local CI: `pnpm test typecheck --base base`, `pnpm test typecheck --base radix`, `pnpm test typecheck --base aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test storybook-tests --base base`, `pnpm test storybook-tests --base radix`, `pnpm test storybook-tests --base aria`
-- Task 1: Touch plays first (P11): on `MenuReorderMovesColumn` a menu item moved by its grip moves the column; on `LockedColumnStaysPut` the locked one stays; on `ReorderRemoveDelete` a sort rule moved above another changes the sort order; on a grouping story of `ColumnGrouping.stories.tsx` that shows the drop zone, a column dragged by its grip onto the drop zone groups the table. Each runs on the code before the change and fails. Checks: the failures in the tracker
+- Task 1: Touch plays first (P11). The touch steps are appended to the existing play of the named story; no new story export is added (D106). On `MenuReorderMovesColumn` a menu item moved by its grip moves the column; on `LockedColumnStaysPut` the locked one stays; on `ReorderRemoveDelete` a sort rule moved above another changes the sort order; on a grouping story of `ColumnGrouping.stories.tsx` that shows the drop zone, a column dragged by its grip onto the drop zone groups the table. Each runs on the code before the change and fails. Checks: the failures in the tracker
 - Task 2: The three surfaces (1.6.4) on base, radix and aria; the per-base differences of these files stay as they are. Checks: the touch plays pass on the three bases; every mouse play of the four story files still passes; the menu and the popover are still open after a touch drop (asserted in the plays)
 - Task 3: The same emulation run as the first milestone's Task 4 for the three surfaces: a touch drag on a menu item or a sort rule does not scroll the page behind the popup. Checks: one line per base in the tracker; the server stopped; the tracker's Notes carry the line that the real device check of D108 is owed before the release
 - Task 4: Cleanup: `pnpm format`, the changelog block, `tools/registry/*-diff.json` still true, `registry.json` unchanged or regenerated. Checks: 2.2

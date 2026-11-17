@@ -8,7 +8,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 Three content corrections to the docs E14 built, found by the owner on the preview. On 15 guides the Example section sits below a note or a second intro block instead of right after the first paragraph (D117). The Basic page's Try it steps never filter a column, although Basic is the page a visitor looking for column filtering lands on (D118). Three example pages carry a title and an address that differ from their sidebar name (D119). One builder holds all three, because D117 and D119 edit the same guide files.
 
-Branch: created from `origin/v0.9/docs-layout`, merges into `v0.9/docs-layout` (process.md P1, D109). The branch is created only after the D122 guide hotfix has merged there (Task 1), because that hotfix edits five of the same guides.
+Branch: created from `origin/v0.9/docs-layout`, merges into `v0.9/docs-layout` (process.md P1, D109). The D122 guide hotfix (merge 77a4a0c2) is on that branch and edits four of the same guides; Task 1 confirms it before anything is moved.
 
 ### 1.2 Goals
 
@@ -30,17 +30,17 @@ apps/shadcn-table-docs/
 │   ├── react-query.mdx:2,13                 ← title; link to /docs/examples/virtualized
 │   ├── editing-crud-inline-row.mdx:2, virtualized.mdx:2
 │   ├── meta.json:8-10                       ← the three slugs in Featured
-│   └── lazy-sub-rows.mdx:11, remote.mdx:9, advanced.mdx:9   ← links to the three
+│   └── lazy-sub-rows.mdx:11, remote.mdx:9, advanced.mdx:9, infinite-scrolling.mdx:7   ← links to the three (`[Virtualized Example](/docs/examples/virtualized)` at infinite-scrolling :7)
 ├── content/docs/getting-started/usage.mdx:51
-├── lib/storybook-map.ts:13,14               ← keys `react-query`, `editing-crud-inline-row` (page slugs; `virtualized` has no key)
+├── lib/storybook-map.ts:13-15               ← keys `react-query`, `editing-crud-inline-row`, `virtualized` (page slugs, all three; `virtualized` is written unquoted)
 └── next.config.mjs:100-112                  ← redirects: [{ source, destination, permanent }]
 packages/shadcn-table/.storybook/preview.tsx:40-60   ← reads the map keys as page slugs (docsPageUrl); not edited here
 test/docs-e2e/lib/examples.mjs:464-468,577,864-877   ← the three addresses
 test/docs-e2e/lib/guides.mjs                          ← per-guide checks
 ```
 
-- Guides with a block between the first paragraph and `## Example` (line of the heading): aggregation 10, column-resizing 10, customize-components 10, customize-icons 10, data-columns 12, detail-panel 10, display-columns 10, editing 10, expanding-sub-rows 10, row-actions 10, row-ordering-dnd 10, state-management 12, table-event-listeners 10, view-settings 18, virtualization 10; and two D122 hotfix pages: async-loading 10, production-ready-tables 30.
-- Guide files that link or name the three pages: async-loading :8, :12, :143; editing :12; production-ready-tables :32, :382; column-filtering :355; toolbar-customization :225; virtualization :143.
+- Guides with a block between the first paragraph and `## Example` (line of the heading): aggregation 10, column-resizing 10, customize-components 10, customize-icons 10, data-columns 12, detail-panel 10, display-columns 10, editing 10, expanding-sub-rows 10, row-actions 10, row-ordering-dnd 10, state-management 12, table-event-listeners 10, view-settings 18, virtualization 10; async-loading 10 (hotfixed by D122); production-ready-tables 30 (D130 hotfix, outside E15; moved as found: with D130 merged its Example section is already on top and nothing moves).
+- Guide files that link or name the three pages: async-loading :8, :12, :14; editing :12; production-ready-tables :32, :382; column-filtering :355; toolbar-customization :225; virtualization :143.
 - The page slug is the mdx file name only. Example folders (`react-query`, `editing-crud-row`, `virtualized`), registry item names and hosted paths use the folder name and do not change (P7).
 - Sitemap, search index, llms output, picker and prev/next are built from the content source and follow by themselves.
 - Filter flow labels on Basic (`shared/locales/en.ts`): toolbar button `Filter` (:6), picker rows are the column headers, the text field placeholder is `Filter by State` (:51), `Remove filter` (:107).
@@ -85,7 +85,7 @@ apps/shadcn-table-docs/next.config.mjs   ← + three permanent redirects
 #### 1.6.4 Three page names (D119)
 
 - The three files are renamed with `git mv`; their `title` becomes the sidebar name plus " Example"; `sidebarTitle`, description and body stay.
-- `meta.json`, `lib/storybook-map.ts` keys, every `GuideExamples` slug and every link of 1.3 take the new slug; a link text "React Query Example", "Editing CRUD Inline Row Example" or "Virtualized Example" becomes the new title. A link text that does not name the title (for example "fully virtualized example") stays.
+- `meta.json`, the three `lib/storybook-map.ts` keys, every `GuideExamples` slug and every link of 1.3 take the new slug; a link text "React Query Example", "Editing CRUD Inline Row Example" or "Virtualized Example" becomes the new title. A link text that does not name the title (for example "fully virtualized example") stays.
 - `next.config.mjs`: three entries `{ source: '/docs/examples/<old>', destination: '/docs/examples/<new>', permanent: true }`.
 - Does NOT rename an example folder, a registry item or a hosted path; does NOT touch `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
 
@@ -103,12 +103,12 @@ apps/shadcn-table-docs/next.config.mjs   ← + three permanent redirects
 - Depends on: none
 - Review: fable
 - Local CI: `pnpm test typecheck --base radix`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base`, `pnpm test docs-e2e --base radix`, `pnpm test docs-e2e --base aria`, `pnpm test storybook-static --base base`
-- Task 1: Start state: the D122 hotfix is on the branch point (`git log origin/v0.9/docs-layout --oneline --grep="Q100"` prints its merges; `production-ready-tables`, `async-loading`, `pagination`, `scroll-cues` each show their table once). Not merged yet: return blocked with that reason. Checks: the two merges named in the tracker
+- Task 1: Start state: the D122 hotfix is on the branch point. Checks: `git merge-base --is-ancestor 77a4a0c2 origin/v0.9/docs-layout` succeeds; `async-loading`, `pagination`, `scroll-cues` and `click-to-copy` each show their table once; whether D130 (production-ready-tables) has merged is noted in the tracker, and that guide is moved as found
 - Task 2: Placement on the 17 guides (1.6.2). Checks: in each of the 17 guides `## Example` is the first heading and directly follows the first paragraph; `git diff origin/v0.9/docs-layout --color-moved=zebra -- apps/shadcn-table-docs/content/docs/guides` shows moved lines only, no added or removed sentence; a docs E2E check in `guides.mjs` that on every guide the Example section's heading is the first `h2` and follows one paragraph
-- Task 3: Three page names (1.6.4). Checks: `grep -rn "examples/react-query\|examples/editing-crud-inline-row\|examples/virtualized\b\|React Query Example\|Editing CRUD Inline Row Example\|Virtualized Example" apps/shadcn-table-docs/content apps/shadcn-table-docs/lib test/docs-e2e` prints only the three redirect sources; on a production build the three old addresses answer 308 to the new ones and the three new pages show the new title in `h1`, `<title>` and the breadcrumb; the Storybook button of `/docs/examples/server-side-pagination` and `/docs/examples/inline-editing` opens its story and that story's intro link points back at the new address (`pnpm test storybook-static --base base`); the example picker lists the three under their new titles
+- Task 3: Three page names (1.6.4). Checks: `grep -rn "examples/react-query\|examples/editing-crud-inline-row\|examples/virtualized\b\|React Query Example\|Editing CRUD Inline Row Example\|Virtualized Example" apps/shadcn-table-docs/content apps/shadcn-table-docs/lib test/docs-e2e` prints nothing; `grep -n "^  virtualized:\|'react-query':\|'editing-crud-inline-row':" apps/shadcn-table-docs/lib/storybook-map.ts` prints nothing; on a production build the three old addresses answer 308 to the new ones and the three new pages show the new title in `h1`, `<title>` and the breadcrumb; the Storybook button of `/docs/examples/server-side-pagination`, `/docs/examples/inline-editing` and `/docs/examples/virtualization` opens its story (`pnpm test storybook-static --base base`), and in a browser that story's intro link leads back to the new address; the example picker lists the three under their new titles
 - Task 4: Nothing else renamed. Checks: `git diff origin/v0.9/docs-layout --stat -- apps/shadcn-table-docs/examples apps/shadcn-table-docs/registry.json packages/shadcn-table/registry.json tools/registry` prints nothing; the frontmatter `title` of the other 39 example pages is unchanged (`git diff` shows three title lines)
 - Task 5: Basic steps (1.6.3) and their truth: each step run once in a browser on a production build with base, radix and aria selected, on a P6 port, its result seen. Checks: one line per base in the tracker with the label of each control as shown; a corrected label named there; the server stopped
-- Task 6: The text check of D104 by three judges on the four Basic steps. Checks: every line passes by majority; a failed line is rewritten within D118 and judged again
+- Task 6: The text check of D104 by three judges on the four Basic steps. Checks: every line passes by majority; for a failed line only a label is corrected to the on-screen one; any other failure goes to the tracker's Attention with the judges' reason, and the text of D118 stays unchanged
 - Task 7: Cleanup: `pnpm format`, the changelog block, docs E2E checks follow the new slugs and the Basic steps. Checks: 2.2
 
 ### 2.2 Checks
