@@ -4,143 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D108** Every reorder drag works by touch on phones and tablets #R5
-	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
-	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
-	- It works the same on all three bases (Base UI, Radix, React Aria).
-	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
-	- Mouse dragging, column resize and the range slider stay as they are today.
-	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
-	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
-	- Owner picked option 1 of Q90, 2026-11-17.
-	- Source: Q90
-- [ ] **D113** An example shown twice on a page has different ids in the served HTML too #R6
-	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
-	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
-	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
-	- Source: Q94
-- [ ] **D114** The column pinning example locks the ID column with the option that works #R6
-	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
-	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
-	- Source: Q98
-- [ ] **D115** The chart detail panel and editing stories match their examples exactly #R6
-	- Settled by the lead: D106 says the story is the same table as the example.
-	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
-	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
-	- Source: Q99
-- [ ] **D116** Story pages no longer triple the size of the docs build #R6
-	- Settled by the lead: a build problem, not an owner item.
-	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
-	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
-	- Source: Q101
-- [ ] **D117** The guide Example section sits right after the first intro paragraph #R6
-	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
-	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
-	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
-	- Source: Q105
-- [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #R6
-	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
-	- The steps, four in all:
-	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
-	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
-	-   3. Remove the filter. All five rows return.
-	-   4. Open search and type `Ohio`. One row remains.
-	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
-	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
-	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
-	- Owner recorded 2026-11-17.
-	- Source: Q96
-- [ ] **D119** Three example pages get a title and address that match their sidebar name #R6
-	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
-	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
-	- The three that change:
-	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
-	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
-	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
-	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
-	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
-	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
-	- Descriptions and body text are not touched (docs-layout LQ26).
-	- Owner recorded 2026-11-17.
-	- Source: Q108
-- [ ] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #R6
-	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
-	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
-	- Full screen still forces the sticky header on, as today.
-	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
-	- All three bases alike. MRT has no such switch.
-	- Owner recorded 2026-11-17.
-	- Source: Q97
-- [ ] **D121** A wrong address on the docs site shows our own 404 page #R6
-	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
-	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
-	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
-	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
-	- Not part of this: a "Did you mean" suggestion.
-	- Owner recorded 2026-11-17.
-	- Source: Q110
-- [ ] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #R6
-	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
-	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
-	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
-	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
-	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
-	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
-	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
-	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
-	- Owner recorded 2026-11-18.
-	- Source: Q100
-- [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #R6
-	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
-	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
-	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
-	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
-	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
-	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
-	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
-	- Owner recorded 2026-11-18.
-	- Source: Q112
-- [ ] **D124** The first line above each Storybook story reads View documentation for this example #R6
-	- The three lines above every story, in this order:
-	-   1. View documentation for this example
-	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
-	-   3. View Source code for these examples in the code tab below or here on GitHub.
-	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
-	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
-	- Owner's wording, recorded 2026-11-18.
-	- Source: Q102
-- [ ] **D125** Ticking a parent row ticks its sub-rows #R6
-	- Settled by the lead: a bug with one right behaviour, the one MRT has.
-	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
-	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
-	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
-	- Source: Q103
-- [ ] **D126** A column's resize grip can be dragged across its whole width #R6
-	- Settled by the lead: a bug with one right behaviour.
-	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
-	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
-	- Source: Q104
-- [ ] **D127** The Click to copy button fits its cell and shows its own tooltip #R6
-	- Settled by the lead: a bug with one right behaviour.
-	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
-	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
-	- Source: Q107
-- [ ] **D128** A pinned row stays in view while virtualized rows scroll #R6
-	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
-	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
-	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
-	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
-	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
-	- Owner tested the story locally and recorded 2026-11-18.
-	- Source: Q106
-- [ ] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #R6
-	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
-	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
-	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
-	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
-	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
-	- Owner recorded 2026-11-18.
-	- Source: Q113
 - [ ] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
 	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
 	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
@@ -162,6 +25,143 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
+- [ ] **D108** Every reorder drag works by touch on phones and tablets #E15 #R5
+	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
+	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
+	- It works the same on all three bases (Base UI, Radix, React Aria).
+	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
+	- Mouse dragging, column resize and the range slider stay as they are today.
+	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
+	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
+	- Owner picked option 1 of Q90, 2026-11-17.
+	- Source: Q90
+- [ ] **D113** An example shown twice on a page has different ids in the served HTML too #E15 #R6
+	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
+	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
+	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
+	- Source: Q94
+- [ ] **D114** The column pinning example locks the ID column with the option that works #E15 #R6
+	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
+	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
+	- Source: Q98
+- [ ] **D115** The chart detail panel and editing stories match their examples exactly #E15 #R6
+	- Settled by the lead: D106 says the story is the same table as the example.
+	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
+	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
+	- Source: Q99
+- [ ] **D116** Story pages no longer triple the size of the docs build #E15 #R6
+	- Settled by the lead: a build problem, not an owner item.
+	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
+	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
+	- Source: Q101
+- [ ] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
+	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
+	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
+	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
+	- Source: Q105
+- [ ] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
+	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
+	- The steps, four in all:
+	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
+	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
+	-   3. Remove the filter. All five rows return.
+	-   4. Open search and type `Ohio`. One row remains.
+	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
+	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
+	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
+	- Owner recorded 2026-11-17.
+	- Source: Q96
+- [ ] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
+	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
+	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
+	- The three that change:
+	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
+	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
+	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
+	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
+	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
+	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
+	- Descriptions and body text are not touched (docs-layout LQ26).
+	- Owner recorded 2026-11-17.
+	- Source: Q108
+- [ ] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
+	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
+	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
+	- Full screen still forces the sticky header on, as today.
+	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
+	- All three bases alike. MRT has no such switch.
+	- Owner recorded 2026-11-17.
+	- Source: Q97
+- [ ] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
+	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
+	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
+	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
+	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
+	- Not part of this: a "Did you mean" suggestion.
+	- Owner recorded 2026-11-17.
+	- Source: Q110
+- [ ] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #E15 #R6
+	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
+	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
+	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
+	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
+	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
+	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
+	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
+	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
+	- Owner recorded 2026-11-18.
+	- Source: Q100
+- [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
+	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
+	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
+	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
+	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
+	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
+	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
+	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
+	- Owner recorded 2026-11-18.
+	- Source: Q112
+- [ ] **D124** The first line above each Storybook story reads View documentation for this example #E15 #R6
+	- The three lines above every story, in this order:
+	-   1. View documentation for this example
+	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
+	-   3. View Source code for these examples in the code tab below or here on GitHub.
+	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
+	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
+	- Owner's wording, recorded 2026-11-18.
+	- Source: Q102
+- [ ] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
+	- Settled by the lead: a bug with one right behaviour, the one MRT has.
+	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
+	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
+	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
+	- Source: Q103
+- [ ] **D126** A column's resize grip can be dragged across its whole width #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
+	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
+	- Source: Q104
+- [ ] **D127** The Click to copy button fits its cell and shows its own tooltip #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
+	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
+	- Source: Q107
+- [ ] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
+	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
+	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
+	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
+	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
+	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
+	- Owner tested the story locally and recorded 2026-11-18.
+	- Source: Q106
+- [ ] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #E15 #R6
+	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
+	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
+	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
+	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
+	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
+	- Owner recorded 2026-11-18.
+	- Source: Q113
 
 ## Done
 
@@ -824,7 +824,7 @@ kanban-plugin: basic
 	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
 	- Source: LQ1, LQ6
 	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [x] **D109** E14 builds on its own branch so patch releases keep going #R5
+- [x] **D109** E14 builds on its own branch so patch releases keep going #E15 #R5
 	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
 	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
 	- `v0.9/docs-layout` merges into `claude/review` only on the owner's explicit word, after the owner's reviews (the guide checklist of D105, the Try it texts of D104, the story texts of D106). It lands as one merge.

@@ -1,4 +1,5 @@
 # 60: Four small table fixes
+- Epic: E15
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
