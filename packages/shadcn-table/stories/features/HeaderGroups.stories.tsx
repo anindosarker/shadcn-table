@@ -292,7 +292,7 @@ export const GroupEdgesMatchLeaves = {
       columns={columns}
       data={data}
       enableRowSelection
-      initialState={{ columnPinning: { start: ['firstName'] } }}
+      initialState={{ columnPinning: { start: ['firstName'], end: [] } }}
     />
   ),
   play: async ({ canvasElement }: StoryContext) =>

@@ -12,7 +12,13 @@ import {
   headerLabelsFit,
   sectionFrame,
 } from './helpers.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
 import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
+import {
+  MORE_DIR,
+  readExactStories,
+} from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { BASE_LABELS } from '../../../tools/registry/bases.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
@@ -252,11 +258,51 @@ const examplePage =
     await codeToggle(page, id, needle, check);
   };
 
-/** A story page (spec 56, 1.6.4) and the last one in the sidebar. */
+/** A story page (spec 56, 1.6.4). */
 const STORY_PAGE = 'features-aggregation--aggregation';
-const LAST_STORY_PAGE = 'styling-theming--custom-dark-theme';
-/** 42 example pages, then one row per story page under More examples. */
-const LAST_ROW = 636;
+/** The story pages in sidebar order (more/meta.json, without its labels). */
+const MORE_PAGES = JSON.parse(
+  fs.readFileSync(path.join(MORE_DIR, 'meta.json'), 'utf8'),
+).pages.filter((page) => !page.startsWith('---'));
+/** The last story page in the sidebar. */
+const LAST_STORY_PAGE = MORE_PAGES.at(-1);
+/**
+ * One example page per exact story (lib/storybook-map.ts), then one row per
+ * story page under More examples.
+ */
+const LAST_ROW = readExactStories().size + MORE_PAGES.length;
+
+/**
+ * D103: "More examples" starts closed on a page outside it and keeps the
+ * state the visitor leaves it in across a reload, open or closed.
+ */
+async function moreExamplesState(page, check) {
+  const more = () =>
+    page.locator('#nd-sidebar button[data-slot="collapsible-trigger"]', {
+      hasText: 'More examples',
+    });
+  const expanded = async () =>
+    (await more()
+      .getAttribute('aria-expanded')
+      .catch(() => null)) === 'true';
+  const reload = () =>
+    page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  check('More examples closed by default', !(await expanded()));
+  await more().click();
+  check('More examples opened by hand', await expanded());
+  await reload();
+  await more()
+    .waitFor({ timeout: 10000 })
+    .catch(() => {});
+  check('More examples still open after a reload', await expanded());
+  await more().click();
+  check('More examples closed by hand', !(await expanded()));
+  await reload();
+  await more()
+    .waitFor({ timeout: 10000 })
+    .catch(() => {});
+  check('More examples still closed after a reload', !(await expanded()));
+}
 
 /**
  * Spec 56 (1.6.4, D103): a story page shows its story in the playground on
@@ -395,6 +441,7 @@ const checks = {
     const w = await example(page, 'basic', check);
     await singleExample(page, check);
     await storedIconLibrary(page, check);
+    await moreExamplesState(page, check);
     // Example switcher: previous is disabled on the first example, next
     // steps to the second Featured row, React Query (D103).
     const header = w.locator('header');
