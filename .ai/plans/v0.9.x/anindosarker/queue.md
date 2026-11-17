@@ -39,6 +39,7 @@ kanban-plugin: basic
 - [ ] **Q111** Opening the docs from the home page showed a script tag error and lost the saved sidebar width
 	- Owner report 2026-11-17 (Next.js console: script tag at app/docs/layout.tsx:22). Fixed on v0.9/docs-layout: 5ec82529, merged bb8eec7a: the sidebar state script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
 - [ ] **Q115** How a touch drag starts on a header and what the finger sees while dragging
+	- Spec 62 (E15, D108), the spec writer's defaults where D108 is silent: a grip drags at once; a header cell that is itself draggable starts the drag only after about 300 ms of holding, so a swipe still scrolls; no drag image follows the finger on touch (the drop target marking is the only feedback). Mouse dragging unchanged. Raised by the lead's SPECS E15 check 2026-11-18.
 
 ## Decided
 
