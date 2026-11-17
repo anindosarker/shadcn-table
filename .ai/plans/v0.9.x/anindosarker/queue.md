@@ -71,6 +71,8 @@ kanban-plugin: basic
 	- production-ready-tables: the Example section (React Query) sits between the guide's own server-side-data table and 'Folder Layout', so the sentence 'Open the Code view above' now has the React Query panel nearest above it; the guide text may not be reworded (D105) and guide-example-plan.md fixes react-query for this guide.
 - [ ] **Q106** A pinned row does not stay in view on scroll when the rows are virtualized
 	- Story features-row-pinning--row-pinning-sticky-with-virtualization on a production docs build (base), branch v0.9/story-texts-g-r: a pinned virtual row does not stick while the table scrolls; the page's steps claim only that the row stays pinned. Found by the run's browser check of the Try it steps; not reproduced by a second agent.
+- [ ] **Q107** On React Aria the Click to copy button is wider than its cell, so hovering can show the cell's overflow tooltip instead
+	- Story features-click-to-copy--click-to-copy-disabled-per-column on aria in the vitest browser: the 57.5px copy button overflows its 50px overflow span, so a hover opens the name's overflow tooltip, not Click to copy; the play checks the tooltip through keyboard focus there. Seen only in the vitest browser, not at desktop width in the docs. Found by the builder of spec 56 Story text checklist; not reproduced by a second agent.
 
 ## Decided
 
