@@ -105,3 +105,4 @@ Updated: 2026-11-17 17:31
 | E14 56 Story texts Miscellaneous |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |
 | E14 56 Story text checklist |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
 | E14 56 Story pages review fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |
+| E14 56 Story and docs fixes found while writing the story texts |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |

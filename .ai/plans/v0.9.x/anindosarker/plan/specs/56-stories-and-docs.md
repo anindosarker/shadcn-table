@@ -327,6 +327,14 @@ sidebarTitle: 'Aggregation Default'
 - Starts: S20
 - Task 1: Story pages review fixes. Checks: pnpm test typecheck --base radix, pnpm test lint, pnpm test validate-repo, pnpm test storybook-static --base base, pnpm test storybook-tests --base base, pnpm test docs-e2e --base base
 
+### Milestone: Story and docs fixes found while writing the story texts
+
+- Files owned: `packages/shadcn-table/stories/**`, `apps/shadcn-table-docs/app/global.css`, `apps/shadcn-table-docs/lib/story-variants.mjs`, `apps/shadcn-table-docs/example-groups/EditingCRUDExamples.tsx`, `apps/shadcn-table-docs/example-groups/map.tsx`, `apps/shadcn-table-docs/content/docs/examples/more/**`, `test/typecheck/**`
+- Depends on: Theme customizer, Style sheet on demand, Remove dev routes, Preview lands on review, Footer link and square corners, Guide pages, Story group names, Exact stories and merged copies, Story pages in the docs, Story pages review fixes, Story texts A to C, Story texts D to F, Story texts G to R, Story texts Miscellaneous, Story texts S to Z, Story texts Styling
+- Review: none
+- Starts: S20
+- Task 1: Story and docs fixes found while writing the story texts. Checks: pnpm test typecheck --base base, pnpm test typecheck --base radix, pnpm test typecheck --base aria, pnpm test lint, pnpm test validate-repo, pnpm test storybook-tests --base base, pnpm test storybook-tests --base radix, pnpm test storybook-tests --base aria, pnpm test storybook-static --base base, pnpm test docs-e2e --base base
+
 ### 2.2 Checks
 
 - `pnpm test storybook-tests --base base|radix|aria`, `pnpm test storybook-static --base base`, `pnpm test typecheck --base base|radix|aria`, `pnpm test lint`, `pnpm test validate-repo`, `pnpm test docs-e2e --base base|radix|aria` green; every server stopped
