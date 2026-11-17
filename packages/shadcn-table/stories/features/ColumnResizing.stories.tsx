@@ -214,44 +214,43 @@ const translateOf = (element: HTMLElement) =>
 // F50: in an RTL table the drag preview lays the slots right to left, so
 // every header stays inside the table and only the dragged and target
 // columns shift.
-export const DragPreviewRTL = {
-  render: ColumnResizingEnabledOnEndRTL,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByRole('columnheader', {
-      name: /Address/,
-    });
-    const address = headerCellNamed(canvasElement, 'Address');
-    const state = headerCellNamed(canvasElement, 'State');
-    const addressWidth = address.getBoundingClientRect().width;
-    const stateWidth = state.getBoundingClientRect().width;
-    fireEvent.dragStart(address);
-    dragOverSlot(canvasElement, state);
-    await waitFor(() => {
-      const table = canvasElement.querySelector('table')!;
-      const tableBox = table.getBoundingClientRect();
-      const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
-      for (const th of ths) {
-        const box = th.getBoundingClientRect();
-        expect(
-          box.left >= tableBox.left - 1 && box.right <= tableBox.right + 1,
-          `${th.textContent?.trim()} [${box.left}, ${box.right}] inside table [${tableBox.left}, ${tableBox.right}]`,
-        ).toBe(true);
-      }
-      // RTL: Address moves left by State's width, State right by Address's.
-      expect(translateOf(address) + stateWidth).toBeCloseTo(0, 0);
-      expect(translateOf(state) - addressWidth).toBeCloseTo(0, 0);
-      for (const th of ths) {
-        if (th === address || th === state) continue;
-        expect(translateOf(th), th.textContent?.trim()).toBe(0);
-      }
-    });
-    // Cancel the drag, as Escape does.
-    const end = new DragEvent('dragend', { bubbles: true });
-    Object.defineProperty(end, 'dataTransfer', {
-      value: { dropEffect: 'none' },
-    });
-    fireEvent(address, end);
-  },
+ColumnResizingEnabledOnEndRTL.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /Address/,
+  });
+  const address = headerCellNamed(canvasElement, 'Address');
+  const state = headerCellNamed(canvasElement, 'State');
+  const addressWidth = address.getBoundingClientRect().width;
+  const stateWidth = state.getBoundingClientRect().width;
+  fireEvent.dragStart(address);
+  dragOverSlot(canvasElement, state);
+  await waitFor(() => {
+    const table = canvasElement.querySelector('table')!;
+    const tableBox = table.getBoundingClientRect();
+    const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
+    for (const th of ths) {
+      const box = th.getBoundingClientRect();
+      expect(
+        box.left >= tableBox.left - 1 && box.right <= tableBox.right + 1,
+        `${th.textContent?.trim()} [${box.left}, ${box.right}] inside table [${tableBox.left}, ${tableBox.right}]`,
+      ).toBe(true);
+    }
+    // RTL: Address moves left by State's width, State right by Address's.
+    expect(translateOf(address) + stateWidth).toBeCloseTo(0, 0);
+    expect(translateOf(state) - addressWidth).toBeCloseTo(0, 0);
+    for (const th of ths) {
+      if (th === address || th === state) continue;
+      expect(translateOf(th), th.textContent?.trim()).toBe(0);
+    }
+  });
+  // Cancel the drag, as Escape does.
+  const end = new DragEvent('dragend', { bubbles: true });
+  Object.defineProperty(end, 'dataTransfer', {
+    value: { dropEffect: 'none' },
+  });
+  fireEvent(address, end);
 };
 
 export const ColumnResizingCustomDefaultWidths = () => (
@@ -485,12 +484,7 @@ export const ResizeGuidesMeetEdge = {
   play: expectResizeGuidesMeetEdge('onChange'),
 };
 
-export const ResizeGuidesMeetEdgeOnEnd = {
-  render: () => (
-    <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
-  ),
-  play: expectResizeGuidesMeetEdge('onEnd'),
-};
+ColumnResizingEnabledOnEnd.play = expectResizeGuidesMeetEdge('onEnd');
 
 const firstNameHeader = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>(

@@ -136,10 +136,6 @@ export const ColumnOrderingWithSelect = () => (
   <ShadcnTable columns={columns} data={data} enableRowSelection />
 );
 
-export const ColumnOrderingWithPinning = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
-
 export const ColumnOrderingNoDragHandles = () => (
   <ShadcnTable columns={columns} data={data} enableColumnDragging={false} />
 );
@@ -256,28 +252,27 @@ export const MenuReorderMovesColumn = {
  * A column with `enableColumnOrdering: false` has no grip in the columns
  * menu, takes no drop, and keeps its index while other columns move.
  */
-export const LockedColumnStaysPut = {
-  render: () => <ColumnOrderingDisabledPerColumn />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByRole('columnheader', {
-      name: /First Name/,
-    });
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
-    const menu = await openColumnsMenu(canvasElement);
-    expect(
-      within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
-        'button',
-        { name: 'Move' },
-      ),
-    ).toBeNull();
-    // A drop on the locked row is refused.
-    menuDrag(menu, 'First Name', 'State');
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(headerIds(canvasElement)[0]).toBe('firstName');
-    // Moving another column past it leaves it where it was.
-    menuDrag(menu, 'First Name', 'City');
-    await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
-    expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
-  },
+ColumnOrderingDisabledPerColumn.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /First Name/,
+  });
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  const menu = await openColumnsMenu(canvasElement);
+  expect(
+    within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
+      'button',
+      { name: 'Move' },
+    ),
+  ).toBeNull();
+  // A drop on the locked row is refused.
+  menuDrag(menu, 'First Name', 'State');
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  expect(headerIds(canvasElement)[0]).toBe('firstName');
+  // Moving another column past it leaves it where it was.
+  menuDrag(menu, 'First Name', 'City');
+  await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
 };

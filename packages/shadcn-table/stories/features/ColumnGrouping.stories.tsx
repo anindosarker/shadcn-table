@@ -410,17 +410,11 @@ const precedes = (a: Node, b: Node) =>
 // Under groupedColumnMode 'remove' the grouping column's header is a
 // breadcrumb: the expand-all button, then per grouped column its icon and
 // name, segments separated by a chevron (D68).
-export const GroupedHeaderHasIcon = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableGrouping
-      groupedColumnMode="remove"
-      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
+GroupingColumnModeRemove.play = async ({
+  canvasElement,
+  step,
+}: StoryContext) => {
+  await step('Grouped Header Has Icon', async () => {
     await waitFor(() => {
       const th = headerCell(canvasElement, 'st-row-expand');
       expect(th).not.toBeNull();
@@ -454,7 +448,39 @@ export const GroupedHeaderHasIcon = {
         expect(precedes(order[index]!, node)).toBe(true);
       });
     });
-  },
+  });
+  // The wide grouping column aligns start: the header's expand-all button and
+  // breadcrumb, the group rows' chevron and label, and the leaf rows' chevron
+  // sit at the cell's start edge, not mid-column (F57).
+  await step('Grouped Header Aligns Start', async () => {
+    const startOffset = (element: Element, cell: Element) =>
+      element.getBoundingClientRect().left - cell.getBoundingClientRect().left;
+    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+    const expandCell = (row: Element) =>
+      row.querySelector('td[data-flip-column="st-row-expand"]')!;
+    await waitFor(() => {
+      const th = headerCell(canvasElement, 'st-row-expand');
+      expect(th).not.toBeNull();
+      const breadcrumb = textNode(th!, 'Gender')!.parentElement!.closest(
+        'span:has(button)',
+      )!;
+      expect(startOffset(breadcrumb, th!)).toBeLessThanOrEqual(24);
+      const groupCell = expandCell(rows()[0]!);
+      expect(
+        startOffset(groupCell.querySelector('button')!, groupCell),
+      ).toBeLessThanOrEqual(24);
+      const leafRow = rows().find(
+        (row) =>
+          row
+            .querySelector('td[data-flip-column="firstName"]')
+            ?.textContent?.trim() !== '',
+      )!;
+      const leafCell = expandCell(leafRow);
+      expect(
+        startOffset(leafCell.querySelector('button')!, leafCell),
+      ).toBeLessThanOrEqual(32);
+    });
+  });
 };
 
 const thWidth = (canvasElement: HTMLElement) =>
@@ -519,42 +545,6 @@ export const GroupedHeaderWidthOverride = {
   },
 };
 
-// Under 'remove' the wide grouping column aligns start: the header's
-// expand-all button and breadcrumb, the group rows' chevron and label, and the
-// leaf rows' chevron sit at the cell's start edge, not mid-column (F57).
-export const GroupedHeaderAlignsStart = {
-  render: () => <GroupingColumnModeRemove />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const startOffset = (element: Element, cell: Element) =>
-      element.getBoundingClientRect().left - cell.getBoundingClientRect().left;
-    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
-    const expandCell = (row: Element) =>
-      row.querySelector('td[data-flip-column="st-row-expand"]')!;
-    await waitFor(() => {
-      const th = headerCell(canvasElement, 'st-row-expand');
-      expect(th).not.toBeNull();
-      const breadcrumb = textNode(th!, 'Gender')!.parentElement!.closest(
-        'span:has(button)',
-      )!;
-      expect(startOffset(breadcrumb, th!)).toBeLessThanOrEqual(24);
-      const groupCell = expandCell(rows()[0]!);
-      expect(
-        startOffset(groupCell.querySelector('button')!, groupCell),
-      ).toBeLessThanOrEqual(24);
-      const leafRow = rows().find(
-        (row) =>
-          row
-            .querySelector('td[data-flip-column="firstName"]')
-            ?.textContent?.trim() !== '',
-      )!;
-      const leafCell = expandCell(leafRow);
-      expect(
-        startOffset(leafCell.querySelector('button')!, leafCell),
-      ).toBeLessThanOrEqual(32);
-    });
-  },
-};
-
 // With grouping active the expand column aligns start in every
 // groupedColumnMode: under `false` and 'reorder' the group rows' chevrons sit
 // at the cell's start and step right one indent per depth, not mid-column
@@ -602,32 +592,20 @@ export const GroupedExpandAlignsStartAllModes = {
 };
 
 // Under 'reorder' the grouped column keeps its own header, icon included.
-export const GroupedHeaderHasIconReorder = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableGrouping
-      groupedColumnMode="reorder"
-      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
+ColumnGroupingEnabledReorder.play = async ({
+  canvasElement,
+  step,
+}: StoryContext) => {
+  await step('Grouped Header Has Icon Reorder', async () => {
     await waitFor(() => {
       const th = headerCell(canvasElement, 'state');
       expect(th).not.toBeNull();
       expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
     });
-  },
-};
-
-/**
- * The banner names the grouped columns as chips, in grouping order; a chip
- * click ungroups that column.
- */
-export const GroupByBanner = {
-  render: () => <ColumnGroupingEnabledReorder />,
-  play: async ({ canvasElement }: StoryContext) => {
+  });
+  // The banner names the grouped columns as chips, in grouping order; a chip
+  // click ungroups that column.
+  await step('Group By Banner', async () => {
     const canvas = within(canvasElement);
     const banner = (await canvas.findByText(/^Grouped by/)).closest('span')!;
     expect(banner).toHaveTextContent(/^Grouped by State, then by Gender$/);
@@ -639,7 +617,7 @@ export const GroupByBanner = {
         /^Grouped by Gender$/,
       ),
     );
-  },
+  });
 };
 
 /**

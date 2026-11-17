@@ -186,13 +186,28 @@ export const PinStartSticks = {
   },
 };
 
-/** Unpin puts a pinned column back in its place, no longer sticky. */
-export const UnpinRestores = {
-  render: () => <ColumnPinningInitial />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByRole('columnheader', {
-      name: /Email Address/,
-    });
+/**
+ * The inner-edge pinned cells cast the edge shadow (D22); unpinned cells do
+ * not. Unpin then puts a pinned column back in its place, no longer sticky.
+ */
+ColumnPinningInitial.play = async ({ canvasElement, step }: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /Email Address/,
+  });
+  await step('Pinned Edge Shadow', () => {
+    for (const id of ['email', 'state']) {
+      expect(header(canvasElement, id)).toHaveClass('drop-shadow-sm');
+      expect(bodyCell(canvasElement, id)).toHaveClass('drop-shadow-sm');
+      expect(getComputedStyle(bodyCell(canvasElement, id)).filter).toMatch(
+        /drop-shadow/,
+      );
+    }
+    for (const id of ['firstName', 'city']) {
+      expect(header(canvasElement, id)).not.toHaveClass('drop-shadow-sm');
+      expect(bodyCell(canvasElement, id)).not.toHaveClass('drop-shadow-sm');
+    }
+  });
+  await step('Unpin Restores', async () => {
     expect(headerIds(canvasElement)[0]).toBe('email');
     expect(getComputedStyle(header(canvasElement, 'email')).position).toBe(
       'sticky',
@@ -207,29 +222,5 @@ export const UnpinRestores = {
     expect(
       getComputedStyle(bodyCell(canvasElement, 'email')).position,
     ).not.toBe('sticky');
-  },
-};
-
-/**
- * The inner-edge pinned cells cast the edge shadow (D22); unpinned cells do
- * not.
- */
-export const PinnedEdgeShadow = {
-  render: () => <ColumnPinningInitial />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByRole('columnheader', {
-      name: /Email Address/,
-    });
-    for (const id of ['email', 'state']) {
-      expect(header(canvasElement, id)).toHaveClass('drop-shadow-sm');
-      expect(bodyCell(canvasElement, id)).toHaveClass('drop-shadow-sm');
-      expect(getComputedStyle(bodyCell(canvasElement, id)).filter).toMatch(
-        /drop-shadow/,
-      );
-    }
-    for (const id of ['firstName', 'city']) {
-      expect(header(canvasElement, id)).not.toHaveClass('drop-shadow-sm');
-      expect(bodyCell(canvasElement, id)).not.toHaveClass('drop-shadow-sm');
-    }
-  },
+  });
 };
