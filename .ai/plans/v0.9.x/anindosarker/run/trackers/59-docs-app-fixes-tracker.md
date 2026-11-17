@@ -19,6 +19,12 @@ Checks:
 - Check: Local CI `pnpm test docs-e2e --base base` at abda6f61: fail, 37 guide pages on one check only, guides.mjs `uniqueExampleIds` "example section: one element per plain example id"; getting-started 265/0, api 111/0, guides 937/37, examples 1101/0, site 40/0
 - Check: `npx prettier --check test/docs-e2e/lib/guides.mjs` at 70ef6df2: pass (file outside the lint config)
 - Check: Local CI `pnpm test docs-e2e --base base` at 70ef6df2: first run guides 974/0, then examples and site lost the server mid-run (ERR_CONNECTION_REFUSED, external); rerun pass, getting-started 265/0, api 111/0, guides 974/0, examples 1101/0, site 40/0
+- Check (verifier): Local CI `pnpm test validate-repo` at 70ef6df2: pass (596 story pages match, 40 unit tests); tree clean after
+- Check (verifier): Local CI `pnpm test lint` at 70ef6df2: pass (0 errors, 9 warnings in example files)
+- Check (verifier): Local CI `pnpm test typecheck --base radix` at 70ef6df2: pass (tsc clean)
+- Check (verifier): Local CI `pnpm test docs-e2e --base base`: not rerun, recorded green at 70ef6df2 (HEAD)
+- Check (verifier): Acceptance 1.2 at 70ef6df2, `next start` of the production build (app code unchanged since bd833f03) on 5347: `/docs/guides/virtualization` serves `example-enable-row-virtualization` once and `guide-example-enable-row-virtualization` once (no duplicate); `/nope`, `/docs/examples/sticky-heder`, `/docs/nope/deeper` 404 with "This page does not exist", `/docs/examples/basic` 200; docs-e2e and validate-repo green as above; the `du -sm` sizes belong to milestone "Lighter story pages"; server stopped
+- Check (verifier): Review: none for this milestone (2.2)
 
 - Task 1 Id check first: done (2568a26d)
 - Task 2 Id by place: done (42fa33e6)
