@@ -54,17 +54,23 @@ const meta: Meta = {
 export default meta;
 
 /**
- * A component whose props differ on the React Aria base, typed loosely: the
- * stories type-check against the Radix copy.
+ * A component whose props differ between the bases, typed loosely: the
+ * stories type-check against the Radix copy and the docs' React Aria copy.
  */
-type AriaComponent = ComponentType<
+type LooseComponent = ComponentType<
   Record<string, unknown> & { children?: ReactNode }
 >;
-const aria = (component: unknown) => component as AriaComponent;
-const AriaTable = aria(Table);
-const AriaTableHead = aria(TableHead);
-const AriaTableRow = aria(TableRow);
-const AriaDialog = aria(DialogParts.Dialog);
+const loose = (component: unknown) => component as LooseComponent;
+const AriaTable = loose(Table);
+const AriaTableHead = loose(TableHead);
+const AriaTableRow = loose(TableRow);
+const AriaDialog = loose(DialogParts.Dialog);
+// The Radix and Base UI dialog: `open` and DialogContent, which the React
+// Aria dialog lacks.
+const RadixDialog = loose(DialogParts.Dialog);
+const RadixDialogContent = loose(
+  (DialogParts as Record<string, unknown>).DialogContent,
+);
 
 // The docs examples "Minimal", "Custom Headless" and "Advanced"
 // (examples/base/minimal, custom-headless, advanced): their columns, options
@@ -962,9 +968,9 @@ const AdvancedTable = () => {
           {dialogBody}
         </AriaDialog>
       ) : (
-        <DialogParts.Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
-          <DialogParts.DialogContent>{dialogBody}</DialogParts.DialogContent>
-        </DialogParts.Dialog>
+        <RadixDialog onOpenChange={setDialogOpen} open={dialogOpen}>
+          <RadixDialogContent>{dialogBody}</RadixDialogContent>
+        </RadixDialog>
       )}
     </>
   );
