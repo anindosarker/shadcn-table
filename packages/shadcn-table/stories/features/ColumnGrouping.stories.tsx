@@ -409,6 +409,61 @@ const headerCell = (canvasElement: HTMLElement, id: string) =>
     `thead th[data-flip-column="${id}"]`,
   );
 
+/**
+ * Grouped by State from its column menu, each state row's Gender cell is the
+ * custom aggregated cell: `Count:` and the group's size, in red; the arrow
+ * opens the group's people with their gender.
+ */
+ColumnGroupingEnabledCustomAggregate.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByText(data[0]!.firstName);
+  await userEvent.click(
+    within(headerCell(canvasElement, 'state')!).getByRole('button', {
+      name: 'Column Actions',
+    }),
+  );
+  await userEvent.click(
+    await within(document.body).findByRole('menuitem', {
+      name: 'Group by State',
+    }),
+  );
+  const rows = () => [
+    ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
+  ];
+  const cell = (row: Element, id: string) =>
+    row.querySelector<HTMLElement>(`td[data-flip-column="${id}"]`)!;
+  let state = '';
+  await waitFor(() => {
+    const match = /(\S.*) \((\d+)\)$/.exec(
+      (cell(rows()[0]!, 'state').textContent ?? '').trim(),
+    );
+    expect(match).not.toBeNull();
+    state = match![1]!;
+    expect(Number(match![2])).toBe(
+      data.filter((person) => person.state === state).length,
+    );
+    const count = cell(rows()[0]!, 'gender').querySelector('.text-red-500');
+    expect(count).toHaveTextContent(`Count: ${match![2]}`);
+  });
+  const members = data.filter((person) => person.state === state);
+  // A closing Radix menu keeps the rest of the page aria-hidden.
+  await waitFor(() =>
+    expect(document.querySelector('[role="menu"]')).toBeNull(),
+  );
+  await userEvent.click(
+    within(rows()[0]!).getByRole('button', { name: 'Expand' }),
+  );
+  await waitFor(() =>
+    members.slice(0, 3).forEach((member, index) => {
+      const row = rows()[index + 1]!;
+      expect(cell(row, 'firstName')).toHaveTextContent(member.firstName);
+      expect(cell(row, 'gender')).toHaveTextContent(member.gender);
+    }),
+  );
+};
+
 /** The first text node in `root` whose trimmed text equals `text`. */
 const textNode = (root: HTMLElement, text: string) => {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
