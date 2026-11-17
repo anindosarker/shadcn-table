@@ -50,6 +50,8 @@ kanban-plugin: basic
 	- Merged 8215fa6b on v0.9/docs-layout (spec 56 Story group names): 'AppBar overlaps with Fullscreen Modal' is now 'Miscellaneous/App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is now 'Click To Copy'; 'RTL' and 'Custom Filter Fns' are kept as they were. Keep or revert each.
 - [ ] **Q96** The Basic example's first Try it step names a menu label the table does not show
 	- content/docs/examples/basic.mdx step 1: the text the owner accepted on basic-new-format-2 (and the example in D104) reads `Sort by First Name ascending`; the column menu shows `Sort ascending` (ST_ColumnActionMenu.tsx:259, sortAscending in locales/en.ts). The builder of spec 54 wrote `Sort ascending`; three judges read it as correct. Keep `Sort ascending` or revert to the accepted text.
+- [ ] **Q97** Turning off Sticky header in View settings does not unstick the header on the sticky header example
+	- /docs/examples/sticky-header (table sets enableStickyHeader: true): with `View settings` > `Sticky header` switched off the switch shows off but thead stays sticky. Found by the builder of spec 54 while running the Try it steps in a browser; not fixed, no step uses the switch; not reproduced by a second agent.
 
 ## Decided
 
