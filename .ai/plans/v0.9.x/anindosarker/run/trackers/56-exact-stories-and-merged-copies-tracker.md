@@ -20,7 +20,10 @@ Checks:
 - Check: `pnpm test storybook-tests --base base` at 9ab98e21: pass (85 files, 636 tests)
 - Check: `pnpm test storybook-static --base base` at 9ab98e21: pass
 - Check: `pnpm test docs-e2e --base base` at 9ab98e21: pass (examples 1067 passed, 110 pages)
-- Check: `pnpm test storybook-tests --base radix`, `--base aria`: left to the verifier
+- Check: `pnpm test storybook-tests --base radix` at 9ab98e21: pass (85 files, 636 tests), verifier
+- Check: `pnpm test storybook-tests --base aria` at 9ab98e21: pass (85 files, 636 tests), verifier
+- Check: Acceptance 1.2, milestone share, at 9ab98e21, verifier: `storybook-tests` base, radix, aria green; `validate-repo` green (builder line above, same commit); `pnpm test docs-e2e --base radix` pass (getting-started 262, api 111, guides 705, examples 1067, 110 pages, 0 failed); `pnpm test docs-e2e --base aria` pass (same counts, 0 failed); base recorded above; `lib/storybook-map.ts` 42 keys = the 42 pages of `content/docs/examples/`, 42 different ids, all in `storybook-static/base/index.json`; the audit's list 1 (exact pairs) is empty, so each id is the new exact story of Task 2; `PREVIEW_SUFFIX`/`examplePageSlug` absent. Not this milestone's: the parity check of 1.6.5, the story page texts and judges, the "More examples" reference (milestones Story pages and the text milestones)
+- Check: every server stopped (verifier started none outside the test runner, which stops its own)
 
 - Task 1 dependencies and ignore entries: done, 9efbaf7e
 - Task 2 a story per example: done, 23e717c2 (run wf_69fd0950-73d)
