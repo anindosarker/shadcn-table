@@ -1,6 +1,6 @@
 # 56: Story text checklist, tracker
 
-Status: done
+Status: merged (e22ad262)
 Branch `v0.9/story-text-checklist`, worktree 05 (from `origin/v0.9/docs-layout` at 7e13af53, D109)
 Checks:
 
