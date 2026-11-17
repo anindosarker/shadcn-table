@@ -29,55 +29,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
-	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
-	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
-	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
-	- Groups, in this order, labels without the word "Examples":
-	  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). A filter example is not featured, because the basic table already filters.
-	  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
-	  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
-	  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
-	  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
-	  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
-	  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
-	  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
-	  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
-	  - Export: `export-csv`, `export-pdf`.
-	  - Customization: `minimal`, `custom-headless`, `persistent-view`.
-	  - More examples: every Storybook group as a labelled sub-group, with its stories as rows (L29).
-	- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar; page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
-	- Numbers, Examples only: every row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included, no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the order, never typed into a page, and show in the sidebar only.
-	- "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels do not collapse.
-	- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Old against new position of every page: `sidebar-regroup-checklist.md`.
-	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
-	- Source: LQ8, LQ10
-	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #E14 #R5
-	- Replaces L14.
-	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
-	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
-	- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address").
-	- Related guides: an h2 heading and a list of links to the guide pages for the feature, below the example; every link resolves.
-	- The "View Extra Storybook Examples" line is removed from the page; the toolbar Storybook button replaces it.
-	- Text check: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
-	- Not part of this decision: rewording titles, descriptions or body text (LQ26, LQ29).
-	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
-	- Source: LQ21, LQ23, LQ24
-	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #E14 #R5
-	- Replaces L12, L19, L20, L21.
-	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
-	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
-	- Text: the docs page owns the details, the Try it steps and the related guides (L27). A story's description carries a link to its docs page and nothing more. No Storybook toolbar addon is built.
-	- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source. How the docs mount a story for each base is settled in the plan.
-	- Story pages that have no text yet start with the table and the Storybook button; their text is written in the docs and goes through the owner's wording review (LQ26).
-	- Test stories: a story that shows the same table as another and only adds an automated check is not listed on its own; its check moves onto the story it copies and the copy is deleted. First case: "Renders Rows" in the Basic stories, a copy of "Default". A test story with its own different table stays listed like any other story; none is hidden or sorted by hand.
-	- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs, as a whole; no story is moved out of it. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
-	- Every story group name is Title Case with spaces and without the word "Examples" ("sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "Aggregation Examples" "Aggregation"); the misspelt "click-propogation" becomes "Click Propagation". The change is made in the story files, so Storybook and the docs follow together, and the docs links to stories are regenerated in the same change. No two groups in one folder end up with the same name.
-	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
-	- Source: LQ20
-	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 
 ## Done
 
@@ -667,6 +618,42 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-17.
 	- Source: LQ16, LQ17, LQ7, LQ25
 	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
+	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
+	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
+	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
+	- Groups, in this order, labels without the word "Examples":
+	  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). A filter example is not featured, because the basic table already filters.
+	  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
+	  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
+	  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
+	  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
+	  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
+	  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
+	  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
+	  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
+	  - Export: `export-csv`, `export-pdf`.
+	  - Customization: `minimal`, `custom-headless`, `persistent-view`.
+	  - More examples: every Storybook group as a labelled sub-group, with its stories as rows (L29).
+	- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar; page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
+	- Numbers, Examples only: every row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included, no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the order, never typed into a page, and show in the sidebar only.
+	- "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels do not collapse.
+	- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Old against new position of every page: `sidebar-regroup-checklist.md`.
+	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
+	- Source: LQ8, LQ10
+	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #E14 #R5
+	- Replaces L14.
+	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
+	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
+	- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address").
+	- Related guides: an h2 heading and a list of links to the guide pages for the feature, below the example; every link resolves.
+	- The "View Extra Storybook Examples" line is removed from the page; the toolbar Storybook button replaces it.
+	- Text check: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
+	- Not part of this decision: rewording titles, descriptions or body text (LQ26, LQ29).
+	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
+	- Source: LQ21, LQ23, LQ24
+	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [x] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #E14 #R5
 	- Replaces L15.
 	- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
@@ -684,6 +671,19 @@ kanban-plugin: basic
 	- Owner accepted on the preview 2026-11-16: pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
 	- Source: LQ22, LQ27, LQ28
 	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #E14 #R5
+	- Replaces L12, L19, L20, L21.
+	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
+	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
+	- Text: the docs page owns the details, the Try it steps and the related guides (L27). A story's description carries a link to its docs page and nothing more. No Storybook toolbar addon is built.
+	- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source. How the docs mount a story for each base is settled in the plan.
+	- Story pages that have no text yet start with the table and the Storybook button; their text is written in the docs and goes through the owner's wording review (LQ26).
+	- Test stories: a story that shows the same table as another and only adds an automated check is not listed on its own; its check moves onto the story it copies and the copy is deleted. First case: "Renders Rows" in the Basic stories, a copy of "Default". A test story with its own different table stays listed like any other story; none is hidden or sorted by hand.
+	- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs, as a whole; no story is moved out of it. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
+	- Every story group name is Title Case with spaces and without the word "Examples" ("sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "Aggregation Examples" "Aggregation"); the misspelt "click-propogation" becomes "Click Propagation". The change is made in the story files, so Storybook and the docs follow together, and the docs links to stories are regenerated in the same change. No two groups in one folder end up with the same name.
+	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
+	- Source: LQ20
+	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
 - [x] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
 	- Replaces L17, L18.
 	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
