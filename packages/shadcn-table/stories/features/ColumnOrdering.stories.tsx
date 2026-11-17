@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
+import {
+  expect,
+  fireEvent,
+  spyOn,
+  userEvent,
+  waitFor,
+  within,
+} from 'storybook/test';
 import {
   type ST_ColumnDef,
   type ST_ColumnOrderState,
@@ -360,6 +367,26 @@ export const MenuReorderMovesColumn = {
     await waitFor(() => expect(headerIds(canvasElement)).toEqual(moved));
     expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
     expect(await within(document.body).findByRole('menu')).toBe(menu);
+
+    // A tap on a grip moves nothing: the next order change slides no column.
+    const grip = within(
+      menuItem(menu, 'State').parentElement as HTMLElement,
+    ).getByRole('button', { name: 'Move' });
+    touch({ at: centreOf(grip), element: grip, type: 'pointerdown' });
+    touch({ at: centreOf(grip), element: grip, type: 'pointerup' });
+    await pause(100);
+    expect(headerIds(canvasElement)).toEqual(moved);
+    const slides = spyOn(Element.prototype, 'animate');
+    try {
+      await userEvent.click(
+        within(document.body).getByRole('button', { name: 'Reset order' }),
+      );
+      await waitFor(() => expect(headerIds(canvasElement)).toEqual(before));
+      await pause(100);
+      expect(slides).not.toHaveBeenCalled();
+    } finally {
+      slides.mockRestore();
+    }
   },
 };
 
