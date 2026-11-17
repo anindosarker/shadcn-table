@@ -22,8 +22,10 @@ Checks:
 - Task 2 three parts on every page: done, 3d9c8c5e, run: workflow 56-texts-misc assembler
 - Task 3 step truth: done, 685dc11f, run: workflow 56-texts-misc assembler
 - Task 4 text check by judges: judges: run by the workflow
+- Task 4 fix round: five failed lines rewritten (callback-refs virtualized step 1, dragging-when-filtered description, subheader-row-ring step 2, empty-mode-chip step 3, chips-string-column description), 94dee38c, run: workflow 56-texts-misc fixer
 - Task 5 cleanup: done, 685dc11f, run: workflow 56-texts-misc assembler
 
 ## Attention
 
 - Two pages with a play carry a step the play does not assert (writers' notes): `mobile-date-pickers--mobile-date-time-pickers` steps 1 and 2 say the browser's date and time pickers open (play checks only the input types); `app-bar-overlaps-with-full-screen-modal--fullscreen-is-above-appbar` step 2 (play presses Escape, does not check the result). Kept as written; the lead decides whether the play or the step changes.
+- `filter-popover--empty-mode-chip-clear-has-name` step 3 now says to click the chip's clear button (the chip goes, the input is back); the play only checks that button's `Clear filter` name and does not click it. A step the visitor can see beat a screen-reader statement; revert if the step must match the play exactly.
