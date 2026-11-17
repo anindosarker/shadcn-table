@@ -64,6 +64,8 @@ kanban-plugin: basic
 	- packages/shadcn-table/.storybook/preview.tsx on v0.9/story-pages (spec 56 1.6.6): the intro line was 'Looking for the main docs site? Click here.'; it is now 'This story on the docs site: shadcn-table.com/docs/examples/...'. The wording is the builder's choice. Keep or give the wording.
 - [ ] **Q103** Ticking a parent row does not tick its sub-rows in the sub-row tree with selection
 	- Story features-sub-row-tree--sub-row-tree-with-selection on base, production build of v0.9/story-texts-s-z: ticking a parent leaves its sub-rows unticked (the builder names getST_RowSelectionHandler unticking them once all are selected); ticking a sub-row ticks the parent. The story page text was written to match what happens. Found by the run's browser check of the Try it steps; not compared with MRT.
+- [ ] **Q104** A column's resize grip can only be dragged from its left half
+	- Seen on the virtualization and view settings stories on a production docs build (base): the right half of a column's resize grip is covered by the next header cell, so a drag starts only from the grip's left half. Found by the run's browser check while running Try it steps; not reproduced by a second agent.
 
 ## Decided
 
