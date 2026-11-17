@@ -44,6 +44,7 @@ import { useGuideExamples } from '@/components/guide-example-switch';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 import { storybookExampleUrl } from '@/lib/storybook-map';
+import { storybookUrl } from '@/components/mdx/storybook-link';
 import type { Base } from '@/lib/install';
 import {
   trackExampleCodeOpened,
@@ -57,10 +58,16 @@ export interface ExampleVariantData {
   files: ExplorerFile[];
   /** Link to the base's example folder on GitHub. */
   githubUrl: string;
-  /** `shadcn add` command that installs the example into a project. */
-  installCommand: string;
-  /** Prompt for a coding agent: install, import, docs to read, verify. */
-  prompt: string;
+  /**
+   * `shadcn add` command that installs the example into a project. A story
+   * page has none (no registry item), so the menu leaves it out.
+   */
+  installCommand?: string;
+  /**
+   * Prompt for a coding agent: install, import, docs to read, verify. A story
+   * page has none, so Copy prompt is left out.
+   */
+  prompt?: string;
 }
 
 interface Props {
@@ -70,6 +77,12 @@ interface Props {
   name: string;
   /** Sources and commands per base; the site-wide selector picks one. */
   variants: Record<Base, ExampleVariantData>;
+  /**
+   * The Storybook story the Storybook button opens, for a story page
+   * (components/story-example.tsx); an example page's story comes from
+   * lib/storybook-map.ts.
+   */
+  storyId?: string;
 }
 
 type Mode = 'preview' | 'code' | 'both';
@@ -188,7 +201,12 @@ const COPIED_MS = 1500;
  * the example's story in the selected base's Storybook. Code, prompt and command are those of the selected
  * base (the header switch), as is the live example.
  */
-export const ExamplePlayground = ({ children, name, variants }: Props) => {
+export const ExamplePlayground = ({
+  children,
+  name,
+  variants,
+  storyId,
+}: Props) => {
   const base = useBase();
   const { files, githubUrl, installCommand, prompt } = variants[base];
   const elementId = useExampleId(name);
@@ -387,7 +405,11 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 (lib/storybook-map.ts). */}
             <Button asChild variant="ghost" size="sm" className="px-2.5">
               <a
-                href={storybookExampleUrl(base, exampleSlug)}
+                href={
+                  storyId
+                    ? `${storybookUrl[base]}?path=/story/${storyId}`
+                    : storybookExampleUrl(base, exampleSlug)
+                }
                 target="_blank"
                 rel="noreferrer"
                 onClick={() =>
@@ -400,44 +422,46 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 </span>
               </a>
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-2.5"
-              onClick={() => void copy('prompt', prompt)}
-            >
-              {copied === 'prompt' ? (
-                <CheckIcon data-icon="inline-start" />
-              ) : (
-                <SparklesIcon data-icon="inline-start" />
-              )}
-              {/* Both labels share one cell so the button keeps its width
-                  while it reads "Copied"; the hidden one is not announced. */}
-              <span
-                className={cn(
-                  'grid justify-items-start',
-                  guide && '@max-3xl:sr-only',
-                )}
+            {prompt !== undefined && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="px-2.5"
+                onClick={() => void copy('prompt', prompt)}
               >
+                {copied === 'prompt' ? (
+                  <CheckIcon data-icon="inline-start" />
+                ) : (
+                  <SparklesIcon data-icon="inline-start" />
+                )}
+                {/* Both labels share one cell so the button keeps its width
+                  while it reads "Copied"; the hidden one is not announced. */}
                 <span
                   className={cn(
-                    'col-start-1 row-start-1',
-                    copied === 'prompt' && 'invisible',
+                    'grid justify-items-start',
+                    guide && '@max-3xl:sr-only',
                   )}
                 >
-                  Copy prompt
+                  <span
+                    className={cn(
+                      'col-start-1 row-start-1',
+                      copied === 'prompt' && 'invisible',
+                    )}
+                  >
+                    Copy prompt
+                  </span>
+                  <span
+                    className={cn(
+                      'col-start-1 row-start-1',
+                      copied !== 'prompt' && 'invisible',
+                    )}
+                  >
+                    Copied
+                  </span>
                 </span>
-                <span
-                  className={cn(
-                    'col-start-1 row-start-1',
-                    copied !== 'prompt' && 'invisible',
-                  )}
-                >
-                  Copied
-                </span>
-              </span>
-            </Button>
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -451,16 +475,20 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="docs-menu w-52">
                 {/* The menu stays open so the "Copied" state is visible. */}
-                <DropdownMenuItem
-                  onSelect={(event) => {
-                    event.preventDefault();
-                    void copy('install', installCommand);
-                  }}
-                >
-                  {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
-                  {copied === 'install' ? 'Copied' : 'Copy install command'}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {installCommand !== undefined && (
+                  <>
+                    <DropdownMenuItem
+                      onSelect={(event) => {
+                        event.preventDefault();
+                        void copy('install', installCommand);
+                      }}
+                    >
+                      {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
+                      {copied === 'install' ? 'Copied' : 'Copy install command'}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem asChild>
                   <a href={githubUrl} target="_blank" rel="noreferrer">
                     <GitHubIcon />

@@ -22,6 +22,15 @@ const config = {
   // for the preview build): tsconfig.json also lists the generated types of
   // the other dist dirs, and a stale copy there (a route deleted since the
   // last `next dev` or preview build) fails the build's type check.
+  // The story pages (components/story-variant.tsx) mount stories through
+  // Storybook's composeStories, whose core annotations import storybook/test
+  // and with it the testing libraries. The docs never run a play: the alias
+  // swaps it for a module whose exports do nothing (spec 56, 1.6.4).
+  turbopack: {
+    resolveAlias: {
+      'storybook/test': './lib/storybook-test-stub.ts',
+    },
+  },
   typescript: {
     tsconfigPath: process.env.NEXT_DEV
       ? process.env.PORT && process.env.PORT !== '5320'
