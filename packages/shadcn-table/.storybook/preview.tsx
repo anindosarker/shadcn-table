@@ -39,6 +39,7 @@ const DOCS_ORIGIN = 'https://www.shadcn-table.com';
  * Story id to example page slug: the `'<slug>': '<story id>'` lines of
  * `storybookStoryId` in apps/shadcn-table-docs/lib/storybook-map.ts, the one
  * hand-kept list (spec 56, D106).
+ * The same parser is readExactStories in apps/shadcn-table-docs/lib/story-pages.mjs.
  */
 const exampleSlugs = (() => {
   const body = storybookMapSource.slice(

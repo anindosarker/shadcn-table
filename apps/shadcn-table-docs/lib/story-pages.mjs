@@ -12,7 +12,10 @@
  * `<StoryExample id="..." />` tag (components/story-example.tsx). A page that
  * exists keeps everything it holds (its description, its body text); only
  * `title` and `sidebarTitle` follow the story's name. A page whose story is
- * gone is removed. Running it twice changes nothing.
+ * gone is removed when it holds no text; one that holds text (a description
+ * or body text besides the StoryExample tag) is kept, and the script fails
+ * naming it: its text is reviewed, so a person moves it or deletes the file.
+ * Running it twice changes nothing.
  *
  * `pnpm test validate-repo` (test/validate-repo/lib/story-pages.mjs) fails
  * when the pages and the stories differ; this script fixes that.
@@ -84,7 +87,8 @@ export async function readStories() {
 
 /**
  * The example page slug of each exact story, from the hand-kept map in
- * lib/storybook-map.ts (`'<slug>': '<story id>'` lines).
+ * lib/storybook-map.ts (`'<slug>': '<story id>'` lines). The same parser is
+ * `exampleSlugs` in packages/shadcn-table/.storybook/preview.tsx.
  * @returns {Map<string, string>} story id to example slug
  */
 export function readExactStories() {
@@ -136,7 +140,7 @@ export function moreMeta(pages) {
 const yamlString = (value) => `'${value.replaceAll("'", "''")}'`;
 
 /** The text of a new page: title, sidebar label and the story. */
-export function newPage(story) {
+function newPage(story) {
   return `---
 title: ${yamlString(story.name)}
 sidebarTitle: ${yamlString(story.name)}
@@ -154,7 +158,7 @@ const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/;
  * @param {string} text
  * @param {Story} story
  */
-export function updatePage(text, story) {
+function updatePage(text, story) {
   const match = FRONTMATTER.exec(text);
   if (!match) return newPage(story) + text;
   const lines = match[1]
@@ -166,6 +170,25 @@ export function updatePage(text, story) {
     ...lines,
   ];
   return `---\n${head.join('\n')}\n---\n${text.slice(match[0].length)}`;
+}
+
+/**
+ * True when a page holds text a person wrote: a frontmatter line besides
+ * `title` and `sidebarTitle` (the description), or body text besides the
+ * `<StoryExample>` tag.
+ * @param {string} text
+ */
+function holdsText(text) {
+  const match = FRONTMATTER.exec(text);
+  const head = match
+    ? match[1]
+        .split('\n')
+        .filter((line) => line.trim() && !/^(title|sidebarTitle):/.test(line))
+    : [];
+  const body = (match ? text.slice(match[0].length) : text)
+    .replace(/<StoryExample\s+id="[^"]*"\s*\/>/g, '')
+    .trim();
+  return head.length > 0 || body.length > 0;
 }
 
 /** The Examples meta.json with "more" as its last entry. */
@@ -210,9 +233,15 @@ async function main() {
   }
   const kept = new Set(pages.map((story) => `${story.id}.mdx`));
   const removed = [];
+  const withText = [];
   for (const entry of await fs.readdir(MORE_DIR)) {
     if (entry.endsWith('.mdx') && !kept.has(entry)) {
-      await fs.rm(path.join(MORE_DIR, entry));
+      const file = path.join(MORE_DIR, entry);
+      if (holdsText(await fs.readFile(file, 'utf8'))) {
+        withText.push(entry);
+        continue;
+      }
+      await fs.rm(file);
       removed.push(entry);
     }
   }
@@ -225,6 +254,12 @@ async function main() {
     `story pages: ${pages.length} (${created} new, ${updated} updated, ${removed.length} removed${removed.length ? `: ${removed.join(', ')}` : ''})` +
       `${metaChanged ? ', more/meta.json written' : ''}${examplesChanged ? ', "more" added to examples/meta.json' : ''}`,
   );
+  for (const entry of withText) {
+    console.error(
+      `content/docs/examples/more/${entry} shows a story that is gone and holds text: move its text to the story's new page, or delete the file by hand, then run this script again`,
+    );
+  }
+  if (withText.length) process.exitCode = 1;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

@@ -16,12 +16,6 @@ const config = {
     (process.env.NEXT_DEV && process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
-  // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
-  // the second server's git-ignored copy, not tsconfig.json.
-  // A build or `next typegen` reads tsconfig.build.json (tsconfig.preview.json
-  // for the preview build): tsconfig.json also lists the generated types of
-  // the other dist dirs, and a stale copy there (a route deleted since the
-  // last `next dev` or preview build) fails the build's type check.
   // The story pages (components/story-variant.tsx) mount stories through
   // Storybook's composeStories, whose core annotations import storybook/test
   // and with it the testing libraries. The docs never run a play: the alias
@@ -31,6 +25,12 @@ const config = {
       'storybook/test': './lib/storybook-test-stub.ts',
     },
   },
+  // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
+  // the second server's git-ignored copy, not tsconfig.json.
+  // A build or `next typegen` reads tsconfig.build.json (tsconfig.preview.json
+  // for the preview build): tsconfig.json also lists the generated types of
+  // the other dist dirs, and a stale copy there (a route deleted since the
+  // last `next dev` or preview build) fails the build's type check.
   typescript: {
     tsconfigPath: process.env.NEXT_DEV
       ? process.env.PORT && process.env.PORT !== '5320'
