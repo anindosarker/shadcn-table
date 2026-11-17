@@ -21,6 +21,10 @@ const eslintConfig = defineConfig([
     'examples/.radix/**',
     'examples/.base/**',
     'examples/.aria/**',
+    //generated per-base copies of the story files (lib/story-variants.mjs)
+    'stories/.radix/**',
+    'stories/.base/**',
+    'stories/.aria/**',
   ]),
   {
     //examples mirror MRT's; loading data and reading storage after mount is intentional there

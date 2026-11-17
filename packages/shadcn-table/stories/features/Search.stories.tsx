@@ -59,9 +59,17 @@ const data = [...Array(200)].map(() => ({
   state: faker.location.state(),
 }));
 
-export const SearchEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
+export const SearchEnabledDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async (context: StoryContext) => {
+    await context.step('ToggleClearsAndCloses', () =>
+      toggleClearsAndCloses(context),
+    );
+    await context.step('EscapeClearsThenCloses', () =>
+      escapeClearsThenCloses(context),
+    );
+  },
+};
 
 export const SearchInitialState = () => (
   <ShadcnTable
@@ -84,9 +92,12 @@ export const SearchInitializedState = () => {
   );
 };
 
-export const SearchContains = () => (
-  <ShadcnTable columns={columns} data={data} globalFilterFn="contains" />
-);
+export const SearchContains = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} globalFilterFn="contains" />
+  ),
+  play: (context: StoryContext) => typingFiltersRows(context),
+};
 
 export const CustomGlobalFilterFn = () => (
   <ShadcnTable
@@ -205,66 +216,53 @@ const openSearch = async (canvasElement: HTMLElement) => {
 };
 
 /** Typing in the search leaves only the rows that contain the text. */
-export const TypingFiltersRows = {
-  render: () => <SearchContains />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const term = data[7].lastName;
-    const before = bodyRowTexts(canvasElement);
-    expect(before.every((text) => text.includes(term))).toBe(false);
-    await openSearch(canvasElement);
-    await userEvent.keyboard(term);
-    await waitFor(() => {
-      const rows = bodyRowTexts(canvasElement);
-      expect(rows.length).toBeGreaterThan(0);
-      for (const text of rows) {
-        expect(text.toLowerCase()).toContain(term.toLowerCase());
-      }
-    });
-  },
+const typingFiltersRows = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const term = data[7].lastName;
+  const before = bodyRowTexts(canvasElement);
+  expect(before.every((text) => text.includes(term))).toBe(false);
+  await openSearch(canvasElement);
+  await userEvent.keyboard(term);
+  await waitFor(() => {
+    const rows = bodyRowTexts(canvasElement);
+    expect(rows.length).toBeGreaterThan(0);
+    for (const text of rows) {
+      expect(text.toLowerCase()).toContain(term.toLowerCase());
+    }
+  });
 };
 
 /**
  * Open, one click on the toggle clears the value, restores every row and
  * closes the field (D35); the toggle is never disabled.
  */
-export const ToggleClearsAndCloses = {
-  render: () => <SearchEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const before = bodyRowTexts(canvasElement);
-    const toggle = await openSearch(canvasElement);
-    await userEvent.keyboard(data[3].lastName);
-    await waitFor(() =>
-      expect(bodyRowTexts(canvasElement)).not.toEqual(before),
-    );
-    expect(toggle).toBeEnabled();
-    await userEvent.click(toggle);
-    await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
-    expect(searchInput(canvasElement)).toHaveValue('');
-    await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
-  },
+const toggleClearsAndCloses = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const before = bodyRowTexts(canvasElement);
+  const toggle = await openSearch(canvasElement);
+  await userEvent.keyboard(data[3].lastName);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).not.toEqual(before));
+  expect(toggle).toBeEnabled();
+  await userEvent.click(toggle);
+  await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
+  expect(searchInput(canvasElement)).toHaveValue('');
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
 };
 
 /** Escape clears the typed text first, then closes the empty field. */
-export const EscapeClearsThenCloses = {
-  render: () => <SearchEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const before = bodyRowTexts(canvasElement);
-    const toggle = await openSearch(canvasElement);
-    await userEvent.keyboard(data[3].lastName);
-    await waitFor(() =>
-      expect(bodyRowTexts(canvasElement)).not.toEqual(before),
-    );
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
-    expect(searchPanel(canvasElement).inert).toBe(false);
-    await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
-    await waitFor(() => expect(document.activeElement).toBe(toggle));
-  },
+const escapeClearsThenCloses = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const before = bodyRowTexts(canvasElement);
+  const toggle = await openSearch(canvasElement);
+  await userEvent.keyboard(data[3].lastName);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).not.toEqual(before));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
+  expect(searchPanel(canvasElement).inert).toBe(false);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
+  await waitFor(() => expect(document.activeElement).toBe(toggle));
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
