@@ -24,6 +24,10 @@ publishes the section as the GitHub release notes.
 - The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
 - On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
 
+#### Spec 53 Sidebar state script
+
+- The docs sidebar's saved width and collapsed state now apply when the docs are opened from the home page, and the browser console no longer reports a script tag on that step.
+
 ### Changed
 
 #### Spec 55 Guide example block
