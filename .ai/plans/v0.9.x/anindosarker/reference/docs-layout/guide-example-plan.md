@@ -22,8 +22,8 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - density-toggle: `basic`, example page. The density button is in the toolbar by default.
 - full-screen-toggle: `basic`, example page. The full screen button is in the toolbar by default.
 - overflow-tooltip: `basic`, example page. The guide already shows it.
-- async-loading: `react-query`, example page. Skeletons and the progress bar while fetching; the guide already shows it.
-- pagination: `remote`, example page. Pages of 10 over 200 rows; the guide already shows it.
+- async-loading: `react-query`, example page. Skeletons and the progress bar while fetching; shown once, on top, under the line the removed lower table had (D122).
+- pagination: `remote`, example page. Pages of 10 over 200 rows; shown once, on top, under the line the removed lower table had (D122).
 - virtualization: `row-virtualization`, example page. Picker also `column-virtualization`, as on the accepted preview page.
 - row-selection: `export-csv`, example page. Checkbox selection with the selection banner on a plain client-side table.
 - editing: `editing-crud`, example page. Picker also `editing-crud-inline-row`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`, the guide's tab order.
@@ -37,7 +37,7 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - aggregation: `aggregation-and-grouping`, example page. The guide's first example.
 - sticky-header: `sticky-header`, example page. The guide already shows it.
 - column-pinning: `column-pinning`, example page. As on the accepted preview page.
-- scroll-cues: `column-pinning`, example page. The guide already shows it.
+- scroll-cues: `column-pinning`, example page. Shown once, on top, under the line the removed lower table had (D122).
 - row-pinning: `sticky-row-pinning`, example page. The guide's first example.
 - sorting: `basic`, example page. Sorting is on by default.
 - sort-editor: `basic`, example page. The sort button is in the toolbar by default.
@@ -47,4 +47,4 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - column-actions: `basic`, example page. The column menu is on by default.
 - cell-actions: `editing-crud-inline-cell`, example page. Cell actions are on; its page links this guide.
 - row-actions: `advanced`, example page. A row action menu on every row.
-- click-to-copy: `advanced`, example page. Click to copy is on.
+- click-to-copy: `more/features-click-to-copy--click-to-copy-enabled-with-copy-button-props`, new story. The guide's own click to copy example (First Name, Last Name, Email, City) with `enableClickToCopy` on for the whole table; the example at the end of the guide is removed (D122).

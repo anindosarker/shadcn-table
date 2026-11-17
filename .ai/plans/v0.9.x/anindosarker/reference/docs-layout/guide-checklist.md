@@ -2,7 +2,7 @@
 
 Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `apps/shadcn-table-docs/content/docs/guides/meta.json` on `v0.9/docs-layout`: the page its Example section links to, and the heading of the table removed from the guide, if any. Tick a line once the guide is checked by hand.
 
-- [X] Building Production-Ready Tables: Example links React Query Example (/docs/examples/react-query); removed: none : **Table duplicated twice** ![1794937426891](image/guide-checklist/1794937426891.png)
+- [ ] Building Production-Ready Tables: Example links React Query Example (/docs/examples/react-query); removed: none : **Table duplicated twice** ![1794937426891](image/guide-checklist/1794937426891.png)
 - [X] Best Practices (TypeScript): Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Data (Accessor) Columns: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Display (Built-in) Columns: Example links Advanced Example (/docs/examples/advanced); removed: none
@@ -22,8 +22,8 @@ Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `app
 - [X] Density Toggle Guide: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Full Screen Toggle Guide: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Overflow Tooltip Guide: Example links Basic Example (/docs/examples/basic); removed: none
-- [X] Async Loading UI Guide: Example links React Query Example (/docs/examples/react-query); removed: none : **Seems duplicate** ![1794938231661](image/guide-checklist/1794938231661.png)
-- [X] Pagination Guide: Example links Remote Data Fetching Example (/docs/examples/remote); removed: none **Seems duplicate** ![1794938299769](image/guide-checklist/1794938299769.png)
+- [ ] Async Loading UI Guide: Example links React Query Example (/docs/examples/react-query), under its moved line; removed: Full Loading and Server-Side Logic Example (D122, 77a4a0c2) : **Seems duplicate** ![1794938231661](image/guide-checklist/1794938231661.png)
+- [ ] Pagination Guide: Example links Remote Data Fetching Example (/docs/examples/remote), under its moved line; removed: the lower Remote Data table, which had no heading (D122, 77a4a0c2) **Seems duplicate** ![1794938299769](image/guide-checklist/1794938299769.png)
 - [X] Virtualization Guide: Example links Row Virtualization Example (/docs/examples/row-virtualization), Column Virtualization Example (/docs/examples/column-virtualization); removed: none
 - [X] Row Selection Guide: Example links CSV Export Example (/docs/examples/export-csv); removed: none
 - [X] Editing Guide: Example links Editing CRUD Example (/docs/examples/editing-crud), Editing CRUD Inline Row Example (/docs/examples/editing-crud-inline-row), Editing CRUD Inline Cell Example (/docs/examples/editing-crud-inline-cell), Editing CRUD Inline Table Example (/docs/examples/editing-crud-inline-table), Editing CRUD Tree Example (/docs/examples/editing-crud-tree); removed: CRUD Examples
@@ -37,7 +37,7 @@ Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `app
 - [X] Aggregation Guide: Example links Aggregation and Grouping Example (/docs/examples/aggregation-and-grouping); removed: Aggregation/Grouping Example
 - [X] Sticky Header/Footer Guide: Example links Sticky Header Example (/docs/examples/sticky-header); removed: Enable Sticky Header and Footer Demo
 - [X] Column Pinning Guide: Example links Column Pinning Example (/docs/examples/column-pinning); removed: Column Pinning Example
-- [X] Scroll Cues Guide: Example links Column Pinning Example (/docs/examples/column-pinning); removed: none; **Seems duplicate and the top example doesn't say to hover and see the cue** ![1794939251581](image/guide-checklist/1794939251581.png)
+- [ ] Scroll Cues Guide: Example links Column Pinning Example (/docs/examples/column-pinning), under its moved line; removed: Scroll Cues Example (D122, 77a4a0c2); **Seems duplicate and the top example doesn't say to hover and see the cue** ![1794939251581](image/guide-checklist/1794939251581.png)
 - [X] Row Pinning Guide: Example links Sticky Row Pinning Example (/docs/examples/sticky-row-pinning); removed: none
 - [X] Sorting Guide: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Sort Editor Guide: Example links Basic Example (/docs/examples/basic); removed: none
@@ -47,4 +47,4 @@ Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `app
 - [X] Column Actions Guide: Example links Basic Example (/docs/examples/basic); removed: none
 - [X] Cell Actions Guide: Example links Editing CRUD Inline Cell Example (/docs/examples/editing-crud-inline-cell); removed: none
 - [X] Row Actions Guide: Example links Advanced Example (/docs/examples/advanced); removed: none
-- [X] Click to Copy Guide: Example links Advanced Example (/docs/examples/advanced); removed: none; **Wrong example and the original one also don't work. Use this example instead. Fix both. remove the end example and keep only one on top** ![1794939544513](image/guide-checklist/1794939544513.png)![1794939581021](image/guide-checklist/1794939581021.png)
+- [ ] Click to Copy Guide: Example links Click To Copy Enabled With Copy Button Props (/docs/examples/more/features-click-to-copy--click-to-copy-enabled-with-copy-button-props), the guide's own example with every cell copying; removed: Click to Copy Example (D122, 77a4a0c2); **Wrong example and the original one also don't work. Use this example instead. Fix both. remove the end example and keep only one on top** ![1794939544513](image/guide-checklist/1794939544513.png)![1794939581021](image/guide-checklist/1794939581021.png)
