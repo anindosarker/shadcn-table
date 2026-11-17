@@ -1,6 +1,6 @@
 # 56: Story texts D to F, tracker
 
-Status: running
+Status: merged (ba1f06e7)
 Branch `v0.9/story-texts-d-f`, worktree 05
 Checks:
 
