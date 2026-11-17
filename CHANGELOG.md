@@ -98,6 +98,12 @@ publishes the section as the GitHub release notes.
 
 - The Click to Copy guide shows its own click to copy example on top, in place of the Advanced example, and no longer repeats it at the end; every cell of that example copies, since click to copy is on for the whole table (D122).
 
+#### Spec 55 Production-Ready Tables guide
+
+- The Production-Ready Tables guide shows its own server-side table once, in the Example section at the top, under the line about the network tab; the React Query example is no longer shown there (D130).
+- The guide's Code view still lists the five files of the `server-side-data` example the guide walks through (D131).
+- New story Features/Server Data / Production-Ready Table, with its page under More examples: the guide's table, whose play checks that each page change, sort, search and filter change sends exactly one request to `/api/users`.
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
