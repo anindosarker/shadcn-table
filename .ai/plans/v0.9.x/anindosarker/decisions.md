@@ -15,7 +15,12 @@ kanban-plugin: basic
 	- Kept as built (ee1c2837 on `claude/review`): play green on three bases, 0 jumps in the scroll measurement. Spec 61 1.5 and 1.6.3 are read with this decision.
 	- Source: Q119
 - [ ] **D135** The three renamed example pages rename the titles of their registry items too #R6
+	- Settled by the lead: follows D119. Registry item titles are generated from the page frontmatter (`tools/registry/examples.mjs:181`).
+	- The title lines of `example-react-query-*`, `example-editing-crud-row-*` and `example-virtualized-*` change on the three bases; item names and hosted paths do not (P7 holds).
+	- Kept; the regenerated `registry.json` is committed with spec 58.
 	- Source: Q120
+- [ ] **D136** The docs build size limit is measured without the build cache #R6
+	- Source: Q122
 
 ## In progress
 
