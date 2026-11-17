@@ -9,6 +9,12 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Added
+
+#### Spec 62 Touch drag for columns and rows
+
+- Columns and rows reorder by touch on phones and tablets, on Base UI, Radix UI and React Aria: a finger on a grip drags at once, a finger resting on a draggable header cell for about 300 ms drags it, and a copy of the dragged header or row follows the finger until the drop. A drag from a grip does not scroll the page; a swipe anywhere else, and on a header cell before the hold, scrolls as before. The handlers passed in `stColumnDragHandleProps` and `stRowDragHandleProps` run for a touch drop too, with the pointer event in place of the drag event. Mouse dragging is unchanged (D108, D132).
+
 ### Fixed
 
 #### Spec 52 Docs filter facts

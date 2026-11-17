@@ -1,4 +1,8 @@
-import { type KeyboardEvent, useState } from 'react';
+import {
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  useState,
+} from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -26,6 +30,10 @@ import { ST_TableHeadCellLockedOverlay } from '@/components/ui/shadcn-table/comp
 import { ST_TableHeadCellResizeHandle } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle';
 import { ST_TableHeadCellSortLabel } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellSortLabel';
 import { prefersReducedMotion } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
+import {
+  ST_TOUCH_HOLD_MS,
+  useST_TouchDrag,
+} from '@/components/ui/shadcn-table/hooks/useST_TouchDrag';
 
 export interface ST_TableHeadCellProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -89,12 +97,39 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   };
   const dragHandlers = getST_ColumnDragHandlers(column, tableHeadCellRef);
 
+  // A finger drags the cell after it rests on it, so a swipe still scrolls;
+  // a column resize holding the same finger keeps it.
+  const touchDrag = useST_TouchDrag({
+    canStart: () => !table.atoms.columnResizing.get().isResizingColumn,
+    delay: ST_TOUCH_HOLD_MS,
+    getGhostSource: () => tableHeadCellRef.current,
+    onEnd: dragHandlers.onDragEnd,
+    onStart: dragHandlers.onDragStart,
+  });
+
   // A leaf header: the one cell per column the column slide moves.
   const isLeaf = !header.isPlaceholder && !header.subHeaders.length;
   const isLocked =
     columnDefType !== 'group' &&
     (enableColumnOrdering === false ||
       columnDef.enableColumnOrdering === false);
+
+  const handlePointerDown = (
+    event: ReactPointerEvent<HTMLTableCellElement>,
+  ) => {
+    tableCellProps?.onPointerDown?.(event);
+    // A finger on a field or a slider keeps its own gesture; a portal (a
+    // menu, a filter popover) is a React child but not part of the cell.
+    const target = event.target as Element;
+    if (
+      event.currentTarget.contains(target) &&
+      !target.closest(
+        'input, select, textarea, [contenteditable="true"], [role="slider"], [data-slot="slider"]',
+      )
+    ) {
+      touchDrag.onPointerDown(event);
+    }
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTableCellElement>) => {
     tableCellProps?.onKeyDown?.(event);
@@ -286,6 +321,9 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             tabIndex={enableKeyboardShortcuts ? 0 : undefined}
             {...tableCellProps}
             onKeyDown={handleKeyDown}
+            onPointerDown={
+              canDrag ? handlePointerDown : tableCellProps.onPointerDown
+            }
             className={cn(
               headCellVariants(),
               !(showSubheaderFilter && showColumnFilters) && 'h-10',
