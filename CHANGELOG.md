@@ -40,6 +40,10 @@ publishes the section as the GitHub release notes.
 
 - The project Storybook moves from 10.6.2 to 10.6.7, the latest stable release: `storybook` and every `@storybook/*` package, with `@storybook/addon-vitest` still pinned exact. No configuration change was needed; the story tests, the three static builds and their story ids, and screenshots of a fixed set of stories are the same as before on Base UI, Radix UI and React Aria. The `glob` advisory that comes in through Storybook's docgen plugin (Storybook issue 37409) is not fixed by 10.6.7 and stays until Storybook updates the plugin; it is a development dependency only (D123).
 
+#### Spec 64 Guide stories
+
+- Four new stories show their feature in use on load, each with its docs page under More examples: Sorted On Load (the Sorting guide's table, sorted by State, then by City descending), Column Hidden On Load (Address hidden, listed unticked in the columns menu), Column Widened On Load (First Name at 400 px) and Searched On Load (the search box open with `John`). Each has a play and Try it steps (D140).
+
 ### Fixed
 
 #### Spec 53 Section tab hover
