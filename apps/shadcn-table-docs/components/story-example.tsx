@@ -72,6 +72,7 @@ export async function StoryExample({
     })),
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}/tree/${gitConfig.branch}/apps/shadcn-table-docs/examples/${base}/${name}`,
     installCommand: exampleAddCommand(name, base),
+    installItem: `example-${name}`,
     prompt: await buildExamplePrompt({ name, base }),
   });
   const variants = Object.fromEntries(
