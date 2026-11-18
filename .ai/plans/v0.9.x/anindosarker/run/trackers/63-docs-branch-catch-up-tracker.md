@@ -1,8 +1,7 @@
 # 63: Docs branch catch-up, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/docs-branch-catch-up`, worktree 08
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+## Attention
