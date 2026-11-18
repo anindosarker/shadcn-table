@@ -44,6 +44,10 @@ publishes the section as the GitHub release notes.
 
 - Four new stories show their feature in use on load, each with its docs page under More examples: Sorted On Load (the Sorting guide's table, sorted by State, then by City descending), Column Hidden On Load (Address hidden, listed unticked in the columns menu), Column Widened On Load (First Name at 400 px) and Searched On Load (the search box open with `John`). Each has a play and Try it steps (D140).
 
+#### Spec 64 Guide examples
+
+- Thirteen guides open with a table that shows their feature in use on load: Column Size, Density Toggle, Overflow Tooltip, Filter Chips, Global Filtering, Sort Editor, Row Selection, Toolbar Customization, Row Actions, Display Columns, Sorting, Column Hiding and Column Resizing. Row Selection and Sorting no longer show that table a second time further down; Row Selection's explainer line moved up with it (D140, D122).
+
 ### Fixed
 
 #### Spec 53 Section tab hover
