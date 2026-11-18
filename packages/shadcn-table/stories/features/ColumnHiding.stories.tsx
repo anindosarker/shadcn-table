@@ -453,3 +453,37 @@ export const MenuReorderWithTableOffset = {
     }
   },
 };
+
+/**
+ * Address starts hidden; the columns menu lists it unticked and brings it
+ * back.
+ */
+export const ColumnHiddenOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{ columnVisibility: { address: false } }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('columnheader', { name: /First Name/ });
+    expect(canvas.queryByRole('columnheader', { name: /^Address/ })).toBeNull();
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide columns' }),
+    );
+    const menu = await within(document.body).findByRole('menu');
+    const address = within(menu).getByRole('menuitemcheckbox', {
+      name: 'Address',
+    });
+    expect(address).toHaveAttribute('aria-checked', 'false');
+    await userEvent.click(address);
+    await canvas.findByRole('columnheader', { hidden: true, name: /^Address/ });
+    await waitFor(() =>
+      expect(
+        within(menu).getByRole('menuitemcheckbox', { name: 'Address' }),
+      ).toHaveAttribute('aria-checked', 'true'),
+    );
+  },
+};

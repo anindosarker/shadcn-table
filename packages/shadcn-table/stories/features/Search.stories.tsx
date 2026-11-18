@@ -350,3 +350,27 @@ export const ClearCancelsPendingSearch = {
     expect(bodyRowTexts(canvasElement)).toEqual(before);
   },
 };
+
+const rowCountText = (canvasElement: HTMLElement) =>
+  canvasElement.textContent?.includes(`of ${data.length}`);
+
+/** The search box starts open with `John`, and the rows are filtered. */
+export const SearchedOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{ globalFilter: 'John', showGlobalFilter: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('row');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue('John'));
+    expect(searchPanel(canvasElement).inert).toBe(false);
+    expect(rowCountText(canvasElement)).toBe(false);
+    await userEvent.click(searchInput(canvasElement));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
+    await waitFor(() => expect(rowCountText(canvasElement)).toBe(true));
+  },
+};
