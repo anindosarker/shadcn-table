@@ -11,6 +11,12 @@
  *   four sections in order (each answering 200), the docs search box opening
  *   the search dialog, the base select and the theme toggle in the bar, light
  *   and dark, and no sideways scroll at 390 px.
+ * - `/docs/examples/sticky-heder` and `/docs/nope`, missing docs addresses
+ *   at two depths (Q129): the served HTML is the 404 page inside the root
+ *   layout, not Next's empty error page (`id="__next_error__"`), with both
+ *   head scripts of app/layout.tsx; a hard load logs no "script tag" error,
+ *   the design system script marks <html>, and a stored sidebar width is
+ *   applied by the sidebar state script.
  * - A story page under "More examples" (D116, D102, D103): its served HTML
  *   holds the folder open with the current row, its number and its
  *   sub-group label, and no other story row; in the browser the folder is
@@ -24,7 +30,10 @@
 const SECTIONS = ['Get Started', 'Examples', 'Guides', 'API'];
 
 /** Missing addresses: one at the root, one under /docs (a misspelt example). */
-const MISSING = ['/nope', '/docs/examples/sticky-heder'];
+const MISSING = ['/nope', '/docs/examples/sticky-heder', '/docs/nope'];
+
+/** The missing addresses under /docs, whose metadata the docs route builds. */
+const MISSING_DOCS = MISSING.filter((r) => r.startsWith('/docs/'));
 
 /** The HTTP status these routes answer with (test.mjs reads it). */
 export const status = Object.fromEntries(MISSING.map((r) => [r, 404]));
@@ -167,6 +176,76 @@ async function notFoundPage(page, check) {
   );
 }
 
+/**
+ * Q129: a missing docs address renders the 404 page inside the root layout,
+ * so the head scripts of app/layout.tsx come with the served HTML and run.
+ * When the docs route threw notFound() for it (metadata or page), Next
+ * served its empty error page and the browser built the whole document,
+ * scripts included, which never ran (React logs "Encountered a script tag"
+ * in development).
+ * The browser part runs in its own tab with its own error listeners; the
+ * sidebar width key is lib/sidebar-state.ts's, the <html> mark
+ * lib/design-system/config.ts's.
+ */
+async function missingDocsPageHead(page, check, route) {
+  const origin = new URL(page.url()).origin;
+  const res = await fetch(origin + route);
+  const html = await res.text();
+  check('served 404: status', res.status === 404, String(res.status));
+  check(
+    'served 404: not the empty error page',
+    !html.includes('id="__next_error__"'),
+  );
+  check(
+    'served 404: the 404 page text',
+    html.includes('>404<') && html.includes('This page does not exist'),
+  );
+  const head = /<head>([\s\S]*?)<\/head>/.exec(html)?.[1] ?? '';
+  const inlineScripts = [
+    ...head.matchAll(/<script>([\s\S]*?)<\/script>/g),
+  ].map((m) => m[1]);
+  check(
+    'served 404: both head scripts',
+    inlineScripts.some((s) => s.includes('"data-design-system"')) &&
+      inlineScripts.some((s) => s.includes('"docs-sidebar-width"')),
+    `inline head scripts=${inlineScripts.length}`,
+  );
+
+  const tab = await page.context().newPage();
+  const errors = [];
+  tab.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
+  tab.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+  try {
+    await tab.goto(origin + '/');
+    await tab.evaluate(() =>
+      localStorage.setItem('docs-sidebar-width', '360'),
+    );
+    await tab.goto(origin + route, { waitUntil: 'networkidle', timeout: 90000 });
+    await tab.waitForTimeout(1000);
+    const script = errors.filter((e) => /script tag/i.test(e));
+    check(
+      'hard load: no script tag error',
+      script.length === 0,
+      script.map((e) => e.split('\n')[0].slice(0, 160)).join(' || '),
+    );
+    check(
+      'hard load: design system mark on <html>',
+      await tab.evaluate(() =>
+        document.documentElement.hasAttribute('data-design-system'),
+      ),
+    );
+    const width = await tab.evaluate(() =>
+      document.documentElement.style.getPropertyValue('--docs-sidebar-width'),
+    );
+    check('hard load: stored sidebar width mark', width === '360px', width);
+  } finally {
+    await tab.evaluate(() => localStorage.removeItem('docs-sidebar-width'));
+    await tab.close();
+  }
+}
+
 /** A story page in the middle of "More examples" (spec 59, D116). */
 const STORY_ROUTE =
   '/docs/examples/more/features-column-pinning--column-pinning-initial';
@@ -297,7 +376,11 @@ const checks = {
   ...Object.fromEntries(
     MISSING.map((route) => [
       route,
-      async ({ page, check }) => notFoundPage(page, check),
+      async ({ page, check }) => {
+        await notFoundPage(page, check);
+        if (MISSING_DOCS.includes(route))
+          await missingDocsPageHead(page, check, route);
+      },
     ]),
   ),
 };
