@@ -120,5 +120,5 @@ Updated: 2026-11-18 06:45
 | E15 62 Touch drag in menus and toolbars |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |
 | E15 62.1 Column auto-scroll stops when the drag leaves the table |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |
 | E15 62.2 Touch drag blocks page scroll from before the touch starts |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |
-| E15 63 Storybook upgrade |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |
+| E15 63 Storybook upgrade |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |
 | E15 63 Docs branch catch-up |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
