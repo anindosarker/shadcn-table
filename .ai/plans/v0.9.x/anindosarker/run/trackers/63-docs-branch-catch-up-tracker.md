@@ -30,10 +30,20 @@ Checks:
 - `pnpm test lint` at 756f516d: pass, 9 warnings (untouched docs examples)
 - `pnpm test validate-repo` at 756f516d: pass, story pages match, 40 unit tests
 - `prettier --check CHANGELOG.md` at 7418d110: pass
+- `pnpm test storybook-tests --base radix` at 7418d110: pass, 641 passed, 85 files (record `test/.out/storybook-tests-radix.json`, run by the review)
+- `pnpm test storybook-tests --base aria` at 7418d110: pass, 641 passed, 85 files (record `test/.out/storybook-tests-aria.json`, run by the review)
+- D104 text check, three judges (independent headless sessions, the four criteria, majority per line) on the description, Try it steps and Related guides lines, at 7418d110:
+  - Touch Hold On Range Slider: 5/5 lines pass 3 of 3
+  - Touch Drag Scrolls Page: 4/4 lines pass 3 of 3
+  - Row Pinning Select Sticky With Virtualization: steps 2 and 3 fail 2 of 3 (wording: the header checkbox's on-screen label is `Toggle select all`, not "select-all checkbox"); rewritten to name `Toggle select all` (f3bf538e) and rejudged: 7/7 lines pass 3 of 3
+- `node lib/story-text-checklist.mjs` (main checkout file) at f3bf538e: 599 pages, the rewritten page's line updated
+- `pnpm test validate-repo` at f3bf538e: pass, story pages match (641 stories, 42 example pages, 599 story pages), 40 unit tests
+- `prettier --check` on the rewritten page at f3bf538e and on `CHANGELOG.md` at 79403873: pass
+- Not rerun after f3bf538e and 79403873: text only (one Try it page, the changelog); docs-e2e checks the step count and order, which did not change
 
 - Task 1 The merge: done (62429d40)
 - Task 2 Pins and install: done (10017aac)
-- Task 3 Story pages: done (a62678ab)
+- Task 3 Story pages: done (a62678ab; judged, f3bf538e)
 - Task 4 Docs story pages against the baseline: done (a62678ab; compare.md and captures/after/docs-*.png on claude/review fdf593c5)
 - Task 5 Cleanup: done (756f516d, changelog 7418d110)
 
@@ -76,5 +86,7 @@ New and corrected story pages:
 ## Attention
 - The committed docs library copies `apps/shadcn-table-docs/components/ui-<base>/` (generated, P9) predate specs 60 to 62 on this branch and on claude/review alike (no `useST_TouchDrag.ts`, old `row.utils.ts`). A build of the branch therefore shows the old behaviour on the two corrected pages (ticking a parent leaves its sub-rows unticked; the pinned virtual row scrolls away) and no touch drag on the new touch pages. Kept as the earlier runs did (regenerated locally for the check, restored, not committed; the release regenerates them). Revert: commit the output of `pnpm --filter shadcn-table-docs lib:install base|radix|aria` on the docs branch, so its preview and the owner's wording review match the texts.
 - The description of Sub Row Tree With Selection also stated the bug ("a row's box ticks when one of its sub-rows is ticked"); corrected with the Try it steps to "ticking a row ticks all its sub-rows" (spec 1.6.5 names the Try it text only). Revert: restore the old description line.
+- The same page's Try it step 3 (`Clear selection` in the banner clears every box) was replaced by "untick it, then tick each of its sub-rows: the row ticks with the last one", to show D125's third behaviour (the play asserts it). Revert: restore the `Clear selection` step.
+- The two judged steps on Row Pinning Select Sticky With Virtualization now name `Toggle select all`, the label of the header checkbox (aria label and tooltip), as `features-selection` pages do; the judges' alternative was none. Revert: "the select-all checkbox".
 - Spec 1.6.5 names `MenuReorderMovesColumn` as the home of `LockedColumnStaysPut`'s steps; on the docs branch D110 merged that story into `ColumnOrderingDisabledPerColumn` (same table), so the steps went there.
 - Touch Drag Scrolls Page step 1 (mouse drag to the window bottom scrolls the page) relies on the browser's own drag auto-scroll; headless Chromium does not reproduce it, so only step 2 (touch) was run.
