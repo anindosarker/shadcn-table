@@ -18,24 +18,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
-	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
-	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
-	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
-	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
-	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
-	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
-	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
-	- Owner recorded 2026-11-18.
-	- Source: Q112
-- [ ] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
-	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
-	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
-	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
-	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
-	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
-	- Owner tested the story locally and recorded 2026-11-18.
-	- Source: Q106
 
 ## Done
 
@@ -807,6 +789,16 @@ kanban-plugin: basic
 	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
 	- Owner recorded 2026-11-18.
 	- Source: Q100
+- [x] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
+	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
+	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
+	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
+	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
+	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
+	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
+	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
+	- Owner recorded 2026-11-18.
+	- Source: Q112
 - [x] **D124** The first line above each Storybook story reads View documentation for this example #E15 #R6
 	- The three lines above every story, in this order:
 	-   1. View documentation for this example
@@ -832,6 +824,14 @@ kanban-plugin: basic
 	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
 	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
 	- Source: Q107
+- [x] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
+	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
+	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
+	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
+	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
+	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
+	- Owner tested the story locally and recorded 2026-11-18.
+	- Source: Q106
 - [x] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
 	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
 	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
