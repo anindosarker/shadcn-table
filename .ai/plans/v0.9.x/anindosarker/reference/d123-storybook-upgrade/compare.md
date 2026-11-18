@@ -32,12 +32,21 @@ After: `4d441d7b` (branch `v0.9/storybook-upgrade-planned`, worktree 08): the up
 
 ## Docs story pages
 
-Not compared here. The docs app's Storybook pins (`@storybook/react`, `storybook` 10.6.2, exact) live only on `v0.9/docs-layout`, and the upgrade reaches that branch in the "Docs branch catch-up" milestone; until then the docs story pages run the baseline's code. That milestone's Task 4 compares the three captured docs pages (`captures/before/docs-*.png`) and `pnpm test docs-e2e --base base|radix|aria` against this baseline.
+Compared in the "Docs branch catch-up" milestone (Task 4), on `v0.9/docs-branch-catch-up` at `a62678ab` (claude/review merged in, docs app pins `@storybook/react` and `storybook` 10.6.7), worktree 08, docs production build served by `next start` on port 5340.
 
+| Base | Result |
+|---|---|
+| base | pass, 5 sections, 116 pages, 2564 checks (getting-started 268, api 111, guides 1020, examples 1107, site 58) |
+| radix | pass, 116 pages, 2564 checks (same per section) |
+| aria | pass, 116 pages, 2564 checks (same per section) |
+
+- Against the baseline's 2561 checks: getting-started has 3 more (268 against 265); the docs branch moved from `6ec25203` (baseline) to `b86ae185` (this branch point) through the hotfixes and fixes merged there, and this milestone changes no getting-started page. Every other section is equal.
+- `captures/after/docs-*.png`: the three docs story pages, light and dark, on each base, made with `tools/capture-docs.cjs` on that build. `tools/diff.cjs` against `captures/before/docs-*.png`: 18 compared, 18 differ, every differing pixel in the sidebar (x <= 240): the "More examples" count and the row numbers move by the three story pages the catch-up adds. The page body, the Try it text, the toolbar and the table are equal.
 ## Differences
 
 | Difference | Cause | Verdict |
 |---|---|---|
 | Static build size +61.5 KB per base | Storybook 10.6.7 runtime | a Storybook change, not a failure |
+| Docs story pages: sidebar count and row numbers | three story pages added by the catch-up (D139, 61.1) | expected, not a Storybook difference |
 
 No other difference.
