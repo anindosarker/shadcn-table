@@ -23,9 +23,14 @@ export const ST_OverflowTooltipProvider = ({
   children: ReactNode;
 }) => <TooltipProvider delayDuration={500}>{children}</TooltipProvider>;
 
-/** True when the element's content is cut off sideways. */
+/**
+ * True when the element's content is cut off sideways and no button inside it
+ * is hovered or focused: a button (the copy button) shows its own tooltip.
+ */
 const isCutOff = (element: HTMLElement | null) =>
-  !!element && element.scrollWidth > element.clientWidth;
+  !!element &&
+  element.scrollWidth > element.clientWidth &&
+  !element.querySelector('button:is(:hover, :focus-visible)');
 
 /**
  * Truncates its content to one line and shows a tooltip with the full text

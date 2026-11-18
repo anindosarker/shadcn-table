@@ -1,3 +1,4 @@
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -32,8 +33,13 @@ export const ST_TableHeadRow = <TData extends ST_RowData>({
 }: ST_TableHeadRowProps<TData>) => {
   const table = useSTContext<TData>();
   const {
-    options: { enableStickyHeader, layoutMode, stTableHeadRowProps },
+    options: { layoutMode, stTableHeadRowProps },
   } = table;
+  const isFullScreen = useSelector(table.atoms.isFullScreen);
+  const stickyHeaderSetting = useSelector(
+    table.atoms.viewSettings,
+    (state) => state.stickyHeader,
+  );
 
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
@@ -52,7 +58,8 @@ export const ST_TableHeadRow = <TData extends ST_RowData>({
       className={cn(
         tableHeadRowVariants({
           layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-          sticky: !!(enableStickyHeader && layoutMode === 'semantic'),
+          sticky:
+            (isFullScreen || stickyHeaderSetting) && layoutMode === 'semantic',
         }),
         tableRowProps.className,
       )}
