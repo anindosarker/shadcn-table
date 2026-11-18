@@ -350,3 +350,39 @@ export const ClearCancelsPendingSearch = {
     expect(bodyRowTexts(canvasElement)).toEqual(before);
   },
 };
+
+const rowCountText = (canvasElement: HTMLElement) =>
+  canvasElement.textContent?.includes(`of ${data.length}`);
+
+// Fixed rows that hold John in front of the random rows, so the search
+// always has matches on load; same length as `data`.
+const searchedOnLoadData = [
+  { ...data[0], firstName: 'John' },
+  { ...data[1], lastName: 'Johnson' },
+  { ...data[2], firstName: 'Johnny' },
+  ...data.slice(3),
+];
+
+/** The search box starts open with `John`, and the rows are filtered. */
+export const SearchedOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={searchedOnLoadData}
+      initialState={{ globalFilter: 'John', showGlobalFilter: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('row');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue('John'));
+    expect(searchPanel(canvasElement).inert).toBe(false);
+    expect(rowCountText(canvasElement)).toBe(false);
+    expect(
+      bodyRowTexts(canvasElement).some((text) => text.includes('John')),
+    ).toBe(true);
+    await userEvent.click(searchInput(canvasElement));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
+    await waitFor(() => expect(rowCountText(canvasElement)).toBe(true));
+  },
+};
