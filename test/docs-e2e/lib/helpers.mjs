@@ -871,13 +871,27 @@ export async function sectionFrame(
     active.join(','),
   );
   if (!toggle) return;
-  // Q116: a hovered tab, active or not, keeps a transparent background, and
-  // the active tab keeps its accent colour.
+  // Q130: every tab has the same padding on both sides, so its label sits
+  // centred over the underline; a hovered tab, active or not, takes the
+  // page bar's hover fill, and the active tab keeps its accent colour.
   const style = (tab) =>
     tab.evaluate((el) => {
       const s = getComputedStyle(el);
-      return { bg: s.backgroundColor, color: s.color };
+      return {
+        bg: s.backgroundColor,
+        color: s.color,
+        start: s.paddingInlineStart,
+        end: s.paddingInlineEnd,
+      };
     });
+  for (const name of tabs) {
+    const { start, end } = await style(row.locator('a', { hasText: name }));
+    check(
+      `frame: ${name} tab label is centred`,
+      start === end && start !== '0px',
+      `${start} / ${end}`,
+    );
+  }
   for (const name of [section, tabs.find((t) => t !== section)]) {
     const tab = row.locator('a', { hasText: name });
     const rest = await style(tab);
@@ -885,8 +899,8 @@ export async function sectionFrame(
     await page.waitForTimeout(300);
     const { bg, color } = await style(tab);
     check(
-      `frame: hovered ${name} tab has no background`,
-      bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent',
+      `frame: hovered ${name} tab shows the hover fill`,
+      bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent',
       bg,
     );
     if (name === section) {

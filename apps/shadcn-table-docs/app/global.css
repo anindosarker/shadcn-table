@@ -977,10 +977,8 @@ html:has(#nd-notebook-layout) ::selection {
   border-inline-start: 1px dashed var(--docs-dash);
 }
 
-/* the section tabs (components/section-tabs.tsx) take no fill: their hover
-   is the label colour only (Q116) */
 :is(.docs-page-bar, .docs-playground > header, .site-nav)
-  :is(button, a:not(nav[aria-label='Sections'] > a), [role='combobox']):hover,
+  :is(button, a, [role='combobox']):hover,
 .site-nav-search:hover {
   background-color: color-mix(
     in oklch,
