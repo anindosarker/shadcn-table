@@ -19,6 +19,14 @@ Checks:
 - `pnpm test typecheck --base aria` at 2a1c0150: pass
 - `pnpm test lint` at 2a1c0150: pass (9 warnings, none in the milestone files; eslint --max-warnings 0 on the four story files pass)
 - `pnpm test docs-e2e --base base` at 2a1c0150: pass, 5 sections, 116 pages, 0 failed
+- Review fix round (fixer, after commits caa9d85f story data, 91c955a4 Try it wording):
+  - Focused vitest `ST_BASE=<base> vitest run stories/features/Search.stories.tsx -t "Searched On Load"` at caa9d85f: base, radix, aria 1 passed each
+  - prettier --check and eslint --max-warnings 0 on Search.stories.tsx at caa9d85f: pass
+  - `pnpm test validate-repo` at 91c955a4: pass (story pages match, 603 story pages)
+  - `pnpm test typecheck --base base|radix|aria` at 91c955a4: pass, tsc clean each
+  - `pnpm test lint` at 91c955a4: pass (9 warnings, unchanged)
+  - `pnpm test storybook-tests --base base|radix|aria` at 91c955a4: pass, 645 passed each
+  - `pnpm test docs-e2e --base base` at 91c955a4: pass, 5 sections, 116 pages, 0 failed
 
 - Task 1 The ten picks on load: done at 121f84fe (captures in reference/docs-layout/image/guide-examples/, plan commit on claude/review)
   - column-size `more/styling-custom-column-widths--custom-widths-semantic`: pass. Widths on load ID 78, First Name 466, Last Name 155, Age 78, Address 280 px, clearly uneven.
@@ -37,7 +45,7 @@ Checks:
   - features-sorting--sorted-on-load: `2 sorts` button; editor lists `State` Ascending then `City` Descending; State column menu `Clear sort`; after it the rows sort by City alone (Valentine first).
   - features-column-hiding--column-hidden-on-load: `Show/Hide columns`; `Address` unticked; ticked, the Address column shows between Last Name and State.
   - features-column-resizing--column-widened-on-load: First Name 400 px, others 180 px; dragging the header's right edge left narrows it (250 px after 150 px); column menu `Reset column size` sets 180 px, the others' width.
-  - features-search--searched-on-load: `Search` box open with `John`, 1-5 of 51; Escape clears it, 1-10 of 200; Escape again closes the box.
+  - features-search--searched-on-load: `Search` box open with `John`, footer `1-N of N` (N varies per load with the random rows, at least 1 since caa9d85f fixed three John rows in front); Escape clears it, 1-10 of 200; Escape again closes the box. Try it step 1 names the box by its value: "Click in the search box (`John`)" (91c955a4).
 - Task 5 Text check: run by the workflow after verify
 New story pages:
 - /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-sorting--sorted-on-load.mdx
@@ -64,5 +72,8 @@ Pages for the second milestone (Guide examples), one per guide:
 ## Attention
 
 - Global Filtering: the D140 pick `features-search--search-initial-state` filters the rows on load but keeps the search box closed, so it fails 1.6.2 ("the search box open with its term"). It is replaced by a new story `SearchedOnLoad` ("Searched On Load", Search file default table, `initialState` globalFilter `John` and showGlobalFilter true). Revert: keep the existing pick and drop the new story.
+
+- Column Resizing: `ColumnWidenedOnLoad` has the same table options as the existing `ResetSizeAnimates` (same columns, data, `initialState.columnSizing: { firstName: 400 }`). A new story was kept because `ResetSizeAnimates` shows an extra `Widen First Name` test button above the table and its page text is about the reset animation. Revert: drop the new story and use `more/features-column-resizing--reset-size-animates`.
+- Commit trailer: the four first-round commits (feaef866, 1cd00df2, 3cde6305, 2a1c0150) carry no `Claude-Session:` trailer; they are pushed and not rewritten (P2, no force-push). The fix commits carry it. coding-standards.md Style still says "no trailers", which disagrees with the run rule.
 
 ## Notes
