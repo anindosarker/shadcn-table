@@ -19,6 +19,12 @@ publishes the section as the GitHub release notes.
 
 - The columns in `Show/Hide columns`, the sort rules in the sort popover and a column dropped on the grouping drop zone reorder or group by touch too, on Base UI, Radix UI and React Aria: a finger on a menu grip or a sort rule handle drags at once, a copy of the menu row or rule follows the finger, and the menu or popover stays open. The drag does not scroll the page behind the popup. A touch drag that leaves the drop zone, or is cancelled over it, groups nothing. Mouse dragging is unchanged (D108, D132).
 
+### Changed
+
+#### Spec 63 Storybook upgrade
+
+- The project Storybook moves from 10.6.2 to 10.6.7, the latest stable release: `storybook` and every `@storybook/*` package, with `@storybook/addon-vitest` still pinned exact. No configuration change was needed; the story tests, the three static builds and their story ids, and screenshots of a fixed set of stories are the same as before on Base UI, Radix UI and React Aria. The `glob` advisory that comes in through Storybook's docgen plugin (Storybook issue 37409) is not fixed by 10.6.7 and stays until Storybook updates the plugin; it is a development dependency only (D123).
+
 ### Fixed
 
 #### Spec 52 Docs filter facts
