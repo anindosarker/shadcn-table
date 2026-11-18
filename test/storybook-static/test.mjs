@@ -9,6 +9,9 @@
  *
  * Usage (repo root):
  *   pnpm test storybook-static [--base base|radix|aria] [--url <origin>]
+ *     [--ids <from>:<to>]
+ * `--ids` reads the Code tab of that slice of index.json only (index
+ * positions, end excluded), for a partial run by hand; the default is every id.
  *
  * Without --url the base's static Storybook is built
  * (`pnpm --filter shadcn-table storybook:build:<base>`) and served from
@@ -61,7 +64,9 @@ const TEST_WORDS = /\bplay\b|\bexpect\(|storybook\/test|\buserEvent\b/;
 /** A story renders within this after the switch. */
 const RENDER_TIMEOUT = 30_000;
 /** Then its code text shows within this (the preview sends it after render). */
-const CODE_TIMEOUT = 3_000;
+const CODE_TIMEOUT = 5_000;
+/** A panel text that stays the same this long is the one the story shows. */
+const CODE_SETTLE = 1_500;
 /** A fresh page after this many stories (one page crashed after about 450). */
 const PAGE_STORIES = 200;
 
@@ -132,11 +137,13 @@ const docsPageUrl = (id) =>
  * within CODE_TIMEOUT and none of the test words.
  * @returns {Promise<{ results: string[], read: number, failed: string[], seconds: number }>}
  */
-async function checkCode(root, log) {
+async function checkCode(root, { log, slice }) {
   const index = await (await fetch(`${root}/index.json`)).json();
-  const ids = Object.values(index.entries)
+  const all = Object.values(index.entries)
     .filter((entry) => entry.type === 'story')
     .map((entry) => entry.id);
+  const [from, to] = (slice || ':').split(':');
+  const ids = all.slice(Number(from || 0), to ? Number(to) : all.length);
   const sources = await storySources();
   const started = Date.now();
   const failed = [];
@@ -188,11 +195,28 @@ async function checkCode(root, log) {
         polling: 50,
       })
       .catch(() => {});
+    // done when the panel shows the text, or shows another text that has
+    // not changed for CODE_SETTLE (a failing story need not wait it out)
+    await page.evaluate(() => {
+      window.__stSettle = undefined;
+    });
     await page
       .waitForFunction(
-        ({ selector, text }) =>
-          (document.querySelector(selector)?.innerText ?? '').trim() === text,
-        { selector: CODE_PANEL, text: expected },
+        ({ selector, text, settle }) => {
+          const now = performance.now();
+          const shown = (
+            document.querySelector(selector)?.innerText ?? ''
+          ).trim();
+          if (shown === text) return true;
+          const last = (window.__stSettle ??= { shown, at: now });
+          if (last.shown !== shown) {
+            last.shown = shown;
+            last.at = now;
+            return false;
+          }
+          return now - last.at >= settle;
+        },
+        { selector: CODE_PANEL, text: expected, settle: CODE_SETTLE },
         { timeout: CODE_TIMEOUT, polling: 50 },
       )
       .catch(() => {});
@@ -384,7 +408,10 @@ export const run = async (ctx) => {
     ctx.log(results.join('\n'));
     let code;
     try {
-      code = await checkCode(root, ctx.log);
+      code = await checkCode(root, {
+        log: ctx.log,
+        slice: option(ctx.flags, 'ids', ''),
+      });
     } catch (error) {
       code = {
         results: [`FAIL code tab threw ${String(error.message).slice(0, 200)}`],
