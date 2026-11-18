@@ -167,7 +167,8 @@ async function checkCode(root, { log, slice }) {
         );
       }, 5);
     });
-    await page.goto(`${root}/?path=/story/${id}`, {
+    // index.html by name: serve with cleanUrls off lists the folder at /
+    await page.goto(`${root}/index.html?path=/story/${id}`, {
       waitUntil: 'load',
       timeout: 90_000,
     });
@@ -224,6 +225,7 @@ async function checkCode(root, { log, slice }) {
   };
   try {
     let fresh = true;
+    let pageFailures = 0;
     for (const [i, id] of ids.entries()) {
       const expected = sources[id]?.trim();
       let text;
@@ -233,9 +235,17 @@ async function checkCode(root, { log, slice }) {
         try {
           text = await read(id, expected ?? '', true);
         } catch (error) {
+          // a manager that does not open at all fails the read at once
+          pageFailures += 1;
+          if (pageFailures >= 3) throw error;
           text = `(page failed: ${String(error.message).split('\n')[0]})`;
+          fresh = true;
+          results.push(`FAIL code ${id}: ${text}`);
+          failed.push(id);
+          continue;
         }
       }
+      pageFailures = 0;
       fresh = false;
       const shown = text.trim();
       const word = TEST_WORDS.exec(shown);

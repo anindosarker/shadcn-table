@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { resolveBase } from '../../../tools/registry/bases.mjs';
+import { storySourcePlugin } from './story-source-plugin';
 
 const require = createRequire(import.meta.url);
 
@@ -50,11 +51,13 @@ const config: StorybookConfig = {
   // Storybook keys its Vite dep cache by the config dir alone, so the base
   // servers (storybook:all) would share one optimized-deps dir and invalidate
   // each other ("Failed to fetch dynamically imported module"). One cache per
-  // base.
-  viteFinal: (config) =>
-    config.cacheDir
-      ? { ...config, cacheDir: `${config.cacheDir}-${ST_BASE}` }
-      : config,
+  // base. The story code texts of the Code tab come from
+  // `virtual:story-sources` (story-source-plugin.ts, spec 66).
+  viteFinal: (config) => ({
+    ...config,
+    ...(config.cacheDir ? { cacheDir: `${config.cacheDir}-${ST_BASE}` } : {}),
+    plugins: [...(config.plugins ?? []), storySourcePlugin()],
+  }),
   features: {
     // Components manifest for the MCP addon's docs tools.
     componentsManifest: true,
