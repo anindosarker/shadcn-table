@@ -1,5 +1,10 @@
 import type { Preview } from '@storybook/react-vite';
-import { Fragment, type ReactNode, useSyncExternalStore } from 'react';
+import {
+  Fragment,
+  type ReactNode,
+  useEffect as useReactEffect,
+  useSyncExternalStore,
+} from 'react';
 import {
   addons,
   emitTransformCode,
@@ -105,10 +110,27 @@ const subscribeReset = (listener: () => void) => {
   return () => resetListeners.delete(listener);
 };
 
+const remountWaiters: Array<() => void> = [];
+
 function ResetAfterPlay({ children }: { children: ReactNode }) {
   const key = useSyncExternalStore(subscribeReset, () => resetCount);
+  useReactEffect(() => {
+    remountWaiters.splice(0).forEach((resolve) => resolve());
+  }, [key]);
   return <Fragment key={key}>{children}</Fragment>;
 }
+
+// A story whose play holds the checks of the copies merged into it (D106,
+// spec 66) runs each of them on a fresh story: the play calls this between
+// its steps, everywhere (vitest, `storybook dev`, the static site), and it
+// resolves once the story has mounted again.
+(globalThis as { __stRemountStory?: () => Promise<void> }).__stRemountStory =
+  () =>
+    new Promise<void>((resolve) => {
+      remountWaiters.push(resolve);
+      resetCount += 1;
+      resetListeners.forEach((listener) => listener());
+    });
 
 const preview: Preview = {
   afterEach: () => {

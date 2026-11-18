@@ -61,28 +61,53 @@ const expectOpener = async (getOpener: () => HTMLElement) => {
 const waitForRows = (canvasElement: HTMLElement) =>
   within(canvasElement).findByText('Mason');
 
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () =>
+  (
+    globalThis as { __stRemountStory?: () => Promise<void> }
+  ).__stRemountStory?.();
+
+const columnActionsPlay = async ({ canvasElement }: StoryContext) => {
+  await waitForRows(canvasElement);
+  const getOpener = () =>
+    within(canvasElement).getAllByRole('button', {
+      hidden: true,
+      name: 'Column Actions',
+    })[0];
+  await expectOpener(getOpener);
+
+  // In chips mode "Filter" opens the column's chip editor with its input
+  // focused.
+  await userEvent.click(getOpener());
+  await userEvent.click(
+    await body.findByRole('menuitem', { name: /^Filter$/ }),
+  );
+  await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
+  const filterInput = await body.findByRole('textbox', {
+    name: 'Filter by First Name',
+  });
+  await waitFor(() => expect(document.activeElement).toBe(filterInput));
+};
+
+const showHideColumnsPlay = async ({ canvasElement }: StoryContext) => {
+  await waitForRows(canvasElement);
+  await expectOpener(() =>
+    within(canvasElement).getByRole('button', {
+      hidden: true,
+      name: 'Show/Hide columns',
+    }),
+  );
+};
+
 export const ColumnActions = {
   render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitForRows(canvasElement);
-    const getOpener = () =>
-      within(canvasElement).getAllByRole('button', {
-        hidden: true,
-        name: 'Column Actions',
-      })[0];
-    await expectOpener(getOpener);
-
-    // In chips mode "Filter" opens the column's chip editor with its input
-    // focused.
-    await userEvent.click(getOpener());
-    await userEvent.click(
-      await body.findByRole('menuitem', { name: /^Filter$/ }),
-    );
-    await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
-    const filterInput = await body.findByRole('textbox', {
-      name: 'Filter by First Name',
-    });
-    await waitFor(() => expect(document.activeElement).toBe(filterInput));
+  play: async (context: StoryContext) => {
+    await context.step('Column Actions', () => columnActionsPlay(context));
+    await remountStory();
+    await context.step('Show Hide Columns', () => showHideColumnsPlay(context));
   },
 };
 
@@ -107,19 +132,6 @@ export const RowActions = {
           hidden: true,
           name: 'Row Actions',
         })[0],
-    );
-  },
-};
-
-export const ShowHideColumns = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitForRows(canvasElement);
-    await expectOpener(() =>
-      within(canvasElement).getByRole('button', {
-        hidden: true,
-        name: 'Show/Hide columns',
-      }),
     );
   },
 };
