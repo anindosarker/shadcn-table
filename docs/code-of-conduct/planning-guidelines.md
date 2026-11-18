@@ -26,8 +26,9 @@ How to write an implementation plan for this repository. Applies to humans and a
    `decisions.md`; the plan implements it and never re-decides.
 2. **Draft during the discussion** for anything non-trivial, so both sides argue against the
    same text.
-3. **No questions in plan files.** Open items are asked in chat. Once answered they go to
-   `decisions.md`.
+3. **No questions in plan files.** Open items are asked in chat. An item goes to
+   `decisions.md` only when the owner says "record it" or "accepted"; an answer, a picked
+   option or a comment is still discussion.
 4. **Structure over prose.** Tables, trees, bullets. Short prose only for a component intro.
 5. **Mermaid for flows, ASCII trees for structure.** No hand-drawn box diagrams. Sketches
    made with Excalidraw go in `reference/` as `.excalidraw`, linked from the section they

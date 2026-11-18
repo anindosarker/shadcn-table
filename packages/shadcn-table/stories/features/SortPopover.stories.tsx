@@ -81,6 +81,76 @@ const ruleIds = () =>
     (rule) => rule.dataset.sortRule,
   );
 
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged sort rule that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/**
+ * Drags the sort rule at `from` by touch, by its handle, onto the rule at
+ * `to`. The ghost shows while the drag is on, follows the finger and is gone
+ * after the `end` event; the popover stays open.
+ */
+const touchRuleDrag = async ({
+  end = 'pointerup',
+  from,
+  to,
+}: {
+  end?: 'pointercancel' | 'pointerup';
+  from: number;
+  to: number;
+}) => {
+  const rules = document.body.querySelectorAll<HTMLElement>('[data-sort-rule]');
+  const handle = within(rules[from]).getByRole('img', {
+    name: 'Drag to reorder',
+  });
+  const start = centreOf(handle);
+  const target = centreOf(rules[to]);
+  touch({ at: start, element: handle, type: 'pointerdown' });
+  touch({
+    at: { x: start.x, y: (start.y + target.y) / 2 },
+    element: handle,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  touch({ at: target, element: handle, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  touch({ at: target, element: handle, type: end });
+  await waitFor(() => expect(ghost()).toBeNull());
+  expect(rules[0].isConnected).toBe(true);
+};
+
 const pickerThenEditor = async ({ canvasElement }: StoryContext) => {
   const canvas = within(canvasElement);
   const body = within(document.body);
@@ -127,14 +197,53 @@ const reorderRemoveDelete = async ({ canvasElement }: StoryContext) => {
     name: 'Drag to reorder',
   });
   const dataTransfer = new DataTransfer();
+  // A mouse drag draws no ghost at any moment of the drag.
+  const ghosts: Element[] = [];
+  const observer = new MutationObserver((records) =>
+    records.forEach((record) =>
+      record.addedNodes.forEach((node) => {
+        if (
+          node instanceof Element &&
+          node.matches('[data-st-touch-ghost]')
+        ) {
+          ghosts.push(node);
+        }
+      }),
+    ),
+  );
+  observer.observe(document.body, { childList: true });
   fireEvent.dragStart(handle, { dataTransfer });
   fireEvent.dragOver(rules[0], { dataTransfer });
   await waitFor(() => expect(rules[0].className).toContain('bg-muted'));
   fireEvent.drop(rules[0], { dataTransfer });
   fireEvent.dragEnd(handle, { dataTransfer });
+  observer.disconnect();
+  expect(ghosts).toEqual([]);
   await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
   await waitFor(() =>
-    expect(firstColumnTexts(canvasElement)[1]).toContain('Review billing page'),
+    expect(firstColumnTexts(canvasElement)[1]).toContain(
+      'Review billing page',
+    ),
+  );
+
+  // Touch: a cancelled drag leaves the rules, then the handle drags at
+  // once, back and then as the mouse moved it.
+  await touchRuleDrag({ end: 'pointercancel', from: 1, to: 0 });
+  await pause(100);
+  expect(ruleIds()).toEqual(['name', 'status']);
+  await touchRuleDrag({ from: 1, to: 0 });
+  await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain(
+      'Build search index',
+    ),
+  );
+  await touchRuleDrag({ from: 1, to: 0 });
+  await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain(
+      'Review billing page',
+    ),
   );
 
   await userEvent.click(
