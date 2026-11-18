@@ -95,12 +95,22 @@ export async function generateStaticParams() {
   return source.generateParams();
 }
 
+// Every docs page is in generateStaticParams, so any other address is
+// answered by Next's own 404 route, which renders app/not-found.tsx inside
+// the root layout as /nope does. A notFound() thrown while the page renders
+// has no boundary on the server: Next serves its empty error page
+// (html id "__next_error__") and the browser builds the whole document, so
+// the head scripts of app/layout.tsx never run (Q129).
+export const dynamicParams = false;
+
 export async function generateMetadata(
   props: PageProps<'/docs/[[...slug]]'>,
 ): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);
-  if (!page) notFound();
+  // No notFound() here: thrown from metadata it escapes every not-found
+  // boundary (Q129); the 404 page's own title instead.
+  if (!page) return { title: 'Page not found' };
 
   return {
     title: page.data.searchTitle ?? page.data.title,
