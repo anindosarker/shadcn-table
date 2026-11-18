@@ -38,6 +38,7 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q116** Hovering a section tab shows a grey box behind it
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
+- [ ] **Q128** Many guides show the Basic example where a table with the feature already in use would teach more
 
 ## Decided
 
