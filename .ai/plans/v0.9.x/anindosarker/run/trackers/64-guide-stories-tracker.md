@@ -27,6 +27,13 @@ Checks:
   - `pnpm test lint` at 91c955a4: pass (9 warnings, unchanged)
   - `pnpm test storybook-tests --base base|radix|aria` at 91c955a4: pass, 645 passed each
   - `pnpm test docs-e2e --base base` at 91c955a4: pass, 5 sections, 116 pages, 0 failed
+- Verifier (HEAD 91c955a4, clean tree; Local CI line all recorded green at HEAD above, not rerun):
+  - Acceptance 1.2 `pnpm test docs-e2e --base radix` at 91c955a4: pass, 5 sections, 116 pages, 0 failed (verifier)
+  - Acceptance 1.2 `pnpm test docs-e2e --base aria` at 91c955a4: pass, 5 sections, 116 pages, 0 failed (verifier)
+  - Acceptance 1.2 storybook-tests base|radix|aria, validate-repo, docs-e2e base: green at 91c955a4 (fixer lines above)
+  - Acceptance 1.2 thirteen guide pages on a production build: second milestone (Guide examples), not this one
+  - Acceptance 1.2 judged text check (D104, three judges): Task 5, run by the workflow after verify
+  - no server left on 5340 to 5360 (verifier)
 
 - Task 1 The ten picks on load: done at 121f84fe (captures in reference/docs-layout/image/guide-examples/, plan commit on claude/review)
   - column-size `more/styling-custom-column-widths--custom-widths-semantic`: pass. Widths on load ID 78, First Name 466, Last Name 155, Age 78, Address 280 px, clearly uneven.
