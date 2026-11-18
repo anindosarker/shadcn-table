@@ -202,10 +202,7 @@ const reorderRemoveDelete = async ({ canvasElement }: StoryContext) => {
   const observer = new MutationObserver((records) =>
     records.forEach((record) =>
       record.addedNodes.forEach((node) => {
-        if (
-          node instanceof Element &&
-          node.matches('[data-st-touch-ghost]')
-        ) {
+        if (node instanceof Element && node.matches('[data-st-touch-ghost]')) {
           ghosts.push(node);
         }
       }),
@@ -221,9 +218,7 @@ const reorderRemoveDelete = async ({ canvasElement }: StoryContext) => {
   expect(ghosts).toEqual([]);
   await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
   await waitFor(() =>
-    expect(firstColumnTexts(canvasElement)[1]).toContain(
-      'Review billing page',
-    ),
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Review billing page'),
   );
 
   // Touch: a cancelled drag leaves the rules, then the handle drags at
@@ -234,16 +229,12 @@ const reorderRemoveDelete = async ({ canvasElement }: StoryContext) => {
   await touchRuleDrag({ from: 1, to: 0 });
   await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
   await waitFor(() =>
-    expect(firstColumnTexts(canvasElement)[1]).toContain(
-      'Build search index',
-    ),
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Build search index'),
   );
   await touchRuleDrag({ from: 1, to: 0 });
   await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
   await waitFor(() =>
-    expect(firstColumnTexts(canvasElement)[1]).toContain(
-      'Review billing page',
-    ),
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Review billing page'),
   );
 
   await userEvent.click(
