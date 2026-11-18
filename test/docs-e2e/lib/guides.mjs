@@ -8,6 +8,7 @@ import {
   codeToggle,
   example,
   exampleGroup,
+  examplePanel,
   headerLabelsFit,
   names,
   paginationControls,
@@ -17,6 +18,14 @@ import {
 } from './helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
+
+/** Rendered widths of the header cells of example `w`, in px. */
+const headWidths = (w) =>
+  w
+    .locator('thead tr')
+    .first()
+    .locator('th')
+    .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
 
 /** Opens the first button with `label` inside `wrapper`; returns the open menu. */
 async function openMenu(page, wrapper, label) {
@@ -634,6 +643,26 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table hides Address on load
+    const hidden = await example(
+      page,
+      'features-column-hiding--column-hidden-on-load',
+      check,
+    );
+    check(
+      'column-hidden-on-load: no Address header',
+      (await hidden.getByRole('columnheader', { name: /^Address/ }).count()) ===
+        0,
+    );
+    const shown = await openMenu(page, hidden, 'Show/Hide columns');
+    check(
+      'column-hidden-on-load: Address unticked in the menu',
+      (await shown
+        .getByRole('menuitemcheckbox', { name: 'Address', exact: true })
+        .getAttribute('aria-checked')
+        .catch(() => '')) === 'false',
+    );
+    await page.keyboard.press('Escape');
     const w = await example(page, 'disable-column-hiding', check);
     const menu = await openMenu(page, w, 'Show/Hide columns');
     check(
@@ -669,6 +698,27 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table has First Name widened on load
+    const widened = await example(
+      page,
+      'features-column-resizing--column-widened-on-load',
+      check,
+    );
+    check(
+      'column-widened-on-load: resize handles',
+      (await count(widened, 'thead .cursor-col-resize')) > 0,
+    );
+    const first = await widened
+      .locator('thead th:has-text("First Name")')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().width)
+      .catch(() => 0);
+    const widths = await headWidths(widened);
+    check(
+      'column-widened-on-load: First Name the widest column',
+      first > 0 && first === Math.max(...widths),
+      `first=${first} widths=${widths.map(Math.round).join(',')}`,
+    );
     const w = await example(page, 'enable-column-resizing', check);
     check(
       'enable-column-resizing: resize handles',
@@ -691,6 +741,18 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's columns have clearly different widths
+    const w = await example(
+      page,
+      'styling-custom-column-widths--custom-widths-semantic',
+      check,
+    );
+    const widths = await headWidths(w);
+    check(
+      'custom-widths-semantic: uneven column widths',
+      widths.length > 1 && Math.max(...widths) > 2 * Math.min(...widths),
+      widths.map(Math.round).join(','),
+    );
   },
 
   '/docs/guides/customize-components': async ({ page, check }) => {
@@ -745,6 +807,19 @@ const checks = {
   '/docs/guides/density-toggle': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table opens dense, the toggle in its toolbar
+    const dense = await example(
+      page,
+      'features-dense-padding--default-to-dense-padding',
+      check,
+    );
+    await marker(
+      dense,
+      'default-to-dense-padding',
+      'density button',
+      'button[aria-label="Toggle density"]',
+      check,
+    );
     const w = await example(page, 'disable-density-toggle', check);
     check(
       'disable-density-toggle: no density button',
@@ -804,6 +879,27 @@ const checks = {
 
   '/docs/guides/display-columns': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
+    // spec 64: the Example section's table shows the built-in display columns
+    const top = await example(
+      page,
+      'styling-styling-display-columns--customize-display-columns',
+      check,
+    );
+    check(
+      'customize-display-columns story: row numbers header',
+      /#/.test((await top.locator('thead').first().textContent()) ?? ''),
+    );
+    check(
+      'customize-display-columns story: select all',
+      (await count(top, '[aria-label="Toggle select all"]')) > 0,
+    );
+    await marker(
+      top,
+      'customize-display-columns story',
+      'expand button',
+      'tbody button[aria-label="Expand"]',
+      check,
+    );
     const w = await example(page, 'customize-display-columns', check);
     check(
       'customize-display-columns: row numbers header',
@@ -867,10 +963,16 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
-    const w = await example(page, 'basic', check);
+    // spec 64: the Example section's table opens with two chips set
+    const w = await example(page, 'features-filter-chips--chips-seeded', check);
+    check(
+      'chips-seeded: two chips',
+      (await count(w, '[data-filter-chip]')) === 2,
+      `chips=${await count(w, '[data-filter-chip]')}`,
+    );
     await marker(
       w,
-      'basic',
+      'chips-seeded',
       'filter button',
       'button[aria-label="Filter"]',
       check,
@@ -879,6 +981,18 @@ const checks = {
   '/docs/guides/overflow-tooltip': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
+    // spec 64: the Example section's table cuts cell text with an ellipsis
+    const top = await example(
+      page,
+      'styling-default-look--overflow-tooltip',
+      check,
+    );
+    const cut = await top
+      .locator('tbody td span.truncate')
+      .evaluateAll(
+        (els) => els.filter((el) => el.scrollWidth > el.clientWidth).length,
+      );
+    check('overflow-tooltip story: cut cell text', cut > 0, `cut=${cut}`);
     const w = await example(page, 'basic', check);
     await marker(
       w,
@@ -902,6 +1016,19 @@ const checks = {
   '/docs/guides/sort-editor': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table opens with two sorts applied
+    const seeded = await example(
+      page,
+      'features-sort-popover--sort-popover-seeded',
+      check,
+    );
+    await marker(
+      seeded,
+      'sort-popover-seeded',
+      'sort button',
+      'button:has-text("2 sorts")',
+      check,
+    );
     const w = await example(page, 'multi-sorting', check);
     await marker(
       w,
@@ -943,6 +1070,20 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
+    // spec 64: the Example section's table opens with its search box set
+    const searched = await example(
+      page,
+      'features-search--searched-on-load',
+      check,
+    );
+    const terms = await searched
+      .locator('input')
+      .evaluateAll((els) => els.map((el) => el.value));
+    check(
+      'searched-on-load: search box open with John',
+      terms.includes('John'),
+      terms.join(','),
+    );
     const custom = await example(
       page,
       'customize-global-filter-component',
@@ -1067,6 +1208,19 @@ const checks = {
   },
   '/docs/guides/row-actions': async ({ page, check }) => {
     await propTable(page, TABLE, check);
+    // spec 64: the Example section's table has action buttons on every row
+    const top = await example(
+      page,
+      'features-row-actions--custom-row-action-buttons',
+      check,
+    );
+    const rows = await count(top, 'tbody tr');
+    const viewed = await count(top, 'tbody tr:has(button:has-text("View"))');
+    check(
+      'custom-row-action-buttons: View on every row',
+      rows > 0 && viewed === rows,
+      `rows=${rows} view=${viewed}`,
+    );
     const menu = await example(page, 'row-actions-menu-items', check);
     await marker(
       menu,
@@ -1139,15 +1293,29 @@ const checks = {
         check,
       );
     }
+    // spec 64: the Example section's table (sticky-row-selection) opens with a row selected
+    await marker(
+      examplePanel(page, 'enable-row-pinning-select'),
+      'enable-row-pinning-select',
+      'selected row',
+      'tbody [data-selected]',
+      check,
+    );
   },
   '/docs/guides/sorting': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
-    const multi = await example(page, 'multi-sorting', check);
+    // spec 64: the Example section's table, sorted on load; the lower copy
+    // of the multi-sorting table is gone (D122)
+    const multi = await example(
+      page,
+      'features-sorting--sorted-on-load',
+      check,
+    );
     await marker(
       multi,
-      'multi-sorting',
+      'sorted-on-load',
       'sorted header marker',
       'th [aria-label="Sorted ascending"], th [aria-label="Sorted descending"]',
       check,
@@ -1191,6 +1359,20 @@ const checks = {
   '/docs/guides/toolbar-customization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, STATE, check);
+    // spec 64: the Example section's table has a custom toolbar button, the
+    // Create New User icon button
+    const top = await example(
+      page,
+      'features-toolbar--custom-top-toolbar-actions',
+      check,
+    );
+    await marker(
+      top,
+      'custom-top-toolbar-actions',
+      'custom toolbar button',
+      'button:has(svg.lucide-square-plus)',
+      check,
+    );
     await example(page, 'minimal', check);
     const provider = await page
       .locator('article h2', { hasText: 'Compose with ST_TableProvider' })
@@ -1245,6 +1427,8 @@ const EXPLAINERS = {
     'Here is a copy of the full React Query example.',
   '/docs/guides/pagination':
     'Here is the full Remote Data example showing off server-side filtering, pagination, and sorting.',
+  '/docs/guides/row-selection':
+    'You can combine the row pinning feature with the row selection feature to create a cool user experience where selected rows always stay within view.',
   '/docs/guides/scroll-cues':
     'Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.',
   '/docs/guides/production-ready-tables':
