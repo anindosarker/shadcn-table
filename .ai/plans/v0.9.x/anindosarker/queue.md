@@ -40,6 +40,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
 - [ ] **Q129** The docs site logs a script tag console error from the root layout
 	- Owner, 2026-11-18, 'Need hotfix', Next.js 16.3.8 (Turbopack) dev overlay on v0.9/docs-layout: Console Error 'Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client.' at script, Layout (app/layout.tsx:55:9), the line <script dangerouslySetInnerHTML={{ __html: designSystemScript }} />. Card Q111 fixed the same error for the sidebar state script by moving it to the root layout head (bb8eec7a).
+- [ ] **Q130** After the tab hover hotfix the section tabs have no hover effect and the first tab's label is off centre
+	- Owner, 2026-11-18, screenshot of localhost:5320/docs/getting-started/introduction after hotfix Q116 (9db6ddd6): 'the hover effect is gone altogether and the text is not centered'; the red box marks GET STARTED, the active first tab, whose underline runs past the label on the right. From the code, not checked in a browser: components/section-tabs.tsx gives every tab px-3 and the first one md:first:ps-0, so the first tab has no left padding and 12 px right padding and its underline is not centred on the label; the hotfix removed the page-bar hover fill for the tabs (app/global.css) and left hover:text-(--docs-accent), which changes nothing on the active tab because it already has that colour.
 
 ## Decided
 
