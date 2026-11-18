@@ -50,6 +50,10 @@ publishes the section as the GitHub release notes.
 
 ### Fixed
 
+#### Spec 59 Missing docs page
+
+- A wrong docs address loaded directly, such as `/docs/examples/sticky-heder`, now gets the site's 404 page from the server with the HTTP status 404, as any other wrong address does; the saved design system and sidebar width apply on it, and the browser console no longer reports a script tag.
+
 #### Spec 53 Section tab hover
 
 - The first section tab (Get Started) on the docs site has the same padding on both sides as the others, so its label sits centred over its underline and inside the hover fill.
