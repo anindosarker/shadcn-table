@@ -1,6 +1,6 @@
 # 66: Code panels show the table's code, Code panel audit, tracker
 
-Status: running
+Status: done (a7735eb8)
 Branch `claude/review`, worktree 08 (read-only)
 Checks:
 - Check: Storybook base build, `pnpm --filter shadcn-table storybook:build:base` at 55a6150b: pass
