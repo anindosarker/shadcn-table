@@ -7,6 +7,8 @@ Shadcn Table has a built-in row selection feature and makes it easy to manage th
 
 ## Example
 
+You can combine the row pinning feature with the row selection feature to create a cool user experience where selected rows always stay within view.
+
 <GuideExamples slugs={['sticky-row-selection']} />
 
 ## Relevant Table Options
@@ -237,11 +239,5 @@ const table = useShadcnTable({
 You may have a use case where you want to be able to select rows by clicking them, but you do not want to show any checkboxes or radio buttons. You can do this by implementing a row selection feature yourself while keeping the `enableRowSelection` table option `false` so that the default selection behavior is disabled.
 
 <ManualSelectionExample />
-
-## Sticky Pinned Row Selection
-
-You can combine the row pinning feature with the row selection feature to create a cool user experience where selected rows always stay within view.
-
-<EnableRowPinningSelectExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
