@@ -19,11 +19,19 @@
  * that Storybook (checkPages), and the intro line above the story (D124): a
  * link "View documentation for this example" to the story's docs page, and
  * no "This story on the docs site" text.
+ *
+ * Then the Code tab of every story (checkCode, spec 66, D142): one manager
+ * page, the story switched in place for every id of index.json; the panel
+ * must show the story's code text (tools/story-source/extract.mjs, the text
+ * `virtual:story-sources` serves), compared after trimming, and none of
+ * `play`, `expect(`, `storybook/test`, `userEvent`. The run time of this
+ * read is in the result's details.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { DEFAULT_BASE } from '../../tools/registry/bases.mjs';
+import { storySources } from '../../tools/story-source/extract.mjs';
 import { portFor, run as exec, spawnServer } from '../lib/exec.mjs';
 import {
   MORE_DIR,
@@ -45,6 +53,17 @@ const option = (flags, name, fallback) => {
   const i = flags.indexOf(`--${name}`);
   return i === -1 ? fallback : flags[i + 1];
 };
+
+/** The Code tab's text in the manager (addon-docs code panel). */
+const CODE_PANEL = '[id$="tabpanel-storybook/docs/panel"] pre';
+/** The words of a test (D142); `play` as a word, so `display` passes. */
+const TEST_WORDS = /\bplay\b|\bexpect\(|storybook\/test|\buserEvent\b/;
+/** A story renders within this after the switch. */
+const RENDER_TIMEOUT = 30_000;
+/** Then its code text shows within this (the preview sends it after render). */
+const CODE_TIMEOUT = 3_000;
+/** A fresh page after this many stories (one page crashed after about 450). */
+const PAGE_STORIES = 200;
 
 /** The footer range, the global filter value and the static flag. */
 const readState = () => {
@@ -103,6 +122,120 @@ async function checkPages(root) {
  */
 const docsPageUrl = (id) =>
   `${DOCS_ORIGIN}/docs/examples/${readExactStories().get(id) ?? `more/${id}`}`;
+
+/**
+ * The Code tab of every story of `root`'s index.json against its code text
+ * (spec 66, 1.6.6). One browser, one manager page (a fresh one every
+ * PAGE_STORIES stories and after a crash); each story is opened in place by
+ * history.pushState and popstate, as the manager's own links do. A story
+ * passes when, after its storyRendered, the panel shows its text (trimmed)
+ * within CODE_TIMEOUT and none of the test words.
+ * @returns {Promise<{ results: string[], read: number, failed: string[], seconds: number }>}
+ */
+async function checkCode(root, log) {
+  const index = await (await fetch(`${root}/index.json`)).json();
+  const ids = Object.values(index.entries)
+    .filter((entry) => entry.type === 'story')
+    .map((entry) => entry.id);
+  const sources = await storySources();
+  const started = Date.now();
+  const failed = [];
+  const results = [];
+  const browser = await chromium.launch();
+  let page;
+  let opened = 0;
+  const open = async (id) => {
+    await page?.close().catch(() => {});
+    page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+    await page.addInitScript(() => {
+      window.__stRendered = new Set();
+      const hook = setInterval(() => {
+        const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
+        if (!channel) return;
+        clearInterval(hook);
+        channel.on('storyRendered', (event) =>
+          window.__stRendered.add(
+            typeof event === 'string' ? event : event?.storyId,
+          ),
+        );
+      }, 5);
+    });
+    await page.goto(`${root}/?path=/story/${id}`, {
+      waitUntil: 'load',
+      timeout: 90_000,
+    });
+    await page.waitForSelector(CODE_PANEL, { timeout: 60_000 });
+    opened = 0;
+  };
+  const panelText = () =>
+    page.evaluate(
+      (selector) => document.querySelector(selector)?.innerText ?? '',
+      CODE_PANEL,
+    );
+  /** The panel's text once it settled on `expected`, else what it shows. */
+  const read = async (id, expected, fresh) => {
+    if (fresh) await open(id);
+    else
+      await page.evaluate((storyId) => {
+        window.__stRendered.delete(storyId);
+        history.pushState({}, '', `?path=/story/${storyId}`);
+        dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+      }, id);
+    opened += 1;
+    await page
+      .waitForFunction((storyId) => window.__stRendered.has(storyId), id, {
+        timeout: RENDER_TIMEOUT,
+        polling: 50,
+      })
+      .catch(() => {});
+    await page
+      .waitForFunction(
+        ({ selector, text }) =>
+          (document.querySelector(selector)?.innerText ?? '').trim() === text,
+        { selector: CODE_PANEL, text: expected },
+        { timeout: CODE_TIMEOUT, polling: 50 },
+      )
+      .catch(() => {});
+    return panelText();
+  };
+  try {
+    let fresh = true;
+    for (const [i, id] of ids.entries()) {
+      const expected = sources[id]?.trim();
+      let text;
+      try {
+        text = await read(id, expected ?? '', fresh || opened >= PAGE_STORIES);
+      } catch {
+        try {
+          text = await read(id, expected ?? '', true);
+        } catch (error) {
+          text = `(page failed: ${String(error.message).split('\n')[0]})`;
+        }
+      }
+      fresh = false;
+      const shown = text.trim();
+      const word = TEST_WORDS.exec(shown);
+      let problem = '';
+      if (expected === undefined) problem = 'no code text for this id';
+      else if (shown !== expected)
+        problem = `shows "${shown.split('\n')[0].slice(0, 80)}" (${shown.split('\n').length} lines; expected "${expected.split('\n')[0].slice(0, 80)}", ${expected.split('\n').length} lines)`;
+      if (word) problem += `${problem ? '; ' : ''}holds "${word[0]}"`;
+      if (problem) {
+        failed.push(id);
+        results.push(`FAIL code ${id}: ${problem}`);
+      }
+      if (i % 100 === 99)
+        log(`storybook-static: code tab ${i + 1} of ${ids.length} read`);
+    }
+  } finally {
+    await browser.close();
+  }
+  const seconds = Math.round((Date.now() - started) / 1000);
+  results.push(
+    `${failed.length ? 'FAIL' : 'PASS'} code tab of ${ids.length} stories: ${ids.length - failed.length} pass, ${failed.length} fail, ${seconds} s`,
+  );
+  return { results, read: ids.length, failed, seconds };
+}
 
 /** The PASS and FAIL lines of one story check against `storyUrl`. */
 async function checkStory(storyUrl) {
@@ -249,10 +382,30 @@ export const run = async (ctx) => {
       results = [`FAIL story threw ${String(error.message).slice(0, 200)}`];
     }
     ctx.log(results.join('\n'));
-    const failures = [...pageResults, ...results].filter((r) =>
-      r.startsWith('FAIL'),
+    let code;
+    try {
+      code = await checkCode(root, ctx.log);
+    } catch (error) {
+      code = {
+        results: [`FAIL code tab threw ${String(error.message).slice(0, 200)}`],
+        read: 0,
+        failed: [],
+        seconds: 0,
+      };
+    }
+    ctx.log(code.results.join('\n'));
+    const failures = [...pageResults, ...results, ...code.results].filter(
+      (r) => r.startsWith('FAIL'),
     );
-    const details = { url: given || 'local', story: STORY_ID };
+    const details = {
+      url: given || 'local',
+      story: STORY_ID,
+      codeTab: {
+        read: code.read,
+        failed: code.failed.length,
+        seconds: code.seconds,
+      },
+    };
     if (failures.length) {
       return {
         status: 'fail',
@@ -261,7 +414,11 @@ export const run = async (ctx) => {
         errors: failures,
       };
     }
-    return { status: 'pass', summary: 'reset pass', details };
+    return {
+      status: 'pass',
+      summary: `reset pass, code tab of ${code.read} stories pass (${code.seconds} s)`,
+      details,
+    };
   } finally {
     await server?.stop();
   }
