@@ -18,16 +18,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D141** 0.9.5 is released with the whole docs site and Storybook, without the date picker work #E17 #R6
-	- The owner's explicit yes for a release (D100, process.md P4): "All looks good, release.", 2026-11-19.
-	- 0.9.5 carries everything on `v0.9/docs-layout` and `claude/review`: the new docs layout, the 42 example pages, the 46 guides, every story page with its text, the 404 page, the three Storybooks on 10.6.7, and the E15 library fixes (touch reorder, pinned rows with row virtualization, Sticky header switch, resize grip, sub-row selection, copy button).
-	- Nothing is left out or hidden: every page is public and indexed (sitemap, search engines, docs search, llms output).
-	- No date picker work is in it. The date filters stay as in 0.9.4; spec 50 stays on its branch `v0.9/filter-input-fixes`, held with Q84 and Q88.
-	- This is the owner's word of D109: `v0.9/docs-layout` merges into `claude/review` as one merge, as the first step of the release.
-	- Lifted by the owner for this release: the 13 unticked lines of the guide checklist (D105), the wording review of the story texts (D104, D106; the owner looked at the preview and it is good), and the real-device touch check of D108 (the owner does it later, card Q131).
-	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
-	- Owner recorded 2026-11-19.
-	- Source: Q132
 
 ## Done
 
@@ -929,6 +919,16 @@ kanban-plugin: basic
 	- `guide-checklist.md` and `guide-example-plan.md` are updated with the result.
 	- Owner recorded 2026-11-18.
 	- Source: Q128
+- [x] **D141** 0.9.5 is released with the whole docs site and Storybook, without the date picker work #E17 #R6
+	- The owner's explicit yes for a release (D100, process.md P4): "All looks good, release.", 2026-11-19.
+	- 0.9.5 carries everything on `v0.9/docs-layout` and `claude/review`: the new docs layout, the 42 example pages, the 46 guides, every story page with its text, the 404 page, the three Storybooks on 10.6.7, and the E15 library fixes (touch reorder, pinned rows with row virtualization, Sticky header switch, resize grip, sub-row selection, copy button).
+	- Nothing is left out or hidden: every page is public and indexed (sitemap, search engines, docs search, llms output).
+	- No date picker work is in it. The date filters stay as in 0.9.4; spec 50 stays on its branch `v0.9/filter-input-fixes`, held with Q84 and Q88.
+	- This is the owner's word of D109: `v0.9/docs-layout` merges into `claude/review` as one merge, as the first step of the release.
+	- Lifted by the owner for this release: the 13 unticked lines of the guide checklist (D105), the wording review of the story texts (D104, D106; the owner looked at the preview and it is good), and the real-device touch check of D108 (the owner does it later, card Q131).
+	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
+	- Owner recorded 2026-11-19.
+	- Source: Q132
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
