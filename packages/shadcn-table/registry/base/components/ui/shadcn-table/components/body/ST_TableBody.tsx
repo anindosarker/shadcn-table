@@ -82,10 +82,10 @@ export const ST_TableBody = <TData extends ST_RowData>({
   // A sticky pinned virtual row leaves the absolute layout: it sits in its
   // own grid track at its offset in the list, so the browser keeps it stuck
   // between the head and the foot as it does a row without virtualization.
-  // A stack higher than the scroll container keeps the absolute layout, as
-  // the virtualizer then keeps no pinned row outside its range.
+  // A stack higher than the scroll container keeps the absolute layout.
   const pinnedStackOverflows =
     !!rowVirtualizer &&
+    pinnedRowIds.length > 0 &&
     getPinnedStackOverflows({
       pinnedCount: pinnedRowIds.length,
       rowHeight: rowVirtualizer.options.estimateSize(0),
