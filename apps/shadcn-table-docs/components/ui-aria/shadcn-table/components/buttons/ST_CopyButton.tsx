@@ -13,7 +13,7 @@ import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 
 const copyButtonVariants = cva(
-  '-m-1 h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
+  '-m-1 h-auto max-w-full min-w-0 shrink cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );
 
 export interface ST_CopyButtonProps<TData extends ST_RowData>
@@ -78,7 +78,10 @@ export const ST_CopyButton = <TData extends ST_RowData>({
         variant="ghost"
         {...buttonProps}
         className={cn(copyButtonVariants(), buttonProps?.className)}
-      />
+      >
+        {/* the label truncates, so the button never overflows its cell */}
+        <span className="min-w-0 truncate">{buttonProps?.children}</span>
+      </Button>
     </ST_Tooltip>
   );
 };

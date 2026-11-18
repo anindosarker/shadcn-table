@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Header Groups Examples',
+  title: 'Features/Header Groups',
 };
 
 export default meta;
@@ -292,7 +292,7 @@ export const GroupEdgesMatchLeaves = {
       columns={columns}
       data={data}
       enableRowSelection
-      initialState={{ columnPinning: { start: ['firstName'] } }}
+      initialState={{ columnPinning: { start: ['firstName'], end: [] } }}
     />
   ),
   play: async ({ canvasElement }: StoryContext) =>

@@ -4,6 +4,8 @@ import { TableOfContentsList } from './table-of-contents-list';
 import { InitCommand, InstallCommand } from './mdx/install-command';
 import { AgentPrompt } from './mdx/agent-prompt';
 import { StorybookLink } from './mdx/storybook-link';
+import { TryIt } from './mdx/try-it';
+import { GuideExamples } from './mdx/guide-examples';
 import { OrDivider } from './or-divider';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
@@ -25,6 +27,7 @@ import {
   TableOptionsSource,
 } from './prop-tables/prop-table-source';
 import { exampleComponents } from '@/example-groups/map';
+import { StoryExample } from './story-example';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -34,6 +37,8 @@ export function getMDXComponents(components?: MDXComponents) {
     InstallCommand,
     AgentPrompt,
     StorybookLink,
+    TryIt,
+    GuideExamples,
     OrDivider,
     Step,
     Steps,
@@ -56,6 +61,7 @@ export function getMDXComponents(components?: MDXComponents) {
     RowInstanceAPIsSource,
     CellInstanceAPIsSource,
     ...exampleComponents,
+    StoryExample,
     ...components,
   } satisfies MDXComponents;
 }

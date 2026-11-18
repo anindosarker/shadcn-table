@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Table Alignment Examples',
+  title: 'Styling/Table Alignment',
 };
 
 export default meta;

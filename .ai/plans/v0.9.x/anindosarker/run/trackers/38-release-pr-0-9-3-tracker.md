@@ -1,6 +1,6 @@
 # 38: Release 0.9.3, Release PR, tracker
 
-Status: merged (9378b9f8)
+Status: done (9378b9f8)
 Branch `dev`, main checkout (gh only)
 Checks:
 - Check: dev equals claude/review, `git rev-parse origin/dev origin/claude/review` at 4b81e672: pass (one sha)

@@ -10,7 +10,9 @@ import type { InferPageType } from 'fumadocs-core/source';
 import type { ReactNode } from 'react';
 import { getBreadcrumbItemsFromPath } from 'fumadocs-core/breadcrumb';
 import { findPath, flattenTree } from 'fumadocs-core/page-tree';
+import type * as PageTree from 'fumadocs-core/page-tree';
 import { source } from '@/lib/source';
+import { firstPageUrl } from '@/lib/page-tree-utils';
 import {
   docsRoute,
   getPageImageUrl,
@@ -74,7 +76,9 @@ export function techArticleJsonLd(page: DocsPage): WithContext<TechArticle> {
 
 /**
  * Docs > section > page, as the visible breadcrumb shows it. A folder without
- * an index page links to its first page.
+ * an index page links to its first page. Each section is a root folder, whose
+ * crumb fumadocs drops; as in components/docs-breadcrumb.tsx, the section is
+ * passed as the tree so `includeRoot` names it and links its first page.
  */
 export function breadcrumbJsonLd(page: DocsPage): WithContext<BreadcrumbList> {
   const tree = source.getPageTree();
@@ -83,20 +87,24 @@ export function breadcrumbJsonLd(page: DocsPage): WithContext<BreadcrumbList> {
       tree.children,
       (node) => node.type === 'page' && node.url === page.url,
     ) ?? [];
+  const section = path.findLast(
+    (node): node is PageTree.Folder => node.type === 'folder' && !!node.root,
+  );
   const items = [
     { name: 'Docs', url: docsRoute },
-    ...getBreadcrumbItemsFromPath(tree, path, { includePage: true }).map(
-      (item) => ({
-        name: textOf(item.name),
-        url:
-          item.url ??
-          path.flatMap((node) =>
-            node.type === 'folder' && node.name === item.name
-              ? flattenTree(node.children)
-              : [],
-          )[0]?.url,
-      }),
-    ),
+    ...getBreadcrumbItemsFromPath(section ?? tree, path, {
+      includePage: true,
+      includeRoot: section ? { url: firstPageUrl(section) ?? '' } : false,
+    }).map((item) => ({
+      name: textOf(item.name),
+      url:
+        item.url ??
+        path.flatMap((node) =>
+          node.type === 'folder' && node.name === item.name
+            ? flattenTree(node.children)
+            : [],
+        )[0]?.url,
+    })),
   ];
 
   return {

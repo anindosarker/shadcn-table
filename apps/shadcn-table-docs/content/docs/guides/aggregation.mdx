@@ -5,9 +5,13 @@ description: 'How to use and customize the aggregation and grouping features of 
 
 Shadcn Table has built-in aggregation features. There are options for both automatic client-side grouping and aggregation, as well as manual server-side grouping and aggregation. This guide will walk you through the different options and how to use and customize them.
 
+## Example
+
+<GuideExamples slugs={['aggregation-and-grouping']} />
+
 > See the [Column Grouping Guide](/docs/guides/column-grouping) as a prerequisite to this guide. The Aggregation and Grouping Guide was recently split into two separate guides.
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -25,7 +29,7 @@ Shadcn Table has built-in aggregation features. There are options for both autom
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -39,15 +43,15 @@ Shadcn Table has built-in aggregation features. There are options for both autom
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['grouping', 'expanded'])} />
 
-### Aggregation on Grouped Rows
+## Aggregation on Grouped Rows
 
 One of the cool features of Shadcn Table is that it can automatically aggregate the data in grouped rows. To enable this, you must specify both an `aggregationFn` and an `AggregatedCell` render option on a column definition.
 
-#### Built-in Aggregation Functions
+### Built-in Aggregation Functions
 
 There are several built-in aggregation functions available that you can use. They are:
 
@@ -91,7 +95,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Custom Aggregation Functions
+### Custom Aggregation Functions
 
 If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation definition. A custom aggregation is a `constructAggregationFn({ aggregate, merge? })` definition: `aggregate` receives a context with the `rows` to aggregate and a `getValue(row)` accessor and returns the single value that will be displayed in the aggregated cell.
 
@@ -113,7 +117,7 @@ const columns = [
 
 Register reusable definitions by name in the `aggregationFns` table option and reference them from `aggregationFn: 'myAggregation'`.
 
-### Aggregation on All Rows in Footer
+## Aggregation on All Rows in Footer
 
 Shadcn Table does not automatically aggregate all rows for you to calculate totals for the entire table. However, it is still easy enough to do this manually and add in your custom calculations into the `footer` or `Footer` of a column definition. It is recommended that you do any necessary aggregation calculations on your data in a useMemo hook before passing it to the columns footer in your columns definition.
 
@@ -143,11 +147,11 @@ const columns = useMemo(
 
 > Please remember to perform heavy aggregation calculations in a useMemo hook to avoid unnecessary re-renders!
 
-### Custom Cell Renders for Aggregation and Grouping
+## Custom Cell Renders for Aggregation and Grouping
 
 There are a few custom cell render overrides that you should be aware of when using grouping and aggregation features.
 
-#### AggregatedCell Column Option
+### AggregatedCell Column Option
 
 "Aggregation Cells" are cells in an aggregated row (not a normal data row) that can display aggregates (avg, sum, etc.) of the data in a group. The cell that the table is grouped on, however, is not an Aggregate Cell, but rather a [GroupedCell](#groupedcell-column-option).
 
@@ -164,7 +168,7 @@ const columns = [
 ];
 ```
 
-#### GroupedCell Column Option
+### GroupedCell Column Option
 
 "Grouped Cells" are cells in a grouped row (not a normal data row) that by default display the value that the rows are grouped on and the number of rows in the group. You can override the default render for these cells with the `GroupedCell` render option on a column definition.
 
@@ -178,7 +182,7 @@ const columns = [
 ];
 ```
 
-#### PlaceholderCell Column Option
+### PlaceholderCell Column Option
 
 "Placeholder Cells" are cells that are usually meant to be empty in grouped rows and columns. They are simply rendered with a value of `null` by default, but you can override the default render for these cells with the `PlaceholderCell` render option on a column definition.
 
@@ -194,11 +198,7 @@ const columns = [
 ];
 ```
 
-### Aggregation/Grouping Example
-
-<AggregationAndGroupingExample />
-
-### Multiple Aggregations Per column
+## Multiple Aggregations Per column
 
 You may want to calculate more than one aggregation per column. You can specify an array of `aggregationFn`s, and then reference the aggregation results from an array in the `AggregatedCell` render option.
 
@@ -222,6 +222,6 @@ const columns = [
 
 <AggregationMultiExample />
 
-### Manual Grouping
+## Manual Grouping
 
 Manual Grouping means that the `data` that you pass to the table is already grouped and aggregated, and you do not want Shadcn Table to do any of the grouping or aggregation for you. This is useful if you are using a backend API to do the grouping and aggregation for you, and you just want to display the results. However, you will need to put your data in the specific format that the `expanding` features understand.

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getIsRowSelected } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { getPinnedStackOverflows } from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
 import { ST_TableBodyCell } from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
 import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/body/ST_TableDetailPanel';
 
@@ -25,6 +26,8 @@ export interface ST_TableBodyRowProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   rowVirtualizer?: ST_RowVirtualizer;
   staticRowIndex: number;
+  /** The grid track ST_TableBody gives a sticky pinned virtual row. */
+  stickyGridRow?: number;
   virtualRow?: ST_VirtualItem;
 }
 
@@ -58,6 +61,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
+  stickyGridRow,
   virtualRow,
   ...rest
 }: ST_TableBodyRowProps<TData>) => {
@@ -68,13 +72,12 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableRowOrdering,
       enableRowPinning,
       enableStickyFooter,
-      enableStickyHeader,
       layoutMode,
       stTableBodyRowProps,
       renderDetailPanel,
       rowPinningDisplayMode,
     },
-    refs: { tableContainerRef, tableFooterRef, tableHeadRef },
+    refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
   } = table;
 
@@ -178,9 +181,8 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 pinnedRowIds.indexOf(row.id),
               ];
 
-        const isStickyHeader = enableStickyHeader || stickyHeader;
         const tableHeadHeight =
-          ((isStickyHeader || isFullScreen) &&
+          ((stickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =
@@ -194,12 +196,18 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
         // With more sticky pinned rows than the scrollport holds, the bottom
         // inset pulls a row up over the head. Dropping it keeps the row at its
         // flow position below the head, sticking at the top inset on scroll.
-        const pinnedStackOverflows =
-          !!pinnedRowIds &&
-          pinnedRowIds.length * rowHeight +
-            (tableHeadRef.current?.clientHeight || 0) +
-            tableFooterHeight >
-            (tableContainerRef.current?.clientHeight ?? Infinity);
+        const pinnedStackOverflows = getPinnedStackOverflows({
+          pinnedCount: pinnedRowIds?.length ?? 0,
+          rowHeight,
+          table,
+        });
+
+        const isSticky =
+          !!rowPinningDisplayMode?.includes('sticky') && !!isRowPinned;
+        // A sticky pinned virtual row sits in its own grid track instead of
+        // being placed by offset, so it sticks like a row without
+        // virtualization.
+        const isPlaced = !!virtualRow && !(isSticky && stickyGridRow);
 
         const tint = isRowSelected
           ? 'selected'
@@ -228,21 +236,21 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               }}
               {...tableRowProps}
               style={{
-                transform: virtualRow
-                  ? `translateY(${virtualRow.start}px)`
-                  : undefined,
-                top: virtualRow
+                gridRow: isPlaced ? undefined : stickyGridRow,
+                transform:
+                  virtualRow && isPlaced
+                    ? `translateY(${virtualRow.start}px)`
+                    : undefined,
+                top: isPlaced
                   ? 0
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        (isStickyHeader || isFullScreen
-                          ? tableHeadHeight - 1
-                          : 0)
+                        (stickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
                       }px`
                     : undefined,
                 bottom:
-                  !virtualRow &&
+                  !isPlaced &&
                   !pinnedStackOverflows &&
                   bottomPinnedIndex !== undefined &&
                   isRowPinned
@@ -257,16 +265,13 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 tableBodyRowVariants({
                   hover: hover && !isRowSelected,
                   layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-                  position: virtualRow
+                  position: isPlaced
                     ? 'absolute'
-                    : rowPinningDisplayMode?.includes('sticky') && isRowPinned
+                    : isSticky
                       ? 'sticky'
                       : 'relative',
                   tint,
-                  zIndex:
-                    rowPinningDisplayMode?.includes('sticky') && isRowPinned
-                      ? 'high'
-                      : 'base',
+                  zIndex: isSticky ? 'high' : 'base',
                 }),
                 tableRowProps?.className,
               )}

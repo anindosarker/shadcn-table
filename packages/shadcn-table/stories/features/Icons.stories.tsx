@@ -12,7 +12,7 @@ import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/t
 // One icon set for every table under ST_DefaultsProvider; a table's own
 // `icons` option still wins key by key (spec 14, D27).
 const meta: Meta = {
-  title: 'Features/Icons Examples',
+  title: 'Features/Icons',
 };
 
 export default meta;

@@ -1,6 +1,6 @@
 # 23: Release 0.9.2, Integration, tracker
 
-Status: merged (11d9e691)
+Status: done (11d9e691)
 Branch `claude/review` and `dev`, main checkout
 Checks:
 - Check: changelog, `grep -c '^## Unreleased' CHANGELOG.md` at 3e254708: 1; `#### Spec 21` under `### Added`, `#### Spec 22` under `### Removed`, no edit needed: pass

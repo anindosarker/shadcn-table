@@ -23,6 +23,7 @@ import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_ColumnIcon } from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
 import { getST_ColumnFlipPositions } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
+import { useST_TouchDrag } from '@/components/ui/shadcn-table/hooks/useST_TouchDrag';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -68,9 +69,13 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const rowRef = useRef<HTMLDivElement>(null);
 
   const [isDragging, setIsDragging] = useState(false);
+  // Read by the rows' dragenter, which a touch drag sends before the render
+  // that sets isDragging.
+  const draggingRef = useRef(false);
 
   const handleDragStart = (e: DragEvent<HTMLButtonElement>) => {
     setIsDragging(true);
+    draggingRef.current = true;
     try {
       e.dataTransfer.setDragImage(rowRef.current as HTMLElement, 0, 0);
     } catch (e) {
@@ -78,10 +83,11 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     }
   };
 
-  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) => {
+  const endDrag = (cancelled: boolean) => {
     setIsDragging(false);
+    draggingRef.current = false;
     setHoveredColumn(null);
-    if (hoveredColumn && !isColumnDragCancelled(e)) {
+    if (hoveredColumn && !cancelled) {
       // The column slide reads where every header sat before the reorder,
       // measured as the slide measures: from the table's left edge.
       table.setColumnFlipPending({
@@ -93,8 +99,21 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     }
   };
 
+  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) =>
+    endDrag(isColumnDragCancelled(e));
+
+  // A finger drags the grip at once, with a copy of the row under it.
+  const touchDrag = useST_TouchDrag({
+    getGhostSource: () => rowRef.current,
+    onEnd: (_event, cancelled) => endDrag(cancelled),
+    onStart: () => {
+      draggingRef.current = true;
+      setIsDragging(true);
+    },
+  });
+
   const handleDragEnter = () => {
-    if (!isDragging && columnDef.enableColumnOrdering !== false) {
+    if (!draggingRef.current && columnDef.enableColumnOrdering !== false) {
       setHoveredColumn(column);
     }
   };
@@ -149,6 +168,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             <ST_GrabHandleButton
               onDragEnd={handleDragEnd}
               onDragStart={handleDragStart}
+              onPointerDown={touchDrag.onPointerDown}
             />
           ) : (
             <div className="w-7" />

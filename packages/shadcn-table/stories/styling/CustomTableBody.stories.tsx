@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Custom Table Body Examples',
+  title: 'Styling/Custom Table Body',
 };
 
 export default meta;

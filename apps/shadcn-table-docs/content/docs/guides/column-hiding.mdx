@@ -5,23 +5,27 @@ description: 'How to use, customize, or disable column hiding and visibility fea
 
 The column hiding feature is enabled by default and allows the user to hide data columns from either the column menu (Hide) or the columns menu. The columns menu opens from the Columns button, which is pinned to the toolbar by default (aria-label "Show/Hide columns"), and from the Columns row of the [view settings](/docs/guides/view-settings) panel. Unpin it in the panel to keep it only there.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['more/features-column-hiding--column-hidden-on-load']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['enableHiding', 'onColumnVisibilityChange'])}
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={new Set(['enableHiding', 'visibleInShowHideMenu'])}
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['columnVisibility'])} />
 
-### Hide Some Columns by Default
+## Hide Some Columns by Default
 
 You can easily hide columns by default by setting the `columnVisibility` `state` or `initialState` to hide the desired columns by id.
 
@@ -35,7 +39,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Dynamically Hide Columns
+## Dynamically Hide Columns
 
 If you need to control how the columns are hidden dynamically, you can use `state` instead of `initialState` along with the `onColumnVisibilityChange` table option. Or alternatively you can use the `setColumnVisibility` table instance api.
 
@@ -59,7 +63,7 @@ const table = useShadcnTable({
 table.setColumnVisibility({ firstName: true }); //programmatically show firstName column
 ```
 
-### Disable Column Hiding
+## Disable Column Hiding
 
 If you do not want this feature to be enabled at all, you can disable it by setting the `enableHiding` table option to `false`.
 
@@ -77,7 +81,7 @@ If you want to hide certain columns by default, you can specify column visibilit
 
 <DisableColumnHidingExample />
 
-### Enable Column Hiding on Display Columns
+## Enable Column Hiding on Display Columns
 
 By default, column hiding is only enabled on data columns. Display columns, such as `st-row-numbers`, `st-row-select`, etc., do not have column hiding enabled, and their toggle will be disabled. You can turn that back on by setting the `enableHiding` option to `true` in the `displayColumnsOptions` table option.
 
@@ -95,7 +99,7 @@ const table = useShadcnTable({
 
 See the [Display Columns Feature Guide](/docs/guides/display-columns#display-column-definition-options-prop) for a more in depth explanation of the `displayColumnsOptions` table option.
 
-### Hide Column From Show Hide Menu
+## Hide Column From Show Hide Menu
 
 By default, all columns are listed in the columns menu that opens from the pinned Columns button in the toolbar and from the Columns row of the view settings panel. You can hide a column from this menu by setting the `visibleInShowHideMenu` column option to `false`.
 
@@ -119,7 +123,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Custom Columns Menu
+## Custom Columns Menu
 
 The `ST_ShowHideColumnsMenu` component is one of the few ST components that is pretty opinionated and not easily customizable. Instead of trying to customize the menu with overrides, it might be easier for you to just build your own new button and menu from scratch using the Table and Column Instance APIs.
 

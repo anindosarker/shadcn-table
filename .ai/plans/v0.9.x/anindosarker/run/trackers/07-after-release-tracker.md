@@ -1,6 +1,6 @@
 # 07: Release 0.9.0, After release, tracker
 
-Status: merged (566f56a6)
+Status: done (566f56a6)
 Branch `master` (read only), main checkout (gh and git only)
 Checks:
 - Check: release.yml, run 42505022746 on master 2eeafde9: pass (Check Release, Verify Deployment, Validate Production, Publish Release all success)

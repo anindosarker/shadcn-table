@@ -5,9 +5,13 @@ description: 'How to use custom icons such as from Font Awesome in Shadcn Table'
 
 Shadcn Table uses [Lucide icons](https://lucide.dev) by default for all of its internal icons.
 
+## Example
+
+<GuideExamples slugs={['more/features-icons--provider-icon-set']} />
+
 If you need to, you can customize and replace some or all of the icons with your own custom icons. You can either use other Lucide icons or icons from a completely different library.
 
-### Icon editions
+## Icon editions
 
 The table ships one edition per icon library: Lucide (`shadcn-table`), Tabler, Phosphor, Hugeicons and Remix Icon (`shadcn-table-<library>`). Each one installs the same `icons.ts` with that library's icons and adds only its icon package. To switch, pick the library and run the command with `--overwrite`:
 
@@ -19,7 +23,7 @@ The `icons` option below overrides single icons on any edition.
 
 Every edition maps every icon key. Where a library has no match for a Lucide glyph, its edition uses the closest icon instead and says so in a comment in its `icons.ts` (for example the view settings icon, the sticky header and alternating rows toggles, and in some editions the density icons). The three grid line icons (`GridLinesAllIcon`, `GridLinesRowsIcon`, `GridLinesColumnsIcon`) are drawn by the library itself (`ST_GridLinesAllIcon`, `ST_GridLinesRowsIcon`, `ST_GridLinesColumnsIcon`) and are the same in every edition.
 
-### Icon Keys for the Toolbar and Column Menu
+## Icon Keys for the Toolbar and Column Menu
 
 Besides the long-standing keys, these keys draw the chrome of the column menu, the filter chips, the sort editor, the view settings panel and the scroll cues (Lucide defaults in brackets):
 
@@ -43,11 +47,11 @@ Besides the long-standing keys, these keys draw the chrome of the column menu, t
 
 Column-type icons (a calendar for dates, a hash for numbers) are not icon keys: set them per column with `columnDef.icon`, see the [Column Icons Guide](/docs/guides/column-icons).
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['icons'])} />
 
-### Replace with Custom Icons
+## Replace with Custom Icons
 
 To replace a default icon, specify the icon in the `icons` table option. You should get TS hints for the name of the icons you can replace, but you can also consult [this source file](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/icons.ts) for a list of all the icons you can replace.
 
@@ -65,7 +69,7 @@ To replace a default icon, specify the icon in the `icons` table option. You sho
 
 Some icons have `style` props that get applied to them internally. So, in order to preserve the ability of those Icons to be styled with the correct paddings, margins, or rotations, you should pass in `{...props}` to your custom icon component as a best practice.
 
-### One Icon Set for Every Table
+## One Icon Set for Every Table
 
 To give every table in a part of your app the same icons without passing `icons` to each one, wrap them in `<ST_DefaultsProvider icons={...}>`. Each table merges `ST_Default_Icons`, then the provider's `icons`, then its own `icons` option, so one table can still override a single key:
 
@@ -85,7 +89,7 @@ import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/t
 
 The map can be a whole icon set, such as another edition's `icons.ts` saved as `icons/<library>.ts`, or only the keys you change. The docs' theme panel uses this provider for its Icon Library select. See [\<ST_DefaultsProvider /\>](/docs/api/st-components#st_defaultsprovider-).
 
-### Font Awesome Example
+## Font Awesome Example
 
 Here is an example where we use icons from a completely different library, [Font Awesome](https://fontawesome.com/).
 

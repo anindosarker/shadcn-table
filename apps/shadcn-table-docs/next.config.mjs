@@ -1,4 +1,5 @@
 import { createMDX } from 'fumadocs-mdx/next';
+import { EXAMPLES_URL, FIRST_EXAMPLE_URL } from './lib/examples-entry.mjs';
 
 const withMDX = createMDX({ agentRules: false });
 
@@ -15,6 +16,15 @@ const config = {
     (process.env.NEXT_DEV && process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
+  // The story pages (components/story-variant.tsx) mount stories through
+  // Storybook's composeStories, whose core annotations import storybook/test
+  // and with it the testing libraries. The docs never run a play: the alias
+  // swaps it for a module whose exports do nothing (spec 56, 1.6.4).
+  turbopack: {
+    resolveAlias: {
+      'storybook/test': './lib/storybook-test-stub.ts',
+    },
+  },
   // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
   // the second server's git-ignored copy, not tsconfig.json.
   // A build or `next typegen` reads tsconfig.build.json (tsconfig.preview.json
@@ -100,6 +110,13 @@ const config = {
       destination: '/docs/getting-started/introduction',
       permanent: true,
     },
+    // The Examples section has no index page; its entry is the first example
+    // (lib/examples-entry.mjs, docs-layout L13).
+    {
+      source: EXAMPLES_URL,
+      destination: FIRST_EXAMPLE_URL,
+      permanent: true,
+    },
     // The getting-started overview was two links; the sidebar lists them.
     {
       source: '/docs/getting-started',
@@ -116,6 +133,22 @@ const config = {
       source: '/docs/getting-started/production-ready-tables',
       destination: '/docs/guides/production-ready-tables',
       permanent: false,
+    },
+    // Three example pages took the address of their sidebar name (D119).
+    {
+      source: '/docs/examples/react-query',
+      destination: '/docs/examples/server-side-pagination',
+      permanent: true,
+    },
+    {
+      source: '/docs/examples/editing-crud-inline-row',
+      destination: '/docs/examples/inline-editing',
+      permanent: true,
+    },
+    {
+      source: '/docs/examples/virtualized',
+      destination: '/docs/examples/virtualization',
+      permanent: true,
     },
   ],
 };

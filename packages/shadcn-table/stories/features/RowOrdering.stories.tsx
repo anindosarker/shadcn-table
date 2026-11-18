@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_Row,
   ShadcnTable,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
@@ -18,7 +19,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Ordering Examples',
+  title: 'Features/Row Ordering',
 };
 
 export default meta;
@@ -460,20 +461,261 @@ export const DropNoSlideReducedMotion = {
   },
 };
 
-/** Dragging the first row's grip onto the third row moves it there. */
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged row that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/**
+ * Drags the grip of the row at `from` by touch onto the row at `to`. The
+ * ghost shows while the drag is on, follows the finger and is gone after
+ * the drop.
+ */
+const touchDragRow = async ({
+  canvasElement,
+  from,
+  to,
+}: {
+  canvasElement: HTMLElement;
+  from: number;
+  to: number;
+}) => {
+  await waitFor(() =>
+    expect(canvasElement.getAnimations({ subtree: true }).length).toBe(0),
+  );
+  const rows = bodyRows(canvasElement);
+  const grip = within(rows[from]).getByRole('button', { name: 'Move' });
+  const start = centreOf(grip);
+  const end = centreOf(
+    rows[to].querySelector<HTMLElement>('td[data-flip-column="firstName"]')!,
+  );
+  touch({ at: start, element: grip, type: 'pointerdown' });
+  touch({
+    at: { x: start.x, y: (start.y + end.y) / 2 },
+    element: grip,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  touch({ at: end, element: grip, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  touch({ at: end, element: grip, type: 'pointerup' });
+  await waitFor(() => expect(ghost()).toBeNull());
+};
+
+/**
+ * Dragging the first row's grip onto the third row moves it there, with the
+ * mouse and by touch.
+ */
 export const DragReordersRows = {
   render: () => <SlideTable />,
   play: async ({ canvasElement }: StoryContext) => {
     await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
     const before = bodyRows(canvasElement).map(rowNum);
+    // A mouse drag draws no ghost at any moment of the drag.
+    const ghosts: Element[] = [];
+    const observer = new MutationObserver((records) =>
+      records.forEach((record) =>
+        record.addedNodes.forEach((node) => {
+          if (
+            node instanceof Element &&
+            node.matches('[data-st-touch-ghost]')
+          ) {
+            ghosts.push(node);
+          }
+        }),
+      ),
+    );
+    observer.observe(document.body, { childList: true });
     await dragFirstRowTwoDown(canvasElement);
+    observer.disconnect();
+    expect(ghosts).toEqual([]);
+    const moved = [before[1], before[2], before[0], ...before.slice(3)];
     await waitFor(() =>
-      expect(bodyRows(canvasElement).map(rowNum)).toEqual([
+      expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
+    );
+
+    // Touch: the grip drags at once, back and then as the mouse moved it.
+    await touchDragRow({ canvasElement, from: 2, to: 0 });
+    await waitFor(() =>
+      expect(bodyRows(canvasElement).map(rowNum)).toEqual(before),
+    );
+    await touchDragRow({ canvasElement, from: 0, to: 2 });
+    await waitFor(() =>
+      expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
+    );
+  },
+};
+
+type DndPerson = {
+  city: string;
+  firstName: string;
+  lastName: string;
+};
+
+// The rows of the docs example `row-ordering` (enable-row-ordering/makeData.ts).
+const dndData: DndPerson[] = [
+  { firstName: 'Dylan', lastName: 'Murray', city: 'East Daphne' },
+  { firstName: 'Raquel', lastName: 'Kohler', city: 'Columbus' },
+  { firstName: 'Ervin', lastName: 'Reinger', city: 'South Linda' },
+  { firstName: 'Brittany', lastName: 'McCullough', city: 'Lincoln' },
+  { firstName: 'Branson', lastName: 'Frami', city: 'Charleston' },
+];
+
+/** The docs example `row-ordering`: the same columns, options and data. */
+const RowDndOrderingTable = () => {
+  const columns = useMemo<ST_ColumnDef<DndPerson>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+      },
+    ],
+    [],
+  );
+
+  const [data, setData] = useState(() => dndData);
+
+  const table = useShadcnTable({
+    autoResetPageIndex: false,
+    columns,
+    data,
+    enableRowOrdering: true,
+    enableSorting: false,
+    stRowDragHandleProps: ({ table }) => ({
+      onDragEnd: () => {
+        const draggingRow = table.atoms.draggingRow.get();
+        const hoveredRow = table.atoms.hoveredRow.get();
+        if (hoveredRow && draggingRow) {
+          data.splice(
+            (hoveredRow as ST_Row<DndPerson>).index,
+            0,
+            data.splice(draggingRow.index, 1)[0],
+          );
+          setData([...data]);
+        }
+      },
+    }),
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+const firstNames = (canvasElement: HTMLElement) =>
+  bodyRows(canvasElement).map((row) =>
+    row.querySelector('td[data-flip-column="firstName"]')?.textContent?.trim(),
+  );
+
+/** Dragging the first row's grip onto the third row moves it there. */
+export const RowDndOrdering = {
+  name: 'Row DnD Ordering',
+  render: () => <RowDndOrderingTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(5));
+    const before = firstNames(canvasElement);
+    const rows = bodyRows(canvasElement);
+    const grip = within(rows[0]!).getByRole('button', { name: 'Move' });
+    const target = rows[2]!.querySelector<HTMLElement>(
+      'td[data-flip-column="firstName"]',
+    )!;
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: {
+          dragAndDrop: (source: Element, target: Element) => Promise<void>;
+        };
+      }
+    ).stBrowserUserEvent;
+    if (browserUserEvent) {
+      await browserUserEvent.dragAndDrop(grip, target);
+    } else {
+      fireEvent.dragStart(grip);
+      fireEvent.dragEnter(target);
+      fireEvent.dragOver(target);
+      fireEvent.drop(target);
+      fireEvent.dragEnd(grip);
+    }
+    await waitFor(() =>
+      expect(firstNames(canvasElement)).toEqual([
         before[1],
         before[2],
         before[0],
         ...before.slice(3),
       ]),
     );
+  },
+};
+
+/**
+ * A table without a scroll of its own on a page that scrolls: a finger held
+ * near the bottom of the screen scrolls the page, as a mouse drag does.
+ */
+export const TouchDragScrollsPage = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={initData}
+      enablePagination={false}
+      enableRowOrdering
+      enableSorting={false}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(100));
+    const page = document.scrollingElement as HTMLElement;
+    page.scrollTop = 0;
+    expect(page.scrollHeight).toBeGreaterThan(window.innerHeight);
+    const grip = within(bodyRows(canvasElement)[0]).getByRole('button', {
+      name: 'Move',
+    });
+    const start = centreOf(grip);
+    const edge = { x: start.x, y: window.innerHeight - 4 };
+    touch({ at: start, element: grip, type: 'pointerdown' });
+    touch({ at: edge, element: grip, type: 'pointermove' });
+    await waitFor(() => expect(ghost()).not.toBeNull());
+    await waitFor(() => expect(page.scrollTop).toBeGreaterThan(0));
+    touch({ at: edge, element: grip, type: 'pointercancel' });
+    await waitFor(() => expect(ghost()).toBeNull());
+    page.scrollTop = 0;
   },
 };

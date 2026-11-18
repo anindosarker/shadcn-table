@@ -7,6 +7,187 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.9.5 - 2026-11-18
+
+### Added
+
+#### Spec 59 Example ids and 404 page
+
+- A wrong address on the docs site shows the site's own 404 page with the HTTP status 404, inside the home page's top bar (with the base select) and footer: "404", "This page does not exist", the docs search box and links to Get Started, Examples, Guides and API, in light and dark and on phones (D121).
+
+#### Spec 62 Touch drag for columns and rows
+
+- Columns and rows reorder by touch on phones and tablets, on Base UI, Radix UI and React Aria: a finger on a grip drags at once, a finger resting on a draggable header cell for about 300 ms drags it, and a copy of the dragged header or row follows the finger until the drop. A drag from a grip does not scroll the page by itself: a row held near the top or bottom edge scrolls the table, or the page when the table has no scroll of its own, as a mouse drag does; a swipe anywhere else, and on a header cell before the hold, scrolls as before. The handlers passed in `stColumnDragHandleProps` and `stRowDragHandleProps` run for a touch drop too, with the pointer event in place of the drag event. Mouse dragging is unchanged (D108, D132).
+
+#### Spec 62 Touch drag in menus and toolbars
+
+- The columns in `Show/Hide columns`, the sort rules in the sort popover and a column dropped on the grouping drop zone reorder or group by touch too, on Base UI, Radix UI and React Aria: a finger on a menu grip or a sort rule handle drags at once, a copy of the menu row or rule follows the finger, and the menu or popover stays open. The drag does not scroll the page behind the popup. A touch drag that leaves the drop zone, or is cancelled over it, groups nothing. Mouse dragging is unchanged (D108, D132).
+
+### Changed
+
+#### Spec 58 Docs content fixes
+
+- On every guide the Example section follows the first intro paragraph; notes and further intro blocks come after it, word for word (D117).
+- The Basic example's Try it steps add a column filtering step and end with a search for `Ohio` (D118).
+- Three example pages take their sidebar name as title and address: Server-Side Pagination Example at `/docs/examples/server-side-pagination`, Inline Editing Example at `/docs/examples/inline-editing` and Virtualization Example at `/docs/examples/virtualization`. The old addresses `react-query`, `editing-crud-inline-row` and `virtualized` redirect permanently (D119).
+
+#### Spec 54
+
+- Every example page lists two to four Try it steps directly above its table and links its guides under Related guides below it; the View Extra Storybook line is gone, the toolbar's Storybook button replaces it. Titles, descriptions and the page text are unchanged (D104).
+- The six format comparison pages and the Format previews sidebar group are removed.
+
+#### Spec 63 Storybook upgrade
+
+- The project Storybook moves from 10.6.2 to 10.6.7, the latest stable release: `storybook` and every `@storybook/*` package, with `@storybook/addon-vitest` still pinned exact. No configuration change was needed; the story tests, the three static builds and their story ids, and screenshots of a fixed set of stories are the same as before on Base UI, Radix UI and React Aria. The `glob` advisory that comes in through Storybook's docgen plugin (Storybook issue 37409) is not fixed by 10.6.7 and stays until Storybook updates the plugin; it is a development dependency only (D123).
+
+#### Spec 64 Guide stories
+
+- Four new stories show their feature in use on load, each with its docs page under More examples: Sorted On Load (the Sorting guide's table, sorted by State, then by City descending), Column Hidden On Load (Address hidden, listed unticked in the columns menu), Column Widened On Load (First Name at 400 px) and Searched On Load (the search box open with `John`). Each has a play and Try it steps (D140).
+
+#### Spec 64 Guide examples
+
+- Thirteen guides open with a table that shows their feature in use on load: Column Size, Density Toggle, Overflow Tooltip, Filter Chips, Global Filtering, Sort Editor, Row Selection, Toolbar Customization, Row Actions, Display Columns, Sorting, Column Hiding and Column Resizing. Row Selection and Sorting no longer show that table a second time further down; Row Selection's explainer line moved up with it (D140, D122).
+
+#### Spec 55 Guide example block
+
+- An example shown twice on one docs page has two different element ids: the first keeps `example-<name>`, a further one gets a suffixed id (D105).
+
+#### Spec 55 Guide pages
+
+- Every guide opens with a live example: an Example section right before its first section shows the best example for the guide, linked to its example page or its story page under More examples. A table the guide showed only as a copy of that example is removed; the guide's text is unchanged (D105).
+- Guide sections are h2 and their sub-sections h3.
+- When the plain id of an example passes from one mount to another (a picker swap), the next mount takes it over, so no two elements ever share it.
+- The five guide comparison pages are removed.
+
+### Fixed
+
+#### Spec 59 Missing docs page
+
+- A wrong docs address loaded directly, such as `/docs/examples/sticky-heder`, now gets the site's 404 page from the server with the HTTP status 404, as any other wrong address does; the saved design system and sidebar width apply on it, and the browser console no longer reports a script tag.
+
+#### Spec 53 Section tab hover
+
+- The first section tab (Get Started) on the docs site has the same padding on both sides as the others, so its label sits centred over its underline and inside the hover fill, the same fill as the page bar's other controls.
+
+#### Spec 52 Docs filter facts
+
+- The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
+- The React Query example offers only the Contains filter mode on its five text columns, the one mode its mock API applies (D95).
+- On the React Query example those five text columns also filter with `contains`, so the one mode offered, Contains, shows as active (D99).
+
+#### Spec 53 Sidebar state script
+
+- The docs sidebar's saved width and collapsed state now apply when the docs are opened from the home page, and the browser console no longer reports a script tag on that step.
+
+#### Spec 57 Stories match their examples
+
+- The column pinning example and its story lock the ID column with `enablePinning: false`; the option it set before, `enableColumnPinning`, does nothing on a column, so the ID column could still be pinned (D114).
+- The chart detail panel story draws its chart with recharts and the five editing CRUD stories confirm a delete in a modal alert dialog, as their docs examples do. Both are story-only: nothing changes in what the registry ships (D115).
+- The first line above every Storybook story reads "View documentation for this example", the whole line one link to the story's docs page (D124).
+
+#### Spec 59 Example ids and 404 page
+
+- An example shown in a guide's Example section and again further down carries two different element ids already in the served HTML: `guide-example-<name>` in the Example section, `example-<name>` elsewhere; example pages and inline examples keep `example-<name>`, so links to `#example-<name>` still work (D113).
+
+#### Spec 59 Lighter story pages
+
+- The 596 story pages no longer each carry the whole "More examples" list of the Examples sidebar: the served page holds the current row with its number and sub-group label, and the browser lists every row right after. The docs build's story pages drop from 1166 MB to 245 MB; the sidebar looks as before (D116).
+
+#### Spec 60 Sticky header switch and resize grip
+
+- `enableStickyHeader` sets how the table starts; the `Sticky header` switch in `View settings` then turns the sticky header off and on, also when the option is `true`. Full screen still keeps the header sticky (D120).
+- A column's resize grip starts a drag from anywhere on it, its right half included, on pinned and sticky header cells too; the hairline is drawn at the same pixel as before (D126).
+
+#### Spec 60 Sub-row selection and copy button
+
+- Ticking a parent row ticks all its sub-rows, unticking it unticks them, and ticking the last unticked sub-row ticks the parent; before, ticking a parent left its sub-rows unticked (D125).
+- The Click to copy button stays inside a narrow cell and truncates its text, and hovering it shows "Click to copy" instead of the cell's overflow tooltip on Base UI, Radix UI and React Aria (D127).
+
+#### Spec 61 Pinned rows with row virtualization
+
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, a pinned row stays in view at the top or the bottom of the body while the other rows scroll, as it does without virtualization, also for several pinned rows, with the sticky header, and for a row far outside the rendered range; before, it scrolled away. The Row Pinning guide no longer says the two do not combine (D128).
+
+#### Spec 61.1 Select all in select-sticky mode keeps the table virtualized
+
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, pinned rows stay in view while they fit in the table's scroll box; a taller stack scrolls with the virtualized rows instead, so the table stays virtualized. For example, Select all in `'select-sticky'` mode no longer renders every row at once. On Base UI, Radix UI and React Aria.
+
+#### Spec 62.1 Column auto-scroll stops when the drag leaves the table
+
+- A column dragged out of a table that scrolls sideways, for example onto the grouping drop zone, no longer keeps scrolling the table from the last pointer or finger position inside it; the table scrolls again when the drag comes back over its edge, on Base UI, Radix UI and React Aria.
+
+#### Spec 62.2 Touch drag blocks page scroll from before the touch starts
+
+- A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a header cell that cannot drag no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
+
+### Docs
+
+#### Spec 53 Preview lands on review
+
+- The docs have four sections, Get Started, Examples, Guides and API, in a tab row under the top bar; the row starts with the sidebar's hide and show button and has a dashed rule below it (D101).
+- Each section has its own sidebar: flush groups, sticky group labels with a dashed line while stuck (also in Firefox and Safari), no heading row; the sidebar hides, resizes between 220 and 480 px and keeps both over a reload (D102).
+- The Examples sidebar opens on Featured, groups the examples by demand with short row labels, and `/docs/examples` opens the first example, Basic (D103).
+- The Guides overview lists every guide under its group heading again, read from the sidebar's order.
+
+#### Spec 53 Footer link and square corners
+
+- The home page footer's Storybook link opens the Storybook of the selected base, no longer always the Radix one; its first Docs link reads "Get Started" (D107, D101).
+- The last rounded frames in the docs content are square: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar and inline code in the prop tables. The table frame and the scroll controls stay rounded (D107).
+
+#### Spec 56 Story group names
+
+- Storybook story groups are in Title Case with spaces and without the word "Examples" ("Features/Aggregation Examples" is "Features/Aggregation", "sticky-footer" is "Sticky Footer", "useEffects" is "Use Effects"); the folder "Fixed Bugs" is "Miscellaneous" (D106).
+- Story links follow the new names: the docs toolbar Storybook button opens the same story as before, and the Storybook GitHub link opens the folder of the story shown (D106).
+
+#### Spec 56 Story pages in the docs
+
+- Every Storybook story without an example page has a docs page under "More examples" (594 pages), in Storybook's groups and order; each shows the story itself in the example playground, its story file in the Code tab and a Storybook button to it, on the selected base (D106, D103).
+- "More examples" keeps the open or closed state the visitor left it in after a reload; its group labels have no toggle (D103).
+- Each Storybook story's intro line links its docs page (D106).
+- `pnpm test validate-repo` fails when a story has no docs page or a page has no story, and `pnpm test storybook-static` checks the pages against the built Storybook (D106).
+
+#### Spec 56 Exact stories and merged copies
+
+- Every docs example has one exact story with its columns, options and data, each with a play; new groups "Features/Customization", "Features/Export", "Features/Server Data" and "Features/Localization" hold the examples no group covered, and the server examples serve their rows from inside the story (D106).
+- The docs toolbar Storybook button of each of the 42 example pages opens that page's own story; no two pages share one (D106).
+- 59 stories that only copied another story's table are gone; a copy's check, where it had one, is now a step of the play on the story it copied (D106).
+- The Localization guide's example is the new story "Features/Localization / Spanish" (D105).
+
+#### Spec 56 Story fixes
+
+- The Styling story pages under "More examples" show their styles (row and cell colors, stripes, widths, caption position); the docs style sheet now reads the story files.
+- Seven stories do what their names say: the custom global filter no longer throws on the Age column, the secondary color checkbox and the lime green sort arrow show on every base, the drag buttons of Columns Hold While Dragging sit below the table out of the drop zone's way, the custom aggregate cell counts each group, Click To Copy Disabled Per Column copies the other columns, and the two Original row number stories have their virtualization the right way round.
+- `pnpm test typecheck` type checks the story files, and the docs type check now covers the React Aria story copies too.
+
+#### Spec 56 Story text checklist
+
+- `pnpm test validate-repo` fails a story page under "More examples" that has no description, not 2 to 4 Try it steps directly above its table, or no Related guides links below it, and names the page (D104, D106).
+- Plays guard three of the fixed stories: Custom Global Filter Fn, Click To Copy Disabled Per Column and Column Grouping Enabled Custom Aggregate.
+
+#### Spec 53 Example row numbers
+
+- Each Examples sidebar row starts with its running number ("1. Basic"), counted through the whole section in sidebar order, and each Examples group label ends with its row count ("Featured (5)"); both are computed from the sidebar's order and show in the sidebar only, never in Get Started, Guides or API (D103).
+- The sticky sidebar labels check their dashed line only on a scroll of the sidebar, no longer on every page or table scroll.
+
+#### Spec 55 Guide tables shown once
+
+- The Async Loading, Pagination and Scroll Cues guides show their main table once, in the Example section at the top; the copy further down is gone, and its explainer line now sits between the Example heading and the table (D122).
+
+#### Spec 55 Click to Copy guide
+
+- The Click to Copy guide shows its own click to copy example on top, in place of the Advanced example, and no longer repeats it at the end; every cell of that example copies, since click to copy is on for the whole table (D122).
+
+#### Spec 55 Production-Ready Tables guide
+
+- The Production-Ready Tables guide shows its own server-side table once, in the Example section at the top, under the line about the network tab; the React Query example is no longer shown there (D130).
+- The guide's Code view still lists the five files of the `server-side-data` example the guide walks through (D131).
+- New story Features/Server Data / Production-Ready Table, with its page under More examples: the guide's table, whose play checks that each page change, sort, search and filter change sends exactly one request to `/api/users`.
+
+#### Spec 63 Docs branch catch-up
+
+- Three new story pages under More examples, each with its description, Try it steps and Related guides: Touch Hold On Range Slider, Touch Drag Scrolls Page and Row Pinning Select Sticky With Virtualization (D139, spec 61.1, D104).
+- The description and Try it steps of Sub Row Tree With Selection and the Try it steps of Row Pinning Sticky With Virtualization describe the fixed behaviour: ticking a row ticks its sub-rows, and a pinned row stays in view while the virtualized rows scroll (D125, D128).
+- The docs app's Storybook packages, used to mount the stories, move to 10.6.7 with the library's (D123).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added

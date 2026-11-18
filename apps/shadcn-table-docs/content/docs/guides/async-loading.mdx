@@ -5,9 +5,15 @@ description: 'How to show loading indicators, skeletons, and progress bars in Sh
 
 While you are fetching your data, you may want to show some loading indicators. Shadcn Table has some nice loading UI features built in that look better than a simple spinner.
 
-> This guide is mostly focused on the loading UI features. Make sure to also check out the [Remote Data](/docs/examples/remote) and [React Query](/docs/examples/react-query) examples for server-side logic examples.
+## Example
 
-### Relevant Table Options
+Here is a copy of the full [React Query](/docs/examples/server-side-pagination) example.
+
+<GuideExamples slugs={['server-side-pagination']} />
+
+> This guide is mostly focused on the loading UI features. Make sure to also check out the [Remote Data](/docs/examples/remote) and [React Query](/docs/examples/server-side-pagination) examples for server-side logic examples.
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -19,7 +25,7 @@ While you are fetching your data, you may want to show some loading indicators. 
   }
 />
 
-### Relevant State Options
+## Relevant State Options
 
 <StateOptionsTable
   onlyOptions={
@@ -33,7 +39,7 @@ While you are fetching your data, you may want to show some loading indicators. 
   }
 />
 
-### isLoading UI
+## isLoading UI
 
 There are three different loading UI features that are built into Shadcn Table:
 
@@ -78,7 +84,7 @@ return <ShadcnTable table={table} />;
 
 > Note: The Loading Overlay UI makes the table container non-interactive while it is showing. This is usually desired while no data is yet in the table. Consider avoiding using the Loading Overlay UI during "refetching" operations like filtering, sorting, or pagination.
 
-### Customize Loading UI
+## Customize Loading UI
 
 You can customize the loading UI by passing props to the `stSkeletonProps`, `stLinearProgressProps`, and `stCircularProgressProps` props.
 
@@ -104,7 +110,7 @@ return <ShadcnTable table={table} />;
 
 <LoadingExample />
 
-#### Custom Loading Spinner component
+### Custom Loading Spinner component
 
 If you need to use a custom loading spinner component other than the built-in shadcn/ui one, you can now pass in custom component in the `stCircularProgressProps` `Component` prop.
 
@@ -118,7 +124,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Only Show Progress Bars or Skeletons
+## Only Show Progress Bars or Skeletons
 
 If you do not want both progress bars and cell skeletons to show, you can use the `showProgressBars` and `showSkeletons` states, instead.
 
@@ -133,9 +139,3 @@ const table = useShadcnTable({
 ```
 
 <LinearProgressExample />
-
-### Full Loading and Server-Side Logic Example
-
-Here is a copy of the full [React Query](/docs/examples/react-query) example.
-
-<ReactQueryExample />

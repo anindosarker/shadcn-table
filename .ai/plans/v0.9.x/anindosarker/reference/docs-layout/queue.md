@@ -6,59 +6,122 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **LQ21** Visitors get confused by the detail panel example because some rows cannot expand #owner
-	- Owner, 2026-11-13, from a screen recording: on `/docs/examples/detail-panel` rows 3 and 5 show a greyed expand chevron that does nothing; nothing on the page says those rows are deliberately disabled, so the visitor thinks the feature is broken. The example text needs to say which rows cannot expand and why, and the table needs a visible cue on those rows (a tooltip on the disabled chevron, or a muted row with a short note).
-	- Fact, 2026-11-13: the page renders `examples/<base>/enable-detail-panel-conditionally/TS.tsx` (same in base, radix, aria), where `renderDetailPanel: ({ row }) => row.original.address ? (...) : null` (TS.tsx:61-69) returns null for Ervin (row 3) and Branson (row 5), which have no `address` in `makeData.ts`; the default `getRowCanExpand` then marks them not expandable (`registry/base/.../hooks/useST_TableOptions.ts:228`), and the example's `stExpandButtonProps` (TS.tsx:50-58) forces a `rotate(-90deg)` style so disabled and collapsed chevrons look the same. The MDX already says it once, at the end of the intro paragraph (`content/docs/examples/detail-panel.mdx:7`): "In this example, the panel renders only for rows that have an address, so the expand button is disabled on rows without one." In the library, `registry/<base>/.../buttons/ST_ExpandButton.tsx` renders a disabled row as `disabled={!canExpand && !detailPanel}` (base and radix :87; aria `isDisabled` :86) with the tooltip switched off (`disableHoverListener`, :78) and no title or explanation, so the greyed chevron gives no reason on hover. Storybook `stories/features/DetailPanel.stories.tsx` shows disabled rows in `DetailPanelEnabledConditional` (:193), `DetailPanelEnabledConditionalHide` (:240, hides the button instead) and `ConditionalPanelDisablesEmptyRow` (:665, play test), none with a description.
-- [ ] **LQ7** The examples list is hard to get through because the groups collapse #owner
-	- Owner, 2026-11-13, from screen recordings of real users: collapsed groups in the Examples sidebar hide the pages. The group labels (L8: small, flush left) stay as plain subheaders, but no group collapses, ever; every example page is visible at all times. Guides and API follow the same rule unless decided otherwise.
-	- Fix: drop the collapse from `components/sidebar-subgroup.tsx` (or render groups through the stock fumadocs separator, which has no collapse), keep the label style, no chevron.
-- [ ] **LQ8** Keep the live examples stack or replace the landing with a card grid #lead
-	- The stack (L2, L3, L4, L6) is SEO-neutral: search ranks the single pages; hash positions are not indexed; a crawler sees the intro, the titles and descriptions and 3 example bodies that duplicate 3 single pages. `perf-report.md` is still red on the stack (CLS 1.10, 19,383 nodes, 1.4 s clicks after a full scroll) and L6 virtualization is unbuilt. With L12 the stack grows from 42 to 121 blocks.
-	- Options posted 2026-11-10: a card grid with a static capture per example (recommended; supersedes L2, L3, L4, L6, makes L5 unnecessary); finish the stack (L6, measured skeleton heights, block titles linking to their pages); stack the 42 docs examples only and cards for the 79 story pages.
-- [ ] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
-	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
-	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
-	- Fix: widen the existing radius-0 rule in the docs `global.css` to those frames; leave the table frame.
-- [ ] **LQ4** The filter-variants example blocks the main thread for 6.6 s on mount #lookup
-	- In the stack it loads in 7.8 s, the longest task is 6.7 s, of which 6.58 s is forced style and layout inside React render (`perf-report.md`, scroll run). Attribution by timing only; profile the example on its single page first. Likely the example itself, not the stack.
-- [ ] **LQ3** Two hand-kept route lists must both be edited for every new page #lead
-	- `content/docs/*/meta.json` drives the sidebar; `lib/routes.ts:11` is a second list (examples block :107, Storybook entry :392) feeding `TableOfContentsList`. After wt1 `b9d619f6` the guides and api overviews no longer render that list; `routes.ts` is still read by the component and by the home page.
-- [ ] **LQ1** The home footer's Storybook link ignores the selected base #lead
-	- `components/dev-home/v12/footer.tsx:40-41` always uses `storybookUrl.radix`; `StorybookLink` (`components/mdx/storybook-link.tsx:24-35`) and the toolbar button (L12) follow the selected base.
+- [ ] **LQ30** No example page for column resizing, the most viewed react-table question #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: The most viewed react-table question on Stack Overflow is about column width and resizing (about 183,000 views). The guide `content/docs/guides/column-resizing.mdx` gets clicks in Search Console and example code exists, but `content/docs/examples` has no page for it. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ31** No example keeps the table state in the URL #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Demand for saved views is mostly about table state in the URL (sorting, filters, page). `persistent-view` saves to the browser's local storage only. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ32** No example for clicking a row #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Row click (open or select a row by clicking it) shows demand in the research and has no example page. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ33** No example for responsive tables #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Columns that collapse or stack on small screens show demand in the research and have no example page. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ34** No example for cursor-based pagination #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Asked for around TanStack Table; lower counts than the items above. The server-side examples page by offset only (not rechecked in the code). Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
+- [ ] **LQ35** No example for server-side grouping #owner
+	- Owner, 2026-11-17: recorded as a finding from the demand research; which of these get an example is decided later.
+	- Fact: Asked for around TanStack Table; lower counts. The grouping examples group in the browser. Evidence: `featured-examples-research.md` and `example-demand-audit.md` (2026-11-16).
 
 ## Decided
 
 - [x] **LQ9** Nav order puts Examples third, after API Reference #owner
-	- Decision: L1
+	- Decision: L24
 - [x] **LQ10** The examples landing is a prose list of links; visitors never see a table without clicking #owner
-	- Decision: L2
+	- Decision: old L2 (not built, archived)
 	- Preview accepted on wt1 `e702398d`; performance measured in `perf-report.md`; L6 adds virtualization. Reopened as LQ8.
 - [x] **LQ11** A reload or share mid-stack opens the single page, not the stack #owner
-	- Decision: L3
+	- Decision: old L3 (not built, archived)
 - [x] **LQ12** A sidebar click leaves the stack #lead
-	- Decision: L4
+	- Decision: old L4 (not built, archived)
 - [x] **LQ13** Getting back to the top of the stack takes many screens #owner
-	- Decision: L5
+	- Decision: old L5 (not built, archived)
 - [x] **LQ14** Scrolling the stack is poor on every metric #lookup
-	- Decision: L6
+	- Decision: old L6 (not built, archived)
 	- `perf-report.md`: CLS 1.10 during the scroll, 26.2 s blocking, 1,448 ms sort click and 19,383 DOM nodes after a full scroll, 276 MB heap.
 - [x] **LQ15** The section switcher's place: header centre, a row under the header, or the sidebar #owner
-	- Decision: L7, amended by L10
+	- Decision: L24
 - [x] **LQ16** Subgroups indented with a guide line, labels too large, section titled "Quick Examples" #owner
-	- Decision: L8
+	- Decision: L25
 - [x] **LQ17** One sidebar for the whole site, three levels deep #owner
-	- Decision: L9
+	- Decision: L25
 	- The per-section change dropped the next link on a section's last page (fixed in wt1 `07b5f1eb`, folded into L9) and the stack's page lookup (fixed in `cd43cf4d`).
 - [x] **LQ18** Header looks empty after the section links left it #owner
-	- Decision: L10
+	- Decision: L24
 - [x] **LQ19** Agents restart preview servers the owner stopped #owner
-	- Decision: L11
+	- Decision: old L11 (working rule, archived)
 - [x] **LQ20** 594 Storybook stories are reachable only through one link per page #owner
-	- Decision: L12
+	- Decision: L29
+- [x] **LQ8** Keep the live examples stack or replace the landing with a card grid #lead
+	- Decision: L26
+- [x] **LQ7** The examples list is hard to get through because the groups collapse #owner
+	- Owner, 2026-11-13, from screen recordings of real users: collapsed groups in the Examples sidebar hide the pages. The group labels (L8: small, flush left) stay as plain subheaders, but no group collapses, ever; every example page is visible at all times. Guides and API follow the same rule unless decided otherwise.
+	- Fix: drop the collapse from `components/sidebar-subgroup.tsx` (or render groups through the stock fumadocs separator, which has no collapse), keep the label style, no chevron.
+	- Covered by L9: on the preview each section is a root, so group labels render through the plain separator and never collapse. Owner confirmed on the running preview, 2026-11-16.
+- [x] **LQ25** Visitors switch examples through the picker and the sidebar, and the deployed sidebar is poor #owner
+	- Owner, 2026-11-16, from PostHog screen recordings: many visitors change example through the quick example picker or the sidebar. The deployed sidebar is worse than the preview one (L8, L9, L10); switching examples through the sidebar must be easy. Related: LQ7.
+	- Fact, 2026-11-16: the picker's left and right arrows were removed on the preview by `ae316d45` and restored on owner feedback in wt1 `3f027846`.
+	- Covered by L8, L9, L10 and the picker arrows (wt1 `3f027846`). Owner is happy with the preview sidebar, 2026-11-16.
+- [x] **LQ21** Visitors get confused by the detail panel example because some rows cannot expand #owner
+	- Decision: L27
+	- Owner, 2026-11-13, from a screen recording: on `/docs/examples/detail-panel` rows 3 and 5 show a greyed expand chevron that does nothing; nothing on the page says those rows are deliberately disabled, so the visitor thinks the feature is broken. The example text needs to say which rows cannot expand and why, and the table needs a visible cue on those rows (a tooltip on the disabled chevron, or a muted row with a short note).
+	- Fact, 2026-11-13: the page renders `examples/<base>/enable-detail-panel-conditionally/TS.tsx` (same in base, radix, aria), where `renderDetailPanel: ({ row }) => row.original.address ? (...) : null` (TS.tsx:61-69) returns null for Ervin (row 3) and Branson (row 5), which have no `address` in `makeData.ts`; the default `getRowCanExpand` then marks them not expandable (`registry/base/.../hooks/useST_TableOptions.ts:228`), and the example's `stExpandButtonProps` (TS.tsx:50-58) forces a `rotate(-90deg)` style so disabled and collapsed chevrons look the same. The MDX already says it once, at the end of the intro paragraph (`content/docs/examples/detail-panel.mdx:7`): "In this example, the panel renders only for rows that have an address, so the expand button is disabled on rows without one." In the library, `registry/<base>/.../buttons/ST_ExpandButton.tsx` renders a disabled row as `disabled={!canExpand && !detailPanel}` (base and radix :87; aria `isDisabled` :86) with the tooltip switched off (`disableHoverListener`, :78) and no title or explanation, so the greyed chevron gives no reason on hover. Storybook `stories/features/DetailPanel.stories.tsx` shows disabled rows in `DetailPanelEnabledConditional` (:193), `DetailPanelEnabledConditionalHide` (:240, hides the button instead) and `ConditionalPanelDisablesEmptyRow` (:665, play test), none with a description.
+- [x] **LQ23** An example page does not say what the visitor is looking at #owner
+	- Decision: L27; the rewording of descriptions is LQ26
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors land on an example and try to work out what it is; the page gives too little information. The example descriptions need a rewrite.
+- [x] **LQ24** Visitors try the example table and get lost #owner
+	- Decision: L27
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors try out the UI of an example and lose their way. Each example needs a step-by-step guide of what to test or check. LQ21 is one case.
+	- Owner, 2026-11-16: LQ21 (detail panel, rows that cannot expand) needs no item of its own; the rewritten description and steps must cover it.
+- [x] **LQ27** Guide sections start at h3 where they should be h2 #owner
+	- Decision: L28
+	- Owner, 2026-11-16, on the v3 guide preview (wt1 `343f6f3d`): every section in a guide is an h3; the sections should be h2, so all guide headings need a bump up by one level.
+	- Fact: `content/docs/guides/column-pinning.mdx` and `virtualization.mdx` use `###` for their sections and `####` below; no `##` on the page. Not verified for the other 44 guides, the API pages or the "On this page" list depth setting.
+	- Owner, 2026-11-16: `/docs/guides/production-ready-tables` needs proper heading sizes too. Fact: all 8 of its sections are `###` (`production-ready-tables.mdx:30` to `:371`), none `##`.
+	- The added Example section (LQ22) follows the guide's section level, so it moves with this fix.
+- [x] **LQ22** First-time visitors land on Guides and see no example #owner
+	- Decision: L28
+	- Owner, 2026-11-16, from PostHog screen recordings: visitors get sent to the Guides pages, likely from the home page, and a guide does not show an example right away, so a first-time visitor is confused. The guides need to show or point to examples.
+	- Fact, 2026-11-16 (wt1 `a8cca4d4`): 11 of the 12 home feature tiles link to a guide (`components/dev-home/shared/outline-tiles.tsx:50-138`, link at `:930`); only Export goes to an example. "All feature guides" (`components/dev-home/v12/home-page.tsx:127`), the top bar and the footer go to `/docs/guides`. The main buttons go to install and `/docs/examples` (`home-page.tsx:55-62`).
+	- Fact: the Guides overview (`content/docs/guides/index.mdx`) is a title and one sentence; no links, no table.
+	- Fact: 46 guide pages. 40 embed a live example, first at about line 83 of the body (median), after 5 to 6 headings, mostly under a "Demo" heading near the end; 6 have code blocks only (accessibility, best-practices, column-size, full-screen-toggle, table-event-listeners, tanstack-table-with-shadcn-ui). 27 guides have a matching example page, 19 do not.
+	- Fact: a guide embeds a table with a bare tag such as `<EnableStickyHeaderExample />` (`examples/map.tsx`, `components/mdx/example-snippet.tsx:12-14`), the same tag the example page uses; moving it up needs no new component.
+	- Fact: `usage.mdx:184` links `/docs/guides#fundamentals` and `#feature-guides`; neither anchor exists.
+- [x] **LQ3** Two hand-kept route lists must both be edited for every new page #lead
+	- Decision: old L16 (build note, archived)
+	- `content/docs/*/meta.json` drives the sidebar; `lib/routes.ts:11` is a second list (examples block :107, Storybook entry :392) feeding `TableOfContentsList`. After wt1 `b9d619f6` the guides and api overviews no longer render that list; `routes.ts` is still read by the component and by the home page.
+- [x] **LQ6** Content elements still render rounded corners against the square dashed style #lookup
+	- Decision: L30
+	- Audit of the built HTML after wt1 `5d262205`, 2026-11-10. Still rounded, no reset rule reaches them: fumadocs `Tabs` frame and panel `rounded-xl` (`@fumadocs/base-ui` `dist/components/tabs.js:29,60`, 6 frames on the install page); `CodeBlockTabs` frame (`dist/components/codeblock.js:101`); the agent bar (`components/agent-bar.tsx:105`); the example skeleton frame and bars (`components/example-skeleton.tsx:20,23,27`); the code block copy chip (`codeblock.js:51`). Unconfirmed: prop-table inline code (`components/prop-tables/inline-code.tsx:7`).
+	- Already square: code blocks, callouts, footer cards, MDX cards, toolbar groups, tab triggers, sidebar links. Rounded on purpose: the table frame (`ST_TableLayout.tsx:30`) and fumadocs scroll controls.
+	- Fix: widen the existing radius-0 rule in the docs `global.css` to those frames; leave the table frame.
+- [x] **LQ1** The home footer's Storybook link ignores the selected base #lead
+	- Decision: L30
+	- `components/dev-home/v12/footer.tsx:40-41` always uses `storybookUrl.radix`; `StorybookLink` (`components/mdx/storybook-link.tsx:24-35`) and the toolbar button (L12) follow the selected base.
 
 ## Later
 
+- [ ] **LQ29** Example page titles, descriptions and URLs do not match what people search for #owner
+	- Owner, 2026-11-16: a separate item from the sidebar regrouping. Not an overhaul: page title, meta description and URL of example pages updated for SEO, after an SEO check. Related: LQ26 (body wording).
+	- Fact: the sidebar row "Server-Side Pagination" opens a page titled "React Query Example" at `/docs/examples/react-query`; "Inline Editing" opens "Editing CRUD Inline Row Example". Phrase evidence in `featured-examples-research.md`.
+	- A URL change needs a permanent redirect from the old URL.
+
+- [ ] **LQ28** Audit which guide tables are part of the guide and which are appended demos #lookup
+	- Owner, 2026-11-16 (L15): a table the guide text refers to stays in place; a table that only shows an example at the end is removed once the Example section shows it. Needs a pass over all 46 guides (40 embed a table); later.
+	- The same pass picks the best relevant example per guide: 27 guides have a matching example page, 13 embed a table without one, 6 have no table.
+
+- [ ] **LQ26** Example, guide and API wording is partly a copy of Material React Table #owner
+	- Fact: `reference/seo-audit-2026-11-10.md` finding 6: 38 to 53% overlap in 6-word phrases on sampled pages; some descriptions are MRT's with the name swapped. Release D74 reverted the first rewrite (spec 31) on style.
+	- Owner, 2026-11-16: not now; the demo comes first. A rephrase needs the owner to go through every description for meaning and SEO; the default agent rephrase does not read well. Until then titles, descriptions and body text stay as they are (L14).
+	- Not measured: how much the Try it and Related guides sections lower the overlap on example pages.
+
 ## Dropped
+
+- [x] **LQ4** The filter-variants example blocks the main thread for 6.6 s on mount #lookup
+	- In the stack it loads in 7.8 s, the longest task is 6.7 s, of which 6.58 s is forced style and layout inside React render (`perf-report.md`, scroll run). Attribution by timing only; profile the example on its single page first. Likely the example itself, not the stack.
+	- Dropped by the owner 2026-11-17: no freeze on `/docs/examples/filter-variants`, only the short placeholder every example page shows while the selected base's example code loads. The example uses fixed local data and fetches nothing. The 6.6 s was measured only inside the examples stack, which L13 removed.
 
 - [x] **LQ2** The example playground names a "Both" mode it never offers #lead
 	- `components/example-playground.tsx:69-70` named Preview, Code and Both while the tab list had two. The toolbar now shows all three (owner's screenshots, 2026-11-10, wt1 after the merge of `claude/review`); nothing to do.

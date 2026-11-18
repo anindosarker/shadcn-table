@@ -1,0 +1,50 @@
+# Guide checklist
+
+Spec 55, milestone "Guide pages" (D105). One line per guide in the order of `apps/shadcn-table-docs/content/docs/guides/meta.json` on `v0.9/docs-layout`: the page its Example section links to, and the heading of the table removed from the guide, if any. Tick a line once the guide is checked by hand.
+
+- [ ] Building Production-Ready Tables: Example links Production-Ready Table (/docs/examples/more/features-server-data--production-ready-table), the guide's own server-side data table, shown once; its Code view lists the five server-side-data files; removed: the guide's inline table and the React Query Example (D130, D131, d9bed58c) : **Table duplicated twice** ![1794937426891](image/guide-checklist/1794937426891.png)
+- [X] Best Practices (TypeScript): Example links Basic Example (/docs/examples/basic); removed: none
+- [X] Data (Accessor) Columns: Example links Basic Example (/docs/examples/basic); removed: none
+- [ ] Display (Built-in) Columns: Example links Customize Display Columns (/docs/examples/more/styling-styling-display-columns--customize-display-columns); removed: none (the lower Customize Display Columns example differs in its options and stays)
+- [X] Table Event Listeners Guide: Example links Row Dragging Example (/docs/examples/row-dragging); removed: none
+- [X] State Management Guide: Example links Persistent View Example (/docs/examples/persistent-view); removed: none
+- [X] Accessibility / Keyboard Navigation Guide: Example links Basic Example (/docs/examples/basic); removed: none
+- [X] TanStack Table with shadcn/ui: Example links Basic Example (/docs/examples/basic); removed: none
+- [X] Customize (Style) Components Guide: Example links Minimal Example (/docs/examples/minimal); removed: none
+- [X] Custom Icons Guide: Example links Provider Icon Set (/docs/examples/more/features-icons--provider-icon-set); removed: none
+- [X] Column Icons Guide: Example links Persistent View Example (/docs/examples/persistent-view); removed: Column Icons Example
+- [X] Localization/i18n Guide: Example links Spanish (/docs/examples/more/features-localization--spanish); removed: none
+- [X] Tint Tokens Guide: Example links Sticky Row Selection Example (/docs/examples/sticky-row-selection); removed: none
+- [ ] Toolbar Customization Guide: Example links Custom Top Toolbar Actions (/docs/examples/more/features-toolbar--custom-top-toolbar-actions); removed: none
+- [X] View Settings Guide: Example links Persistent View Example (/docs/examples/persistent-view); removed: View Settings Example
+- [ ] Column Size Guide: Example links Custom Widths Semantic (/docs/examples/more/styling-custom-column-widths--custom-widths-semantic); removed: none
+- [ ] Column Resizing Guide: Example links Column Widened On Load (/docs/examples/more/features-column-resizing--column-widened-on-load); removed: none
+- [ ] Density Toggle Guide: Example links Default To Dense Padding (/docs/examples/more/features-dense-padding--default-to-dense-padding); removed: none
+- [X] Full Screen Toggle Guide: Example links Basic Example (/docs/examples/basic); removed: none
+- [ ] Overflow Tooltip Guide: Example links Overflow Tooltip (/docs/examples/more/styling-default-look--overflow-tooltip); removed: none
+- [ ] Async Loading UI Guide: Example links React Query Example (/docs/examples/react-query), under its moved line; removed: Full Loading and Server-Side Logic Example (D122, 77a4a0c2) : **Seems duplicate** ![1794938231661](image/guide-checklist/1794938231661.png)
+- [ ] Pagination Guide: Example links Remote Data Fetching Example (/docs/examples/remote), under its moved line; removed: the lower Remote Data table, which had no heading (D122, 77a4a0c2) **Seems duplicate** ![1794938299769](image/guide-checklist/1794938299769.png)
+- [X] Virtualization Guide: Example links Row Virtualization Example (/docs/examples/row-virtualization), Column Virtualization Example (/docs/examples/column-virtualization); removed: none
+- [ ] Row Selection Guide: Example links Sticky Row Selection Example (/docs/examples/sticky-row-selection); removed: Sticky Pinned Row Selection, its line moved up into the Example section (D122)
+- [X] Editing Guide: Example links Editing CRUD Example (/docs/examples/editing-crud), Editing CRUD Inline Row Example (/docs/examples/editing-crud-inline-row), Editing CRUD Inline Cell Example (/docs/examples/editing-crud-inline-cell), Editing CRUD Inline Table Example (/docs/examples/editing-crud-inline-table), Editing CRUD Tree Example (/docs/examples/editing-crud-tree); removed: CRUD Examples
+- [X] Column Filtering Guide: Example links Filter Variants Example (/docs/examples/filter-variants); removed: none
+- [ ] Filter Chips Guide: Example links Chips Seeded (/docs/examples/more/features-filter-chips--chips-seeded); removed: Filter Chips Example
+- [ ] Global Filtering/Search Guide: Example links Searched On Load (/docs/examples/more/features-search--searched-on-load); removed: none
+- [ ] Column Hiding Guide: Example links Column Hidden On Load (/docs/examples/more/features-column-hiding--column-hidden-on-load); removed: none
+- [X] Detail Panel Expanding Guide: Example links Detail Panel Example (/docs/examples/detail-panel); removed: none
+- [X] Expanding Sub-Rows/Tree Data Guide: Example links Expanding Tree Example (/docs/examples/expanding-tree); removed: none
+- [X] Column Grouping Guide: Example links Column Grouping Example (/docs/examples/column-grouping); removed: none
+- [X] Aggregation Guide: Example links Aggregation and Grouping Example (/docs/examples/aggregation-and-grouping); removed: Aggregation/Grouping Example
+- [X] Sticky Header/Footer Guide: Example links Sticky Header Example (/docs/examples/sticky-header); removed: Enable Sticky Header and Footer Demo
+- [X] Column Pinning Guide: Example links Column Pinning Example (/docs/examples/column-pinning); removed: Column Pinning Example
+- [ ] Scroll Cues Guide: Example links Column Pinning Example (/docs/examples/column-pinning), under its moved line; removed: Scroll Cues Example (D122, 77a4a0c2); **Seems duplicate and the top example doesn't say to hover and see the cue** ![1794939251581](image/guide-checklist/1794939251581.png)
+- [X] Row Pinning Guide: Example links Sticky Row Pinning Example (/docs/examples/sticky-row-pinning); removed: none
+- [ ] Sorting Guide: Example links Sorted On Load (/docs/examples/more/features-sorting--sorted-on-load); removed: the Multi Sorting table under Sort Direction, no line moved (D122)
+- [ ] Sort Editor Guide: Example links Sort Popover Seeded (/docs/examples/more/features-sort-popover--sort-popover-seeded); removed: none
+- [X] Row Ordering/DnD Guide: Example links Row DnD Ordering Example (/docs/examples/row-ordering); removed: none
+- [X] Column Ordering/DnD Guide: Example links Column DnD Ordering Example (/docs/examples/column-ordering); removed: none
+- [X] Row Numbers Guide: Example links Row Virtualization Example (/docs/examples/row-virtualization); removed: none
+- [X] Column Actions Guide: Example links Basic Example (/docs/examples/basic); removed: none
+- [X] Cell Actions Guide: Example links Editing CRUD Inline Cell Example (/docs/examples/editing-crud-inline-cell); removed: none
+- [ ] Row Actions Guide: Example links Custom Row Action Buttons (/docs/examples/more/features-row-actions--custom-row-action-buttons); removed: none
+- [ ] Click to Copy Guide: Example links Click To Copy Enabled With Copy Button Props (/docs/examples/more/features-click-to-copy--click-to-copy-enabled-with-copy-button-props), the guide's own example with every cell copying; removed: Click to Copy Example (D122, 77a4a0c2); **Wrong example and the original one also don't work. Use this example instead. Fix both. remove the end example and keep only one on top** ![1794939544513](image/guide-checklist/1794939544513.png)![1794939581021](image/guide-checklist/1794939581021.png)

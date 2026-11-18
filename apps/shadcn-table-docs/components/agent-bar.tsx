@@ -93,7 +93,7 @@ export const AgentBar = ({
 
   const tabClass = (value: Mode) =>
     cn(
-      'flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium text-muted-foreground transition-colors',
+      'flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-muted-foreground transition-colors',
       mode === value && 'bg-background text-foreground shadow-sm',
     );
 
@@ -102,7 +102,7 @@ export const AgentBar = ({
       data-slot="agent-bar"
       data-mode={mode}
       className={cn(
-        'not-prose flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-1.5 text-sm sm:flex-nowrap',
+        'not-prose flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 border border-border bg-card py-1.5 pr-1.5 pl-1.5 text-sm sm:flex-nowrap',
         className,
       )}
     >
@@ -110,7 +110,7 @@ export const AgentBar = ({
         <div
           role="radiogroup"
           aria-label="Install with"
-          className="flex shrink-0 gap-0.5 rounded-md bg-muted p-0.5"
+          className="flex shrink-0 gap-0.5 bg-muted p-0.5"
         >
           <button
             type="button"
@@ -130,7 +130,7 @@ export const AgentBar = ({
               role="radio"
               aria-checked={mode === 'command'}
               onClick={() => select('command')}
-              className={cn(tabClass('command'), perBase && 'rounded-r-none')}
+              className={tabClass('command')}
             >
               <TerminalIcon aria-hidden="true" className="size-3.5" />
               {perBase ? (
@@ -155,7 +155,7 @@ export const AgentBar = ({
                     data-active={mode === 'command' || undefined}
                     className={cn(
                       tabClass('command'),
-                      'rounded-l-none border-l border-border/60 px-1',
+                      'border-l border-border/60 px-1',
                     )}
                   >
                     <ChevronDownIcon aria-hidden="true" className="size-3.5" />
