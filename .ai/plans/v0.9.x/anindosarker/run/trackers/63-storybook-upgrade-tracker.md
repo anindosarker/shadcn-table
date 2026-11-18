@@ -24,6 +24,9 @@ Checks:
 - `pnpm test validate-repo` at e6baba6f: pass, 40 unit tests
 - `pnpm test lint` at e6baba6f: pass, 9 warnings (apps/shadcn-table-docs, untouched)
 - `pnpm test typecheck --base base|radix|aria` at e6baba6f: pass, tsc clean each
+- Verifier (2.2) at e6baba6f: every Local CI check recorded green at HEAD (typecheck x3, lint, validate-repo) or at 4d441d7b, whose diff to HEAD is CHANGELOG.md only (storybook-tests x3, storybook-static x3); `test/.out` records confirm sha and status; no heavy check rerun (owner load rule)
+- Verifier Acceptance (1.2) rerun at e6baba6f against the baseline: story ids of `storybook-static/<base>/index.json` vs `lists/before`: base 654/654, radix 654/654, aria 654/654, diff empty each; test names `lists/after` vs `lists/before`: equal on base, radix, aria (aria differs only in the [passed]/[failed] status of the two load flakes, green in the recorded `pnpm test storybook-tests` runs); captures 69/69 equal (compare.md); docs-e2e is the catch-up milestone's (docs branch)
+- Verifier: worktree 08 clean (`git status --short` empty); no server started
 
 - Task 1 Baseline: done (plan files, reference/d123-storybook-upgrade/baseline.md)
 - Task 2 Audit: done (plan files, reference/d123-storybook-upgrade/audit.md)
@@ -35,3 +38,4 @@ Checks:
 ## Attention
 - glob advisory GHSA-3g3m-2fjr-6pw4 (Storybook issue 37409) not overridden: the override would go in the root package.json (not owned by this milestone) and force @joshwooding/vite-plugin-react-docgen-typescript 0.9.1 outside @storybook/react-vite's ^0.7.0; dev-only path, nothing shipped. Revert by adding the override if the owner wants it now.
 - No hosting preview exists for the branch (no deployment or commit status on 3f35b7a4 or 4d441d7b); the deployed Storybook check of Task 5 used the three local static builds on port 5341 as the stand-in: the fixed set and the shell equal the baseline on base, radix and aria.
+- Verifier did not rerun the heavy Acceptance commands at e6baba6f: each was recorded green at e6baba6f or at 4d441d7b (diff to HEAD: CHANGELOG.md only), and the owner's load note rules out repeats. origin/claude/review has moved to 95ed1e46 (spec 61/62 virtualization and RowPinning story, CHANGELOG.md): the merge into claude/review will meet a CHANGELOG.md block conflict (P9: keep both) and runs on code not covered by these runs; CI on the release PR is the second run.
