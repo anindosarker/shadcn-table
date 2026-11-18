@@ -1,7 +1,7 @@
 # 65: Release 0.9.5, After release 0.9.5, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `master`, no worktree for Tasks 1 and 2 (operations only)
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

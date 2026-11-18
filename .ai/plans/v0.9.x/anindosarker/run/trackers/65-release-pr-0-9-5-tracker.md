@@ -1,6 +1,6 @@
 # 65: Release 0.9.5, Release PR 0.9.5, tracker
 
-Status: running
+Status: done (da4f513f)
 Branch `dev`, no worktree (operations only)
 Checks:
 - Check: PR opened, `gh pr create --base master --head dev --title "release: 0.9.5" --label release:patch` at 323f183a: PR 139, https://github.com/anindosarker/shadcn-table/pull/139
@@ -10,9 +10,12 @@ Checks:
 - Check: `gh run rerun 44389754666 --failed`, attempt 2 at 323f183a: both jobs green; `gh run view 44389754666 --json jobs --jq '[.jobs[] | select(.conclusion != "success" and .conclusion != "skipped")]'` lists only Prepare Release (waiting), pass
 - Check: approval (D47), `gh api repos/anindosarker/shadcn-table/actions/runs/44389754666/pending_deployments -X POST -f state=approved -F 'environment_ids[]=26597343948' -f comment="D47"`: environment `release`, by anindosarker, created_at 2026-11-18T20:43:41Z
 
+- Check: bump run 44394322177 at 812f0f75 (`chore: version 0.9.5` by github-actions[bot]: CHANGELOG.md, packages/shadcn-table/package.json, apps/shadcn-table-docs/package.json): completed success; Validate Repo and Lint skipped
+- Check: Task 3, `gh pr view 139 --json state --jq .state`: `MERGED` at 2026-11-18T20:46:09Z, merge commit da4f513f on master; `git show origin/master:packages/shadcn-table/package.json | grep '"version": "0.9.5"'`: found, pass
+
 - Task 1 Open the PR with its label and auto-merge: done (323f183a, PR 139); watcher armed in the runner session
 - Task 2 Full run green and the approval: done (323f183a, run 44389754666 attempt 2, approved 2026-11-18T20:43:41Z)
-- Task 3 Bump run and merge: planned
+- Task 3 Bump run and merge: done (812f0f75, merged as da4f513f)
 
 ## Attention
 
