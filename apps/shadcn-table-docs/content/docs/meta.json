@@ -2,9 +2,9 @@
   "title": "Docs",
   "pages": [
     "getting-started",
-    "api",
     "examples",
     "guides",
+    "api",
     "external:[Changelog](https://github.com/anindosarker/shadcn-table/blob/master/CHANGELOG.md)"
   ]
 }

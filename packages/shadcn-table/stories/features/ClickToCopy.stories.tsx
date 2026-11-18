@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Click to Copy Examples',
+  title: 'Features/Click To Copy',
 };
 
 export default meta;
@@ -179,53 +179,198 @@ export const ClickToCopyDisabledPerColumn = () => {
       },
     ],
     data,
+    enableClickToCopy: true,
   });
 
   return <ShadcnTable table={table} />;
 };
 
+interface Contact {
+  city: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+const contactColumns: ST_ColumnDef<Contact>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+    icon: UserIcon,
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+    icon: UserIcon,
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    icon: MailIcon,
+    stCopyButtonProps: {
+      className: 'w-full justify-start',
+    },
+  },
+  {
+    accessorKey: 'city',
+    header: 'City',
+    icon: Building2Icon,
+  },
+];
+
+const contacts: Contact[] = [
+  {
+    city: 'East Daphne',
+    email: 'dmurray@yopmail.com',
+    firstName: 'Dylan',
+    lastName: 'Murray',
+  },
+  {
+    city: 'Columbus',
+    email: 'rkholer33@yopmail.com',
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+  },
+  {
+    city: 'South Linda',
+    email: 'ereinger@mailinator.com',
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+  },
+  {
+    city: 'Lincoln',
+    email: 'bmccullough44@mailinator.com',
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+  },
+  {
+    city: 'New York',
+    email: 'bframi@yopmain.com',
+    firstName: 'Branson',
+    lastName: 'Frami',
+  },
+];
+
+/**
+ * The docs example of the Click to Copy guide (examples/<base>/
+ * enable-click-to-copy): click to copy on for the whole table, the Email
+ * copy button stretched to the cell's width.
+ */
+export const ClickToCopyEnabledWithCopyButtonProps = () => (
+  <ShadcnTable columns={contactColumns} data={contacts} enableClickToCopy />
+);
+
 /**
  * A click on a cell copies its text to the clipboard, and the tooltip says
  * it was copied.
  */
-export const ClickCopiesValue = {
-  render: () => <ClickToCopyEnabled />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
-      undefined,
+ClickToCopyEnabled.play = async ({ canvasElement }: StoryContext) => {
+  const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+    undefined,
+  );
+  try {
+    const value = data[0].name.firstName;
+    const [text] = await within(canvasElement).findAllByText(value);
+    const button = text!.closest<HTMLElement>('button')!;
+    const input = pointerInput();
+    await input.click(button);
+    expect(writeText).toHaveBeenCalledWith(value);
+    // The press closes the tooltip. Keyboard focus opens it at once, inside
+    // the 4 s the copied title lasts, without the 1 s hover delay.
+    await input.tab();
+    await input.tab({ shift: true });
+    expect(document.activeElement).toBe(button);
+    await waitFor(() =>
+      expect(tooltipTexts()).toContain('Copied to clipboard'),
     );
-    try {
-      const value = data[0].name.firstName;
-      const [text] = await within(canvasElement).findAllByText(value);
-      const button = text!.closest<HTMLElement>('button')!;
-      const browserUserEvent = (
-        globalThis as {
-          stBrowserUserEvent?: {
-            click: (element: Element) => Promise<void>;
-            tab: (options?: { shift?: boolean }) => Promise<void>;
-          };
-        }
-      ).stBrowserUserEvent;
-      const input = browserUserEvent ?? userEvent;
-      await input.click(button);
-      expect(writeText).toHaveBeenCalledWith(value);
-      // The press closes the tooltip. Keyboard focus opens it at once, inside
-      // the 4 s the copied title lasts, without the 1 s hover delay.
-      await input.tab();
-      await input.tab({ shift: true });
-      expect(document.activeElement).toBe(button);
-      await waitFor(() =>
-        expect(
-          [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
-            (tooltip) => tooltip.textContent,
-          ),
-        ).toContain('Copied to clipboard'),
-      );
-    } finally {
-      writeText.mockRestore();
-    }
-  },
+  } finally {
+    writeText.mockRestore();
+  }
 };
+
+/**
+ * With click to copy on for the table and off for Email Address: a First
+ * Name cell shows the Click to copy tooltip and copies on a click;
+ * an Email Address cell has no copy button and copies nothing.
+ */
+ClickToCopyDisabledPerColumn.play = async ({ canvasElement }: StoryContext) => {
+  const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+    undefined,
+  );
+  try {
+    const canvas = within(canvasElement);
+    const value = data[0]!.name.firstName;
+    const [text] = await canvas.findAllByText(value);
+    const button = text!.closest<HTMLElement>('button');
+    expect(button).not.toBeNull();
+    const input = pointerInput();
+    // Keyboard focus opens the tooltip at once, without the hover delay; on
+    // React Aria a hover over a name the copy button cuts off opens the
+    // cell's overflow tooltip instead.
+    button!.focus();
+    await input.tab();
+    await input.tab({ shift: true });
+    expect(document.activeElement).toBe(button);
+    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'));
+    await input.click(button!);
+    expect(writeText).toHaveBeenCalledWith(value);
+
+    const [email] = canvas.getAllByText(data[0]!.email);
+    expect(email!.closest('button')).toBeNull();
+    await input.click(email!);
+    expect(writeText).toHaveBeenCalledTimes(1);
+  } finally {
+    writeText.mockRestore();
+  }
+};
+
+/**
+ * Every column copies: a click on the first cell of each column copies that
+ * cell's text.
+ */
+ClickToCopyEnabledWithCopyButtonProps.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+    undefined,
+  );
+  try {
+    const canvas = within(canvasElement);
+    const input = pointerInput();
+    const first = contacts[0]!;
+    const values = [first.firstName, first.lastName, first.email, first.city];
+    for (const value of values) {
+      const [text] = await canvas.findAllByText(value);
+      const button = text!.closest<HTMLElement>('button');
+      expect(button).not.toBeNull();
+      await input.click(button!);
+      expect(writeText).toHaveBeenLastCalledWith(value);
+    }
+    expect(writeText).toHaveBeenCalledTimes(values.length);
+  } finally {
+    writeText.mockRestore();
+  }
+};
+
+/** The open tooltips' texts. */
+const tooltipTexts = () =>
+  [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+    (tooltip) => tooltip.textContent,
+  );
+
+/**
+ * The real browser pointer and keyboard under vitest (.storybook/vitest.setup.ts),
+ * else Storybook's simulated events.
+ */
+const pointerInput = () =>
+  (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (element: Element) => Promise<void>;
+        tab: (options?: { shift?: boolean }) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent ?? userEvent;
 
 // A copy column narrowed below the button's width keeps the button inside its
 // cell, and a pointer hover on the button shows "Click to copy" (D127).

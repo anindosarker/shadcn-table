@@ -8,6 +8,9 @@ types
 apps/shadcn-table-docs/examples/.radix
 apps/shadcn-table-docs/examples/.base
 apps/shadcn-table-docs/examples/.aria
+apps/shadcn-table-docs/stories/.radix
+apps/shadcn-table-docs/stories/.base
+apps/shadcn-table-docs/stories/.aria
 # installed copies of the library and its parts, written by pnpm lib:install <base>
 apps/shadcn-table-docs/components/ui-radix
 apps/shadcn-table-docs/components/ui-base

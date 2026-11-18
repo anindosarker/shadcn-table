@@ -10,7 +10,7 @@ import {
 // The sort editor: the toolbar button opens the column picker while no sort
 // exists and the editor otherwise; a chip in the chip row opens the editor.
 const meta: Meta = {
-  title: 'Features/Sort Popover Examples',
+  title: 'Features/Sort Popover',
 };
 
 export default meta;
@@ -36,33 +36,40 @@ const options: Partial<ST_TableOptions<Task>> = {
   enableViewSettings: true,
 };
 
-export const SortPopoverDefault = () => (
-  <ShadcnTable columns={columns} data={data} {...options} />
-);
+export const SortPopoverDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} {...options} />,
+  play: (context: StoryContext) => pickerThenEditor(context),
+};
 
-export const SortPopoverSeeded = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    initialState={{
-      sorting: [
-        { desc: false, id: 'status' },
-        { desc: true, id: 'name' },
-      ],
-    }}
-    {...options}
-  />
-);
+export const SortPopoverSeeded = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{
+        sorting: [
+          { desc: false, id: 'status' },
+          { desc: true, id: 'name' },
+        ],
+      }}
+      {...options}
+    />
+  ),
+  play: (context: StoryContext) => reorderRemoveDelete(context),
+};
 
-export const SortPopoverSingleSort = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableMultiSort={false}
-    initialState={{ sorting: [{ desc: false, id: 'name' }] }}
-    {...options}
-  />
-);
+export const SortPopoverSingleSort = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableMultiSort={false}
+      initialState={{ sorting: [{ desc: false, id: 'name' }] }}
+      {...options}
+    />
+  ),
+  play: (context: StoryContext) => singleSortHasNoAdd(context),
+};
 
 const firstColumnTexts = (canvasElement: HTMLElement) =>
   [...canvasElement.querySelectorAll('tbody tr')].map(
@@ -144,141 +151,116 @@ const touchRuleDrag = async ({
   expect(rules[0].isConnected).toBe(true);
 };
 
-export const PickerThenEditor = {
-  render: SortPopoverDefault,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
+const pickerThenEditor = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
 
-    // No sort: the button opens the column picker.
-    await userEvent.click(canvas.getByRole('button', { name: 'Sort' }));
-    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
-    await waitFor(() =>
-      expect(firstColumnTexts(canvasElement)[0]).toContain(
-        'Build search index',
-      ),
-    );
-    // The open popover swaps to the editor.
-    await waitFor(() => expect(ruleIds()).toEqual(['status']));
-    expect(body.queryByRole('option', { name: 'Name' })).toBeNull();
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(ruleIds()).toEqual([]));
+  // No sort: the button opens the column picker.
+  await userEvent.click(canvas.getByRole('button', { name: 'Sort' }));
+  await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[0]).toContain('Build search index'),
+  );
+  // The open popover swaps to the editor.
+  await waitFor(() => expect(ruleIds()).toEqual(['status']));
+  expect(body.queryByRole('option', { name: 'Name' })).toBeNull();
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(ruleIds()).toEqual([]));
 
-    // One sort: the chip shows the column label and opens the editor.
-    const chip = await canvas.findByRole('button', { name: 'Status' });
-    await userEvent.click(chip);
-    await waitFor(() => expect(ruleIds()).toEqual(['status']));
+  // One sort: the chip shows the column label and opens the editor.
+  const chip = await canvas.findByRole('button', { name: 'Status' });
+  await userEvent.click(chip);
+  await waitFor(() => expect(ruleIds()).toEqual(['status']));
 
-    await userEvent.click(body.getByRole('button', { name: 'Add sort' }));
-    await userEvent.click(
-      await body.findByRole('option', { name: 'Priority' }),
-    );
-    await waitFor(() => expect(ruleIds()).toEqual(['status', 'priority']));
-    await canvas.findByRole('button', { name: '2 sorts' });
-  },
+  await userEvent.click(body.getByRole('button', { name: 'Add sort' }));
+  await userEvent.click(await body.findByRole('option', { name: 'Priority' }));
+  await waitFor(() => expect(ruleIds()).toEqual(['status', 'priority']));
+  await canvas.findByRole('button', { name: '2 sorts' });
 };
 
-export const ReorderRemoveDelete = {
-  render: SortPopoverSeeded,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
+const reorderRemoveDelete = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
 
-    // Status ascending, then Name descending.
-    await waitFor(() =>
-      expect(firstColumnTexts(canvasElement)[1]).toContain(
-        'Build search index',
-      ),
-    );
-    await userEvent.click(canvas.getByRole('button', { name: '2 sorts' }));
-    await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
+  // Status ascending, then Name descending.
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Build search index'),
+  );
+  await userEvent.click(canvas.getByRole('button', { name: '2 sorts' }));
+  await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
 
-    // Drag the second rule's handle onto the first row.
-    const rules =
-      document.body.querySelectorAll<HTMLElement>('[data-sort-rule]');
-    const handle = within(rules[1]).getByRole('img', {
-      name: 'Drag to reorder',
-    });
-    const dataTransfer = new DataTransfer();
-    // A mouse drag draws no ghost at any moment of the drag.
-    const ghosts: Element[] = [];
-    const observer = new MutationObserver((records) =>
-      records.forEach((record) =>
-        record.addedNodes.forEach((node) => {
-          if (
-            node instanceof Element &&
-            node.matches('[data-st-touch-ghost]')
-          ) {
-            ghosts.push(node);
-          }
-        }),
-      ),
-    );
-    observer.observe(document.body, { childList: true });
-    fireEvent.dragStart(handle, { dataTransfer });
-    fireEvent.dragOver(rules[0], { dataTransfer });
-    await waitFor(() => expect(rules[0].className).toContain('bg-muted'));
-    fireEvent.drop(rules[0], { dataTransfer });
-    fireEvent.dragEnd(handle, { dataTransfer });
-    observer.disconnect();
-    expect(ghosts).toEqual([]);
-    await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
-    await waitFor(() =>
-      expect(firstColumnTexts(canvasElement)[1]).toContain(
-        'Review billing page',
-      ),
-    );
+  // Drag the second rule's handle onto the first row.
+  const rules = document.body.querySelectorAll<HTMLElement>('[data-sort-rule]');
+  const handle = within(rules[1]).getByRole('img', {
+    name: 'Drag to reorder',
+  });
+  const dataTransfer = new DataTransfer();
+  // A mouse drag draws no ghost at any moment of the drag.
+  const ghosts: Element[] = [];
+  const observer = new MutationObserver((records) =>
+    records.forEach((record) =>
+      record.addedNodes.forEach((node) => {
+        if (node instanceof Element && node.matches('[data-st-touch-ghost]')) {
+          ghosts.push(node);
+        }
+      }),
+    ),
+  );
+  observer.observe(document.body, { childList: true });
+  fireEvent.dragStart(handle, { dataTransfer });
+  fireEvent.dragOver(rules[0], { dataTransfer });
+  await waitFor(() => expect(rules[0].className).toContain('bg-muted'));
+  fireEvent.drop(rules[0], { dataTransfer });
+  fireEvent.dragEnd(handle, { dataTransfer });
+  observer.disconnect();
+  expect(ghosts).toEqual([]);
+  await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Review billing page'),
+  );
 
-    // Touch: a cancelled drag leaves the rules, then the handle drags at
-    // once, back and then as the mouse moved it.
-    await touchRuleDrag({ end: 'pointercancel', from: 1, to: 0 });
-    await pause(100);
-    expect(ruleIds()).toEqual(['name', 'status']);
-    await touchRuleDrag({ from: 1, to: 0 });
-    await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
-    await waitFor(() =>
-      expect(firstColumnTexts(canvasElement)[1]).toContain(
-        'Build search index',
-      ),
-    );
-    await touchRuleDrag({ from: 1, to: 0 });
-    await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
-    await waitFor(() =>
-      expect(firstColumnTexts(canvasElement)[1]).toContain(
-        'Review billing page',
-      ),
-    );
+  // Touch: a cancelled drag leaves the rules, then the handle drags at
+  // once, back and then as the mouse moved it.
+  await touchRuleDrag({ end: 'pointercancel', from: 1, to: 0 });
+  await pause(100);
+  expect(ruleIds()).toEqual(['name', 'status']);
+  await touchRuleDrag({ from: 1, to: 0 });
+  await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Build search index'),
+  );
+  await touchRuleDrag({ from: 1, to: 0 });
+  await waitFor(() => expect(ruleIds()).toEqual(['name', 'status']));
+  await waitFor(() =>
+    expect(firstColumnTexts(canvasElement)[1]).toContain('Review billing page'),
+  );
 
-    await userEvent.click(
-      body.getByRole('button', { name: 'Remove sort on Name' }),
-    );
-    await waitFor(() => expect(ruleIds()).toEqual(['status']));
-    await canvas.findByRole('button', { name: 'Status' });
+  await userEvent.click(
+    body.getByRole('button', { name: 'Remove sort on Name' }),
+  );
+  await waitFor(() => expect(ruleIds()).toEqual(['status']));
+  await canvas.findByRole('button', { name: 'Status' });
 
-    await userEvent.click(body.getByRole('button', { name: 'Delete sort' }));
-    await waitFor(() => expect(ruleIds()).toEqual([]));
-    await waitFor(() =>
-      expect(canvas.queryByRole('button', { name: 'Status' })).toBeNull(),
-    );
-    expect(
-      canvas.getByRole('button', { name: 'Sort' }).getAttribute('data-variant'),
-    ).not.toBe('secondary');
-  },
+  await userEvent.click(body.getByRole('button', { name: 'Delete sort' }));
+  await waitFor(() => expect(ruleIds()).toEqual([]));
+  await waitFor(() =>
+    expect(canvas.queryByRole('button', { name: 'Status' })).toBeNull(),
+  );
+  expect(
+    canvas.getByRole('button', { name: 'Sort' }).getAttribute('data-variant'),
+  ).not.toBe('secondary');
 };
 
-export const SingleSortHasNoAdd = {
-  render: SortPopoverSingleSort,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Plan audit log');
+const singleSortHasNoAdd = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Plan audit log');
 
-    await userEvent.click(canvas.getByRole('button', { name: 'Sort' }));
-    await waitFor(() => expect(ruleIds()).toEqual(['name']));
-    expect(body.queryByRole('button', { name: 'Add sort' })).toBeNull();
-  },
+  await userEvent.click(canvas.getByRole('button', { name: 'Sort' }));
+  await waitFor(() => expect(ruleIds()).toEqual(['name']));
+  expect(body.queryByRole('button', { name: 'Add sort' })).toBeNull();
 };
 
 // The editor offers "Add sort" only while the rule count is below

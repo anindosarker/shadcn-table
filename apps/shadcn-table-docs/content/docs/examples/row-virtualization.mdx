@@ -1,5 +1,6 @@
 ---
 title: 'Row Virtualization Example'
+sidebarTitle: 'Row Virtualization'
 description: 'An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets'
 ---
 
@@ -11,6 +12,18 @@ Be sure to also check out the full [virtualization feature guide docs](/docs/gui
 
 > NOTE: You should only enable row virtualization if you have a large number of rows or columns. Depending on the size of the table, if you are rendering fewer than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have over 50 rows or so at the same time with no pagination or dozens of columns.
 
+### Try it
+
+<TryIt>
+
+1. Scroll to the bottom of the table. The last row is number `10000`.
+2. Click `First Name` and choose `Sort ascending`. All 10,000 rows sort.
+
+</TryIt>
+
 <EnableRowVirtualizationExample />
 
-View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
+## Related guides
+
+- [Virtualization](/docs/guides/virtualization)
+- [Row Numbers](/docs/guides/row-numbers)

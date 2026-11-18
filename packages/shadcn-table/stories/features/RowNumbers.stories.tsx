@@ -7,7 +7,7 @@ import { expect, waitFor } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Number Examples',
+  title: 'Features/Row Number',
 };
 
 export default meta;
@@ -117,7 +117,6 @@ export const enableRowNumbersOriginal = () => (
     columns={columns}
     data={data}
     enableRowNumbers
-    enableRowVirtualization
     rowNumberDisplayMode="original"
   />
 );
@@ -129,6 +128,7 @@ export const enableRowNumbersOriginalVirtual = () => (
     enableBottomToolbar={false}
     enablePagination={false}
     enableRowNumbers
+    enableRowVirtualization
     rowNumberDisplayMode="original"
   />
 );

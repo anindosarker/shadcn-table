@@ -1,5 +1,6 @@
 ---
 title: 'Lazy Detail Panel Example'
+sidebarTitle: 'Lazy Detail Panel'
 description: 'A Shadcn Table example showing how to use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.'
 ---
 
@@ -7,6 +8,18 @@ Fetching the additional data for the detail panels only after the user clicks to
 
 It's even easier if you are using [React Query.](https://tanstack.com/query/latest) In this example, react query is used to fetch the data for the detail panel, but only after the user clicks to expand the row. The data is also cached for a certain period of time so that when the detail panel is closed and reopened, the data is already available and won't need to be re-fetched.
 
+### Try it
+
+<TryIt>
+
+1. Click `+` on the first row. Its details load from the server and open.
+2. Click `-` and then `+` again. The details show at once: they are cached.
+
+</TryIt>
+
 <LazyDetailPanelExample />
 
-View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
+## Related guides
+
+- [Detail Panel](/docs/guides/detail-panel)
+- [Async Loading UI](/docs/guides/async-loading)

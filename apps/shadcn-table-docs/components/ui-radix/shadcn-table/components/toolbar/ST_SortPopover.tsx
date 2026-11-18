@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type PointerEvent, useRef, useState } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui-radix/button';
 import {
@@ -23,6 +23,7 @@ import {
 import { getColumnLabel } from '@/components/ui-radix/shadcn-table/shared/utils/filterSummary.utils';
 import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_ColumnPicker } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ColumnPicker';
+import { useST_TouchDrag } from '@/components/ui-radix/shadcn-table/hooks/useST_TouchDrag';
 
 const pickerClassName =
   'max-h-[min(24rem,var(--radix-popover-content-available-height))] w-65 gap-0 overflow-hidden p-0';
@@ -100,6 +101,28 @@ export const ST_SortPopover = <TData extends ST_RowData>({
   const endDrag = () => {
     setDragIndex(null);
     setOverIndex(null);
+  };
+
+  // A finger drags a rule by its handle at once, with a copy of the rule
+  // under it; the rule's own drop handler moves it, as for the mouse.
+  const touchSource = useRef<{ index: number; rule: HTMLElement | null }>({
+    index: -1,
+    rule: null,
+  });
+  const touchDrag = useST_TouchDrag({
+    getGhostSource: () => touchSource.current.rule,
+    onEnd: endDrag,
+    onStart: () => setDragIndex(touchSource.current.index),
+  });
+  const handleHandlePointerDown = (
+    event: PointerEvent<HTMLElement>,
+    index: number,
+  ) => {
+    touchSource.current = {
+      index,
+      rule: event.currentTarget.closest('li'),
+    };
+    touchDrag.onPointerDown(event);
   };
 
   if (variant === 'chip' && !sorting.length) return null;
@@ -194,13 +217,16 @@ export const ST_SortPopover = <TData extends ST_RowData>({
                 >
                   <span
                     aria-label={localization.dragToReorder}
-                    className="flex cursor-grab items-center text-muted-foreground/60 hover:text-muted-foreground active:cursor-grabbing"
+                    className="flex cursor-grab touch-none items-center text-muted-foreground/60 hover:text-muted-foreground active:cursor-grabbing"
                     draggable
                     onDragStart={(event) => {
                       event.dataTransfer.effectAllowed = 'move';
                       event.dataTransfer.setData('text/plain', String(index));
                       setDragIndex(index);
                     }}
+                    onPointerDown={(event) =>
+                      handleHandlePointerDown(event, index)
+                    }
                     role="img"
                   >
                     <DragHandleIcon className="size-3.5" />

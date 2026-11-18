@@ -19,7 +19,7 @@ import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import { ST_BASE } from '../../.storybook/themes';
 
 const meta: Meta = {
-  title: 'Features/Toolbar Examples',
+  title: 'Features/Toolbar',
 };
 
 export default meta;
@@ -64,9 +64,12 @@ const data = [...Array(5)].map(() => ({
   phoneNumber: faker.phone.number(),
 }));
 
-export const ToolbarEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} enableRowSelection />
-);
+export const ToolbarEnabledDefault = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} enableRowSelection />
+  ),
+  play: (context: StoryContext) => internalButtonsOrder(context),
+};
 
 export const TopToolbarHidden = () => (
   <ShadcnTable
@@ -296,46 +299,49 @@ export const CustomBottomToolbarSelectionActions = () => (
   />
 );
 
-export const ToolbarAlertBannerBottom = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableRowSelection
-    positionToolbarAlertBanner="bottom"
-    renderTopToolbarCustomActions={({ table }) => {
-      const handleCreateNewUser = () => {
-        prompt('Create new user modal');
-      };
-      const handleRemoveUsers = () => {
-        confirm('Are you sure you want to remove the selected users?');
-      };
+export const ToolbarAlertBannerBottom = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      positionToolbarAlertBanner="bottom"
+      renderTopToolbarCustomActions={({ table }) => {
+        const handleCreateNewUser = () => {
+          prompt('Create new user modal');
+        };
+        const handleRemoveUsers = () => {
+          confirm('Are you sure you want to remove the selected users?');
+        };
 
-      return (
-        <div>
-          <ST_Tooltip title="Create New User">
-            <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
-              <SquarePlus />
-            </Button>
-          </ST_Tooltip>
-          <ST_Tooltip title="Remove Users">
-            <span>
-              <Button
-                {...disabledProps(
-                  table.getSelectedRowModel().flatRows.length === 0,
-                )}
-                onClick={handleRemoveUsers}
-                size="icon"
-                variant="ghost"
-              >
-                <Trash2 />
+        return (
+          <div>
+            <ST_Tooltip title="Create New User">
+              <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
+                <SquarePlus />
               </Button>
-            </span>
-          </ST_Tooltip>
-        </div>
-      );
-    }}
-  />
-);
+            </ST_Tooltip>
+            <ST_Tooltip title="Remove Users">
+              <span>
+                <Button
+                  {...disabledProps(
+                    table.getSelectedRowModel().flatRows.length === 0,
+                  )}
+                  onClick={handleRemoveUsers}
+                  size="icon"
+                  variant="ghost"
+                >
+                  <Trash2 />
+                </Button>
+              </span>
+            </ST_Tooltip>
+          </div>
+        );
+      }}
+    />
+  ),
+  play: (context: StoryContext) => bottomToolbarAlertBanner(context),
+};
 
 export const ToolbarAlertBannerBottomWithActionsAlsoBottom = () => (
   <ShadcnTable
@@ -464,25 +470,22 @@ export const InternalButtonsAnimateIn = {
  * The built-in buttons sit in one group in the D8 order: search toggle,
  * filter picker, sort, the pinned view items, full screen, view settings.
  */
-export const InternalButtonsOrder = {
-  render: () => <ToolbarEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const fullScreen = await within(canvasElement).findByRole('button', {
-      name: /full screen/i,
-    });
-    const labels = [
-      ...internalButtonsGroup(fullScreen).querySelectorAll('button'),
-    ].map((button) => button.getAttribute('aria-label'));
-    expect(labels).toEqual([
-      'Show/Hide search',
-      'Filter',
-      'Sort',
-      'Show/Hide columns',
-      'Toggle density',
-      'Toggle full screen',
-      'View settings',
-    ]);
-  },
+const internalButtonsOrder = async ({ canvasElement }: StoryContext) => {
+  const fullScreen = await within(canvasElement).findByRole('button', {
+    name: /full screen/i,
+  });
+  const labels = [
+    ...internalButtonsGroup(fullScreen).querySelectorAll('button'),
+  ].map((button) => button.getAttribute('aria-label'));
+  expect(labels).toEqual([
+    'Show/Hide search',
+    'Filter',
+    'Sort',
+    'Show/Hide columns',
+    'Toggle density',
+    'Toggle full screen',
+    'View settings',
+  ]);
 };
 
 /**
@@ -596,19 +599,16 @@ export const CustomActionsFollowSelection = {
  * With `positionToolbarAlertBanner="bottom"` the selection banner appears
  * below the table once a row is selected.
  */
-export const BottomToolbarAlertBanner = {
-  render: () => <ToolbarAlertBannerBottom />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByRole('checkbox', { name: 'Toggle select row' });
-    expect(canvas.queryByText(/row\(s\) selected/)).toBeNull();
-    await userEvent.click(
-      canvas.getAllByRole('checkbox', { name: 'Toggle select row' })[0]!,
-    );
-    const text = await canvas.findByText(`1 of ${data.length} row(s) selected`);
-    const table = canvasElement.querySelector('table')!;
-    expect(text.getBoundingClientRect().top).toBeGreaterThanOrEqual(
-      table.getBoundingClientRect().bottom,
-    );
-  },
+const bottomToolbarAlertBanner = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByRole('checkbox', { name: 'Toggle select row' });
+  expect(canvas.queryByText(/row\(s\) selected/)).toBeNull();
+  await userEvent.click(
+    canvas.getAllByRole('checkbox', { name: 'Toggle select row' })[0]!,
+  );
+  const text = await canvas.findByText(`1 of ${data.length} row(s) selected`);
+  const table = canvasElement.querySelector('table')!;
+  expect(text.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+    table.getBoundingClientRect().bottom,
+  );
 };

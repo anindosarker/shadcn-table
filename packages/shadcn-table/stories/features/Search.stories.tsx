@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Search Examples',
+  title: 'Features/Search',
 };
 
 export default meta;
@@ -59,9 +59,17 @@ const data = [...Array(200)].map(() => ({
   state: faker.location.state(),
 }));
 
-export const SearchEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
+export const SearchEnabledDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async (context: StoryContext) => {
+    await context.step('ToggleClearsAndCloses', () =>
+      toggleClearsAndCloses(context),
+    );
+    await context.step('EscapeClearsThenCloses', () =>
+      escapeClearsThenCloses(context),
+    );
+  },
+};
 
 export const SearchInitialState = () => (
   <ShadcnTable
@@ -84,9 +92,12 @@ export const SearchInitializedState = () => {
   );
 };
 
-export const SearchContains = () => (
-  <ShadcnTable columns={columns} data={data} globalFilterFn="contains" />
-);
+export const SearchContains = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} globalFilterFn="contains" />
+  ),
+  play: (context: StoryContext) => typingFiltersRows(context),
+};
 
 export const CustomGlobalFilterFn = () => (
   <ShadcnTable
@@ -94,11 +105,47 @@ export const CustomGlobalFilterFn = () => (
     data={data}
     filterFns={{
       myCustomFilterFn: (row, id, filterValue) =>
-        row.getValue<string>(id).startsWith(filterValue),
+        String(row.getValue(id)).startsWith(filterValue),
     }}
     globalFilterFn="myCustomFilterFn"
   />
 );
+
+/**
+ * The custom filter keeps a row when one of its cells starts with the typed
+ * text, case included: the start of a first name keeps its rows, the same
+ * letters in lower case keep none of them.
+ */
+CustomGlobalFilterFn.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByText(data[0]!.firstName);
+  const start = data[0]!.firstName.slice(0, 3);
+  // Cell texts, not getByText: the search highlights the match in its own
+  // element, which splits the name's text.
+  const cellTexts = (row: Element) =>
+    [...row.querySelectorAll('td')].map((cell) =>
+      (cell.textContent ?? '').trim(),
+    );
+  const startsAnyCell = (row: Element, text: string) =>
+    cellTexts(row).some((cellText) => cellText.startsWith(text));
+  const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+  const showsFirstPerson = () =>
+    rows().some((row) => cellTexts(row).includes(data[0]!.firstName));
+
+  await openSearch(canvasElement);
+  await userEvent.keyboard(start);
+  await waitFor(() => {
+    expect(showsFirstPerson()).toBe(true);
+    for (const row of rows()) expect(startsAnyCell(row, start)).toBe(true);
+  });
+
+  await userEvent.clear(searchInput(canvasElement));
+  await userEvent.type(searchInput(canvasElement), start.toLowerCase());
+  await waitFor(() => {
+    expect(showsFirstPerson()).toBe(false);
+    for (const row of rows()) expect(startsAnyCell(row, start)).toBe(false);
+  });
+};
 
 export const SearchGlobalFilterModes = () => (
   <ShadcnTable columns={columns} data={data} enableGlobalFilterModes />
@@ -205,66 +252,53 @@ const openSearch = async (canvasElement: HTMLElement) => {
 };
 
 /** Typing in the search leaves only the rows that contain the text. */
-export const TypingFiltersRows = {
-  render: () => <SearchContains />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const term = data[7].lastName;
-    const before = bodyRowTexts(canvasElement);
-    expect(before.every((text) => text.includes(term))).toBe(false);
-    await openSearch(canvasElement);
-    await userEvent.keyboard(term);
-    await waitFor(() => {
-      const rows = bodyRowTexts(canvasElement);
-      expect(rows.length).toBeGreaterThan(0);
-      for (const text of rows) {
-        expect(text.toLowerCase()).toContain(term.toLowerCase());
-      }
-    });
-  },
+const typingFiltersRows = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const term = data[7].lastName;
+  const before = bodyRowTexts(canvasElement);
+  expect(before.every((text) => text.includes(term))).toBe(false);
+  await openSearch(canvasElement);
+  await userEvent.keyboard(term);
+  await waitFor(() => {
+    const rows = bodyRowTexts(canvasElement);
+    expect(rows.length).toBeGreaterThan(0);
+    for (const text of rows) {
+      expect(text.toLowerCase()).toContain(term.toLowerCase());
+    }
+  });
 };
 
 /**
  * Open, one click on the toggle clears the value, restores every row and
  * closes the field (D35); the toggle is never disabled.
  */
-export const ToggleClearsAndCloses = {
-  render: () => <SearchEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const before = bodyRowTexts(canvasElement);
-    const toggle = await openSearch(canvasElement);
-    await userEvent.keyboard(data[3].lastName);
-    await waitFor(() =>
-      expect(bodyRowTexts(canvasElement)).not.toEqual(before),
-    );
-    expect(toggle).toBeEnabled();
-    await userEvent.click(toggle);
-    await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
-    expect(searchInput(canvasElement)).toHaveValue('');
-    await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
-  },
+const toggleClearsAndCloses = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const before = bodyRowTexts(canvasElement);
+  const toggle = await openSearch(canvasElement);
+  await userEvent.keyboard(data[3].lastName);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).not.toEqual(before));
+  expect(toggle).toBeEnabled();
+  await userEvent.click(toggle);
+  await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
+  expect(searchInput(canvasElement)).toHaveValue('');
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
 };
 
 /** Escape clears the typed text first, then closes the empty field. */
-export const EscapeClearsThenCloses = {
-  render: () => <SearchEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const before = bodyRowTexts(canvasElement);
-    const toggle = await openSearch(canvasElement);
-    await userEvent.keyboard(data[3].lastName);
-    await waitFor(() =>
-      expect(bodyRowTexts(canvasElement)).not.toEqual(before),
-    );
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
-    expect(searchPanel(canvasElement).inert).toBe(false);
-    await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
-    await waitFor(() => expect(document.activeElement).toBe(toggle));
-  },
+const escapeClearsThenCloses = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const before = bodyRowTexts(canvasElement);
+  const toggle = await openSearch(canvasElement);
+  await userEvent.keyboard(data[3].lastName);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).not.toEqual(before));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
+  expect(searchPanel(canvasElement).inert).toBe(false);
+  await waitFor(() => expect(bodyRowTexts(canvasElement)).toEqual(before));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(searchPanel(canvasElement).inert).toBe(true));
+  await waitFor(() => expect(document.activeElement).toBe(toggle));
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -314,5 +348,41 @@ export const ClearCancelsPendingSearch = {
     expect(output).toHaveTextContent('null');
     expect(searchInput(canvasElement)).toHaveValue('');
     expect(bodyRowTexts(canvasElement)).toEqual(before);
+  },
+};
+
+const rowCountText = (canvasElement: HTMLElement) =>
+  canvasElement.textContent?.includes(`of ${data.length}`);
+
+// Fixed rows that hold John in front of the random rows, so the search
+// always has matches on load; same length as `data`.
+const searchedOnLoadData = [
+  { ...data[0], firstName: 'John' },
+  { ...data[1], lastName: 'Johnson' },
+  { ...data[2], firstName: 'Johnny' },
+  ...data.slice(3),
+];
+
+/** The search box starts open with `John`, and the rows are filtered. */
+export const SearchedOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={searchedOnLoadData}
+      initialState={{ globalFilter: 'John', showGlobalFilter: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('row');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue('John'));
+    expect(searchPanel(canvasElement).inert).toBe(false);
+    expect(rowCountText(canvasElement)).toBe(false);
+    expect(
+      bodyRowTexts(canvasElement).some((text) => text.includes('John')),
+    ).toBe(true);
+    await userEvent.click(searchInput(canvasElement));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(searchInput(canvasElement)).toHaveValue(''));
+    await waitFor(() => expect(rowCountText(canvasElement)).toBe(true));
   },
 };

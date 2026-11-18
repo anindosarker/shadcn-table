@@ -5,9 +5,15 @@ description: 'How to add row action buttons to each row in Shadcn Table'
 
 The row actions feature is simply a pre-built [Display Column](/docs/guides/display-columns) feature that adds a column as a place to store either a row action menu or other row action buttons.
 
+## Example
+
+<GuideExamples
+  slugs={['more/features-row-actions--custom-row-action-buttons']}
+/>
+
 Using the built-in Row Actions column is optional, as you can simply create your own display columns, but this feature has some built-in conveniences that make it easy to add row actions to your table.
 
-### Relevant Table Options
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -21,13 +27,13 @@ Using the built-in Row Actions column is optional, as you can simply create your
   }
 />
 
-### Enable Row Actions
+## Enable Row Actions
 
 You can enable the row actions feature by setting the `enableRowActions` table option to `true`.
 
 You can then add your row action components with either the `renderRowActions` or `renderRowActionMenuItems` props.
 
-#### Add Row Actions Menu Items
+### Add Row Actions Menu Items
 
 If you want to embed all of your row actions into a single menu, you can use the `renderRowActionMenuItems` table option.
 
@@ -51,7 +57,7 @@ return <ShadcnTable table={table} />;
 
 <RowActionsMenuItemsExample />
 
-#### Add Row Action Buttons
+### Add Row Action Buttons
 
 If you want to add row action buttons, you can use the `renderRowActions` table option.
 
@@ -77,9 +83,9 @@ return <ShadcnTable table={table} />;
 
 <RowActionsButtonsExample />
 
-### Customize Row Actions Column
+## Customize Row Actions Column
 
-#### Change Row Actions Display Column Options
+### Change Row Actions Display Column Options
 
 By default the row actions column is the last column, 48 px wide, pinned to the end so it stays visible while the table scrolls sideways. Its trigger is a horizontal dots button, and its header label ("Actions") is visually hidden and read by screen readers only.
 
@@ -107,7 +113,7 @@ const table = useShadcnTable({
 });
 ```
 
-#### Position Row Actions Column
+### Position Row Actions Column
 
 You can position the row actions column at the start or end (first or last column) of the table using the `positionActionsColumn` table option. The default is `'last'`, with the column pinned to the end. To put it back before the data columns, set `positionActionsColumn: 'first'`; the column is then not pinned.
 

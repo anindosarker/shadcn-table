@@ -15,16 +15,27 @@
  * packages/shadcn-table/storybook-static/<base> by `serve` on 5343 under
  * --ci, else on a free agent port (5340 to 5360), then stopped. With --url
  * the story is opened on `<origin>/<base>/` (the deployed site) instead.
+ * Both ways it also checks the docs story pages against the index.json of
+ * that Storybook (checkPages), and the intro line above the story (D124): a
+ * link "View documentation for this example" to the story's docs page, and
+ * no "This story on the docs site" text.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { DEFAULT_BASE } from '../../tools/registry/bases.mjs';
 import { portFor, run as exec, spawnServer } from '../lib/exec.mjs';
+import {
+  MORE_DIR,
+  readExactStories,
+} from '../../apps/shadcn-table-docs/lib/story-pages.mjs';
 
 const CI_PORT = 5343;
-const STORY_ID = 'features-pagination-examples--pagination-compact-more-data';
+const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
+const DOCS_ORIGIN = 'https://www.shadcn-table.com';
+const INTRO_TEXT = 'View documentation for this example';
+const OLD_INTRO_TEXT = 'This story on the docs site';
 /** The story's render (play, then afterEach) settles within this. */
 const FINISH_TIMEOUT = 90_000;
 /** Then the initial state shows within this. */
@@ -47,6 +58,51 @@ const readState = () => {
     isStatic: window.__ST_STATIC__ === true,
   };
 };
+
+/**
+ * The docs story pages against this Storybook's index (spec 56, 1.6.5): every
+ * exact story of lib/storybook-map.ts is in it, and the pages under
+ * content/docs/examples/more/ (more/meta.json order) are its other stories,
+ * in its order.
+ */
+async function checkPages(root) {
+  const results = [];
+  const check = (name, ok, extra = '') =>
+    results.push(`${ok ? 'PASS' : 'FAIL'} ${name}${extra ? ' ' + extra : ''}`);
+  const res = await fetch(`${root}/index.json`);
+  const index = await res.json();
+  const ids = Object.values(index.entries)
+    .filter((entry) => entry.type === 'story')
+    .map((entry) => entry.id);
+  const exact = readExactStories();
+  const missing = [...exact.keys()].filter((id) => !ids.includes(id));
+  check(
+    'example stories in index.json',
+    missing.length === 0,
+    missing.length ? missing.join(', ') : `${exact.size}`,
+  );
+  const want = ids.filter((id) => !exact.has(id));
+  const meta = JSON.parse(
+    fs.readFileSync(path.join(MORE_DIR, 'meta.json'), 'utf8'),
+  );
+  const pages = meta.pages.filter((page) => !page.startsWith('---'));
+  const first = want.findIndex((id, i) => pages[i] !== id);
+  check(
+    'story pages match index.json',
+    want.length === pages.length && first === -1,
+    first === -1
+      ? `${pages.length} pages`
+      : `at ${first}: page ${pages[first] ?? 'none'}, story ${want[first] ?? 'none'} (node lib/story-pages.mjs)`,
+  );
+  return results;
+}
+
+/**
+ * A story's docs page, as .storybook/preview.tsx links it: the example page
+ * of an exact story, else /docs/examples/more/<story id>.
+ */
+const docsPageUrl = (id) =>
+  `${DOCS_ORIGIN}/docs/examples/${readExactStories().get(id) ?? `more/${id}`}`;
 
 /** The PASS and FAIL lines of one story check against `storyUrl`. */
 async function checkStory(storyUrl) {
@@ -103,6 +159,22 @@ async function checkStory(storyUrl) {
       state.filter ? `"${state.filter}"` : '',
     );
     check('window.__ST_STATIC__ is true', state.isStatic);
+    const intro = await page.evaluate(
+      ({ text, oldText }) => ({
+        hrefs: [...document.querySelectorAll('a')]
+          .filter((a) => a.textContent?.trim() === text)
+          .map((a) => a.href),
+        hasOld: document.body.textContent?.includes(oldText) ?? false,
+      }),
+      { text: INTRO_TEXT, oldText: OLD_INTRO_TEXT },
+    );
+    const expectedDocs = docsPageUrl(STORY_ID);
+    check(
+      'intro links to the docs page',
+      intro.hrefs.length === 1 && intro.hrefs[0] === expectedDocs,
+      `${JSON.stringify(intro.hrefs)} (expected "${expectedDocs}")`,
+    );
+    check('old intro text absent', !intro.hasOld);
   } finally {
     await browser.close();
   }
@@ -166,6 +238,8 @@ export const run = async (ctx) => {
         },
       );
     }
+    const pageResults = await checkPages(root);
+    ctx.log(pageResults.join('\n'));
     const storyUrl = `${root}/iframe.html?id=${STORY_ID}&viewMode=story`;
     ctx.log(`storybook-static (${base}): ${storyUrl}`);
     let results;
@@ -175,7 +249,9 @@ export const run = async (ctx) => {
       results = [`FAIL story threw ${String(error.message).slice(0, 200)}`];
     }
     ctx.log(results.join('\n'));
-    const failures = results.filter((r) => r.startsWith('FAIL'));
+    const failures = [...pageResults, ...results].filter((r) =>
+      r.startsWith('FAIL'),
+    );
     const details = { url: given || 'local', story: STORY_ID };
     if (failures.length) {
       return {

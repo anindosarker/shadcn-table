@@ -5,7 +5,11 @@ description: 'How to use, customize, or disable column the action button and men
 
 By default, Shadcn Table renders a column menu for each column header. A chevron button at the end of the header cell opens it, and so does a click on the header label. Every action in the menu can also be reached some other way (the sort editor, the filter chips, the view settings panel), so the menu is a shortcut that keeps the table's features close to the column they act on.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -17,7 +21,7 @@ By default, Shadcn Table renders a column menu for each column header. A chevron
   }
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={
@@ -29,13 +33,13 @@ By default, Shadcn Table renders a column menu for each column header. A chevron
   }
 />
 
-### Open the Column Menu
+## Open the Column Menu
 
 The chevron button at the end of each header cell (aria-label "Column Actions") and the header label are two triggers of the same menu. A second press on either one closes it. Clicking a header label does not sort the column: sorting is a deliberate action from the menu or from the [sort editor](/docs/guides/sort-editor). If you want a header that sorts on click, write a custom `Header` that calls `column.getToggleSortingHandler()`.
 
 A column with a custom `Header` render keeps its own content and events, so only the chevron opens its menu.
 
-### Default Menu Items
+## Default Menu Items
 
 The menu lists only what applies to the column right now, in this order:
 
@@ -49,7 +53,7 @@ The menu lists only what applies to the column right now, in this order:
 
 Items that do not apply are left out instead of greyed out. Sorting from the menu follows one rule: choosing a direction on a column that is already sorted replaces its direction, choosing a direction on another column adds it after the current sorts. "Show all columns" lives in the columns menu, not here.
 
-### Disable or Hide Column Actions Buttons
+## Disable or Hide Column Actions Buttons
 
 You can set the `enableColumnActions` table option to `false` in the table to disable this feature and hide the button in each column header completely. The header labels then stop opening a menu as well.
 
@@ -69,7 +73,7 @@ In this demo, we disable the column actions button for the 'ID' column.
 
 <DisableColumnActionsExample />
 
-### Custom Column Actions Menu
+## Custom Column Actions Menu
 
 If you do not like the default column actions menu items that Shadcn Table generates, you can provide your own custom menu items with the `renderColumnActionsMenuItems` table or column option. You can choose whether or not to include the internal menu items by using the `internalColumnMenuItems` parameter.
 
@@ -91,7 +95,7 @@ return <ShadcnTable table={table} />;
 
 <CustomColumnActionsExample />
 
-### Open the Menu From Your Own Trigger
+## Open the Menu From Your Own Trigger
 
 `ST_ColumnActionMenu` is exported, so you can open the same menu from an element of your own, for example in a custom `Header`. Pass the element as `trigger`; the menu opens when it is pressed and closes on a second press. Pass `open` and `onOpenChange` as well to control it. The same `trigger` prop works on `ST_RowActionMenu`, `ST_ShowHideColumnsMenu` and `ST_FilterOptionMenu`. The older `anchorEl` and `setAnchorEl` props still work for a menu without a trigger element.
 
@@ -114,7 +118,7 @@ const columns = [
 ];
 ```
 
-### Justify Column Actions Button
+## Justify Column Actions Button
 
 By default, the chevron sits at the end of the header cell, after the column label and the sort arrow. If you want to spread the header content differently, you can use a CSS selector in `stTableHeadCellProps` to change the `justify-content` property of the column header container.
 

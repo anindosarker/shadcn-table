@@ -23,11 +23,13 @@ GET /api/users
 
 This guide assumes you know React and the basics of React Query.
 
-<ServerSideDataExample />
+## Example
 
 Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.
 
-### Folder Layout
+<GuideExamples slugs={['more/features-server-data--production-ready-table']} />
+
+## Folder Layout
 
 The live example is split the way you would split it in your app. Open the Code view above to browse the files:
 
@@ -53,7 +55,7 @@ GET /api/users?page=2&limit=10&search=tex&sortBy=lastName:desc&filter=state[$con
 
 <Step>
 
-### Write the Service
+## Write the Service
 
 The service is a plain async function. It knows your API's URL and response shape, and nothing about tables. Type the params and the response.
 
@@ -106,7 +108,7 @@ const { data } = await http.get<PaginatedResponse<User>>('/users', { params });
 
 <Step>
 
-### Wrap It in a Query Hook
+## Wrap It in a Query Hook
 
 ```ts title="hooks/useUsersQuery.ts"
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -128,7 +130,7 @@ export function useUsersQuery(params: UsersQueryParams) {
 
 <Step>
 
-### Turn Table State Into Server Params
+## Turn Table State Into Server Params
 
 This hook is the link between the table and your server. It holds the table state you control, and it translates that state into the params your API expects. The table state is always the same. The params are whatever your server wants, so you shape this hook to your server.
 
@@ -260,7 +262,7 @@ If your server has no filter operators, drop `columnFilterFns` and send `field=v
 
 <Step>
 
-### Build the Table
+## Build the Table
 
 Define your columns the regular way. Then wire the hooks into the table:
 
@@ -311,7 +313,7 @@ The search box and the typed column filters already wait 500ms after the last ke
 
 </Steps>
 
-### Adapting to Your Server
+## Adapting to Your Server
 
 **Extra params that aren't table state.** Merge them in before you call the query hook:
 
@@ -358,7 +360,7 @@ useMutation({
 });
 ```
 
-### Common Mistakes
+## Common Mistakes
 
 - **Not resetting the page.** You are on page 7, you type a search, and the result has 2 pages. Page 7 is empty. Reset `pageIndex` to 0 in every search, sort and filter handler.
 - **Mixing up 0-based and 1-based pages.** The table's `pageIndex` starts at 0. Most servers start at 1. Convert in one place: the params block.
@@ -368,11 +370,11 @@ useMutation({
 - **Forgetting `rowCount`.** The pagination thinks there is only one page.
 - **Adding your own debounce.** The built-in search and filter inputs already debounce. A second debounce just adds lag.
 
-### Related
+## Related
 
 - [State Management](/docs/guides/state-management)
 - [Pagination: Manual or Server-Side Pagination](/docs/guides/pagination#manual-or-server-side-pagination)
 - [Sorting: Manual Server-Side Sorting](/docs/guides/sorting#manual-server-side-sorting)
 - [Column Filtering: Manual Server-Side Column Filtering](/docs/guides/column-filtering#manual-server-side-column-filtering)
 - [Global Filtering: Manual Server-Side Global Filtering](/docs/guides/global-filtering#manual-server-side-global-filtering)
-- [React Query Example](/docs/examples/react-query)
+- [Server-Side Pagination Example](/docs/examples/server-side-pagination)

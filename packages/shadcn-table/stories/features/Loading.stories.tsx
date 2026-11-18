@@ -5,7 +5,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Loading Examples',
+  title: 'Features/Loading',
 };
 
 export default meta;
@@ -62,9 +62,24 @@ const blankData = [...Array(100)].map(() => ({
   state: null,
 }));
 
-export const Loading = () => (
-  <ShadcnTable columns={columns} data={[]} state={{ isLoading: true }} />
-);
+/** While loading with no data, every body cell is a skeleton, ten rows. */
+export const Loading = {
+  render: () => (
+    <ShadcnTable columns={columns} data={[]} state={{ isLoading: true }} />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('columnheader');
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(10),
+    );
+    const cells = canvasElement.querySelectorAll('tbody td');
+    expect(cells).toHaveLength(10 * columns.length);
+    for (const cell of cells) {
+      expect(cell.querySelector('[data-slot="skeleton"]')).not.toBeNull();
+      expect(cell).toHaveTextContent(/^$/);
+    }
+  },
+};
 
 export const Loading5 = () => (
   <ShadcnTable
@@ -139,50 +154,18 @@ export const SkeletonDisplayColumns = () => (
   />
 );
 
-export const ReloadingExample = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    state={{ showProgressBars: true }}
-  />
-);
-
-export const OnlyTopProgressBar = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    stLinearProgressProps={({ isTopToolbar }) => ({
-      progressComponentProps: {
-        style: { display: isTopToolbar ? 'block' : 'none' },
-      },
-    })}
-    state={{ showProgressBars: true }}
-  />
-);
-
-/** While loading with no data, every body cell is a skeleton, ten rows. */
-export const SkeletonsWhileLoading = {
-  render: () => <Loading />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByRole('columnheader');
-    await waitFor(() =>
-      expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(10),
-    );
-    const cells = canvasElement.querySelectorAll('tbody td');
-    expect(cells).toHaveLength(10 * columns.length);
-    for (const cell of cells) {
-      expect(cell.querySelector('[data-slot="skeleton"]')).not.toBeNull();
-      expect(cell).toHaveTextContent(/^$/);
-    }
-  },
-};
-
 /**
  * `showProgressBars` draws the progress bars in both toolbars while the
  * rows stay visible.
  */
-export const ProgressBarShown = {
-  render: () => <ReloadingExample />,
+export const ReloadingExample = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      state={{ showProgressBars: true }}
+    />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await canvas.findAllByText(data[0].firstName);
@@ -198,3 +181,16 @@ export const ProgressBarShown = {
     expect(canvasElement.querySelector('[data-slot="skeleton"]')).toBeNull();
   },
 };
+
+export const OnlyTopProgressBar = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    stLinearProgressProps={({ isTopToolbar }) => ({
+      progressComponentProps: {
+        style: { display: isTopToolbar ? 'block' : 'none' },
+      },
+    })}
+    state={{ showProgressBars: true }}
+  />
+);

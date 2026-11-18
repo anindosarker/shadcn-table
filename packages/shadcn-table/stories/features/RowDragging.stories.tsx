@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_Row,
@@ -9,10 +9,17 @@ import {
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, fireEvent, waitFor, within } from 'storybook/test';
-import { CakeIcon, HashIcon, MailIcon, MapIcon, UserIcon } from 'lucide-react';
+import {
+  Building2Icon,
+  CakeIcon,
+  HashIcon,
+  MailIcon,
+  MapIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Dragging Examples',
+  title: 'Features/Row Dragging',
 };
 
 export default meta;
@@ -280,5 +287,170 @@ export const DragBetweenTables = {
       ),
     );
     expect(ids(source!)).toEqual(initData.slice(1, 3).map((row) => row.id));
+  },
+};
+
+type ListPerson = {
+  city: string;
+  firstName: string;
+  lastName: string;
+};
+
+// The rows of the docs example `row-dragging` (enable-row-dragging/makeData.ts).
+const listData: ListPerson[] = [
+  { firstName: 'Dylan', lastName: 'Murray', city: 'East Daphne' },
+  { firstName: 'Raquel', lastName: 'Kohler', city: 'Columbus' },
+  { firstName: 'Ervin', lastName: 'Reinger', city: 'South Linda' },
+  { firstName: 'Brittany', lastName: 'McCullough', city: 'Lincoln' },
+  { firstName: 'Branson', lastName: 'Frami', city: 'Charleston' },
+];
+
+/** The docs example `row-dragging`: the same columns, options and data. */
+const RowDraggingTables = () => {
+  const columns = useMemo<ST_ColumnDef<ListPerson>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+      },
+    ],
+    [],
+  );
+
+  const [data1, setData1] = useState<ListPerson[]>(() => listData.slice(0, 3));
+  const [data2, setData2] = useState<ListPerson[]>(() => listData.slice(3, 5));
+
+  const [draggingRow, setDraggingRow] = useState<ST_Row<ListPerson> | null>(
+    null,
+  );
+  const [hoveredTable, setHoveredTable] = useState<string | null>(null);
+
+  const commonTableProps: Partial<ST_TableOptions<ListPerson>> & {
+    columns: ST_ColumnDef<ListPerson>[];
+  } = {
+    columns,
+    enableRowDragging: true,
+    enableFullScreenToggle: false,
+    stTableContainerProps: {
+      className: 'min-h-[320px]',
+    },
+    onDraggingRowChange: setDraggingRow,
+    state: { draggingRow },
+  };
+
+  const table1 = useShadcnTable({
+    ...commonTableProps,
+    data: data1,
+    getRowId: (originalRow) => `table-1-${originalRow.firstName}`,
+    stRowDragHandleProps: {
+      onDragEnd: () => {
+        if (hoveredTable === 'table-2') {
+          setData2((data2) => [...data2, draggingRow!.original]);
+          setData1((data1) => data1.filter((d) => d !== draggingRow!.original));
+        }
+        setHoveredTable(null);
+      },
+    },
+    stTableLayoutProps: {
+      onDragEnter: () => setHoveredTable('table-1'),
+      className:
+        hoveredTable === 'table-1'
+          ? 'outline-2 outline-dashed outline-pink-400'
+          : undefined,
+    },
+    renderTopToolbarCustomActions: () => (
+      <span className="text-2xl font-semibold text-green-600">Nice List</span>
+    ),
+  });
+
+  const table2 = useShadcnTable({
+    ...commonTableProps,
+    data: data2,
+    getRowId: (originalRow) => `table-2-${originalRow.firstName}`,
+    stRowDragHandleProps: {
+      onDragEnd: () => {
+        if (hoveredTable === 'table-1') {
+          setData1((data1) => [...data1, draggingRow!.original]);
+          setData2((data2) => data2.filter((d) => d !== draggingRow!.original));
+        }
+        setHoveredTable(null);
+      },
+    },
+    stTableLayoutProps: {
+      onDragEnter: () => setHoveredTable('table-2'),
+      className:
+        hoveredTable === 'table-2'
+          ? 'outline-2 outline-dashed outline-pink-400'
+          : undefined,
+    },
+    renderTopToolbarCustomActions: () => (
+      <span className="text-2xl font-semibold text-destructive">
+        Naughty List
+      </span>
+    ),
+  });
+
+  return (
+    // Side by side only when the wrapper is wide enough for both tables.
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-4 overflow-auto p-1 @4xl:grid-cols-2">
+        <ShadcnTable table={table1} />
+        <ShadcnTable table={table2} />
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Dragging the first row of the Nice List onto the Naughty List moves it:
+ * it leaves the Nice List and appears at the end of the Naughty List.
+ */
+export const RowDragging = {
+  render: () => <RowDraggingTables />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText(listData[0]!.firstName);
+    const [source, target] = canvas.getAllByRole('table');
+    const names = (table: HTMLElement) =>
+      [...table.querySelectorAll('tbody td[data-flip-column="firstName"]')].map(
+        (cell) => (cell.textContent ?? '').trim(),
+      );
+    expect(names(source!)).toEqual(['Dylan', 'Raquel', 'Ervin']);
+    expect(names(target!)).toEqual(['Brittany', 'Branson']);
+    const grip = within(
+      source!.querySelector<HTMLElement>('tbody tr')!,
+    ).getByRole('button', { name: 'Move' });
+    const drop = target!.querySelector<HTMLElement>('tbody td')!;
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: {
+          dragAndDrop: (source: Element, target: Element) => Promise<void>;
+        };
+      }
+    ).stBrowserUserEvent;
+    if (browserUserEvent) {
+      await browserUserEvent.dragAndDrop(grip, drop);
+    } else {
+      fireEvent.dragStart(grip);
+      fireEvent.dragEnter(drop);
+      fireEvent.dragOver(drop);
+      fireEvent.drop(drop);
+      fireEvent.dragEnd(grip);
+    }
+    await waitFor(() =>
+      expect(names(target!)).toEqual(['Brittany', 'Branson', 'Dylan']),
+    );
+    expect(names(source!)).toEqual(['Raquel', 'Ervin']);
   },
 };

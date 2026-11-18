@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_Row,
   ShadcnTable,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
@@ -18,7 +19,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Ordering Examples',
+  title: 'Features/Row Ordering',
 };
 
 export default meta;
@@ -572,6 +573,115 @@ export const DragReordersRows = {
     await touchDragRow({ canvasElement, from: 0, to: 2 });
     await waitFor(() =>
       expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
+    );
+  },
+};
+
+type DndPerson = {
+  city: string;
+  firstName: string;
+  lastName: string;
+};
+
+// The rows of the docs example `row-ordering` (enable-row-ordering/makeData.ts).
+const dndData: DndPerson[] = [
+  { firstName: 'Dylan', lastName: 'Murray', city: 'East Daphne' },
+  { firstName: 'Raquel', lastName: 'Kohler', city: 'Columbus' },
+  { firstName: 'Ervin', lastName: 'Reinger', city: 'South Linda' },
+  { firstName: 'Brittany', lastName: 'McCullough', city: 'Lincoln' },
+  { firstName: 'Branson', lastName: 'Frami', city: 'Charleston' },
+];
+
+/** The docs example `row-ordering`: the same columns, options and data. */
+const RowDndOrderingTable = () => {
+  const columns = useMemo<ST_ColumnDef<DndPerson>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+      },
+    ],
+    [],
+  );
+
+  const [data, setData] = useState(() => dndData);
+
+  const table = useShadcnTable({
+    autoResetPageIndex: false,
+    columns,
+    data,
+    enableRowOrdering: true,
+    enableSorting: false,
+    stRowDragHandleProps: ({ table }) => ({
+      onDragEnd: () => {
+        const draggingRow = table.atoms.draggingRow.get();
+        const hoveredRow = table.atoms.hoveredRow.get();
+        if (hoveredRow && draggingRow) {
+          data.splice(
+            (hoveredRow as ST_Row<DndPerson>).index,
+            0,
+            data.splice(draggingRow.index, 1)[0],
+          );
+          setData([...data]);
+        }
+      },
+    }),
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+const firstNames = (canvasElement: HTMLElement) =>
+  bodyRows(canvasElement).map((row) =>
+    row.querySelector('td[data-flip-column="firstName"]')?.textContent?.trim(),
+  );
+
+/** Dragging the first row's grip onto the third row moves it there. */
+export const RowDndOrdering = {
+  name: 'Row DnD Ordering',
+  render: () => <RowDndOrderingTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(5));
+    const before = firstNames(canvasElement);
+    const rows = bodyRows(canvasElement);
+    const grip = within(rows[0]!).getByRole('button', { name: 'Move' });
+    const target = rows[2]!.querySelector<HTMLElement>(
+      'td[data-flip-column="firstName"]',
+    )!;
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: {
+          dragAndDrop: (source: Element, target: Element) => Promise<void>;
+        };
+      }
+    ).stBrowserUserEvent;
+    if (browserUserEvent) {
+      await browserUserEvent.dragAndDrop(grip, target);
+    } else {
+      fireEvent.dragStart(grip);
+      fireEvent.dragEnter(target);
+      fireEvent.dragOver(target);
+      fireEvent.drop(target);
+      fireEvent.dragEnd(grip);
+    }
+    await waitFor(() =>
+      expect(firstNames(canvasElement)).toEqual([
+        before[1],
+        before[2],
+        before[0],
+        ...before.slice(3),
+      ]),
     );
   },
 };

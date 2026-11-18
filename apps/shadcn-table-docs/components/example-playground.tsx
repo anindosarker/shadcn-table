@@ -8,14 +8,17 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  ArrowUpRightIcon,
   CheckIcon,
   ChevronDownIcon,
+  BookOpenIcon,
   ExternalLinkIcon,
   MaximizeIcon,
   MinimizeIcon,
   SparklesIcon,
   TerminalIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTreePath } from 'fumadocs-ui/contexts/tree';
 import { Button } from '@/components/ui-radix/button';
@@ -34,12 +37,16 @@ import {
 import { BaseSwitch, useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
+import { useGuideExamples } from '@/components/guide-example-switch';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
+import { storybookExampleUrl } from '@/lib/storybook-map';
+import { storybookUrl } from '@/components/mdx/storybook-link';
 import type { Base } from '@/lib/install';
 import {
   trackExampleCodeOpened,
   trackInstallCommandCopied,
+  trackStorybookOpened,
 } from '@/lib/analytics';
 
 /** What differs per base: the base's sources, their GitHub folder and the commands. */
@@ -48,10 +55,23 @@ export interface ExampleVariantData {
   files: ExplorerFile[];
   /** Link to the base's example folder on GitHub. */
   githubUrl: string;
-  /** `shadcn add` command that installs the example into a project. */
-  installCommand: string;
-  /** Prompt for a coding agent: install, import, docs to read, verify. */
-  prompt: string;
+  /**
+   * `shadcn add` command that installs the example into a project. A story
+   * page has none (no registry item), so the menu leaves it out.
+   */
+  installCommand?: string;
+  /**
+   * Registry item `installCommand` adds, sent with its copy event. Defaults
+   * to `example-<name>`; a story panel that shows a docs example's files
+   * (components/story-example.tsx, `codeFrom`) names that example's item,
+   * since its `name` is the story id.
+   */
+  installItem?: string;
+  /**
+   * Prompt for a coding agent: install, import, docs to read, verify. A story
+   * page has none, so Copy prompt is left out.
+   */
+  prompt?: string;
 }
 
 interface Props {
@@ -61,6 +81,12 @@ interface Props {
   name: string;
   /** Sources and commands per base; the site-wide selector picks one. */
   variants: Record<Base, ExampleVariantData>;
+  /**
+   * The Storybook story the Storybook button opens, for a story page
+   * (components/story-example.tsx); an example page's story comes from
+   * lib/storybook-map.ts.
+   */
+  storyId?: string;
 }
 
 type Mode = 'preview' | 'code' | 'both';
@@ -129,16 +155,22 @@ const COPIED_MS = 1500;
  * (the example, then its code below) view, a file tree code explorer, Copy
  * prompt, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
- * pages the header also carries the example switcher (previous / next and
- * the page combobox), so the reader can step through examples without
- * leaving the panel. Copy prompt writes the agent prompt to the clipboard;
- * the caret menu next to it copies the install command or opens the
- * example in GitHub. Code, prompt and command are those of the selected
+ * pages the header also carries the example switcher (the page combobox),
+ * so the reader can move between examples without leaving the panel. Copy
+ * prompt writes the agent prompt to the clipboard; the caret menu next to it
+ * copies the install command or opens the example in GitHub; Storybook opens
+ * the example's story in the selected base's Storybook. Code, prompt and command are those of the selected
  * base (the header switch), as is the live example.
  */
-export const ExamplePlayground = ({ children, name, variants }: Props) => {
+export const ExamplePlayground = ({
+  children,
+  name,
+  variants,
+  storyId,
+}: Props) => {
   const base = useBase();
-  const { files, githubUrl, installCommand, prompt } = variants[base];
+  const { files, githubUrl, installCommand, installItem, prompt } =
+    variants[base];
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,
@@ -152,6 +184,17 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const path = useTreePath();
+  // Inside a guide's <GuideExamples>: its example list and the one on show.
+  const guide = useGuideExamples();
+  // The id follows the mount's place, known on the server (D113): the
+  // guide's Example section holds `guide-example-<name>`, an inline guide
+  // example and an example or story page keep `example-<name>`, so a guide
+  // that shows one example in both places repeats no id.
+  const elementId = guide ? `guide-example-${name}` : `example-${name}`;
+  const guidePage = guide?.pages[guide.index];
+  const exampleSlug =
+    /^\/docs\/examples\/([^/]+)$/.exec(pathname)?.[1] ??
+    guidePage?.url.slice(guidePage.url.lastIndexOf('/') + 1);
 
   useEffect(
     () => () => {
@@ -172,7 +215,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
     copiedTimer.current = setTimeout(() => setCopied(null), COPIED_MS);
     if (target === 'install') {
       trackInstallCommandCopied({
-        item: `example-${name}`,
+        item: installItem ?? `example-${name}`,
         base,
         package_manager: 'pnpm',
         surface: 'example',
@@ -219,37 +262,85 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
 
   const showCode = mode !== 'preview' && files.length > 0;
 
-  // Only example pages get the switcher: inside a guide the panel is one of
-  // several and switching would navigate away from the guide.
+  // Example pages get the section switcher. A guide's plain example panel
+  // gets nothing (switching would navigate away from the guide); one inside
+  // <GuideExamples> gets its example page's link, or with several examples
+  // the switcher over that list, swapping the example in place.
   const section = path[0];
   const current = path[path.length - 1];
-  const switcher =
+  let switcher: ReactNode = null;
+  if (
     pathname.startsWith('/docs/examples/') &&
     section?.type === 'folder' &&
-    current?.type === 'page' ? (
-      <ExampleSwitcher section={section} current={current} />
-    ) : null;
+    current?.type === 'page'
+  ) {
+    switcher = <ExampleSwitcher section={section} current={current} />;
+  } else if (guide && guidePage && guide.pages.length > 1) {
+    switcher = (
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <ExampleSwitcher
+          pages={guide.pages}
+          current={guidePage}
+          onSelect={(page) =>
+            guide.select(guide.pages.findIndex((p) => p.url === page.url))
+          }
+        />
+        <Button asChild variant="ghost" size="icon-sm">
+          <Link href={guidePage.url} aria-label="Open example page">
+            <ArrowUpRightIcon />
+          </Link>
+        </Button>
+      </div>
+    );
+  } else if (guidePage) {
+    switcher = (
+      <div className="flex min-w-0 flex-1 items-center">
+        <Link
+          href={guidePage.url}
+          className="inline-flex min-w-0 items-center gap-1 text-sm font-medium text-fd-foreground underline-offset-4 hover:underline"
+        >
+          <span className="truncate">{guidePage.name}</span>
+          <ArrowUpRightIcon className="size-3.5 shrink-0" />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div
       // Prefixed like the registry item so a guide heading whose slug is
       // the example name ("Customize Filter Modes") cannot share the id.
-      id={`example-${name}`}
+      id={elementId}
+      // The example name whatever the id, so a check can find the mount
+      // that holds the plain id `example-<name>`.
+      data-example={name}
       data-mode={mode}
       data-fullscreen={fullscreen || undefined}
       className={cn(
         'docs-playground not-prose my-8 scroll-mt-24 overflow-hidden rounded-lg bg-fd-background',
+        // Guide panels sit in the narrower column beside "On this page":
+        // their toolbar keeps one row by container width (below).
+        guide && '@container',
         fullscreen && 'fixed inset-0 z-50 my-0 flex flex-col rounded-none',
       )}
     >
       <header
         className={cn(
           'flex min-h-12 flex-wrap items-center justify-between gap-x-4 gap-y-2 px-3 py-1.5',
+          // Guide panels: one row from 36rem, the example link or picker
+          // takes the space left and truncates; below 48rem Storybook and
+          // Copy prompt show their icons only. Example pages are unchanged.
+          guide && '@xl:flex-nowrap',
           fullscreen && 'shrink-0',
         )}
       >
         {switcher}
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div
+          className={cn(
+            'ml-auto flex flex-wrap items-center gap-2',
+            guide && '@xl:shrink-0',
+          )}
+        >
           <div
             role="group"
             aria-label="View mode"
@@ -269,45 +360,77 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </Button>
             ))}
           </div>
-          <BaseSwitch surface="example" />
+          {/* dashed like the other groups on this row */}
+          <BaseSwitch
+            surface="example"
+            className="border-dashed border-(--docs-dash)"
+          />
           <div
             role="group"
             aria-label="Open example"
             className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           >
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-2.5"
-              onClick={() => void copy('prompt', prompt)}
-            >
-              {copied === 'prompt' ? (
-                <CheckIcon data-icon="inline-start" />
-              ) : (
-                <SparklesIcon data-icon="inline-start" />
-              )}
-              {/* Both labels share one cell so the button keeps its width
-                  while it reads "Copied"; the hidden one is not announced. */}
-              <span className="grid justify-items-start">
-                <span
-                  className={cn(
-                    'col-start-1 row-start-1',
-                    copied === 'prompt' && 'invisible',
-                  )}
-                >
-                  Copy prompt
+            {/* The selected base's Storybook at the example's story
+                (lib/storybook-map.ts). */}
+            <Button asChild variant="ghost" size="sm" className="px-2.5">
+              <a
+                href={
+                  storyId
+                    ? `${storybookUrl[base]}?path=/story/${storyId}`
+                    : storybookExampleUrl(base, exampleSlug)
+                }
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackStorybookOpened({ base, surface: 'example' })
+                }
+              >
+                <BookOpenIcon data-icon="inline-start" />
+                <span className={cn(guide && '@max-3xl:sr-only')}>
+                  Storybook
                 </span>
-                <span
-                  className={cn(
-                    'col-start-1 row-start-1',
-                    copied !== 'prompt' && 'invisible',
-                  )}
-                >
-                  Copied
-                </span>
-              </span>
+              </a>
             </Button>
+            {prompt !== undefined && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="px-2.5"
+                onClick={() => void copy('prompt', prompt)}
+              >
+                {copied === 'prompt' ? (
+                  <CheckIcon data-icon="inline-start" />
+                ) : (
+                  <SparklesIcon data-icon="inline-start" />
+                )}
+                {/* Both labels share one cell so the button keeps its width
+                  while it reads "Copied"; the hidden one is not announced. */}
+                <span
+                  className={cn(
+                    'grid justify-items-start',
+                    guide && '@max-3xl:sr-only',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'col-start-1 row-start-1',
+                      copied === 'prompt' && 'invisible',
+                    )}
+                  >
+                    Copy prompt
+                  </span>
+                  <span
+                    className={cn(
+                      'col-start-1 row-start-1',
+                      copied !== 'prompt' && 'invisible',
+                    )}
+                  >
+                    Copied
+                  </span>
+                </span>
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -321,16 +444,20 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="docs-menu w-52">
                 {/* The menu stays open so the "Copied" state is visible. */}
-                <DropdownMenuItem
-                  onSelect={(event) => {
-                    event.preventDefault();
-                    void copy('install', installCommand);
-                  }}
-                >
-                  {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
-                  {copied === 'install' ? 'Copied' : 'Copy install command'}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {installCommand !== undefined && (
+                  <>
+                    <DropdownMenuItem
+                      onSelect={(event) => {
+                        event.preventDefault();
+                        void copy('install', installCommand);
+                      }}
+                    >
+                      {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
+                      {copied === 'install' ? 'Copied' : 'Copy install command'}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem asChild>
                   <a href={githubUrl} target="_blank" rel="noreferrer">
                     <GitHubIcon />

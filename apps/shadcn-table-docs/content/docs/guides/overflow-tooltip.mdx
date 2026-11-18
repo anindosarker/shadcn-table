@@ -5,19 +5,23 @@ description: 'How Shadcn Table cuts long cell text with an ellipsis and shows th
 
 Body cell text stays on one line by default and is cut with an ellipsis when it does not fit. When the text of a cell is actually cut off, hovering or focusing the cell shows a tooltip with the full value after the normal tooltip delay. A cell whose text fits shows no tooltip.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['more/styling-default-look--overflow-tooltip']} />
+
+## Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['enableCellOverflowTooltip'])} />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable onlyOptions={new Set(['Cell', 'overflowTooltip'])} />
 
-### Show the Full Text Instead
+## Show the Full Text Instead
 
 Users can switch on Wrap cell text in the [view settings](/docs/guides/view-settings) panel (or pin it to the toolbar). With it on, cell text wraps and shows in full, and no tooltip is needed. You can start a table wrapped with `wrapText: true` in `initialState.viewSettings`.
 
-### Turn the Tooltip Off
+## Turn the Tooltip Off
 
 Set `enableCellOverflowTooltip: false` to keep the ellipsis but never show the tooltip.
 
@@ -29,7 +33,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Per Column
+## Per Column
 
 The `overflowTooltip` column option sets the tooltip for one column:
 
@@ -58,7 +62,7 @@ const columns = [
 
 Display columns (row numbers, selection, row actions and the like) never show it, and neither do skeleton rows or cells being edited.
 
-### Custom Cells
+## Custom Cells
 
 A column with a custom `Cell` render gets no automatic tooltip, because the table cannot know which part of your markup may be cut off. Wrap the text in the exported `ST_OverflowText` to opt in. It truncates its content to one line and shows the tooltip only when the content is cut off. Pass `tooltip` to show something other than its children, and `wrap` (for example the Wrap cell text setting, `viewSettings.wrapText`) to render plain wrapping text with no tooltip.
 
@@ -80,7 +84,7 @@ const columns = [
 
 The table renders one tooltip provider per body, so `ST_OverflowText` works inside any body cell without a provider of your own.
 
-### Overflow Tooltip Example
+## Overflow Tooltip Example
 
 Narrow a column with its resize handle until its text is cut off, then hover a cell.
 

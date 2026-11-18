@@ -5,7 +5,11 @@ description: 'How to add and customize row selection checkboxes in Shadcn Table'
 
 Shadcn Table has a powerful row pinning feature that allows you to either pin rows to the top and bottom of the table as a user scrolls, or pin rows to the top and bottom of the table regardless of scrolling.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['sticky-row-pinning']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -18,11 +22,11 @@ Shadcn Table has a powerful row pinning feature that allows you to either pin ro
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['rowPinning'])} />
 
-### Row Pinning Display Modes
+## Row Pinning Display Modes
 
 You can enable the row pinning feature with the `enableRowPinning` table option. There are multiple display modes that you can choose from with the `rowPinningDisplayMode` table option.
 
@@ -43,7 +47,7 @@ const table = useShadcnTable({
 - `select-top` - This statically pins selected rows to the top of the table upon pinning. (alternative pinning UI)
 - `select-bottom` - This statically pins selected rows to the bottom of the table upon pinning. (alternative pinning UI)
 
-### Sticky Row Pinning
+## Sticky Row Pinning
 
 By default, the row pinning feature will add a position sticky style to the pinned rows. This means that the pinned rows will stay in place if the row is already in view. However, the rows will stay in view as the user scrolls up or down.
 
@@ -74,7 +78,7 @@ const table = useShadcnTable({
 
 <EnableRowPinningStickyExample />
 
-### Static Row Pinning
+## Static Row Pinning
 
 Some of the other row pinning modes will show pinned rows at the top or bottom of the the table regardless of scrolling. This is a simpler implementation of the row pinning feature.
 
@@ -82,7 +86,7 @@ Static row pinning does not require set row heights, as they will render in a no
 
 <EnableRowPinningStaticExample />
 
-### Alternative Selection Row Pinning UI
+## Alternative Selection Row Pinning UI
 
 By default, the row pinning feature adds a pinning display column with pinning buttons for each row. However, you can instead combine the row pinning feature with the row selection feature to pin selected rows.
 

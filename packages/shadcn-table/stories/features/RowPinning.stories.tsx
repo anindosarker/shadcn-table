@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  type ST_TableOptions,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
@@ -13,7 +18,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Row Pinning Examples',
+  title: 'Features/Row Pinning',
 };
 
 export default meta;
@@ -480,48 +485,30 @@ const pinButton = (row: HTMLElement) =>
  * `rowPinningDisplayMode: 'top'`: a pinned row moves to the top of the body
  * and leaves its old place.
  */
-export const PinRowTopMode = {
-  render: () => <RowPinningTopMode />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    const target = bodyRows(canvasElement)[9]!;
-    await userEvent.click(pinButton(target));
-    await waitFor(() => {
-      const first = bodyRows(canvasElement)[0]!;
-      expect(first).toHaveAttribute('data-pinned');
-      expect(first).toHaveTextContent(data[9].email);
-    });
-    expect(
-      bodyRows(canvasElement).filter((row) =>
-        row.textContent?.includes(data[9].email),
-      ),
-    ).toHaveLength(1);
-  },
+RowPinningTopMode.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  const target = bodyRows(canvasElement)[9]!;
+  await userEvent.click(pinButton(target));
+  await waitFor(() => {
+    const first = bodyRows(canvasElement)[0]!;
+    expect(first).toHaveAttribute('data-pinned');
+    expect(first).toHaveTextContent(data[9].email);
+  });
+  expect(
+    bodyRows(canvasElement).filter((row) =>
+      row.textContent?.includes(data[9].email),
+    ),
+  ).toHaveLength(1);
 };
 
-/** Default sticky mode: the pinned row keeps its index and turns sticky. */
-export const PinRowSticky = {
-  render: () => <RowPinningStickyDefaultEnabled />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
-    expect(getComputedStyle(bodyRows(canvasElement)[4]!).position).not.toBe(
-      'sticky',
-    );
-    await userEvent.click(pinButton(bodyRows(canvasElement)[4]!));
-    await waitFor(() =>
-      expect(bodyRows(canvasElement)[4]).toHaveAttribute('data-pinned'),
-    );
-    const row = bodyRows(canvasElement)[4]!;
-    expect(row).toHaveTextContent(data[4].email);
-    expect(getComputedStyle(row).position).toBe('sticky');
-  },
-};
-
-/** A second click on the pin button unpins the row: back to static. */
-export const UnpinRow = {
-  render: () => <RowPinningStickyDefaultEnabled />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(data[0].firstName);
+RowPinningStickyDefaultEnabled.play = async ({
+  canvasElement,
+  step,
+}: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0].firstName);
+  // A second click on the pin button unpins the row: back to static. Runs
+  // first, so no row is pinned when it counts the pinned rows.
+  await step('UnpinRow', async () => {
     await userEvent.click(pinButton(bodyRows(canvasElement)[2]!));
     await waitFor(() =>
       expect(bodyRows(canvasElement)[2]).toHaveAttribute('data-pinned'),
@@ -536,5 +523,415 @@ export const UnpinRow = {
     expect(
       canvasElement.querySelectorAll('tbody tr[data-pinned]'),
     ).toHaveLength(0);
+  });
+  // Default sticky mode: the pinned row keeps its index and turns sticky.
+  await step('PinRowSticky', async () => {
+    expect(getComputedStyle(bodyRows(canvasElement)[4]!).position).not.toBe(
+      'sticky',
+    );
+    await userEvent.click(pinButton(bodyRows(canvasElement)[4]!));
+    await waitFor(() =>
+      expect(bodyRows(canvasElement)[4]).toHaveAttribute('data-pinned'),
+    );
+    const row = bodyRows(canvasElement)[4]!;
+    expect(row).toHaveTextContent(data[4].email);
+    expect(getComputedStyle(row).position).toBe('sticky');
+  });
+};
+
+type PinPerson = {
+  city: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
+// The rows of the docs row pinning examples (enable-row-pinning-*/makeData.ts).
+const pinData: PinPerson[] = [
+  {
+    firstName: 'Dylan',
+    lastName: 'Murray',
+    email: 'dmurray@yopmail.com',
+    city: 'East Daphne',
+  },
+  {
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+    email: 'rkholer33@yopmail.com',
+    city: 'Columbus',
+  },
+  {
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+    email: 'ereinger@mailinator.com',
+    city: 'South Linda',
+  },
+  {
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+    email: 'bmccullough44@mailinator.com',
+    city: 'Lincoln',
+  },
+  {
+    firstName: 'Branson',
+    lastName: 'Frami',
+    email: 'bframi@yopmain.com',
+    city: 'New York',
+  },
+  {
+    firstName: 'Ben',
+    lastName: 'Murray',
+    email: 'benm@email.com',
+    city: 'Salt Lake City',
+  },
+  {
+    firstName: 'Elena',
+    lastName: 'Smith',
+    email: 'esmith@yopmail.com',
+    city: 'Los Angeles',
+  },
+  {
+    firstName: 'Michael',
+    lastName: 'Johnson',
+    email: 'mjohnson@mailinator.com',
+    city: 'Chicago',
+  },
+  {
+    firstName: 'Sophia',
+    lastName: 'Brown',
+    email: 'sbrown@yopmail.com',
+    city: 'Houston',
+  },
+  {
+    firstName: 'Lucas',
+    lastName: 'Davis',
+    email: 'ldavis@mailinator.com',
+    city: 'Phoenix',
+  },
+  {
+    firstName: 'Olivia',
+    lastName: 'Garcia',
+    email: 'ogarcia@yopmail.com',
+    city: 'Philadelphia',
+  },
+  {
+    firstName: 'Liam',
+    lastName: 'Rodriguez',
+    email: 'lrodriguez@mailinator.com',
+    city: 'San Antonio',
+  },
+  {
+    firstName: 'Emma',
+    lastName: 'Martinez',
+    email: 'emartinez@yopmail.com',
+    city: 'San Diego',
+  },
+  {
+    firstName: 'Noah',
+    lastName: 'Hernandez',
+    email: 'nhernandez@mailinator.com',
+    city: 'Dallas',
+  },
+  {
+    firstName: 'Ava',
+    lastName: 'Lopez',
+    email: 'alopez@yopmail.com',
+    city: 'San Jose',
+  },
+  {
+    firstName: 'William',
+    lastName: 'Gonzalez',
+    email: 'wgonzalez@mailinator.com',
+    city: 'Austin',
+  },
+  {
+    firstName: 'Isabella',
+    lastName: 'Wilson',
+    email: 'iwilson@yopmail.com',
+    city: 'Jacksonville',
+  },
+  {
+    firstName: 'James',
+    lastName: 'Anderson',
+    email: 'janderson@mailinator.com',
+    city: 'Fort Worth',
+  },
+  {
+    firstName: 'Mia',
+    lastName: 'Thomas',
+    email: 'mthomas@yopmail.com',
+    city: 'Columbus',
+  },
+  {
+    firstName: 'Alexander',
+    lastName: 'Taylor',
+    email: 'ataylor@mailinator.com',
+    city: 'Charlotte',
+  },
+  {
+    firstName: 'Grace',
+    lastName: 'Moore',
+    email: 'gmoore@yopmail.com',
+    city: 'Indianapolis',
+  },
+  {
+    firstName: 'Ethan',
+    lastName: 'White',
+    email: 'ewhite@mailinator.com',
+    city: 'San Francisco',
+  },
+  {
+    firstName: 'Lily',
+    lastName: 'Harris',
+    email: 'lharris@yopmail.com',
+    city: 'Seattle',
+  },
+  {
+    firstName: 'Daniel',
+    lastName: 'Martin',
+    email: 'dmartin@mailinator.com',
+    city: 'Denver',
+  },
+  {
+    firstName: 'Zoe',
+    lastName: 'Jackson',
+    email: 'zjackson@yopmail.com',
+    city: 'Boston',
+  },
+  {
+    firstName: 'Matthew',
+    lastName: 'Thompson',
+    email: 'mthompson@mailinator.com',
+    city: 'Nashville',
+  },
+  {
+    firstName: 'Ella',
+    lastName: 'Garcia',
+    email: 'egarcia@yopmail.com',
+    city: 'Detroit',
+  },
+  {
+    firstName: 'David',
+    lastName: 'Martinez',
+    email: 'dmartinez@mailinator.com',
+    city: 'Portland',
+  },
+  {
+    firstName: 'Aria',
+    lastName: 'Robinson',
+    email: 'arobinson@yopmail.com',
+    city: 'Las Vegas',
+  },
+  {
+    firstName: 'Joseph',
+    lastName: 'Clark',
+    email: 'jclark@mailinator.com',
+    city: 'Baltimore',
+  },
+];
+
+/** The columns of the docs row pinning examples. */
+const usePinColumns = () =>
+  useMemo<ST_ColumnDef<PinPerson>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        icon: UserIcon,
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        icon: UserIcon,
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'email',
+        icon: MailIcon,
+        header: 'Email',
+      },
+      {
+        accessorKey: 'city',
+        icon: Building2Icon,
+        header: 'City',
+      },
+    ],
+    [],
+  );
+
+/** A fixed height for pinned rows: the library's row height per density. */
+const pinnedRowHeight: ST_TableOptions<PinPerson>['stTableBodyRowProps'] = ({
+  row,
+  table,
+}) => {
+  const density = table.atoms.density.get();
+  return {
+    style: {
+      height: row.getIsPinned()
+        ? `${density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56}px`
+        : undefined,
+    },
+  };
+};
+
+const pinnedEmails = (canvasElement: HTMLElement) =>
+  [
+    ...canvasElement.querySelectorAll<HTMLElement>(
+      'tbody tr[data-pinned] td[data-flip-column="email"]',
+    ),
+  ].map((cell) => cell.textContent?.trim());
+
+const rowWith = (canvasElement: HTMLElement, email: string) =>
+  bodyRows(canvasElement).find((row) => row.textContent?.includes(email))!;
+
+/** The docs example `sticky-row-pinning`: the same columns, options and data. */
+const StickyRowPinningTable = () => {
+  const columns = usePinColumns();
+
+  const table = useShadcnTable({
+    columns,
+    data: pinData,
+    enableRowPinning: true,
+    enablePagination: false,
+    enableStickyHeader: true,
+    getRowId: (row) => row.email,
+    initialState: {
+      rowPinning: {
+        top: ['rkholer33@yopmail.com', 'egarcia@yopmail.com'],
+        bottom: [],
+      },
+    },
+    stTableContainerProps: {
+      className: 'max-h-[400px]',
+    },
+    stTableBodyRowProps: pinnedRowHeight,
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+/** The two rows pinned at the start are sticky; a pinned row unpins. */
+export const StickyRowPinning = {
+  render: () => <StickyRowPinningTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(pinData[0]!.firstName);
+    await waitFor(() =>
+      expect(pinnedEmails(canvasElement)).toEqual([
+        'rkholer33@yopmail.com',
+        'egarcia@yopmail.com',
+      ]),
+    );
+    const pinned = rowWith(canvasElement, 'egarcia@yopmail.com');
+    expect(getComputedStyle(pinned).position).toBe('sticky');
+    await userEvent.click(within(pinned).getByRole('button', { name: 'Pin' }));
+    await waitFor(() =>
+      expect(pinnedEmails(canvasElement)).toEqual(['rkholer33@yopmail.com']),
+    );
+  },
+};
+
+/** The docs example `static-row-pinning`: the same columns, options and data. */
+const StaticRowPinningTable = () => {
+  const columns = usePinColumns();
+
+  const table = useShadcnTable({
+    columns,
+    data: pinData,
+    enableRowPinning: true,
+    enablePagination: false,
+    enableStickyHeader: true,
+    rowPinningDisplayMode: 'top-and-bottom',
+    getRowId: (row) => row.email,
+    stTableContainerProps: {
+      className: 'max-h-[400px]',
+    },
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * Each row has two pin buttons: the first pins it to the top of the body,
+ * the second to the bottom.
+ */
+export const StaticRowPinning = {
+  render: () => <StaticRowPinningTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(pinData[0]!.firstName);
+    expect(pinnedEmails(canvasElement)).toEqual([]);
+    const toTop = pinData[5]!.email;
+    await userEvent.click(
+      within(rowWith(canvasElement, toTop)).getAllByRole('button', {
+        name: 'Pin',
+      })[0]!,
+    );
+    await waitFor(() => {
+      const first = bodyRows(canvasElement)[0]!;
+      expect(first).toHaveAttribute('data-pinned');
+      expect(first).toHaveTextContent(toTop);
+    });
+    const toBottom = pinData[6]!.email;
+    await userEvent.click(
+      within(rowWith(canvasElement, toBottom)).getAllByRole('button', {
+        name: 'Pin',
+      })[1]!,
+    );
+    await waitFor(() => {
+      const last = bodyRows(canvasElement).at(-1)!;
+      expect(last).toHaveAttribute('data-pinned');
+      expect(last).toHaveTextContent(toBottom);
+    });
+  },
+};
+
+/** The docs example `sticky-row-selection`: the same columns, options and data. */
+const StickyRowSelectionTable = () => {
+  const columns = usePinColumns();
+
+  const table = useShadcnTable({
+    columns,
+    data: pinData,
+    enablePagination: false,
+    enableRowPinning: true,
+    enableRowSelection: true,
+    enableStickyHeader: true,
+    rowPinningDisplayMode: 'select-sticky',
+    getRowId: (row) => row.email,
+    initialState: {
+      rowPinning: {
+        bottom: [],
+        top: ['ereinger@mailinator.com'],
+      },
+      rowSelection: {
+        'ereinger@mailinator.com': true,
+      },
+    },
+    stTableContainerProps: {
+      className: 'max-h-[400px]',
+    },
+    stTableBodyRowProps: pinnedRowHeight,
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+/** The selected row starts pinned; selecting another row pins it too. */
+export const StickyRowSelection = {
+  render: () => <StickyRowSelectionTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(pinData[0]!.firstName);
+    await waitFor(() =>
+      expect(pinnedEmails(canvasElement)).toEqual(['ereinger@mailinator.com']),
+    );
+    await userEvent.click(
+      within(rowWith(canvasElement, pinData[4]!.email)).getByRole('checkbox', {
+        name: 'Toggle select row',
+      }),
+    );
+    await waitFor(() =>
+      expect(pinnedEmails(canvasElement)).toEqual([
+        'ereinger@mailinator.com',
+        pinData[4]!.email,
+      ]),
+    );
   },
 };

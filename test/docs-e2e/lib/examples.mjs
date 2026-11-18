@@ -1,5 +1,5 @@
 /**
- * Examples page checks: /docs/examples and examples/*. Every example page
+ * Examples page checks: the /docs/examples redirect and examples/*. Every example page
  * renders its own example in one playground panel (the group tab strips only
  * survive inside guides), so a page asserts that single panel, its table
  * rows, the Code toggle and the example's own markers.
@@ -10,7 +10,16 @@ import {
   codeToggle,
   example,
   headerLabelsFit,
+  sectionFrame,
 } from './helpers.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
+import {
+  MORE_DIR,
+  readExactStories,
+} from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
+import { BASE_LABELS } from '../../../tools/registry/bases.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -79,6 +88,55 @@ async function singleExample(page, check) {
     .locator('article [role="tablist"]:not([aria-label="Source files"])')
     .count();
   check('no group tab strip', strips === 0, `tablists=${strips}`);
+  await pageOrder(page, check);
+}
+
+/**
+ * Spec 54 (D104): the page order around the example. A `Try it` h3 and its
+ * list of 2 to 4 steps sit directly above the example panel, a `Related
+ * guides` h2 with its links follows the panel, and the page has no "View
+ * Extra Storybook" line.
+ */
+async function pageOrder(page, check) {
+  const order = await page.evaluate(() => {
+    const article = document.querySelector('article');
+    const panel = article?.querySelector('[data-mode]');
+    // the heading's text also holds its hidden "Copy Anchor Link" label
+    const heading = (tag, text) =>
+      [...(article?.querySelectorAll(tag) ?? [])].find((h) =>
+        h.textContent?.trim().startsWith(text),
+      );
+    const tryIt = heading('h3', 'Try it');
+    const list = tryIt?.nextElementSibling;
+    const next = list?.nextElementSibling;
+    const guides = heading('h2', 'Related guides');
+    return {
+      steps: list?.querySelectorAll('ol > li').length ?? 0,
+      aboveExample: !!(
+        panel &&
+        next &&
+        (next === panel || next.contains(panel))
+      ),
+      guidesBelow: !!(
+        panel &&
+        guides &&
+        panel.compareDocumentPosition(guides) & Node.DOCUMENT_POSITION_FOLLOWING
+      ),
+      links: guides?.nextElementSibling?.querySelectorAll('li a').length ?? 0,
+      storybookLine: /View Extra Storybook/.test(article?.textContent ?? ''),
+    };
+  });
+  check(
+    'Try it steps directly above the example',
+    order.steps >= 2 && order.steps <= 4 && order.aboveExample,
+    `steps=${order.steps} above=${order.aboveExample}`,
+  );
+  check(
+    'Related guides below the example',
+    order.guidesBelow && order.links > 0,
+    `links=${order.links}`,
+  );
+  check('no Storybook examples line', !order.storybookLine);
 }
 
 /**
@@ -200,6 +258,178 @@ const examplePage =
     await codeToggle(page, id, needle, check);
   };
 
+/**
+ * Spec 58 (D118): the Basic page's Try it steps, as written, on the base the
+ * page opened on: `Sort ascending` from the `First Name` column menu shows the
+ * sort chip, column filtering (`Filter`, `State`, `Nebraska`) leaves two
+ * rows, removing the filter brings back five, searching `Ohio` leaves one.
+ */
+async function basicSteps(page, w, check) {
+  const rows = () => w.locator('table tbody tr').count();
+  // the list follows the `Try it` h3 (pageOrder)
+  const steps = await page.evaluate(() => {
+    const h = [...document.querySelectorAll('article h3')].find((el) =>
+      el.textContent?.trim().startsWith('Try it'),
+    );
+    return [...(h?.nextElementSibling?.querySelectorAll('ol > li') ?? [])].map(
+      (li) => li.textContent?.trim() ?? '',
+    );
+  });
+  check(
+    'Basic Try it: four steps, the second on column filtering',
+    steps.length === 4 && /^Try column filtering:/.test(steps[1] ?? ''),
+    steps.join(' | ').slice(0, 160),
+  );
+  check(
+    'Basic step 1: sorts through the column menu',
+    /Sort ascending/.test(steps[0] ?? ''),
+    (steps[0] ?? '').slice(0, 120),
+  );
+  await sortChip(page, w, 'Basic step 1', 'First Name', check);
+  try {
+    await w
+      .getByRole('button', { name: 'Filter', exact: true })
+      .first()
+      .click();
+    await page.getByText('State', { exact: true }).last().click();
+    await page.getByPlaceholder('Filter by State').fill('Nebraska');
+    await page.waitForTimeout(800);
+    check('Basic step 2: two rows remain', (await rows()) === 2);
+    await page.keyboard.press('Escape');
+    await w
+      .getByText(/^State fuzzy/)
+      .first()
+      .click();
+    await page.getByText('Remove filter', { exact: true }).last().click();
+    await page.waitForTimeout(500);
+    check('Basic step 3: all five rows return', (await rows()) === 5);
+    await w.getByRole('button', { name: 'Show/Hide search' }).click();
+    await page.getByPlaceholder('Search', { exact: true }).last().fill('Ohio');
+    await page.waitForTimeout(800);
+    check('Basic step 4: one row remains', (await rows()) === 1);
+  } catch (e) {
+    check('Basic steps 2 to 4', false, String(e.message).split('\n')[0]);
+  }
+}
+
+/** A story page (spec 56, 1.6.4). */
+const STORY_PAGE = 'features-aggregation--aggregation';
+/** The story pages in sidebar order (more/meta.json, without its labels). */
+const MORE_PAGES = JSON.parse(
+  fs.readFileSync(path.join(MORE_DIR, 'meta.json'), 'utf8'),
+).pages.filter((page) => !page.startsWith('---'));
+/** The last story page in the sidebar. */
+const LAST_STORY_PAGE = MORE_PAGES.at(-1);
+/**
+ * One example page per exact story (lib/storybook-map.ts), then one row per
+ * story page under More examples.
+ */
+const LAST_ROW = readExactStories().size + MORE_PAGES.length;
+
+/**
+ * D103: "More examples" starts closed on a page outside it and keeps the
+ * state the visitor leaves it in across a reload, open or closed.
+ */
+async function moreExamplesState(page, check) {
+  const more = () =>
+    page.locator('#nd-sidebar button[data-slot="collapsible-trigger"]', {
+      hasText: 'More examples',
+    });
+  const expanded = async () =>
+    (await more()
+      .getAttribute('aria-expanded')
+      .catch(() => null)) === 'true';
+  const reload = () =>
+    page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  check('More examples closed by default', !(await expanded()));
+  await more().click();
+  check('More examples opened by hand', await expanded());
+  await reload();
+  await more()
+    .waitFor({ timeout: 10000 })
+    .catch(() => {});
+  check('More examples still open after a reload', await expanded());
+  await more().click();
+  check('More examples closed by hand', !(await expanded()));
+  await reload();
+  await more()
+    .waitFor({ timeout: 10000 })
+    .catch(() => {});
+  check('More examples still closed after a reload', !(await expanded()));
+}
+
+/**
+ * Spec 56 (1.6.4, D103): a story page shows its story in the playground on
+ * the run's base (the toolbar names it, the table renders, Storybook opens
+ * that base's story), the Code tab shows the story file, and the page has no
+ * Copy prompt (a story has no registry item). The sidebar numbers the
+ * Examples rows from `1. Basic` through More examples, which is open on a
+ * page inside it.
+ */
+const storyPage =
+  (id, row) =>
+  async ({ page, check, base }) => {
+    // one panel; the Try it and Related guides parts come with the texts
+    const panels = await page.locator('article [data-mode]').count();
+    check(`${id}: single example panel`, panels === 1, `panels=${panels}`);
+    const panel = page.locator(`[id="example-${id}"]`);
+    const rows = panel.locator('[data-slot="preview"] tbody tr');
+    await rows
+      .first()
+      .waitFor({ timeout: 30000 })
+      .catch(() => {});
+    check(`${id}: table renders`, (await rows.count()) > 0);
+    const label = (
+      (await panel.locator('header button[aria-label="Base"]').textContent()) ??
+      ''
+    ).trim();
+    check(
+      `${id}: toolbar base is the run's base`,
+      label === BASE_LABELS[base],
+      label,
+    );
+    const href = await panel
+      .locator('header a', { hasText: 'Storybook' })
+      .getAttribute('href');
+    check(
+      `${id}: Storybook opens this story on the base`,
+      href === `https://storybook.shadcn-table.com/${base}/?path=/story/${id}`,
+      href ?? '',
+    );
+    check(
+      `${id}: no Copy prompt`,
+      (await panel.getByRole('button', { name: /Copy prompt/ }).count()) === 0,
+    );
+    await panel.getByRole('button', { name: 'Code', exact: true }).click();
+    const code = panel.locator('[data-slot="code"]');
+    await code.waitFor({ timeout: 10000 }).catch(() => {});
+    const text = (await code.textContent().catch(() => '')) ?? '';
+    check(
+      `${id}: Code shows the story file`,
+      text.includes('.stories.tsx') && text.includes('export default meta'),
+    );
+    await panel.getByRole('button', { name: 'Preview', exact: true }).click();
+    const more = page.locator(
+      '#nd-sidebar button[data-slot="collapsible-trigger"]',
+      {
+        hasText: 'More examples',
+      },
+    );
+    check(
+      'More examples open on a page inside it',
+      (await more.getAttribute('aria-expanded').catch(() => null)) === 'true',
+    );
+    const links = page.locator('#nd-sidebar a[href^="/docs/examples/"]');
+    const first = ((await links.first().textContent()) ?? '').trim();
+    check('first Examples row is 1. Basic', first === '1. Basic', first);
+    const active = (
+      (await page.locator('#nd-sidebar a[data-active="true"]').textContent()) ??
+      ''
+    ).trim();
+    if (row !== undefined)
+      check(`${id}: sidebar row ${row}`, active.startsWith(`${row}. `), active);
+  };
+
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
@@ -265,30 +495,34 @@ const checks = {
     const w = await example(page, 'basic', check);
     await singleExample(page, check);
     await storedIconLibrary(page, check);
+    await moreExamplesState(page, check);
+    await basicSteps(page, w, check);
     // Example switcher: previous is disabled on the first example, next
-    // steps to Minimal.
+    // steps to the second Featured row, Server-Side Pagination (D103, D119).
     const header = w.locator('header');
     const prev = header.locator('button[aria-label^="Previous"]');
     const next = header.locator('button[aria-label^="Next"]');
     check(
-      'switcher: label',
-      (await header.getByText('Select example').count()) === 1,
+      'switcher: no label',
+      (await header.getByText('Select example').count()) === 0,
     );
     check(
       'switcher: prev disabled',
       await prev.isDisabled().catch(() => false),
     );
     check(
-      'switcher: next names Minimal',
-      /^Next: Minimal/.test((await next.getAttribute('aria-label')) ?? ''),
+      'switcher: next names Server-Side Pagination',
+      /^Next: Server-Side Pagination/.test(
+        (await next.getAttribute('aria-label')) ?? '',
+      ),
     );
     await next.click();
     await page
-      .waitForURL('**/docs/examples/minimal', { timeout: 30000 })
+      .waitForURL('**/docs/examples/server-side-pagination', { timeout: 30000 })
       .catch(() => {});
     check(
-      'switcher: next goes to minimal',
-      new URL(page.url()).pathname === '/docs/examples/minimal',
+      'switcher: next goes to server-side-pagination',
+      new URL(page.url()).pathname === '/docs/examples/server-side-pagination',
       page.url(),
     );
   },
@@ -397,7 +631,7 @@ const checks = {
     await headerLabelsFit(w, 'editing-crud-cell', check);
     await deleteDialog(page, w, 'editing-crud-cell', check);
   },
-  '/docs/examples/editing-crud-inline-row': async ({ page, check }) => {
+  '/docs/examples/inline-editing': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-row', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-row', /Create New User/, check);
@@ -452,13 +686,14 @@ const checks = {
     await chipsDefault(w, 'export-to-pdf', check);
     await headerLabelsFit(w, 'export-to-pdf', check);
   },
+  // no index page: the section opens its first example (docs-layout L13)
   '/docs/examples': async ({ page, check }) => {
-    const links = page.locator('main a[href^="/docs/examples/"]');
     check(
-      'example links',
-      (await links.count()) >= 40,
-      `n=${await links.count()}`,
+      'redirects to the first example',
+      new URL(page.url()).pathname === FIRST_EXAMPLE_URL,
+      page.url(),
     );
+    await sectionFrame(page, check, 'Examples');
   },
   '/docs/examples/faceted-values': examplePage(
     'enable-filter-facet-values',
@@ -683,7 +918,7 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/virtualized': examplePage(
+  '/docs/examples/virtualization': examplePage(
     'virtualized',
     'enableColumnVirtualization: true',
     async (page, w, check) => {
@@ -695,7 +930,7 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/react-query': examplePage(
+  '/docs/examples/server-side-pagination': examplePage(
     'react-query',
     'useQuery',
     async (page, w, check) => {
@@ -816,6 +1051,11 @@ const checks = {
           .count()) > 0,
       );
     },
+  ),
+  [`/docs/examples/more/${STORY_PAGE}`]: storyPage(STORY_PAGE),
+  [`/docs/examples/more/${LAST_STORY_PAGE}`]: storyPage(
+    LAST_STORY_PAGE,
+    LAST_ROW,
   ),
 };
 

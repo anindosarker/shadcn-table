@@ -8,14 +8,24 @@ import {
   codeToggle,
   example,
   exampleGroup,
+  examplePanel,
   headerLabelsFit,
   names,
   paginationControls,
   panelOf,
   propTable,
+  sectionFrame,
 } from './helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
+
+/** Rendered widths of the header cells of example `w`, in px. */
+const headWidths = (w) =>
+  w
+    .locator('thead tr')
+    .first()
+    .locator('th')
+    .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
 
 /** Opens the first button with `label` inside `wrapper`; returns the open menu. */
 async function openMenu(page, wrapper, label) {
@@ -245,6 +255,124 @@ async function themeParts(page, check) {
   }
 }
 
+/**
+ * Spec 55 (D105, finding 2 of the "Guide example block" review), as D113
+ * builds it: no two elements share an example id. Every example playground
+ * carries its name in `data-example`; after hydration (polled) each example
+ * on the page has at most one element with `example-<name>` (a mount in the
+ * guide body) and at most one with `guide-example-<name>` (the Example
+ * section), at least one of the two, and no id of a playground repeats.
+ */
+async function uniqueExampleIds(page, check, label) {
+  const probe = () => {
+    const count = (id) => document.querySelectorAll(`[id="${id}"]`).length;
+    const panels = [...document.querySelectorAll('[data-example]')];
+    const names = [...new Set(panels.map((el) => el.dataset.example))];
+    const wrong = names.filter((name) => {
+      const plain = count(`example-${name}`);
+      const section = count(`guide-example-${name}`);
+      return plain > 1 || section > 1 || plain + section === 0;
+    });
+    const ids = panels.map((el) => el.id);
+    const repeated = ids.filter((id, i) => ids.indexOf(id) !== i);
+    return {
+      ok: wrong.length === 0 && repeated.length === 0,
+      wrong,
+      repeated,
+    };
+  };
+  await page
+    .waitForFunction(
+      `document.querySelector('[data-example]') && (${probe.toString()})().ok`,
+      undefined,
+      { timeout: 10000 },
+    )
+    .catch(() => {});
+  const result = await page.evaluate(probe);
+  check(
+    `${label}: one element per example id`,
+    result.ok,
+    `wrong=${result.wrong.join(',')} repeated=${result.repeated.join(',')}`,
+  );
+}
+
+/**
+ * Spec 55 (D105): the guide's Example section. An h2 "Example" sits before
+ * every other h2 of the guide, with one example playground between it and
+ * the next heading; the playground's toolbar links its example page (one
+ * example: the name; several: "Open example page" beside the picker).
+ * Between the heading and the playground stands nothing, or, on a guide of
+ * `EXPLAINERS` (D122), exactly the one explainer paragraph moved up with
+ * the removed lower table.
+ * Spec 58 (D117): only the first intro paragraph stands above the heading,
+ * except on the guides of `INTRO_BLOCKS`.
+ * Returns the section's playground.
+ */
+async function exampleSection(page, check, explainer) {
+  const info = await page.evaluate(() => {
+    const heading = document.querySelector('article h2#example');
+    if (!heading) return null;
+    const lead = [];
+    for (
+      let el = heading.nextElementSibling;
+      el && !el.matches('[data-example], h2, h3');
+      el = el.nextElementSibling
+    ) {
+      lead.push({ tag: el.tagName, text: el.textContent ?? '' });
+    }
+    const headings = [...document.querySelectorAll('article :is(h2, h3)')];
+    const next = headings[headings.indexOf(heading) + 1];
+    const follows = (a, b) =>
+      !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const panels = [
+      ...document.querySelectorAll('article [data-example]'),
+    ].filter((el) => follows(heading, el) && (!next || follows(el, next)));
+    const link = panels[0]?.querySelector('header a[href^="/docs/examples/"]');
+    const above = [...(heading.parentElement?.children ?? [])];
+    return {
+      intro: above.slice(0, above.indexOf(heading)).map((el) => el.tagName),
+      firstH2: document.querySelector('article h2') === heading,
+      lead,
+      panels: panels.length,
+      href: link?.getAttribute('href') ?? '',
+    };
+  });
+  check('example section: h2 "Example"', info !== null);
+  if (!info) return null;
+  check('example section: first h2 of the guide', info.firstH2);
+  const blocks = INTRO_BLOCKS[new URL(page.url()).pathname] ?? 1;
+  check(
+    `example section: follows ${blocks} intro block(s)`,
+    info.intro.length === blocks && (blocks !== 1 || info.intro[0] === 'P'),
+    info.intro.join(','),
+  );
+  const lead = info.lead.map(({ tag, text }) => `${tag}:${text}`);
+  check(
+    explainer
+      ? 'example section: explainer line, then the playground'
+      : 'example section: playground right under the heading',
+    lead.join('|') === (explainer ? `P:${explainer}` : ''),
+    lead.join('|').slice(0, 120),
+  );
+  check(
+    'example section: one playground',
+    info.panels === 1,
+    `panels=${info.panels}`,
+  );
+  check('example section: links its example page', info.href !== '', info.href);
+  await uniqueExampleIds(page, check, 'example section');
+  return page.locator('article h2#example ~ [data-example]').first();
+}
+
+/**
+ * Clicks the picker arrow `verb` ("Next", "Previous") of guide playground
+ * `w`; an enabled arrow is labelled `<verb>: <example title>`.
+ */
+async function pickExample(page, w, verb) {
+  await w.locator(`header button[aria-label^="${verb}: "]`).first().click();
+  await page.waitForTimeout(500);
+}
+
 const TABLE = '#relevant-props-table';
 const STATE = '#relevant-state-options-table';
 const COLUMN = '#relevant-column-options-table';
@@ -338,7 +466,7 @@ const checks = {
   },
 
   '/docs/guides/best-practices': async ({ page, check }) => {
-    // One h3 per section, as in MRT; the h2 repeating the title is dropped
+    // One h2 per section (spec 55); the h2 repeating the title is dropped
     // by the sync.
     check('headings', (await count(page, 'article :is(h2, h3)')) >= 3);
   },
@@ -364,10 +492,23 @@ const checks = {
   '/docs/guides/click-to-copy': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
-    const w = await example(page, 'enable-click-to-copy', check);
+    // The Example section's story turns click to copy on for the whole
+    // table: every cell of the first row holds a copy button.
+    const w = page.locator('article h2#example ~ [data-example]').first();
+    const cells = w.locator('table tbody tr').first().locator('td');
+    await cells
+      .first()
+      .waitFor({ timeout: 30000 })
+      .catch(() => {});
+    const copy = await w
+      .locator('table tbody tr')
+      .first()
+      .locator('td:has(button)')
+      .count();
     check(
-      'enable-click-to-copy: copy buttons in cells',
-      (await count(w, 'table tbody button')) > 0,
+      'click to copy example: a copy button in every cell',
+      copy > 0 && copy === (await cells.count()),
+      `copy=${copy} cells=${await cells.count()}`,
     );
   },
 
@@ -502,6 +643,26 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table hides Address on load
+    const hidden = await example(
+      page,
+      'features-column-hiding--column-hidden-on-load',
+      check,
+    );
+    check(
+      'column-hidden-on-load: no Address header',
+      (await hidden.getByRole('columnheader', { name: /^Address/ }).count()) ===
+        0,
+    );
+    const shown = await openMenu(page, hidden, 'Show/Hide columns');
+    check(
+      'column-hidden-on-load: Address unticked in the menu',
+      (await shown
+        .getByRole('menuitemcheckbox', { name: 'Address', exact: true })
+        .getAttribute('aria-checked')
+        .catch(() => '')) === 'false',
+    );
+    await page.keyboard.press('Escape');
     const w = await example(page, 'disable-column-hiding', check);
     const menu = await openMenu(page, w, 'Show/Hide columns');
     check(
@@ -537,6 +698,27 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table has First Name widened on load
+    const widened = await example(
+      page,
+      'features-column-resizing--column-widened-on-load',
+      check,
+    );
+    check(
+      'column-widened-on-load: resize handles',
+      (await count(widened, 'thead .cursor-col-resize')) > 0,
+    );
+    const first = await widened
+      .locator('thead th:has-text("First Name")')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().width)
+      .catch(() => 0);
+    const widths = await headWidths(widened);
+    check(
+      'column-widened-on-load: First Name the widest column',
+      first > 0 && first === Math.max(...widths),
+      `first=${first} widths=${widths.map(Math.round).join(',')}`,
+    );
     const w = await example(page, 'enable-column-resizing', check);
     check(
       'enable-column-resizing: resize handles',
@@ -559,6 +741,18 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's columns have clearly different widths
+    const w = await example(
+      page,
+      'styling-custom-column-widths--custom-widths-semantic',
+      check,
+    );
+    const widths = await headWidths(w);
+    check(
+      'custom-widths-semantic: uneven column widths',
+      widths.length > 1 && Math.max(...widths) > 2 * Math.min(...widths),
+      widths.map(Math.round).join(','),
+    );
   },
 
   '/docs/guides/customize-components': async ({ page, check }) => {
@@ -613,6 +807,19 @@ const checks = {
   '/docs/guides/density-toggle': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table opens dense, the toggle in its toolbar
+    const dense = await example(
+      page,
+      'features-dense-padding--default-to-dense-padding',
+      check,
+    );
+    await marker(
+      dense,
+      'default-to-dense-padding',
+      'density button',
+      'button[aria-label="Toggle density"]',
+      check,
+    );
     const w = await example(page, 'disable-density-toggle', check);
     check(
       'disable-density-toggle: no density button',
@@ -672,6 +879,27 @@ const checks = {
 
   '/docs/guides/display-columns': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
+    // spec 64: the Example section's table shows the built-in display columns
+    const top = await example(
+      page,
+      'styling-styling-display-columns--customize-display-columns',
+      check,
+    );
+    check(
+      'customize-display-columns story: row numbers header',
+      /#/.test((await top.locator('thead').first().textContent()) ?? ''),
+    );
+    check(
+      'customize-display-columns story: select all',
+      (await count(top, '[aria-label="Toggle select all"]')) > 0,
+    );
+    await marker(
+      top,
+      'customize-display-columns story',
+      'expand button',
+      'tbody button[aria-label="Expand"]',
+      check,
+    );
     const w = await example(page, 'customize-display-columns', check);
     check(
       'customize-display-columns: row numbers header',
@@ -689,19 +917,6 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
-    await exampleGroup(
-      page,
-      [
-        ['Modal', 'editing-crud-modal'],
-        ['Inline Row', 'editing-crud-row'],
-        ['Inline Cell', 'editing-crud-cell'],
-        ['Inline Table', 'editing-crud-table'],
-        ['Tree Editing', 'editing-crud-tree'],
-      ],
-      check,
-    );
-    const modalTab = page.locator('[role="tab"]', { hasText: 'Modal' }).first();
-    await modalTab.click();
     const w = await example(page, 'editing-crud-modal', check);
     // ST_Tooltip adds no aria-label to its trigger (MUI did); match the icon.
     await marker(
@@ -711,6 +926,18 @@ const checks = {
       'tbody button:has(.lucide-pencil)',
       check,
     );
+    // The Example section's picker lists the five editing examples in the
+    // guide's order and swaps them in place.
+    const section = page.locator('article h2#example ~ [data-example]').first();
+    for (const id of [
+      'editing-crud-row',
+      'editing-crud-cell',
+      'editing-crud-table',
+      'editing-crud-tree',
+    ]) {
+      await pickExample(page, section, 'Next');
+      await example(page, id, check);
+    }
   },
   '/docs/guides/expanding-sub-rows': async ({ page, check }) => {
     await propTable(page, TABLE, check);
@@ -736,10 +963,16 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
-    const w = await example(page, 'basic', check);
+    // spec 64: the Example section's table opens with two chips set
+    const w = await example(page, 'features-filter-chips--chips-seeded', check);
+    check(
+      'chips-seeded: two chips',
+      (await count(w, '[data-filter-chip]')) === 2,
+      `chips=${await count(w, '[data-filter-chip]')}`,
+    );
     await marker(
       w,
-      'basic',
+      'chips-seeded',
       'filter button',
       'button[aria-label="Filter"]',
       check,
@@ -748,6 +981,18 @@ const checks = {
   '/docs/guides/overflow-tooltip': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
+    // spec 64: the Example section's table cuts cell text with an ellipsis
+    const top = await example(
+      page,
+      'styling-default-look--overflow-tooltip',
+      check,
+    );
+    const cut = await top
+      .locator('tbody td span.truncate')
+      .evaluateAll(
+        (els) => els.filter((el) => el.scrollWidth > el.clientWidth).length,
+      );
+    check('overflow-tooltip story: cut cell text', cut > 0, `cut=${cut}`);
     const w = await example(page, 'basic', check);
     await marker(
       w,
@@ -771,6 +1016,19 @@ const checks = {
   '/docs/guides/sort-editor': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // spec 64: the Example section's table opens with two sorts applied
+    const seeded = await example(
+      page,
+      'features-sort-popover--sort-popover-seeded',
+      check,
+    );
+    await marker(
+      seeded,
+      'sort-popover-seeded',
+      'sort button',
+      'button:has-text("2 sorts")',
+      check,
+    );
     const w = await example(page, 'multi-sorting', check);
     await marker(
       w,
@@ -812,6 +1070,20 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
+    // spec 64: the Example section's table opens with its search box set
+    const searched = await example(
+      page,
+      'features-search--searched-on-load',
+      check,
+    );
+    const terms = await searched
+      .locator('input')
+      .evaluateAll((els) => els.map((el) => el.value));
+    check(
+      'searched-on-load: search box open with John',
+      terms.includes('John'),
+      terms.join(','),
+    );
     const custom = await example(
       page,
       'customize-global-filter-component',
@@ -835,8 +1107,15 @@ const checks = {
   },
   // content/docs/guides/index.mdx is served at /docs/guides (fumadocs index).
   '/docs/guides': async ({ page, check }) => {
-    const links = await page.locator('main a[href^="/docs/guides/"]').count();
-    check('guides toc links', links > 10, `links=${links}`);
+    // every guide of meta.json under its group heading (spec 53 1.6.3)
+    const links = await page.locator('main a.docs-index-link').count();
+    check('guides list links', links === 46, `links=${links}`);
+    for (const id of ['fundamentals', 'customization-guides'])
+      check(
+        `guides list heading #${id}`,
+        (await page.locator(`main h3[id="${id}"]`).count()) === 1,
+      );
+    await sectionFrame(page, check, 'Guides');
   },
   '/docs/guides/localization': async ({ page, check, base }) => {
     await propTable(page, TABLE, check);
@@ -885,7 +1164,13 @@ const checks = {
     );
   },
   '/docs/guides/production-ready-tables': async ({ page, check }) => {
-    const w = await example(page, 'server-side-data', check);
+    // The Example section shows the guide's table as a story; its Code view
+    // lists the server-side-data example's files (D130, D131).
+    const w = await example(
+      page,
+      'features-server-data--production-ready-table',
+      check,
+    );
     await marker(
       w,
       'server-side-data',
@@ -893,7 +1178,7 @@ const checks = {
       'button:has(.lucide-refresh-cw)',
       check,
     );
-    check('steps', (await page.locator('article h3').count()) >= 4);
+    check('steps', (await page.locator('article h2').count()) >= 4);
     // Multi-file example: the code explorer lists every file in its tree.
     await w
       .locator('button', { hasText: /^Code$/ })
@@ -923,6 +1208,19 @@ const checks = {
   },
   '/docs/guides/row-actions': async ({ page, check }) => {
     await propTable(page, TABLE, check);
+    // spec 64: the Example section's table has action buttons on every row
+    const top = await example(
+      page,
+      'features-row-actions--custom-row-action-buttons',
+      check,
+    );
+    const rows = await count(top, 'tbody tr');
+    const viewed = await count(top, 'tbody tr:has(button:has-text("View"))');
+    check(
+      'custom-row-action-buttons: View on every row',
+      rows > 0 && viewed === rows,
+      `rows=${rows} view=${viewed}`,
+    );
     const menu = await example(page, 'row-actions-menu-items', check);
     await marker(
       menu,
@@ -995,15 +1293,29 @@ const checks = {
         check,
       );
     }
+    // spec 64: the Example section's table (sticky-row-selection) opens with a row selected
+    await marker(
+      examplePanel(page, 'enable-row-pinning-select'),
+      'enable-row-pinning-select',
+      'selected row',
+      'tbody [data-selected]',
+      check,
+    );
   },
   '/docs/guides/sorting': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
     await propTable(page, STATE, check);
-    const multi = await example(page, 'multi-sorting', check);
+    // spec 64: the Example section's table, sorted on load; the lower copy
+    // of the multi-sorting table is gone (D122)
+    const multi = await example(
+      page,
+      'features-sorting--sorted-on-load',
+      check,
+    );
     await marker(
       multi,
-      'multi-sorting',
+      'sorted-on-load',
       'sorted header marker',
       'th [aria-label="Sorted ascending"], th [aria-label="Sorted descending"]',
       check,
@@ -1026,9 +1338,10 @@ const checks = {
     );
   },
   '/docs/guides/table-event-listeners': async ({ page, check }) => {
-    // One h3 (shadcn components) with an h4 per listener example, as in MRT.
-    const headings = await page.locator('main h4').count();
-    check('event listener sections', headings > 3, `h4=${headings}`);
+    // One h2 (shadcn components) with an h3 per listener example (spec 55:
+    // guide sections are h2, their sub-sections h3).
+    const headings = await page.locator('article h3').count();
+    check('event listener sections', headings > 3, `h3=${headings}`);
   },
   '/docs/guides/tanstack-table-with-shadcn-ui': async ({ page, check }) => {
     const title = (
@@ -1046,11 +1359,25 @@ const checks = {
   '/docs/guides/toolbar-customization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, STATE, check);
+    // spec 64: the Example section's table has a custom toolbar button, the
+    // Create New User icon button
+    const top = await example(
+      page,
+      'features-toolbar--custom-top-toolbar-actions',
+      check,
+    );
+    await marker(
+      top,
+      'custom-top-toolbar-actions',
+      'custom toolbar button',
+      'button:has(svg.lucide-square-plus)',
+      check,
+    );
     await example(page, 'minimal', check);
     const provider = await page
-      .locator('article h3', { hasText: 'Compose with ST_TableProvider' })
+      .locator('article h2', { hasText: 'Compose with ST_TableProvider' })
       .count();
-    check('table provider section', provider === 1, `h3=${provider}`);
+    check('table provider section', provider === 1, `h2=${provider}`);
     const custom = await example(page, 'custom-top-toolbar', check);
     await marker(
       custom,
@@ -1079,7 +1406,57 @@ const checks = {
       const rows = await w.locator('table tbody tr').count();
       check(`${id}: virtualized row window`, rows < 200, `rows=${rows}`);
     }
+    // The section's picker swaps row for column virtualization and back;
+    // each example also shows further down, so the plain id passes between
+    // mounts and must stay on exactly one element.
+    const section = page.locator('article h2#example ~ [data-example]').first();
+    await pickExample(page, section, 'Next');
+    await uniqueExampleIds(page, check, 'after picker swap');
+    await pickExample(page, section, 'Previous');
+    await uniqueExampleIds(page, check, 'after picker swap back');
   },
 };
+
+/*
+ * D122: the guides whose lower copy of the Example section's table was
+ * removed and whose explainer line moved up into the section, as rendered
+ * text.
+ */
+const EXPLAINERS = {
+  '/docs/guides/async-loading':
+    'Here is a copy of the full React Query example.',
+  '/docs/guides/pagination':
+    'Here is the full Remote Data example showing off server-side filtering, pagination, and sorting.',
+  '/docs/guides/row-selection':
+    'You can combine the row pinning feature with the row selection feature to create a cool user experience where selected rows always stay within view.',
+  '/docs/guides/scroll-cues':
+    'Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.',
+  '/docs/guides/production-ready-tables':
+    'Open the network tab and click around. Every page, sort, search or filter change sends one request to /api/users.',
+};
+
+/*
+ * D117: guides whose Example section does not follow exactly one intro
+ * paragraph, by the number of blocks above it. Full Screen Toggle has no
+ * intro; Production-Ready Tables keeps its four-piece list, diagram and
+ * closing line in the intro, as D130 left it (spec 58, 1.3).
+ */
+const INTRO_BLOCKS = {
+  '/docs/guides/full-screen-toggle': 0,
+  '/docs/guides/production-ready-tables': 4,
+};
+
+/*
+ * Every guide page opens with its Example section (spec 55, D105): its
+ * checks run first, then the page's own, in page order.
+ */
+for (const [path, run] of Object.entries(checks)) {
+  if (!/^\/docs\/guides\/[^/]+$/.test(path)) continue;
+  if (path === '/docs/guides/server-side-data') continue;
+  checks[path] = async (ctx) => {
+    await exampleSection(ctx.page, ctx.check, EXPLAINERS[path]);
+    await run(ctx);
+  };
+}
 
 export default checks;

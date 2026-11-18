@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Full Screen Examples',
+  title: 'Features/Full Screen',
 };
 
 export default meta;
@@ -73,9 +73,35 @@ const data = [...Array(128)].map(() => ({
   startDate: faker.date.past({ years: 8 }).toLocaleDateString(),
 }));
 
-export const FullScreenToggleEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
+/**
+ * The toggle puts the table root in full screen (fixed, covering the
+ * viewport); Escape leaves it.
+ */
+export const FullScreenToggleEnabledDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const root = canvasElement.querySelector<HTMLElement>(
+      '[data-st-full-screen]',
+    )!;
+    expect(getComputedStyle(root).position).not.toBe('fixed');
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Toggle full screen' }),
+    );
+    await waitFor(() => {
+      expect(getComputedStyle(root).position).toBe('fixed');
+      const box = root.getBoundingClientRect();
+      expect(box.width).toBe(window.innerWidth);
+      expect(box.height).toBe(window.innerHeight);
+    });
+    root.focus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(getComputedStyle(root).position).not.toBe('fixed'),
+    );
+  },
+};
 
 export const DisableFullScreenToggle = () => (
   <ShadcnTable columns={columns} data={data} enableFullScreenToggle={false} />
@@ -103,34 +129,4 @@ export const ControlledFullScreen = () => {
       state={{ isFullScreen }}
     />
   );
-};
-
-/**
- * The toggle puts the table root in full screen (fixed, covering the
- * viewport); Escape leaves it.
- */
-export const ToggleFullScreen = {
-  render: () => <FullScreenToggleEnabledDefault />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByText(data[0].firstName);
-    const root = canvasElement.querySelector<HTMLElement>(
-      '[data-st-full-screen]',
-    )!;
-    expect(getComputedStyle(root).position).not.toBe('fixed');
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Toggle full screen' }),
-    );
-    await waitFor(() => {
-      expect(getComputedStyle(root).position).toBe('fixed');
-      const box = root.getBoundingClientRect();
-      expect(box.width).toBe(window.innerWidth);
-      expect(box.height).toBe(window.innerHeight);
-    });
-    root.focus();
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() =>
-      expect(getComputedStyle(root).position).not.toBe('fixed'),
-    );
-  },
 };

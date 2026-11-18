@@ -5,19 +5,27 @@ description: 'How to use and customize the click to copy features of Shadcn Tabl
 
 Shadcn Table has an easy-to-implement feature that allows a user to copy a cell's value to the clipboard.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples
+  slugs={[
+    'more/features-click-to-copy--click-to-copy-enabled-with-copy-button-props',
+  ]}
+/>
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={new Set(['enableClickToCopy', 'stCopyButtonProps'])}
 />
 
-### Relevant Column Options
+## Relevant Column Options
 
 <ColumnOptionsTable
   onlyOptions={new Set(['enableClickToCopy', 'stCopyButtonProps'])}
 />
 
-### Enable Click to Copy Per Column
+## Enable Click to Copy Per Column
 
 Most likely, there will just be a couple columns that you want to enable click to copy for. You can do this by setting the `enableClickToCopy` option to `true` per column on the column definition.
 
@@ -33,7 +41,7 @@ const columns = [
 ];
 ```
 
-### Enable Click to Copy For All Cells
+## Enable Click to Copy For All Cells
 
 Alternatively, you can enable click to copy globally by setting the `enableClickToCopy` table option to `true`. You could then opt out per column by setting the `enableClickToCopy` option to `false` on the column definition.
 
@@ -45,7 +53,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Customize Copy Buttons
+## Customize Copy Buttons
 
 The click to copy feature is built on top of the shadcn/ui Button component. You can customize the copy button by passing in the `stCopyButtonProps` table or column option.
 
@@ -59,9 +67,5 @@ const table = useShadcnTable({
   },
 });
 ```
-
-### Click to Copy Example
-
-<EnableClickToCopyExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

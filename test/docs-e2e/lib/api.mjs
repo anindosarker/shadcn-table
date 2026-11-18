@@ -3,12 +3,14 @@
  * => void, run after load at the first width. Every reference page shows the
  * OptionsSwitcher with its own tab active and its full prop table.
  */
-import { codeToggle, names } from './helpers.mjs';
+import { codeToggle, names, sectionFrame } from './helpers.mjs';
 
 const checks = {
   '/docs/api': async ({ page, check }) => {
-    const n = await page.locator('article a[href^="/docs/api/"]').count();
-    check('table of contents links', n >= 9, String(n));
+    // the overview is one sentence; the sidebar lists the reference pages
+    const n = await page.locator('#nd-sidebar a[href^="/docs/api/"]').count();
+    check('sidebar reference links', n >= 9, String(n));
+    await sectionFrame(page, check, 'API');
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);

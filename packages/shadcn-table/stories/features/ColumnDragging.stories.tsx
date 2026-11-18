@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Dragging Examples',
+  title: 'Features/Column Dragging',
 };
 
 export default meta;

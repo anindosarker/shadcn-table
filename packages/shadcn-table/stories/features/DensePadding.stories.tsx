@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Dense Padding Examples',
+  title: 'Features/Dense Padding',
 };
 
 export default meta;
@@ -65,28 +65,9 @@ const data = [...Array(25)].map(() => ({
   zipCode: faker.location.zipCode(),
 }));
 
-export const DensePaddingToggleEnabledDefault = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
-
-export const DensePaddingDisabled = () => (
-  <ShadcnTable columns={columns} data={data} enableDensityToggle={false} />
-);
-
-export const DefaultToDensePadding = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    initialState={{
-      density: 'compact',
-      pagination: { pageIndex: 0, pageSize: 25 },
-    }}
-  />
-);
-
 /** Each click of the density toggle gives the rows a different height. */
-export const ToggleChangesRowHeight = {
-  render: () => <DensePaddingToggleEnabledDefault />,
+export const DensePaddingToggleEnabledDefault = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await canvas.findAllByText(data[0].firstName);
@@ -108,3 +89,18 @@ export const ToggleChangesRowHeight = {
     await waitFor(() => expect(rowHeight()).toBe(heights[0]));
   },
 };
+
+export const DensePaddingDisabled = () => (
+  <ShadcnTable columns={columns} data={data} enableDensityToggle={false} />
+);
+
+export const DefaultToDensePadding = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    initialState={{
+      density: 'compact',
+      pagination: { pageIndex: 0, pageSize: 25 },
+    }}
+  />
+);
