@@ -1,6 +1,6 @@
 # 63: Docs branch catch-up, tracker
 
-Status: running
+Status: done (4535bd65)
 Branch `v0.9/docs-branch-catch-up`, worktree 08
 Checks:
 - `git merge-base --is-ancestor origin/claude/review HEAD` at 62429d40: pass
