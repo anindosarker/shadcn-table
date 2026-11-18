@@ -48,6 +48,17 @@ publishes the section as the GitHub release notes.
 
 - Thirteen guides open with a table that shows their feature in use on load: Column Size, Density Toggle, Overflow Tooltip, Filter Chips, Global Filtering, Sort Editor, Row Selection, Toolbar Customization, Row Actions, Display Columns, Sorting, Column Hiding and Column Resizing. Row Selection and Sorting no longer show that table a second time further down; Row Selection's explainer line moved up with it (D140, D122).
 
+#### Spec 55 Guide example block
+
+- An example shown twice on one docs page has two different element ids: the first keeps `example-<name>`, a further one gets a suffixed id (D105).
+
+#### Spec 55 Guide pages
+
+- Every guide opens with a live example: an Example section right before its first section shows the best example for the guide, linked to its example page or its story page under More examples. A table the guide showed only as a copy of that example is removed; the guide's text is unchanged (D105).
+- Guide sections are h2 and their sub-sections h3.
+- When the plain id of an example passes from one mount to another (a picker swap), the next mount takes it over, so no two elements ever share it.
+- The five guide comparison pages are removed.
+
 ### Fixed
 
 #### Spec 59 Missing docs page
@@ -56,7 +67,7 @@ publishes the section as the GitHub release notes.
 
 #### Spec 53 Section tab hover
 
-- The first section tab (Get Started) on the docs site has the same padding on both sides as the others, so its label sits centred over its underline and inside the hover fill.
+- The first section tab (Get Started) on the docs site has the same padding on both sides as the others, so its label sits centred over its underline and inside the hover fill, the same fill as the page bar's other controls.
 
 #### Spec 52 Docs filter facts
 
@@ -107,19 +118,6 @@ publishes the section as the GitHub release notes.
 #### Spec 62.2 Touch drag blocks page scroll from before the touch starts
 
 - A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a header cell that cannot drag no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
-
-### Changed
-
-#### Spec 55 Guide example block
-
-- An example shown twice on one docs page has two different element ids: the first keeps `example-<name>`, a further one gets a suffixed id (D105).
-
-#### Spec 55 Guide pages
-
-- Every guide opens with a live example: an Example section right before its first section shows the best example for the guide, linked to its example page or its story page under More examples. A table the guide showed only as a copy of that example is removed; the guide's text is unchanged (D105).
-- Guide sections are h2 and their sub-sections h3.
-- When the plain id of an example passes from one mount to another (a picker swap), the next mount takes it over, so no two elements ever share it.
-- The five guide comparison pages are removed.
 
 ### Docs
 
