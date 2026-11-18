@@ -7,7 +7,7 @@ import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons
 import { useSTContext } from '@/components/ui-aria/shadcn-table/context/ST_TableContext';
 
 const grabHandleButtonVariants = cva(
-  'my-0 mx-[-0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
+  'my-0 mx-[-0.1rem] cursor-grab touch-none transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
   {
     variants: {
       location: {
@@ -33,6 +33,7 @@ export const ST_GrabHandleButton = ({
   location,
   onDragEnd,
   onDragStart,
+  onPointerDown,
   ...rest
 }: ST_GrabHandleButtonProps) => {
   const table = useSTContext();
@@ -56,14 +57,18 @@ export const ST_GrabHandleButton = ({
           rest?.onClick?.(e);
         }}
         className={cn(grabHandleButtonVariants({ location }), rest?.className)}
-        // React Aria's Button drops drag attributes; its render prop puts
-        // them on the <button>.
+        // React Aria's Button drops drag attributes and its press handling
+        // owns pointerdown; its render prop puts them on the <button>.
         render={(props) => (
           <button
             {...props}
             draggable={draggable}
             onDragEnd={onDragEnd}
             onDragStart={onDragStart}
+            onPointerDown={(event) => {
+              props.onPointerDown?.(event);
+              onPointerDown?.(event);
+            }}
           />
         )}
       >

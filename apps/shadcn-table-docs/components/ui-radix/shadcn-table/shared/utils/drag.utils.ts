@@ -44,6 +44,63 @@ export const getST_ColumnDropTargetProps = <TData extends ST_RowData>(
   },
 });
 
+/** Marks the copy of the dragged item that follows a finger. */
+export const ST_TOUCH_GHOST_ATTR = 'data-st-touch-ghost';
+
+const touchDragEvents = new WeakSet<Event>();
+
+/**
+ * The data transfer of a touch drag: the read surface of a `DataTransfer`,
+ * empty, so a listener outside the table reads it as it reads a mouse drag's.
+ */
+export type ST_TouchDataTransfer = Pick<
+  DataTransfer,
+  | 'clearData'
+  | 'dropEffect'
+  | 'effectAllowed'
+  | 'files'
+  | 'getData'
+  | 'items'
+  | 'setData'
+  | 'setDragImage'
+  | 'types'
+>;
+
+/**
+ * A drag event the touch path sends to the element under the finger, so a
+ * touch drag reaches the same drop target handlers as a mouse drag. Its
+ * `dataTransfer` is `dataTransfer`: a constructed `DataTransfer` ignores a
+ * written `dropEffect` outside a native drag.
+ */
+export const createST_TouchDragEvent = ({
+  dataTransfer,
+  relatedTarget,
+  type,
+  x,
+  y,
+}: {
+  dataTransfer: ST_TouchDataTransfer;
+  relatedTarget?: Element | null;
+  type: 'dragenter' | 'dragleave' | 'dragover' | 'drop';
+  x: number;
+  y: number;
+}): globalThis.DragEvent => {
+  const event = new globalThis.DragEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    clientX: x,
+    clientY: y,
+    relatedTarget,
+  });
+  Object.defineProperty(event, 'dataTransfer', { value: dataTransfer });
+  touchDragEvents.add(event);
+  return event;
+};
+
+/** Whether `event` was sent by the touch path. */
+export const isST_TouchDragEvent = (event: Event): boolean =>
+  touchDragEvents.has(event);
+
 /**
  * True when a column drag ended without a drop: Escape, or a drop outside
  * every drop target. A drag event without a `dataTransfer` counts as dropped.
