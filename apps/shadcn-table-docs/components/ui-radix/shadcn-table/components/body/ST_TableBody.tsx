@@ -13,6 +13,7 @@ import {
   type TableBodyProps,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
+import { getPinnedStackOverflows } from '@/components/ui-radix/shadcn-table/shared/utils/virtualization.utils';
 import { ST_OverflowTooltipProvider } from '@/components/ui-radix/shadcn-table/components/body/ST_OverflowText';
 import { ST_TableBodyRow } from '@/components/ui-radix/shadcn-table/components/body/ST_TableBodyRow';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/context/ST_TableContext';
@@ -42,8 +43,8 @@ export const ST_TableBody = <TData extends ST_RowData>({
     getIsSomeRowsPinned,
     getTopRows,
     options: {
+      enableRowPinning,
       enableStickyFooter,
-      enableStickyHeader,
       layoutMode,
       localization,
       renderDetailPanel,
@@ -77,6 +78,53 @@ export const ST_TableBody = <TData extends ST_RowData>({
   const rowVirtualizer = useST_RowVirtualizer(table, rows);
 
   const { virtualRows } = rowVirtualizer ?? {};
+
+  // A sticky pinned virtual row leaves the absolute layout: it sits in its
+  // own grid track at its offset in the list, so the browser keeps it stuck
+  // between the head and the foot as it does a row without virtualization.
+  // A stack higher than the scroll container keeps the absolute layout.
+  const pinnedStackOverflows =
+    !!rowVirtualizer &&
+    pinnedRowIds.length > 0 &&
+    getPinnedStackOverflows({
+      pinnedCount: pinnedRowIds.length,
+      rowHeight: rowVirtualizer.options.estimateSize(0),
+      table,
+    });
+  const stickyPinnedTracks = useMemo(() => {
+    if (
+      !virtualRows ||
+      !enableRowPinning ||
+      !rowPinningDisplayMode?.includes('sticky') ||
+      !pinnedRowIds.length ||
+      pinnedStackOverflows
+    ) {
+      return undefined;
+    }
+    const gridRows = new Map<string, number>();
+    const tracks: string[] = [];
+    let end = 0;
+    for (const virtualRow of virtualRows) {
+      if (renderDetailPanel && virtualRow.index % 2 === 1) continue;
+      const row =
+        rows[renderDetailPanel ? virtualRow.index / 2 : virtualRow.index];
+      if (!row?.getIsPinned()) continue;
+      tracks.push(`${Math.max(virtualRow.start - end, 0)}px`, 'auto');
+      gridRows.set(row.id, tracks.length);
+      end = Math.max(end, virtualRow.end);
+    }
+    return gridRows.size
+      ? { gridRows, gridTemplateRows: tracks.join(' ') }
+      : undefined;
+  }, [
+    enableRowPinning,
+    pinnedRowIds,
+    pinnedStackOverflows,
+    renderDetailPanel,
+    rowPinningDisplayMode,
+    rows,
+    virtualRows,
+  ]);
 
   const commonRowProps = {
     columnVirtualizer,
@@ -118,6 +166,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
         row,
         rowVirtualizer,
         staticRowIndex,
+        stickyGridRow: stickyPinnedTracks?.gridRows.get(row.id),
         virtualRow: rowVirtualizer
           ? (rowOrVirtualRow as ST_VirtualItem)
           : undefined,
@@ -151,7 +200,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     >
       {({ columnFilters, globalFilter, isFullScreen, stickyHeader }) => {
         const tableHeadHeight =
-          ((enableStickyHeader || stickyHeader || isFullScreen) &&
+          ((stickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =
@@ -189,6 +238,10 @@ export const ST_TableBody = <TData extends ST_RowData>({
                 height: rowVirtualizer
                   ? `${rowVirtualizer.getTotalSize()}px`
                   : undefined,
+                // Start, not stretch: a stretched auto track grows the row it
+                // measures, which grows the body without end.
+                alignContent: stickyPinnedTracks ? 'start' : undefined,
+                gridTemplateRows: stickyPinnedTracks?.gridTemplateRows,
                 ...tableBodyProps?.style,
               }}
             >

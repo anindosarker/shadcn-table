@@ -8,7 +8,10 @@ import {
   type ST_TableInstance,
 } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { extraIndexRangeExtractor } from '@/components/ui-aria/shadcn-table/shared/utils/virtualization.utils';
+import {
+  extraIndexRangeExtractor,
+  getPinnedStackOverflows,
+} from '@/components/ui-aria/shadcn-table/shared/utils/virtualization.utils';
 
 export const useST_RowVirtualizer = <
   TData extends ST_RowData,
@@ -22,8 +25,10 @@ export const useST_RowVirtualizer = <
   const {
     getRowModel,
     options: {
+      enableRowPinning,
       enableRowVirtualization,
       renderDetailPanel,
+      rowPinningDisplayMode,
       rowVirtualizerInstanceRef,
       rowVirtualizerOptions,
     },
@@ -40,6 +45,13 @@ export const useST_RowVirtualizer = <
   );
   const expanded = useSelector(table.atoms.expanded, (value) =>
     enableRowVirtualization ? value : undefined,
+  );
+  const stickyPinning =
+    !!enableRowVirtualization &&
+    !!enableRowPinning &&
+    !!rowPinningDisplayMode?.includes('sticky');
+  const rowPinning = useSelector(table.atoms.rowPinning, (value) =>
+    stickyPinning ? value : undefined,
   );
 
   const rowVirtualizerProps = parseFromValuesOrFunc(rowVirtualizerOptions, {
@@ -61,9 +73,40 @@ export const useST_RowVirtualizer = <
   const normalRowHeight =
     density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56;
 
+  const pinnedRows = useMemo(
+    () =>
+      rowPinning?.top?.length || rowPinning?.bottom?.length
+        ? realRows.flatMap((row, index) => (row.getIsPinned() ? [index] : []))
+        : [],
+    [realRows, rowPinning],
+  );
+
+  // Sticky pinned rows stay rendered wherever the scroll is, unless they
+  // stack higher than the scroll container holds.
+  const pinnedStackOverflows =
+    pinnedRows.length > 0 &&
+    getPinnedStackOverflows({
+      pinnedCount: pinnedRows.length,
+      rowHeight: rowVirtualizerProps?.estimateSize?.(0) ?? normalRowHeight,
+      table,
+    });
+  const pinnedRowIndexes = useMemo(
+    () =>
+      pinnedStackOverflows
+        ? []
+        : pinnedRows.map((index) => (renderDetailPanel ? index * 2 : index)),
+    [pinnedRows, pinnedStackOverflows, renderDetailPanel],
+  );
+
   const rangeExtractor = useCallback(
-    (range: Range) => extraIndexRangeExtractor(range, draggingRowIndex),
-    [draggingRowIndex],
+    (range: Range) =>
+      extraIndexRangeExtractor(
+        range,
+        draggingRowIndex === undefined
+          ? pinnedRowIndexes
+          : [draggingRowIndex, ...pinnedRowIndexes],
+      ),
+    [draggingRowIndex, pinnedRowIndexes],
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'
