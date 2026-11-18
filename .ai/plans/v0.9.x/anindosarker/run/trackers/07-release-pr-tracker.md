@@ -1,6 +1,6 @@
 # 07: Release 0.9.0, Release PR, tracker
 
-Status: merged (2eeafde9)
+Status: done (2eeafde9)
 Branch `dev` at 0adce149, main checkout (gh only)
 Checks:
 - Check: merged, `gh pr view 134 --json state --jq .state` at 634739d3: `MERGED`; `git show origin/master:packages/shadcn-table/package.json | grep version` prints 0.9.0 (checked by the After release milestone)

@@ -1,6 +1,6 @@
 # 48: Release 0.9.4, After release, tracker
 
-Status: merged (7b37986610565ff36f191c89932edfcdda4385af)
+Status: done (7b37986610565ff36f191c89932edfcdda4385af)
 Branch `master` (read), `claude/review` and `dev` (sync), main checkout
 Checks:
 - `gh run watch 43503728164 --exit-status`, run 43503728164 (https://github.com/anindosarker/shadcn-table/actions/runs/43503728164): completed success; Check Release, Verify Deployment, Validate Production, Publish Release success

@@ -1,6 +1,6 @@
 # 20: Release 0.9.1, Release PR, tracker
 
-Status: merged (b0d53a11)
+Status: done (b0d53a11)
 Branch `dev`, main checkout (gh only)
 Checks:
 - Check: dev ancestor, `git merge-base --is-ancestor origin/dev origin/claude/review` at 763f923b / fbf615ad: pass

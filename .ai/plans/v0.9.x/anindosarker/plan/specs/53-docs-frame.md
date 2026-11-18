@@ -7,14 +7,14 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-The docs frame the owner accepted exists only on the preview branch `v0.9/preview-docs-examples` (head `173444ad`): the section tab row under the top bar (D101), the per-section sidebar with sticky group labels, hide and resize (D102), and the regrouped Examples sidebar that opens on the first example (D103). This spec lands that branch on `claude/review` without its demo sections, adds the row numbers and group counts the Examples sidebar still lacks (D103), and makes the two small fixes of D107. Every other spec of E14 builds on its first milestone.
+The docs frame the owner accepted exists only on the preview branch `v0.9/preview-docs-examples` (head `173444ad`): the section tab row under the top bar (D101), the per-section sidebar with sticky group labels, hide and resize (D102), and the regrouped Examples sidebar that opens on the first example (D103). This spec lands that branch on `v0.9/docs-layout`, the integration branch of E14 (D109), without its demo sections, adds the row numbers and group counts the Examples sidebar still lacks (D103), and makes the two small fixes of D107. Every other spec of E14 builds on its first milestone.
 
-This spec starts from the preview branch: its first milestone merges `origin/v0.9/preview-docs-examples` into a milestone branch created from `origin/claude/review` and passes the full gates before it merges.
+This spec starts from the preview branch: its first milestone merges `origin/v0.9/preview-docs-examples` into a milestone branch created from `origin/v0.9/docs-layout` (D109) and passes the full gates before it merges.
 
 ### 1.2 Goals
 
-- `claude/review` carries the top bar, tab row and sidebar exactly as on the preview at `173444ad` (D101, D102), and the Examples sidebar grouping, short labels and first-example redirect (D103).
-- The two demo sections EX A and EX B are not on `claude/review`; captures of the EX B sidebar are saved as the reference for the numbers, counts and "More examples" (D103).
+- `v0.9/docs-layout` carries the top bar, tab row and sidebar exactly as on the preview at `173444ad` (D101, D102), and the Examples sidebar grouping, short labels and first-example redirect (D103).
+- The two demo sections EX A and EX B are not on `v0.9/docs-layout`; captures of the EX B sidebar are saved as the reference for the numbers, counts and "More examples" (D103).
 - The Guides overview page lists every guide again, as on the live site, built from the sidebar's data.
 - Every Examples row shows its running number, every Examples group label its row count; Guides and API show neither (D103, D102).
 - The footer's Storybook link opens the selected base; the last rounded frames are square (D107).
@@ -85,7 +85,7 @@ apps/shadcn-table-docs/
 
 #### 1.6.2 Preview merge (D101, D102, D103)
 
-Status `new` on `claude/review`: every file of the preview outside the demo folders, unchanged in behaviour.
+Status `new` on `v0.9/docs-layout`: every file of the preview outside the demo folders, unchanged in behaviour.
 
 - Merges the preview into the milestone branch; resolves nothing by rewriting, the merge is clean.
 - Removes the demo sections: `content/docs/examples-a`, `content/docs/examples-b`, `preview-examples-ab/`, their root `meta.json` entries, `PREVIEW_NAV_LINKS`, the `PREVIEW_SECTIONS` exclusion and `publicSource` when nothing else needs it, the demo redirects.
@@ -167,6 +167,14 @@ export function groupCount(node: PageTree.Separator | PageTree.Folder, siblings:
 - Task 1: The footer Storybook link by base and the "Get Started" label (1.6.5). Checks: on a production build, with each base selected the footer link's `href` is `https://storybook.shadcn-table.com/<base>/`; the home page footer shows "Get Started"
 - Task 2: The square corners (1.6.5). Checks: computed `border-radius` is `0px` on a tab frame and panel and a code tab frame of `/docs/getting-started/install`, a code block copy chip, the agent bar and a prop-table inline code; the table frame of `/docs/examples/basic` is still rounded
 - Task 3: Cleanup: `pnpm format`, the changelog block. Checks: 2.2
+
+### Milestone: Guides overview anchors match the live site
+
+- Files owned: `apps/shadcn-table-docs/components/table-of-contents-list.tsx`, `apps/shadcn-table-docs/lib/layout.shared.tsx`
+- Depends on: Preview lands on review
+- Review: none
+- Starts: S20
+- Task 1: Guides overview anchors match the live site. Checks: pnpm test typecheck --base radix, pnpm test lint, pnpm test docs-e2e --base base
 
 ### 2.2 Checks
 

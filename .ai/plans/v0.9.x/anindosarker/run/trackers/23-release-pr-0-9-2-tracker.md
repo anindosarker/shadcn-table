@@ -1,6 +1,6 @@
 # 23: Release 0.9.2, Release PR, tracker
 
-Status: merged (8feb7940)
+Status: done (8feb7940)
 Branch `dev`, main checkout (gh only)
 Checks:
 - Check: dev contains in claude/review, `git merge-base --is-ancestor origin/dev origin/claude/review` at ffc8ce56: pass (equal)

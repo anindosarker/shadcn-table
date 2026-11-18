@@ -4,25 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D108** Every reorder drag works by touch on phones and tablets #R5
-	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
-	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
-	- It works the same on all three bases (Base UI, Radix, React Aria).
-	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
-	- Mouse dragging, column resize and the range slider stay as they are today.
-	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
-	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
-	- Owner picked option 1 of Q90, 2026-11-17.
-	- Source: Q90
-- [ ] **D109** E14 builds on its own branch so patch releases keep going #R5
-	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
-	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
-	- `v0.9/docs-layout` merges into `claude/review` only on the owner's explicit word, after the owner's reviews (the guide checklist of D105, the Try it texts of D104, the story texts of D106). It lands as one merge.
-	- After each patch release `claude/review` is merged into `v0.9/docs-layout`, so the branch stays close.
-	- Plan files, trackers, the grid and decisions stay on `claude/review` as before.
-	- Why the whole epic: the sidebar, tab row and page formats are also not released yet, and without the texts `claude/review` would carry about 650 story pages with no text.
-	- Owner recorded 2026-11-17.
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -37,103 +18,24 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #E14 #R5
-	- Replaces L1, L7, L10, L23.
-	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
-	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
-	- The section tabs form a row directly under the top bar on every docs page, left aligned with the brand: mono, uppercase, letter-spaced, muted; the active tab in the accent colour with a 2px underline. The space inside a label is tighter than the gap between tabs, so "GET STARTED" reads as one tab. A dashed rule runs below the row; there is no line between the top bar and the row. Top bar and row stay in place together when the page scrolls.
-	- The row starts with the sidebar's hide and show button (L25), close to the first tab, with no divider. On the mobile layout the button is not shown and the row scrolls sideways when the tabs do not fit.
-	- The top bar holds the brand on the left, the search box in the centre (from the `lg` width up; an icon in the right group below it), then GitHub, Discord, the base selector and the theme toggle on the right.
-	- Owner accepted on the preview 2026-11-17.
-	- Source: LQ9, LQ15, LQ18
-	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #E14 #R5
-	- Replaces L8, L9, and the general parts of L22.
-	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
-	- No heading row with the section's name at the top of the list; the active tab names the section.
-	- Group labels and their pages share one left edge: no indent, no guide line. Labels are small, mono, uppercase and muted.
-	- Groups never collapse. The one exception is "More examples" in the Examples sidebar (L26).
-	- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Only one label shows at a time.
-	- Hide and show: the button at the start of the tab row hides the whole sidebar and brings it back. Its icon carries an arrow pointing left when the sidebar is open and right when it is hidden; the tooltip reads "Hide sidebar" or "Show sidebar". The sidebar slides in about 200 ms and the content follows; no animation on reload, while resizing, or for visitors who ask for reduced motion. The state survives a reload.
-	- Resize: dragging the sidebar's right edge changes its width between 220 and 480 px; a double click resets it; arrow keys work; the width survives a reload.
-	- The header's text links never show as rows in the sidebar, at any width; the tab row replaces them, also on the mobile layout.
-	- Guides and API: their labels, groups and order stay as they are today.
-	- Owner accepted on the preview 2026-11-17.
-	- Source: LQ16, LQ17, LQ7, LQ25
-	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
-	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
-	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
-	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
-	- Groups, in this order, labels without the word "Examples":
-	  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). A filter example is not featured, because the basic table already filters.
-	  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
-	  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
-	  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
-	  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
-	  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
-	  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
-	  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
-	  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
-	  - Export: `export-csv`, `export-pdf`.
-	  - Customization: `minimal`, `custom-headless`, `persistent-view`.
-	  - More examples: every Storybook group as a labelled sub-group, with its stories as rows (L29).
-	- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar; page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
-	- Numbers, Examples only: every row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included, no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the order, never typed into a page, and show in the sidebar only.
-	- "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels do not collapse.
-	- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Old against new position of every page: `sidebar-regroup-checklist.md`.
-	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
-	- Source: LQ8, LQ10
-	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #E14 #R5
-	- Replaces L14.
-	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
-	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
-	- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address").
-	- Related guides: an h2 heading and a list of links to the guide pages for the feature, below the example; every link resolves.
-	- The "View Extra Storybook Examples" line is removed from the page; the toolbar Storybook button replaces it.
-	- Text check: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
-	- Not part of this decision: rewording titles, descriptions or body text (LQ26, LQ29).
-	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
-	- Source: LQ21, LQ23, LQ24
-	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #E14 #R5
-	- Replaces L15.
-	- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
-	- The rules, in the owner's words of 2026-11-17:
-	  - Every guide gets an Example section. No guide is left without one.
-	  - The example in it is the best one for that guide.
-	  - A table that was already in the guide is removed only when both hold: the same example is now shown in the Example section, and the table is not part of the guide's story or writing. Then removing it breaks nothing. A table the writing depends on stays, even when the Example section shows the same example. A table that shows a different example stays.
-	  - After the implementation there is a short checklist, one line per guide, so the owner can check every guide by hand: which example the section shows, and which table was removed, if any. Nothing is released without the owner's approval of that checklist.
-	- The Example section is a heading "Example" at the guide's section level and the live example block, nothing else.
-	- The example's toolbar names the example in its left slot. One example: the example page title followed by the arrow-up-right icon, together the link to the example page. Several examples: the example picker (arrows and dropdown) listing only this guide's examples; it swaps the table in place without changing the URL, and an "Open example page" button beside it follows the selection.
-	- On guide pages the toolbar stays on one row: the name truncates, and Storybook and Copy prompt show only their icons when the column is narrow. Example pages are unchanged.
-	- Guide sections are h2 and their sub-sections h3; every guide heading moves up one level.
-	- Guide text is not reworded (LQ26).
-	- An example shown twice on one page must not repeat its element id.
-	- Owner accepted on the preview 2026-11-16: pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
-	- Source: LQ22, LQ27, LQ28
-	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #E14 #R5
-	- Replaces L12, L19, L20, L21.
-	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
-	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
-	- Text: the docs page owns the details, the Try it steps and the related guides (L27). A story's description carries a link to its docs page and nothing more. No Storybook toolbar addon is built.
-	- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source. How the docs mount a story for each base is settled in the plan.
-	- Story pages that have no text yet start with the table and the Storybook button; their text is written in the docs and goes through the owner's wording review (LQ26).
-	- Test stories: a story that shows the same table as another and only adds an automated check is not listed on its own; its check moves onto the story it copies and the copy is deleted. First case: "Renders Rows" in the Basic stories, a copy of "Default". A test story with its own different table stays listed like any other story; none is hidden or sorted by hand.
-	- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs, as a whole; no story is moved out of it. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
-	- Every story group name is Title Case with spaces and without the word "Examples" ("sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "Aggregation Examples" "Aggregation"); the misspelt "click-propogation" becomes "Click Propagation". The change is made in the story files, so Storybook and the docs follow together, and the docs links to stories are regenerated in the same change. No two groups in one folder end up with the same name.
-	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
-	- Source: LQ20
-	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
-- [ ] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
-	- Replaces L17, L18.
-	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
-	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
-	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
-	- Source: LQ1, LQ6
-	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [ ] **D123** Storybook is upgraded to the latest stable version, as planned work with a baseline #E15 #R6
+	- Storybook and every `@storybook/*` package move to the latest stable release at the time the work runs. On 2026-11-17 that is 10.6.7; installed is 10.6.2. A beta or release candidate is not a target.
+	- It is planned work, a spec in an epic, not a hotfix. The hotfix started on 2026-11-17 (branch `v0.9/storybook-upgrade`) was stopped by the owner and is not merged.
+	- Baseline before any change: the story tests on base, radix and aria, the three static builds, the story pages the docs mount, and screenshots of a fixed set of stories.
+	- Audit: every Storybook package, addon and config the project uses is checked against what the target version expects: the three-base scripts, `storybook-dark-mode`, the vitest setup, `composeStories` in the docs app, the deployed builds.
+	- The upgrade is one install on its own branch. `pnpm ls storybook` shows one version in the package and in the docs app.
+	- Proof: tests, builds, screenshots and docs story pages compared with the baseline on all three bases, and the deployed Storybook checked on a preview.
+	- Known issues are listed with what is done about each, among them the `glob` vulnerability that comes in through `@storybook/react-vite` (Storybook issue 37409) and the peer range of `storybook-dark-mode`.
+	- Owner recorded 2026-11-18.
+	- Source: Q112
+- [ ] **D128** A pinned row stays in view while virtualized rows scroll #E15 #R6
+	- With row virtualization on and sticky row pinning, a pinned row stays stuck at the top or the bottom of the table body while the other rows scroll under it, as it does without virtualization.
+	- Today a virtual row is always placed by position and the sticky rule applies only when the row is not virtual (`body/ST_TableBodyRow.tsx:228-262`), so a pinned row scrolls away. Base, radix and aria alike.
+	- This goes beyond MRT, where a pinned virtual row does not stick either (`MRT_TableBodyRow.tsx:181-218`).
+	- Holds for several pinned rows at the top and at the bottom, with a sticky header, and with rows that leave the rendered range while pinned.
+	- Proof: the story `features-row-pinning--row-pinning-sticky-with-virtualization` on the three bases; pin a row, scroll to the end, the row is still in view. Its docs page text follows the working behaviour.
+	- Owner tested the story locally and recorded 2026-11-18.
+	- Source: Q106
 
 ## Done
 
@@ -699,6 +601,300 @@ kanban-plugin: basic
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
 	- Recorded in `process.md` P4. Owner, 2026-11-14: "If I ask it to hold, then it should hold. Otherwise if I explicitly say yes or during the plan that release is part of it, then yes.", "record it".
 	- Source: Q89
+- [x] **D101** Top of the page: sections Get Started, Examples, Guides, API in a tab row under the top bar #E14 #R5
+	- Replaces L1, L7, L10, L23.
+	- The docs have four sections, in this order: Get Started, Examples, Guides, API. The order applies wherever the sections are listed: the tab row, the home page menu, the footer.
+	- The first section is labelled "Get Started", not "Docs". Its pages are the getting-started pages (introduction, install, usage, agents, comparison) and its URLs already say `/docs/getting-started/`. The breadcrumb root "Docs" and the footer column head "Docs" stay; they name the whole docs area.
+	- The section tabs form a row directly under the top bar on every docs page, left aligned with the brand: mono, uppercase, letter-spaced, muted; the active tab in the accent colour with a 2px underline. The space inside a label is tighter than the gap between tabs, so "GET STARTED" reads as one tab. A dashed rule runs below the row; there is no line between the top bar and the row. Top bar and row stay in place together when the page scrolls.
+	- The row starts with the sidebar's hide and show button (L25), close to the first tab, with no divider. On the mobile layout the button is not shown and the row scrolls sideways when the tabs do not fit.
+	- The top bar holds the brand on the left, the search box in the centre (from the `lg` width up; an icon in the right group below it), then GitHub, Discord, the base selector and the theme toggle on the right.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ9, LQ15, LQ18
+	- Source: docs-layout L24 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D102** The sidebar, in every section: one list per section, flush groups, sticky labels, hide and resize #E14 #R5
+	- Replaces L8, L9, and the general parts of L22.
+	- Each section has its own sidebar: on an Examples page it lists only the examples, on a Guides page only the guides. Guides and API open with an Overview row; Examples has none (L26). The prev/next footer still crosses from one section into the next, in the section order of L24.
+	- No heading row with the section's name at the top of the list; the active tab names the section.
+	- Group labels and their pages share one left edge: no indent, no guide line. Labels are small, mono, uppercase and muted.
+	- Groups never collapse. The one exception is "More examples" in the Examples sidebar (L26).
+	- Sticky group labels: while the sidebar scrolls, the label of the group in view sticks at the top with a dashed line below it and no fade; the next group's label pushes it out. Only one label shows at a time.
+	- Hide and show: the button at the start of the tab row hides the whole sidebar and brings it back. Its icon carries an arrow pointing left when the sidebar is open and right when it is hidden; the tooltip reads "Hide sidebar" or "Show sidebar". The sidebar slides in about 200 ms and the content follows; no animation on reload, while resizing, or for visitors who ask for reduced motion. The state survives a reload.
+	- Resize: dragging the sidebar's right edge changes its width between 220 and 480 px; a double click resets it; arrow keys work; the width survives a reload.
+	- The header's text links never show as rows in the sidebar, at any width; the tab row replaces them, also on the mobile layout.
+	- Guides and API: their labels, groups and order stay as they are today.
+	- Owner accepted on the preview 2026-11-17.
+	- Source: LQ16, LQ17, LQ7, LQ25
+	- Source: docs-layout L25 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D103** The Examples sidebar: Featured first, groups by demand, numbered rows, stories under "More examples" #E14 #R5
+	- Replaces L13 and the Examples parts of L22. The long scrolling examples page (old L2 to L6) is not built; it never reached the live site.
+	- The Examples section has no overview page. `/docs/examples` and the Examples tab open the first example in the list, Basic, through a permanent redirect, so a table shows without a click.
+	- Regrouping moves no page: titles, URLs, descriptions and text of the 42 example pages stay as they are (LQ29 covers titles and URLs).
+	- Groups, in this order, labels without the word "Examples":
+	  - Featured: Basic (`basic`), Server-Side Pagination (`react-query`), Inline Editing (`editing-crud-inline-row`), Virtualization (`virtualized`), Advanced (`advanced`). A filter example is not featured, because the basic table already filters.
+	  - Filtering: `filter-variants`, `faceted-values`, `filter-switching`, `popover-filters`, `subheader-filters`, `custom-filter-ui`.
+	  - Server Data: `remote`, `dynamic-columns`, `lazy-detail-panel`, `lazy-sub-rows`.
+	  - Pinning: `sticky-header`, `column-pinning`, `sticky-row-pinning`, `static-row-pinning`, `sticky-row-selection`.
+	  - Virtualization: `row-virtualization`, `column-virtualization`, `infinite-scrolling`.
+	  - Editing: `editing-crud`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`.
+	  - Grouping: `column-grouping`, `customized-grouping`, `aggregation-and-grouping`.
+	  - Expanding: `expanding-tree`, `expanding-tree-flat-parse`, `detail-panel`, `chart-detail-panel`.
+	  - Drag and Drop: `column-ordering`, `row-ordering`, `row-dragging`.
+	  - Export: `export-csv`, `export-pdf`.
+	  - Customization: `minimal`, `custom-headless`, `persistent-view`.
+	  - More examples: every Storybook group as a labelled sub-group, with its stories as rows (L29).
+	- Row labels: the Featured rows use the names above; every other row is the page title without the word "Example". The short label shows only in the sidebar; page heading, browser title, breadcrumb, prev/next and the example picker keep the page title.
+	- Numbers, Examples only: every row starts with its running number and a dot ("1. Basic", "12. Popover Filters"), counted through the whole section in sidebar order, the "More examples" rows included, no leading zeros. Every group label ends with its row count in brackets ("Featured (5)", "More examples (652)"). The numbers are computed from the order, never typed into a page, and show in the sidebar only.
+	- "More examples" is the only group that collapses. It starts closed, opens when the current page is inside it, and otherwise stays as the visitor left it. Its sub-group labels do not collapse.
+	- Why this order and these names: `featured-examples-research.md`, `example-demand-audit.md`. Old against new position of every page: `sidebar-regroup-checklist.md`.
+	- Owner accepted on the preview 2026-11-17: the real Examples section, and "More examples" with the numbers and counts in the EX B demo.
+	- Source: LQ8, LQ10
+	- Source: docs-layout L26 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D104** Example pages: "Try it" steps above the table, "Related guides" below, existing text unchanged #E14 #R5
+	- Replaces L14.
+	- Page order: title and description (unchanged); the page's existing body text, word for word; "Try it"; the live example; "Related guides".
+	- Try it: an h3 heading, then 2 to 4 steps in the `TryIt` component: one short line each, an action and a few words of result, small muted text, directly above the live example. On-screen labels and typed values are inline code, with the exact label the table shows (for example `Sort by First Name ascending`).
+	- Every step is true to the example's code and data in all three bases. Where the page text does not explain a behaviour the visitor will hit, the step carries the reason in a few words (detail panel: "these rows have no address").
+	- Related guides: an h2 heading and a list of links to the guide pages for the feature, below the example; every link resolves.
+	- The "View Extra Storybook Examples" line is removed from the page; the toolbar Storybook button replaces it.
+	- Text check: every Try it step and every Related guides line is verified before it ships, against four criteria. Wording: it reads right and uses the exact on-screen labels. No slop: no filler, nothing that could be deleted without loss. No unnecessary jargon: plain words where a plain word exists. Simple and short enough: one short line per step, 2 to 4 steps. A text that fails one criterion is rewritten, not shipped.
+	- Not part of this decision: rewording titles, descriptions or body text (LQ26, LQ29).
+	- Owner accepted on the preview 2026-11-16: pages `basic-new-format-2`, `detail-panel-new-format-2`, `row-dragging-new-format-2`.
+	- Source: LQ21, LQ23, LQ24
+	- Source: docs-layout L27 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D105** Guide pages: an "Example" section under the intro with the best example; the guide's text unchanged #E14 #R5
+	- Replaces L15.
+	- Page order: title, description and intro paragraph (unchanged); the "Example" section; the rest of the guide (unchanged text, same order).
+	- The rules, in the owner's words of 2026-11-17:
+	  - Every guide gets an Example section. No guide is left without one.
+	  - The example in it is the best one for that guide.
+	  - A table that was already in the guide is removed only when both hold: the same example is now shown in the Example section, and the table is not part of the guide's story or writing. Then removing it breaks nothing. A table the writing depends on stays, even when the Example section shows the same example. A table that shows a different example stays.
+	  - After the implementation there is a short checklist, one line per guide, so the owner can check every guide by hand: which example the section shows, and which table was removed, if any. Nothing is released without the owner's approval of that checklist.
+	- The Example section is a heading "Example" at the guide's section level and the live example block, nothing else.
+	- The example's toolbar names the example in its left slot. One example: the example page title followed by the arrow-up-right icon, together the link to the example page. Several examples: the example picker (arrows and dropdown) listing only this guide's examples; it swaps the table in place without changing the URL, and an "Open example page" button beside it follows the selection.
+	- On guide pages the toolbar stays on one row: the name truncates, and Storybook and Copy prompt show only their icons when the column is narrow. Example pages are unchanged.
+	- Guide sections are h2 and their sub-sections h3; every guide heading moves up one level.
+	- Guide text is not reworded (LQ26).
+	- An example shown twice on one page must not repeat its element id.
+	- Owner accepted on the preview 2026-11-16: pages `column-pinning-new-format-3` and `virtualization-new-format-3`.
+	- Source: LQ22, LQ27, LQ28
+	- Source: docs-layout L28 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D106** Storybook and docs match one to one: every story is a docs page, the docs page owns the text #E14 #R5
+	- Replaces L12, L19, L20, L21.
+	- Every Storybook story is also an example page in the docs. The docs list follows Storybook: its groups and its stories, with the same names and order, under "More examples" in the Examples sidebar (L26). One story is one row and one page. This replaces the earlier wording "one page per story file, its stories as tabs".
+	- Pairing: an audit lists every docs example with its story in a markdown file, in three lists: exact pair (same table), close pair (same feature, different table), no partner. After the audit every docs example has an exact story: the existing story where it already matches, otherwise a new story built from the example. No "closest story" links remain; the toolbar Storybook button always opens the same table.
+	- Text: the docs page owns the details, the Try it steps and the related guides (L27). A story's description carries a link to its docs page and nothing more. No Storybook toolbar addon is built.
+	- The docs page shows the story itself; story code is not copied into the docs examples. The code tab shows the story's source. How the docs mount a story for each base is settled in the plan.
+	- Story pages that have no text yet start with the table and the Storybook button; their text is written in the docs and goes through the owner's wording review (LQ26).
+	- Test stories: a story that shows the same table as another and only adds an automated check is not listed on its own; its check moves onto the story it copies and the copy is deleted. First case: "Renders Rows" in the Basic stories, a copy of "Default". A test story with its own different table stays listed like any other story; none is hidden or sorted by hand.
+	- The Storybook folder "Fixed Bugs" is renamed "Miscellaneous", in Storybook and in the docs, as a whole; no story is moved out of it. It is kept for completeness and easy upkeep, not as a group visitors are expected to browse.
+	- Every story group name is Title Case with spaces and without the word "Examples" ("sticky-footer" becomes "Sticky Footer", "useEffects" "Use Effects", "Aggregation Examples" "Aggregation"); the misspelt "click-propogation" becomes "Click Propagation". The change is made in the story files, so Storybook and the docs follow together, and the docs links to stories are regenerated in the same change. No two groups in one folder end up with the same name.
+	- Owner accepted 2026-11-16 and 2026-11-17; the list and the names as in the EX B demo on the preview.
+	- Source: LQ20
+	- Source: docs-layout L29 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D107** Two small fixes: the footer's Storybook link follows the selected base; the last rounded boxes go square #E14 #R5
+	- Replaces L17, L18.
+	- The Storybook link in the home page footer opens the Storybook of the selected base. Today it always opens the Radix one.
+	- The last rounded frames in the docs content get square corners, matching the square dashed style of the rest: the tab frames and panels, the code tab frames, the code block copy chip, the agent bar, and inline code in the prop tables. The table frame itself and the scroll controls stay rounded on purpose.
+	- Settled by the lead 2026-11-16, confirmed by the owner 2026-11-17.
+	- Source: LQ1, LQ6
+	- Source: docs-layout L30 (`reference/docs-layout/decisions.md`), accepted by the owner 2026-11-17; text copied unchanged.
+- [x] **D108** Every reorder drag works by touch on phones and tablets #E15 #R5
+	- Supersedes the line "touch screens have no drag (unchanged)" of v0.8.x D37.
+	- Every drag that reorders works with a finger as it does with a mouse, on all five surfaces: column reorder (grip and header), row reorder, the show/hide columns menu, the sort rules in the sort popover, and the grouping drop zone.
+	- It works the same on all three bases (Base UI, Radix, React Aria).
+	- Dragging a grip by touch does not scroll the page; a touch outside a grip scrolls as before.
+	- Mouse dragging, column resize and the range slider stay as they are today.
+	- Today: reorder uses HTML5 drag and drop only, with no touch or pointer handlers; in phone emulation column reorder starts but the order never changes and row reorder never starts.
+	- Proof: each of the five drags has an automated touch check per base, and one check on a real phone or tablet before the release that carries it.
+	- Owner picked option 1 of Q90, 2026-11-17.
+	- Source: Q90
+- [x] **D109** E14 builds on its own branch so patch releases keep going #E15 #R5
+	- Every E14 milestone branch is created from `origin/v0.9/docs-layout` and merges into `v0.9/docs-layout`, never into `claude/review`. The branch is created from `origin/claude/review` on 2026-11-17.
+	- `claude/review` stays free for patch releases (date filter fixes, touch dragging); nothing of E14's code or content reaches it, `dev` or `master` during the run.
+	- `v0.9/docs-layout` merges into `claude/review` only on the owner's explicit word, after the owner's reviews (the guide checklist of D105, the Try it texts of D104, the story texts of D106). It lands as one merge.
+	- After each patch release `claude/review` is merged into `v0.9/docs-layout`, so the branch stays close.
+	- Plan files, trackers, the grid and decisions stay on `claude/review` as before.
+	- Why the whole epic: the sidebar, tab row and page formats are also not released yet, and without the texts `claude/review` would carry about 650 story pages with no text.
+	- Owner recorded 2026-11-17.
+- [x] **D110** All 59 copied stories merge into the story they copy #R6
+	- Settled by the lead: D106's rule applied as written (a copy whose copied story has no check of its own merges; its check moves onto the story it copies).
+	- The audit of E14 (`reference/docs-layout/story-pairing-audit.md`, list 4) found 59 such copies in 59 same-table groups, not the 2 the plan assumed: 54 move a play, 5 had none; 12 stories now carry two or more plays.
+	- Kept as built in E14.
+	- Source: Q92
+- [x] **D111** Each of the 42 docs examples gets a new exact story #R6
+	- Settled by the lead: D106 as written (every docs example has an exact story; a new story built from the example where none matches).
+	- The audit found exact 0, close 34, no partner 8, so all 42 examples get a new story. Story pages under More examples: 593.
+	- Kept as built in E14.
+	- Source: Q93
+- [x] **D112** Story group names with no example in D106 follow its Title Case rule #R6
+	- Settled by the lead: D106's naming rule (Title Case with spaces) applied where D106 gives no example.
+	- 'AppBar overlaps with Fullscreen Modal' is 'App Bar Overlaps With Full Screen Modal'; 'Click to Copy' is 'Click To Copy'; 'RTL' and 'Custom Filter Fns' stay.
+	- Kept as built in E14.
+	- Source: Q95
+- [x] **D113** An example shown twice on a page has different ids in the served HTML too #E15 #R6
+	- Settled by the lead: D105 says an example shown twice on one page must not repeat its element id.
+	- Today the second mount gets its own id only after the page has loaded; the served HTML of a guide with the same example twice carries the id twice (`components/example-playground.tsx`, `useExampleId`).
+	- Fix: the ids differ in the served HTML. Check: `curl` of a production build of such a guide page shows no repeated example id.
+	- Source: Q94
+- [x] **D114** The column pinning example locks the ID column with the option that works #E15 #R6
+	- Settled by the lead: the example's comment says the ID column cannot be pinned, but it sets `enableColumnPinning: false` on the column, an option that does nothing; the column option is `enablePinning`.
+	- Fix: `enablePinning: false` on the ID column in `examples/{base,radix,aria}/enable-column-pinning`, and in its exact story. No page text changes.
+	- Source: Q98
+- [x] **D115** The chart detail panel and editing stories match their examples exactly #E15 #R6
+	- Settled by the lead: D106 says the story is the same table as the example.
+	- Today the chart detail panel story draws its lines in inline SVG (the example uses recharts) and the five editing CRUD stories confirm a delete in an inline box (the examples open a modal dialog).
+	- Fix: recharts and an alert dialog are added to the package's story setup only, as development dependencies and story-only files; nothing is added to what the registry ships. The six stories then match their examples.
+	- Source: Q99
+- [x] **D116** Story pages no longer triple the size of the docs build #E15 #R6
+	- Settled by the lead: a build problem, not an owner item.
+	- Measured in E14: the docs build output grew from 644 MB to 1.9 GB; 1.0 GB of it is the HTML and RSC of the 594 story pages, each carrying the Examples sidebar of 636 rows.
+	- Fix: the build output returns close to its size before the story pages. What the visitor sees in the sidebar stays as D102 and D103 say; the mechanism is settled in the spec.
+	- Source: Q101
+- [x] **D117** The guide Example section sits right after the first intro paragraph #E15 #R6
+	- Settled by the lead: D105's page order (title, description and intro paragraph; the Example section; the rest) and the accepted preview page `virtualization-new-format-3`.
+	- Today the section sits before each guide's first own heading, so on 16 guides a note or further intro blocks stand above it.
+	- Fix: the section follows the first intro paragraph on every guide; notes and further intro blocks come after it. On `production-ready-tables` this also puts the guide's own table back as the nearest one above 'Open the Code view above'. No guide text is reworded.
+	- Source: Q105
+- [x] **D118** The Basic page's Try it steps name the real menu label and add a column filtering step #E15 #R6
+	- Changes the Try it text of `content/docs/examples/basic.mdx` that the owner accepted on `basic-new-format-2` (D104).
+	- The steps, four in all:
+	-   1. Click `First Name` and choose `Sort ascending`. The rows reorder.
+	-   2. Try column filtering: click `Filter`, choose `State` and type `Nebraska`. Two rows remain.
+	-   3. Remove the filter. All five rows return.
+	-   4. Open search and type `Ohio`. One row remains.
+	- Step 1 names `Sort ascending`, the label the column menu shows, not `Sort by First Name ascending`.
+	- Step 2 carries the words "column filtering": the Basic page is where a visitor looking for column filtering lands, because D103 leaves a filter example out of Featured.
+	- The labels inside the filter popup are checked by the D104 text check on all three bases; a label that differs on screen is corrected to the on-screen one, the four steps and the words "column filtering" stay.
+	- Owner recorded 2026-11-17.
+	- Source: Q96
+- [x] **D119** Three example pages get a title and address that match their sidebar name #E15 #R6
+	- Replaces, for these three pages only, D103's lines "Regrouping moves no page: titles, URLs ... stay as they are" and "page heading, browser title, breadcrumb, prev/next and the example picker keep the page title". Closes the title and URL part of docs-layout LQ29 for them.
+	- Rule: an example page's title is its sidebar name plus " Example". "Basic" with "Basic Example" is right. 39 of the 42 pages already follow it and do not change.
+	- The three that change:
+	-   - `react-query`: title "React Query Example" becomes "Server-Side Pagination Example"; address `/docs/examples/server-side-pagination`.
+	-   - `editing-crud-inline-row`: "Editing CRUD Inline Row Example" becomes "Inline Editing Example"; address `/docs/examples/inline-editing`.
+	-   - `virtualized`: "Virtualized Example" becomes "Virtualization Example"; address `/docs/examples/virtualization`.
+	- The title drives the heading, browser title, breadcrumb, prev/next and the example picker; all follow.
+	- Each old address redirects permanently to the new one. Every docs link to the three follows; a link text that names the old title gets the new title, and nothing else is reworded.
+	- Six pages whose title follows the rule but whose address is shorter than the name stay as they are: `column-ordering`, `row-ordering`, `expanding-tree-flat-parse`, `export-csv`, `export-pdf`, `remote`.
+	- Descriptions and body text are not touched (docs-layout LQ26).
+	- Owner recorded 2026-11-17.
+	- Source: Q108
+- [x] **D120** The Sticky header switch in View settings wins over the enableStickyHeader option #E15 #R6
+	- `enableStickyHeader` sets how the table starts: with `true` the header is sticky and the `Sticky header` switch in `View settings` shows on.
+	- The visitor's switch then decides: off unsticks the header, on sticks it, whatever the option says.
+	- Full screen still forces the sticky header on, as today.
+	- Today every sticky check joins the option and the switch with "or", so the option always wins and the switch shows off while the header stays stuck: `ST_TableHead.tsx:72`, `ST_TableHeadCell.tsx:183`, `ST_TableBodyRow.tsx:181`, `ST_TableBody.tsx:154`, `ST_TableContainer.tsx:152`.
+	- All three bases alike. MRT has no such switch.
+	- Owner recorded 2026-11-17.
+	- Source: Q97
+- [x] **D121** A wrong address on the docs site shows our own 404 page #E15 #R6
+	- A missing address on the docs site shows a 404 page of our own inside the site frame: top bar, footer, theme and base selector, in the mono dashed style of the rest of the site.
+	- The page holds three things: the line "404" with "This page does not exist", the docs search box, and links to the four sections in the order of D101: Get Started, Examples, Guides, API.
+	- It works in light and dark and on the mobile layout, and answers with the HTTP status 404.
+	- Today `apps/shadcn-table-docs/app` has no `not-found` file, so the framework's default page shows.
+	- Not part of this: a "Did you mean" suggestion.
+	- Owner recorded 2026-11-17.
+	- Source: Q110
+- [x] **D122** A guide shows each table once, on top, and the removed table's explainer line moves up with it #E15 #R6
+	- From the owner's review of `reference/docs-layout/guide-checklist.md` (all 46 guides ticked, five with a remark and a screenshot). The other 41 guides keep the example they show.
+	- Changes two lines of D105. "A table the writing depends on stays, even when the Example section shows the same example": a guide no longer shows the same table twice; the copy further down is removed with its heading. "The Example section is a heading and the live example block, nothing else": when the removed table had an explainer line, that line moves into the Example section, between the heading and the table, word for word. A removed table without such a line adds none.
+	- Building Production-Ready Tables: one table on top. Line: "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`." The table kept is the one this sentence is true for.
+	- Async Loading: the React Query table shows once, on top. Line: "Here is a copy of the full [React Query](/docs/examples/react-query) example." The heading "Full Loading and Server-Side Logic Example" goes with the removed table. The loading and linear progress tables stay.
+	- Pagination: the Remote Data table shows once, on top. Line: "Here is the full Remote Data example showing off server-side filtering, **pagination**, and sorting." The alternate pagination table stays.
+	- Scroll Cues: one table on top. Line: "Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow."
+	- Click to Copy: the Example section shows the guide's own Click to Copy example (First Name, Last Name, Email, City), not Advanced, with its own page so the name links (D106). Every cell copies: the example sets `enableClickToCopy: true` for the whole table instead of on Email and City only; the library is not changed. The example at the end of the guide is removed.
+	- Sorting and Global Filtering keep their Remote Data table at the end; their Example section shows Basic, so nothing shows twice.
+	- Owner recorded 2026-11-18.
+	- Source: Q100
+- [x] **D124** The first line above each Storybook story reads View documentation for this example #E15 #R6
+	- The three lines above every story, in this order:
+	-   1. View documentation for this example
+	-   2. These stories render shadcn-table on React Aria. The other bases: Base UI, Radix UI.
+	-   3. View Source code for these examples in the code tab below or here on GitHub.
+	- Line 1 is new wording: the whole line is a link to the story's docs page (D106); no address is shown. Before: "This story on the docs site: shadcn-table.com/docs/examples/..." (`packages/shadcn-table/.storybook/preview.tsx:164-173`).
+	- Lines 2 and 3 stay as built: the base name follows the Storybook the visitor is in, the other two bases and "here on GitHub." are links.
+	- Owner's wording, recorded 2026-11-18.
+	- Source: Q102
+- [x] **D125** Ticking a parent row ticks its sub-rows #E15 #R6
+	- Settled by the lead: a bug with one right behaviour, the one MRT has.
+	- Today ticking a parent leaves its sub-rows unticked: `shared/utils/row.utils.ts:168-182` toggles the row, then reads `row.getIsAllSubRowsSelected()`, which the v9 store already reports as true, and unticks them all. Base, radix and aria alike.
+	- Fix: ticking a parent ticks all its sub-rows; unticking it unticks them; ticking the last unticked sub-row ticks the parent. A check per base.
+	- The Try it text of the story page `features-sub-row-tree--sub-row-tree-with-selection` was written to match the bug; it is corrected with the fix and stays in the owner's wording review.
+	- Source: Q103
+- [x] **D126** A column's resize grip can be dragged across its whole width #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the right half of the grip is covered by the next header cell: the handle sits half over the next cell (`head/ST_TableHeadCellResizeHandle.tsx:60-62`) and cannot rise above it, because every head cell is its own layer (`shared/utils/style.utils.ts:188-196`, `ST_TableHeadCell.tsx:296`). Base, radix and aria alike.
+	- Fix: a drag starts from anywhere on the grip, also on pinned and sticky headers. A check per base that drags from the grip's right half.
+	- Source: Q104
+- [x] **D127** The Click to copy button fits its cell and shows its own tooltip #E15 #R6
+	- Settled by the lead: a bug with one right behaviour.
+	- Today the copy button cannot shrink (`buttons/ST_CopyButton.tsx:16,74-80`), so in a narrow cell it overflows its truncating span (`ST_OverflowText`); on React Aria a hover then opens the cell's overflow tooltip instead of "Click to copy". The overflow is in base, radix and aria.
+	- Fix: the button stays inside its cell and its text truncates; hovering it shows "Click to copy" on all three bases. A check per base on a narrow column with the pointer, not keyboard focus.
+	- Source: Q107
+- [x] **D129** The docs Storybook button opens the local Storybook under the dev server #R6
+	- Under the docs dev server the Storybook button links to the local Storybook: base `http://localhost:6007/`, radix `http://localhost:6006/`, aria `http://localhost:6008/`, with the same `?path=/story/<id>`. A production build keeps the deployed addresses `https://storybook.shadcn-table.com/{base,radix,aria}/`.
+	- Before, the three deployed addresses were fixed in `components/mdx/storybook-link.tsx`, so the button could not be checked locally.
+	- Built as a hotfix on `v0.9/docs-layout`, merge 675337f9, on the owner's instruction of 2026-11-17.
+	- Owner closed the card 2026-11-18.
+	- Source: Q109
+- [x] **D130** The Production-Ready Tables guide's own table becomes a story and shows on top #E15 #R6
+	- Completes D122 for this guide. The guide's own table (the server-side data table the guide builds, which calls `/api/users`) becomes a Storybook story and so a page under "More examples" (D106), with its text.
+	- The guide's Example section shows that story: the heading, the line "Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.", then the table, its name linking to the story page. The table shows once; the React Query table is no longer shown in this guide.
+	- The guide's later sections that point at this table ("Open the Code view above", the folder tree) stay word for word and stay true.
+	- The story behaves as the guide's table does: every page, sort, search and filter change sends one request. Inside Storybook the server is a stand-in that answers `/api/users`; how is settled in the build.
+	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
+	- Owner recorded 2026-11-18.
+	- Source: Q113
+- [x] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
+	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
+	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
+	- The story's own page under More examples keeps the story source in its Code tab, like every story page.
+	- The docs E2E check 'server-side-data: 5 files in the tree' stays and passes.
+	- Source: Q114
+- [x] **D132** A touch drag on a header starts after a short hold and a ghost copy follows the finger #R6
+	- Details D108 where it is silent; D108's five surfaces and three bases stand.
+	- A grip starts the drag at once.
+	- A header cell that is itself draggable, with no grip, starts the drag after the finger rests about 300 ms without moving; a swipe before that scrolls the table as today.
+	- While a touch drag is on, a ghost copy of the dragged column header, row, menu item or sort rule follows the finger, on all five surfaces. The dragged item keeps the same dragging style as with the mouse and the drop target is marked as with the mouse.
+	- The ghost is removed on drop and on cancel, does not take touches, and does not show on mouse drags, where the browser draws its own.
+	- Owner recorded 2026-11-18.
+	- Source: Q115
+- [x] **D133** The sidebar state script runs from the page head #R6
+	- Settled by the lead: an owner-reported bug with one right behaviour, already fixed.
+	- Opening the docs from the home page showed a script tag error in the console and lost the saved sidebar width (`app/docs/layout.tsx:22`).
+	- Fixed as a hotfix on `v0.9/docs-layout`, merge bb8eec7a: the script moved to the root layout head; a docs E2E check (home, client navigation, saved width 360px, no script tag error) failed before and passes now.
+	- Source: Q111
+- [x] **D134** Pinned virtual rows are sticky rows in their own grid track #R6
+	- Settled by the lead: a build deviation that keeps D128.
+	- Spec 61 described absolute rows with a clamped offset; built as `position: sticky` in a grid track of their own (`ST_TableBody.tsx:84`, new optional prop `stickyGridRow` on `ST_TableBodyRowProps`), because an absolute row placed from the scroll offset lags and jumps.
+	- Kept as built (ee1c2837 on `claude/review`): play green on three bases, 0 jumps in the scroll measurement. Spec 61 1.5 and 1.6.3 are read with this decision.
+	- Source: Q119
+- [x] **D135** The three renamed example pages rename the titles of their registry items too #R6
+	- Settled by the lead: follows D119. Registry item titles are generated from the page frontmatter (`tools/registry/examples.mjs:181`).
+	- The title lines of `example-react-query-*`, `example-editing-crud-row-*` and `example-virtualized-*` change on the three bases; item names and hosted paths do not (P7 holds).
+	- Kept; the regenerated `registry.json` is committed with spec 58.
+	- Source: Q120
+- [x] **D136** The docs build size limit is measured without the build cache #R6
+	- Settled by the lead: a build measure, not an owner item.
+	- Spec 59's 900 MB limit is measured on `.next` without `.next/cache` (the turbopack build cache, not served, 518 MB before the change too). Measured: 583 MB, below the 644 MB from before the story pages; the story pages went from 1166 MB to 245 MB.
+	- D116 is met. Spec 59 line 18 says so.
+	- Source: Q122
+- [x] **D137** The More examples rows come from one list bundled in the docs script #R6
+	- Settled by the lead: a build deviation that keeps D116 and D103.
+	- Spec 59 described rows fetched from a JSON route; built from the folder's `meta.json` bundled once (`lib/more-examples.ts`, `components/docs-tree-layout.tsx`), because the breadcrumb, the page switcher and the row numbers need the full tree on the server render.
+	- Kept: the HTML carries only the current row, and the build fails if the bundled rows differ from the page tree.
+	- Source: Q123
+- [x] **D138** Touch drag reuses the mouse drop handlers through marked drag events #R6
+	- Settled by the lead: a build deviation that keeps D108 and D132.
+	- Spec 62 described drop target marks; built so the touch path (`hooks/useST_TouchDrag.ts`) dispatches marked dragenter, dragleave, dragover and drop events to the element under the finger, with a stand-in `dataTransfer`, so the existing mouse handlers serve it and the body cell and row files are untouched.
+	- Kept as built (fcd6af8f on `claude/review`). Spec 62 1.4 and 1.6.2 are read with this decision.
+	- Source: Q124
+- [x] **D139** The two touch drag test stories stay and become docs pages #R6
+	- Settled by the lead: D106 says a test story with its own different table stays listed like any other story, and P11 needs a play that fails first for each fix.
+	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
+	- Spec 63's catch-up gives each its page under More examples and its text, which joins the owner's wording review.
+	- Source: Q125
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}

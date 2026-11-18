@@ -3,6 +3,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { isST_TouchDragEvent } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 
 /** Width of the hot zone at each inner edge of the unpinned area. */
 const ZONE_PX = 64;
@@ -16,7 +17,10 @@ const MAX_SPEED_PX = 20;
  * only while the pointer moves, so a frame loop keeps scrolling from the last
  * pointer position and, each scrolled frame, re-sends a `dragover` to the
  * element under the pointer so the drop target follows. It scrolls and
- * dispatches only; it never writes styles.
+ * dispatches only; it never writes styles. A touch drag feeds it the same
+ * `dragover` events. A `dragover` outside the container, such as on the
+ * toolbar drop zone, stops the loop; the next one over the table starts it
+ * again.
  */
 export const useST_DragAutoScroll = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
@@ -91,8 +95,12 @@ export const useST_DragAutoScroll = <TData extends ST_RowData>(
     };
 
     const handleDragOver = (event: DragEvent) => {
-      // The loop's own dragover would start a second loop.
-      if (!event.isTrusted || !table.atoms.draggingColumn.get()) return;
+      // The loop's own dragover would start a second loop; a touch drag's
+      // dragover carries the finger.
+      if (!event.isTrusted && !isST_TouchDragEvent(event)) return;
+      if (!box || !table.atoms.draggingColumn.get()) return;
+      // Off the table the last pointer position inside it is stale.
+      if (!box.contains(event.target as Node | null)) return stop();
       pointerX = event.clientX;
       pointerY = event.clientY;
       if (!frame && speed() !== 0) frame = requestAnimationFrame(step);
@@ -111,7 +119,7 @@ export const useST_DragAutoScroll = <TData extends ST_RowData>(
 
     const detach = () => {
       stop();
-      box?.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('dragover', handleDragOver, true);
       document.removeEventListener('dragleave', handleDragLeave);
       document.removeEventListener('dragend', stop);
       document.removeEventListener('drop', stop);
@@ -121,7 +129,7 @@ export const useST_DragAutoScroll = <TData extends ST_RowData>(
     const attach = () => {
       box = table.refs.tableContainerRef.current;
       if (!box) return;
-      box.addEventListener('dragover', handleDragOver);
+      document.addEventListener('dragover', handleDragOver, true);
       document.addEventListener('dragleave', handleDragLeave);
       document.addEventListener('dragend', stop);
       document.addEventListener('drop', stop);

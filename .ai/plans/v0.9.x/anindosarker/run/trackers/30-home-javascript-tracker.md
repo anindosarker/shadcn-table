@@ -1,6 +1,6 @@
 # 30: Home JavaScript, tracker
 
-Status: merged (5735b0ee)
+Status: done (5735b0ee)
 Branch `v0.9/home-javascript`, worktree `shadcn-react-table.worktrees/05`
 Checks:
 - `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at e5f078cd: pass

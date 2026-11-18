@@ -271,6 +271,45 @@ export const ColumnResizingWithPinning = () => (
   />
 );
 
+/**
+ * Starts a pointer drag on the right half of a column's resize grip, on
+ * whatever element is drawn there, and expects the column to grow.
+ */
+const dragGripRightHalf = async (
+  canvasElement: HTMLElement,
+  columnId: string,
+  dx: number,
+) => {
+  const th = canvasElement.querySelector<HTMLElement>(
+    `thead th[data-flip-column="${columnId}"]`,
+  )!;
+  const grip = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  grip.scrollIntoView({ block: 'nearest', inline: 'center' });
+  const before = widthOf(th);
+  const box = grip.getBoundingClientRect();
+  const point = {
+    clientX: box.left + box.width * 0.75,
+    clientY: box.top + box.height / 2,
+  };
+  const hit = document.elementFromPoint(point.clientX, point.clientY)!;
+  fireEvent.mouseDown(hit, point);
+  fireEvent.mouseMove(document, { ...point, clientX: point.clientX + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: point.clientX + dx });
+  await waitFor(() =>
+    expect(widthOf(th) - before, columnId).toBeGreaterThanOrEqual(dx / 2),
+  );
+};
+
+// A resize drag starts from anywhere on the grip, its right half included,
+// on a pinned and on an unpinned column (D126).
+ColumnResizingWithPinning.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /First Name/,
+  });
+  await dragGripRightHalf(canvasElement, 'firstName', 60);
+  await dragGripRightHalf(canvasElement, 'address', 60);
+};
+
 export const ColumnResizingWithHeaderGroups = () => (
   <ShadcnTable
     columns={[
