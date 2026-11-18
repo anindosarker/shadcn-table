@@ -414,50 +414,108 @@ const highlightsIn = (started: Started, element: Element) =>
       animation.keyframes.some((keyframe) => keyframe.boxShadow !== undefined),
   );
 
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () =>
+  (
+    globalThis as { __stRemountStory?: () => Promise<void> }
+  ).__stRemountStory?.();
+
+const dropSlidesRowsPlay = async ({ canvasElement }: StoryContext) => {
+  const { result: movedRow, started } = await recordAnimations(() =>
+    dragFirstRowTwoDown(canvasElement),
+  );
+  expect(slidesOn(started, movedRow).length).toBeGreaterThan(0);
+  expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
+  expect(slidesOn(started, bodyRows(canvasElement)[0]).length).toBe(1);
+  // Rows past the new index keep their place.
+  expect(slidesOn(started, bodyRows(canvasElement)[5]).length).toBe(0);
+};
+
+// Reduced motion: the rows do not slide, the highlight stays (D57).
+const dropNoSlideReducedMotionPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const matchMedia = window.matchMedia;
+  // The library reads the preference through matchMedia.
+  window.matchMedia = (query: string) =>
+    query.includes('prefers-reduced-motion')
+      ? ({
+          addEventListener: () => {},
+          addListener: () => {},
+          dispatchEvent: () => false,
+          matches: true,
+          media: query,
+          onchange: null,
+          removeEventListener: () => {},
+          removeListener: () => {},
+        } as MediaQueryList)
+      : matchMedia.call(window, query);
+  try {
+    const { result: movedRow, started } = await recordAnimations(() =>
+      dragFirstRowTwoDown(canvasElement),
+    );
+    expect(slidesOn(started, movedRow).length).toBe(0);
+    expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
+  } finally {
+    window.matchMedia = matchMedia;
+  }
+};
+
+/**
+ * Dragging the first row's grip onto the third row moves it there, with the
+ * mouse and by touch.
+ */
+const dragReordersRowsPlay = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
+  const before = bodyRows(canvasElement).map(rowNum);
+  // A mouse drag draws no ghost at any moment of the drag.
+  const ghosts: Element[] = [];
+  const observer = new MutationObserver((records) =>
+    records.forEach((record) =>
+      record.addedNodes.forEach((node) => {
+        if (node instanceof Element && node.matches('[data-st-touch-ghost]')) {
+          ghosts.push(node);
+        }
+      }),
+    ),
+  );
+  observer.observe(document.body, { childList: true });
+  await dragFirstRowTwoDown(canvasElement);
+  observer.disconnect();
+  expect(ghosts).toEqual([]);
+  const moved = [before[1], before[2], before[0], ...before.slice(3)];
+  await waitFor(() =>
+    expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
+  );
+
+  // Touch: the grip drags at once, back and then as the mouse moved it.
+  await touchDragRow({ canvasElement, from: 2, to: 0 });
+  await waitFor(() =>
+    expect(bodyRows(canvasElement).map(rowNum)).toEqual(before),
+  );
+  await touchDragRow({ canvasElement, from: 0, to: 2 });
+  await waitFor(() =>
+    expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
+  );
+};
+
 // A row drop slides the rows between the old and the new index into place
 // and the moved row flashes the drop highlight (D57).
 export const DropSlidesRows = {
   render: () => <SlideTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const { result: movedRow, started } = await recordAnimations(() =>
-      dragFirstRowTwoDown(canvasElement),
+  play: async (context: StoryContext) => {
+    await context.step('Drop Slides Rows', () => dropSlidesRowsPlay(context));
+    await remountStory();
+    await context.step('Drop No Slide Reduced Motion', () =>
+      dropNoSlideReducedMotionPlay(context),
     );
-    expect(slidesOn(started, movedRow).length).toBeGreaterThan(0);
-    expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
-    expect(slidesOn(started, bodyRows(canvasElement)[0]).length).toBe(1);
-    // Rows past the new index keep their place.
-    expect(slidesOn(started, bodyRows(canvasElement)[5]).length).toBe(0);
-  },
-};
-
-// Reduced motion: the rows do not slide, the highlight stays (D57).
-export const DropNoSlideReducedMotion = {
-  render: () => <SlideTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const matchMedia = window.matchMedia;
-    // The library reads the preference through matchMedia.
-    window.matchMedia = (query: string) =>
-      query.includes('prefers-reduced-motion')
-        ? ({
-            addEventListener: () => {},
-            addListener: () => {},
-            dispatchEvent: () => false,
-            matches: true,
-            media: query,
-            onchange: null,
-            removeEventListener: () => {},
-            removeListener: () => {},
-          } as MediaQueryList)
-        : matchMedia.call(window, query);
-    try {
-      const { result: movedRow, started } = await recordAnimations(() =>
-        dragFirstRowTwoDown(canvasElement),
-      );
-      expect(slidesOn(started, movedRow).length).toBe(0);
-      expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
-    } finally {
-      window.matchMedia = matchMedia;
-    }
+    await remountStory();
+    await context.step('Drag Reorders Rows', () =>
+      dragReordersRowsPlay(context),
+    );
   },
 };
 
@@ -531,50 +589,6 @@ const touchDragRow = async ({
   await pause(50);
   touch({ at: end, element: grip, type: 'pointerup' });
   await waitFor(() => expect(ghost()).toBeNull());
-};
-
-/**
- * Dragging the first row's grip onto the third row moves it there, with the
- * mouse and by touch.
- */
-export const DragReordersRows = {
-  render: () => <SlideTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
-    const before = bodyRows(canvasElement).map(rowNum);
-    // A mouse drag draws no ghost at any moment of the drag.
-    const ghosts: Element[] = [];
-    const observer = new MutationObserver((records) =>
-      records.forEach((record) =>
-        record.addedNodes.forEach((node) => {
-          if (
-            node instanceof Element &&
-            node.matches('[data-st-touch-ghost]')
-          ) {
-            ghosts.push(node);
-          }
-        }),
-      ),
-    );
-    observer.observe(document.body, { childList: true });
-    await dragFirstRowTwoDown(canvasElement);
-    observer.disconnect();
-    expect(ghosts).toEqual([]);
-    const moved = [before[1], before[2], before[0], ...before.slice(3)];
-    await waitFor(() =>
-      expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
-    );
-
-    // Touch: the grip drags at once, back and then as the mouse moved it.
-    await touchDragRow({ canvasElement, from: 2, to: 0 });
-    await waitFor(() =>
-      expect(bodyRows(canvasElement).map(rowNum)).toEqual(before),
-    );
-    await touchDragRow({ canvasElement, from: 0, to: 2 });
-    await waitFor(() =>
-      expect(bodyRows(canvasElement).map(rowNum)).toEqual(moved),
-    );
-  },
 };
 
 type DndPerson = {

@@ -373,27 +373,43 @@ const expectHeldUntilRelease = async (
   );
 };
 
-export const ColumnsHoldWhileResizing = {
-  render: () => <FrozenColumnsTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
-    await expectHeldUntilRelease(canvasElement, 'Start resize', 'End resize');
-  },
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () =>
+  (
+    globalThis as { __stRemountStory?: () => Promise<void> }
+  ).__stRemountStory?.();
+
+const columnsHoldWhileResizingPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+  await expectHeldUntilRelease(canvasElement, 'Start resize', 'End resize');
 };
 
-export const ColumnsHoldWhileDragging = {
+const columnsHoldWhileDraggingPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+  await expectHeldUntilRelease(
+    canvasElement,
+    'Start column drag',
+    'End column drag',
+  );
+  await expectHeldUntilRelease(canvasElement, 'Start row drag', 'End row drag');
+};
+
+export const ColumnsHoldWhileResizing = {
   render: () => <FrozenColumnsTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
-    await expectHeldUntilRelease(
-      canvasElement,
-      'Start column drag',
-      'End column drag',
+  play: async (context: StoryContext) => {
+    await context.step('Columns Hold While Resizing', () =>
+      columnsHoldWhileResizingPlay(context),
     );
-    await expectHeldUntilRelease(
-      canvasElement,
-      'Start row drag',
-      'End row drag',
+    await remountStory();
+    await context.step('Columns Hold While Dragging', () =>
+      columnsHoldWhileDraggingPlay(context),
     );
   },
 };
