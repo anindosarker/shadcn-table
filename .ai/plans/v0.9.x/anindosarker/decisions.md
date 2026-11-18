@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D141** 0.9.5 is released with the whole docs site and Storybook, without the date picker work #R6
+	- Source: Q132
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
