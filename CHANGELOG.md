@@ -32,7 +32,7 @@ publishes the section as the GitHub release notes.
 
 #### Spec 53 Section tab hover
 
-- Hovering a section tab (Get Started, Examples, Guides, API) on the docs site no longer draws a grey box behind it: an inactive tab's label turns to the text colour, the active tab keeps its accent colour and underline.
+- Hovering a section tab (Get Started, Examples, Guides, API) on the docs site no longer draws a grey box behind it; the label colour and the active tab's underline are unchanged.
 
 #### Spec 52 Docs filter facts
 

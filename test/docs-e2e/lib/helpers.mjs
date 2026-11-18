@@ -871,9 +871,8 @@ export async function sectionFrame(
     active.join(','),
   );
   if (!toggle) return;
-  // Q116: a hovered tab, active or not, keeps a transparent background;
-  // hover feedback is the label's colour only, and the active tab keeps its
-  // accent colour.
+  // Q116: a hovered tab, active or not, keeps a transparent background, and
+  // the active tab keeps its accent colour.
   const style = (tab) =>
     tab.evaluate((el) => {
       const s = getComputedStyle(el);
