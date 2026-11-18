@@ -45,6 +45,7 @@ kanban-plugin: basic
 - [ ] **Q130** After the tab hover hotfix the section tabs have no hover effect and the first tab's label is off centre
 	- Owner, 2026-11-18, screenshot of localhost:5320/docs/getting-started/introduction after hotfix Q116 (9db6ddd6): 'the hover effect is gone altogether and the text is not centered'; the red box marks GET STARTED, the active first tab, whose underline runs past the label on the right. From the code, not checked in a browser: components/section-tabs.tsx gives every tab px-3 and the first one md:first:ps-0, so the first tab has no left padding and 12 px right padding and its underline is not centred on the label; the hotfix removed the page-bar hover fill for the tabs (app/global.css) and left hover:text-(--docs-accent), which changes nothing on the active tab because it already has that colour.
 	- Owner, 2026-11-18: '1.a, the issue is maybe margin/padding missing on left, fix; 2. hover effect just, no over engineering on active/inactive.' Built and merged into v0.9/docs-layout: the first tab keeps its left padding (md:first:ps-0 removed in components/section-tabs.tsx), so every tab has 12 px on both sides; the page bar's hover fill is back on the tabs (app/global.css as before Q116), the same for active and inactive. Docs E2E getting-started 272 passed: each tab 12px / 12px, hovered tab shows the fill.
+- [ ] **Q131** Owner checks touch drag on a real phone or tablet, together with the date picker
 
 ## Decided
 
