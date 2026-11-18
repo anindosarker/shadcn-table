@@ -40,6 +40,16 @@ Checks:
 - `pnpm test validate-repo` at f3bf538e: pass, story pages match (641 stories, 42 example pages, 599 story pages), 40 unit tests
 - `prettier --check` on the rewritten page at f3bf538e and on `CHANGELOG.md` at 79403873: pass
 - Not rerun after f3bf538e and 79403873: text only (one Try it page, the changelog); docs-e2e checks the step count and order, which did not change
+- Verifier (2.2, clean tree at 79403873, every heavy command through the lock script, one base at a time):
+  - `pnpm test storybook-static --base base` at 79403873: reset pass; 599 story pages match `index.json`, 42 example stories; 641 story ids
+  - `pnpm test storybook-static --base radix` at 79403873: reset pass; 641 story ids, equal to base (`diff` prints nothing)
+  - `pnpm test storybook-static --base aria` at 79403873: reset pass; 641 story ids, equal to base; the three new ids present
+  - `pnpm --filter shadcn-table-docs build` at 79403873: pass
+  - `pnpm test docs-e2e --base base --url <next start on 5340>` at 79403873 (that build): pass, 5 sections, 116 pages, 2564 checks (getting-started 268, api 111, guides 1020, examples 1107, site 58)
+  - `pnpm test docs-e2e --base radix --url ...` at 79403873: pass, 116 pages, 2564 checks, same per section
+  - `pnpm test docs-e2e --base aria --url ...` at 79403873: pass, 116 pages, 2564 checks, same per section; server stopped, no listener left on 5340 to 5360
+  - Not rerun (recorded green, diff since touches only story page text, the changelog and a format-only story change; CI is the second run): typecheck base (10017aac), radix and aria (756f516d), lint (756f516d), storybook-tests base (756f516d), radix and aria (7418d110), validate-repo (f3bf538e)
+  - Acceptance (1.2) on the docs branch at 79403873: pass. Story tests 641 passed on each base (records above); static builds green on the three bases with equal id lists, 641 = 638 of `origin/v0.9/docs-layout` plus the three new claude/review stories (the baseline's 654 ids are claude/review's groups before D110, not the docs branch's reference); docs-e2e 116 pages on each base as in `baseline.md`, checks 2561 to 2564 (the three added story pages in getting-started); docs story page captures recorded at a62678ab differ only in the sidebar count; typecheck, lint, validate-repo green as recorded
 
 - Task 1 The merge: done (62429d40)
 - Task 2 Pins and install: done (10017aac)
