@@ -5,10 +5,16 @@ Branch `v0.9/storybook-code-tab`, worktree 08
 Checks:
 - Check: Code tab read on 0.9.5 (P11), `pnpm --filter shadcn-table storybook:build:base` at detached origin/master da4f513f, then `pnpm test storybook-static --base base --url <served build> --ids 0:215|215:430|430:700` (test at 88aaec58): fail as required, 645 of 645 ids fail (0 pass; 3 slices, 456 s, 452 s, 444 s), `basic--basic` shows its story object with its play (quoted under Notes)
 - Check: validate-repo, `pnpm test validate-repo` at 7c280699 (with the Task 3 files uncommitted beside it): pass, story-source 645 stories, 645 with a code text, 0 problems
+- Check: typecheck, `pnpm test typecheck --base base` and `--base radix` at 7c280699 plus the Task 3 files, `--base aria` at 35c2af48: tsc clean, each
+- Check: stories tsconfig (not in `pnpm test typecheck`; it holds .storybook/), `pnpm exec tsc -p tsconfig.stories.json --noEmit` in packages/shadcn-table at 35c2af48: clean
+- Check: eslint on .storybook, `pnpm exec eslint --max-warnings 0 .storybook` in packages/shadcn-table at 35c2af48: clean
+- Check: storybook-static base, `pnpm test storybook-static --base base` at 35c2af48: pass, Code tab of 645 of 645 ids read and equal, reading 399 s, whole run 6 min 53 s with the build
+- Check: storybook-static radix, `pnpm test storybook-static --base radix` at 35c2af48: pass, 645 of 645, reading 394 s, whole run 6 min 48 s
+- Check: storybook-static aria, `pnpm test storybook-static --base aria` at 35c2af48: pass, 645 of 645, reading 399 s, whole run 6 min 53 s
 
 - Task 1: done, 88aaec58
 - Task 2: done, 7c280699
-- Task 3: planned
+- Task 3: done, 35c2af48
 - Task 4: planned
 - Task 5: planned
 
