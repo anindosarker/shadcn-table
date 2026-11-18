@@ -1,6 +1,6 @@
 # 38: Release 0.9.3, Integration, tracker
 
-Status: merged (head of claude/review after this commit, equal to dev)
+Status: done (head of claude/review after this commit, equal to dev)
 Branch `claude/review` and `dev`, main checkout
 Checks:
 - Check: precondition, `status/sprints.md` rows E11 32 to 37 and the four fix rows (D77, D78, D79, D80) all `[x]`: pass

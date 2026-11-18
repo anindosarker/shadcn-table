@@ -15,6 +15,14 @@ publishes the section as the GitHub release notes.
 
 - A wrong address on the docs site shows the site's own 404 page with the HTTP status 404, inside the home page's top bar (with the base select) and footer: "404", "This page does not exist", the docs search box and links to Get Started, Examples, Guides and API, in light and dark and on phones (D121).
 
+#### Spec 62 Touch drag for columns and rows
+
+- Columns and rows reorder by touch on phones and tablets, on Base UI, Radix UI and React Aria: a finger on a grip drags at once, a finger resting on a draggable header cell for about 300 ms drags it, and a copy of the dragged header or row follows the finger until the drop. A drag from a grip does not scroll the page by itself: a row held near the top or bottom edge scrolls the table, or the page when the table has no scroll of its own, as a mouse drag does; a swipe anywhere else, and on a header cell before the hold, scrolls as before. The handlers passed in `stColumnDragHandleProps` and `stRowDragHandleProps` run for a touch drop too, with the pointer event in place of the drag event. Mouse dragging is unchanged (D108, D132).
+
+#### Spec 62 Touch drag in menus and toolbars
+
+- The columns in `Show/Hide columns`, the sort rules in the sort popover and a column dropped on the grouping drop zone reorder or group by touch too, on Base UI, Radix UI and React Aria: a finger on a menu grip or a sort rule handle drags at once, a copy of the menu row or rule follows the finger, and the menu or popover stays open. The drag does not scroll the page behind the popup. A touch drag that leaves the drop zone, or is cancelled over it, groups nothing. Mouse dragging is unchanged (D108, D132).
+
 ### Changed
 
 #### Spec 58 Docs content fixes
@@ -27,6 +35,10 @@ publishes the section as the GitHub release notes.
 
 - Every example page lists two to four Try it steps directly above its table and links its guides under Related guides below it; the View Extra Storybook line is gone, the toolbar's Storybook button replaces it. Titles, descriptions and the page text are unchanged (D104).
 - The six format comparison pages and the Format previews sidebar group are removed.
+
+#### Spec 63 Storybook upgrade
+
+- The project Storybook moves from 10.6.2 to 10.6.7, the latest stable release: `storybook` and every `@storybook/*` package, with `@storybook/addon-vitest` still pinned exact. No configuration change was needed; the story tests, the three static builds and their story ids, and screenshots of a fixed set of stories are the same as before on Base UI, Radix UI and React Aria. The `glob` advisory that comes in through Storybook's docgen plugin (Storybook issue 37409) is not fixed by 10.6.7 and stays until Storybook updates the plugin; it is a development dependency only (D123).
 
 ### Fixed
 
@@ -57,6 +69,32 @@ publishes the section as the GitHub release notes.
 #### Spec 59 Lighter story pages
 
 - The 596 story pages no longer each carry the whole "More examples" list of the Examples sidebar: the served page holds the current row with its number and sub-group label, and the browser lists every row right after. The docs build's story pages drop from 1166 MB to 245 MB; the sidebar looks as before (D116).
+
+#### Spec 60 Sticky header switch and resize grip
+
+- `enableStickyHeader` sets how the table starts; the `Sticky header` switch in `View settings` then turns the sticky header off and on, also when the option is `true`. Full screen still keeps the header sticky (D120).
+- A column's resize grip starts a drag from anywhere on it, its right half included, on pinned and sticky header cells too; the hairline is drawn at the same pixel as before (D126).
+
+#### Spec 60 Sub-row selection and copy button
+
+- Ticking a parent row ticks all its sub-rows, unticking it unticks them, and ticking the last unticked sub-row ticks the parent; before, ticking a parent left its sub-rows unticked (D125).
+- The Click to copy button stays inside a narrow cell and truncates its text, and hovering it shows "Click to copy" instead of the cell's overflow tooltip on Base UI, Radix UI and React Aria (D127).
+
+#### Spec 61 Pinned rows with row virtualization
+
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, a pinned row stays in view at the top or the bottom of the body while the other rows scroll, as it does without virtualization, also for several pinned rows, with the sticky header, and for a row far outside the rendered range; before, it scrolled away. The Row Pinning guide no longer says the two do not combine (D128).
+
+#### Spec 61.1 Select all in select-sticky mode keeps the table virtualized
+
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, pinned rows stay in view while they fit in the table's scroll box; a taller stack scrolls with the virtualized rows instead, so the table stays virtualized. For example, Select all in `'select-sticky'` mode no longer renders every row at once. On Base UI, Radix UI and React Aria.
+
+#### Spec 62.1 Column auto-scroll stops when the drag leaves the table
+
+- A column dragged out of a table that scrolls sideways, for example onto the grouping drop zone, no longer keeps scrolling the table from the last pointer or finger position inside it; the table scrolls again when the drag comes back over its edge, on Base UI, Radix UI and React Aria.
+
+#### Spec 62.2 Touch drag blocks page scroll from before the touch starts
+
+- A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a header cell that cannot drag no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
 
 ### Changed
 

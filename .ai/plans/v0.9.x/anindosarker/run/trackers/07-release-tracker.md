@@ -1,6 +1,6 @@
 # 07: Release 0.9.0, Integration, tracker
 
-Status: merged (0adce149)
+Status: done (0adce149)
 Branch `dev`, main checkout (Task 1); worktree 03 at origin/dev (Task 2)
 Checks:
 - Check: dev equals claude/review, `git rev-parse origin/dev` equals `git rev-parse origin/claude/review` at c4960684: pass

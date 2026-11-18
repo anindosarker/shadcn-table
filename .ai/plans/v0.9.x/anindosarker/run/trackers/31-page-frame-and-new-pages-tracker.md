@@ -1,6 +1,6 @@
 # 31: Page frame and new pages, tracker
 
-Status: merged (23e1cfa95aabb584eaba348823c6d3eac5f01dd5)
+Status: done (23e1cfa95aabb584eaba348823c6d3eac5f01dd5)
 Branch `v0.9/docs-frame`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`
 
 Checks:
