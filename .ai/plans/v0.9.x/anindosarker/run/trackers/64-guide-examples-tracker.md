@@ -17,6 +17,10 @@ Checks:
 - `pnpm test docs-e2e --base base --url <next start 5341>` on one production build at f245a89a: pass, 5 sections, 116 pages, 0 failed
 - `pnpm test docs-e2e --base radix --url <same server>` at f245a89a: pass, 5 sections, 116 pages, 0 failed
 - `pnpm test docs-e2e --base aria --url <same server>` at f245a89a: pass, 5 sections, 116 pages, 0 failed; server stopped
+- Verifier, 2.2 Local CI line: typecheck radix, lint, validate-repo, docs-e2e base|radix|aria all recorded green at f245a89a = HEAD; not rerun (verifier)
+- Verifier, Acceptance 1.2 rerun at f245a89a: production build of HEAD (built 16:16, after the HEAD commit), `next start` on 5341, `curl` of the thirteen guides: each Example table id occurs once (x1 on all thirteen), sorting has no `multi-sorting`, row-selection no second `enable-row-pinning-select`; server stopped (verifier)
+- Verifier, Acceptance 1.2 storybook-tests base|radix|aria: green at 91c955a4 (Guide stories tracker); `git diff --name-only 91c955a4..HEAD` touches only the thirteen guides, `test/docs-e2e/lib/guides.mjs` and `CHANGELOG.md`, no story or library file; not rerun (verifier)
+- Verifier, Acceptance 1.2 judged text (D104): first milestone's scope (new story pages), not this one (verifier)
 
 - Task 1 The thirteen slugs: done at 2d3e384c
 - Task 2 Shown once: done at 781509a5 (row-selection: heading, tag removed, sentence moved up; sorting: tag removed; display-columns: lower table kept)
