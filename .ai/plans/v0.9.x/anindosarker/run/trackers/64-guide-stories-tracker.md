@@ -1,9 +1,8 @@
 # 64: Guide stories, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/guide-stories`, worktree 08
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 The ten picks on load: planned
 - Task 2 The three stories: planned
