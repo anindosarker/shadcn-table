@@ -285,7 +285,7 @@ const FrozenColumnsTable = () => (
     enableRowNumbers
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
     rowNumberDisplayMode="static"
-    renderTopToolbarCustomActions={({ table }) => (
+    renderBottomToolbarCustomActions={({ table }) => (
       <div className="flex gap-2">
         <button
           onClick={() =>

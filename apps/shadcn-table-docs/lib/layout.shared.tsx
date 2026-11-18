@@ -4,12 +4,12 @@ import { ThemeControls } from '@/components/theme-controls';
 import { DiscordIcon } from '@/components/discord-icon';
 import { gitConfig } from './shared';
 
-/** Top bar links, shared by the fumadocs layouts and components/site-nav.tsx. */
+/** Section links, rendered by the sidebar section tabs (components/section-tabs.tsx). */
 export const NAV_LINKS = [
-  { text: 'Docs', url: '/docs/getting-started/introduction' },
-  { text: 'API', url: '/docs/api' },
+  { text: 'Get Started', url: '/docs/getting-started/introduction' },
   { text: 'Examples', url: '/docs/examples' },
   { text: 'Guides', url: '/docs/guides' },
+  { text: 'API', url: '/docs/api' },
 ] as const;
 
 export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
@@ -21,8 +21,10 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: <Logo />,
     },
+    // No text links: fumadocs renders them as sidebar rows below lg (and in
+    // the mobile drawer), duplicating the section tabs (L7) shown there too;
+    // the header (components/site-nav.tsx) does not read `links`.
     links: [
-      ...NAV_LINKS.map((l) => ({ ...l, active: 'nested-url' as const })),
       {
         type: 'icon',
         icon: <DiscordIcon />,

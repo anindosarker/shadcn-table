@@ -13,32 +13,45 @@ import {
 import { PageSwitcher, sectionPages } from '@/components/page-switcher';
 
 interface Props {
-  section: PageTree.Folder;
+  /** The section whose pages the switcher lists and navigates between. */
+  section?: PageTree.Folder;
+  /** A scoped list instead of the section (a guide's examples). */
+  pages?: PageTree.Item[];
   current: PageTree.Item;
+  /** Replaces navigation: called with the picked page. */
+  onSelect?: (page: PageTree.Item) => void;
 }
 
 /**
- * Example playground's left toolbar: "Select example" label, then the page
- * switcher combobox between previous / next buttons. The steps follow the
- * combobox's order (the section's pages, without its overview) and stop at
- * either end. The label hides below sm.
+ * Example playground's left toolbar: the page switcher combobox between
+ * previous / next buttons. The steps follow the combobox's order (the
+ * section's pages, without its overview, or the given `pages`) and stop at
+ * either end.
  */
-export const ExampleSwitcher = ({ section, current }: Props) => {
-  const pages = useMemo(() => sectionPages(section), [section]);
+export const ExampleSwitcher = ({
+  section,
+  pages: scoped,
+  current,
+  onSelect,
+}: Props) => {
+  const pages = useMemo(
+    () => scoped ?? (section ? sectionPages(section) : []),
+    [section, scoped],
+  );
   const index = pages.findIndex((page) => page.url === current.url);
 
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <span className="hidden font-mono text-[11px] tracking-[0.12em] whitespace-nowrap text-fd-muted-foreground uppercase sm:inline">
-        Select example
-      </span>
       <StepButton
         direction="previous"
         page={index > 0 ? pages[index - 1] : undefined}
+        onSelect={onSelect}
       />
       <PageSwitcher
         section={section}
+        pages={scoped}
         current={current}
+        onSelect={onSelect}
         className="h-8 min-w-0 shrink rounded-md border bg-fd-secondary px-2.5 text-sm font-medium text-fd-foreground"
       />
       <StepButton
@@ -48,6 +61,7 @@ export const ExampleSwitcher = ({ section, current }: Props) => {
             ? pages[index + 1]
             : undefined
         }
+        onSelect={onSelect}
       />
     </div>
   );
@@ -57,9 +71,11 @@ export const ExampleSwitcher = ({ section, current }: Props) => {
 function StepButton({
   direction,
   page,
+  onSelect,
 }: {
   direction: 'previous' | 'next';
   page?: PageTree.Item;
+  onSelect?: (page: PageTree.Item) => void;
 }) {
   const router = useRouter();
   const Icon = direction === 'previous' ? ChevronLeftIcon : ChevronRightIcon;
@@ -91,7 +107,7 @@ function StepButton({
           size="icon"
           aria-label={label}
           className="docs-playground-step"
-          onClick={() => router.push(page.url)}
+          onClick={() => (onSelect ? onSelect(page) : router.push(page.url))}
         >
           <Icon />
         </Button>

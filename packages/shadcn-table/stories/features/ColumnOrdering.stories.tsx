@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
+import {
+  expect,
+  fireEvent,
+  spyOn,
+  userEvent,
+  waitFor,
+  within,
+} from 'storybook/test';
 import {
   type ST_ColumnDef,
   type ST_ColumnOrderState,
   ShadcnTable,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -17,7 +25,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Ordering Examples',
+  title: 'Features/Column Ordering',
 };
 
 export default meta;
@@ -136,10 +144,6 @@ export const ColumnOrderingWithSelect = () => (
   <ShadcnTable columns={columns} data={data} enableRowSelection />
 );
 
-export const ColumnOrderingWithPinning = () => (
-  <ShadcnTable columns={columns} data={data} />
-);
-
 export const ColumnOrderingNoDragHandles = () => (
   <ShadcnTable columns={columns} data={data} enableColumnDragging={false} />
 );
@@ -222,6 +226,95 @@ const menuDrag = (menu: HTMLElement, source: string, target: string) => {
   fireEvent.dragEnd(handle);
 };
 
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged menu row that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/** Runs `drag` and returns the touch ghosts it drew. */
+const ghostsDrawnBy = async (drag: () => unknown) => {
+  const ghosts: Element[] = [];
+  const observer = new MutationObserver((records) =>
+    records.forEach((record) =>
+      record.addedNodes.forEach((node) => {
+        if (node instanceof Element && node.matches('[data-st-touch-ghost]')) {
+          ghosts.push(node);
+        }
+      }),
+    ),
+  );
+  observer.observe(document.body, { childList: true });
+  await drag();
+  observer.disconnect();
+  return ghosts;
+};
+
+/**
+ * Drags the menu row of `source` by touch, by its Move grip, onto the row of
+ * `target`. The ghost shows while the drag is on, follows the finger and is
+ * gone after the `end` event; the menu stays open.
+ */
+const touchMenuDrag = async ({
+  end = 'pointerup',
+  menu,
+  source,
+  target,
+}: {
+  end?: 'pointercancel' | 'pointerup';
+  menu: HTMLElement;
+  source: string;
+  target: string;
+}) => {
+  const handle = within(
+    menuItem(menu, source).parentElement as HTMLElement,
+  ).getByRole('button', { name: 'Move' });
+  const from = centreOf(handle);
+  const to = centreOf(menuItem(menu, target));
+  touch({ at: from, element: handle, type: 'pointerdown' });
+  touch({
+    at: { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 },
+    element: handle,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  touch({ at: to, element: handle, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  touch({ at: to, element: handle, type: end });
+  await waitFor(() => expect(ghost()).toBeNull());
+  expect(menu.isConnected).toBe(true);
+};
+
 /**
  * Dragging a row of the columns menu moves the column: the header order
  * changes and the body cells follow.
@@ -238,8 +331,12 @@ export const MenuReorderMovesColumn = {
       'email',
       'address',
     ]);
+    const before = headerIds(canvasElement);
     const menu = await openColumnsMenu(canvasElement);
-    menuDrag(menu, 'Address', 'First Name');
+    // A mouse drag draws no ghost at any moment of the drag.
+    expect(
+      await ghostsDrawnBy(() => menuDrag(menu, 'Address', 'First Name')),
+    ).toEqual([]);
     await waitFor(() =>
       expect(headerIds(canvasElement).slice(0, 4)).toEqual([
         'address',
@@ -249,6 +346,44 @@ export const MenuReorderMovesColumn = {
       ]),
     );
     expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+    const moved = headerIds(canvasElement);
+
+    // Touch: a cancelled drag leaves the order, then the grip drags at once,
+    // back and then as the mouse moved it.
+    await touchMenuDrag({
+      end: 'pointercancel',
+      menu,
+      source: 'Address',
+      target: 'Email Address',
+    });
+    await pause(100);
+    expect(headerIds(canvasElement)).toEqual(moved);
+    await touchMenuDrag({ menu, source: 'Address', target: 'Email Address' });
+    await waitFor(() => expect(headerIds(canvasElement)).toEqual(before));
+    await touchMenuDrag({ menu, source: 'Address', target: 'First Name' });
+    await waitFor(() => expect(headerIds(canvasElement)).toEqual(moved));
+    expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+    expect(await within(document.body).findByRole('menu')).toBe(menu);
+
+    // A tap on a grip moves nothing: the next order change slides no column.
+    const grip = within(
+      menuItem(menu, 'State').parentElement as HTMLElement,
+    ).getByRole('button', { name: 'Move' });
+    touch({ at: centreOf(grip), element: grip, type: 'pointerdown' });
+    touch({ at: centreOf(grip), element: grip, type: 'pointerup' });
+    await pause(100);
+    expect(headerIds(canvasElement)).toEqual(moved);
+    const slides = spyOn(Element.prototype, 'animate');
+    try {
+      await userEvent.click(
+        within(document.body).getByRole('button', { name: 'Reset order' }),
+      );
+      await waitFor(() => expect(headerIds(canvasElement)).toEqual(before));
+      await pause(100);
+      expect(slides).not.toHaveBeenCalled();
+    } finally {
+      slides.mockRestore();
+    }
   },
 };
 
@@ -256,13 +391,153 @@ export const MenuReorderMovesColumn = {
  * A column with `enableColumnOrdering: false` has no grip in the columns
  * menu, takes no drop, and keeps its index while other columns move.
  */
-export const LockedColumnStaysPut = {
-  render: () => <ColumnOrderingDisabledPerColumn />,
+ColumnOrderingDisabledPerColumn.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /First Name/,
+  });
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  const menu = await openColumnsMenu(canvasElement);
+  expect(
+    within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
+      'button',
+      { name: 'Move' },
+    ),
+  ).toBeNull();
+  // A drop on the locked row is refused.
+  menuDrag(menu, 'First Name', 'State');
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  expect(headerIds(canvasElement)[0]).toBe('firstName');
+  // Moving another column past it leaves it where it was.
+  const before = headerIds(canvasElement);
+  menuDrag(menu, 'First Name', 'City');
+  await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+  const moved = headerIds(canvasElement);
+
+  // Touch: a drop on the locked row is refused, then First Name moves back
+  // and past the locked column again as the mouse moved it.
+  await touchMenuDrag({ menu, source: 'Last Name', target: 'State' });
+  await pause(100);
+  expect(headerIds(canvasElement)).toEqual(moved);
+  await touchMenuDrag({ menu, source: 'First Name', target: 'Last Name' });
+  await waitFor(() => expect(headerIds(canvasElement)).toEqual(before));
+  await touchMenuDrag({ menu, source: 'First Name', target: 'City' });
+  await waitFor(() => expect(headerIds(canvasElement)).toEqual(moved));
+  expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+  expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+};
+
+// The docs example "Column DnD Ordering" (examples/base/enable-column-ordering):
+// its columns, options and rows.
+interface DndOrderingPerson {
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+}
+
+const dndOrderingData: DndOrderingPerson[] = [
+  {
+    firstName: 'Dylan',
+    lastName: 'Murray',
+    address: '261 Erdman Ford',
+    city: 'East Daphne',
+    state: 'Kentucky',
+  },
+  {
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+    address: '769 Dominic Grove',
+    city: 'Columbus',
+    state: 'Ohio',
+  },
+  {
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+    address: '566 Brakus Inlet',
+    city: 'South Linda',
+    state: 'West Virginia',
+  },
+  {
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+    address: '722 Emie Stream',
+    city: 'Lincoln',
+    state: 'Nebraska',
+  },
+  {
+    firstName: 'Branson',
+    lastName: 'Frami',
+    address: '32188 Larkin Turnpike',
+    city: 'Charleston',
+    state: 'South Carolina',
+  },
+];
+
+const dndOrderingColumns: ST_ColumnDef<DndOrderingPerson>[] = [
+  {
+    accessorKey: 'firstName',
+    icon: UserIcon,
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    icon: UserIcon,
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    icon: MapPinIcon,
+    header: 'Address',
+  },
+  {
+    accessorKey: 'city',
+    icon: Building2Icon,
+    header: 'City',
+  },
+  {
+    accessorKey: 'state',
+    icon: MapIcon,
+    enableColumnOrdering: false,
+    header: 'State',
+  },
+];
+
+/** The header ids without the display columns. */
+const dataHeaderIds = (canvasElement: HTMLElement) =>
+  headerIds(canvasElement).filter((id) => !id?.startsWith('st-'));
+
+const ColumnDndOrderingTable = () => {
+  const table = useShadcnTable({
+    columns: dndOrderingColumns,
+    data: dndOrderingData,
+    enableColumnOrdering: true,
+  });
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * City moves to the front from the columns menu; State, locked, has no grip
+ * and keeps its place.
+ */
+export const ColumnDndOrdering = {
+  name: 'Column DnD Ordering',
+  render: () => <ColumnDndOrderingTable />,
   play: async ({ canvasElement }: StoryContext) => {
     await within(canvasElement).findByRole('columnheader', {
       name: /First Name/,
     });
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    expect(dataHeaderIds(canvasElement)).toEqual([
+      'firstName',
+      'lastName',
+      'address',
+      'city',
+      'state',
+    ]);
     const menu = await openColumnsMenu(canvasElement);
     expect(
       within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
@@ -270,14 +545,16 @@ export const LockedColumnStaysPut = {
         { name: 'Move' },
       ),
     ).toBeNull();
-    // A drop on the locked row is refused.
-    menuDrag(menu, 'First Name', 'State');
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(headerIds(canvasElement)[0]).toBe('firstName');
-    // Moving another column past it leaves it where it was.
-    menuDrag(menu, 'First Name', 'City');
-    await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
-    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    menuDrag(menu, 'City', 'First Name');
+    await waitFor(() =>
+      expect(dataHeaderIds(canvasElement)).toEqual([
+        'city',
+        'firstName',
+        'lastName',
+        'address',
+        'state',
+      ]),
+    );
     expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
   },
 };

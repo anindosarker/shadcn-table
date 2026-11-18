@@ -27,13 +27,27 @@ export async function propTable(page, tableId, check) {
 }
 
 /**
- * Example playground `#example-<id>` or prop-table source toggle
- * `#props-<id>` for a bare example or table id. Both carry a prefix so a
- * heading whose slug equals the id cannot resolve the locator to two nodes.
+ * Example playground `#example-<id>` (or `#guide-example-<id>` in a guide's
+ * Example section) or prop-table source toggle `#props-<id>` for a bare
+ * example or table id. All carry a prefix so a heading whose slug equals
+ * the id cannot resolve the locator to two nodes.
  */
 export function panelOf(page, id) {
-  return page.locator(`[id="example-${id}"], [id="props-${id}"]`);
+  return page
+    .locator(
+      `[id="guide-example-${id}"], [id="example-${id}"], [id="props-${id}"]`,
+    )
+    .first();
 }
+
+/**
+ * The first mount of example `<id>` on the page. The id follows the mount's
+ * place (components/example-playground.tsx, D113): `guide-example-<id>` in
+ * a guide's Example section, `example-<id>` inline and on example and story
+ * pages, so a guide's Example section resolves first.
+ */
+export const examplePanel = (page, id) =>
+  page.locator(`[id="guide-example-${id}"], [id="example-${id}"]`).first();
 
 /**
  * Live example playground: panel `#example-<id>` present, table with rows.
@@ -41,7 +55,7 @@ export function panelOf(page, id) {
  * the Code toggle. Returns the panel locator.
  */
 export async function example(page, id, check) {
-  const panel = page.locator(`[id="example-${id}"]`);
+  const panel = examplePanel(page, id);
   check(`${id}: panel`, (await panel.count()) === 1);
   const rows = panel.locator('table tbody tr');
   await rows
@@ -225,7 +239,7 @@ export async function codeToggle(page, id, needle, check) {
             const pre = document.querySelector(sel)?.querySelector('pre');
             return !!pre && pre.textContent.replace(/\s+/g, '') !== prev;
           },
-          [`[id="example-${id}"]`, norm(txt)],
+          [`[id="guide-example-${id}"], [id="example-${id}"]`, norm(txt)],
           { timeout: 5000 },
         )
         .catch(() => {});
@@ -424,7 +438,7 @@ export async function headerBaseMenu(page, check, current) {
 
 /** The base select in the toolbar of example `#example-<id>`. */
 export const toolbarBase = (page, id) =>
-  page.locator(`[id="example-${id}"] header button[aria-label="Base"]`);
+  examplePanel(page, id).locator('header button[aria-label="Base"]');
 
 /**
  * Picks a base by label through the toolbar select of example `#example-<id>`,
@@ -462,7 +476,7 @@ export const pickToolbarBase = async (page, id, label) => {
  * is read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
-  const panel = page.locator(`[id="example-${id}"]`);
+  const panel = examplePanel(page, id);
   const header = headerBase(page);
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
@@ -827,4 +841,106 @@ export async function liveDemoFilters(page, w, check) {
     .nth(9)
     .waitFor({ timeout: 30000 })
     .catch(() => {});
+}
+
+/**
+ * The docs frame (D101, D102): the section tab row lists Get Started,
+ * Examples, Guides, API in that order and marks `section` active; with
+ * `toggle`, the hide button leads the row, hides the sidebar, keeps it
+ * hidden over a reload and brings it back.
+ */
+export async function sectionFrame(
+  page,
+  check,
+  section,
+  { toggle = false } = {},
+) {
+  const row = page.locator('nav[aria-label="Sections"]');
+  const tabs = (await row.locator('a').allTextContents()).map((t) => t.trim());
+  check(
+    'frame: tab order',
+    tabs.join(',') === 'Get Started,Examples,Guides,API',
+    tabs.join(','),
+  );
+  const active = (await row.locator('a[data-active]').allTextContents()).map(
+    (t) => t.trim(),
+  );
+  check(
+    `frame: ${section} tab active`,
+    active.join(',') === section,
+    active.join(','),
+  );
+  if (!toggle) return;
+  // Q130: every tab has the same padding on both sides, so its label sits
+  // centred over the underline; a hovered tab, active or not, takes the
+  // page bar's hover fill, and the active tab keeps its accent colour.
+  const style = (tab) =>
+    tab.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return {
+        bg: s.backgroundColor,
+        color: s.color,
+        start: s.paddingInlineStart,
+        end: s.paddingInlineEnd,
+      };
+    });
+  for (const name of tabs) {
+    const { start, end } = await style(row.locator('a', { hasText: name }));
+    check(
+      `frame: ${name} tab label is centred`,
+      start === end && start !== '0px',
+      `${start} / ${end}`,
+    );
+  }
+  for (const name of [section, tabs.find((t) => t !== section)]) {
+    const tab = row.locator('a', { hasText: name });
+    const rest = await style(tab);
+    await tab.hover();
+    await page.waitForTimeout(300);
+    const { bg, color } = await style(tab);
+    check(
+      `frame: hovered ${name} tab shows the hover fill`,
+      bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent',
+      bg,
+    );
+    if (name === section) {
+      check(
+        `frame: hovered ${name} tab keeps its colour`,
+        color === rest.color,
+        `${rest.color} -> ${color}`,
+      );
+    }
+  }
+  await page.mouse.move(0, 0);
+  const rowStart = await page.evaluate(() => {
+    const nav = document.querySelector('nav[aria-label="Sections"]');
+    const first = nav?.parentElement?.querySelector('button');
+    return first?.getAttribute('aria-label') ?? '';
+  });
+  check(
+    'frame: hide button leads the row',
+    rowStart === 'Hide sidebar',
+    rowStart,
+  );
+  const sidebarShown = () =>
+    page.evaluate(() => {
+      const box = document
+        .querySelector('#nd-sidebar')
+        ?.getBoundingClientRect();
+      return !!box && box.width > 0 && box.right > 1;
+    });
+  check('frame: sidebar shown', await sidebarShown());
+  await page.getByRole('button', { name: 'Hide sidebar' }).click();
+  await page.waitForTimeout(600);
+  check('frame: hide hides the sidebar', !(await sidebarShown()));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+  const show = page.getByRole('button', { name: 'Show sidebar' });
+  check(
+    'frame: hidden over a reload',
+    (await show.count()) === 1 && !(await sidebarShown()),
+  );
+  await show.click();
+  await page.waitForTimeout(600);
+  check('frame: show brings it back', await sidebarShown());
 }

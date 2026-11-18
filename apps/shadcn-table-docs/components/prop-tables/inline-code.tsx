@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
  * children get light syntax colours (st-tok-* in app/global.css). */
 export const InlineCode = ({ children }: { children: ReactNode }) =>
   children ? (
-    <code className="rounded-md border bg-muted px-1.5 py-0.5 font-mono text-[0.8rem] wrap-anywhere whitespace-pre-wrap">
+    <code className="border bg-muted px-1.5 py-0.5 font-mono text-[0.8rem] wrap-anywhere whitespace-pre-wrap">
       {typeof children === 'string' ? tokenize(children) : children}
     </code>
   ) : null;

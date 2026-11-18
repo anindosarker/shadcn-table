@@ -153,6 +153,7 @@ pnpm --filter shadcn-table tsc:aria
 ```
 
 - **Stories are tests.** `pnpm test:<base>` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on every base: the stories are shared, one set for all three bases, with no per-base story files.
+- **Every story has a docs page.** A story that is not the exact story of an example page has a page under `apps/shadcn-table-docs/content/docs/examples/more/`. After you add, remove or rename a story, run `node lib/story-pages.mjs` in `apps/shadcn-table-docs`, or `pnpm test validate-repo` fails. The script will not delete a page that holds text; move that text to the story's new page or delete the file by hand.
 - **shadcn/ui parts.** `registry/<base>/components/ui/*.tsx` are plain shadcn components, never edited by hand, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`registry/<base>/components.json`) and prints the dependencies to add:
 
   ```bash
@@ -284,7 +285,7 @@ Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI ins
 `.github/workflows/pr.yml` runs these on every pull request, one job per test and base or scenario; run them first, from the repo root (`pnpm test --changed` runs only the tests whose paths you changed):
 
 ```bash
-pnpm test typecheck          # Typecheck (base), (radix), (aria); radix also the docs types:check
+pnpm test typecheck          # Typecheck (base), (radix), (aria); radix also the docs types:check and the story files
 pnpm test lint               # Lint: the package and the docs app
 pnpm test storybook-tests    # Storybook Tests (base), (radix), (aria)
 pnpm test docs-e2e           # Docs E2E Tests (base), (radix), (aria): builds the docs, checks every page

@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Column Resizing Examples',
+  title: 'Features/Column Resizing',
 };
 
 export default meta;
@@ -214,44 +214,43 @@ const translateOf = (element: HTMLElement) =>
 // F50: in an RTL table the drag preview lays the slots right to left, so
 // every header stays inside the table and only the dragged and target
 // columns shift.
-export const DragPreviewRTL = {
-  render: ColumnResizingEnabledOnEndRTL,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByRole('columnheader', {
-      name: /Address/,
-    });
-    const address = headerCellNamed(canvasElement, 'Address');
-    const state = headerCellNamed(canvasElement, 'State');
-    const addressWidth = address.getBoundingClientRect().width;
-    const stateWidth = state.getBoundingClientRect().width;
-    fireEvent.dragStart(address);
-    dragOverSlot(canvasElement, state);
-    await waitFor(() => {
-      const table = canvasElement.querySelector('table')!;
-      const tableBox = table.getBoundingClientRect();
-      const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
-      for (const th of ths) {
-        const box = th.getBoundingClientRect();
-        expect(
-          box.left >= tableBox.left - 1 && box.right <= tableBox.right + 1,
-          `${th.textContent?.trim()} [${box.left}, ${box.right}] inside table [${tableBox.left}, ${tableBox.right}]`,
-        ).toBe(true);
-      }
-      // RTL: Address moves left by State's width, State right by Address's.
-      expect(translateOf(address) + stateWidth).toBeCloseTo(0, 0);
-      expect(translateOf(state) - addressWidth).toBeCloseTo(0, 0);
-      for (const th of ths) {
-        if (th === address || th === state) continue;
-        expect(translateOf(th), th.textContent?.trim()).toBe(0);
-      }
-    });
-    // Cancel the drag, as Escape does.
-    const end = new DragEvent('dragend', { bubbles: true });
-    Object.defineProperty(end, 'dataTransfer', {
-      value: { dropEffect: 'none' },
-    });
-    fireEvent(address, end);
-  },
+ColumnResizingEnabledOnEndRTL.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /Address/,
+  });
+  const address = headerCellNamed(canvasElement, 'Address');
+  const state = headerCellNamed(canvasElement, 'State');
+  const addressWidth = address.getBoundingClientRect().width;
+  const stateWidth = state.getBoundingClientRect().width;
+  fireEvent.dragStart(address);
+  dragOverSlot(canvasElement, state);
+  await waitFor(() => {
+    const table = canvasElement.querySelector('table')!;
+    const tableBox = table.getBoundingClientRect();
+    const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
+    for (const th of ths) {
+      const box = th.getBoundingClientRect();
+      expect(
+        box.left >= tableBox.left - 1 && box.right <= tableBox.right + 1,
+        `${th.textContent?.trim()} [${box.left}, ${box.right}] inside table [${tableBox.left}, ${tableBox.right}]`,
+      ).toBe(true);
+    }
+    // RTL: Address moves left by State's width, State right by Address's.
+    expect(translateOf(address) + stateWidth).toBeCloseTo(0, 0);
+    expect(translateOf(state) - addressWidth).toBeCloseTo(0, 0);
+    for (const th of ths) {
+      if (th === address || th === state) continue;
+      expect(translateOf(th), th.textContent?.trim()).toBe(0);
+    }
+  });
+  // Cancel the drag, as Escape does.
+  const end = new DragEvent('dragend', { bubbles: true });
+  Object.defineProperty(end, 'dataTransfer', {
+    value: { dropEffect: 'none' },
+  });
+  fireEvent(address, end);
 };
 
 export const ColumnResizingCustomDefaultWidths = () => (
@@ -271,6 +270,45 @@ export const ColumnResizingWithPinning = () => (
     }}
   />
 );
+
+/**
+ * Starts a pointer drag on the right half of a column's resize grip, on
+ * whatever element is drawn there, and expects the column to grow.
+ */
+const dragGripRightHalf = async (
+  canvasElement: HTMLElement,
+  columnId: string,
+  dx: number,
+) => {
+  const th = canvasElement.querySelector<HTMLElement>(
+    `thead th[data-flip-column="${columnId}"]`,
+  )!;
+  const grip = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  grip.scrollIntoView({ block: 'nearest', inline: 'center' });
+  const before = widthOf(th);
+  const box = grip.getBoundingClientRect();
+  const point = {
+    clientX: box.left + box.width * 0.75,
+    clientY: box.top + box.height / 2,
+  };
+  const hit = document.elementFromPoint(point.clientX, point.clientY)!;
+  fireEvent.mouseDown(hit, point);
+  fireEvent.mouseMove(document, { ...point, clientX: point.clientX + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: point.clientX + dx });
+  await waitFor(() =>
+    expect(widthOf(th) - before, columnId).toBeGreaterThanOrEqual(dx / 2),
+  );
+};
+
+// A resize drag starts from anywhere on the grip, its right half included,
+// on a pinned and on an unpinned column (D126).
+ColumnResizingWithPinning.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', {
+    name: /First Name/,
+  });
+  await dragGripRightHalf(canvasElement, 'firstName', 60);
+  await dragGripRightHalf(canvasElement, 'address', 60);
+};
 
 export const ColumnResizingWithHeaderGroups = () => (
   <ShadcnTable
@@ -485,12 +523,7 @@ export const ResizeGuidesMeetEdge = {
   play: expectResizeGuidesMeetEdge('onChange'),
 };
 
-export const ResizeGuidesMeetEdgeOnEnd = {
-  render: () => (
-    <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
-  ),
-  play: expectResizeGuidesMeetEdge('onEnd'),
-};
+ColumnResizingEnabledOnEnd.play = expectResizeGuidesMeetEdge('onEnd');
 
 const firstNameHeader = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>(
@@ -652,5 +685,34 @@ export const ResetSizeAnimates = {
       expect(tableElement.hasAttribute('data-size-resetting')).toBe(false),
     );
     expect(sizeVar()).toBe('180');
+  },
+};
+
+/**
+ * First Name starts at 400 px through `initialState.columnSizing`, wider
+ * than the rest; its resize handle drags it narrower.
+ */
+export const ColumnWidenedOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{ columnSizing: { firstName: 400 } }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const lastName = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="lastName"]',
+    )!;
+    const before = widthOf(th);
+    expect(before - widthOf(lastName)).toBeGreaterThanOrEqual(150);
+    dragFirstNameHandle(canvasElement, -150);
+    await waitFor(() =>
+      expect(before - widthOf(th)).toBeGreaterThanOrEqual(100),
+    );
   },
 };

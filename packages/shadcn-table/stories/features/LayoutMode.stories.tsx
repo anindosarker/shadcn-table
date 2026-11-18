@@ -5,7 +5,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Features/Layout Mode Examples',
+  title: 'Features/Layout Mode',
 };
 
 export default meta;
@@ -46,56 +46,6 @@ const data = [...Array(100)].map(() => ({
   state: faker.location.state(),
 }));
 
-// The stock layout: grid, data columns grow in proportion (D31).
-export const DefaultGrid = () => (
-  <ShadcnTable columns={columns} data={data} enableRowSelection />
-);
-
-export const Semantic = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableRowSelection
-    layoutMode="semantic"
-  />
-);
-
-export const Grid = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableRowSelection
-    layoutMode="grid"
-  />
-);
-
-export const GridNoGrow = () => (
-  <ShadcnTable
-    columns={columns.slice(0, 2)}
-    data={data}
-    enableRowSelection
-    layoutMode="grid-no-grow"
-  />
-);
-
-export const GridWithResizing = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableRowSelection
-    layoutMode="grid"
-  />
-);
-
-export const GridNoGrowWithResizing = () => (
-  <ShadcnTable
-    columns={columns.slice(0, 2)}
-    data={data}
-    enableRowSelection
-    layoutMode="grid-no-grow"
-  />
-);
-
 const headerWidth = (canvasElement: HTMLElement, id: string) =>
   canvasElement
     .querySelector<HTMLElement>(`thead th[data-flip-column="${id}"]`)!
@@ -104,11 +54,13 @@ const headerWidth = (canvasElement: HTMLElement, id: string) =>
 const dataIds = ['firstName', 'lastName', 'address', 'state', 'phoneNumber'];
 
 /**
- * The default grid layout spreads spare width over the data columns in
+ * The stock layout: grid. It spreads spare width over the data columns in
  * proportion; the select column keeps its own width (D31).
  */
-export const GridGrowsColumns = {
-  render: () => <DefaultGrid />,
+export const DefaultGrid = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} enableRowSelection />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     await within(canvasElement).findAllByText(data[0].firstName);
     const table = canvasElement.querySelector('table')!;
@@ -131,8 +83,15 @@ export const GridGrowsColumns = {
 };
 
 /** `layoutMode="semantic"` renders a native table layout. */
-export const SemanticLayoutRenders = {
-  render: () => <Semantic />,
+export const Semantic = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      layoutMode="semantic"
+    />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     await within(canvasElement).findAllByText(data[0].firstName);
     const table = canvasElement.querySelector('table')!;
@@ -152,3 +111,21 @@ export const SemanticLayoutRenders = {
     }
   },
 };
+
+export const Grid = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    enableRowSelection
+    layoutMode="grid"
+  />
+);
+
+export const GridNoGrow = () => (
+  <ShadcnTable
+    columns={columns.slice(0, 2)}
+    data={data}
+    enableRowSelection
+    layoutMode="grid-no-grow"
+  />
+);

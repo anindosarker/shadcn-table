@@ -1,4 +1,8 @@
-import { type DragEvent, type RefObject } from 'react';
+import {
+  type DragEvent,
+  type PointerEvent as ReactPointerEvent,
+  type RefObject,
+} from 'react';
 import {
   type ButtonProps,
   type ST_Column,
@@ -11,6 +15,10 @@ import { isColumnDragCancelled } from '@/components/ui/shadcn-table/shared/utils
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { getST_ColumnFlipPositions } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
+import {
+  type ST_TouchDragEvent,
+  useST_TouchDrag,
+} from '@/components/ui/shadcn-table/hooks/useST_TouchDrag';
 
 export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -19,11 +27,12 @@ export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
 }
 
 /**
- * The column drag source handlers, shared by the header cell and its grip:
- * the start marks the dragging column with the header cell as the drag image;
- * the end groups on a drop-zone drop, reorders on any other accepted drop
- * (handing the layout offsets to the column slide first) and ignores a
- * cancelled drag.
+ * The column drag source handlers, shared by the header cell and its grip,
+ * for the mouse and the touch path: the start marks the dragging column with
+ * the header cell as the drag image; the end groups on a drop-zone drop,
+ * reorders on any other accepted drop (handing the layout offsets to the
+ * column slide first) and ignores a cancelled drag. A mouse drag reads the
+ * cancel from its `dataTransfer`, a touch drag passes it.
  */
 export const getST_ColumnDragHandlers = <TData extends ST_RowData>(
   column: ST_Column<TData>,
@@ -31,10 +40,10 @@ export const getST_ColumnDragHandlers = <TData extends ST_RowData>(
 ) => {
   const table = column.table;
 
-  const onDragStart = (event: DragEvent<HTMLElement>) => {
+  const onDragStart = (event: DragEvent<HTMLElement> | ST_TouchDragEvent) => {
     table.setDraggingColumn(column);
     const dragImage = tableHeadCellRef.current;
-    if (dragImage && event.dataTransfer) {
+    if (dragImage && 'dataTransfer' in event && event.dataTransfer) {
       try {
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setDragImage(dragImage, 0, 0);
@@ -44,7 +53,10 @@ export const getST_ColumnDragHandlers = <TData extends ST_RowData>(
     }
   };
 
-  const onDragEnd = (event: DragEvent<HTMLElement>) => {
+  const onDragEnd = (
+    event: DragEvent<HTMLElement> | ST_TouchDragEvent,
+    cancelled = 'dataTransfer' in event && isColumnDragCancelled(event),
+  ) => {
     const draggingColumn = table.atoms.draggingColumn.get();
     const hoveredColumn = table.atoms.hoveredColumn.get();
     if (hoveredColumn?.id === 'drop-zone') {
@@ -53,7 +65,7 @@ export const getST_ColumnDragHandlers = <TData extends ST_RowData>(
       table.options.enableColumnOrdering &&
       hoveredColumn &&
       hoveredColumn.id !== draggingColumn?.id &&
-      !isColumnDragCancelled(event)
+      !cancelled
     ) {
       table.setColumnFlipPending({
         dragDrop: true,
@@ -92,23 +104,46 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const { onDragEnd, onDragStart } = getST_ColumnDragHandlers(
-    column,
-    tableHeadCellRef,
-  );
+  // Built per event: the handlers read the header cell ref, never in render.
+  const dragHandlers = () => getST_ColumnDragHandlers(column, tableHeadCellRef);
 
   // The grip sits inside the draggable header cell, so its drag events stop
   // here instead of running the cell's handlers a second time.
   const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     iconButtonProps?.onDragStart?.(event);
-    onDragStart(event);
+    dragHandlers().onDragStart(event);
   };
 
   const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     iconButtonProps?.onDragEnd?.(event);
-    onDragEnd(event);
+    dragHandlers().onDragEnd(event);
+  };
+
+  // A finger drags the grip at once; the app's drag handlers get the pointer
+  // event of the moment.
+  const touchDrag = useST_TouchDrag({
+    getGhostSource: () => tableHeadCellRef.current,
+    onEnd: (event, cancelled) => {
+      iconButtonProps?.onDragEnd?.(
+        event as unknown as DragEvent<HTMLButtonElement>,
+      );
+      dragHandlers().onDragEnd(event, cancelled);
+    },
+    onStart: (event) => {
+      iconButtonProps?.onDragStart?.(
+        event as unknown as DragEvent<HTMLButtonElement>,
+      );
+      dragHandlers().onDragStart(event);
+    },
+  });
+
+  // The header cell's own touch hold must not start under the grip.
+  const handlePointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    iconButtonProps?.onPointerDown?.(event);
+    if (event.pointerType === 'touch') event.stopPropagation();
+    touchDrag.onPointerDown(event);
   };
 
   return (
@@ -116,6 +151,7 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
       {...iconButtonProps}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
+      onPointerDown={handlePointerDown}
     />
   );
 };

@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta = {
-  title: 'Styling/Row Height Examples',
+  title: 'Styling/Row Height',
 };
 
 export default meta;

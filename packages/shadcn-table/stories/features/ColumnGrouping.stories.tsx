@@ -1,23 +1,36 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  type ComponentType,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_Column,
   type ST_ColumnDef,
   type ST_RowData,
   ShadcnTable,
+  ST_ExpandAllButton,
+  useShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { faker } from '@faker-js/faker';
 import {
   Building2Icon,
+  CakeIcon,
+  DollarSignIcon,
   MapIcon,
   MapPinIcon,
   UserIcon,
   VenusAndMarsIcon,
 } from 'lucide-react';
+import { ST_BASE } from '../../.storybook/themes';
 
 const meta: Meta = {
-  title: 'Features/Column Grouping Examples',
+  title: 'Features/Column Grouping',
 };
 
 export default meta;
@@ -204,9 +217,10 @@ export const ColumnGroupingEnabledCustomAggregate = () => (
       },
       {
         AggregatedCell: ({ cell }) => (
-          <div className="text-red-500">{cell.renderValue() as string}</div>
+          <div className="text-red-500">Count: {cell.getValue<number>()}</div>
         ),
         accessorKey: 'gender',
+        aggregationFn: 'count',
         header: 'Gender',
         icon: VenusAndMarsIcon,
       },
@@ -395,6 +409,61 @@ const headerCell = (canvasElement: HTMLElement, id: string) =>
     `thead th[data-flip-column="${id}"]`,
   );
 
+/**
+ * Grouped by State from its column menu, each state row's Gender cell is the
+ * custom aggregated cell: `Count:` and the group's size, in red; the arrow
+ * opens the group's people with their gender.
+ */
+ColumnGroupingEnabledCustomAggregate.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByText(data[0]!.firstName);
+  await userEvent.click(
+    within(headerCell(canvasElement, 'state')!).getByRole('button', {
+      name: 'Column Actions',
+    }),
+  );
+  await userEvent.click(
+    await within(document.body).findByRole('menuitem', {
+      name: 'Group by State',
+    }),
+  );
+  const rows = () => [
+    ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
+  ];
+  const cell = (row: Element, id: string) =>
+    row.querySelector<HTMLElement>(`td[data-flip-column="${id}"]`)!;
+  let state = '';
+  await waitFor(() => {
+    const match = /(\S.*) \((\d+)\)$/.exec(
+      (cell(rows()[0]!, 'state').textContent ?? '').trim(),
+    );
+    expect(match).not.toBeNull();
+    state = match![1]!;
+    expect(Number(match![2])).toBe(
+      data.filter((person) => person.state === state).length,
+    );
+    const count = cell(rows()[0]!, 'gender').querySelector('.text-red-500');
+    expect(count).toHaveTextContent(`Count: ${match![2]}`);
+  });
+  const members = data.filter((person) => person.state === state);
+  // A closing Radix menu keeps the rest of the page aria-hidden.
+  await waitFor(() =>
+    expect(document.querySelector('[role="menu"]')).toBeNull(),
+  );
+  await userEvent.click(
+    within(rows()[0]!).getByRole('button', { name: 'Expand' }),
+  );
+  await waitFor(() =>
+    members.slice(0, 3).forEach((member, index) => {
+      const row = rows()[index + 1]!;
+      expect(cell(row, 'firstName')).toHaveTextContent(member.firstName);
+      expect(cell(row, 'gender')).toHaveTextContent(member.gender);
+    }),
+  );
+};
+
 /** The first text node in `root` whose trimmed text equals `text`. */
 const textNode = (root: HTMLElement, text: string) => {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -410,17 +479,11 @@ const precedes = (a: Node, b: Node) =>
 // Under groupedColumnMode 'remove' the grouping column's header is a
 // breadcrumb: the expand-all button, then per grouped column its icon and
 // name, segments separated by a chevron (D68).
-export const GroupedHeaderHasIcon = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableGrouping
-      groupedColumnMode="remove"
-      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
+GroupingColumnModeRemove.play = async ({
+  canvasElement,
+  step,
+}: StoryContext) => {
+  await step('Grouped Header Has Icon', async () => {
     await waitFor(() => {
       const th = headerCell(canvasElement, 'st-row-expand');
       expect(th).not.toBeNull();
@@ -454,7 +517,39 @@ export const GroupedHeaderHasIcon = {
         expect(precedes(order[index]!, node)).toBe(true);
       });
     });
-  },
+  });
+  // The wide grouping column aligns start: the header's expand-all button and
+  // breadcrumb, the group rows' chevron and label, and the leaf rows' chevron
+  // sit at the cell's start edge, not mid-column (F57).
+  await step('Grouped Header Aligns Start', async () => {
+    const startOffset = (element: Element, cell: Element) =>
+      element.getBoundingClientRect().left - cell.getBoundingClientRect().left;
+    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+    const expandCell = (row: Element) =>
+      row.querySelector('td[data-flip-column="st-row-expand"]')!;
+    await waitFor(() => {
+      const th = headerCell(canvasElement, 'st-row-expand');
+      expect(th).not.toBeNull();
+      const breadcrumb = textNode(th!, 'Gender')!.parentElement!.closest(
+        'span:has(button)',
+      )!;
+      expect(startOffset(breadcrumb, th!)).toBeLessThanOrEqual(24);
+      const groupCell = expandCell(rows()[0]!);
+      expect(
+        startOffset(groupCell.querySelector('button')!, groupCell),
+      ).toBeLessThanOrEqual(24);
+      const leafRow = rows().find(
+        (row) =>
+          row
+            .querySelector('td[data-flip-column="firstName"]')
+            ?.textContent?.trim() !== '',
+      )!;
+      const leafCell = expandCell(leafRow);
+      expect(
+        startOffset(leafCell.querySelector('button')!, leafCell),
+      ).toBeLessThanOrEqual(32);
+    });
+  });
 };
 
 const thWidth = (canvasElement: HTMLElement) =>
@@ -519,42 +614,6 @@ export const GroupedHeaderWidthOverride = {
   },
 };
 
-// Under 'remove' the wide grouping column aligns start: the header's
-// expand-all button and breadcrumb, the group rows' chevron and label, and the
-// leaf rows' chevron sit at the cell's start edge, not mid-column (F57).
-export const GroupedHeaderAlignsStart = {
-  render: () => <GroupingColumnModeRemove />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const startOffset = (element: Element, cell: Element) =>
-      element.getBoundingClientRect().left - cell.getBoundingClientRect().left;
-    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
-    const expandCell = (row: Element) =>
-      row.querySelector('td[data-flip-column="st-row-expand"]')!;
-    await waitFor(() => {
-      const th = headerCell(canvasElement, 'st-row-expand');
-      expect(th).not.toBeNull();
-      const breadcrumb = textNode(th!, 'Gender')!.parentElement!.closest(
-        'span:has(button)',
-      )!;
-      expect(startOffset(breadcrumb, th!)).toBeLessThanOrEqual(24);
-      const groupCell = expandCell(rows()[0]!);
-      expect(
-        startOffset(groupCell.querySelector('button')!, groupCell),
-      ).toBeLessThanOrEqual(24);
-      const leafRow = rows().find(
-        (row) =>
-          row
-            .querySelector('td[data-flip-column="firstName"]')
-            ?.textContent?.trim() !== '',
-      )!;
-      const leafCell = expandCell(leafRow);
-      expect(
-        startOffset(leafCell.querySelector('button')!, leafCell),
-      ).toBeLessThanOrEqual(32);
-    });
-  },
-};
-
 // With grouping active the expand column aligns start in every
 // groupedColumnMode: under `false` and 'reorder' the group rows' chevrons sit
 // at the cell's start and step right one indent per depth, not mid-column
@@ -602,44 +661,211 @@ export const GroupedExpandAlignsStartAllModes = {
 };
 
 // Under 'reorder' the grouped column keeps its own header, icon included.
-export const GroupedHeaderHasIconReorder = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableGrouping
-      groupedColumnMode="reorder"
-      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
+ColumnGroupingEnabledReorder.play = async ({
+  canvasElement,
+  step,
+}: StoryContext) => {
+  await step('Grouped Header Has Icon Reorder', async () => {
     await waitFor(() => {
       const th = headerCell(canvasElement, 'state');
       expect(th).not.toBeNull();
       expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
     });
-  },
-};
-
-/**
- * The banner names the grouped columns as chips, in grouping order; a chip
- * click ungroups that column.
- */
-export const GroupByBanner = {
-  render: () => <ColumnGroupingEnabledReorder />,
-  play: async ({ canvasElement }: StoryContext) => {
+  });
+  // The banner names the grouped columns as chips, in grouping order; a chip
+  // click ungroups that column. A column dragged onto the drop zone, with the
+  // mouse or by touch, groups the table by it.
+  await step('Group By Banner', async () => {
     const canvas = within(canvasElement);
     const banner = (await canvas.findByText(/^Grouped by/)).closest('span')!;
     expect(banner).toHaveTextContent(/^Grouped by State, then by Gender$/);
     const chips = within(banner).getAllByRole('button');
     expect(chips.map((chip) => chip.textContent)).toEqual(['State', 'Gender']);
     await userEvent.click(chips[0]!);
-    await waitFor(() =>
-      expect(canvas.getByText(/^Grouped by/).closest('span')).toHaveTextContent(
-        /^Grouped by Gender$/,
+    const bannerText = () =>
+      canvas
+        .getByText(/^Grouped by/)
+        .closest('span')
+        ?.textContent?.replace(/\s+/g, ' ');
+    await waitFor(() => expect(bannerText()).toBe('Grouped by Gender'));
+
+    // The mouse: City dragged onto the drop zone groups by it, no ghost.
+    const ghosts: Element[] = [];
+    const observer = new MutationObserver((records) =>
+      records.forEach((record) =>
+        record.addedNodes.forEach((node) => {
+          if (
+            node instanceof Element &&
+            node.matches('[data-st-touch-ghost]')
+          ) {
+            ghosts.push(node);
+          }
+        }),
       ),
     );
-  },
+    observer.observe(document.body, { childList: true });
+    const city = headerCell(canvasElement, 'city')!;
+    fireEvent.dragStart(city);
+    const zone = await dropZone(canvasElement, 'City');
+    fireEvent.dragEnter(zone);
+    fireEvent.dragOver(zone);
+    fireEvent.dragEnd(city);
+    observer.disconnect();
+    expect(ghosts).toEqual([]);
+    await waitFor(() =>
+      expect(bannerText()).toBe('Grouped by Gender, then by City'),
+    );
+
+    // Touch: a cancelled drag groups nothing; a header held and dropped on
+    // the drop zone groups by Last Name.
+    await touchDragToDropZone({
+      canvasElement,
+      end: 'pointercancel',
+      header: 'Last Name',
+      id: 'lastName',
+    });
+    await pause(100);
+    expect(bannerText()).toBe('Grouped by Gender, then by City');
+    // The column auto-scroll re-sends a plain dragover to a header while the
+    // finger rests on the drop zone; the drop still groups.
+    await touchDragToDropZone({
+      beforeEnd: () => {
+        const { x, y } = centreOf(headerCell(canvasElement, 'firstName')!);
+        headerCell(canvasElement, 'firstName')!.dispatchEvent(
+          new DragEvent('dragover', {
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y,
+          }),
+        );
+      },
+      canvasElement,
+      header: 'Last Name',
+      id: 'lastName',
+    });
+    await waitFor(() =>
+      expect(bannerText()).toBe(
+        'Grouped by Gender, then by City, then by Last Name',
+      ),
+    );
+
+    // A narrow table scrolls sideways while the finger rests near its end
+    // edge, stays put while the finger is on the drop zone, and scrolls again
+    // once the finger is back over the table.
+    const firstName = headerCell(canvasElement, 'firstName')!;
+    const container = firstName.closest('[data-slot="st-scroll-wrapper"]')!
+      .firstElementChild as HTMLElement;
+    container.style.maxWidth = '320px';
+    try {
+      await waitFor(() =>
+        expect(container.scrollWidth - container.clientWidth).toBeGreaterThan(
+          300,
+        ),
+      );
+      container.scrollLeft = 0;
+      const box = container.getBoundingClientRect();
+      const edge = { x: box.right - 48, y: centreOf(firstName).y };
+      touch({ at: edge, element: firstName, type: 'pointerdown' });
+      await pause(400);
+      touch({ at: edge, element: firstName, type: 'pointermove' });
+      await waitFor(() => expect(ghost()).not.toBeNull());
+      await waitFor(() => expect(container.scrollLeft).toBeGreaterThan(0));
+      const zone = centreOf(await dropZone(canvasElement, 'First Name'));
+      touch({ at: zone, element: firstName, type: 'pointermove' });
+      const stopped = container.scrollLeft;
+      await pause(200);
+      expect(container.scrollLeft).toBe(stopped);
+      touch({ at: edge, element: firstName, type: 'pointermove' });
+      await waitFor(() =>
+        expect(container.scrollLeft).toBeGreaterThan(stopped),
+      );
+      touch({ at: edge, element: firstName, type: 'pointercancel' });
+      await waitFor(() => expect(ghost()).toBeNull());
+      expect(bannerText()).toBe(
+        'Grouped by Gender, then by City, then by Last Name',
+      );
+    } finally {
+      container.style.maxWidth = '';
+      container.scrollLeft = 0;
+    }
+  });
+};
+
+const centreOf = (element: Element) => {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** A finger's pointer event, sent to the element it went down on. */
+const touch = ({
+  at,
+  element,
+  type,
+}: {
+  at: { x: number; y: number };
+  element: Element;
+  type: 'pointercancel' | 'pointerdown' | 'pointermove' | 'pointerup';
+}) =>
+  fireEvent(
+    element,
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: at.x,
+      clientY: at.y,
+      isPrimary: true,
+      pointerId: 11,
+      pointerType: 'touch',
+    }),
+  );
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
+/** The copy of the dragged header that follows the finger. */
+const ghost = () =>
+  document.querySelector<HTMLElement>('[data-st-touch-ghost]');
+
+/** The drop zone that shows while column `header` is dragged. */
+const dropZone = (canvasElement: HTMLElement, header: string) =>
+  within(canvasElement).findByText(`Drop to group by ${header}`);
+
+/**
+ * Drags the header cell of column `id` by touch onto the drop zone, after the
+ * finger rests: these tables show no grip. The ghost shows while the drag is
+ * on, follows the finger and is gone after the `end` event.
+ */
+const touchDragToDropZone = async ({
+  beforeEnd,
+  canvasElement,
+  end = 'pointerup',
+  header,
+  id,
+}: {
+  beforeEnd?: () => void;
+  canvasElement: HTMLElement;
+  end?: 'pointercancel' | 'pointerup';
+  header: string;
+  id: string;
+}) => {
+  const cell = headerCell(canvasElement, id)!;
+  const start = centreOf(cell);
+  touch({ at: start, element: cell, type: 'pointerdown' });
+  await pause(400);
+  touch({
+    at: { x: start.x, y: start.y - 10 },
+    element: cell,
+    type: 'pointermove',
+  });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  const halfway = ghost()?.style.translate;
+  const target = centreOf(await dropZone(canvasElement, header));
+  touch({ at: target, element: cell, type: 'pointermove' });
+  await waitFor(() => expect(ghost()?.style.translate).not.toBe(halfway));
+  await pause(50);
+  beforeEnd?.();
+  touch({ at: target, element: cell, type: end });
+  await waitFor(() => expect(ghost()).toBeNull());
 };
 
 /**
@@ -683,6 +909,461 @@ export const ExpandGroupShowsRows = {
             ),
           ).toHaveTextContent(member.firstName),
         ),
+    );
+  },
+};
+
+// The docs examples "Column Grouping" (examples/base/enable-column-grouping)
+// and "Customized Grouping" (examples/base/customize-remove-column-grouping):
+// their columns, options and rows.
+interface ExamplePerson {
+  age: number;
+  firstName: string;
+  gender: string;
+  lastName: string;
+  salary: number;
+  state: string;
+}
+
+// The docs examples' rows (examples/base/<name>/makeData.ts, the same file
+// for every grouping example): first name, last name, age, gender, state,
+// salary.
+const exampleRows: [string, string, number, string, string, number][] = [
+  ['Danika', 'Rodriguez', 57, 'Male', 'Utah', 31404],
+  ['Eloisa', 'Kohler', 31, 'Male', 'Alaska', 45801],
+  ['Gunner', 'Rolfson', 22, 'Male', 'Arizona', 54027],
+  ['Andreanne', 'Hamill', 65, 'Female', 'Hawaii', 60975],
+  ['Kali', 'Jones', 56, 'Female', 'Kentucky', 27067],
+  ['Felicia', 'Mitchell', 34, 'Male', 'South Carolina', 48423],
+  ['Philip', 'Koepp', 32, 'Male', 'Louisiana', 36713],
+  ['Aniya', 'Mante', 41, 'Female', 'Minnesota', 77658],
+  ['Nelda', 'Gottlieb', 41, 'Female', 'Delaware', 57634],
+  ['Marty', 'Kihn', 19, 'Male', 'Delaware', 95427],
+  ['Alvis', 'Turcotte', 53, 'Female', 'Wyoming', 14272],
+  ['Kavon', 'Spencer', 37, 'Female', 'Missouri', 79499],
+  ['Winifred', 'Wilderman', 56, 'Female', 'Iowa', 96293],
+  ['Brooklyn', 'Monahan', 35, 'Female', 'Nevada', 13219],
+  ['Santino', 'Brown', 33, 'Male', 'Mississippi', 36361],
+  ['Bianka', 'Yost', 28, 'Female', 'Wisconsin', 89057],
+  ['Herman', 'Herzog', 63, 'Female', 'South Carolina', 28110],
+  ['Earl', 'Gottlieb', 65, 'Female', 'Florida', 31400],
+  ['Valentine', 'Bauch', 61, 'Female', 'North Carolina', 35130],
+  ['Joanny', 'Koss', 23, 'Male', 'Colorado', 90422],
+  ['Aliza', 'Wilkinson', 25, 'Female', 'Virginia', 98417],
+  ['Eldred', 'Collier', 37, 'Male', 'Mississippi', 43741],
+  ['Dorris', 'Koch', 37, 'Male', 'Delaware', 40979],
+  ['Felix', 'Zieme', 51, 'Male', 'Ohio', 55319],
+  ['Salma', 'Treutel', 32, 'Female', 'Pennsylvania', 31722],
+  ['Durward', 'Kris', 36, 'Male', 'Iowa', 28486],
+  ['Osborne', 'Barrows', 28, 'Male', 'West Virginia', 43996],
+  ['Adelia', 'Abbott', 38, 'Male', 'Oregon', 34720],
+  ['Thad', 'Wiegand', 64, 'Female', 'Alabama', 56146],
+  ['Tiana', 'Tromp', 51, 'Male', 'Arkansas', 45636],
+  ['Gwen', 'Bergstrom', 36, 'Female', 'Wyoming', 95145],
+  ['Evalyn', 'Mitchell', 53, 'Female', 'Illinois', 86990],
+  ['Edyth', 'Macejkovic', 55, 'Female', 'Kentucky', 65344],
+  ['Lamar', 'Bechtelar', 58, 'Female', 'Rhode Island', 93753],
+  ['Tillman', 'Jacobs', 36, 'Female', 'New Mexico', 13393],
+  ['Turner', 'Haley', 56, 'Female', 'Nebraska', 93733],
+  ['Omer', 'Funk', 28, 'Female', 'Iowa', 77913],
+  ['Alivia', 'Ledner', 56, 'Male', 'Alabama', 12591],
+  ['Dortha', 'Schmitt', 43, 'Male', 'Mississippi', 80347],
+  ['Ellie', 'Schinner', 41, 'Female', 'Rhode Island', 42232],
+  ['Pansy', 'Reilly', 55, 'Male', 'Louisiana', 87255],
+  ['Alfonzo', 'Abernathy', 40, 'Male', 'Utah', 53374],
+  ['Carmine', 'Orn', 24, 'Female', 'Georgia', 89363],
+  ['Taylor', 'Herzog', 63, 'Male', 'Florida', 81429],
+  ['Ray', 'Little', 27, 'Female', 'Maine', 53736],
+  ['Melyssa', 'Bechtelar', 56, 'Male', 'New Mexico', 85152],
+  ['Coy', 'Schoen', 32, 'Male', 'Florida', 83999],
+  ['Lexi', 'Reinger', 39, 'Female', 'Virginia', 17585],
+  ['Carlee', 'Turcotte', 25, 'Male', 'Missouri', 85236],
+  ['Tamia', 'Stamm', 47, 'Female', 'Nevada', 65037],
+  ['Leola', 'Donnelly', 30, 'Female', 'Missouri', 23897],
+  ['Allison', 'Stanton', 34, 'Male', 'New Hampshire', 34389],
+  ['Neoma', 'Flatley', 65, 'Female', 'Connecticut', 43669],
+  ['Brad', 'Altenwerth', 18, 'Male', 'Virginia', 85599],
+  ['Magdalen', 'Berge', 58, 'Female', 'Louisiana', 65571],
+  ['Kathryn', 'Kirlin', 48, 'Female', 'New Hampshire', 97434],
+  ['Rod', 'Sawayn', 19, 'Female', 'Nevada', 58951],
+  ['Georgette', 'Beatty', 53, 'Male', 'Kentucky', 12203],
+  ['Dianna', 'King', 23, 'Female', 'Vermont', 13515],
+  ['Kellie', 'Parker', 43, 'Trans Male', 'Louisiana', 49457],
+  ['Faustino', 'Ankunding', 43, 'Male', 'Indiana', 49943],
+  ['Hilton', 'Pacocha', 58, 'Male', 'South Dakota', 34874],
+  ['Shanel', 'Schneider', 33, 'Female', 'Nebraska', 50446],
+  ['Wade', 'Kiehn', 23, 'Male', 'Delaware', 29522],
+  ['Austyn', 'Rempel', 35, 'Female', 'Arkansas', 42997],
+  ['Maggie', 'Keebler', 20, 'Female', 'California', 11588],
+  ['Ruby', 'Kertzmann', 40, 'Female', 'Missouri', 45860],
+  ['Lilyan', 'Pfannerstill', 37, 'Cisgender', 'Washington', 37347],
+  ['Fletcher', 'Huels', 65, 'Female', 'Colorado', 11596],
+  ['Danyka', 'Gleason', 36, 'Male', 'Alabama', 71238],
+  ['Tressa', 'McCullough', 64, 'Female', 'Virginia', 47028],
+  ['Heber', 'Bernhard', 37, 'Cisgender', 'California', 11268],
+  ['Damon', 'Barrows', 20, 'Female', 'West Virginia', 22796],
+  ['Willy', 'Koss', 35, 'Female', 'Colorado', 88346],
+  ['Carley', 'Block', 54, 'Female', 'Michigan', 32934],
+  ['Randy', 'Powlowski', 31, 'Female', 'Mississippi', 68186],
+  ['Rubye', 'Weissnat', 43, 'Female', 'South Carolina', 19377],
+  ['Gloria', 'Green', 54, 'Male', 'Georgia', 85559],
+  ['Kian', 'Hand', 56, 'Male', 'Alaska', 81062],
+  ['Adelia', 'Weber', 29, 'Male', 'Wyoming', 62704],
+  ['Clemmie', 'Nienow', 64, 'Male', 'New Hampshire', 84951],
+  ['Buck', 'Ankunding', 25, 'Male', 'Kentucky', 88189],
+  ['Abbey', 'Kulas', 36, 'Female', 'Oklahoma', 62902],
+  ['Godfrey', 'Beahan', 43, 'Female', 'Georgia', 85231],
+  ['Jayde', 'Friesen', 60, 'Male', 'Minnesota', 68939],
+  ['Kaela', 'Bernhard', 51, 'Female', 'Virginia', 61567],
+  ['Jerome', 'Jast', 22, 'Male', 'Wisconsin', 47210],
+  ['Lawrence', 'Steuber', 39, 'Male', 'Mississippi', 99291],
+  ['Deon', 'Romaguera', 53, 'Female', 'Vermont', 98288],
+  ['Jena', "O'Hara", 41, 'Female', 'Iowa', 40063],
+  ['Ima', 'Bartell', 62, 'Female', 'Rhode Island', 72570],
+  ['Antonina', 'McCullough', 59, 'Male', 'Nebraska', 95189],
+  ['Steve', 'Gislason', 41, 'Male', 'Kentucky', 93162],
+  ['Carmela', 'Boyle', 49, 'Male', 'Virginia', 71890],
+  ['Horacio', 'Murphy', 51, 'Female', 'Vermont', 32343],
+  ['Bettie', "O'Hara", 40, 'Female', 'North Dakota', 60492],
+  ['Rene', 'Gottlieb', 34, 'Female', 'Florida', 90192],
+  ['Turner', 'Ward', 32, 'Female', 'Tennessee', 55249],
+  ['Elaina', 'Orn', 30, 'Female', 'Michigan', 72501],
+  ['Nayeli', 'Littel', 44, 'Nonbinary', 'Maine', 53740],
+  ['Velda', 'Kuphal', 57, 'Male', 'New York', 93481],
+  ['Loyce', 'Schmidt', 29, 'Female', 'Alaska', 76295],
+  ['Oswaldo', 'DuBuque', 30, 'Male', 'Ohio', 55034],
+  ['Kiarra', 'Dooley', 20, 'Male', 'Nebraska', 60415],
+  ['Ashleigh', 'Fahey', 56, 'Female', 'New Mexico', 28186],
+  ['Jordyn', 'Weissnat', 49, 'Female', 'North Dakota', 81663],
+  ['Maureen', 'Swift', 63, 'Male', 'Ohio', 53538],
+  ['Cathryn', 'Spinka', 42, 'Female', 'New Hampshire', 14586],
+  ['Xzavier', 'Raynor', 37, 'Male', 'California', 60776],
+  ['Alexander', 'Kris', 63, 'Female', 'North Carolina', 85926],
+  ['Golda', 'McLaughlin', 41, 'Cisgender', 'Kansas', 49250],
+  ['Delbert', 'Jacobson', 40, 'Female', 'New Hampshire', 58482],
+  ['Cordia', 'Hermann', 45, 'Female', 'Mississippi', 29543],
+  ['Brennon', 'Smith', 39, 'Nonbinary', 'Missouri', 65193],
+  ['Kraig', 'Moen', 59, 'Male', 'West Virginia', 52677],
+  ['Lionel', 'Hartmann', 30, 'Nonbinary', 'Alabama', 58743],
+  ['Terrill', 'Feest', 61, 'Female', 'West Virginia', 97637],
+  ['Jaylin', 'Murazik', 56, 'Male', 'Wyoming', 68290],
+  ['Tyrique', 'Emard', 55, 'Male', 'New Hampshire', 23052],
+  ['Shanelle', 'Hilll', 35, 'Male', 'New Mexico', 66504],
+  ['Antwan', 'Zieme', 21, 'Male', 'Utah', 56638],
+  ['Kyler', 'Schmeler', 19, 'Female', 'Oklahoma', 73721],
+  ['Colt', 'Wiegand', 64, 'Male', 'New York', 69024],
+  ['Paul', 'Leannon', 21, 'Male', 'New York', 67575],
+  ['Magnus', 'Ortiz', 53, 'Female', 'Ohio', 18489],
+  ['Kathryn', 'Langworth', 39, 'Male', 'Utah', 25720],
+  ['Zelma', 'Grimes', 42, 'Male', 'Texas', 94083],
+  ['Eddie', 'Paucek', 40, 'Nonbinary', 'Michigan', 96538],
+  ['Tressa', 'Cartwright', 26, 'Female', 'Maine', 38495],
+  ['Dawn', 'Huels', 57, 'Male', 'New Jersey', 41603],
+  ['Pinkie', 'Rau', 30, 'Female', 'New Jersey', 27073],
+  ['Macie', 'Reynolds', 18, 'Male', 'Massachusetts', 86581],
+  ['Bertrand', 'Cummings', 62, 'Female', 'Illinois', 96908],
+  ['Dylan', 'Wolf', 65, 'Male', 'New York', 75557],
+  ['Elsa', 'Lockman', 36, 'Female', 'Colorado', 30586],
+  ['Haylee', 'Price', 57, 'Male', 'Utah', 59047],
+  ['Harold', 'Stracke', 49, 'Female', 'Indiana', 99744],
+  ['Kelly', 'Monahan', 20, 'Male', 'Indiana', 64408],
+  ['Lee', "O'Hara", 38, 'Male', 'Washington', 23136],
+  ['Trevor', 'Beier', 65, 'Female', 'New York', 19235],
+  ['Theron', 'Windler', 32, 'Male', 'North Dakota', 52825],
+  ['Jennings', 'Halvorson', 34, 'Male', 'New York', 24737],
+  ['Charity', 'Kuvalis', 40, 'Male', 'Mississippi', 60813],
+  ['Kaitlyn', 'Maggio', 23, 'Female', 'Indiana', 74616],
+  ['Reymundo', 'Osinski', 45, 'Female', 'New Mexico', 50978],
+  ['Glen', 'Kub', 47, 'Male', 'Vermont', 85742],
+  ['Reinhold', 'Reichel', 30, 'Female', 'Alabama', 30531],
+  ['Theresia', 'Wyman', 50, 'Female', 'Kentucky', 49835],
+  ['Lurline', 'Koepp', 59, 'Female', 'Alabama', 10645],
+  ['Elise', 'Schimmel', 42, 'Male', 'Illinois', 80267],
+  ['Maeve', 'Mante', 54, 'Male', 'Massachusetts', 34713],
+  ['Michale', 'Collier', 59, 'Male', 'Alaska', 75197],
+  ['Adell', 'Champlin', 37, 'Female', 'Tennessee', 80245],
+  ['Cyril', 'Hahn', 48, 'Male', 'Louisiana', 76679],
+  ['Josiah', 'Durgan', 50, 'Female', 'North Carolina', 76309],
+  ['Rene', 'Weber', 58, 'Female', 'Mississippi', 51097],
+  ['Stacey', 'Pouros', 34, 'Male', 'Minnesota', 71566],
+  ['Kody', 'Braun', 38, 'Female', 'Alabama', 63733],
+  ['Maritza', 'Bartell', 45, 'Female', 'Idaho', 14581],
+  ['Abbey', 'Fay', 30, 'Male', 'New Mexico', 21372],
+  ['Duncan', 'Carroll', 50, 'Male', 'Washington', 65996],
+  ['Eldridge', 'Stroman', 42, 'Male', 'Alaska', 59594],
+  ['Roberta', 'Bashirian', 38, 'Male', 'Nevada', 91870],
+  ['Erwin', 'Kihn', 26, 'Nonbinary', 'Louisiana', 48803],
+  ['Alberta', 'Considine', 37, 'Male', 'Illinois', 84906],
+  ['Lexi', "O'Hara", 29, 'Male', 'Virginia', 72684],
+  ['Alvera', 'Balistreri', 25, 'Female', 'Alaska', 79844],
+  ['Kayden', 'Emard', 35, 'Female', 'Alaska', 98252],
+  ['Rahul', 'Greenfelder', 27, 'Female', 'Wisconsin', 63419],
+  ['Caterina', 'Koss', 52, 'Male', 'Arkansas', 58259],
+  ['Eriberto', 'Klein', 20, 'Male', 'Iowa', 73198],
+  ['Lilla', 'Thompson', 36, 'Male', 'Washington', 53856],
+  ['Jonathan', 'Brakus', 47, 'Female', 'Kansas', 45726],
+  ['Darby', 'Frami', 58, 'Female', 'Texas', 68700],
+  ['Damon', 'Barrows', 22, 'Female', 'Pennsylvania', 23156],
+  ['Eliezer', 'Erdman', 25, 'Female', 'Missouri', 48537],
+  ['Marge', 'Windler', 29, 'Female', 'Georgia', 54107],
+  ['Raleigh', 'Lakin', 48, 'Male', 'Nebraska', 13802],
+  ['Freida', 'Barrows', 54, 'Female', 'North Carolina', 32719],
+  ['Allen', 'Gaylord', 57, 'Female', 'Virginia', 41416],
+  ['Blanche', 'Luettgen', 39, 'Male', 'Missouri', 81498],
+  ['Domingo', 'Bauch', 36, 'Female', 'Alaska', 35159],
+  ['Elijah', 'Kiehn', 43, 'Female', 'Colorado', 11772],
+  ['Mozelle', 'Kuvalis', 44, 'Female', 'Massachusetts', 25499],
+  ['Adaline', 'Volkman', 19, 'Female', 'Louisiana', 74049],
+  ['Edward', 'Wisozk', 22, 'Female', 'Washington', 90236],
+  ['Rita', 'Gaylord', 64, 'Female', 'Georgia', 12755],
+  ['Burdette', 'Fisher', 27, 'Female', 'Connecticut', 29371],
+  ['Naomi', 'Ebert', 52, 'Female', 'Colorado', 48525],
+  ['Sid', 'Champlin', 43, 'Female', 'Pennsylvania', 77186],
+  ['Darwin', 'Luettgen', 57, 'Male', 'Illinois', 34401],
+  ['Bonita', 'Klocko', 43, 'Male', 'Arkansas', 85883],
+  ['Tremayne', 'Casper', 58, 'Female', 'Nebraska', 47237],
+  ['Maximillian', "O'Connell", 27, 'Female', 'New Jersey', 33190],
+  ['Nola', 'Bashirian', 36, 'Male', 'Nebraska', 45510],
+  ['Vernon', 'Murray', 62, 'Male', 'Montana', 25464],
+  ['Edwin', 'Rippin', 32, 'Male', 'Michigan', 44083],
+  ['Zola', 'Goodwin', 20, 'Male', 'Idaho', 62729],
+  ['Dangelo', 'Abshire', 31, 'Female', 'Connecticut', 40247],
+  ['Kallie', 'Swaniawski', 45, 'Male', 'Virginia', 35294],
+];
+
+const examplePeople: ExamplePerson[] = exampleRows.map(
+  ([firstName, lastName, age, gender, state, salary]) => ({
+    age,
+    firstName,
+    gender,
+    lastName,
+    salary,
+    state,
+  }),
+);
+
+const exampleColumns: ST_ColumnDef<ExamplePerson>[] = [
+  {
+    header: 'First Name',
+    accessorKey: 'firstName',
+    icon: UserIcon,
+  },
+  {
+    header: 'Last Name',
+    accessorKey: 'lastName',
+    icon: UserIcon,
+  },
+  {
+    header: 'Age',
+    accessorKey: 'age',
+    icon: CakeIcon,
+  },
+  {
+    header: 'Gender',
+    accessorKey: 'gender',
+    icon: VenusAndMarsIcon,
+  },
+  {
+    header: 'State',
+    accessorKey: 'state',
+    icon: MapIcon,
+  },
+  {
+    header: 'Salary',
+    accessorKey: 'salary',
+    icon: DollarSignIcon,
+  },
+];
+
+type GroupedColumnMode = false | 'remove' | 'reorder';
+
+/** The React Aria radio group takes `onChange` and holds its own label. */
+const AriaRadioGroup = RadioGroup as unknown as ComponentType<{
+  children?: ReactNode;
+  className?: string;
+  onChange: (value: string) => void;
+  value: string;
+}>;
+
+/**
+ * The Radix and Base UI radio group takes `onValueChange`, which the React
+ * Aria one lacks.
+ */
+const RadixRadioGroup = RadioGroup as unknown as ComponentType<{
+  children?: ReactNode;
+  className?: string;
+  onValueChange: (value: string) => void;
+  value: string;
+}>;
+
+const DemoRadioGroup = ({
+  groupedColumnMode,
+  setGroupedColumnMode,
+}: {
+  groupedColumnMode: GroupedColumnMode;
+  setGroupedColumnMode: (groupedColumnMode: GroupedColumnMode) => void;
+}) => {
+  const onChange = (value: string) =>
+    setGroupedColumnMode(
+      value === 'false' ? false : (value as 'remove' | 'reorder'),
+    );
+  const items = (
+    <>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="reorder" id="grouped-column-mode-reorder" />
+        <Label htmlFor="grouped-column-mode-reorder">
+          &quot;reorder&quot; (default)
+        </Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="remove" id="grouped-column-mode-remove" />
+        <Label htmlFor="grouped-column-mode-remove">&quot;remove&quot;</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="false" id="grouped-column-mode-false" />
+        <Label htmlFor="grouped-column-mode-false">false</Label>
+      </div>
+    </>
+  );
+  if (ST_BASE === 'aria') {
+    return (
+      <AriaRadioGroup
+        className="mx-auto flex w-fit flex-col items-center"
+        onChange={onChange}
+        value={String(groupedColumnMode)}
+      >
+        <Label>Grouped Column Mode</Label>
+        <div className="flex gap-3">{items}</div>
+      </AriaRadioGroup>
+    );
+  }
+  return (
+    <div className="mx-auto text-center">
+      <Label>Grouped Column Mode</Label>
+      <RadixRadioGroup
+        className="flex"
+        onValueChange={onChange}
+        value={String(groupedColumnMode)}
+      >
+        {items}
+      </RadixRadioGroup>
+    </div>
+  );
+};
+
+const ColumnGroupingTable = () => {
+  const [groupedColumnMode, setGroupedColumnMode] =
+    useState<GroupedColumnMode>('reorder');
+  const table = useShadcnTable({
+    columns: exampleColumns,
+    data: examplePeople,
+    enableGrouping: true,
+    groupedColumnMode,
+    initialState: {
+      expanded: true,
+      grouping: ['state', 'gender'],
+      pagination: { pageIndex: 0, pageSize: 20 },
+    },
+    stTableContainerProps: { className: 'max-h-[800px]' },
+  });
+  return (
+    <div className="flex flex-col gap-4">
+      <DemoRadioGroup
+        groupedColumnMode={groupedColumnMode}
+        setGroupedColumnMode={setGroupedColumnMode}
+      />
+      <ShadcnTable table={table} />
+    </div>
+  );
+};
+
+/**
+ * Grouped by State then Gender under "reorder"; picking "remove" takes the
+ * grouped columns out of the table and keeps the groups.
+ */
+export const ColumnGrouping = {
+  render: () => <ColumnGroupingTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const banner = (await canvas.findByText(/^Grouped by/)).closest('span')!;
+    expect(banner).toHaveTextContent(/^Grouped by State, then by Gender$/);
+    const radios = canvas.getAllByRole('radio');
+    expect(radios).toHaveLength(3);
+    expect(radios[0]).toBeChecked();
+    expect(headerCell(canvasElement, 'state')).not.toBeNull();
+    await userEvent.click(radios[1]!);
+    await waitFor(() => {
+      expect(headerCell(canvasElement, 'state')).toBeNull();
+      expect(headerCell(canvasElement, 'gender')).toBeNull();
+    });
+    expect(canvas.getByText(/^Grouped by/).closest('span')).toHaveTextContent(
+      /^Grouped by State, then by Gender$/,
+    );
+  },
+};
+
+const CustomizedGroupingTable = () => {
+  const table = useShadcnTable({
+    columns: exampleColumns,
+    data: examplePeople,
+    displayColumnDefOptions: {
+      'st-row-expand': {
+        Header: () => (
+          <div className="flex flex-row items-center">
+            <ST_ExpandAllButton />
+            <div>Groups</div>
+          </div>
+        ),
+        GroupedCell: ({ row, table }) => {
+          const grouping = table.atoms.grouping.get();
+          return row.getValue(grouping[grouping.length - 1]);
+        },
+        enableResizing: true,
+        stTableBodyCellProps: ({ row }) => ({
+          style: {
+            color:
+              row.depth === 0
+                ? 'var(--primary)'
+                : row.depth === 1
+                  ? 'var(--secondary)'
+                  : undefined,
+          },
+        }),
+        size: 200,
+      },
+    },
+    enableGrouping: true,
+    enableColumnResizing: true,
+    groupedColumnMode: 'remove',
+    initialState: {
+      density: 'compact',
+      expanded: true,
+      grouping: ['state', 'gender'],
+      pagination: { pageIndex: 0, pageSize: 20 },
+      sorting: [{ id: 'state', desc: false }],
+    },
+  });
+  return <ShadcnTable table={table} />;
+};
+
+/**
+ * The grouping column has its own "Groups" header and takes the place of the
+ * removed State and Gender columns; the groups start at Alabama.
+ */
+export const CustomizedGrouping = {
+  render: () => <CustomizedGroupingTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText('Groups');
+    const th = headerCell(canvasElement, 'st-row-expand')!;
+    expect(th).toHaveTextContent(/Groups$/);
+    expect(headerCell(canvasElement, 'state')).toBeNull();
+    expect(headerCell(canvasElement, 'gender')).toBeNull();
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector(
+          'tbody tr:first-child td[data-flip-column="st-row-expand"]',
+        ),
+      ).toHaveTextContent('Alabama'),
     );
   },
 };

@@ -613,6 +613,11 @@
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_TouchDrag.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TouchDrag.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
@@ -2026,6 +2031,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_TouchDrag.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TouchDrag.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
@@ -3443,6 +3453,11 @@
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_TouchDrag.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TouchDrag.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
@@ -4856,6 +4871,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_TouchDrag.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TouchDrag.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",

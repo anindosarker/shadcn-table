@@ -5,15 +5,19 @@ description: 'How to use and customize the accessibility and keyboard navigation
 
 Shadcn Table tries to get the basics of data grid accessibility right out of the box. But since you can easily add event handlers to just about any interaction inside of the table, you can heavily customize the accessibility of your table to your needs too.
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['enableKeyboardShortcuts'])} />
 
-### Keyboard Navigation
+## Keyboard Navigation
 
 Shadcn Table has a table option that is `true` by default: `enableKeyboardShortcuts`
 
-#### `enableKeyboardShortcuts`
+### `enableKeyboardShortcuts`
 
 This option enables the following keyboard shortcuts:
 
@@ -35,7 +39,7 @@ This option enables the following keyboard shortcuts:
 
 A `tabIndex={0}` is also automatically added to all cells, headers, and footers when `enableKeyboardShortcuts` is enabled to allow for keyboard focus.
 
-### Custom Keyboard Shortcuts
+## Custom Keyboard Shortcuts
 
 You do not have to use the provided keyboard shortcuts. You can turn off `enableKeyboardShortcuts` and add your own keyboard shortcuts using the `onKeyDown` event handler on all of the table cells (or any other element).
 
@@ -73,7 +77,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Custom Focus Styles
+## Custom Focus Styles
 
 An outline is automatically added to all elements when they are focused. The outline uses the shadcn `ring` color, so you can easily customize its color by overriding the `--ring` CSS variable on the table.
 
@@ -102,7 +106,7 @@ const table = useShadcnTable({
 });
 ```
 
-### Full Screen Mode
+## Full Screen Mode
 
 A focus trap is applied to the table when in full screen mode. This is to prevent the user from navigating outside of the table when using the arrow keys.
 

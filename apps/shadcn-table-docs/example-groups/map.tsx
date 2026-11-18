@@ -3,7 +3,6 @@ import { exampleComponents as examples } from '@/examples/map';
 import BasicExamples from './BasicExamples';
 import DataExportExamples from './DataExportExamples';
 import DraggingExamples from './DraggingExamples';
-import EditingCRUDExamples from './EditingCRUDExamples';
 import ExpandingExamples from './ExpandingExamples';
 import FilteringExamples from './FilteringExamples';
 import InstanceAPIsSwitcher from './InstanceAPIsSwitcher';
@@ -18,7 +17,6 @@ export const exampleComponents = {
   BasicExamples,
   DataExportExamples,
   DraggingExamples,
-  EditingCRUDExamples,
   ExpandingExamples,
   FilteringExamples,
   InstanceAPIsSwitcher,

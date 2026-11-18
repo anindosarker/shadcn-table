@@ -22,7 +22,6 @@ const Example = () => {
         accessorKey: 'email',
         icon: MailIcon,
         header: 'Email',
-        enableClickToCopy: true,
         stCopyButtonProps: {
           className: 'w-full justify-start',
         },
@@ -31,13 +30,12 @@ const Example = () => {
         accessorKey: 'city',
         icon: Building2Icon,
         header: 'City',
-        enableClickToCopy: true,
       },
     ],
     [],
   );
 
-  return <ShadcnTable columns={columns} data={data} />;
+  return <ShadcnTable columns={columns} data={data} enableClickToCopy />;
 };
 
 export default Example;

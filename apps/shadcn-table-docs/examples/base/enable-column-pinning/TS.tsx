@@ -23,7 +23,7 @@ const Example = () => {
       {
         accessorKey: 'id',
         icon: HashIcon,
-        enableColumnPinning: false, //disable column pinning for this column
+        enablePinning: false, //disable column pinning for this column
         header: 'ID',
         size: 110,
       },

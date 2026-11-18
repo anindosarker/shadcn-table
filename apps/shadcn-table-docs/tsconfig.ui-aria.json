@@ -1,6 +1,6 @@
-// The aria copy of the library and its example variants, checked in a program
-// of their own by `types:bases` (`types:check` and `build`): see
-// tsconfig.build.json.
+// The aria copy of the library, its example variants and its story copies,
+// checked in a program of their own by `types:bases` (`types:check` and
+// `build`): see tsconfig.build.json.
 {
   "extends": "./tsconfig.json",
   "include": [
@@ -8,6 +8,8 @@
     "components/ui-aria/**/*.ts",
     "components/ui-aria/**/*.tsx",
     "examples/.aria/**/*.ts",
-    "examples/.aria/**/*.tsx"
+    "examples/.aria/**/*.tsx",
+    "stories/.aria/**/*.ts",
+    "stories/.aria/**/*.tsx"
   ]
 }

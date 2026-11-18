@@ -3,7 +3,11 @@ title: 'Full Screen Toggle Guide'
 description: 'How to use, customize, or disable the full screen toggle button feature of Shadcn Table'
 ---
 
-### Relevant Table Options
+## Example
+
+<GuideExamples slugs={['basic']} />
+
+## Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
@@ -15,11 +19,11 @@ description: 'How to use, customize, or disable the full screen toggle button fe
   }
 />
 
-### Relevant State
+## Relevant State
 
 <StateOptionsTable onlyOptions={new Set(['isFullScreen'])} />
 
-### Disable Full Screen Toggle
+## Disable Full Screen Toggle
 
 The full screen toggle button is enabled by default. You can hide it by setting the `enableFullScreenToggle` table option to `false`.
 
@@ -33,7 +37,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Change Z-Index of Full Screen Table
+## Change Z-Index of Full Screen Table
 
 Under the hood, when the table is full screen, these classes are applied to the root table layout element:
 

@@ -1,8 +1,19 @@
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, waitFor, within } from 'storybook/test';
-import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
+import {
+  Building2Icon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   parameters: {
@@ -10,7 +21,7 @@ const meta: Meta = {
       type: 'stable',
     },
   },
-  title: 'Styling/Sticky Header Examples',
+  title: 'Styling/Sticky Header',
 };
 
 export default meta;
@@ -156,4 +167,350 @@ StickyHeaderShorterTable.play = async ({ canvasElement }: StoryContext) => {
       ),
     ).toBeLessThanOrEqual(1),
   );
+};
+
+// The docs example `enable-sticky-header`: header and footer stay in view
+// while 30 unpaged rows scroll.
+type Contact = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  city: string;
+};
+
+const contacts: Contact[] = [
+  {
+    firstName: 'Dylan',
+    lastName: 'Murray',
+    email: 'dmurray@yopmail.com',
+    city: 'East Daphne',
+  },
+  {
+    firstName: 'Raquel',
+    lastName: 'Kohler',
+    email: 'rkholer33@yopmail.com',
+    city: 'Columbus',
+  },
+  {
+    firstName: 'Ervin',
+    lastName: 'Reinger',
+    email: 'ereinger@mailinator.com',
+    city: 'South Linda',
+  },
+  {
+    firstName: 'Brittany',
+    lastName: 'McCullough',
+    email: 'bmccullough44@mailinator.com',
+    city: 'Lincoln',
+  },
+  {
+    firstName: 'Branson',
+    lastName: 'Frami',
+    email: 'bframi@yopmain.com',
+    city: 'New York',
+  },
+  {
+    firstName: 'Ben',
+    lastName: 'Murray',
+    email: 'benm@email.com',
+    city: 'Salt Lake City',
+  },
+  {
+    firstName: 'Elena',
+    lastName: 'Smith',
+    email: 'esmith@yopmail.com',
+    city: 'Los Angeles',
+  },
+  {
+    firstName: 'Michael',
+    lastName: 'Johnson',
+    email: 'mjohnson@mailinator.com',
+    city: 'Chicago',
+  },
+  {
+    firstName: 'Sophia',
+    lastName: 'Brown',
+    email: 'sbrown@yopmail.com',
+    city: 'Houston',
+  },
+  {
+    firstName: 'Lucas',
+    lastName: 'Davis',
+    email: 'ldavis@mailinator.com',
+    city: 'Phoenix',
+  },
+  {
+    firstName: 'Olivia',
+    lastName: 'Garcia',
+    email: 'ogarcia@yopmail.com',
+    city: 'Philadelphia',
+  },
+  {
+    firstName: 'Liam',
+    lastName: 'Rodriguez',
+    email: 'lrodriguez@mailinator.com',
+    city: 'San Antonio',
+  },
+  {
+    firstName: 'Emma',
+    lastName: 'Martinez',
+    email: 'emartinez@yopmail.com',
+    city: 'San Diego',
+  },
+  {
+    firstName: 'Noah',
+    lastName: 'Hernandez',
+    email: 'nhernandez@mailinator.com',
+    city: 'Dallas',
+  },
+  {
+    firstName: 'Ava',
+    lastName: 'Lopez',
+    email: 'alopez@yopmail.com',
+    city: 'San Jose',
+  },
+  {
+    firstName: 'William',
+    lastName: 'Gonzalez',
+    email: 'wgonzalez@mailinator.com',
+    city: 'Austin',
+  },
+  {
+    firstName: 'Isabella',
+    lastName: 'Wilson',
+    email: 'iwilson@yopmail.com',
+    city: 'Jacksonville',
+  },
+  {
+    firstName: 'James',
+    lastName: 'Anderson',
+    email: 'janderson@mailinator.com',
+    city: 'Fort Worth',
+  },
+  {
+    firstName: 'Mia',
+    lastName: 'Thomas',
+    email: 'mthomas@yopmail.com',
+    city: 'Columbus',
+  },
+  {
+    firstName: 'Alexander',
+    lastName: 'Taylor',
+    email: 'ataylor@mailinator.com',
+    city: 'Charlotte',
+  },
+  {
+    firstName: 'Grace',
+    lastName: 'Moore',
+    email: 'gmoore@yopmail.com',
+    city: 'Indianapolis',
+  },
+  {
+    firstName: 'Ethan',
+    lastName: 'White',
+    email: 'ewhite@mailinator.com',
+    city: 'San Francisco',
+  },
+  {
+    firstName: 'Lily',
+    lastName: 'Harris',
+    email: 'lharris@yopmail.com',
+    city: 'Seattle',
+  },
+  {
+    firstName: 'Daniel',
+    lastName: 'Martin',
+    email: 'dmartin@mailinator.com',
+    city: 'Denver',
+  },
+  {
+    firstName: 'Zoe',
+    lastName: 'Jackson',
+    email: 'zjackson@yopmail.com',
+    city: 'Boston',
+  },
+  {
+    firstName: 'Matthew',
+    lastName: 'Thompson',
+    email: 'mthompson@mailinator.com',
+    city: 'Nashville',
+  },
+  {
+    firstName: 'Ella',
+    lastName: 'Garcia',
+    email: 'egarcia@yopmail.com',
+    city: 'Detroit',
+  },
+  {
+    firstName: 'David',
+    lastName: 'Martinez',
+    email: 'dmartinez@mailinator.com',
+    city: 'Portland',
+  },
+  {
+    firstName: 'Aria',
+    lastName: 'Robinson',
+    email: 'arobinson@yopmail.com',
+    city: 'Las Vegas',
+  },
+  {
+    firstName: 'Joseph',
+    lastName: 'Clark',
+    email: 'jclark@mailinator.com',
+    city: 'Baltimore',
+  },
+];
+
+const contactColumns: ST_ColumnDef<Contact>[] = [
+  {
+    accessorKey: 'firstName',
+    icon: UserIcon,
+    header: 'First Name',
+    footer: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    icon: UserIcon,
+    header: 'Last Name',
+    footer: 'Last Name',
+  },
+  {
+    accessorKey: 'email',
+    icon: MailIcon,
+    header: 'Email',
+    footer: 'Email',
+  },
+  {
+    accessorKey: 'city',
+    icon: Building2Icon,
+    header: 'City',
+    footer: 'City',
+  },
+];
+
+const StickyHeaderExample = () => {
+  const table = useShadcnTable({
+    columns: contactColumns,
+    data: contacts,
+    enableBottomToolbar: false,
+    enableStickyHeader: true,
+    enableStickyFooter: true,
+    enablePagination: false,
+    stTableContainerProps: { className: 'max-h-[400px]' },
+    stTableBodyCellProps: {
+      className: 'bg-muted',
+    },
+  });
+
+  return <ShadcnTable table={table} />;
+};
+
+export const StickyHeader = {
+  render: () => <StickyHeaderExample />,
+  // Every row renders unpaged; header and footer stay at the edges of the
+  // scroll box while the rows scroll.
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText(contacts[0]!.email);
+    expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(
+      contacts.length,
+    );
+    const thead = canvasElement.querySelector<HTMLElement>('thead')!;
+    const tfoot = canvasElement.querySelector<HTMLElement>('tfoot')!;
+    expect(getComputedStyle(thead).position).toBe('sticky');
+    expect(getComputedStyle(tfoot).position).toBe('sticky');
+    let box: HTMLElement | null = thead.parentElement;
+    while (box && getComputedStyle(box).overflowY !== 'auto') {
+      box = box.parentElement;
+    }
+    box!.scrollTop = 300;
+    await waitFor(() => expect(box!.scrollTop).toBe(300));
+    await waitFor(() => {
+      const rect = box!.getBoundingClientRect();
+      expect(
+        Math.abs(thead.getBoundingClientRect().top - rect.top),
+      ).toBeLessThanOrEqual(1);
+      // The visible bottom edge, above a horizontal scrollbar if one shows.
+      const bottom = rect.top + box!.clientTop + box!.clientHeight;
+      expect(
+        Math.abs(tfoot.getBoundingClientRect().bottom - bottom),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
+};
+
+const isStuck = (canvasElement: HTMLElement) => {
+  const thead = canvasElement.querySelector<HTMLElement>('thead')!;
+  const th = thead.querySelector<HTMLElement>('th')!;
+  return (
+    getComputedStyle(thead).position === 'sticky' ||
+    getComputedStyle(th).position === 'sticky'
+  );
+};
+
+/**
+ * Starts a pointer drag on the right half of a column's resize grip, on
+ * whatever element is drawn there, and expects the column to grow.
+ */
+const dragGripRightHalf = async (
+  canvasElement: HTMLElement,
+  columnId: string,
+  dx: number,
+) => {
+  const th = canvasElement.querySelector<HTMLElement>(
+    `thead th[data-flip-column="${columnId}"]`,
+  )!;
+  const grip = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  grip.scrollIntoView({ block: 'nearest', inline: 'center' });
+  const before = th.getBoundingClientRect().width;
+  const box = grip.getBoundingClientRect();
+  const point = {
+    clientX: box.left + box.width * 0.75,
+    clientY: box.top + box.height / 2,
+  };
+  const hit = document.elementFromPoint(point.clientX, point.clientY)!;
+  fireEvent.mouseDown(hit, point);
+  fireEvent.mouseMove(document, { ...point, clientX: point.clientX + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: point.clientX + dx });
+  await waitFor(() =>
+    expect(th.getBoundingClientRect().width - before).toBeGreaterThanOrEqual(
+      dx / 2,
+    ),
+  );
+};
+
+// The option sets how the table starts; the View settings switch then turns
+// the sticky header off and on (D120). Full screen keeps it sticky with the
+// switch off. With the header sticky, a resize drag starts from the right
+// half of the grip too (D126).
+EnableStickyHeader.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findAllByText(data[0]!.firstName);
+  expect(isStuck(canvasElement)).toBe(true);
+
+  await userEvent.click(canvas.getByRole('button', { name: 'View settings' }));
+  const toggle = await body.findByRole('switch', { name: 'Sticky header' });
+  expect(toggle).toBeChecked();
+  await userEvent.click(toggle);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
+  await userEvent.click(toggle);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(true));
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() =>
+    expect(body.queryByRole('switch', { name: 'Sticky header' })).toBeNull(),
+  );
+
+  await dragGripRightHalf(canvasElement, 'lastName', 60);
+
+  await userEvent.click(canvas.getByRole('button', { name: 'View settings' }));
+  await userEvent.click(
+    await body.findByRole('switch', { name: 'Sticky header' }),
+  );
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
+  await userEvent.keyboard('{Escape}');
+  const fullScreen = canvas.getByRole('button', { name: 'Toggle full screen' });
+  await userEvent.click(fullScreen);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(true));
+  await userEvent.click(fullScreen);
+  await waitFor(() => expect(isStuck(canvasElement)).toBe(false));
 };
