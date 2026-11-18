@@ -18,30 +18,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D140** Thirteen guides open with a table that shows their feature already at work #E16 #R6
-	- Sharpens D105's "the best example for that guide": the Example section shows a table in which the guide's feature is already visibly in use when the page opens, where such a table can exist. "The feature is on by default" is not a reason to show Basic.
-	- Full list with reasons: `reference/docs-layout/guide-example-candidates.md` (code read, not rendered). The build confirms each pick in a browser on load; a pick that does not show the feature on load is replaced by a new story for that guide, not by Basic.
-	- Ten guides take a table that exists:
-	-   - Column Size: story `styling-custom-column-widths--custom-widths-semantic`.
-	-   - Density Toggle: story `features-dense-padding--default-to-dense-padding`.
-	-   - Overflow Tooltip: story `styling-default-look--overflow-tooltip`.
-	-   - Filter Chips: story `features-filter-chips--chips-seeded`.
-	-   - Global Filtering: story `features-search--search-initial-state`.
-	-   - Sort Editor: story `features-sort-popover--sort-popover-seeded`.
-	-   - Row Selection: example page `sticky-row-selection` (was `export-csv`).
-	-   - Toolbar Customization: story `features-toolbar--custom-top-toolbar-actions` (was `advanced`).
-	-   - Row Actions: story `features-row-actions--custom-row-action-buttons` (was `advanced`).
-	-   - Display Columns: story `styling-styling-display-columns--customize-display-columns` (was `advanced`).
-	- Three guides get a new story, which becomes a page under More examples with its text (D106):
-	-   - Sorting: the guide's own multi-sort table, sorted by state ascending then city descending on load.
-	-   - Column Hiding: a plain table with one column hidden that the reader can bring back from the menu.
-	-   - Column Resizing: a table with one column already widened.
-	- A table that moves to the top and is also shown further down the guide shows once: the lower copy goes, its explainer line moves up (D122).
-	- Basic stays on six guides, whose subject cannot be seen on load in any table: Best Practices, Data Columns, Accessibility, TanStack Table with shadcn/ui, Full Screen Toggle, Column Actions.
-	- Six guides keep their table: Row Numbers, Tint Tokens, Table Event Listeners, Column Icons, View Settings, Click to Copy.
-	- `guide-checklist.md` and `guide-example-plan.md` are updated with the result.
-	- Owner recorded 2026-11-18.
-	- Source: Q128
 
 ## Done
 
@@ -919,6 +895,30 @@ kanban-plugin: basic
 	- `TouchHoldOnRangeSlider` (`ColumnDragging.stories.tsx:495`) and `TouchDragScrollsPage` (`RowOrdering.stories.tsx:583`) stay.
 	- Spec 63's catch-up gives each its page under More examples and its text, which joins the owner's wording review.
 	- Source: Q125
+- [x] **D140** Thirteen guides open with a table that shows their feature already at work #E16 #R6
+	- Sharpens D105's "the best example for that guide": the Example section shows a table in which the guide's feature is already visibly in use when the page opens, where such a table can exist. "The feature is on by default" is not a reason to show Basic.
+	- Full list with reasons: `reference/docs-layout/guide-example-candidates.md` (code read, not rendered). The build confirms each pick in a browser on load; a pick that does not show the feature on load is replaced by a new story for that guide, not by Basic.
+	- Ten guides take a table that exists:
+	-   - Column Size: story `styling-custom-column-widths--custom-widths-semantic`.
+	-   - Density Toggle: story `features-dense-padding--default-to-dense-padding`.
+	-   - Overflow Tooltip: story `styling-default-look--overflow-tooltip`.
+	-   - Filter Chips: story `features-filter-chips--chips-seeded`.
+	-   - Global Filtering: story `features-search--search-initial-state`.
+	-   - Sort Editor: story `features-sort-popover--sort-popover-seeded`.
+	-   - Row Selection: example page `sticky-row-selection` (was `export-csv`).
+	-   - Toolbar Customization: story `features-toolbar--custom-top-toolbar-actions` (was `advanced`).
+	-   - Row Actions: story `features-row-actions--custom-row-action-buttons` (was `advanced`).
+	-   - Display Columns: story `styling-styling-display-columns--customize-display-columns` (was `advanced`).
+	- Three guides get a new story, which becomes a page under More examples with its text (D106):
+	-   - Sorting: the guide's own multi-sort table, sorted by state ascending then city descending on load.
+	-   - Column Hiding: a plain table with one column hidden that the reader can bring back from the menu.
+	-   - Column Resizing: a table with one column already widened.
+	- A table that moves to the top and is also shown further down the guide shows once: the lower copy goes, its explainer line moves up (D122).
+	- Basic stays on six guides, whose subject cannot be seen on load in any table: Best Practices, Data Columns, Accessibility, TanStack Table with shadcn/ui, Full Screen Toggle, Column Actions.
+	- Six guides keep their table: Row Numbers, Tint Tokens, Table Event Listeners, Column Icons, View Settings, Click to Copy.
+	- `guide-checklist.md` and `guide-example-plan.md` are updated with the result.
+	- Owner recorded 2026-11-18.
+	- Source: Q128
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
