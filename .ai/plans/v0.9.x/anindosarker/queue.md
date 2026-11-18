@@ -39,6 +39,7 @@ kanban-plugin: basic
 - [ ] **Q116** Hovering a section tab shows a grey box behind it
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
 - [ ] **Q128** Many guides show the Basic example where a table with the feature already in use would teach more
+	- Owner, 2026-11-18, on the preview of v0.9/docs-layout: a reader of a guide whose Example section shows Basic sees a plain table and has to find the feature himself. 'the sorting guide has a basic example, but a sorted example or an example that has a pre-sort applied makes better sense here.' 15 guides show Basic (reference/docs-layout/guide-example-plan.md): best-practices, data-columns, accessibility, tanstack-table-with-shadcn-ui, column-size, column-resizing, density-toggle, full-screen-toggle, overflow-tooltip, filter-chips, global-filtering, column-hiding, sorting, sort-editor, column-actions. 593 story pages exist under More examples since E14.
 
 ## Decided
 
