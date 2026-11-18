@@ -1,6 +1,6 @@
 # 65: Release 0.9.5, Integration 0.9.5, tracker
 
-Status: running
+Status: done (7f891d1f)
 Branch `claude/review`, worktree 08
 Checks:
 - Check: precondition, `git show origin/claude/review:.ai/plans/v0.9.x/anindosarker/status/sprints.md` open E14 to E16 rows at cf759857: none, pass
