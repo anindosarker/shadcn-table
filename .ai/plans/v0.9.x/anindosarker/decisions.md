@@ -4,17 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D141** 0.9.5 is released with the whole docs site and Storybook, without the date picker work #R6
-	- The owner's explicit yes for a release (D100, process.md P4): "All looks good, release.", 2026-11-19.
-	- 0.9.5 carries everything on `v0.9/docs-layout` and `claude/review`: the new docs layout, the 42 example pages, the 46 guides, every story page with its text, the 404 page, the three Storybooks on 10.6.7, and the E15 library fixes (touch reorder, pinned rows with row virtualization, Sticky header switch, resize grip, sub-row selection, copy button).
-	- Nothing is left out or hidden: every page is public and indexed (sitemap, search engines, docs search, llms output).
-	- No date picker work is in it. The date filters stay as in 0.9.4; spec 50 stays on its branch `v0.9/filter-input-fixes`, held with Q84 and Q88.
-	- This is the owner's word of D109: `v0.9/docs-layout` merges into `claude/review` as one merge, as the first step of the release.
-	- Lifted by the owner for this release: the 13 unticked lines of the guide checklist (D105), the wording review of the story texts (D104, D106; the owner looked at the preview and it is good), and the real-device touch check of D108 (the owner does it later, card Q131).
-	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
-	- Owner recorded 2026-11-19.
-	- Source: Q132
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -29,6 +18,16 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
+- [ ] **D141** 0.9.5 is released with the whole docs site and Storybook, without the date picker work #E17 #R6
+	- The owner's explicit yes for a release (D100, process.md P4): "All looks good, release.", 2026-11-19.
+	- 0.9.5 carries everything on `v0.9/docs-layout` and `claude/review`: the new docs layout, the 42 example pages, the 46 guides, every story page with its text, the 404 page, the three Storybooks on 10.6.7, and the E15 library fixes (touch reorder, pinned rows with row virtualization, Sticky header switch, resize grip, sub-row selection, copy button).
+	- Nothing is left out or hidden: every page is public and indexed (sitemap, search engines, docs search, llms output).
+	- No date picker work is in it. The date filters stay as in 0.9.4; spec 50 stays on its branch `v0.9/filter-input-fixes`, held with Q84 and Q88.
+	- This is the owner's word of D109: `v0.9/docs-layout` merges into `claude/review` as one merge, as the first step of the release.
+	- Lifted by the owner for this release: the 13 unticked lines of the guide checklist (D105), the wording review of the story texts (D104, D106; the owner looked at the preview and it is good), and the real-device touch check of D108 (the owner does it later, card Q131).
+	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
+	- Owner recorded 2026-11-19.
+	- Source: Q132
 
 ## Done
 
@@ -589,7 +588,7 @@ kanban-plugin: basic
 	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
 	- Owner, 2026-11-14: "k" on option 1.
 	- Source: Q2
-- [x] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #R4
+- [x] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #E17 #R4
 	- Release 0.9.4 was on a hold the owner asked for (Q83); the lead lifted it once the fix merged and the runner published without an owner yes. From 0.9.5 on: a release that is part of an epic the owner started ships with that epic; a release not in the plan ships only on the owner's explicit yes; a hold the owner asks for stays until the owner says release, and a merged fix, green checks, the lead or the runner never lift it.
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
 	- Recorded in `process.md` P4. Owner, 2026-11-14: "If I ask it to hold, then it should hold. Otherwise if I explicitly say yes or during the plan that release is part of it, then yes.", "record it".
