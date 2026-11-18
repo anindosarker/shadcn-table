@@ -57,7 +57,7 @@ publishes the section as the GitHub release notes.
 
 #### Spec 62.2 Touch drag blocks page scroll from before the touch starts
 
-- A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a table that cannot drag by touch no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
+- A touch drag keeps the page still once it has started even when an element under the finger stops the `touchmove` event, and a header cell that cannot drag no longer keeps a page-wide touch listener, on Base UI, Radix UI and React Aria; the listener stays on the page from before the touch starts, as WebKit on iOS needs (D108, D132).
 
 ## 0.9.4 - 2026-11-13
 
