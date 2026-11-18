@@ -11,16 +11,51 @@ Checks:
 - Check: storybook-static base, `pnpm test storybook-static --base base` at 35c2af48: pass, Code tab of 645 of 645 ids read and equal, reading 399 s, whole run 6 min 53 s with the build
 - Check: storybook-static radix, `pnpm test storybook-static --base radix` at 35c2af48: pass, 645 of 645, reading 394 s, whole run 6 min 48 s
 - Check: storybook-static aria, `pnpm test storybook-static --base aria` at 35c2af48: pass, 645 of 645, reading 399 s, whole run 6 min 53 s
+- Check: merged plays, `ST_BASE=base pnpm exec vitest run` on the 10 changed story files at e505b8b3 (before commit): 10 files, 123 tests pass
+- Check: storybook-tests base, `pnpm test storybook-tests --base base` at e505b8b3: pass, 626 passed (645 minus the 19 merged copies)
+- Check: storybook-tests radix, `pnpm test storybook-tests --base radix` at e505b8b3: pass, 626 passed
+- Check: storybook-tests aria, `pnpm test storybook-tests --base aria` at e505b8b3: pass, 626 passed
+- Check: lint, `pnpm test lint` at eb6ced96: pass, 9 warnings (docs app, no limit; package 0)
+- Check: validate-repo, `pnpm test validate-repo` at eb6ced96: pass, story pages match (584), story code complete
+- Check: typecheck base, `pnpm test typecheck --base base` at eb6ced96: tsc clean; `pnpm exec tsc -p tsconfig.stories.json --noEmit` at eb6ced96: clean
+- Check: storybook-static base, `pnpm test storybook-static --base base` at eb6ced96: pass, index.json 626 ids, Code tab 626 of 626 equal, reading 384 s; story pages match index.json 584 pages; servers stopped
+- Check: 2.2 library untouched, `git diff origin/master --stat -- packages/shadcn-table/registry apps/shadcn-table-docs/examples registry.json` at eb6ced96: prints nothing
 
 - Task 1: done, 88aaec58
 - Task 2: done, 7c280699
 - Task 3: done, 35c2af48
-- Task 4: planned
-- Task 5: planned
+- Task 4: done, e505b8b3
+- Task 5: done, eb6ced96
 
 ## Attention
 
+- The 19 removed story pages under more/ held reviewed text (description, Try it steps, Related guides); story-pages.mjs refused to drop them, so they were deleted by hand and their text was not moved onto the pages of the stories they copied (those keep their own 2 to 4 steps). Revert: restore any page's Try it steps onto its target page from git (e505b8b3^).
+
 ## Notes
+
+- Task 4: 13 groups, 19 copies merged exactly as the audit's last list. Each target's play runs its own check, then each copy's play as a `context.step` named after the copy, the story mounted again between steps (`remountStory()` in each file calls `__stRemountStory`, .storybook/preview.tsx, which re-keys ResetAfterPlay and resolves after the commit). The copies' plays are `const <name>Play` in their files. Removed ids and their former addresses (public since 0.9.5, no redirect):
+  - `features-column-action--label-opens-menu`: https://www.shadcn-table.com/docs/examples/more/features-column-action--label-opens-menu
+  - `features-column-dragging--column-dragging-cancelled`: https://www.shadcn-table.com/docs/examples/more/features-column-dragging--column-dragging-cancelled
+  - `features-column-dragging--drop-highlights-column`: https://www.shadcn-table.com/docs/examples/more/features-column-dragging--drop-highlights-column
+  - `features-column-resizing--double-click-resets-width`: https://www.shadcn-table.com/docs/examples/more/features-column-resizing--double-click-resets-width
+  - `features-column-resizing--drag-resizes-column`: https://www.shadcn-table.com/docs/examples/more/features-column-resizing--drag-resizes-column
+  - `features-column-resizing--resize-menu-item-resets`: https://www.shadcn-table.com/docs/examples/more/features-column-resizing--resize-menu-item-resets
+  - `features-filtering--chip-editor-escape-keeps-typed-date`: https://www.shadcn-table.com/docs/examples/more/features-filtering--chip-editor-escape-keeps-typed-date
+  - `features-filtering--chip-editor-escape-keeps-typed-text`: https://www.shadcn-table.com/docs/examples/more/features-filtering--chip-editor-escape-keeps-typed-text
+  - `features-filtering--half-typed-year-applies-nothing`: https://www.shadcn-table.com/docs/examples/more/features-filtering--half-typed-year-applies-nothing
+  - `features-filtering--mode-menu-next-to-button-during-popover-animation`: https://www.shadcn-table.com/docs/examples/more/features-filtering--mode-menu-next-to-button-during-popover-animation
+  - `features-filtering--mode-menu-next-to-button-popover`: https://www.shadcn-table.com/docs/examples/more/features-filtering--mode-menu-next-to-button-popover
+  - `features-row-ordering--drag-reorders-rows`: https://www.shadcn-table.com/docs/examples/more/features-row-ordering--drag-reorders-rows
+  - `features-row-ordering--drop-no-slide-reduced-motion`: https://www.shadcn-table.com/docs/examples/more/features-row-ordering--drop-no-slide-reduced-motion
+  - `features-virtualization--column-virtualization-scrolls-headers`: https://www.shadcn-table.com/docs/examples/more/features-virtualization--column-virtualization-scrolls-headers
+  - `miscellaneous-headless-full-screen--escape-in-search-keeps-full-screen`: https://www.shadcn-table.com/docs/examples/more/miscellaneous-headless-full-screen--escape-in-search-keeps-full-screen
+  - `miscellaneous-headless-full-screen--pointer-click-then-escape`: https://www.shadcn-table.com/docs/examples/more/miscellaneous-headless-full-screen--pointer-click-then-escape
+  - `miscellaneous-menu-focus-return--show-hide-columns-menu`: https://www.shadcn-table.com/docs/examples/more/miscellaneous-menu-focus-return--show-hide-columns-menu
+  - `miscellaneous-menu-openers--show-hide-columns`: https://www.shadcn-table.com/docs/examples/more/miscellaneous-menu-openers--show-hide-columns
+  - `styling-render-counts--columns-hold-while-dragging`: https://www.shadcn-table.com/docs/examples/more/styling-render-counts--columns-hold-while-dragging
+- Implementation facts: `storyCode({ fileText, exportName, file })` takes one object (the spec writes two arguments; `file` resolves relative imports inside stories/, none exist today); `storySources()` in the same file gives every id's text (the plugin and the storybook-static check use it; the docs milestone can use it for sources.json). `ST_BASE` of .storybook/themes is written as `const ST_BASE: 'base' | 'radix' | 'aria' = 'base';`. The component is `const <Export> = () => ...; export default <Export>;` so the story's own formatting is kept. validate-repo story-source allows one story without a table: `features-view-settings--edition-icons-render` (an icon grid).
+- The Code tab gets the text through a preview decorator that calls `emitTransformCode` once per story id (Storybook sends a snippet itself only for args stories); `docs.source.transform` maps the id to its text. Also new: .storybook/story-sources.d.ts (the virtual module's type) and `tools/story-source/**` in test/storybook-static/run.mjs paths; `pnpm test typecheck` does not cover tsconfig.stories.json (.storybook), so it was run by hand.
+- Reading check run time per base: about 400 s for 645 ids (384 s for 626), about 7 minutes per base with the build; the three bases one after another about 21 minutes.
 
 - `basic--basic` on 0.9.5, the whole Code tab text:
 
