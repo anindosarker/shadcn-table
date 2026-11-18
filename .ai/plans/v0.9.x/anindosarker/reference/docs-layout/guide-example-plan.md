@@ -5,7 +5,7 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - production-ready-tables: `more/features-server-data--production-ready-table`, new story. The guide's own server-side data table (every page, sort, search and filter change sends one request to `/api/users`); in the guide its Code view shows the five files of `server-side-data/` (D130, D131).
 - best-practices: `basic`, example page. Typed columns and stable data.
 - data-columns: `basic`, example page. Accessor columns, one with a nested key.
-- display-columns: `advanced`, example page. Selection, expand and row action columns.
+- display-columns: `more/styling-styling-display-columns--customize-display-columns`, existing story (spec 64, D140). Expand, selection, row number and actions columns on every row on load; the lower Customize Display Columns example stays, its options differ (D122).
 - table-event-listeners: `row-dragging`, example page. Drag listeners passed through the drag handle and layout props.
 - state-management: `persistent-view`, example page. Initial state and stored state; the guide links it.
 - accessibility: `basic`, example page. Keyboard navigation is on by default.
@@ -15,22 +15,22 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - column-icons: `persistent-view`, example page. The guide already shows it.
 - localization: `features-localization--spanish`, new story. Group "Features/Localization", story "Spanish", file `packages/shadcn-table/stories/features/Localization.stories.tsx`, built from `examples/base/localization-i18n-es`. No example page is localized; the one story with a language (Features/Pagination, "Pagination Enabled Big Data Language") picks it from the browser.
 - tint-tokens: `sticky-row-selection`, example page. Starts with selected and pinned rows, so the tints show at once.
-- toolbar-customization: `advanced`, example page. Custom top toolbar with selection actions.
+- toolbar-customization: `more/features-toolbar--custom-top-toolbar-actions`, existing story (spec 64, D140). A custom Create New User button in the toolbar on load.
 - view-settings: `persistent-view`, example page. The guide already shows it.
-- column-size: `basic`, example page. Every column sets `size`.
-- column-resizing: `basic`, example page. Resizing is on by default.
-- density-toggle: `basic`, example page. The density button is in the toolbar by default.
+- column-size: `more/styling-custom-column-widths--custom-widths-semantic`, existing story (spec 64, D140). Columns of clearly different widths on load.
+- column-resizing: `more/features-column-resizing--column-widened-on-load`, new story (spec 64, D140). First Name already widened on load; the resize grips work.
+- density-toggle: `more/features-dense-padding--default-to-dense-padding`, existing story (spec 64, D140). Compact rows on load, the density toggle in the toolbar.
 - full-screen-toggle: `basic`, example page. The full screen button is in the toolbar by default.
-- overflow-tooltip: `basic`, example page. The guide already shows it.
+- overflow-tooltip: `more/styling-default-look--overflow-tooltip`, existing story (spec 64, D140). Cell text cut with an ellipsis on load; the lower Basic table stays.
 - async-loading: `react-query`, example page. Skeletons and the progress bar while fetching; shown once, on top, under the line the removed lower table had (D122).
 - pagination: `remote`, example page. Pages of 10 over 200 rows; shown once, on top, under the line the removed lower table had (D122).
 - virtualization: `row-virtualization`, example page. Picker also `column-virtualization`, as on the accepted preview page.
-- row-selection: `export-csv`, example page. Checkbox selection with the selection banner on a plain client-side table.
+- row-selection: `sticky-row-selection`, example page (spec 64, D140). One row selected and pinned on load; the lower Sticky Pinned Row Selection table, the same example, is removed and its line moved up (D122).
 - editing: `editing-crud`, example page. Picker also `editing-crud-inline-row`, `editing-crud-inline-cell`, `editing-crud-inline-table`, `editing-crud-tree`, the guide's tab order.
 - column-filtering: `filter-variants`, example page. The guide's first example.
-- filter-chips: `basic`, example page. The guide already shows it.
-- global-filtering: `basic`, example page. Search is on by default.
-- column-hiding: `basic`, example page. Column hiding is on by default.
+- filter-chips: `more/features-filter-chips--chips-seeded`, existing story (spec 64, D140). Two filter chips set and the rows filtered on load.
+- global-filtering: `more/features-search--searched-on-load`, new story (spec 64, D140). The search box open with `John` and the rows filtered on load; replaces the pick `features-search--search-initial-state`, whose box is closed on load.
+- column-hiding: `more/features-column-hiding--column-hidden-on-load`, new story (spec 64, D140). Address hidden on load, listed unticked in the show/hide columns menu.
 - detail-panel: `detail-panel`, example page. The guide's first example.
 - expanding-sub-rows: `expanding-tree`, example page. The guide already shows it.
 - column-grouping: `column-grouping`, example page. The guide's first example.
@@ -39,12 +39,12 @@ Spec 56, milestone "Exact stories and merged copies" (D105, 1.6.3). One line per
 - column-pinning: `column-pinning`, example page. As on the accepted preview page.
 - scroll-cues: `column-pinning`, example page. Shown once, on top, under the line the removed lower table had (D122).
 - row-pinning: `sticky-row-pinning`, example page. The guide's first example.
-- sorting: `basic`, example page. Sorting is on by default.
-- sort-editor: `basic`, example page. The sort button is in the toolbar by default.
+- sorting: `more/features-sorting--sorted-on-load`, new story (spec 64, D140). The guide's multi-sorting table, sorted by state ascending then city descending on load; the lower copy is removed (D122).
+- sort-editor: `more/features-sort-popover--sort-popover-seeded`, existing story (spec 64, D140). Two sorts applied on load, the sort button showing them; the lower Multi Sorting table stays.
 - row-ordering-dnd: `row-ordering`, example page. The guide's first example.
 - column-ordering-dnd: `column-ordering`, example page. The guide already shows it.
 - row-numbers: `row-virtualization`, example page. Row numbers are on, and its page already counts to row 10000 and links this guide.
 - column-actions: `basic`, example page. The column menu is on by default.
 - cell-actions: `editing-crud-inline-cell`, example page. Cell actions are on; its page links this guide.
-- row-actions: `advanced`, example page. A row action menu on every row.
+- row-actions: `more/features-row-actions--custom-row-action-buttons`, existing story (spec 64, D140). View and Remove buttons on every row on load.
 - click-to-copy: `more/features-click-to-copy--click-to-copy-enabled-with-copy-button-props`, new story. The guide's own click to copy example (First Name, Last Name, Email, City) with `enableClickToCopy` on for the whole table; the example at the end of the guide is removed (D122).
