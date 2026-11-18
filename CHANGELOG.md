@@ -172,6 +172,12 @@ publishes the section as the GitHub release notes.
 - The guide's Code view still lists the five files of the `server-side-data` example the guide walks through (D131).
 - New story Features/Server Data / Production-Ready Table, with its page under More examples: the guide's table, whose play checks that each page change, sort, search and filter change sends exactly one request to `/api/users`.
 
+#### Spec 63 Docs branch catch-up
+
+- Three new story pages under More examples, each with its description, Try it steps and Related guides: Touch Hold On Range Slider, Touch Drag Scrolls Page and Row Pinning Select Sticky With Virtualization (D139, D104).
+- The Try it steps of Sub Row Tree With Selection and Row Pinning Sticky With Virtualization describe the fixed behaviour: ticking a row ticks its sub-rows, and a pinned row stays in view while the virtualized rows scroll (D125, D128).
+- The docs app's Storybook packages, used to mount the stories, move to 10.6.7 with the library's (D123).
+
 ## 0.9.4 - 2026-11-13
 
 ### Added
