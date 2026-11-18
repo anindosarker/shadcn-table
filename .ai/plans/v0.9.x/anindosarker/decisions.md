@@ -4,7 +4,21 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D140** Thirteen guides open with a table that shows their feature already at work #R6
+## In progress
+
+- [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
+	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
+	- Source: Q77
+- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
+	- Source: Q78
+- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
+	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
+	- Source: Q80
+- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
+	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
+	- Source: Q86
+- [ ] **D140** Thirteen guides open with a table that shows their feature already at work #E16 #R6
 	- Sharpens D105's "the best example for that guide": the Example section shows a table in which the guide's feature is already visibly in use when the page opens, where such a table can exist. "The feature is on by default" is not a reason to show Basic.
 	- Full list with reasons: `reference/docs-layout/guide-example-candidates.md` (code read, not rendered). The build confirms each pick in a browser on load; a pick that does not show the feature on load is replaced by a new story for that guide, not by Basic.
 	- Ten guides take a table that exists:
@@ -28,21 +42,6 @@ kanban-plugin: basic
 	- `guide-checklist.md` and `guide-example-plan.md` are updated with the result.
 	- Owner recorded 2026-11-18.
 	- Source: Q128
-
-## In progress
-
-- [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
-	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
-	- Source: Q77
-- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
-	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
-	- Source: Q78
-- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
-	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
-	- Source: Q80
-- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
-	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
-	- Source: Q86
 
 ## Done
 
