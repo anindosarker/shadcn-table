@@ -30,6 +30,10 @@ publishes the section as the GitHub release notes.
 
 ### Fixed
 
+#### Spec 53 Section tab hover
+
+- Hovering a section tab (Get Started, Examples, Guides, API) on the docs site no longer draws a grey box behind it: an inactive tab's label turns to the text colour, the active tab keeps its accent colour and underline.
+
 #### Spec 52 Docs filter facts
 
 - The column filtering guide says `'date'`, `'datetime'` and `'time'` columns default to `equals` and compare by local day, to the minute or by time of day, also when the accessor returns a `Date`; text columns keep `fuzzy` (D94).
