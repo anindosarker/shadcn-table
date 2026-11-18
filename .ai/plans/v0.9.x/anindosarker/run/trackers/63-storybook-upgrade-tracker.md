@@ -1,6 +1,6 @@
 # 63: Storybook upgrade and the docs branch catch-up, tracker
 
-Status: running
+Status: done (8262cd41)
 Branch `v0.9/storybook-upgrade-planned`, worktree 08
 Checks:
 - Baseline `pnpm test storybook-tests --base base|radix|aria` at 57ece654: pass, 654 each
