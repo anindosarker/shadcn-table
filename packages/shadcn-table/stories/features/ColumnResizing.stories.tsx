@@ -687,3 +687,32 @@ export const ResetSizeAnimates = {
     expect(sizeVar()).toBe('180');
   },
 };
+
+/**
+ * First Name starts at 400 px through `initialState.columnSizing`, wider
+ * than the rest; its resize handle drags it narrower.
+ */
+export const ColumnWidenedOnLoad = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{ columnSizing: { firstName: 400 } }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const lastName = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="lastName"]',
+    )!;
+    const before = widthOf(th);
+    expect(before - widthOf(lastName)).toBeGreaterThanOrEqual(150);
+    dragFirstNameHandle(canvasElement, -150);
+    await waitFor(() =>
+      expect(before - widthOf(th)).toBeGreaterThanOrEqual(100),
+    );
+  },
+};
