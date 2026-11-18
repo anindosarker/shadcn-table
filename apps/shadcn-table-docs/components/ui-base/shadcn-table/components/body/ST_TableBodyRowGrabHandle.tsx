@@ -1,4 +1,8 @@
-import { type DragEvent, type RefObject } from 'react';
+import {
+  type DragEvent,
+  type PointerEvent as ReactPointerEvent,
+  type RefObject,
+} from 'react';
 import {
   type ButtonProps,
   type ST_Row,
@@ -8,6 +12,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { getST_RowFlipPositions } from '@/components/ui-base/shadcn-table/hooks/useST_RowFlip';
+import { useST_TouchDrag } from '@/components/ui-base/shadcn-table/hooks/useST_TouchDrag';
 
 export interface ST_TableBodyRowGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -61,12 +66,35 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
     });
   };
 
+  // A finger drags the grip at once; the app's drag handlers get the pointer
+  // event of the moment, and a cancelled touch drop hovers no row.
+  const touchDrag = useST_TouchDrag({
+    getGhostSource: () => rowRef.current,
+    getScrollContainer: () => table.refs.tableContainerRef.current,
+    onEnd: (event, cancelled) => {
+      if (cancelled) table.setHoveredRow(null);
+      handleDragEnd(event as unknown as DragEvent<HTMLButtonElement>);
+    },
+    onStart: (event) => {
+      iconButtonProps?.onDragStart?.(
+        event as unknown as DragEvent<HTMLButtonElement>,
+      );
+      table.setDraggingRow(row);
+    },
+  });
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    iconButtonProps?.onPointerDown?.(event);
+    touchDrag.onPointerDown(event);
+  };
+
   return (
     <ST_GrabHandleButton
       {...iconButtonProps}
       location="row"
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
+      onPointerDown={handlePointerDown}
     />
   );
 };

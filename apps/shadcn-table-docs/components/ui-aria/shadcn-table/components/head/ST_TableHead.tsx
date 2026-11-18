@@ -31,12 +31,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
 }: ST_TableHeadProps) => {
   const table = useSTContext<TData>();
   const {
-    options: {
-      enableStickyHeader,
-      layoutMode,
-      stTableHeadProps,
-      positionToolbarAlertBanner,
-    },
+    options: { layoutMode, stTableHeadProps, positionToolbarAlertBanner },
     refs: { tableHeadRef },
   } = table;
 
@@ -68,8 +63,8 @@ export const ST_TableHead = <TData extends ST_RowData>({
       })}
     >
       {({ isFullScreen, showAlertBanner, stickyHeaderSetting }) => {
-        const stickyHeader =
-          enableStickyHeader || isFullScreen || stickyHeaderSetting;
+        // The option only seeds the setting; the switch decides (D120).
+        const stickyHeader = isFullScreen || stickyHeaderSetting;
 
         return (
           <thead

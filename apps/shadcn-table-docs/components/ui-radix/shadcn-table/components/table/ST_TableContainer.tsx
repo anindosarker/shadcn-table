@@ -40,7 +40,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
       enableCellActions,
       enableRowVirtualization,
       enableScrollButtons,
-      enableStickyHeader,
       stTableContainerProps,
     },
     refs: { bottomToolbarRef, tableContainerRef, topToolbarRef },
@@ -149,7 +148,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
           ? undefined
           : enableRowVirtualization
             ? 'var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))'
-            : enableStickyHeader || stickyHeader
+            : stickyHeader
               ? 'var(--st-sticky-max-height, 70vh)'
               : undefined;
 

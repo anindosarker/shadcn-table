@@ -167,6 +167,10 @@ export const getST_RowSelectionHandler =
   (event: ST_SelectionEvent, value?: boolean) => {
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
     const checked = value ?? !wasCurrentRowChecked;
+    // read before the toggle: the store updates at once, so after ticking a
+    // parent its sub-rows already read as all selected
+    const wereAllSubRowsSelected =
+      row.getCanSelectSubRows() && row.getIsAllSubRowsSelected();
 
     // toggle selection of this row; with Shift held (or any event that
     // `isRowRangeSelectionEvent` accepts) TanStack extends the toggle to the
@@ -177,7 +181,8 @@ export const getST_RowSelectionHandler =
       target: { checked },
     });
 
-    if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
+    // unticking a parent that read as ticked through its sub-rows unticks them
+    if (!checked && wereAllSubRowsSelected) {
       row.subRows?.forEach((r) => r.toggleSelected(false));
     }
   };
