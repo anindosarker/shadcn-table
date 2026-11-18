@@ -43,7 +43,7 @@ publishes the section as the GitHub release notes.
 
 #### Spec 61.1 Select all in select-sticky mode keeps the table virtualized
 
-- With `enableRowVirtualization` and `rowPinningDisplayMode: 'select-sticky'`, Select all no longer renders every row at once: when the pinned rows stack higher than the table's scroll box holds, they scroll with the virtualized rows instead of staying in view, on Base UI, Radix UI and React Aria.
+- With `enableRowVirtualization` and a sticky `rowPinningDisplayMode`, pinned rows stay in view while they fit in the table's scroll box; a taller stack scrolls with the virtualized rows instead, so the table stays virtualized. For example, Select all in `'select-sticky'` mode no longer renders every row at once. On Base UI, Radix UI and React Aria.
 
 #### Spec 62.1 Column auto-scroll stops when the drag leaves the table
 
