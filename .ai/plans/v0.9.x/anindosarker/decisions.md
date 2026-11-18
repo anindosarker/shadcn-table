@@ -4,17 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D142** Every code panel shows the table's own code: audit, fix, release 0.9.6 #R6
-	- Wherever a reader is offered an example's code, the panel shows the code of the table itself, complete enough to copy and run: the columns, the data or how it is fetched, the hook and its options, the component. It never shows only a wrapper such as `render: () => <BasicExample />`, and it does not show the story's test (`play`).
-	- This holds in the Code tab of every story in the three Storybooks (base, radix, aria) and in the code panel of every story page and example page in the docs.
-	- Today on the live 0.9.5 Storybook the Code tab of "Basic / Basic" shows the story object with its test and none of the table's code; the stories built in E14 from the docs examples import the example as a component.
-	- Audit first: every story and every docs code panel is listed with what its panel shows today, and the ones that fail the first bullet are named. The audit also lists stories that show the same table twice in one group ("Default" and "Basic" under Basic) and settles each by D106's rule.
-	- Fix: every failing panel is corrected. Proof is by reading the panels, not only by rendering: a check opens the code panel of every story and every docs page on a production build and asserts it contains the table's hook call and no `play`; it fails on the shipped 0.9.5 first.
-	- Release: the fix ships as 0.9.6, in the same epic, on the owner's word of 2026-11-19 ("audit, fix, release"; "epic and go"). No date picker work is in it.
-	- The line above each story, "View Source code for these examples in the code tab below or here on GitHub.", stays (D124) and becomes true.
-	- Owner recorded 2026-11-19.
-	- Source: Q133
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -29,6 +18,16 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
+- [ ] **D142** Every code panel shows the table's own code: audit, fix, release 0.9.6 #E18 #R6
+	- Wherever a reader is offered an example's code, the panel shows the code of the table itself, complete enough to copy and run: the columns, the data or how it is fetched, the hook and its options, the component. It never shows only a wrapper such as `render: () => <BasicExample />`, and it does not show the story's test (`play`).
+	- This holds in the Code tab of every story in the three Storybooks (base, radix, aria) and in the code panel of every story page and example page in the docs.
+	- Today on the live 0.9.5 Storybook the Code tab of "Basic / Basic" shows the story object with its test and none of the table's code; the stories built in E14 from the docs examples import the example as a component.
+	- Audit first: every story and every docs code panel is listed with what its panel shows today, and the ones that fail the first bullet are named. The audit also lists stories that show the same table twice in one group ("Default" and "Basic" under Basic) and settles each by D106's rule.
+	- Fix: every failing panel is corrected. Proof is by reading the panels, not only by rendering: a check opens the code panel of every story and every docs page on a production build and asserts it contains the table's hook call and no `play`; it fails on the shipped 0.9.5 first.
+	- Release: the fix ships as 0.9.6, in the same epic, on the owner's word of 2026-11-19 ("audit, fix, release"; "epic and go"). No date picker work is in it.
+	- The line above each story, "View Source code for these examples in the code tab below or here on GitHub.", stays (D124) and becomes true.
+	- Owner recorded 2026-11-19.
+	- Source: Q133
 
 ## Done
 
@@ -857,7 +856,7 @@ kanban-plugin: basic
 	- Measured before: the guide's own table calls `/api/users`, the React Query example calls `/api/data`, so the sentence is true only for the guide's own table.
 	- Owner recorded 2026-11-18.
 	- Source: Q113
-- [x] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #R6
+- [x] **D131** The Production-Ready Tables guide's Code view keeps showing the guide's five files #E18 #R6
 	- Settled by the lead: the one way that keeps both D130 (the guide's sentence 'Open the Code view above to browse the files' and the five-file `server-side-data/` tree stay true) and D106 (a story page's Code tab shows the story source).
 	- In the guide, the Code view of the Example section shows the five files of the example folder `server-side-data/`, through an opt-in map in `GuideExamples` from this story's id to that folder.
 	- The story's own page under More examples keeps the story source in its Code tab, like every story page.

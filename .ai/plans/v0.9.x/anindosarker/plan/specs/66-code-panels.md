@@ -1,4 +1,5 @@
 # 66: Code panels show the table's code
+- Epic: E18
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
