@@ -37,6 +37,8 @@ export interface ST_TouchDragOptions {
   canStart?: () => boolean;
   /** The finger's rest before the drag starts; 0 starts it at once. */
   delay?: number;
+  /** False when the source cannot drag: no page listener is kept for it. */
+  enabled?: boolean;
   /** The element the ghost copies. */
   getGhostSource: () => HTMLElement | null;
   /** Scrolled up or down while the finger is near its top or bottom edge. */
@@ -67,6 +69,9 @@ let mountedSources = 0;
 
 // WebKit on iOS lets a touchmove listener cancel the scroll only when it was
 // on the page before the touch began, so it stays while a source is mounted.
+// It listens in the capture phase: an element under the finger that stops
+// touchmove does not keep it from the page.
+const PAGE_LISTENER = { capture: true, passive: false } as const;
 const blockScroll = (event: TouchEvent) => {
   if (activeDrags > 0 && event.cancelable) event.preventDefault();
 };
@@ -392,20 +397,22 @@ export const useST_TouchDrag = (options: ST_TouchDragOptions) => {
     latest.current = options;
   });
   const cancel = useRef<(() => void) | undefined>(undefined);
+  const enabled = options.enabled ?? true;
 
   useEffect(() => {
+    if (!enabled) return;
     mountedSources += 1;
     if (mountedSources === 1) {
-      window.addEventListener('touchmove', blockScroll, { passive: false });
+      window.addEventListener('touchmove', blockScroll, PAGE_LISTENER);
     }
     return () => {
       cancel.current?.();
       mountedSources -= 1;
       if (mountedSources === 0) {
-        window.removeEventListener('touchmove', blockScroll);
+        window.removeEventListener('touchmove', blockScroll, PAGE_LISTENER);
       }
     };
-  }, []);
+  }, [enabled]);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType !== 'touch' || !event.isPrimary) return;
