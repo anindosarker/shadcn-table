@@ -871,6 +871,34 @@ export async function sectionFrame(
     active.join(','),
   );
   if (!toggle) return;
+  // Q116: a hovered tab, active or not, keeps a transparent background;
+  // hover feedback is the label's colour only, and the active tab keeps its
+  // accent colour.
+  const style = (tab) =>
+    tab.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundColor, color: s.color };
+    });
+  for (const name of [section, tabs.find((t) => t !== section)]) {
+    const tab = row.locator('a', { hasText: name });
+    const rest = await style(tab);
+    await tab.hover();
+    await page.waitForTimeout(300);
+    const { bg, color } = await style(tab);
+    check(
+      `frame: hovered ${name} tab has no background`,
+      bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent',
+      bg,
+    );
+    if (name === section) {
+      check(
+        `frame: hovered ${name} tab keeps its colour`,
+        color === rest.color,
+        `${rest.color} -> ${color}`,
+      );
+    }
+  }
+  await page.mouse.move(0, 0);
   const rowStart = await page.evaluate(() => {
     const nav = document.querySelector('nav[aria-label="Sections"]');
     const first = nav?.parentElement?.querySelector('button');

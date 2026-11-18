@@ -35,7 +35,7 @@ export function SectionTabs() {
             key={l.url}
             href={l.url}
             data-active={isActive(l.url, pathname) || undefined}
-            className="-mb-px inline-flex shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3 py-1 font-mono md:first:ps-0 text-[11px] uppercase tracking-[0.12em] [word-spacing:-0.4em] text-fd-muted-foreground transition-colors hover:text-(--docs-accent) data-active:border-(--docs-accent) data-active:text-(--docs-accent)"
+            className="-mb-px inline-flex shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-3 py-1 font-mono md:first:ps-0 text-[11px] uppercase tracking-[0.12em] [word-spacing:-0.4em] text-fd-muted-foreground transition-colors hover:not-data-active:text-fd-foreground data-active:border-(--docs-accent) data-active:text-(--docs-accent)"
           >
             {l.text}
           </Link>
