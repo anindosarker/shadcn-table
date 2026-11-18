@@ -119,6 +119,50 @@ export const RowPinningSelectStickyMode = () => (
     enablePagination={false}
     enableRowPinning
     enableRowSelection
+    stTableContainerProps={{
+      style: {
+        maxHeight: '600px',
+      },
+    }}
+    rowPinningDisplayMode="select-sticky"
+  />
+);
+
+// Select all pins all 50 rows, more than the 600px container holds; the
+// pinned rows stay below the head, so the select-all box is still the
+// topmost element at its center and unselects them all.
+RowPinningSelectStickyMode.play = async ({
+  canvas,
+  canvasElement,
+}: StoryContext) => {
+  const pinnedRows = () =>
+    canvasElement.querySelectorAll('tbody tr[data-pinned]');
+  const selectAll = await canvas.findByRole('checkbox', {
+    name: 'Toggle select all',
+  });
+  await userEvent.click(selectAll);
+  await waitFor(() => expect(pinnedRows()).toHaveLength(data.length));
+  // The visible box: the React Aria base's checkbox role is a visually hidden
+  // input inside it.
+  const selectAllBox = selectAll.closest<HTMLElement>(
+    '[data-slot="checkbox"]',
+  )!;
+  await waitFor(() => {
+    const { height, left, top, width } = selectAllBox.getBoundingClientRect();
+    const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+    expect(selectAllBox.contains(hit)).toBe(true);
+  });
+  await userEvent.click(selectAll);
+  await waitFor(() => expect(pinnedRows()).toHaveLength(0));
+};
+
+export const RowPinningSelectStickyWithVirtualization = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    enablePagination={false}
+    enableRowPinning
+    enableRowSelection
     enableRowVirtualization
     stTableContainerProps={{
       style: {
@@ -133,7 +177,7 @@ export const RowPinningSelectStickyMode = () => (
 // table stays virtualized: it renders the rows in view, not every pinned
 // row. The pinned rows stay below the head, so the select-all box is still
 // the topmost element at its center and unselects them all.
-RowPinningSelectStickyMode.play = async ({
+RowPinningSelectStickyWithVirtualization.play = async ({
   canvas,
   canvasElement,
 }: StoryContext) => {
