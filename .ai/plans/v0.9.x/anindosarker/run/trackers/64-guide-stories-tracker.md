@@ -1,6 +1,6 @@
 # 64: Guide stories, tracker
 
-Status: running
+Status: done (93a1642c)
 Branch `v0.9/guide-stories`, worktree 08
 Checks:
 - Task 1 picks on load: `pnpm --filter shadcn-table-docs build` + `next start` on 5340, Playwright on base at 1440 px (scratchpad capture.mjs) at 121f84fe: build pass, 10 pages 200, no page errors, server stopped
