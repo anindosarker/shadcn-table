@@ -1,6 +1,6 @@
 # 64: Guide examples, tracker
 
-Status: running
+Status: done (98c9fae7)
 Branch `v0.9/guide-examples`, worktree 08
 Checks:
 - Task 1 `grep -n -A2 "GuideExamples"` on the thirteen guides at 2d3e384c: the thirteen target pages of the Guide stories tracker, no `basic`, `advanced` or `export-csv`; `git diff origin/v0.9/docs-layout --stat -- .../guides`: the thirteen files only (prettier wraps five long tags over three lines, as click-to-copy already is)
