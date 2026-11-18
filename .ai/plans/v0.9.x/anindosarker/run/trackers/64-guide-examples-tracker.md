@@ -14,6 +14,9 @@ Checks:
 - `pnpm test typecheck --base radix` at f245a89a: first run exit 2 (output not kept), rerun pass, tsc clean
 - `pnpm test lint` at f245a89a: pass (9 warnings, none in milestone files)
 - `pnpm test validate-repo` at f245a89a: pass
+- `pnpm test docs-e2e --base base --url <next start 5341>` on one production build at f245a89a: pass, 5 sections, 116 pages, 0 failed
+- `pnpm test docs-e2e --base radix --url <same server>` at f245a89a: pass, 5 sections, 116 pages, 0 failed
+- `pnpm test docs-e2e --base aria --url <same server>` at f245a89a: pass, 5 sections, 116 pages, 0 failed; server stopped
 
 - Task 1 The thirteen slugs: done at 2d3e384c
 - Task 2 Shown once: done at 781509a5 (row-selection: heading, tag removed, sentence moved up; sorting: tag removed; display-columns: lower table kept)
