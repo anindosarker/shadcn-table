@@ -22,16 +22,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D142** Every code panel shows the table's own code: audit, fix, release 0.9.6 #E18 #R6
-	- Wherever a reader is offered an example's code, the panel shows the code of the table itself, complete enough to copy and run: the columns, the data or how it is fetched, the hook and its options, the component. It never shows only a wrapper such as `render: () => <BasicExample />`, and it does not show the story's test (`play`).
-	- This holds in the Code tab of every story in the three Storybooks (base, radix, aria) and in the code panel of every story page and example page in the docs.
-	- Today on the live 0.9.5 Storybook the Code tab of "Basic / Basic" shows the story object with its test and none of the table's code; the stories built in E14 from the docs examples import the example as a component.
-	- Audit first: every story and every docs code panel is listed with what its panel shows today, and the ones that fail the first bullet are named. The audit also lists stories that show the same table twice in one group ("Default" and "Basic" under Basic) and settles each by D106's rule.
-	- Fix: every failing panel is corrected. Proof is by reading the panels, not only by rendering: a check opens the code panel of every story and every docs page on a production build and asserts it contains the table's hook call and no `play`; it fails on the shipped 0.9.5 first.
-	- Release: the fix ships as 0.9.6, in the same epic, on the owner's word of 2026-11-19 ("audit, fix, release"; "epic and go"). No date picker work is in it.
-	- The line above each story, "View Source code for these examples in the code tab below or here on GitHub.", stays (D124) and becomes true.
-	- Owner recorded 2026-11-19.
-	- Source: Q133
 
 ## Done
 
@@ -943,6 +933,16 @@ kanban-plugin: basic
 	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
 	- Owner recorded 2026-11-19.
 	- Source: Q132
+- [x] **D142** Every code panel shows the table's own code: audit, fix, release 0.9.6 #E18 #R6
+	- Wherever a reader is offered an example's code, the panel shows the code of the table itself, complete enough to copy and run: the columns, the data or how it is fetched, the hook and its options, the component. It never shows only a wrapper such as `render: () => <BasicExample />`, and it does not show the story's test (`play`).
+	- This holds in the Code tab of every story in the three Storybooks (base, radix, aria) and in the code panel of every story page and example page in the docs.
+	- Today on the live 0.9.5 Storybook the Code tab of "Basic / Basic" shows the story object with its test and none of the table's code; the stories built in E14 from the docs examples import the example as a component.
+	- Audit first: every story and every docs code panel is listed with what its panel shows today, and the ones that fail the first bullet are named. The audit also lists stories that show the same table twice in one group ("Default" and "Basic" under Basic) and settles each by D106's rule.
+	- Fix: every failing panel is corrected. Proof is by reading the panels, not only by rendering: a check opens the code panel of every story and every docs page on a production build and asserts it contains the table's hook call and no `play`; it fails on the shipped 0.9.5 first.
+	- Release: the fix ships as 0.9.6, in the same epic, on the owner's word of 2026-11-19 ("audit, fix, release"; "epic and go"). No date picker work is in it.
+	- The line above each story, "View Source code for these examples in the code tab below or here on GitHub.", stays (D124) and becomes true.
+	- Owner recorded 2026-11-19.
+	- Source: Q133
 - [x] **D143** An unknown docs address answers the site's 404 page #R6
 	- The docs route sets dynamicParams = false (apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx), so an address outside the generated list goes to the 404 route and the root layout's head scripts no longer log the script tag console error. Built on the owner's 'fix it', shipped in 0.9.5.
 	- Source: Q129
