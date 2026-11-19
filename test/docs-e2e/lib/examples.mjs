@@ -430,6 +430,24 @@ async function codePanelProblem(panel, { id, expected, exportName }) {
   if (!expected) return `no code text for "${id}" in tools/story-source`;
   const pre = panel.locator('[data-slot="code"] pre').first();
   await pre.waitFor({ timeout: 30000 }).catch(() => {});
+  // Until Shiki has highlighted the file, DynamicCodeBlock (fumadocs) shows
+  // its Placeholder: one bare `span.line` per line with no newline between
+  // them, so its textContent is the whole file on one line. On a slow runner
+  // that lasts long enough for two reads to agree on it (pr.yml run
+  // 44445584962). Wait for Shiki's token spans inside the lines, the final
+  // text, before reading.
+  const highlighted = await pre
+    .locator('code .line > span')
+    .first()
+    .waitFor({ timeout: 60000 })
+    .then(
+      () => true,
+      () => false,
+    );
+  if (!highlighted) {
+    const shown = (await pre.textContent().catch(() => '')) ?? '';
+    return `code not highlighted after 60 s; shows: ${firstLines(shown)}`;
+  }
   // the highlighted text can settle after the first paint: read until two
   // reads agree. textContent, not innerText: the lines are flex items, and
   // innerText drops the empty ones.
