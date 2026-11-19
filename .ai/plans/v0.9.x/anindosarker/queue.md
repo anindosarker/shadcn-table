@@ -39,6 +39,8 @@ kanban-plugin: basic
 - [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
 	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
 	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
+- [ ] **Q143** The ci:skip label skips the tests on a PR into any branch, not only master
+	- A PR into dev or claude/review that carries ci:skip reports every test job green without running it, while D153, CONTRIBUTING.md and the coding standards say a PR into master: pr.yml reads the label on any pull_request event (.github/workflows/pr.yml, Head job). Only people who can set labels can use it. Found by the review of milestone 71 CI skip label; either scope the read to base master or drop 'into master' from the two sentences.
 
 ## Decided
 
