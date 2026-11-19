@@ -278,10 +278,12 @@ ClickToCopyEnabled.play = async ({ canvasElement }: StoryContext) => {
     // The press closes the tooltip. Keyboard focus opens it at once, inside
     // the 4 s the copied title lasts, without the 1 s hover delay.
     await input.tab();
+    await tooltipsGone();
     await input.tab({ shift: true });
     expect(document.activeElement).toBe(button);
-    await waitFor(() =>
-      expect(tooltipTexts()).toContain('Copied to clipboard'),
+    await waitFor(
+      () => expect(tooltipTexts()).toContain('Copied to clipboard'),
+      { timeout: 3000 },
     );
   } finally {
     writeText.mockRestore();
@@ -309,9 +311,12 @@ ClickToCopyDisabledPerColumn.play = async ({ canvasElement }: StoryContext) => {
     // cell's overflow tooltip instead.
     button!.focus();
     await input.tab();
+    await tooltipsGone();
     await input.tab({ shift: true });
     expect(document.activeElement).toBe(button);
-    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'));
+    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'), {
+      timeout: 3000,
+    });
     await input.click(button!);
     expect(writeText).toHaveBeenCalledWith(value);
 
@@ -352,10 +357,34 @@ ClickToCopyEnabledWithCopyButtonProps.play = async ({
   }
 };
 
-/** The open tooltips' texts. */
+/**
+ * The open tooltips' texts. A closing tooltip stays in the DOM through its
+ * exit animation (Radix data-state="closed", Base UI data-closed, React Aria
+ * data-exiting) and does not count.
+ */
 const tooltipTexts = () =>
-  [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
-    (tooltip) => tooltip.textContent,
+  [...document.querySelectorAll('[data-slot="tooltip-content"]')]
+    .filter(
+      (tooltip) =>
+        !tooltip.matches(
+          '[data-state="closed"], [data-closed], [data-ending-style], [data-exiting]',
+        ),
+    )
+    .map((tooltip) => tooltip.textContent);
+
+/**
+ * Waits until every tooltip has left the DOM, exit animation included. On
+ * Radix a tooltip focused again while its content still animates out does
+ * not open: the focus also reaches the cell's overflow tooltip, whose open
+ * event closes every tooltip content still mounted, the closing one too.
+ */
+const tooltipsGone = () =>
+  waitFor(
+    () =>
+      expect(
+        document.querySelector('[data-slot="tooltip-content"]'),
+      ).toBeNull(),
+    { timeout: 3000 },
   );
 
 /**
