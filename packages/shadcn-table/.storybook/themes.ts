@@ -44,7 +44,18 @@ export function staticBaseRoot(target: Base) {
 export const ST_DEV: boolean =
   (globalThis as { __ST_DEV__?: boolean }).__ST_DEV__ === true;
 
-/** Manager title: "shadcn-table (Base UI)", "(Radix UI)" or "(React Aria)". */
+/**
+ * The library version (packages/shadcn-table/package.json), set on the window
+ * by main.ts (`managerHead` / `previewHead`); the toolbar shows it
+ * (version-tool.ts, D150).
+ */
+export const ST_VERSION: string =
+  (globalThis as { __ST_VERSION__?: string }).__ST_VERSION__ ?? '';
+
+/**
+ * Manager title: "shadcn-table (Base UI)", "(Radix UI)" or "(React Aria)",
+ * as before spec 68: the version moved to the toolbar (D150 supersedes D148).
+ */
 const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 
 /**
