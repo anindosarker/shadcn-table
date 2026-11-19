@@ -10,10 +10,15 @@ Checks:
 - Check: typecheck, `pnpm test typecheck --base base` at 9aab25d1 (tree of 9aab25d1 before its commit): pass, tsc clean
 - Check: lint, `pnpm test lint` at 9aab25d1: pass, 9 warnings (docs app, none in this milestone's files: `eslint components/site-nav.tsx lib/layout.shared.tsx` clean)
 - Check: storybook-static, `pnpm test storybook-static --base base` at 9aab25d1: pass, `manager title version "shadcn-table v0.9.6 (Base UI)"`, code tab of 626 stories pass
+- Check: lint, `pnpm test lint` at a882a4a6: pass, 9 warnings (docs app)
+- Check: validate-repo, `pnpm test validate-repo` at a882a4a6: pass, 43 unit tests, registry fresh
+- Check: changelog, `grep -c '^#### Spec 68' CHANGELOG.md` at a882a4a6: 1
+- Check: cherry-pick diff at end, `git diff a3d61fe9 HEAD -- apps/shadcn-table-docs/components/site-nav.tsx apps/shadcn-table-docs/lib/layout.shared.tsx` at a882a4a6: empty
+- Not run here (verifier): docs-e2e, storybook-static and typecheck on radix and aria
 
 - Task 1 The docs check and the header label: 26bef0e1
 - Task 2 The title check and the Storybook title: 9aab25d1
-- Task 3 The changelog block: planned
+- Task 3 The changelog block: a882a4a6
 
 ## Attention
 
