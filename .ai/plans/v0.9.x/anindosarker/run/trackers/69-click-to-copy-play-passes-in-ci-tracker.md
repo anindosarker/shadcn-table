@@ -1,8 +1,7 @@
 # 69: Click to copy play passes in CI, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/click-to-copy-play-ci`, worktree 06
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Click to copy play passes in CI: running
