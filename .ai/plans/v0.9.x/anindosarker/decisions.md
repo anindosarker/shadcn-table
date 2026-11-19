@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D147** The docs header shows the library version after the name #R6
+	- The docs site header shows the current version right after the library name, top left: small muted mono text (v0.9.5) in the style of the section tab labels, no box, visible on mobile. It is read from packages/shadcn-table/package.json at build time and links to the GitHub releases page.
+	- Source: Q136
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
