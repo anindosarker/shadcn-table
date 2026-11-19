@@ -10,6 +10,8 @@ kanban-plugin: basic
 - [ ] **D148** The Storybook title shows the library version #R6
 	- The Storybook sidebar title reads shadcn-table v<version> (<base>), for example shadcn-table v0.9.6 (Base UI): the version is read from packages/shadcn-table/package.json in packages/shadcn-table/.storybook/themes.ts, on the three bases. The title link stays as it is.
 	- Source: Q137
+- [ ] **D149** Release 0.9.7 ships the version labels #R6
+	- 0.9.7 is released with the docs header version label (D147) and the Storybook title version (D148), through a release spec in the same epic (P4). Owner, 2026-11-19: 'do a new release with both changes, Epic and Go.'
 
 ## In progress
 
