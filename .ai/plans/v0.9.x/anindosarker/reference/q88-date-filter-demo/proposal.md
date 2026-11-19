@@ -2,6 +2,8 @@
 
 Running notes from the discussion with the owner, 2026-11-20. Not decisions: nothing here is a D item until the owner says "record it". Only points the owner stated or agreed to are listed; points still under discussion stay in chat.
 
+The owner agreed to every point below on 2026-11-20 ("I agree to all the proposals"). Not built yet: the build waits for the owner's go. Planned as two versions on top of 4.AO: first typed values, limits, year list and `calendarProps`; then `presets` and `step`.
+
 ## Versions
 
 - Default folder `components/date-picker/` holds the 4.AL code (owner: "looks good, promote").
