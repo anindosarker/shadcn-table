@@ -1,6 +1,6 @@
 # 66: Code panels show the table's code, Docs code panels, tracker
 
-Status: running
+Status: done (172b3739)
 Branch `v0.9/docs-code-panels`, worktree 08
 Checks:
 - Check: Task 1 reading check on the shipped panels (P11), `pnpm test docs-e2e --base base --widths 1440 /docs/examples/more/features-aggregation--aggregation` (production docs build of the branch point 8859af54, built and served by the run; check file of 55d8f0d7 uncommitted beside it): fail as required, 0 of 599 story code panels show the story's own text (584 story pages, 15 guide items), every one shows the whole story file; reading 98 s
