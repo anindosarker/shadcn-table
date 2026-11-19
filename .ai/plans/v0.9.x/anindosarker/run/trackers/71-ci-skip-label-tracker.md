@@ -1,8 +1,10 @@
 # 71: CI skip label, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/ci-skip-label`, worktree 07
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 skip output of Head: running
+- Task 2 the ci:skip sentence in CONTRIBUTING.md and coding-standards.md: planned
+
+## Attention
