@@ -1,6 +1,6 @@
 # 70: Home page version label, tracker
 
-Status: running
+Status: done (c9d56119)
 Branch `v0.9/home-page-version-label`, worktree 06
 Checks:
 - Red: docs-e2e, `pnpm test docs-e2e --base base / /nope` at 1c5f6dc9 (checks only, before the cherry-pick): fail, `FAIL / @1440 home header version v0.9.7: []`, `FAIL / @1440 home header version at 390 v0.9.7: []`, `FAIL /nope @1440 404: header version v0.9.7: []`, `FAIL /nope @1440 404: header version at 390 v0.9.7: []`, the only 4 fails of 99
