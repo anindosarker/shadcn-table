@@ -34,7 +34,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { DEFAULT_BASE } from '../../tools/registry/bases.mjs';
-import { storySources } from '../../tools/story-source/extract.mjs';
+import {
+  storySources,
+  TEST_WORDS,
+} from '../../tools/story-source/extract.mjs';
 import { portFor, run as exec, spawnServer } from '../lib/exec.mjs';
 import {
   MORE_DIR,
@@ -59,8 +62,6 @@ const option = (flags, name, fallback) => {
 
 /** The Code tab's text in the manager (addon-docs code panel). */
 const CODE_PANEL = '[id$="tabpanel-storybook/docs/panel"] pre';
-/** The words of a test (D142); `play` as a word, so `display` passes. */
-const TEST_WORDS = /\bplay\b|\bexpect\(|storybook\/test|\buserEvent\b/;
 /** A story renders within this after the switch. */
 const RENDER_TIMEOUT = 30_000;
 /** Then its code text shows within this (the preview sends it after render). */
@@ -137,14 +138,14 @@ const docsPageUrl = (id) =>
  * within CODE_TIMEOUT and none of the test words.
  * @returns {Promise<{ results: string[], read: number, failed: string[], seconds: number }>}
  */
-async function checkCode(root, { log, slice }) {
+async function checkCode(root, { base, log, slice }) {
   const index = await (await fetch(`${root}/index.json`)).json();
   const all = Object.values(index.entries)
     .filter((entry) => entry.type === 'story')
     .map((entry) => entry.id);
   const [from, to] = (slice || ':').split(':');
   const ids = all.slice(Number(from || 0), to ? Number(to) : all.length);
-  const sources = await storySources();
+  const sources = await storySources({ base });
   const started = Date.now();
   const failed = [];
   const results = [];
@@ -419,6 +420,7 @@ export const run = async (ctx) => {
     let code;
     try {
       code = await checkCode(root, {
+        base,
         log: ctx.log,
         slice: option(ctx.flags, 'ids', ''),
       });

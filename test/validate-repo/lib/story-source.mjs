@@ -14,10 +14,11 @@ import {
   readStories,
   STORIES_DIR,
 } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
-import { storyCode, ts } from '../../../tools/story-source/extract.mjs';
-
-/** The words of a test (D142); `play` as a word, so `display` passes. */
-export const TEST_WORDS = /\bplay\b|\bexpect\(|storybook\/test|\buserEvent\b/;
+import {
+  storyCode,
+  TEST_WORDS,
+  ts,
+} from '../../../tools/story-source/extract.mjs';
 /** The table: the component, the hook, or a library part (`ST_...`). */
 const TABLE = /<ShadcnTable\b|\buseShadcnTable\(|<ST_\w+/;
 /**
