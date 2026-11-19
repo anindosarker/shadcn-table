@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D144** Section tabs keep equal side padding and the page bar's hover fill #R6
-	- Every section tab has the same padding on both sides, the first one included, and the hover fill is the same for active and inactive tabs (components/section-tabs.tsx, app/global.css). The owner's fix, replaces the Q116 hotfix; shipped in 0.9.5.
-	- Source: Q130
 - [ ] **D145** The docs code panel check waits for the highlighted code #R6
 	- The 'story code panels' check read the highlighter's placeholder on the slow CI machine and failed PR 140; the pages were right. The check now waits for the highlighted code before it reads (fix milestone of spec 67, merge a263d115). A CI problem, settled by the lead.
 	- Source: Q135
@@ -949,6 +946,9 @@ kanban-plugin: basic
 - [x] **D143** An unknown docs address answers the site's 404 page #R6
 	- The docs route sets dynamicParams = false (apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx), so an address outside the generated list goes to the 404 route and the root layout's head scripts no longer log the script tag console error. Built on the owner's 'fix it', shipped in 0.9.5.
 	- Source: Q129
+- [x] **D144** Section tabs keep equal side padding and the page bar's hover fill #R6
+	- Every section tab has the same padding on both sides, the first one included, and the hover fill is the same for active and inactive tabs (components/section-tabs.tsx, app/global.css). The owner's fix, replaces the Q116 hotfix; shipped in 0.9.5.
+	- Source: Q130
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
