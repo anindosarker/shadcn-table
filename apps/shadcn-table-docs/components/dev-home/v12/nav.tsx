@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn';
 import { GitHubIcon } from '@/components/dev-home/v2/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
 import { GITHUB_URL } from '@/components/dev-home/v4/nav';
-import { DISCORD_URL } from '@/lib/layout.shared';
+import { DISCORD_URL, LIBRARY_VERSION } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
 
 const LINKS = [
@@ -31,12 +31,21 @@ export function Nav({ baseSwitch = false }: { baseSwitch?: boolean }) {
   return (
     <header className="v4-nav">
       <div className="v4-shell v4-nav-row">
-        <IntentLink href="/" className="v4-wordmark">
-          <span aria-hidden="true" className="v4-wordmark-slash">
-            {'//'}
-          </span>
-          <span>shadcn-table</span>
-        </IntentLink>
+        {/* the wordmark, then the version linking to the GitHub releases, as in the docs bar */}
+        <div className="flex min-w-0 items-center gap-2 [grid-area:brand]">
+          <IntentLink href="/" className="v4-wordmark">
+            <span aria-hidden="true" className="v4-wordmark-slash">
+              {'//'}
+            </span>
+            <span>shadcn-table</span>
+          </IntentLink>
+          <a
+            href={`${GITHUB_URL}/releases`}
+            className="shrink-0 font-mono text-xs text-(--dh-ink-muted) transition-colors hover:text-(--dh-accent)"
+          >
+            v{LIBRARY_VERSION}
+          </a>
+        </div>
         <nav aria-label="Primary" className="v4-nav-links">
           {LINKS.map((l) => (
             <IntentLink key={l.label} href={l.href} className="v4-nav-link">
