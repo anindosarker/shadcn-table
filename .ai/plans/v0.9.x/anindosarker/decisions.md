@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D151** The click-to-copy tooltip shows when focus comes back quickly #R6
 	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
 	- Source: Q140
+- [ ] **D154** The ci:skip label counts only on a PR into master #R6
+	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
+	- Source: Q143
 
 ## In progress
 
