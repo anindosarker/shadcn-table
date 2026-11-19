@@ -1,6 +1,6 @@
 # 69: Click to copy play passes in CI, tracker
 
-Status: running
+Status: done (07c626e9)
 Branch `v0.9/click-to-copy-play-ci`, worktree 06
 Checks:
 - Reproduction before the fix (P3, P11): Linux container `mcr.microsoft.com/playwright:v1.64.1-noble` (arm64, Docker Desktop), HEAD 6c26b459 copied in with its own `pnpm install --frozen-lockfile`, `ST_BASE=radix npx vitest run stories/features/ClickToCopy.stories.tsx` at `docker update --cpus=0.5`, repeated: run 3 of 3 failed with `Click To Copy Disabled Per Column`, `expected [] to include 'Click to copy'` (the CI line); a second series failed once in 20. Not act: the act job runs the whole radix leg (626 plays, install, browser install) per attempt for a flake of about 1 in 20; the single file in the same Linux image under CPU limits shows the same line in minutes.
