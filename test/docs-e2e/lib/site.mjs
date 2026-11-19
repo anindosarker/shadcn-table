@@ -26,6 +26,8 @@
  *   opens on a click and stays open after a reload.
  */
 
+import { headerVersion } from './getting-started.mjs';
+
 /** The sections of D101, in their order. */
 const SECTIONS = ['Get Started', 'Examples', 'Guides', 'API'];
 
@@ -127,6 +129,13 @@ async function notFoundPage(page, check) {
   );
   check('404: base select in the bar', await baseSelect.isVisible());
   check('404: theme toggle in the bar', await themeToggle.isVisible());
+  // the 404 page renders the home header (components/not-found-page.tsx)
+  await headerVersion({
+    page,
+    check,
+    selector: 'header.v4-nav',
+    prefix: '404: ',
+  });
 
   const search = main.locator('[data-search-full]');
   await search.click();
