@@ -13,6 +13,10 @@ Checks:
 - `pnpm test validate-repo` at 707ca3ab: pass
 - `pnpm test storybook-static --base base` at 707ca3ab: pass, `PASS manager toolbar version "v0.9.6"`, code tab 626 of 626
 - Browser look, base static build of bd104e7d served on 5350 (stopped), Chromium: desktop 1400x900 toolbar reads reload, measure, outline, viewport, vision, theme, `Base UI` switcher, `v0.9.6`, then right side isolation, zoom, full screen; `v0.9.6` sits right after the switcher, link `https://github.com/anindosarker/shadcn-table/releases`, `target=_blank`, `rel=noopener noreferrer`; sidebar title `shadcn-table (Base UI)`. Phone 390x844: same left group, `Base UI` and `v0.9.6` both visible side by side; Storybook itself drops the full screen button at phone width (its isMobile rule) and the right group (isolation, zoom) runs past the edge of the toolbar; the base switcher and the version behave the same, neither hidden; the sidebar is behind the bottom menu at phone width
+- Verifier: base storybook-static, typecheck on three bases, lint and validate-repo recorded at 707ca3ab = HEAD, not rerun
+- Verifier: `pnpm test storybook-static --base radix` at 707ca3ab: pass, `PASS manager toolbar version "v0.9.6"`, code tab 626 of 626, 0 FAIL lines
+- Verifier: `pnpm test storybook-static --base aria` at 707ca3ab: pass, `PASS manager toolbar version "v0.9.6"`, code tab 626 of 626, 0 FAIL lines
+- Verifier: spec 69 1.2 Acceptance at 707ca3ab (release not run yet, expected pending): `git ls-remote --tags origin v0.9.7` empty; `gh release view v0.9.7` "release not found"; both `version.txt` print `0.9.6`; origin claude/review 51921f80, dev 81a2c015, master 022f8770 differ. Belongs to the After release milestone, not this one
 
 - Task 1 Storybook version in the toolbar: 707ca3ab
 
