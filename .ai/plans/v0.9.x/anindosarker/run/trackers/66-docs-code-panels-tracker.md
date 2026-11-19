@@ -15,6 +15,15 @@ Checks:
 - Check: Task 4 audit rerun, Storybook, `pnpm --filter shadcn-table storybook:build:base` at 2543c800, then `node read-panels.mjs storybook <python http.server>`: 626 ids read in 1081 s; 624 pass, 2 "other" (no table in the story), 0 fail; server stopped
 - Check: Task 4 audit rerun, docs, `node read-panels.mjs docs <next start of the 96b4acda build> --pages <225 pages>` three times (docs app unchanged to 2543c800): 673 pages, all 200, 881 s; story pages 582 pass and 2 "other" (same two stories), guide story items 15 of 15 pass, every other kind unchanged at 0 fail; servers stopped
 - Check: 2.2 library untouched, `git diff origin/master --stat -- packages/shadcn-table/registry apps/shadcn-table-docs/examples registry.json` at 2543c800: prints nothing
+- Verifier, 2026-11-19, at 2543c800 from a clean tree, each through heavy.sh one at a time. Not rerun: typecheck radix (recorded tree equals HEAD for TypeScript), validate-repo and docs-e2e base (5e7424c8..HEAD is CHANGELOG.md only), 2.2 library diff (recorded at HEAD); lint recorded green before the one-line reader change of 5e7424c8, left to CI with tsc
+- Check (verifier): docs build, `pnpm --filter shadcn-table-docs build` at 2543c800: pass
+- Check (verifier): docs-e2e radix, `pnpm test docs-e2e --base radix --url <next start of that build on 5340>`: pass, 5 sections, 117 pages, 0 failed; story code panels 599 of 599 (584 story pages, 15 guide items), reading 71 s; guides 1056 passed; whole run 391 s; server stopped
+- Check (verifier): docs-e2e aria, same build and port: pass, 5 sections, 117 pages, 0 failed; story code panels 599 of 599, reading 74 s; guides 1056 passed; whole run 393 s; server stopped
+- Check (verifier): storybook-static base, `pnpm test storybook-static --base base` (build by the run): pass, Code tab 626 of 626 equal, reading 382 s
+- Check (verifier): storybook-static radix: pass, 626 of 626, reading 380 s
+- Check (verifier): storybook-static aria: pass, 626 of 626, reading 381 s
+- Check (verifier): storybook-tests base, radix, aria, `pnpm test storybook-tests --base <base>` one at a time: pass, 626 passed each (85 files)
+- Check (verifier): Acceptance 1.2 at 2543c800: green, validate-repo and docs-e2e base by the recorded runs at 5e7424c8 (CHANGELOG.md only since), storybook-static, docs-e2e radix and aria, storybook-tests by the verifier above; audit rerun all failing rows pass (Task 4 lines above)
 
 - Task 1: done, 55d8f0d7
 - Task 2: done, 5e7424c8
