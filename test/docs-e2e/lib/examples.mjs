@@ -431,10 +431,12 @@ async function codePanelProblem(panel, { id, expected, exportName }) {
   const pre = panel.locator('[data-slot="code"] pre').first();
   await pre.waitFor({ timeout: 30000 }).catch(() => {});
   // the highlighted text can settle after the first paint: read until two
-  // reads agree
+  // reads agree. textContent, not innerText: the lines are flex items, and
+  // innerText drops the empty ones.
   let text = '';
   for (let i = 0; i < 20; i += 1) {
-    const again = await pre.innerText({ timeout: 5000 }).catch(() => '');
+    const again =
+      (await pre.textContent({ timeout: 5000 }).catch(() => '')) ?? '';
     if (again && again === text) break;
     text = again;
     await panel.page().waitForTimeout(150);
