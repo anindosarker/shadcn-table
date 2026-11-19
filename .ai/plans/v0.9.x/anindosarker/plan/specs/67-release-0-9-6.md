@@ -133,6 +133,14 @@ sequenceDiagram
 - Task 2: The live code panel checks of 1.6.3. Checks: one line per check in the tracker with the first five lines the panel shows and pass or fail; the browser closed
 - Task 3: `claude/review` and `dev` up to `master`, push both; rewrite the handoff (1.6.3). Checks: `git rev-parse origin/claude/review origin/dev origin/master` prints one sha three times; `git ls-remote --heads origin v0.9/filter-input-fixes` prints one line; `pnpm test validate-repo` green on `claude/review`
 
+### Milestone: Docs code panel check passes in CI
+
+- Files owned: `test/docs-e2e/lib/examples.mjs`, `test/docs-e2e/lib/helpers.mjs`, `apps/shadcn-table-docs/components/story-example.tsx`, `apps/shadcn-table-docs/lib/story-variants.mjs`, `tools/story-source/extract.mjs`, `tools/story-source/extract.test.mjs`
+- Depends on: Filtering, Persistent view page size, CRUD dialog check waits for the rows, Icon library select, Filter editor fixes, React Aria filter popups modal again (D97), Live demo ten columns, Example page format, Guide example block, Production-Ready guide install copy is tracked under its example, Story pages in the docs, Story pages review fixes, Story and docs fixes found while writing the story texts, Stories match their examples, Docs content fixes, Basic page check walks step one, Example ids and 404 page, Storybook Code tab, Docs code panels
+- Review: none
+- Starts: S20
+- Task 1: Docs code panel check passes in CI. Checks: pnpm test typecheck --base radix, pnpm test lint, pnpm test validate-repo, pnpm test docs-e2e --base base, pnpm test docs-e2e --base radix, pnpm test docs-e2e --base aria
+
 ### 2.2 Checks
 
 - Integration: `pnpm test validate-repo`, `pnpm test lint` green on `claude/review`; `dev` equals `claude/review`
