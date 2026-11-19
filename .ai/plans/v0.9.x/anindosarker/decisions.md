@@ -5,6 +5,7 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D150** The Storybook version sits in the toolbar after the base switcher #R6
+	- Supersedes D148.
 	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
 	- Source: Q138
 
@@ -960,7 +961,7 @@ kanban-plugin: basic
 - [x] **D147** The docs header shows the library version after the name #E19 #R6
 	- The docs site header shows the current version right after the library name, top left: small muted mono text (v0.9.5) in the style of the section tab labels, no box, visible on mobile. It is read from packages/shadcn-table/package.json at build time and links to the GitHub releases page.
 	- Source: Q136
-- [x] **D148** The Storybook title shows the library version #E19 #R6
+- [x] **D148** The Storybook title shows the library version (superseded by D150) #superseded #E19 #R6
 	- The Storybook sidebar title reads shadcn-table v<version> (<base>), for example shadcn-table v0.9.6 (Base UI): the version is read from packages/shadcn-table/package.json in packages/shadcn-table/.storybook/themes.ts, on the three bases. The title link stays as it is.
 	- Source: Q137
 
