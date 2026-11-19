@@ -763,3 +763,29 @@ Names: what the panel uses and does not declare or import (first four).
 | `styling-theming--default-theme` | arrow | table code without its columns or data | fail | columns, data |
 | `styling-theming--custom-light-theme` | arrow + X.play | table code without its columns or data | fail | columns, data |
 | `styling-theming--custom-dark-theme` | arrow | table code without its columns or data | fail | columns, data |
+
+## Rerun 2026-11-19 (Docs code panels milestone)
+
+Read with `read-panels.mjs` (this folder, unchanged) in pool worktree 08 on branch `v0.9/docs-code-panels` at 2543c800: the static Storybook of base built at 2543c800 (`pnpm --filter shadcn-table storybook:build:base`, served by `python3 -m http.server`), and the production docs build of 96b4acda (`next start`; the docs app and the story files are the same at 2543c800, the later commits touch only `test/docs-e2e/lib/examples.mjs` and `CHANGELOG.md`). Servers stopped after each read.
+
+### Storybook Code tab, base
+
+- Ids in `storybook-static/base/index.json`: 626 (645 at the first read, minus the 19 same-table copies merged by the Storybook Code tab milestone). Read: 626, in 1081 s.
+- Pass 624, fail 0 of the table stories; 2 rows read "other": table code complete 624, other 2.
+- The 623 rows that failed at the first read: 602 pass, 19 are gone (the merged copies), 2 read "other": `features-table-provider--no-provider-throws` (renders `ST_TablePagination` without its provider to show the error) and `features-view-settings--edition-icons-render` (an icon grid). Neither story renders a table; their panels show the story's whole code with its imports and no test, and the reader has no table to find, so it files them under "other". The 22 rows that passed still pass.
+
+### Docs code panels
+
+Pages read: 673 (every `.mdx` of `content/docs/examples`, `examples/more` and `guides`; 692 at the first read minus the 19 merged story pages), all HTTP 200, in 881 s (three runs of about 225 pages).
+
+| Panel kind | Pages read | Panels | Fail | What the panel shows |
+|---|---|---|---|---|
+| Example pages (`/docs/examples/<slug>`) | 42 | 42 | 0 | table code complete 42 |
+| Story pages (`/docs/examples/more/`) | 584 | 584 | 0 (2 other) | table code complete 582; other 2 (the two stories above, `/NoProviderThrows.tsx`, `/EditionIconsRender.tsx`) |
+| Guide Example section: example page item | 30 | 35 | 0 | table code complete 35 |
+| Guides' own tables (inline example panels) | 31 | 61 | 0 | table code complete 61 |
+| Guide Example section: story item without `codeFrom` | 15 | 15 | 0 | table code complete 15 |
+| Guide Example section: story item with `codeFrom` | 1 | 1 | 0 | table code complete 1 (the five files of `server-side-data`) |
+
+- Every story page and every guide story item without `codeFrom` shows one file, `<StoryExport>.tsx`: the story's own code text on the selected base, the same text as the Storybook Code tab; no `meta`, no play, no `storybook/test`.
+- The rows that failed at the first read: 603 story pages (584 pass or read "other" as above, 19 gone with the merged copies) and 15 guide story items (15 pass).
