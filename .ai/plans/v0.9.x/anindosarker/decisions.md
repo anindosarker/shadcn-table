@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D146** The 19 merged same-table test stories lose their pages, with no redirect #R6
+	- Spec 66 merged the 19 same-table copies into their originals and removed their 19 pages under /docs/examples/more/; the old addresses answer 404 after 0.9.6 and get no redirect and no duplicate page. Owner, 2026-11-19: 'that's fine then. We don't need any duplicate or redirect.' No link, guide, storybook map row or test names any of the 19 ids.
+	- Source: Q134
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
