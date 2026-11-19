@@ -38,6 +38,8 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
 	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
+- [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly
+	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
 
 ## Decided
 
