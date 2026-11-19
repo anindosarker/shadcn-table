@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D152** The home page header shows the library version too #R6
 	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
 	- Source: Q141
+- [ ] **D153** A PR label skips the test jobs so a small change ships without a release #R6
+	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
+	- Source: Q142
 
 ## In progress
 

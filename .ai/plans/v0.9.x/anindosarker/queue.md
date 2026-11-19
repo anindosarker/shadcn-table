@@ -39,7 +39,6 @@ kanban-plugin: basic
 - [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
 	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
 	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
-- [ ] **Q142** A small docs-only change can reach the live site only through a full release run
 
 ## Decided
 
@@ -368,6 +367,7 @@ kanban-plugin: basic
 - [ ] **Q141** The home page header shows no version label #D152
 	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
 	- Owner, 2026-11-19: 'Yes, we can add it', and asks that so small a change ships without a new release and without the full PR check run (see the docs-only shipping card).
+- [ ] **Q142** A small docs-only change can reach the live site only through a full release run #D153
 
 ## Later
 
