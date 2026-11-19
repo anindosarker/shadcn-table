@@ -368,10 +368,10 @@ kanban-plugin: basic
 - [x] **Q137** Storybook shows the library's current version nowhere #D148
 - [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly #D151
 	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
-- [x] **Q141** The home page header shows no version label #D152 #E20
+- [x] **Q141** The home page header shows no version label #D152
 	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
 	- Owner, 2026-11-19: 'Yes, we can add it', and asks that so small a change ships without a new release and without the full PR check run (see the docs-only shipping card).
-- [x] **Q142** A small docs-only change can reach the live site only through a full release run #D153 #E20
+- [x] **Q142** A small docs-only change can reach the live site only through a full release run #D153
 
 ## Later
 

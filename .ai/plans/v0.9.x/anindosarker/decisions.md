@@ -22,12 +22,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D152** The home page header shows the library version too #E20 #R6
-	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
-	- Source: Q141
-- [ ] **D153** A PR label skips the test jobs so a small change ships without a release #E20 #R6
-	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
-	- Source: Q142
 
 ## Done
 
@@ -973,6 +967,12 @@ kanban-plugin: basic
 	- Supersedes D148.
 	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
 	- Source: Q138
+- [x] **D152** The home page header shows the library version too #E20 #R6
+	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
+	- Source: Q141
+- [x] **D153** A PR label skips the test jobs so a small change ships without a release #E20 #R6
+	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
+	- Source: Q142
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
