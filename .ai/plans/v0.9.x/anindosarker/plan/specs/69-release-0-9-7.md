@@ -132,6 +132,14 @@ sequenceDiagram
 - Task 2: The live label checks of 1.6.3. Checks: one line per check in the tracker with the text read and pass or fail; the browser closed
 - Task 3: `claude/review` and `dev` up to `master`, push both; rewrite the handoff (1.6.3). Checks: `git rev-parse origin/claude/review origin/dev origin/master` prints one sha three times; `git ls-remote --heads origin v0.9/filter-input-fixes v0.9/docs-version-label` prints two lines; `pnpm test validate-repo` green on `claude/review`
 
+### Milestone: Click to copy play passes in CI
+
+- Files owned: `packages/shadcn-table/stories/features/ClickToCopy.stories.tsx`
+- Depends on: Sub-row selection and copy button
+- Review: none
+- Starts: S20
+- Task 1: Click to copy play passes in CI. Checks: the failure reproduced in a Linux container or under act before the fix; pnpm test storybook-tests --base base, --base radix, --base aria green one at a time; the reproduction rerun green 20 times in a row
+
 ### 2.2 Checks
 
 - Integration: `pnpm test validate-repo`, `pnpm test lint` green on `claude/review`; `dev` equals `claude/review`
