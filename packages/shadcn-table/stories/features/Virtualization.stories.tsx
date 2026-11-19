@@ -459,10 +459,12 @@ const indexes = (elements: NodeListOf<Element>) =>
  * Mounts the story again (.storybook/preview.tsx), so each step of a play
  * that holds merged checks (D106) starts from the story's first render.
  */
-const remountStory = () =>
-  (
-    globalThis as { __stRemountStory?: () => Promise<void> }
-  ).__stRemountStory?.();
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
 
 const scrollRendersFurtherRowsPlay = async ({
   canvasElement,
