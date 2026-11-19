@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D151** The click-to-copy tooltip shows when focus comes back quickly #R6
 	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
 	- Source: Q140
+- [ ] **D152** The home page header shows the library version too #R6
+	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
+	- Source: Q141
 
 ## In progress
 
