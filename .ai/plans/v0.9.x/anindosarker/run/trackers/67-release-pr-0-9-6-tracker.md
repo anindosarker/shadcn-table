@@ -11,7 +11,7 @@ Checks:
 - Check: fix milestone `67 Docs code panel check passes in CI` merged as a263d115 (check-only: the read now waits for the highlighted code); dev fast-forwarded to 13a8633e, PR 140 follows
 
 - Task 1 Open the PR with its label and auto-merge: done (020465a0, PR 140); watcher armed in the runner session
-- Task 2: planned
+- Task 2: running. Run 44452617252 on `13a8633e` green apart from Prepare Release waiting; environment `release` (id 26597343948) approved through `pending_deployments` at 2026-11-19 09:54 with comment D47, response deployment id 7903598655 (D47)
 - Task 3: planned
 
 ## Attention
