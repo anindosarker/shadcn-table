@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D146** The 19 merged same-table test stories lose their pages, with no redirect #R6
-	- Spec 66 merged the 19 same-table copies into their originals and removed their 19 pages under /docs/examples/more/; the old addresses answer 404 after 0.9.6 and get no redirect and no duplicate page. Owner, 2026-11-19: 'that's fine then. We don't need any duplicate or redirect.' No link, guide, storybook map row or test names any of the 19 ids.
-	- Source: Q134
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -952,6 +948,9 @@ kanban-plugin: basic
 - [x] **D145** The docs code panel check waits for the highlighted code #R6
 	- The 'story code panels' check read the highlighter's placeholder on the slow CI machine and failed PR 140; the pages were right. The check now waits for the highlighted code before it reads (fix milestone of spec 67, merge a263d115). A CI problem, settled by the lead.
 	- Source: Q135
+- [x] **D146** The 19 merged same-table test stories lose their pages, with no redirect #R6
+	- Spec 66 merged the 19 same-table copies into their originals and removed their 19 pages under /docs/examples/more/; the old addresses answer 404 after 0.9.6 and get no redirect and no duplicate page. Owner, 2026-11-19: 'that's fine then. We don't need any duplicate or redirect.' No link, guide, storybook map row or test names any of the 19 ids.
+	- Source: Q134
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
