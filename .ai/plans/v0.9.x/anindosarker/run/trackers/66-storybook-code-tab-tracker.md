@@ -21,6 +21,12 @@ Checks:
 - Check: storybook-static base, `pnpm test storybook-static --base base` at eb6ced96: pass, index.json 626 ids, Code tab 626 of 626 equal, reading 384 s; story pages match index.json 584 pages; servers stopped
 - Check: 2.2 library untouched, `git diff origin/master --stat -- packages/shadcn-table/registry apps/shadcn-table-docs/examples registry.json` at eb6ced96: prints nothing
 
+- Check (review fixes): ST_BASE texts per base, `storySources({ base })` for base, radix, aria at fd635b9a, the 15 texts that use ST_BASE compiled in memory under strict: 0 TS2367 on each base (constant `const ST_BASE = '<base>' as 'base' | 'radix' | 'aria';`); every other line of all 626 texts equal to eb6ced96's
+- Check (review fixes): `pnpm test typecheck --base base`, `--base radix`, `--base aria` at fd635b9a: tsc clean, each; `pnpm exec tsc -p tsconfig.stories.json --noEmit` and `pnpm exec eslint --max-warnings 0 .storybook stories` in packages/shadcn-table: clean
+- Check (review fixes): `pnpm test lint` at fd635b9a: pass
+- Check (review fixes): `pnpm test validate-repo` at fd635b9a: pass, story-source 626 stories, 626 with a code text, 0 problems
+- Check (review fixes): `pnpm test storybook-tests --base base` at fd635b9a: pass, 626 passed; `--base aria`: pass, 626 passed; `--base radix`: first run 1 failed (`dragging-virtual-when-filtered` "Dragging Row When Filtered", a file this milestone does not touch, row count 2 for 1), rerun pass, 626 passed
+- Check (review fixes): `pnpm test storybook-static --base base` at fd635b9a: pass, Code tab 626 of 626, 383 s; `--base radix`: pass, 626 of 626, 380 s; `--base aria`: pass, 626 of 626, 383 s; servers stopped
 - Task 1: done, 88aaec58
 - Task 2: done, 7c280699
 - Task 3: done, 35c2af48
@@ -29,6 +35,9 @@ Checks:
 
 ## Attention
 
+- Review fix: `tools/story-source/extract.d.mts` (the type file of extract.mjs, added by this milestone but not on its Files owned line) was edited with the major fix: `storySources({ base })`, `storyCode({ base })`, `TEST_WORDS`, and `usedNames` dropped. Revert: add the path to the milestone's Files owned line, or move the types into extract.mjs JSDoc.
+- Review fix: `csfPluginOptions: { disableSource: true }` on addon-docs (main.ts) removes `docs.source.originalSource` for every story, so the Code tab is empty until the code text arrives; anything else that read the original source (docs blocks Source/Canvas "Show code") now gets the emitted text instead. Revert: drop the option from main.ts.
+- `dragging-virtual-when-filtered` "Dragging Row When Filtered" (radix) failed once under load at fd635b9a and passed on rerun; not in P5 known flakes.
 - The 19 removed story pages under more/ held reviewed text (description, Try it steps, Related guides); story-pages.mjs refused to drop them, so they were deleted by hand and their text was not moved onto the pages of the stories they copied (those keep their own 2 to 4 steps). Revert: restore any page's Try it steps onto its target page from git (e505b8b3^).
 
 ## Notes
@@ -290,3 +299,5 @@ const DynamicColumns = () => (
 
 export default DynamicColumns;
 ```
+
+- Review round (fable, eb6ced96): fixed at ff8b98f0 (ST_BASE per base; extractor dead code, object parameters, fileURLToPath, header comment, TEST_WORDS once), 085e9796 (Code tab never shows the story as written; eslint-disable reason), fd635b9a (remountStory throws when `__stRemountStory` is unset). Declined: `tools/story-source/extract.test.mjs` (not owned; the two spec-named paths it would cover, meta component with args and a relative import inside stories/, are kept), one shared `remountStory` (a `.storybook/` file is not owned and the docs copies rewrite only the themes import, lib/story-variants.mjs), coding-standards.md Layout line and process.md P5 rename (not owned; for the lead), CHANGELOG (true again after the ST_BASE fix). The storySources-per-base text is what the Docs code panels milestone writes into sources.json: one text per base.
