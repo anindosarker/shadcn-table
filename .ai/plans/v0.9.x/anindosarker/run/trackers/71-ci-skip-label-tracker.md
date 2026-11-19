@@ -12,6 +12,8 @@ Checks:
 - Check: `grep -c 'ci:skip' CONTRIBUTING.md docs/code-of-conduct/coding-standards.md` = 1 and 2 at e99d2894: pass
 - Check: `pnpm test lint` at e99d2894: pass (9 warnings, unchanged files)
 - Check: `pnpm test validate-repo` at e99d2894: pass (43 unit tests, worktree clean after)
+- Verifier: lint, validate-repo, the greps and the act lines above are recorded at e99d2894 = HEAD, not rerun
+- Acceptance (1.2, act part), verifier, at e99d2894 (clone synced to HEAD, workflow files identical): `act pull_request -W .github/workflows/pr.yml -j head` on PR 134, no label: pass, `bumped=false`, `skip=false (none)`; labelled (label read replaced by `echo true`, as above): pass, `skip=true (label ci:skip)`. The GitHub part of Acceptance belongs to milestone `Ship the home page label`
 
 - Task 1 skip output of Head: done (23c30cee)
 - Task 2 the ci:skip sentence in CONTRIBUTING.md and coding-standards.md: done (e99d2894)
