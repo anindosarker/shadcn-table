@@ -1,6 +1,6 @@
 # 68: Version labels, tracker
 
-Status: running
+Status: done (88a0c18f)
 Branch `v0.9/version-labels`, worktree 03
 Checks:
 - Red: docs-e2e `header version`, `pnpm test docs-e2e --base base /docs/getting-started/install` at 5d16e986 (before the cherry-pick): fail, `FAIL /docs/getting-started/install @1440 header version v0.9.6: []` and `... header version at 390 v0.9.6: []`, the only 2 fails of 35
