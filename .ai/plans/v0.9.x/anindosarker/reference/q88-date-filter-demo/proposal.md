@@ -2,7 +2,7 @@
 
 Running notes from the discussion with the owner, 2026-11-20. Not decisions: nothing here is a D item until the owner says "record it". Only points the owner stated or agreed to are listed; points still under discussion stay in chat.
 
-The owner agreed to every point below on 2026-11-20 ("I agree to all the proposals"). Not built yet: the build waits for the owner's go. Planned as two versions on top of 4.AO: first typed values, limits, year list and `calendarProps`; then `presets` and `step`.
+The owner agreed to every point below on 2026-11-20 ("I agree to all the proposals"). The owner gave the go for the build on 2026-11-20 ("rest lgtm. note decision and implement version"). Built as three versions on top of 4.AO, each on the one before: 4.AP typed values, limits, year list, `calendarProps`, `popoverProps`, `dialogProps`; 4.AQ `presets` and `step`; 4.AR `labels`, form use, `defaultValue`, open state.
 
 ## Versions
 
@@ -35,25 +35,37 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 ## Presets
 
 - One optional prop `presets`: a list of `{ label, value }`, where `value` has the picker's value format or is a function returning it, so "Last 7 days" is worked out at the click. This is Ant Design's shape. No built-in list.
-- They render as stock buttons in a row under the calendar, as in shadcn's `calendar-presets` recipe, the same on every screen size. A click sets the value and moves the calendar there.
+- They render as stock buttons in a row under the calendar, as in shadcn's `calendar-presets` recipe (reference the owner named: https://ui.shadcn.com/docs/components/radix/calendar#presets), the same on every screen size. A click sets the value and moves the calendar there.
+- The owner confirms the presets UI on the card before it counts as accepted.
 
 ## Time step
 
 - The browser's `step` attribute, in seconds, is passed straight to the time and date-time boxes. `step={900}` flags a time off the quarter hour; a step under 60 adds seconds to the box and to the value (`10:30:45`). shadcn's time recipes use `step="1"`.
 - The clock columns follow it: the minute list by the step, a seconds column when the step is under 60.
+- `step` exists only on modes with a time. The browser also takes `step` on a date box, in days, but MDN says day steps do not work well in any browser.
 
 ## Props, as agreed so far
 
 - Every mode: `mode`, `value`, `onChange`, `disabled`, `min`, `max`, and HTML attributes for the outer wrapper.
 - Modes with a time: `step`.
 - Modes with a calendar: `presentation`, `calendarProps`, `presets`.
+- Modes with a popup: `popoverProps`, `dialogProps`, `open`, `defaultOpen`, `onOpenChange`.
+- Every mode also: `defaultValue`, `labels`, `name`, `required`, `form` (range modes: `startName`, `endName`).
 
-## Known gaps, accepted as not built now
+## Inner parts
 
-- Text in other languages (labels are English in the code).
-- Use inside a form (`name`, `required` land on the wrapper, not the box).
-- Uncontrolled use (`defaultValue`).
-- Open state from outside (`open`, `onOpenChange`).
+- Basic only: pass-through props for parts that have their own documented API, `calendarProps`, `popoverProps`, `dialogProps`. No props that replace a part, no per-part `classNames`.
+
+## Display format
+
+- Skipped. A page cannot set the format or language of a native date box (spec has no attribute; `lang` changed nothing in Chromium or WebKit), and every library with a format prop uses its own typed field. No format prop for our own text either.
+
+## The four former gaps, now built
+
+- Our words in other languages: one `labels` object for the picker's own text ("From", "To", "Done", "Today", placeholders). The calendar's words come through `calendarProps` (`locale`, `labels`).
+- Form use: `name`, `required` and `form` reach a real input. Range modes take `startName` and `endName` and render hidden inputs, as React Aria does.
+- Uncontrolled use: `defaultValue`.
+- Open state: `open`, `defaultOpen`, `onOpenChange`, the names shadcn, Ant Design and React Aria use.
 
 ## Lookups read so far
 
