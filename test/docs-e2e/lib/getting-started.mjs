@@ -94,23 +94,34 @@ async function iconEditions(page, check, article) {
 }
 
 /**
- * The header's version label (spec 68, D147): one visible link in the header
- * reading `v<version>` of packages/shadcn-table/package.json, to the GitHub
- * releases page, beside the home link and not inside it. Checked at the page's
- * width, then at the phone width of site.mjs (390), then the width is restored.
+ * The header's version label (spec 68, D147; the home header, spec 70, D152):
+ * one visible link in the header `selector` names (the docs bar `#nd-subnav`
+ * by default, `header.v4-nav` on the home and 404 pages) reading `v<version>`
+ * of packages/shadcn-table/package.json, to the GitHub releases page, beside
+ * the home link and not inside it. Checked at the page's width, then at the
+ * phone width of site.mjs (390), then the width is restored. The check names
+ * start with `prefix` (`home `, `404: `).
  */
-async function headerVersion(page, check) {
+export async function headerVersion({
+  page,
+  check,
+  selector = '#nd-subnav',
+  prefix = '',
+}) {
   const read = () =>
-    page.evaluate((text) => {
-      const links = [...document.querySelectorAll('#nd-subnav a')].filter(
-        (a) => a.textContent?.trim() === text,
-      );
-      return links.map((a) => ({
-        href: a.getAttribute('href') ?? '',
-        nested: a.parentElement?.closest('a') !== null,
-        visible: a.getClientRects().length > 0,
-      }));
-    }, `v${LIBRARY_VERSION}`);
+    page.evaluate(
+      ([scope, text]) => {
+        const links = [...document.querySelectorAll(`${scope} a`)].filter(
+          (a) => a.textContent?.trim() === text,
+        );
+        return links.map((a) => ({
+          href: a.getAttribute('href') ?? '',
+          nested: a.parentElement?.closest('a') !== null,
+          visible: a.getClientRects().length > 0,
+        }));
+      },
+      [selector, `v${LIBRARY_VERSION}`],
+    );
   const expect = async (name) => {
     const links = await read();
     const [link] = links;
@@ -124,11 +135,11 @@ async function headerVersion(page, check) {
     );
   };
   const viewport = page.viewportSize() ?? { width: 1440, height: 900 };
-  await expect('header version');
+  await expect(`${prefix}header version`);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(300);
   try {
-    await expect('header version at 390');
+    await expect(`${prefix}header version at 390`);
   } finally {
     await page.setViewportSize(viewport);
     await page.waitForTimeout(300);
@@ -1003,6 +1014,12 @@ const checks = {
       (await bar.getByRole('button', { name: 'Copy command' }).count()) === 1,
     );
     check('no V3 alert', !/was released September 5th, 2024/.test(txt));
+    await headerVersion({
+      page,
+      check,
+      selector: 'header.v4-nav',
+      prefix: 'home ',
+    });
     check(
       'agent bar',
       (await page.locator('[data-slot="agent-bar"]').count()) === 1,
@@ -1596,7 +1613,7 @@ const checks = {
     );
     await iconEditions(page, check, article);
     await agentBar(page, check);
-    await headerVersion(page, check);
+    await headerVersion({ page, check });
   },
   '/docs/getting-started/agents': async ({ page, check }) => {
     await agentBar(page, check);
