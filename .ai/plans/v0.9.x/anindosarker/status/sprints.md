@@ -140,4 +140,4 @@ Updated: 2026-11-19 11:31
 | E19 69 Release PR 0.9.7 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |
 | E19 69 After release 0.9.7 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
 | E19 69 Click to copy play passes in CI |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| E19 69 Storybook version in the toolbar |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |
+| E19 69 Storybook version in the toolbar |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |
