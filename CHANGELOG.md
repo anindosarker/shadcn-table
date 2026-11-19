@@ -14,7 +14,7 @@ publishes the section as the GitHub release notes.
 #### Spec 68
 
 - The docs header shows the library version after the name, top left on every page and at phone width: small muted text such as `v0.9.7`, read from the package at build time, linking to the GitHub releases (D147).
-- The Storybook sidebar title shows the library version before the base name, for example `shadcn-table v0.9.7 (Base UI)`, on the three bases, read from the package at build time (D148).
+- The Storybook toolbar shows the library version right after the base switcher, such as `v0.9.7`, on the three bases: a link to the GitHub releases, read from the package at build time (D150).
 
 ## 0.9.6 - 2026-11-19
 

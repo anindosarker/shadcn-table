@@ -15,7 +15,7 @@ const require = createRequire(import.meta.url);
 // base), which decides where its base switch goes (base-tool.ts).
 const ST_BASE = resolveBase(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
-// The library version, for the title (themes.ts, D148): read from the
+// The library version, for the toolbar (version-tool.ts, D150): read from the
 // package file as the docs header reads it, never typed.
 const { version: ST_VERSION } = require('../package.json') as {
   version: string;
