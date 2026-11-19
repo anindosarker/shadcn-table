@@ -1,6 +1,6 @@
 # 71: CI skip label, tracker
 
-Status: running
+Status: done (4a3234bc)
 Branch `v0.9/ci-skip-label`, worktree 07
 Checks:
 - Check: `grep -c 'needs.head.outputs.bumped' .github/workflows/pr.yml` = 0, `grep -c 'needs.head.outputs.skip' .github/workflows/pr.yml` = 6 at 23c30cee: pass
