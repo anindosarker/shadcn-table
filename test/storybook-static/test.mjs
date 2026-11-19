@@ -28,12 +28,14 @@
  * must show the story's code text (tools/story-source/extract.mjs, the text
  * `virtual:story-sources` serves), compared after trimming, and none of
  * `play`, `expect(`, `storybook/test`, `userEvent`. The run time of this
- * read is in the result's details.
+ * read is in the result's details. On the first manager page it opens, the
+ * sidebar title must read `shadcn-table v<version> (<base label>)` (spec 68,
+ * D148), the version from packages/shadcn-table/package.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { DEFAULT_BASE } from '../../tools/registry/bases.mjs';
+import { BASE_LABELS, DEFAULT_BASE } from '../../tools/registry/bases.mjs';
 import {
   storySources,
   TEST_WORDS,
@@ -45,6 +47,15 @@ import {
 } from '../../apps/shadcn-table-docs/lib/story-pages.mjs';
 
 const CI_PORT = 5343;
+/** The library version the manager title names (D148). */
+const LIBRARY_VERSION = JSON.parse(
+  fs.readFileSync(
+    new URL('../../packages/shadcn-table/package.json', import.meta.url),
+    'utf8',
+  ),
+).version;
+/** The manager's brand title: Storybook's Brand, a link to the root. */
+const MANAGER_TITLE = '.sidebar-header a';
 const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
 const DOCS_ORIGIN = 'https://www.shadcn-table.com';
@@ -152,6 +163,21 @@ async function checkCode(root, { base, log, slice }) {
   const browser = await chromium.launch();
   let page;
   let opened = 0;
+  let titleChecked = false;
+  /** The sidebar title of the manager page that just opened, once a run. */
+  const checkTitle = async () => {
+    titleChecked = true;
+    const expected = `shadcn-table v${LIBRARY_VERSION} (${BASE_LABELS[base]})`;
+    const shown = await page
+      .locator(MANAGER_TITLE)
+      .filter({ hasText: /^shadcn-table/ })
+      .first()
+      .innerText({ timeout: 5_000 })
+      .catch(() => '');
+    results.push(
+      `${shown.trim() === expected ? 'PASS' : 'FAIL'} manager title version "${shown.trim()}" (expected "${expected}")`,
+    );
+  };
   const open = async (id) => {
     await page?.close().catch(() => {});
     page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
@@ -175,6 +201,7 @@ async function checkCode(root, { base, log, slice }) {
     });
     await page.waitForSelector(CODE_PANEL, { timeout: 60_000 });
     opened = 0;
+    if (!titleChecked) await checkTitle();
   };
   const panelText = () =>
     page.evaluate(

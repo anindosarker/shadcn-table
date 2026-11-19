@@ -8,13 +8,13 @@ import { BaseSwitch } from '@/components/base-selector';
 import { GitHubIcon } from '@/components/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
 import { cn } from '@/lib/cn';
-import { DISCORD_URL, GITHUB_URL } from '@/lib/layout.shared';
+import { DISCORD_URL, GITHUB_URL, LIBRARY_VERSION } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
 import { SectionTabs } from '@/components/section-tabs';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
- * "// shadcn-table" wordmark, GitHub, the base select and the theme pill),
+ * "// shadcn-table" wordmark with the version linking to the GitHub releases, GitHub, the base select and the theme pill),
  * plus the search and sidebar triggers the docs need; the section tabs
  * (components/section-tabs.tsx, L7) are its second row. Keeps
  * fumadocs' `#nd-subnav` id and grid area so the layout and the sticky
@@ -39,6 +39,12 @@ export function SiteNav(props: ComponentProps<'header'>) {
             </span>
             <span>shadcn-table</span>
           </Link>
+          <a
+            href={`${GITHUB_URL}/releases`}
+            className="shrink-0 font-mono text-xs text-fd-muted-foreground transition-colors hover:text-(--docs-accent)"
+          >
+            v{LIBRARY_VERSION}
+          </a>
         </div>
         {/* from lg: the search field in the centre, max 28rem */}
         {slots.searchTrigger && (

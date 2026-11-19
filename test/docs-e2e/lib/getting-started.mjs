@@ -8,6 +8,7 @@
  * full live demo loop on Base UI, Radix UI and React Aria (demoLoop in
  * helpers.mjs), and ends with the theme customizer (themeCustomizer).
  */
+import fs from 'node:fs';
 import { BASE_LABELS, BASES } from '../../../tools/registry/bases.mjs';
 import {
   baseSwitch,
@@ -19,6 +20,14 @@ import {
   liveDemoFilters,
   sectionFrame,
 } from './helpers.mjs';
+
+/** The library version the header names (D147), read from the package file. */
+const LIBRARY_VERSION = JSON.parse(
+  fs.readFileSync(
+    new URL('../../../packages/shadcn-table/package.json', import.meta.url),
+    'utf8',
+  ),
+).version;
 
 // D29's 300 ms budget holds on a local machine, but GitHub runners took 342 to
 // 351 ms for the toggle on run 42514739346 (F28), so CI gets 600 ms.
@@ -82,6 +91,48 @@ async function iconEditions(page, check, article) {
       txt.includes('/r/{style}/{name}.json'),
   );
   await short.click();
+}
+
+/**
+ * The header's version label (spec 68, D147): one visible link in the header
+ * reading `v<version>` of packages/shadcn-table/package.json, to the GitHub
+ * releases page, beside the home link and not inside it. Checked at the page's
+ * width, then at the phone width of site.mjs (390), then the width is restored.
+ */
+async function headerVersion(page, check) {
+  const read = () =>
+    page.evaluate((text) => {
+      const links = [...document.querySelectorAll('#nd-subnav a')].filter(
+        (a) => a.textContent?.trim() === text,
+      );
+      return links.map((a) => ({
+        href: a.getAttribute('href') ?? '',
+        nested: a.parentElement?.closest('a') !== null,
+        visible: a.getClientRects().length > 0,
+      }));
+    }, `v${LIBRARY_VERSION}`);
+  const expect = async (name) => {
+    const links = await read();
+    const [link] = links;
+    check(
+      name,
+      links.length === 1 &&
+        link.href.endsWith('/releases') &&
+        !link.nested &&
+        link.visible,
+      `v${LIBRARY_VERSION}: ${JSON.stringify(links)}`,
+    );
+  };
+  const viewport = page.viewportSize() ?? { width: 1440, height: 900 };
+  await expect('header version');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  try {
+    await expect('header version at 390');
+  } finally {
+    await page.setViewportSize(viewport);
+    await page.waitForTimeout(300);
+  }
 }
 
 /** The agent bar: one visible prompt pointing at /SKILL.md, Copy prompt writes it. */
@@ -1545,6 +1596,7 @@ const checks = {
     );
     await iconEditions(page, check, article);
     await agentBar(page, check);
+    await headerVersion(page, check);
   },
   '/docs/getting-started/agents': async ({ page, check }) => {
     await agentBar(page, check);
