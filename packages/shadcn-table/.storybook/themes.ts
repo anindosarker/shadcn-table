@@ -46,16 +46,17 @@ export const ST_DEV: boolean =
 
 /**
  * The library version (packages/shadcn-table/package.json), set on the window
- * by main.ts (`managerHead` / `previewHead`).
+ * by main.ts (`managerHead` / `previewHead`); the toolbar shows it
+ * (version-tool.ts, D150).
  */
 export const ST_VERSION: string =
   (globalThis as { __ST_VERSION__?: string }).__ST_VERSION__ ?? '';
 
 /**
- * Manager title: "shadcn-table v<version> (Base UI)", "(Radix UI)" or
- * "(React Aria)" (D148).
+ * Manager title: "shadcn-table (Base UI)", "(Radix UI)" or "(React Aria)",
+ * as before spec 68: the version moved to the toolbar (D150 supersedes D148).
  */
-const brandTitle = `shadcn-table v${ST_VERSION} (${ST_BASE_LABEL})`;
+const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 
 /**
  * Shared manager/docs themes. The dark surfaces match the shadcn `.dark`

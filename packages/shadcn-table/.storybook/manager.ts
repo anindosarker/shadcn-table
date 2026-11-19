@@ -2,6 +2,8 @@ import { addons } from 'storybook/manager-api';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
 // Toolbar select between the bases (Base UI, Radix UI, React Aria).
 import './base-tool';
+// The library version right after it, a link to the GitHub releases (D150).
+import './version-tool';
 
 // First paint of the manager chrome. storybook-dark-mode's preset falls back
 // to the OS scheme when nothing is stored; we want dark by default, and the
