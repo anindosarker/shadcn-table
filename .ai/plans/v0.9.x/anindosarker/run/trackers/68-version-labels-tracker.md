@@ -1,9 +1,8 @@
 # 68: Version labels, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/version-labels`, worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
 - Task 1 The docs check and the header label: planned
 - Task 2 The title check and the Storybook title: planned
