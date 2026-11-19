@@ -1,6 +1,6 @@
 # 66: Code panels show the table's code, Storybook Code tab, tracker
 
-Status: running
+Status: done (68a5d989)
 Branch `v0.9/storybook-code-tab`, worktree 08
 Checks:
 - Check: Code tab read on 0.9.5 (P11), `pnpm --filter shadcn-table storybook:build:base` at detached origin/master da4f513f, then `pnpm test storybook-static --base base --url <served build> --ids 0:215|215:430|430:700` (test at 88aaec58): fail as required, 645 of 645 ids fail (0 pass; 3 slices, 456 s, 452 s, 444 s), `basic--basic` shows its story object with its play (quoted under Notes)
