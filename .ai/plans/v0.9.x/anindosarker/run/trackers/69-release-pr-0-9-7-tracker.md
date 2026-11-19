@@ -1,6 +1,6 @@
 # 69: Release 0.9.7, Release PR 0.9.7, tracker
 
-Status: running
+Status: done (f88bb263)
 Branch `dev`, no worktree (operations only)
 Checks:
 - Check: PR opened, `gh pr create --base master --head dev --title "release: 0.9.7" --label release:patch` at 81a2c015: PR 141, https://github.com/anindosarker/shadcn-table/pull/141
@@ -11,7 +11,7 @@ Checks:
 
 - Task 1 Open the PR with its label and auto-merge: done (81a2c015, PR 141); watcher armed in the runner session
 - Task 2: done (a328a4c0). Run 44475092527 on `a328a4c0` green apart from Prepare Release waiting (no rerun needed); environment `release` (id 26597343948) approved through `pending_deployments` at 2026-11-19 13:08 with comment D47, response deployment id 7906531107 (D47)
-- Task 3 The bump run and the merge: planned
+- Task 3: done (f88bb263). Bump commit `chore: version 0.9.7` dd2cb8e2 on `dev`, its run 44477465938 green, auto-merge merged PR 141 as f88bb263; `gh pr view 141 --json state` prints `MERGED`, `origin/master` package.json holds `"version": "0.9.7"`
 
 ## Attention
 

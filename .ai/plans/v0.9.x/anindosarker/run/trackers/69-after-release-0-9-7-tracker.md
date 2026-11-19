@@ -1,13 +1,12 @@
 # 69: Release 0.9.7, After release 0.9.7, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `master`, no worktree for Tasks 1 and 2 (operations only)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 Watch release.yml: planned
-- Task 2 The live label checks: planned
-- Task 3 Branches up to master and the handoff: planned
+- Task 1: running. `release.yml` run 44477578442 on f88bb263
+- Task 2: planned
+- Task 3: planned
 
 ## Attention
 
