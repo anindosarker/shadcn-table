@@ -56,7 +56,7 @@ const config: StorybookConfig = {
   viteFinal: (config) => ({
     ...config,
     ...(config.cacheDir ? { cacheDir: `${config.cacheDir}-${ST_BASE}` } : {}),
-    plugins: [...(config.plugins ?? []), storySourcePlugin()],
+    plugins: [...(config.plugins ?? []), storySourcePlugin({ base: ST_BASE })],
   }),
   features: {
     // Components manifest for the MCP addon's docs tools.

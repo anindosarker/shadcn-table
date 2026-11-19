@@ -11,30 +11,33 @@
  *     and the Storybook packages are left out, `@story-support/<part>` (the
  *     story-only parts of a base) is written as `@/components/ui/<part>`, as
  *     the docs copies map it (apps/shadcn-table-docs/lib/story-variants.mjs);
- *   - `ST_BASE` of `.storybook/themes`, when used, as a constant;
+ *   - `ST_BASE` of `.storybook/themes`, when used, as a constant holding
+ *     the base the text is made for (the Storybook's own base);
  *   - the declarations of a file imported from a relative path inside
  *     stories/, then those of the story file, each in file order: every
  *     top-level declaration the component uses, followed through the names it
  *     uses in turn (columns, data, types, helpers, the wrapped component);
- *   - the component, `export default function <StoryExport>()`: an arrow or
- *     function story's body, an object story's `render`, the render of the
+ *   - the component, `const <StoryExport> = () => ...;` then
+ *     `export default <StoryExport>;`: an arrow or function story's body, an object story's `render`, the render of the
  *     object a story factory returns (`pinStory({...})`), or the meta's
  *     `render` or `component`. The story's args (the meta's, then the
- *     story's) are written out: `{...args}` as props, `args.x` as its value,
- *     any other use as a `const` of the args object.
+ *     story's) are written out: `{...args}` as props, `args.x` as its value.
  * Left out: `play`, `parameters`, `tags`, `argTypes`, `beforeEach`, the meta,
  * the default export and every declaration only those use.
  *
  * TypeScript compiler API, no text matching. Usage:
- *   storyCode({ fileText, exportName, file }) -> string
- *   await storySources() -> { [story id]: string }, every story
+ *   storyCode({ fileText, exportName, file, base }) -> string
+ *   await storySources({ base }) -> { [story id]: string }, every story
  * `file` (the story file's path) is needed only when the file imports from a
- * relative path inside stories/. Throws when the story has a shape it cannot
+ * relative path inside stories/; `base` (default DEFAULT_BASE) is the base
+ * the text names as `ST_BASE`. Throws when the story has a shape it cannot
  * read.
  */
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { BASES, DEFAULT_BASE } from '../registry/bases.mjs';
 
 const require = createRequire(
   new URL('../../packages/shadcn-table/package.json', import.meta.url),
@@ -49,15 +52,19 @@ const STORY_SUPPORT = '@story-support/';
 /** `.storybook/themes`: the names a story reads from it, as constants. */
 const THEMES_MODULE = /(^|\/)\.storybook\/themes$/;
 const THEMES_NAMES = {
-  ST_BASE: [
-    "// The base this example renders on: 'base', 'radix' or 'aria'.",
-    "const ST_BASE: 'base' | 'radix' | 'aria' = 'base';",
-  ].join('\n'),
+  // asserted to the union, so a comparison with another base still compiles
+  ST_BASE: (base) =>
+    [
+      "// The base this example renders on: 'base', 'radix' or 'aria'.",
+      `const ST_BASE = '${base}' as 'base' | 'radix' | 'aria';`,
+    ].join('\n'),
 };
 const STORIES_DIR = path.resolve(
-  path.dirname(new URL(import.meta.url).pathname),
+  path.dirname(fileURLToPath(import.meta.url)),
   '../../packages/shadcn-table/stories',
 );
+/** The words of a test (D142); `play` as a word, so `display` passes. */
+export const TEST_WORDS = /\bplay\b|\bexpect\(|storybook\/test|\buserEvent\b/;
 const LINE_WIDTH = 80;
 
 const parse = (text, fileName) =>
@@ -83,9 +90,6 @@ function unwrap(node) {
     current = current.expression;
   return current;
 }
-
-const hasModifier = (node, kind) =>
-  !!node.modifiers?.some((modifier) => modifier.kind === kind);
 
 /** Adds the names a binding (identifier or pattern) declares to `out`. */
 function bindingNames(name, out) {
@@ -166,7 +170,7 @@ function isDeclarationName(node) {
  * declared, which can only leave a top-level declaration out, and the
  * validate-repo check finds that.
  */
-export function usedNames(node) {
+function usedNames(node) {
   const declared = new Set();
   const used = new Set();
   const visit = (current) => {
@@ -308,7 +312,11 @@ function resolveObject(mod, bound) {
     fn.parameters.forEach((parameter, i) => {
       const arg = node.arguments[i];
       if (!arg) return;
-      bindParameter(parameter.name, { node: arg, env }, callEnv, mod);
+      bindParameter(mod, {
+        name: parameter.name,
+        bound: { node: arg, env },
+        env: callEnv,
+      });
     });
     const returned = returnedExpression(fn);
     return returned
@@ -330,8 +338,6 @@ function resolveObject(mod, bound) {
       });
     } else if (ts.isShorthandPropertyAssignment(property)) {
       properties.set(property.name.text, { node: property.name, env });
-    } else if (ts.isMethodDeclaration(property)) {
-      properties.set(propertyName(property.name), { node: property, env });
     }
   }
   return { properties };
@@ -342,8 +348,8 @@ const propertyName = (name) =>
     ? name.text
     : name.getText();
 
-/** Binds a factory parameter (a name, or an array pattern over an array literal). */
-function bindParameter(name, bound, env, mod) {
+/** Binds a factory parameter (a name, or an array pattern over an array literal) in `env`. */
+function bindParameter(mod, { name, bound, env }) {
   if (ts.isIdentifier(name)) {
     env.set(name.text, bound);
     return;
@@ -354,7 +360,11 @@ function bindParameter(name, bound, env, mod) {
     name.elements.forEach((element, i) => {
       const item = value.node.elements[i];
       if (item && !ts.isOmittedExpression(element))
-        bindParameter(element.name, { node: item, env: value.env }, env, mod);
+        bindParameter(mod, {
+          name: element.name,
+          bound: { node: item, env: value.env },
+          env,
+        });
     });
   }
 }
@@ -396,7 +406,7 @@ function lineIndent(sf, pos) {
 }
 
 /** Moves every line after the first from `from` spaces of indent to `to`. */
-function reindent(text, from, to) {
+function reindent({ text, from, to }) {
   return text
     .split('\n')
     .map((line, i) => {
@@ -416,7 +426,7 @@ function boundText(mod, bound) {
 }
 
 /** One JSX attribute for an arg: `name="text"`, `name` for true, else `name={value}`. */
-function jsxAttribute(name, valueText, valueNode) {
+function jsxAttribute({ name, valueText, valueNode }) {
   const node = valueNode && unwrap(valueNode);
   if (node && node.kind === ts.SyntaxKind.TrueKeyword) return name;
   if (
@@ -428,22 +438,9 @@ function jsxAttribute(name, valueText, valueNode) {
   return `${name}={${valueText}}`;
 }
 
-/** The args as an object literal. */
-function argsObject(mod, args) {
-  if (!args.length) return '{}';
-  const parts = args.map(([key, value]) => {
-    const text = boundText(mod, value);
-    return text === key ? key : `${key}: ${text}`;
-  });
-  const one = `{ ${parts.join(', ')} }`;
-  return one.length <= 60
-    ? one
-    : `{\n${parts.map((p) => `  ${p},`).join('\n')}\n}`;
-}
-
 /**
- * The component of the story: `fn` (an arrow, function expression or method)
- * called with `args`; names `fn` uses from a factory's parameters are written
+ * The component of the story: `fn` (an arrow or function expression) called
+ * with `args`; names `fn` uses from a factory's parameters are written
  * as constants first.
  */
 function componentFromFunction(mod, { fn, env, args, name }) {
@@ -519,13 +516,10 @@ function componentFromFunction(mod, { fn, env, args, name }) {
         ts.forEachChild(node, visit);
       };
       visit(body);
-      if (other) {
-        const type = first.type ? `: ${textOf(first.type)}` : '';
-        prefix.push(`const ${argName}${type} = ${argsObject(mod, args)};`);
-      }
-    } else if (usedNamesOfBinding(param).size) {
-      const type = first.type ? `: ${textOf(first.type)}` : '';
-      prefix.push(`const ${textOf(param)}${type} = ${argsObject(mod, args)};`);
+      if (other)
+        throw new Error('a story render reads its args other than by name');
+    } else {
+      throw new Error('a story render destructures its args');
     }
   }
   let bodyText = sf.text.slice(bodyStart, body.getEnd());
@@ -538,17 +532,17 @@ function componentFromFunction(mod, { fn, env, args, name }) {
   const head = `const ${name} = () => `;
   const tail = `;\n\nexport default ${name};\n`;
   if (ts.isBlock(body)) {
-    const inner = reindent(bodyText, indent, 0);
+    const inner = reindent({ text: bodyText, from: indent, to: 0 });
     if (!prefix.length) return `${head}${inner}${tail}`;
     // `{`, the prefix, then the block's own lines
     const open = inner.indexOf('{') + 1;
     const prefixText = prefix
-      .map((line) => `  ${reindent(line, 0, 2)}\n`)
+      .map((line) => `  ${reindent({ text: line, from: 0, to: 2 })}\n`)
       .join('');
     return `${head}{\n${prefixText}${inner.slice(open).replace(/^\n/, '')}${tail}`;
   }
   if (!prefix.length) {
-    const expression = reindent(bodyText, indent, 0);
+    const expression = reindent({ text: bodyText, from: indent, to: 0 });
     const wrap =
       !expression.includes('\n') &&
       head.length + expression.length + 1 > LINE_WIDTH;
@@ -557,9 +551,9 @@ function componentFromFunction(mod, { fn, env, args, name }) {
       : `${head}${expression}${tail}`;
   }
   const prefixText = prefix
-    .map((line) => `  ${reindent(line, 0, 2)}\n`)
+    .map((line) => `  ${reindent({ text: line, from: 0, to: 2 })}\n`)
     .join('');
-  const expression = reindent(bodyText, indent, 2);
+  const expression = reindent({ text: bodyText, from: indent, to: 2 });
   return `${head}{\n${prefixText}  return ${expression};\n}${tail}`;
 }
 
@@ -571,7 +565,11 @@ function componentFromFunction(mod, { fn, env, args, name }) {
 function spreadEdit(mod, { node, args, body }) {
   const sf = node.getSourceFile();
   const attributes = args.map(([key, value]) =>
-    jsxAttribute(key, boundText(mod, value), value.node),
+    jsxAttribute({
+      name: key,
+      valueText: boundText(mod, value),
+      valueNode: value.node,
+    }),
   );
   if (!attributes.length) {
     let start = node.getStart(sf);
@@ -621,17 +619,15 @@ function spreadEdit(mod, { node, args, body }) {
   };
 }
 
-function usedNamesOfBinding(pattern) {
-  const names = new Set();
-  bindingNames(pattern, names);
-  return names;
-}
-
 /** The component of a story that has args and no render: the meta's component with them. */
 function componentFromMetaComponent(mod, { component, args, name }) {
   const tag = textOf(component);
   const attributes = args.map(([key, value]) =>
-    jsxAttribute(key, boundText(mod, value), value.node),
+    jsxAttribute({
+      name: key,
+      valueText: boundText(mod, value),
+      valueNode: value.node,
+    }),
   );
   const one = `<${tag}${attributes.map((a) => ` ${a}`).join('')} />`;
   const jsx =
@@ -670,11 +666,7 @@ function storyComponent(mod, exportName) {
   if (render) {
     const value = resolveValue(mod, render);
     const fn = value.node;
-    if (
-      ts.isArrowFunction(fn) ||
-      ts.isFunctionExpression(fn) ||
-      ts.isMethodDeclaration(fn)
-    )
+    if (ts.isArrowFunction(fn) || ts.isFunctionExpression(fn))
       return componentFromFunction(mod, {
         fn,
         env: value.env,
@@ -723,7 +715,7 @@ function declarationText(statement) {
 }
 
 /** One import line with only `names`, the module as the text writes it. */
-function importText(statement, names, specifier) {
+function importText({ statement, names, specifier }) {
   const clause = statement.importClause;
   if (!clause) return `import '${specifier}';`;
   const typeOnly = clause.isTypeOnly ? 'type ' : '';
@@ -770,10 +762,16 @@ function readRelative(fromFile, specifier) {
 
 /**
  * The story's code text.
- * @param {{ fileText: string, exportName: string, file?: string }} story
+ * @param {{ fileText: string, exportName: string, file?: string, base?: string }} story
  * @returns {string}
  */
-export function storyCode({ fileText, exportName, file = 'story.tsx' }) {
+export function storyCode({
+  fileText,
+  exportName,
+  file = 'story.tsx',
+  base = DEFAULT_BASE,
+}) {
+  if (!BASES.includes(base)) throw new Error(`unknown base "${base}"`);
   const mod = readModule(fileText, file);
   const component = storyComponent(mod, exportName);
   // names followed per module; package imports collected across modules
@@ -835,14 +833,10 @@ export function storyCode({ fileText, exportName, file = 'story.tsx' }) {
     }
   };
   follow(mod, usedNames(parse(component, 'component.tsx')));
-  const imports = [...packageImports.values()]
-    .map(({ statement, names, specifier }) =>
-      importText(statement, names, specifier),
-    )
-    .filter(Boolean);
+  const imports = [...packageImports.values()].map(importText).filter(Boolean);
   const blocks = [];
   if (imports.length) blocks.push(imports.join('\n'));
-  for (const name of themes) blocks.push(THEMES_NAMES[name]);
+  for (const name of themes) blocks.push(THEMES_NAMES[name](base));
   // relative modules first (the story file was added first, so reverse)
   for (const current of [...modules.slice(1).reverse(), modules[0]]) {
     const statements = [...included.get(current)].sort(
@@ -861,10 +855,11 @@ export { ts };
  * Every story's code text, keyed by story id (the ids of `readStories`,
  * apps/shadcn-table-docs/lib/story-pages.mjs). A story whose text cannot be
  * made gets a one-line comment naming why; `pnpm test validate-repo` fails on
- * it.
+ * it. `base` is the base the texts are made for (storyCode).
+ * @param {{ base?: string }} [options]
  * @returns {Promise<Record<string, string>>}
  */
-export async function storySources() {
+export async function storySources({ base = DEFAULT_BASE } = {}) {
   const { readStories, STORIES_DIR: dir } = await import(
     '../../apps/shadcn-table-docs/lib/story-pages.mjs'
   );
@@ -879,6 +874,7 @@ export async function storySources() {
         fileText: files.get(file),
         exportName: story.exportName,
         file,
+        base,
       });
     } catch (error) {
       sources[story.id] = `// No code text for this story: ${error.message}\n`;
