@@ -341,39 +341,81 @@ export const MenuItemsFollowTheColumnState = {
   },
 };
 
-/** Sorting from the menu stacks onto another column's sort. */
-export const MenuSortStacks = {
-  render: () => <ShadcnTable columns={menuColumns} data={menuData} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText('Mason');
-    await openMenu(canvasElement, 'First Name');
-    await userEvent.click(menuItem('Sort ascending'));
-    await waitForNoMenu();
-    await openMenu(canvasElement, 'Last Name');
-    await userEvent.click(menuItem('Sort descending'));
-    await waitFor(() =>
-      expect(headerCell(canvasElement, 'Last Name')).toHaveAttribute(
-        'aria-sort',
-        'descending',
-      ),
-    );
-    expect(headerCell(canvasElement, 'First Name')).toHaveAttribute(
-      'aria-sort',
-      'ascending',
-    );
-    // The same column replaces its own direction.
-    await openMenu(canvasElement, 'First Name');
-    await userEvent.click(menuItem('Sort descending'));
-    await waitFor(() =>
-      expect(headerCell(canvasElement, 'First Name')).toHaveAttribute(
-        'aria-sort',
-        'descending',
-      ),
-    );
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const menuSortStacksPlay = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findByText('Mason');
+  await openMenu(canvasElement, 'First Name');
+  await userEvent.click(menuItem('Sort ascending'));
+  await waitForNoMenu();
+  await openMenu(canvasElement, 'Last Name');
+  await userEvent.click(menuItem('Sort descending'));
+  await waitFor(() =>
     expect(headerCell(canvasElement, 'Last Name')).toHaveAttribute(
       'aria-sort',
       'descending',
-    );
+    ),
+  );
+  expect(headerCell(canvasElement, 'First Name')).toHaveAttribute(
+    'aria-sort',
+    'ascending',
+  );
+  // The same column replaces its own direction.
+  await openMenu(canvasElement, 'First Name');
+  await userEvent.click(menuItem('Sort descending'));
+  await waitFor(() =>
+    expect(headerCell(canvasElement, 'First Name')).toHaveAttribute(
+      'aria-sort',
+      'descending',
+    ),
+  );
+  expect(headerCell(canvasElement, 'Last Name')).toHaveAttribute(
+    'aria-sort',
+    'descending',
+  );
+};
+
+/**
+ * The label opens the same menu as the chevron and never sorts; a second
+ * click on the chevron closes the menu.
+ */
+const labelOpensMenuPlay = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findByText('Mason');
+  const cell = headerCell(canvasElement, 'First Name');
+  await userEvent.click(
+    within(cell).getByRole('button', { name: 'First Name column menu' }),
+  );
+  await body.findByRole('menu');
+  expect(cell).toHaveAttribute('aria-sort', 'none');
+  await closeMenu();
+
+  const chevron = within(cell).getByRole('button', {
+    name: 'Column Actions',
+  });
+  await userEvent.click(chevron);
+  await body.findByRole('menu');
+  // A modal menu sets pointer-events: none outside it.
+  await userEvent.setup({ pointerEventsCheck: 0 }).click(chevron);
+  await waitForNoMenu();
+  expect(cell).toHaveAttribute('aria-sort', 'none');
+};
+
+/** Sorting from the menu stacks onto another column's sort. */
+export const MenuSortStacks = {
+  render: () => <ShadcnTable columns={menuColumns} data={menuData} />,
+  play: async (context: StoryContext) => {
+    await context.step('Menu Sort Stacks', () => menuSortStacksPlay(context));
+    await remountStory();
+    await context.step('Label Opens Menu', () => labelOpensMenuPlay(context));
   },
 };
 
@@ -402,33 +444,5 @@ export const MenuResetSizeAfterResize = {
       'Reset column size',
     );
     await closeMenu();
-  },
-};
-
-/**
- * The label opens the same menu as the chevron and never sorts; a second
- * click on the chevron closes the menu.
- */
-export const LabelOpensMenu = {
-  render: () => <ShadcnTable columns={menuColumns} data={menuData} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText('Mason');
-    const cell = headerCell(canvasElement, 'First Name');
-    await userEvent.click(
-      within(cell).getByRole('button', { name: 'First Name column menu' }),
-    );
-    await body.findByRole('menu');
-    expect(cell).toHaveAttribute('aria-sort', 'none');
-    await closeMenu();
-
-    const chevron = within(cell).getByRole('button', {
-      name: 'Column Actions',
-    });
-    await userEvent.click(chevron);
-    await body.findByRole('menu');
-    // A modal menu sets pointer-events: none outside it.
-    await userEvent.setup({ pointerEventsCheck: 0 }).click(chevron);
-    await waitForNoMenu();
-    expect(cell).toHaveAttribute('aria-sort', 'none');
   },
 };
