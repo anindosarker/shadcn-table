@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D151** The click-to-copy tooltip shows when focus comes back quickly #R6
+	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
+	- Source: Q140
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4

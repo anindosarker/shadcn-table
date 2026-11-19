@@ -39,8 +39,6 @@ kanban-plugin: basic
 - [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
 	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
 	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
-- [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly
-	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
 - [ ] **Q141** The home page header shows no version label
 	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
 
@@ -366,6 +364,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-19, after the reason was explained (the 19 were same-table copies under D106): 'that's fine then. We don't need any duplicate or redirect.' Checked on claude/review f4f4ad5e: none of the 19 removed story ids occurs in any file outside .ai/ and CHANGELOG.md (no link, no guide slug, no storybook map row, no test); the sitemap, sidebar and search are built from the content source.
 - [x] **Q136** The docs site shows the library's current version nowhere #D147
 - [x] **Q137** Storybook shows the library's current version nowhere #D148
+- [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly #D151
+	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
 
 ## Later
 
