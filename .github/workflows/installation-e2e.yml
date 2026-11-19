@@ -21,7 +21,7 @@ on:
         type: boolean
         default: false
       skip:
-        description: Skip every step (the PR head is the version bump commit, D35)
+        description: Skip every step (the PR head is the version bump commit, D35, or the PR carries the label ci:skip, D153)
         type: boolean
         default: false
     outputs:
