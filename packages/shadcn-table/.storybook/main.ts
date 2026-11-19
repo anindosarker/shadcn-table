@@ -36,7 +36,12 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('storybook-dark-mode'),
-    getAbsolutePath('@storybook/addon-docs'),
+    {
+      name: getAbsolutePath('@storybook/addon-docs'),
+      // No `docs.source.originalSource`: the Code tab would show the story as
+      // written, with its play, until the code text arrives (spec 66, D142).
+      options: { csfPluginOptions: { disableSource: true } },
+    },
     getAbsolutePath('@storybook/addon-mcp'),
     getAbsolutePath('@storybook/addon-vitest'),
   ],
