@@ -1,6 +1,16 @@
 import type { Preview } from '@storybook/react-vite';
-import { Fragment, type ReactNode, useSyncExternalStore } from 'react';
-import { addons, useEffect, useState } from 'storybook/preview-api';
+import {
+  Fragment,
+  type ReactNode,
+  useEffect as useReactEffect,
+  useSyncExternalStore,
+} from 'react';
+import {
+  addons,
+  emitTransformCode,
+  useEffect,
+  useState,
+} from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import {
   darkTheme,
@@ -13,6 +23,8 @@ import {
 } from './themes';
 // The docs app's map of example pages to their exact stories, read as text.
 import storybookMapSource from '../../../apps/shadcn-table-docs/lib/storybook-map.ts?raw';
+// Every story's code text, by story id (story-source-plugin.ts, spec 66).
+import { storySource } from 'virtual:story-sources';
 // Resolved inside the tree ST_BASE selects (vite.config.ts).
 import '@/index.css';
 import './preview.css';
@@ -98,10 +110,27 @@ const subscribeReset = (listener: () => void) => {
   return () => resetListeners.delete(listener);
 };
 
+const remountWaiters: Array<() => void> = [];
+
 function ResetAfterPlay({ children }: { children: ReactNode }) {
   const key = useSyncExternalStore(subscribeReset, () => resetCount);
+  useReactEffect(() => {
+    remountWaiters.splice(0).forEach((resolve) => resolve());
+  }, [key]);
   return <Fragment key={key}>{children}</Fragment>;
 }
+
+// A story whose play holds the checks of the copies merged into it (D106,
+// spec 66) runs each of them on a fresh story: the play calls this between
+// its steps, everywhere (vitest, `storybook dev`, the static site), and it
+// resolves once the story has mounted again.
+(globalThis as { __stRemountStory?: () => Promise<void> }).__stRemountStory =
+  () =>
+    new Promise<void>((resolve) => {
+      remountWaiters.push(resolve);
+      resetCount += 1;
+      resetListeners.forEach((listener) => listener());
+    });
 
 const preview: Preview = {
   afterEach: () => {
@@ -133,29 +162,29 @@ const preview: Preview = {
       // Built-in "Code" addon panel (replaces addon-storysource, which
       // material-react-table's storybook uses for its Code tab).
       codePanel: true,
-      // Source type stays 'auto' (documented default): arrow stories get their
-      // file text. Arg-driven stories would get the dynamic snippet, which
-      // inlines the mutated column objects (ST adds id, columnDefType, ...),
-      // so they print the one-liner by arg name instead.
+      // The Code tab shows the story's code text (spec 66, D142): the table
+      // as one component with its imports, columns and data, never its play.
+      // The panel shows the text the preview sends once the story rendered
+      // (the first decorator below) with this transform applied; until then
+      // it is empty (main.ts turns off the story-as-written source).
       source: {
         // Keep the preview harness (placeholder lines) out of snippets.
         excludeDecorators: true,
-        transform: (
-          code: string,
-          ctx: {
-            args: Record<string, unknown>;
-            parameters: Record<string, unknown>;
-          },
-        ) =>
-          ctx.parameters.__isArgsStory
-            ? `() => <ShadcnTable ${Object.keys(ctx.args)
-                .map((k) => `${k}={${k}}`)
-                .join(' ')} />`
-            : code,
+        transform: (code: string, ctx: { id: string }) =>
+          storySource(ctx.id) ?? code,
       },
     },
   },
   decorators: [
+    // Sends the story's code text to the Code tab once per story. Storybook
+    // sends one itself only for a story with args.
+    (Story, context) => {
+      useEffect(() => {
+        void emitTransformCode(storySource(context.id), context);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- once per story: a re-render of the same story sends nothing new
+      }, [context.id]);
+      return <Story />;
+    },
     (Story, { id, title }) => {
       useStorybookDarkMode();
       return (

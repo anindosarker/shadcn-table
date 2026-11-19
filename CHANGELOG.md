@@ -7,6 +7,19 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.9.6 - 2026-11-19
+
+### Fixed
+
+#### Spec 66 Storybook Code tab
+
+- The Code tab of every story in the three Storybooks shows the table's own code, complete enough to copy and run: the imports it needs, its columns, data, types and helpers, and the story's table as one component (the default export, named after the story). It no longer shows a wrapper such as `render: () => <BasicExample />`, a one-liner without its columns and data, or the story's test (D142).
+- The 19 stories that showed the same table as another story in their group and only added a check are merged into the story they copy; each check now runs as a step of that story, and their pages under More examples are gone (D106, D142).
+
+#### Spec 66 Docs code panels
+
+- The Code view of every story page under More examples, and of every guide Example item that shows a story, shows that story's own code on the selected base, the same text as the Storybook Code tab, as one file named after the story. It no longer shows the whole story file with every story and test in it. The Production-Ready Tables guide keeps its five example files (D142, D131).
+
 ## 0.9.5 - 2026-11-18
 
 ### Added

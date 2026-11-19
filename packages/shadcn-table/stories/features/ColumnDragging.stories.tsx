@@ -175,6 +175,255 @@ const settled = (canvasElement: HTMLElement) =>
   );
 
 /**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const columnDraggingEnabledPlay = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const headers = await canvas.findAllByRole('columnheader');
+  expect(headers[0]).toHaveTextContent('First Name');
+  expect(headers[0]).toHaveAttribute('draggable', 'true');
+  expect(within(headers[0]).queryByRole('button', { name: 'Move' })).toBeNull();
+
+  const source = headerCell(canvasElement, 'First Name');
+  fireEvent.dragStart(source);
+  expect(ghost()).toBeNull();
+  dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
+  await waitFor(() =>
+    expect(
+      parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
+    ).toBeLessThan(0),
+  );
+  expect(bodyCell(canvasElement, 'lastName').style.translate).toBe('');
+  expect(getComputedStyle(bodyCell(canvasElement, 'lastName')).translate).toBe(
+    'none',
+  );
+
+  dragEnd(source, 'move');
+  await waitFor(() =>
+    expect(headerNames(canvasElement)).toEqual([
+      'Last Name',
+      'First Name',
+      'Email Address',
+      'Address',
+      'City',
+      'State',
+    ]),
+  );
+  expect(
+    bodyCell(canvasElement, 'firstName').getAnimations().length,
+  ).toBeGreaterThan(0);
+  expect(headerCell(canvasElement, 'Last Name').style.translate).toBe('');
+  expect(ghost()).toBeNull();
+  await settled(canvasElement);
+
+  // Touch: a swipe that moves before the hold scrolls, it drags nothing.
+  const swiped = headerCell(canvasElement, 'Last Name');
+  const start = centreOf(swiped);
+  touch({ at: start, element: swiped, type: 'pointerdown' });
+  touch({
+    at: { x: start.x + 40, y: start.y },
+    element: swiped,
+    type: 'pointermove',
+  });
+  await pause(400);
+  expect(ghost()).toBeNull();
+  touch({
+    at: { x: start.x + 40, y: start.y },
+    element: swiped,
+    type: 'pointerup',
+  });
+
+  // Touch: the header after the hold, back and then as the mouse moved it.
+  await touchDrag({
+    hold: true,
+    source: headerCell(canvasElement, 'Last Name'),
+    target: headerCell(canvasElement, 'First Name'),
+  });
+  await waitFor(() =>
+    expect(headerNames(canvasElement)).toEqual([
+      'First Name',
+      'Last Name',
+      'Email Address',
+      'Address',
+      'City',
+      'State',
+    ]),
+  );
+  await settled(canvasElement);
+  await touchDrag({
+    hold: true,
+    source: headerCell(canvasElement, 'First Name'),
+    target: headerCell(canvasElement, 'Last Name'),
+  });
+  await waitFor(() =>
+    expect(headerNames(canvasElement)).toEqual([
+      'Last Name',
+      'First Name',
+      'Email Address',
+      'Address',
+      'City',
+      'State',
+    ]),
+  );
+  // Touch: a hold and a lift in place stays a tap; the click it brings
+  // opens the column menu as before.
+  await settled(canvasElement);
+  const label = within(headerCell(canvasElement, 'Email Address')).getByRole(
+    'button',
+    { name: 'Email Address column menu' },
+  );
+  touch({ at: centreOf(label), element: label, type: 'pointerdown' });
+  await pause(400);
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  touch({ at: centreOf(label), element: label, type: 'pointerup' });
+  await waitFor(() => expect(ghost()).toBeNull());
+  expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
+  const browserUserEvent = (
+    globalThis as {
+      stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+    }
+  ).stBrowserUserEvent;
+  if (browserUserEvent) await browserUserEvent.click(label);
+  else fireEvent.click(label);
+  expect(await within(document.body).findByRole('menu')).toBeInTheDocument();
+  fireEvent.keyDown(document.activeElement ?? document.body, {
+    key: 'Escape',
+  });
+  await waitFor(() =>
+    expect(within(document.body).queryByRole('menu')).toBeNull(),
+  );
+
+  // Touch: the listener that keeps the page still is on the page before
+  // the finger goes down (WebKit ignores one added later), a swipe before
+  // the hold still scrolls, and after the hold the page stays still even
+  // when an element on the way stops the touchmove.
+  const held = headerCell(canvasElement, 'Last Name');
+  const at = centreOf(held);
+  /** Whether a touchmove on `element` would leave the page still. */
+  const keepsPageStill = (element: Element) => {
+    const event = new Event('touchmove', { bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event.defaultPrevented;
+  };
+  const stopTouchMove = (event: Event) => event.stopPropagation();
+  const added: string[] = [];
+  const addEventListener = window.addEventListener;
+  window.addEventListener = function (
+    this: Window,
+    ...args: Parameters<Window['addEventListener']>
+  ) {
+    added.push(args[0]);
+    return addEventListener.apply(this, args);
+  } as Window['addEventListener'];
+  canvasElement.addEventListener('touchmove', stopTouchMove);
+  try {
+    touch({ at, element: held, type: 'pointerdown' });
+    expect(keepsPageStill(held)).toBe(false);
+    await pause(400);
+    await waitFor(() => expect(ghost()).not.toBeNull());
+    expect(keepsPageStill(held)).toBe(true);
+    touch({ at, element: held, type: 'pointerup' });
+    await waitFor(() => expect(ghost()).toBeNull());
+    expect(keepsPageStill(held)).toBe(false);
+  } finally {
+    window.addEventListener = addEventListener;
+    canvasElement.removeEventListener('touchmove', stopTouchMove);
+  }
+  expect(added).not.toContain('touchmove');
+  expect(headerNames(canvasElement)[0]).toMatch(/^Last Name/);
+};
+
+/** Escape (a drag that ends with no drop effect) reorders nothing. */
+const columnDraggingCancelledPlay = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByRole('columnheader');
+  const source = headerCell(canvasElement, 'First Name');
+  fireEvent.dragStart(source);
+  dragOverSlot(canvasElement, headerCell(canvasElement, 'City'));
+  await waitFor(() =>
+    expect(headerCell(canvasElement, 'City').style.translate).not.toBe(''),
+  );
+  dragEnd(source, 'none');
+  await waitFor(() =>
+    expect(headerCell(canvasElement, 'City').style.translate).toBe(''),
+  );
+  expect(headerNames(canvasElement)).toEqual([
+    'First Name',
+    'Last Name',
+    'Email Address',
+    'Address',
+    'City',
+    'State',
+  ]);
+
+  // Touch: a pointercancel mid-drag slides the headers back, no reorder.
+  const touched = headerCell(canvasElement, 'First Name');
+  const city = headerCell(canvasElement, 'City');
+  touch({ at: centreOf(touched), element: touched, type: 'pointerdown' });
+  await pause(400);
+  touch({ at: centreOf(city), element: touched, type: 'pointermove' });
+  await waitFor(() => expect(ghost()).not.toBeNull());
+  await waitFor(() => expect(city.style.translate).not.toBe(''));
+  touch({ at: centreOf(city), element: touched, type: 'pointercancel' });
+  await waitFor(() => expect(ghost()).toBeNull());
+  await waitFor(() => expect(city.style.translate).toBe(''));
+  expect(headerNames(canvasElement)).toEqual([
+    'First Name',
+    'Last Name',
+    'Email Address',
+    'Address',
+    'City',
+    'State',
+  ]);
+};
+
+/**
+ * On drop the moved column, header and body cells, flashes the primary tint
+ * (D37); the other columns do not.
+ */
+const dropHighlightsColumnPlay = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findAllByRole('columnheader');
+  const source = headerCell(canvasElement, 'First Name');
+  fireEvent.dragStart(source);
+  dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
+  await waitFor(() =>
+    expect(
+      parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
+    ).toBeLessThan(0),
+  );
+  const highlighted = await recordHighlights(async () => {
+    dragEnd(source, 'move');
+    await waitFor(() =>
+      expect(headerNames(canvasElement).slice(0, 2)).toEqual([
+        'Last Name',
+        'First Name',
+      ]),
+    );
+  });
+  const highlights = (element: Element) => highlighted.has(element);
+  const firstNameCells = canvasElement.querySelectorAll(
+    'tbody td[data-flip-column="firstName"]',
+  );
+  expect(firstNameCells.length).toBeGreaterThan(0);
+  for (const cell of firstNameCells) expect(highlights(cell)).toBe(true);
+  expect(highlights(headerCell(canvasElement, 'First Name'))).toBe(true);
+  for (const cell of canvasElement.querySelectorAll(
+    'tbody td[data-flip-column="email"]',
+  )) {
+    expect(highlights(cell)).toBe(false);
+  }
+};
+
+/**
  * The header cell is the drag source: mid-drag only the headers slide, the
  * body stays still; the drop reorders and the body cells catch up. By touch
  * the header drags after the finger rests on it; a swipe before that drags
@@ -189,216 +438,18 @@ export const ColumnDraggingEnabled = {
       enableColumnOrdering
     />
   ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const headers = await canvas.findAllByRole('columnheader');
-    expect(headers[0]).toHaveTextContent('First Name');
-    expect(headers[0]).toHaveAttribute('draggable', 'true');
-    expect(
-      within(headers[0]).queryByRole('button', { name: 'Move' }),
-    ).toBeNull();
-
-    const source = headerCell(canvasElement, 'First Name');
-    fireEvent.dragStart(source);
-    expect(ghost()).toBeNull();
-    dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
-    await waitFor(() =>
-      expect(
-        parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
-      ).toBeLessThan(0),
+  play: async (context: StoryContext) => {
+    await context.step('Column Dragging Enabled', () =>
+      columnDraggingEnabledPlay(context),
     );
-    expect(bodyCell(canvasElement, 'lastName').style.translate).toBe('');
-    expect(
-      getComputedStyle(bodyCell(canvasElement, 'lastName')).translate,
-    ).toBe('none');
-
-    dragEnd(source, 'move');
-    await waitFor(() =>
-      expect(headerNames(canvasElement)).toEqual([
-        'Last Name',
-        'First Name',
-        'Email Address',
-        'Address',
-        'City',
-        'State',
-      ]),
+    await remountStory();
+    await context.step('Column Dragging Cancelled', () =>
+      columnDraggingCancelledPlay(context),
     );
-    expect(
-      bodyCell(canvasElement, 'firstName').getAnimations().length,
-    ).toBeGreaterThan(0);
-    expect(headerCell(canvasElement, 'Last Name').style.translate).toBe('');
-    expect(ghost()).toBeNull();
-    await settled(canvasElement);
-
-    // Touch: a swipe that moves before the hold scrolls, it drags nothing.
-    const swiped = headerCell(canvasElement, 'Last Name');
-    const start = centreOf(swiped);
-    touch({ at: start, element: swiped, type: 'pointerdown' });
-    touch({
-      at: { x: start.x + 40, y: start.y },
-      element: swiped,
-      type: 'pointermove',
-    });
-    await pause(400);
-    expect(ghost()).toBeNull();
-    touch({
-      at: { x: start.x + 40, y: start.y },
-      element: swiped,
-      type: 'pointerup',
-    });
-
-    // Touch: the header after the hold, back and then as the mouse moved it.
-    await touchDrag({
-      hold: true,
-      source: headerCell(canvasElement, 'Last Name'),
-      target: headerCell(canvasElement, 'First Name'),
-    });
-    await waitFor(() =>
-      expect(headerNames(canvasElement)).toEqual([
-        'First Name',
-        'Last Name',
-        'Email Address',
-        'Address',
-        'City',
-        'State',
-      ]),
+    await remountStory();
+    await context.step('Drop Highlights Column', () =>
+      dropHighlightsColumnPlay(context),
     );
-    await settled(canvasElement);
-    await touchDrag({
-      hold: true,
-      source: headerCell(canvasElement, 'First Name'),
-      target: headerCell(canvasElement, 'Last Name'),
-    });
-    await waitFor(() =>
-      expect(headerNames(canvasElement)).toEqual([
-        'Last Name',
-        'First Name',
-        'Email Address',
-        'Address',
-        'City',
-        'State',
-      ]),
-    );
-    // Touch: a hold and a lift in place stays a tap; the click it brings
-    // opens the column menu as before.
-    await settled(canvasElement);
-    const label = within(headerCell(canvasElement, 'Email Address')).getByRole(
-      'button',
-      { name: 'Email Address column menu' },
-    );
-    touch({ at: centreOf(label), element: label, type: 'pointerdown' });
-    await pause(400);
-    await waitFor(() => expect(ghost()).not.toBeNull());
-    touch({ at: centreOf(label), element: label, type: 'pointerup' });
-    await waitFor(() => expect(ghost()).toBeNull());
-    expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
-    const browserUserEvent = (
-      globalThis as {
-        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
-      }
-    ).stBrowserUserEvent;
-    if (browserUserEvent) await browserUserEvent.click(label);
-    else fireEvent.click(label);
-    expect(await within(document.body).findByRole('menu')).toBeInTheDocument();
-    fireEvent.keyDown(document.activeElement ?? document.body, {
-      key: 'Escape',
-    });
-    await waitFor(() =>
-      expect(within(document.body).queryByRole('menu')).toBeNull(),
-    );
-
-    // Touch: the listener that keeps the page still is on the page before
-    // the finger goes down (WebKit ignores one added later), a swipe before
-    // the hold still scrolls, and after the hold the page stays still even
-    // when an element on the way stops the touchmove.
-    const held = headerCell(canvasElement, 'Last Name');
-    const at = centreOf(held);
-    /** Whether a touchmove on `element` would leave the page still. */
-    const keepsPageStill = (element: Element) => {
-      const event = new Event('touchmove', { bubbles: true, cancelable: true });
-      element.dispatchEvent(event);
-      return event.defaultPrevented;
-    };
-    const stopTouchMove = (event: Event) => event.stopPropagation();
-    const added: string[] = [];
-    const addEventListener = window.addEventListener;
-    window.addEventListener = function (
-      this: Window,
-      ...args: Parameters<Window['addEventListener']>
-    ) {
-      added.push(args[0]);
-      return addEventListener.apply(this, args);
-    } as Window['addEventListener'];
-    canvasElement.addEventListener('touchmove', stopTouchMove);
-    try {
-      touch({ at, element: held, type: 'pointerdown' });
-      expect(keepsPageStill(held)).toBe(false);
-      await pause(400);
-      await waitFor(() => expect(ghost()).not.toBeNull());
-      expect(keepsPageStill(held)).toBe(true);
-      touch({ at, element: held, type: 'pointerup' });
-      await waitFor(() => expect(ghost()).toBeNull());
-      expect(keepsPageStill(held)).toBe(false);
-    } finally {
-      window.addEventListener = addEventListener;
-      canvasElement.removeEventListener('touchmove', stopTouchMove);
-    }
-    expect(added).not.toContain('touchmove');
-    expect(headerNames(canvasElement)[0]).toMatch(/^Last Name/);
-  },
-};
-
-/** Escape (a drag that ends with no drop effect) reorders nothing. */
-export const ColumnDraggingCancelled = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableColumnDragging
-      enableColumnOrdering
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByRole('columnheader');
-    const source = headerCell(canvasElement, 'First Name');
-    fireEvent.dragStart(source);
-    dragOverSlot(canvasElement, headerCell(canvasElement, 'City'));
-    await waitFor(() =>
-      expect(headerCell(canvasElement, 'City').style.translate).not.toBe(''),
-    );
-    dragEnd(source, 'none');
-    await waitFor(() =>
-      expect(headerCell(canvasElement, 'City').style.translate).toBe(''),
-    );
-    expect(headerNames(canvasElement)).toEqual([
-      'First Name',
-      'Last Name',
-      'Email Address',
-      'Address',
-      'City',
-      'State',
-    ]);
-
-    // Touch: a pointercancel mid-drag slides the headers back, no reorder.
-    const touched = headerCell(canvasElement, 'First Name');
-    const city = headerCell(canvasElement, 'City');
-    touch({ at: centreOf(touched), element: touched, type: 'pointerdown' });
-    await pause(400);
-    touch({ at: centreOf(city), element: touched, type: 'pointermove' });
-    await waitFor(() => expect(ghost()).not.toBeNull());
-    await waitFor(() => expect(city.style.translate).not.toBe(''));
-    touch({ at: centreOf(city), element: touched, type: 'pointercancel' });
-    await waitFor(() => expect(ghost()).toBeNull());
-    await waitFor(() => expect(city.style.translate).toBe(''));
-    expect(headerNames(canvasElement)).toEqual([
-      'First Name',
-      'Last Name',
-      'Email Address',
-      'Address',
-      'City',
-      'State',
-    ]);
   },
 };
 
@@ -656,54 +707,6 @@ const recordHighlights = async (run: () => Promise<void>) => {
     Element.prototype.animate = animate;
   }
   return highlighted;
-};
-
-/**
- * On drop the moved column, header and body cells, flashes the primary tint
- * (D37); the other columns do not.
- */
-export const DropHighlightsColumn = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableColumnDragging
-      enableColumnOrdering
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findAllByRole('columnheader');
-    const source = headerCell(canvasElement, 'First Name');
-    fireEvent.dragStart(source);
-    dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
-    await waitFor(() =>
-      expect(
-        parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
-      ).toBeLessThan(0),
-    );
-    const highlighted = await recordHighlights(async () => {
-      dragEnd(source, 'move');
-      await waitFor(() =>
-        expect(headerNames(canvasElement).slice(0, 2)).toEqual([
-          'Last Name',
-          'First Name',
-        ]),
-      );
-    });
-    const highlights = (element: Element) => highlighted.has(element);
-    const firstNameCells = canvasElement.querySelectorAll(
-      'tbody td[data-flip-column="firstName"]',
-    );
-    expect(firstNameCells.length).toBeGreaterThan(0);
-    for (const cell of firstNameCells) expect(highlights(cell)).toBe(true);
-    expect(highlights(headerCell(canvasElement, 'First Name'))).toBe(true);
-    for (const cell of canvasElement.querySelectorAll(
-      'tbody td[data-flip-column="email"]',
-    )) {
-      expect(highlights(cell)).toBe(false);
-    }
-  },
 };
 
 /** Whether the topmost element at the centre of `cell`'s drawn box is in it. */
