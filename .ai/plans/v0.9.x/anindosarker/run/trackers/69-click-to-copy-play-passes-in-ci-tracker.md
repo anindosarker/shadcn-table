@@ -10,6 +10,8 @@ Checks:
 - `pnpm test storybook-tests --base radix` at d496c72b: first run fail (exit 1 after 271 passed, 35 s, right after a link-only `pnpm install --frozen-lockfile` that the stale worktree needed), rerun 626 passed
 - `pnpm test storybook-tests --base base` at d496c72b: first run 1 failed 625 passed (the runner keeps no vitest output; a direct vitest run right after 626 passed), rerun 626 passed
 - `pnpm test storybook-tests --base aria` at d496c72b: 626 passed
+- Verifier: every check of the task (reproduction before the fix, 20 green reruns, three bases one at a time, eslint, prettier, tsc) is recorded at d496c72b = HEAD; none rerun (CI is the second run)
+- Verifier, epic Acceptance (1.2) once at d496c72b: not met, expected before the release runs: `git ls-remote --tags origin v0.9.7` empty; `gh release view v0.9.7` "release not found"; www and storybook `version.txt` print `0.9.6`; origin/claude/review 9671ab8d, origin/dev a328a4c0, origin/master 022f8770 differ. The Release PR and After release milestones own it
 
 - Task 1 Click to copy play passes in CI: d496c72b
 
