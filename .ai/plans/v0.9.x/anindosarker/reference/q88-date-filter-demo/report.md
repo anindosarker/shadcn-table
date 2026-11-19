@@ -103,6 +103,4 @@
 
 ## Captures
 
-- `page-light.png`, `page-dark.png`: full page at 1280 px, with the Picked and Default lines.
-- `<candidate>-<variant>-<light|dark>.png`: closed captures of the 10 picked cards, with values filled in, showing the Pick and Default checkboxes.
-- `a-date-open-dark.png`, `g-datetime-open-dark.png`, `g-datetime-range-open-dark.png`, `h-datetime-range-open-dark.png`: popover open, dark.
+- Removed on 2026-11-19: the captures showed the bespoke demo code that was deleted; they remain in git history before this commit.

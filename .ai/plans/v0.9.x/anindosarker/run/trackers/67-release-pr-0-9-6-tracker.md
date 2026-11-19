@@ -1,6 +1,6 @@
 # 67: Release 0.9.6, Release PR 0.9.6, tracker
 
-Status: running
+Status: done (022f8770)
 Branch `dev`, no worktree (operations only)
 Checks:
 - Check: PR opened, `gh pr create --base master --head dev --title "release: 0.9.6" --label release:patch` at 020465a0: PR 140, https://github.com/anindosarker/shadcn-table/pull/140
@@ -8,9 +8,11 @@ Checks:
 
 - Check: pr.yml run 44445584962, attempt 1 at 020465a0: red. Docs E2E Tests fail on base, radix and aria in the check `story code panels` of spec 66: base 587 of 599, aria 593, radix 597 show the story's own text, `text differs from the story's code text`; the failing pages differ per base, `basic--default` fails on all three. Every other job green. Not a P5 flake and not rerun: fix milestone `67 Docs code panel check passes in CI` (card Q135), then dev fast-forwarded again
 
+- Check: fix milestone `67 Docs code panel check passes in CI` merged as a263d115 (check-only: the read now waits for the highlighted code); dev fast-forwarded to 13a8633e, PR 140 follows
+
 - Task 1 Open the PR with its label and auto-merge: done (020465a0, PR 140); watcher armed in the runner session
-- Task 2: planned
-- Task 3: planned
+- Task 2: done (13a8633e). Run 44452617252 on `13a8633e` green apart from Prepare Release waiting; environment `release` (id 26597343948) approved through `pending_deployments` at 2026-11-19 09:54 with comment D47, response deployment id 7903598655 (D47)
+- Task 3: done (022f8770). Bump commit `chore: version 0.9.6` 2ef14507 on `dev`, its run 44454734805 green, auto-merge merged PR 140 as 022f8770; `gh pr view 140 --json state` prints `MERGED`, `origin/master` package.json holds `"version": "0.9.6"`
 
 ## Attention
 
