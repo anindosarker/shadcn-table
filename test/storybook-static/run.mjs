@@ -10,6 +10,7 @@ export default defineTest({
     'apps/shadcn-table-docs/lib/story-pages.mjs',
     'apps/shadcn-table-docs/content/docs/examples/more/**',
     'test/storybook-static/**',
+    'tools/story-source/**',
   ],
   bases: ['base', 'radix', 'aria'],
   run,

@@ -1287,6 +1287,112 @@ export const ModePickerByDefaultSubheader = {
   },
 };
 
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const modePickerByDefaultPopoverPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ada');
+  const trigger = filterHeaderCell(
+    canvasElement,
+    'Name',
+  ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+  expect(trigger, 'the Name filter button').not.toBeNull();
+  await userEvent.click(trigger!);
+  await body.findByPlaceholderText('Filter by Name');
+  await userEvent.click(
+    await body.findByRole('button', { name: 'Change filter mode' }),
+  );
+  const items = await openModeMenuItems();
+  expect(items).toHaveLength(14);
+};
+
+// D77: in the popover filter, the filter-mode menu opens next to its button,
+// not offset by the popover's own position.
+const modeMenuNextToButtonPopoverPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ada');
+  const trigger = filterHeaderCell(
+    canvasElement,
+    'Name',
+  ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+  expect(trigger, 'the Name filter button').not.toBeNull();
+  await userEvent.click(trigger!);
+  await body.findByPlaceholderText('Filter by Name');
+  const modeButton = await body.findByRole('button', {
+    name: 'Change filter mode',
+  });
+  // The popover's enter animation transforms it; a person opens the menu
+  // after it has settled.
+  await Promise.all(
+    document.getAnimations().map((animation) => animation.finished),
+  );
+  await userEvent.click(modeButton);
+  const menu = await body.findByRole('menu');
+  // The gap between the two boxes on each axis, 0 when they overlap; the
+  // menu's side offset is 4 px.
+  await waitFor(() => {
+    const a = modeButton.getBoundingClientRect();
+    const b = menu.getBoundingClientRect();
+    const gapX = Math.max(0, b.left - a.right, a.left - b.right);
+    const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
+    expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
+    expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
+  });
+};
+
+// D80: a click on the mode button while the popover still animates in opens
+// the menu next to the button once every animation has ended.
+const modeMenuNextToButtonDuringPopoverAnimationPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ada');
+  const trigger = filterHeaderCell(
+    canvasElement,
+    'Name',
+  ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+  expect(trigger, 'the Name filter button').not.toBeNull();
+  await userEvent.click(trigger!);
+  const modeButton = await body.findByRole('button', {
+    name: 'Change filter mode',
+  });
+  // No wait for the popover's enter animation: the click lands mid-way.
+  await userEvent.click(modeButton);
+  const menu = await body.findByRole('menu');
+  // Every animation, the popover's and the menu's, has ended.
+  while (document.getAnimations().some((a) => a.playState === 'running')) {
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished),
+    );
+  }
+  // The gap between the two boxes on each axis, 0 when they overlap; the
+  // menu's side offset is 4 px.
+  await waitFor(() => {
+    const a = modeButton.getBoundingClientRect();
+    const b = menu.getBoundingClientRect();
+    const gapX = Math.max(0, b.left - a.right, a.left - b.right);
+    const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
+    expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
+    expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
+  });
+};
+
 // D4: the popover filter shows the mode picker without the flag too.
 export const ModePickerByDefaultPopover = {
   render: () => (
@@ -1296,111 +1402,19 @@ export const ModePickerByDefaultPopover = {
       data={scoreData}
     />
   ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Ada');
-    const trigger = filterHeaderCell(
-      canvasElement,
-      'Name',
-    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
-    expect(trigger, 'the Name filter button').not.toBeNull();
-    await userEvent.click(trigger!);
-    await body.findByPlaceholderText('Filter by Name');
-    await userEvent.click(
-      await body.findByRole('button', { name: 'Change filter mode' }),
+  play: async (context: StoryContext) => {
+    await context.step('Mode Picker By Default Popover', () =>
+      modePickerByDefaultPopoverPlay(context),
     );
-    const items = await openModeMenuItems();
-    expect(items).toHaveLength(14);
-  },
-};
-
-// D77: in the popover filter, the filter-mode menu opens next to its button,
-// not offset by the popover's own position.
-export const ModeMenuNextToButtonPopover = {
-  render: () => (
-    <ShadcnTable
-      columnFilterDisplayMode="popover"
-      columns={scoreColumns}
-      data={scoreData}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Ada');
-    const trigger = filterHeaderCell(
-      canvasElement,
-      'Name',
-    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
-    expect(trigger, 'the Name filter button').not.toBeNull();
-    await userEvent.click(trigger!);
-    await body.findByPlaceholderText('Filter by Name');
-    const modeButton = await body.findByRole('button', {
-      name: 'Change filter mode',
-    });
-    // The popover's enter animation transforms it; a person opens the menu
-    // after it has settled.
-    await Promise.all(
-      document.getAnimations().map((animation) => animation.finished),
+    await remountStory();
+    await context.step('Mode Menu Next To Button Popover', () =>
+      modeMenuNextToButtonPopoverPlay(context),
     );
-    await userEvent.click(modeButton);
-    const menu = await body.findByRole('menu');
-    // The gap between the two boxes on each axis, 0 when they overlap; the
-    // menu's side offset is 4 px.
-    await waitFor(() => {
-      const a = modeButton.getBoundingClientRect();
-      const b = menu.getBoundingClientRect();
-      const gapX = Math.max(0, b.left - a.right, a.left - b.right);
-      const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
-      expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
-      expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
-    });
-  },
-};
-
-// D80: a click on the mode button while the popover still animates in opens
-// the menu next to the button once every animation has ended.
-export const ModeMenuNextToButtonDuringPopoverAnimation = {
-  render: () => (
-    <ShadcnTable
-      columnFilterDisplayMode="popover"
-      columns={scoreColumns}
-      data={scoreData}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Ada');
-    const trigger = filterHeaderCell(
-      canvasElement,
-      'Name',
-    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
-    expect(trigger, 'the Name filter button').not.toBeNull();
-    await userEvent.click(trigger!);
-    const modeButton = await body.findByRole('button', {
-      name: 'Change filter mode',
-    });
-    // No wait for the popover's enter animation: the click lands mid-way.
-    await userEvent.click(modeButton);
-    const menu = await body.findByRole('menu');
-    // Every animation, the popover's and the menu's, has ended.
-    while (document.getAnimations().some((a) => a.playState === 'running')) {
-      await Promise.all(
-        document.getAnimations().map((animation) => animation.finished),
-      );
-    }
-    // The gap between the two boxes on each axis, 0 when they overlap; the
-    // menu's side offset is 4 px.
-    await waitFor(() => {
-      const a = modeButton.getBoundingClientRect();
-      const b = menu.getBoundingClientRect();
-      const gapX = Math.max(0, b.left - a.right, a.left - b.right);
-      const gapY = Math.max(0, b.top - a.bottom, a.top - b.bottom);
-      expect(gapY, 'vertical gap to the mode button').toBeLessThanOrEqual(8);
-      expect(gapX, 'horizontal gap to the mode button').toBeLessThanOrEqual(8);
-    });
+    await remountStory();
+    await context.step(
+      'Mode Menu Next To Button During Popover Animation',
+      () => modeMenuNextToButtonDuringPopoverAnimationPlay(context),
+    );
   },
 };
 
@@ -1463,33 +1477,150 @@ const debounceRows = (canvasElement: HTMLElement) =>
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const typeThenClearFiltersStaysClearedPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const body = within(document.body);
+  await canvas.findByText('Ada');
+
+  await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+  await userEvent.click(
+    await body.findByRole('option', { name: 'First Name' }),
+  );
+  const input = await body.findByRole('textbox', {
+    name: 'Filter by First Name',
+  });
+  await waitFor(() => expect(document.activeElement).toBe(input));
+  await userEvent.type(input, 'Ada');
+  const clearFilters = () =>
+    canvas.queryByRole('button', { name: 'Clear filters' });
+  await userEvent.click(clearFilters()!);
+  // React Aria's popover spends the first outside press on closing itself.
+  if (clearFilters()) await userEvent.click(clearFilters()!);
+
+  await sleep(700);
+  expect(columnFilterState(canvasElement)).toEqual([]);
+  expect(debounceRows(canvasElement)).toHaveLength(4);
+};
+
+/** Escape closes the chip editor without a blur: the typed text applies. */
+const chipEditorEscapeKeepsTypedTextPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await openChipEditor(canvasElement, 'First Name');
+  const input = await within(document.body).findByRole('textbox', {
+    name: 'Filter by First Name',
+  });
+  await waitFor(() => expect(document.activeElement).toBe(input));
+  await userEvent.type(input, 'Ada');
+  await userEvent.keyboard('{Escape}');
+
+  await waitFor(() => expect(input).not.toBeInTheDocument());
+  await waitFor(() =>
+    expect(columnFilterState(canvasElement)).toEqual([
+      { id: 'firstName', value: 'Ada' },
+    ]),
+  );
+  await sleep(700);
+  expect(columnFilterState(canvasElement)).toEqual([
+    { id: 'firstName', value: 'Ada' },
+  ]);
+};
+
+/** Escape closes the chip editor without a blur: the typed date applies. */
+const chipEditorEscapeKeepsTypedDatePlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await openChipEditor(canvasElement, 'Birth Date');
+  const input = await within(document.body).findByLabelText(
+    'Filter by Birth Date',
+  );
+  await waitFor(() => expect(document.activeElement).toBe(input));
+  // Real key presses: the synthetic ones do not fill the date segments.
+  const keyboard =
+    (
+      globalThis as {
+        stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
+      }
+    ).stBrowserUserEvent ?? userEvent;
+  await keyboard.keyboard('01011990');
+  await waitFor(() => expect(input).toHaveValue('1990-01-01'));
+  expect(columnFilterState(canvasElement)).toEqual([]);
+  await keyboard.keyboard('{Escape}');
+
+  await waitFor(() => expect(input).not.toBeInTheDocument());
+  await waitFor(() =>
+    expect(columnFilterState(canvasElement)).toEqual([
+      { id: 'birthDate', value: '1990-01-01' },
+    ]),
+  );
+};
+
 /** Clear filters inside the wait drops the typed text for good. */
 export const TypeThenClearFiltersStaysCleared = {
   render: () => <DebounceTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await canvas.findByText('Ada');
-
-    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
-    await userEvent.click(
-      await body.findByRole('option', { name: 'First Name' }),
+  play: async (context: StoryContext) => {
+    await context.step('Type Then Clear Filters Stays Cleared', () =>
+      typeThenClearFiltersStaysClearedPlay(context),
     );
-    const input = await body.findByRole('textbox', {
-      name: 'Filter by First Name',
-    });
-    await waitFor(() => expect(document.activeElement).toBe(input));
-    await userEvent.type(input, 'Ada');
-    const clearFilters = () =>
-      canvas.queryByRole('button', { name: 'Clear filters' });
-    await userEvent.click(clearFilters()!);
-    // React Aria's popover spends the first outside press on closing itself.
-    if (clearFilters()) await userEvent.click(clearFilters()!);
-
-    await sleep(700);
-    expect(columnFilterState(canvasElement)).toEqual([]);
-    expect(debounceRows(canvasElement)).toHaveLength(4);
+    await remountStory();
+    await context.step('Chip Editor Escape Keeps Typed Text', () =>
+      chipEditorEscapeKeepsTypedTextPlay(context),
+    );
+    await remountStory();
+    await context.step('Chip Editor Escape Keeps Typed Date', () =>
+      chipEditorEscapeKeepsTypedDatePlay(context),
+    );
   },
+};
+
+const typeThenEnterAppliesAtOncePlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Ada');
+  const input = canvas.getByRole('textbox', {
+    name: 'Filter by First Name',
+  });
+  await userEvent.type(input, 'Ada');
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(debounceRows(canvasElement)).toHaveLength(1), {
+    timeout: 100,
+  });
+};
+
+/**
+ * A native date input holds a valid value after each digit of the year
+ * (0002, 0020, ...): a typed date applies on blur or Enter, never on a pause.
+ */
+const halfTypedYearAppliesNothingPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Ada');
+  const input = canvas.getByLabelText('Filter by Birth Date');
+  // Real key presses: the synthetic ones do not fill the date segments.
+  const keyboard =
+    (
+      globalThis as {
+        stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
+      }
+    ).stBrowserUserEvent ?? userEvent;
+  input.focus();
+  // Day and month 01 read the same in either segment order of the locale.
+  await keyboard.keyboard('01012');
+  await waitFor(() => expect(input).toHaveValue('0002-01-01'));
+
+  await sleep(700);
+  expect(columnFilterState(canvasElement)).toEqual([]);
+
+  input.blur();
+  await waitFor(() =>
+    expect(columnFilterState(canvasElement)).toEqual([
+      { id: 'birthDate', value: '0002-01-01' },
+    ]),
+  );
 };
 
 /** Enter applies the typed text before the wait ends. */
@@ -1501,56 +1632,13 @@ export const TypeThenEnterAppliesAtOnce = {
       initialState={{ showColumnFilters: true }}
     />
   ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Ada');
-    const input = canvas.getByRole('textbox', {
-      name: 'Filter by First Name',
-    });
-    await userEvent.type(input, 'Ada');
-    await userEvent.keyboard('{Enter}');
-    await waitFor(() => expect(debounceRows(canvasElement)).toHaveLength(1), {
-      timeout: 100,
-    });
-  },
-};
-
-/**
- * A native date input holds a valid value after each digit of the year
- * (0002, 0020, ...): a typed date applies on blur or Enter, never on a pause.
- */
-export const HalfTypedYearAppliesNothing = {
-  name: 'Subheader: Half Typed Year Applies Nothing',
-  render: () => (
-    <DebounceTable
-      columnFilterDisplayMode="subheader"
-      initialState={{ showColumnFilters: true }}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Ada');
-    const input = canvas.getByLabelText('Filter by Birth Date');
-    // Real key presses: the synthetic ones do not fill the date segments.
-    const keyboard =
-      (
-        globalThis as {
-          stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
-        }
-      ).stBrowserUserEvent ?? userEvent;
-    input.focus();
-    // Day and month 01 read the same in either segment order of the locale.
-    await keyboard.keyboard('01012');
-    await waitFor(() => expect(input).toHaveValue('0002-01-01'));
-
-    await sleep(700);
-    expect(columnFilterState(canvasElement)).toEqual([]);
-
-    input.blur();
-    await waitFor(() =>
-      expect(columnFilterState(canvasElement)).toEqual([
-        { id: 'birthDate', value: '0002-01-01' },
-      ]),
+  play: async (context: StoryContext) => {
+    await context.step('Subheader: Type Then Enter Applies At Once', () =>
+      typeThenEnterAppliesAtOncePlay(context),
+    );
+    await remountStory();
+    await context.step('Subheader: Half Typed Year Applies Nothing', () =>
+      halfTypedYearAppliesNothingPlay(context),
     );
   },
 };
@@ -1609,61 +1697,6 @@ const openChipEditor = async (canvasElement: HTMLElement, column: string) => {
   await userEvent.click(
     await within(document.body).findByRole('option', { name: column }),
   );
-};
-
-/** Escape closes the chip editor without a blur: the typed text applies. */
-export const ChipEditorEscapeKeepsTypedText = {
-  render: () => <DebounceTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await openChipEditor(canvasElement, 'First Name');
-    const input = await within(document.body).findByRole('textbox', {
-      name: 'Filter by First Name',
-    });
-    await waitFor(() => expect(document.activeElement).toBe(input));
-    await userEvent.type(input, 'Ada');
-    await userEvent.keyboard('{Escape}');
-
-    await waitFor(() => expect(input).not.toBeInTheDocument());
-    await waitFor(() =>
-      expect(columnFilterState(canvasElement)).toEqual([
-        { id: 'firstName', value: 'Ada' },
-      ]),
-    );
-    await sleep(700);
-    expect(columnFilterState(canvasElement)).toEqual([
-      { id: 'firstName', value: 'Ada' },
-    ]);
-  },
-};
-
-/** Escape closes the chip editor without a blur: the typed date applies. */
-export const ChipEditorEscapeKeepsTypedDate = {
-  render: () => <DebounceTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await openChipEditor(canvasElement, 'Birth Date');
-    const input = await within(document.body).findByLabelText(
-      'Filter by Birth Date',
-    );
-    await waitFor(() => expect(document.activeElement).toBe(input));
-    // Real key presses: the synthetic ones do not fill the date segments.
-    const keyboard =
-      (
-        globalThis as {
-          stBrowserUserEvent?: { keyboard: (text: string) => Promise<void> };
-        }
-      ).stBrowserUserEvent ?? userEvent;
-    await keyboard.keyboard('01011990');
-    await waitFor(() => expect(input).toHaveValue('1990-01-01'));
-    expect(columnFilterState(canvasElement)).toEqual([]);
-    await keyboard.keyboard('{Escape}');
-
-    await waitFor(() => expect(input).not.toBeInTheDocument());
-    await waitFor(() =>
-      expect(columnFilterState(canvasElement)).toEqual([
-        { id: 'birthDate', value: '1990-01-01' },
-      ]),
-    );
-  },
 };
 
 /** The table wait and a column's own wait (D88). */

@@ -456,60 +456,82 @@ const indexes = (elements: NodeListOf<Element>) =>
   [...elements].map((element) => Number(element.getAttribute('data-index')));
 
 /**
- * Row virtualization renders a window of the 500 rows; scrolling down
- * renders rows further in the data.
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
  */
-export const ScrollRendersFurtherRows = {
-  render: () => <MaxVirtualization />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(fakeData[0]!['0']!);
-    const rows = () => canvasElement.querySelectorAll('tbody tr[data-index]');
-    expect(rows().length).toBeGreaterThan(0);
-    expect(rows().length).toBeLessThan(fakeData.length);
-    const lastBefore = Math.max(...indexes(rows()));
-    const box = scrollBox(canvasElement);
-    box.scrollTop = box.scrollHeight / 2;
-    box.dispatchEvent(new Event('scroll'));
-    await waitFor(() =>
-      expect(Math.min(...indexes(rows()))).toBeGreaterThan(lastBefore),
-    );
-    const first = Math.min(...indexes(rows()));
-    expect(
-      canvasElement.querySelector(`tbody tr[data-index="${first}"]`),
-    ).toHaveTextContent(fakeData[first]!['0']!);
-    expect(rows().length).toBeLessThan(fakeData.length);
-  },
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const scrollRendersFurtherRowsPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findAllByText(fakeData[0]!['0']!);
+  const rows = () => canvasElement.querySelectorAll('tbody tr[data-index]');
+  expect(rows().length).toBeGreaterThan(0);
+  expect(rows().length).toBeLessThan(fakeData.length);
+  const lastBefore = Math.max(...indexes(rows()));
+  const box = scrollBox(canvasElement);
+  box.scrollTop = box.scrollHeight / 2;
+  box.dispatchEvent(new Event('scroll'));
+  await waitFor(() =>
+    expect(Math.min(...indexes(rows()))).toBeGreaterThan(lastBefore),
+  );
+  const first = Math.min(...indexes(rows()));
+  expect(
+    canvasElement.querySelector(`tbody tr[data-index="${first}"]`),
+  ).toHaveTextContent(fakeData[first]!['0']!);
+  expect(rows().length).toBeLessThan(fakeData.length);
 };
 
 /**
  * Column virtualization renders a window of the 500 columns; scrolling
  * sideways brings later headers in, the body cells with them.
  */
-export const ColumnVirtualizationScrollsHeaders = {
-  render: () => <MaxVirtualization />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findAllByText(fakeData[0]!['0']!);
-    const headers = () =>
-      canvasElement.querySelectorAll('thead th[data-flip-column]');
-    expect(headers().length).toBeLessThan(fakeColumns.length);
-    expect(canvasElement.querySelector('thead')).not.toHaveTextContent(
-      'Column 250',
-    );
-    const box = scrollBox(canvasElement);
-    box.scrollLeft = box.scrollWidth / 2;
-    box.dispatchEvent(new Event('scroll'));
-    await waitFor(() =>
-      expect(
-        canvasElement.querySelector('thead th[data-flip-column="250"]'),
-      ).toHaveTextContent('Column 250'),
-    );
-    expect(headers().length).toBeLessThan(fakeColumns.length);
+const columnVirtualizationScrollsHeadersPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findAllByText(fakeData[0]!['0']!);
+  const headers = () =>
+    canvasElement.querySelectorAll('thead th[data-flip-column]');
+  expect(headers().length).toBeLessThan(fakeColumns.length);
+  expect(canvasElement.querySelector('thead')).not.toHaveTextContent(
+    'Column 250',
+  );
+  const box = scrollBox(canvasElement);
+  box.scrollLeft = box.scrollWidth / 2;
+  box.dispatchEvent(new Event('scroll'));
+  await waitFor(() =>
     expect(
-      canvasElement.querySelector('thead th[data-flip-column="0"]'),
-    ).toBeNull();
-    const row = canvasElement.querySelector('tbody tr[data-index="0"]')!;
-    expect(row.querySelector('td[data-flip-column="250"]')).toHaveTextContent(
-      fakeData[0]!['250']!,
+      canvasElement.querySelector('thead th[data-flip-column="250"]'),
+    ).toHaveTextContent('Column 250'),
+  );
+  expect(headers().length).toBeLessThan(fakeColumns.length);
+  expect(
+    canvasElement.querySelector('thead th[data-flip-column="0"]'),
+  ).toBeNull();
+  const row = canvasElement.querySelector('tbody tr[data-index="0"]')!;
+  expect(row.querySelector('td[data-flip-column="250"]')).toHaveTextContent(
+    fakeData[0]!['250']!,
+  );
+};
+
+/**
+ * Row virtualization renders a window of the 500 rows; scrolling down
+ * renders rows further in the data.
+ */
+export const ScrollRendersFurtherRows = {
+  render: () => <MaxVirtualization />,
+  play: async (context: StoryContext) => {
+    await context.step('Scroll Renders Further Rows', () =>
+      scrollRendersFurtherRowsPlay(context),
+    );
+    await remountStory();
+    await context.step('Column Virtualization Scrolls Headers', () =>
+      columnVirtualizationScrollsHeadersPlay(context),
     );
   },
 };

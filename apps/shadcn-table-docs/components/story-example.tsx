@@ -22,24 +22,63 @@ interface StoryEntry {
 }
 
 /**
- * The story index and the story files as written, from fixed paths so the
- * docs build does not trace the stories tree. Every base folder holds the
- * same two files; the base folder is read.
+ * The story index (lib/story-variants.mjs), from a fixed path so the docs
+ * build does not trace the stories tree; it is the same for every base.
  */
-const readJson = async <T,>(name: 'index.json' | 'sources.json') =>
+const readIndex = async () =>
   JSON.parse(
-    await fs.readFile(path.join(process.cwd(), 'stories/.base', name), 'utf8'),
-  ) as T;
+    await fs.readFile(
+      path.join(process.cwd(), 'stories/.base/index.json'),
+      'utf8',
+    ),
+  ) as Record<string, StoryEntry>;
+
+/**
+ * Each story's own code text by story id, per base (stories/.<base>/
+ * sources.json, tools/story-source via lib/story-variants.mjs): the text the
+ * Storybook Code tab of that base shows (spec 66, D142). One literal path
+ * per base, as lib/example-source.ts reads the example sources.
+ */
+const SOURCES: Record<Base, () => Promise<string>> = {
+  base: () =>
+    fs.readFile(path.join(process.cwd(), 'stories/.base/sources.json'), 'utf8'),
+  radix: () =>
+    fs.readFile(
+      path.join(process.cwd(), 'stories/.radix/sources.json'),
+      'utf8',
+    ),
+  aria: () =>
+    fs.readFile(path.join(process.cwd(), 'stories/.aria/sources.json'), 'utf8'),
+};
+
+/** The parsed texts per base, read once per build worker. */
+const sourcesByBase = new Map<Base, Promise<Record<string, string>>>();
+
+const readStoryCode = async (id: string, base: Base) => {
+  let pending = sourcesByBase.get(base);
+  if (!pending) {
+    pending = SOURCES[base]().then(
+      (text) => JSON.parse(text) as Record<string, string>,
+    );
+    sourcesByBase.set(base, pending);
+  }
+  const sources = await pending;
+  const text = Object.hasOwn(sources, id) ? sources[id] : undefined;
+  if (text === undefined)
+    throw new Error(`No code text for story "${id}" in stories/.${base}`);
+  return text;
+};
 
 /**
  * Server side: one Storybook story in the example playground (spec 56,
  * D106). The Preview mounts the story from the selected base's library copy
- * (components/story-variant.tsx); the Code tab shows the story file as it is
- * written in packages/shadcn-table/stories; the Storybook button opens the
+ * (components/story-variant.tsx); the Code tab shows the story's own code
+ * text on that base, `<StoryExport>.tsx` (spec 66, D142: the table with its
+ * columns, data and imports, never the test); the Storybook button opens the
  * story. A story has no registry item, so the panel has no install command
  * and no Copy prompt. The story's play and Storybook's decorator never run
  * here. With `codeFrom`, the Code tab shows the files of that docs example
- * (examples/<base>/<codeFrom>) in place of the story file, for a guide
+ * (examples/<base>/<codeFrom>) in place of the story's text, for a guide
  * whose text walks through those files (D131), and the panel carries that
  * example's install command and Copy prompt, so it installs the files it
  * lists.
@@ -51,16 +90,20 @@ export async function StoryExample({
   id: string;
   codeFrom?: string;
 }) {
-  const index = await readJson<Record<string, StoryEntry>>('index.json');
+  const index = await readIndex();
   const story = Object.hasOwn(index, id) ? index[id] : undefined;
   if (!story)
     throw new Error(`No story "${id}" in packages/shadcn-table/stories`);
-  const sources = await readJson<Record<string, string>>('sources.json');
-  const fileName = story.file.slice(story.file.lastIndexOf('/') + 1);
-  const data: ExampleVariantData = {
-    files: [{ path: fileName, source: sources[story.key] ?? '', lang: 'tsx' }],
+  const storyData = async (base: Base): Promise<ExampleVariantData> => ({
+    files: [
+      {
+        path: `${story.exportName}.tsx`,
+        source: await readStoryCode(id, base),
+        lang: 'tsx',
+      },
+    ],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/packages/shadcn-table/stories/${story.file}`,
-  };
+  });
   const exampleData = async (
     name: string,
     base: Base,
@@ -79,7 +122,12 @@ export async function StoryExample({
     await Promise.all(
       bases.map(
         async (base) =>
-          [base, codeFrom ? await exampleData(codeFrom, base) : data] as const,
+          [
+            base,
+            codeFrom
+              ? await exampleData(codeFrom, base)
+              : await storyData(base),
+          ] as const,
       ),
     ),
   ) as Record<Base, ExampleVariantData>;

@@ -52,25 +52,62 @@ const HeadlessTable = () => {
   );
 };
 
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const escapeLeavesFullScreenPlay = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  const wrapper = canvas.getByTestId('headless-wrapper');
+  expect(wrapper).not.toHaveAttribute('tabindex');
+
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Toggle full screen' }),
+  );
+  await canvas.findByText('Full screen');
+  expect(wrapper).toHaveAttribute('tabindex', '-1');
+  expect(wrapper.className).toContain('fixed');
+
+  wrapper.focus();
+  await userEvent.keyboard('{Escape}');
+  await canvas.findByText('Inline');
+  await waitFor(() => expect(wrapper.className).not.toContain('fixed'));
+};
+
+const pointerClickThenEscapePlay = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
+
+  await userEvent.click(toggle);
+  await canvas.findByText('Full screen');
+  // Entering full screen moves the toggle under the pointer, which opens
+  // its tooltip again.
+  await userEvent.hover(toggle);
+  expect(document.activeElement).toBe(toggle);
+
+  await userEvent.keyboard('{Escape}');
+  await canvas.findByText('Inline');
+};
+
 export const EscapeLeavesFullScreen = {
   render: () => <HeadlessTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    const wrapper = canvas.getByTestId('headless-wrapper');
-    expect(wrapper).not.toHaveAttribute('tabindex');
-
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Toggle full screen' }),
+  play: async (context: StoryContext) => {
+    await context.step('Escape Leaves Full Screen', () =>
+      escapeLeavesFullScreenPlay(context),
     );
-    await canvas.findByText('Full screen');
-    expect(wrapper).toHaveAttribute('tabindex', '-1');
-    expect(wrapper.className).toContain('fixed');
-
-    wrapper.focus();
-    await userEvent.keyboard('{Escape}');
-    await canvas.findByText('Inline');
-    await waitFor(() => expect(wrapper.className).not.toContain('fixed'));
+    await remountStory();
+    await context.step('Pointer Click Then Escape', () =>
+      pointerClickThenEscapePlay(context),
+    );
   },
 };
 
@@ -80,70 +117,60 @@ const isFullScreen = (canvasElement: HTMLElement) =>
     ?.className.split(' ')
     .includes('fixed');
 
-export const PointerClickThenEscape = {
-  render: () => <HeadlessTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
+const tableLayoutPointerClickThenEscapePlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+  const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
 
-    await userEvent.click(toggle);
-    await canvas.findByText('Full screen');
-    // Entering full screen moves the toggle under the pointer, which opens
-    // its tooltip again.
-    await userEvent.hover(toggle);
-    expect(document.activeElement).toBe(toggle);
+  await userEvent.click(toggle);
+  await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
+  await userEvent.hover(toggle);
+  expect(document.activeElement).toBe(toggle);
 
-    await userEvent.keyboard('{Escape}');
-    await canvas.findByText('Inline');
-  },
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(isFullScreen(canvasElement)).toBe(false));
+};
+
+const escapeInSearchKeepsFullScreenPlay = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('Mason');
+
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Toggle full screen' }),
+  );
+  await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
+
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Show/Hide search' }),
+  );
+  const input = canvas.getByPlaceholderText('Search');
+  await waitFor(() => expect(document.activeElement).toBe(input));
+  await userEvent.keyboard('Ma');
+  // An open tooltip takes the first Escape to close itself (Radix), so the
+  // pointer leaves the toolbar and the tooltip closes first.
+  await userEvent.hover(canvas.getByText('Mason'));
+  await waitFor(() =>
+    expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull(),
+  );
+  await userEvent.keyboard('{Escape}');
+
+  await waitFor(() => expect(input).toHaveValue(''));
+  expect(isFullScreen(canvasElement)).toBe(true);
 };
 
 export const TableLayoutPointerClickThenEscape = {
   render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-    const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
-
-    await userEvent.click(toggle);
-    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
-    await userEvent.hover(toggle);
-    expect(document.activeElement).toBe(toggle);
-
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(false));
-  },
-};
-
-export const EscapeInSearchKeepsFullScreen = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await canvas.findByText('Mason');
-
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Toggle full screen' }),
+  play: async (context: StoryContext) => {
+    await context.step('Table Layout Pointer Click Then Escape', () =>
+      tableLayoutPointerClickThenEscapePlay(context),
     );
-    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
-
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Show/Hide search' }),
+    await remountStory();
+    await context.step('Escape In Search Keeps Full Screen', () =>
+      escapeInSearchKeepsFullScreenPlay(context),
     );
-    const input = canvas.getByPlaceholderText('Search');
-    await waitFor(() => expect(document.activeElement).toBe(input));
-    await userEvent.keyboard('Ma');
-    // An open tooltip takes the first Escape to close itself (Radix), so the
-    // pointer leaves the toolbar and the tooltip closes first.
-    await userEvent.hover(canvas.getByText('Mason'));
-    await waitFor(() =>
-      expect(
-        document.querySelector('[data-slot="tooltip-content"]'),
-      ).toBeNull(),
-    );
-    await userEvent.keyboard('{Escape}');
-
-    await waitFor(() => expect(input).toHaveValue(''));
-    expect(isFullScreen(canvasElement)).toBe(true);
   },
 };

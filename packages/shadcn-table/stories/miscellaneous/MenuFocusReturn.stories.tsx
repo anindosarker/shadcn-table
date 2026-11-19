@@ -49,14 +49,43 @@ const expectFocusReturn = async (
 
 const click = (opener: HTMLElement) => userEvent.click(opener);
 
+/**
+ * Mounts the story again (.storybook/preview.tsx), so each step of a play
+ * that holds merged checks (D106) starts from the story's first render.
+ */
+const remountStory = () => {
+  const remount = (globalThis as { __stRemountStory?: () => Promise<void> })
+    .__stRemountStory;
+  if (!remount) throw new Error('__stRemountStory is not set (preview.tsx)');
+  return remount();
+};
+
+const columnActionMenuPlay = async ({ canvasElement }: StoryContext) => {
+  await waitForRows(canvasElement);
+  const [opener] = within(canvasElement).getAllByRole('button', {
+    name: 'Column Actions',
+  });
+  await expectFocusReturn(opener, click);
+};
+
+const showHideColumnsMenuPlay = async ({ canvasElement }: StoryContext) => {
+  await waitForRows(canvasElement);
+  const opener = within(canvasElement).getByRole('button', {
+    name: 'Show/Hide columns',
+  });
+  await expectFocusReturn(opener, click);
+};
+
 export const ColumnActionMenu = {
   render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitForRows(canvasElement);
-    const [opener] = within(canvasElement).getAllByRole('button', {
-      name: 'Column Actions',
-    });
-    await expectFocusReturn(opener, click);
+  play: async (context: StoryContext) => {
+    await context.step('Column Action Menu', () =>
+      columnActionMenuPlay(context),
+    );
+    await remountStory();
+    await context.step('Show Hide Columns Menu', () =>
+      showHideColumnsMenuPlay(context),
+    );
   },
 };
 
@@ -115,17 +144,6 @@ export const FilterOptionMenu = {
     await waitForRows(canvasElement);
     const [opener] = within(canvasElement).getAllByRole('button', {
       name: 'Change filter mode',
-    });
-    await expectFocusReturn(opener, click);
-  },
-};
-
-export const ShowHideColumnsMenu = {
-  render: () => <ShadcnTable columns={columns} data={data} />,
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitForRows(canvasElement);
-    const opener = within(canvasElement).getByRole('button', {
-      name: 'Show/Hide columns',
     });
     await expectFocusReturn(opener, click);
   },
