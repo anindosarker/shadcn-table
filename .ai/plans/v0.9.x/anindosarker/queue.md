@@ -42,6 +42,7 @@ kanban-plugin: basic
 - [ ] **Q141** The home page header shows no version label
 	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
 	- Owner, 2026-11-19: 'Yes, we can add it', and asks that so small a change ships without a new release and without the full PR check run (see the docs-only shipping card).
+- [ ] **Q142** A small docs-only change can reach the live site only through a full release run
 
 ## Decided
 
