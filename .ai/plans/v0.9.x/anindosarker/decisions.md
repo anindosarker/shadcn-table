@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D143** An unknown docs address answers the site's 404 page #R6
 	- The docs route sets dynamicParams = false (apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx), so an address outside the generated list goes to the 404 route and the root layout's head scripts no longer log the script tag console error. Built on the owner's 'fix it', shipped in 0.9.5.
 	- Source: Q129
+- [ ] **D144** Section tabs keep equal side padding and the page bar's hover fill #R6
+	- Every section tab has the same padding on both sides, the first one included, and the hover fill is the same for active and inactive tabs (components/section-tabs.tsx, app/global.css). The owner's fix, replaces the Q116 hotfix; shipped in 0.9.5.
+	- Source: Q130
 
 ## In progress
 
