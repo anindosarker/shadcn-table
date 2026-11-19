@@ -4,11 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D150** The Storybook version sits in the toolbar after the base switcher #R6
-	- Supersedes D148.
-	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
-	- Source: Q138
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -964,6 +959,10 @@ kanban-plugin: basic
 	- Source: Q137
 - [x] **D149** Release 0.9.7 ships the version labels #E19 #R6
 	- 0.9.7 is released with the docs header version label (D147) and the Storybook title version (D148), through a release spec in the same epic (P4). Owner, 2026-11-19: 'do a new release with both changes, Epic and Go.'
+- [x] **D150** The Storybook version sits in the toolbar after the base switcher #R6
+	- Supersedes D148.
+	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
+	- Source: Q138
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
