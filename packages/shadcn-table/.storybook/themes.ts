@@ -44,8 +44,18 @@ export function staticBaseRoot(target: Base) {
 export const ST_DEV: boolean =
   (globalThis as { __ST_DEV__?: boolean }).__ST_DEV__ === true;
 
-/** Manager title: "shadcn-table (Base UI)", "(Radix UI)" or "(React Aria)". */
-const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
+/**
+ * The library version (packages/shadcn-table/package.json), set on the window
+ * by main.ts (`managerHead` / `previewHead`).
+ */
+export const ST_VERSION: string =
+  (globalThis as { __ST_VERSION__?: string }).__ST_VERSION__ ?? '';
+
+/**
+ * Manager title: "shadcn-table v<version> (Base UI)", "(Radix UI)" or
+ * "(React Aria)" (D148).
+ */
+const brandTitle = `shadcn-table v${ST_VERSION} (${ST_BASE_LABEL})`;
 
 /**
  * Shared manager/docs themes. The dark surfaces match the shadcn `.dark`

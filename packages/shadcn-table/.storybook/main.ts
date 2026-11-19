@@ -15,6 +15,12 @@ const require = createRequire(import.meta.url);
 // base), which decides where its base switch goes (base-tool.ts).
 const ST_BASE = resolveBase(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
+// The library version, for the title (themes.ts, D148): read from the
+// package file as the docs header reads it, never typed.
+const { version: ST_VERSION } = require('../package.json') as {
+  version: string;
+};
+const versionScript = `<script>window.__ST_VERSION__ = ${JSON.stringify(ST_VERSION)};</script>`;
 const devScript = (dev: boolean) =>
   `<script>window.__ST_DEV__ = ${JSON.stringify(dev)};</script>`;
 // The preview gets whether this is a static build, which resets each story
@@ -50,9 +56,9 @@ const config: StorybookConfig = {
     options: {},
   },
   managerHead: (head, { configType }) =>
-    `${head}${baseScript}${devScript(configType !== 'PRODUCTION')}`,
+    `${head}${baseScript}${versionScript}${devScript(configType !== 'PRODUCTION')}`,
   previewHead: (head, { configType }) =>
-    `${head}${baseScript}${staticScript(configType === 'PRODUCTION')}`,
+    `${head}${baseScript}${versionScript}${staticScript(configType === 'PRODUCTION')}`,
   // Storybook keys its Vite dep cache by the config dir alone, so the base
   // servers (storybook:all) would share one optimized-deps dir and invalidate
   // each other ("Failed to fetch dynamically imported module"). One cache per
