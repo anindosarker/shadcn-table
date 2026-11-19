@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D154** The ci:skip label counts only on a PR into master #R6
 	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
 	- Source: Q143
+- [ ] **D155** A PR opened with ci:skip merges without a further push #R6
+	- A PR created with ci:skip and release:skip merges on its first green run: PR 142 stayed blocked on '16 of 21 required status checks are expected' until a new commit was pushed. The cause is found first (likely the label runs on the same head, whose skipped caller jobs carry no matrix legs) and fixed in pr.yml, proven under act and then with trial PRs carrying ci:skip, which this decision allows. A CI problem, settled by the lead.
+	- Source: Q144
 
 ## In progress
 
