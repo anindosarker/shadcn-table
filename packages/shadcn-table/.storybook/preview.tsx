@@ -166,7 +166,7 @@ const preview: Preview = {
       // as one component with its imports, columns and data, never its play.
       // The panel shows the text the preview sends once the story rendered
       // (the first decorator below) with this transform applied; until then
-      // it shows the story as written.
+      // it is empty (main.ts turns off the story-as-written source).
       source: {
         // Keep the preview harness (placeholder lines) out of snippets.
         excludeDecorators: true,
@@ -181,8 +181,7 @@ const preview: Preview = {
     (Story, context) => {
       useEffect(() => {
         void emitTransformCode(storySource(context.id), context);
-        // once per story: a re-render of the same story sends nothing new
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- once per story: a re-render of the same story sends nothing new
       }, [context.id]);
       return <Story />;
     },
