@@ -18,12 +18,6 @@ kanban-plugin: basic
 - [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
 	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
 	- Source: Q86
-- [ ] **D147** The docs header shows the library version after the name #E19 #R6
-	- The docs site header shows the current version right after the library name, top left: small muted mono text (v0.9.5) in the style of the section tab labels, no box, visible on mobile. It is read from packages/shadcn-table/package.json at build time and links to the GitHub releases page.
-	- Source: Q136
-- [ ] **D148** The Storybook title shows the library version #E19 #R6
-	- The Storybook sidebar title reads shadcn-table v<version> (<base>), for example shadcn-table v0.9.6 (Base UI): the version is read from packages/shadcn-table/package.json in packages/shadcn-table/.storybook/themes.ts, on the three bases. The title link stays as it is.
-	- Source: Q137
 - [ ] **D149** Release 0.9.7 ships the version labels #E19 #R6
 	- 0.9.7 is released with the docs header version label (D147) and the Storybook title version (D148), through a release spec in the same epic (P4). Owner, 2026-11-19: 'do a new release with both changes, Epic and Go.'
 
@@ -959,6 +953,12 @@ kanban-plugin: basic
 - [x] **D146** The 19 merged same-table test stories lose their pages, with no redirect #R6
 	- Spec 66 merged the 19 same-table copies into their originals and removed their 19 pages under /docs/examples/more/; the old addresses answer 404 after 0.9.6 and get no redirect and no duplicate page. Owner, 2026-11-19: 'that's fine then. We don't need any duplicate or redirect.' No link, guide, storybook map row or test names any of the 19 ids.
 	- Source: Q134
+- [x] **D147** The docs header shows the library version after the name #E19 #R6
+	- The docs site header shows the current version right after the library name, top left: small muted mono text (v0.9.5) in the style of the section tab labels, no box, visible on mobile. It is read from packages/shadcn-table/package.json at build time and links to the GitHub releases page.
+	- Source: Q136
+- [x] **D148** The Storybook title shows the library version #E19 #R6
+	- The Storybook sidebar title reads shadcn-table v<version> (<base>), for example shadcn-table v0.9.6 (Base UI): the version is read from packages/shadcn-table/package.json in packages/shadcn-table/.storybook/themes.ts, on the three bases. The title link stays as it is.
+	- Source: Q137
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
