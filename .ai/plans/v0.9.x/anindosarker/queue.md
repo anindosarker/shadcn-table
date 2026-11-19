@@ -357,8 +357,8 @@ kanban-plugin: basic
 	- A reader or a search engine that holds one of 19 /docs/examples/more/<story id> addresses published with 0.9.5 gets the 404 page after 0.9.6: spec 66 Task 4 of 'Storybook Code tab' merges the copies the audit marks (reference/code-panels/audit.md, 13 groups, 19 copies, each differing from its original only by its own play, none an exact docs story or used by a guide) and removes their pages and meta.json rows; the spec names no redirect for them. The run builds it as the spec says; the removed addresses are listed in the milestone tracker.
 	- Built on v0.9/storybook-code-tab (e505b8b3), not merged yet: the 19 copies are merged and their 19 pages deleted; each page held a reviewed description and Try it steps, and that text was not moved onto the page of the story it copied (restorable from e505b8b3^). The removed ids and addresses are listed in run/trackers/66-storybook-code-tab-tracker.md. Story count 645 to 626, story pages 603 to 584.
 	- Owner, 2026-11-19, after the reason was explained (the 19 were same-table copies under D106): 'that's fine then. We don't need any duplicate or redirect.' Checked on claude/review f4f4ad5e: none of the 19 removed story ids occurs in any file outside .ai/ and CHANGELOG.md (no link, no guide slug, no storybook map row, no test); the sitemap, sidebar and search are built from the content source.
-- [ ] **Q136** The docs site shows the library's current version nowhere #D147
-- [ ] **Q137** Storybook shows the library's current version nowhere #D148
+- [x] **Q136** The docs site shows the library's current version nowhere #D147 #E19
+- [x] **Q137** Storybook shows the library's current version nowhere #D148 #E19
 
 ## Later
 
