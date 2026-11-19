@@ -10,7 +10,7 @@ Checks:
 - Check: milestone `69 Storybook version in the toolbar` merged as 04b056cb (D150); dev fast-forwarded to a328a4c0 (plain push), `gh pr merge 141 --auto --merge` again: `autoMergeRequest` set, PR head a328a4c0; PR body names the toolbar item; pr.yml run 44475092527 on a328a4c0 is the run that counts
 
 - Task 1 Open the PR with its label and auto-merge: done (81a2c015, PR 141); watcher armed in the runner session
-- Task 2 The full run green, the approval: running
+- Task 2: done (a328a4c0). Run 44475092527 on `a328a4c0` green apart from Prepare Release waiting (no rerun needed); environment `release` (id 26597343948) approved through `pending_deployments` at 2026-11-19 13:08 with comment D47, response deployment id 7906531107 (D47)
 - Task 3 The bump run and the merge: planned
 
 ## Attention
