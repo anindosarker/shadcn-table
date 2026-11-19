@@ -17,7 +17,14 @@ const RELEASES_URL = 'https://github.com/anindosarker/shadcn-table/releases';
 function VersionTool() {
   return createElement(
     Button,
-    { asChild: true, variant: 'ghost', size: 'small', padding: 'small' },
+    {
+      asChild: true,
+      // the text names the link, as on Storybook's own text links
+      ariaLabel: false,
+      variant: 'ghost',
+      size: 'small',
+      padding: 'small',
+    },
     createElement(
       'a',
       { href: RELEASES_URL, target: '_blank', rel: 'noopener noreferrer' },
