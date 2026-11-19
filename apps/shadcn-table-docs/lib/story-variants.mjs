@@ -13,9 +13,11 @@
  *   - a namespace import of a library part to a plain object (see rewriteStory)
  * `storybook/test` stays: next.config.mjs points it at lib/storybook-test-stub.ts.
  * Nothing else changes. stories/.base also gets index.json, every story's
- * file key, export and source path, and sources.json, the story files as
- * written, for the code view (components/story-example.tsx reads both, from
- * stories/.base only: they are the same for every base).
+ * file key, export and source path (the same for every base), and every
+ * stories/.<base> gets sources.json, each story's own code text by story id
+ * (tools/story-source/extract.mjs, spec 66, D142), the text the Storybook
+ * Code tab of that base shows: components/story-example.tsx reads both for
+ * a story page's Code view.
  *
  * Runs before `next build`, `next dev` and `types:check` (package.json
  * `build`, `predev`, `types:check`). Stale copies are removed.
@@ -26,6 +28,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BASES } from '../../../tools/registry/bases.mjs';
+import { storySources } from '../../../tools/story-source/extract.mjs';
 import { readStories, STORIES_DIR } from './story-pages.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -66,9 +69,9 @@ async function main() {
   const stories = await readStories();
   const files = [...new Set(stories.map((story) => story.file))];
   /** @type {Record<string, string>} */
-  const sources = {};
+  const fileTexts = {};
   for (const file of files) {
-    sources[fileKey(file)] = await fs.readFile(
+    fileTexts[fileKey(file)] = await fs.readFile(
       path.join(STORIES_DIR, file),
       'utf8',
     );
@@ -89,7 +92,7 @@ async function main() {
     const out = path.join(OUT, `.${base}`);
     await fs.mkdir(out, { recursive: true });
     const written = new Set(['themes.ts']);
-    for (const [key, source] of Object.entries(sources)) {
+    for (const [key, source] of Object.entries(fileTexts)) {
       const name = `${key}${SUFFIX}`;
       written.add(name);
       await fs.writeFile(
@@ -98,15 +101,16 @@ async function main() {
       );
     }
     await fs.writeFile(path.join(out, 'themes.ts'), themes(base));
+    written.add('sources.json');
+    await fs.writeFile(
+      path.join(out, 'sources.json'),
+      `${JSON.stringify(await storySources({ base }))}\n`,
+    );
     if (base === 'base') {
-      written.add('index.json').add('sources.json');
+      written.add('index.json');
       await fs.writeFile(
         path.join(out, 'index.json'),
         `${JSON.stringify(index)}\n`,
-      );
-      await fs.writeFile(
-        path.join(out, 'sources.json'),
-        `${JSON.stringify(sources)}\n`,
       );
     }
     for (const entry of await fs.readdir(out)) {
