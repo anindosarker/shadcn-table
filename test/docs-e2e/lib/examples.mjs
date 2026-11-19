@@ -15,11 +15,17 @@ import {
 import fs from 'node:fs';
 import path from 'node:path';
 import { FIRST_EXAMPLE_URL } from '../../../apps/shadcn-table-docs/lib/examples-entry.mjs';
+import { TAB_VALUES } from '../../../apps/shadcn-table-docs/lib/base-tabs.mjs';
 import {
   MORE_DIR,
   readExactStories,
+  readStories,
 } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { BASE_LABELS } from '../../../tools/registry/bases.mjs';
+import {
+  storySources,
+  TEST_WORDS,
+} from '../../../tools/story-source/extract.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -358,10 +364,202 @@ async function moreExamplesState(page, check) {
   check('More examples still closed after a reload', !(await expanded()));
 }
 
+/** The guides folder, beside content/docs/examples. */
+const GUIDES_DIR = path.join(MORE_DIR, '..', '..', 'guides');
+/**
+ * Story items whose guide Code view shows a docs example's files in place of
+ * the story's text (D131, STORY_CODE_FROM in components/mdx/guide-examples.tsx);
+ * guides.mjs checks their files.
+ */
+const CODE_FROM_STORIES = new Set([
+  'features-server-data--production-ready-table',
+]);
+/**
+ * The guide Example items that show a story, as [guide route, story id], in
+ * file order: every `more/<id>` slug of a guide's `<GuideExamples>`.
+ */
+const GUIDE_STORY_ITEMS = fs
+  .readdirSync(GUIDES_DIR)
+  .filter((file) => file.endsWith('.mdx'))
+  .sort()
+  .flatMap((file) => {
+    const text = fs.readFileSync(path.join(GUIDES_DIR, file), 'utf8');
+    const route = `/docs/guides/${file.slice(0, -'.mdx'.length)}`;
+    return [...text.matchAll(/<GuideExamples[\s\S]*?\/>/g)].flatMap(([block]) =>
+      [...block.matchAll(/['"]more\/([^'"]+)['"]/g)]
+        .map((match) => match[1])
+        .filter((id) => !CODE_FROM_STORIES.has(id))
+        .map((id) => [route, id]),
+    );
+  });
+
+/** Every story's code text per base (tools/story-source), made once. */
+const textsByBase = new Map();
+const storyTexts = (base) => {
+  if (!textsByBase.has(base)) textsByBase.set(base, storySources({ base }));
+  return textsByBase.get(base);
+};
+let exportNames;
+/** Story id to its export name (lib/story-pages.mjs). */
+const storyExportNames = () => {
+  exportNames ??= readStories().then(
+    (stories) => new Map(stories.map((story) => [story.id, story.exportName])),
+  );
+  return exportNames;
+};
+
+/** A code text as compared: no carriage returns or trailing spaces, trimmed. */
+const codeLines = (text) =>
+  text
+    .replace(/\r/g, '')
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n')
+    .trim();
+
+/** The first three lines of a text on one line, for a FAIL line. */
+const firstLines = (text) => text.split('\n').slice(0, 3).join(' | ');
+
+/**
+ * D142 (spec 66, 1.6.6): what is wrong with the Code view of the story panel
+ * `panel` (a locator), or undefined when it shows the story's own text: one
+ * file, `<StoryExport>.tsx`, whose text equals `expected` and holds no test.
+ * The panel is in Code view already.
+ */
+async function codePanelProblem(panel, { id, expected, exportName }) {
+  if (!expected) return `no code text for "${id}" in tools/story-source`;
+  const pre = panel.locator('[data-slot="code"] pre').first();
+  await pre.waitFor({ timeout: 30000 }).catch(() => {});
+  // the highlighted text can settle after the first paint: read until two
+  // reads agree. textContent, not innerText: the lines are flex items, and
+  // innerText drops the empty ones.
+  let text = '';
+  for (let i = 0; i < 20; i += 1) {
+    const again =
+      (await pre.textContent({ timeout: 5000 }).catch(() => '')) ?? '';
+    if (again && again === text) break;
+    text = again;
+    await panel.page().waitForTimeout(150);
+  }
+  if (!text) return 'no code shown';
+  const files = await panel
+    .locator('[data-tree-row]:not([data-folder])')
+    .count();
+  if (files > 1) return `${files} files, not the story's one`;
+  const explorer =
+    (await panel
+      .locator('[data-slot="code-explorer"]')
+      .innerText()
+      .catch(() => '')) ?? '';
+  if (exportName && !explorer.includes(`${exportName}.tsx`))
+    return `file name is not ${exportName}.tsx; shows: ${firstLines(text)}`;
+  if (TEST_WORDS.test(text)) return `shows a test; shows: ${firstLines(text)}`;
+  if (codeLines(text) !== codeLines(expected))
+    return `text differs from the story's code text; shows: ${firstLines(text)}`;
+  return undefined;
+}
+
+/** Pages read at once by storyCodePanels, each in its own tab. */
+const PANEL_READERS = 4;
+
+/**
+ * D142 (spec 66, 1.6.6, P11): the code panel of every story page under
+ * More examples and of every guide Example item that shows a story without
+ * `codeFrom` shows that story's own code text (tools/story-source) on the
+ * run's base, not the story file and not its test. Each page opens in Code
+ * view (the stored `st-example-mode`) in a context of its own, the pages
+ * split across PANEL_READERS tabs; a guide's Example section is stepped with
+ * its Next button to the item. One FAIL line per failing panel, then the
+ * count.
+ */
+async function storyCodePanels({ page, check, base }) {
+  const started = Date.now();
+  const origin = new URL(page.url()).origin;
+  const texts = await storyTexts(base);
+  const names = await storyExportNames();
+  const jobs = [
+    ...MORE_PAGES.map((id) => ({ route: `/docs/examples/more/${id}`, id })),
+    ...GUIDE_STORY_ITEMS.map(([route, id]) => ({ route, id, guide: true })),
+  ];
+  const ctx = await page
+    .context()
+    .browser()
+    .newContext({
+      viewport: { width: 1440, height: 900 },
+      colorScheme: 'dark',
+    });
+  await ctx.addInitScript((tab) => {
+    localStorage.setItem('st-example-mode', 'code');
+    if (tab) localStorage.setItem('base', tab);
+  }, TAB_VALUES[base]);
+  const problems = jobs.map(() => undefined);
+  const read = async (tab, { route, id, guide }) => {
+    await tab.goto(origin + route, {
+      waitUntil: 'domcontentloaded',
+      timeout: 90000,
+    });
+    const target = `article [id="${guide ? 'guide-example' : 'example'}-${id}"]`;
+    if (guide) {
+      // step the Example section to the item
+      for (let step = 0; step < 20; step += 1) {
+        if (await tab.locator(target).count()) break;
+        const next = tab
+          .locator(
+            'article [id^="guide-example-"] button[aria-label^="Next: "]',
+          )
+          .first();
+        await next.waitFor({ timeout: 30000 }).catch(() => {});
+        if (!(await next.count())) break;
+        await next.click();
+        await tab.waitForTimeout(300);
+      }
+    }
+    const panel = tab.locator(target);
+    await panel.waitFor({ timeout: 30000 }).catch(() => {});
+    if (!(await panel.count())) return `no panel ${target}`;
+    return codePanelProblem(panel, {
+      id,
+      expected: texts[id],
+      exportName: names.get(id),
+    });
+  };
+  let next = 0;
+  const reader = async () => {
+    const tab = await ctx.newPage();
+    while (next < jobs.length) {
+      const index = next++;
+      problems[index] = await read(tab, jobs[index]).catch(
+        (error) => `threw ${String(error.message).split('\n')[0]}`,
+      );
+    }
+    await tab.close();
+  };
+  try {
+    await Promise.all(Array.from({ length: PANEL_READERS }, reader));
+  } finally {
+    await ctx.close();
+  }
+  jobs.forEach(({ route, id, guide }, i) => {
+    if (problems[i])
+      check(
+        `code panel ${route}${guide ? ` (${id})` : ''}`,
+        false,
+        problems[i],
+      );
+  });
+  const failed = problems.filter(Boolean).length;
+  const seconds = Math.round((Date.now() - started) / 1000);
+  check(
+    `story code panels: ${jobs.length - failed} of ${jobs.length} show the story's own text (${MORE_PAGES.length} story pages, ${GUIDE_STORY_ITEMS.length} guide items, ${seconds} s)`,
+    failed === 0,
+    failed ? `${failed} failed` : '',
+  );
+}
+
 /**
  * Spec 56 (1.6.4, D103): a story page shows its story in the playground on
  * the run's base (the toolbar names it, the table renders, Storybook opens
- * that base's story), the Code tab shows the story file, and the page has no
+ * that base's story), the Code tab shows the story's own text (D142), and the page has no
  * Copy prompt (a story has no registry item). The sidebar numbers the
  * Examples rows from `1. Basic` through More examples, which is open on a
  * page inside it.
@@ -401,13 +599,12 @@ const storyPage =
       (await panel.getByRole('button', { name: /Copy prompt/ }).count()) === 0,
     );
     await panel.getByRole('button', { name: 'Code', exact: true }).click();
-    const code = panel.locator('[data-slot="code"]');
-    await code.waitFor({ timeout: 10000 }).catch(() => {});
-    const text = (await code.textContent().catch(() => '')) ?? '';
-    check(
-      `${id}: Code shows the story file`,
-      text.includes('.stories.tsx') && text.includes('export default meta'),
-    );
+    const problem = await codePanelProblem(panel, {
+      id,
+      expected: (await storyTexts(base))[id],
+      exportName: (await storyExportNames()).get(id),
+    });
+    check(`${id}: Code shows the story's own text`, !problem, problem ?? '');
     await panel.getByRole('button', { name: 'Preview', exact: true }).click();
     const more = page.locator(
       '#nd-sidebar button[data-slot="collapsible-trigger"]',
@@ -1052,7 +1249,10 @@ const checks = {
       );
     },
   ),
-  [`/docs/examples/more/${STORY_PAGE}`]: storyPage(STORY_PAGE),
+  [`/docs/examples/more/${STORY_PAGE}`]: async (args) => {
+    await storyPage(STORY_PAGE)(args);
+    await storyCodePanels(args);
+  },
   [`/docs/examples/more/${LAST_STORY_PAGE}`]: storyPage(
     LAST_STORY_PAGE,
     LAST_ROW,
