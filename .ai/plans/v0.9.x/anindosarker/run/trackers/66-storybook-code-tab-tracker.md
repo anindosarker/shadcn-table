@@ -27,6 +27,11 @@ Checks:
 - Check (review fixes): `pnpm test validate-repo` at fd635b9a: pass, story-source 626 stories, 626 with a code text, 0 problems
 - Check (review fixes): `pnpm test storybook-tests --base base` at fd635b9a: pass, 626 passed; `--base aria`: pass, 626 passed; `--base radix`: first run 1 failed (`dragging-virtual-when-filtered` "Dragging Row When Filtered", a file this milestone does not touch, row count 2 for 1), rerun pass, 626 passed
 - Check (review fixes): `pnpm test storybook-static --base base` at fd635b9a: pass, Code tab 626 of 626, 383 s; `--base radix`: pass, 626 of 626, 380 s; `--base aria`: pass, 626 of 626, 383 s; servers stopped
+- Check (verifier, HEAD fd635b9a, clean tree): Local CI recorded green at HEAD (typecheck base, radix, aria; lint; validate-repo; storybook-tests base, radix, aria; storybook-static base, radix, aria; tsconfig.stories and eslint on .storybook and stories), not rerun
+- Check (verifier): 2.2 library untouched, `git diff origin/master --stat -- packages/shadcn-table/registry apps/shadcn-table-docs/examples registry.json` at fd635b9a: prints nothing
+- Check (verifier): Acceptance 1.2 rerun, `pnpm test validate-repo` at fd635b9a: pass, story pages match (626 stories, 42 example pages, 584 story pages), story-source 626 stories, 626 with a code text, 0 problems; tree clean after
+- Check (verifier): Acceptance 1.2, docs side, `pnpm test docs-e2e --base base` at fd635b9a (regression check for the 19 removed more/ pages; the code panel read is the Docs code panels milestone's): pass, 5 sections, 117 pages, 2634 checks, 0 failed, 346 s; server stopped
+- Check (verifier): Acceptance 1.2 storybook-static and storybook-tests on the three bases: recorded green at fd635b9a above; docs-e2e radix and aria with the code panel read and the audit rerun belong to the Docs code panels milestone
 - Task 1: done, 88aaec58
 - Task 2: done, 7c280699
 - Task 3: done, 35c2af48
