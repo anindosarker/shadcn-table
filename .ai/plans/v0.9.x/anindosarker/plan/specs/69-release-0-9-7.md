@@ -140,6 +140,14 @@ sequenceDiagram
 - Starts: S20
 - Task 1: Click to copy play passes in CI. Checks: the failure reproduced in a Linux container or under act before the fix; pnpm test storybook-tests --base base, --base radix, --base aria green one at a time; the reproduction rerun green 20 times in a row
 
+### Milestone: Storybook version in the toolbar
+
+- Files owned: `packages/shadcn-table/.storybook/version-tool.ts`, `packages/shadcn-table/.storybook/manager.ts`, `packages/shadcn-table/.storybook/base-tool.ts`, `packages/shadcn-table/.storybook/themes.ts`, `packages/shadcn-table/.storybook/main.ts`, `test/storybook-static/test.mjs`
+- Depends on: Storybook reset, Story group names, Story pages in the docs, Stories match their examples, Storybook Code tab, Version labels
+- Review: none
+- Starts: S20
+- Task 1: Storybook version in the toolbar (Q138). Checks: the rewritten check manager toolbar version run red on the current code first; pnpm test typecheck and pnpm test storybook-static green on base, radix, aria one at a time; pnpm test lint and pnpm test validate-repo green
+
 ### 2.2 Checks
 
 - Integration: `pnpm test validate-repo`, `pnpm test lint` green on `claude/review`; `dev` equals `claude/review`

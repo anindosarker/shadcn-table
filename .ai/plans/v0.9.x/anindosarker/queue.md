@@ -359,7 +359,6 @@ kanban-plugin: basic
 	- Owner, 2026-11-19, after the reason was explained (the 19 were same-table copies under D106): 'that's fine then. We don't need any duplicate or redirect.' Checked on claude/review f4f4ad5e: none of the 19 removed story ids occurs in any file outside .ai/ and CHANGELOG.md (no link, no guide slug, no storybook map row, no test); the sitemap, sidebar and search are built from the content source.
 - [x] **Q136** The docs site shows the library's current version nowhere #D147
 - [x] **Q137** Storybook shows the library's current version nowhere #D148
-- [ ] **Q138** The Storybook version label sits in the sidebar title, not in the toolbar beside the base switcher #D150
 
 ## Later
 
@@ -481,6 +480,7 @@ kanban-plugin: basic
 	- Hotfix Q113 (d9bed58c on v0.9/docs-layout), builder's addition beyond D131: in the guide, the Example panel that lists the five server-side-data files also shows Copy install command (example-server-side-data) and Copy prompt, as the guide's table had before D130; the story page has neither (D106). Keep or revert. If kept: the install copy event is tracked under the story id example-features-server-data--production-ready-table, not example-server-side-data (story-example.tsx:74, example-playground.tsx:255-261), found by the run's review.
 - [x] **Q127** The docs site still shows the bugs that E15 fixed in the library
 	- A reader of the docs built from v0.9/docs-layout (4535bd65) still sees the old behaviour in every example, guide and story page: ticking a parent row unticks its sub-rows, pinned rows scroll away with virtualization, no touch drag, the Sticky header switch does nothing, the resize grip and copy button bugs. Cause: the docs app's library copies apps/shadcn-table-docs/components/ui-base, ui-radix and ui-aria are generated files committed before specs 60 to 62.2; the catch-up merged the library but its spec did not own the copies. The two story page texts corrected in spec 63 (Sub Row Tree With Selection, Row Pinning Sticky With Virtualization) now describe behaviour the preview does not show. Fix known: commit the output of pnpm --filter shadcn-table-docs lib:install base, radix, aria on the docs branch, then docs E2E on the three bases. Found by the builder and the reviewer of spec 63; the builder ran the corrected steps on locally regenerated copies and they were true. Not run by this runner: E15 had finished, so plan/new_fix.py refused the fix ('E15 is not running').
+- [x] **Q138** The Storybook version label sits in the sidebar title, not in the toolbar beside the base switcher
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
