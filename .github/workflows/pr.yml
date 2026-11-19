@@ -16,9 +16,12 @@ run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installatio
 # (Validate PR and Prepare Release skip without a PR); with
 # installation-e2e-only it runs the seven Installation E2E jobs with
 # --no-diff, whose artifacts carry the captures (the reference refresh path,
-# D86). Head, the first job, reads the PR head commit: on the version bump
-# commit Lint and Validate Repo skip and every matrix leg skips its steps
-# (D35).
+# D86). Head, the first job, reads the PR head commit and the PR labels:
+# on the version bump commit (D35), or on a PR that carries the label
+# `ci:skip` (D153), Lint and Validate Repo skip and every matrix leg skips
+# its steps. A label event does not run Head, so `ci:skip` is set at
+# `gh pr create --label`, or added later and followed by a re-run of the
+# PR's checks run (`gh run rerun <id>`).
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
@@ -38,19 +41,26 @@ permissions:
 
 jobs:
   # The PR head commit: bumped=true when it is the `chore: version <v>`
-  # commit Prepare Release pushes as github-actions[bot] (D35); the test
-  # jobs then skip (the called workflows skip every step through their skip
-  # input, so each matrix leg still reports its check context, as success).
-  # false without a PR. The default checkout (the merge commit, depth 2)
-  # holds the head commit as a parent, so git reads it by sha without a
-  # fetch. Its if: is the label condition alone, so the installation-e2e-only
-  # dispatch still reaches Installation E2E, which needs this job.
+  # commit Prepare Release pushes as github-actions[bot] (D35). skip=true
+  # when bumped is true or the PR carries the label `ci:skip`, read live
+  # (D153); a failed label read leaves skip equal to bumped. On skip=true
+  # the test jobs skip (the called workflows skip every step through their
+  # skip input, so each matrix leg still reports its check context, as
+  # success). Both false without a PR. The default checkout (the merge
+  # commit, depth 2) holds the head commit as a parent, so git reads it by
+  # sha without a fetch. Its if: is the label condition alone, so the
+  # installation-e2e-only dispatch still reaches Installation E2E, which
+  # needs this job.
   head:
     name: Head
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     outputs:
       bumped: ${{ steps.commit.outputs.bumped }}
+      skip: ${{ steps.commit.outputs.skip }}
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v7
         with:
@@ -59,6 +69,9 @@ jobs:
         id: commit
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           bumped=false
           if [ -n "$HEAD_SHA" ]; then
@@ -70,6 +83,23 @@ jobs:
           fi
           echo "bumped=$bumped"
           echo "bumped=$bumped" >> "$GITHUB_OUTPUT"
+          skip=$bumped
+          reason=none
+          if [ "$bumped" = true ]; then
+            reason='version commit'
+          elif [ -n "$PR" ]; then
+            if labelled=$(gh pr view "$PR" --json labels --jq 'any(.labels[]; .name == "ci:skip")'); then
+              if [ "$labelled" = true ]; then
+                skip=true
+                reason='label ci:skip'
+              fi
+            else
+              reason='none, the label read failed'
+              echo "::warning::could not read the labels of PR $PR; skip follows bumped"
+            fi
+          fi
+          echo "skip=$skip ($reason)"
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
 
   typecheck:
     name: Typecheck
@@ -77,12 +107,12 @@ jobs:
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/typecheck.yml
     with:
-      skip: ${{ needs.head.outputs.bumped == 'true' }}
+      skip: ${{ needs.head.outputs.skip == 'true' }}
 
   lint:
     name: Lint
     needs: [head]
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.skip != 'true' }}
     runs-on: ubuntu-latest
     outputs:
       record: ${{ steps.record.outputs.record }}
@@ -106,7 +136,7 @@ jobs:
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/storybook-tests.yml
     with:
-      skip: ${{ needs.head.outputs.bumped == 'true' }}
+      skip: ${{ needs.head.outputs.skip == 'true' }}
 
   docs-e2e:
     name: Docs E2E Tests
@@ -114,14 +144,14 @@ jobs:
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/docs-e2e.yml
     with:
-      skip: ${{ needs.head.outputs.bumped == 'true' }}
+      skip: ${{ needs.head.outputs.skip == 'true' }}
 
   # bases-identical, icon-maps, tailwind-classes, registry-valid and the
   # tool unit tests (node --test "tools/**/*.test.mjs").
   validate-repo:
     name: Validate Repo
     needs: [head]
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.skip != 'true' }}
     runs-on: ubuntu-latest
     outputs:
       record: ${{ steps.record.outputs.record }}
@@ -145,7 +175,7 @@ jobs:
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     uses: ./.github/workflows/installation-e2e.yml
     with:
-      skip: ${{ needs.head.outputs.bumped == 'true' }}
+      skip: ${{ needs.head.outputs.skip == 'true' }}
       no-diff: ${{ github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only }}
 
   # Exactly one `release:` label on a PR into master (from dev only); on
@@ -209,8 +239,9 @@ jobs:
   # that rerun Validate PR passes the bumped head and this job stops at
   # "already bumped". A red or skipped need skips it. The job waits for the
   # owner's Approve on the `release` environment before it runs (D3). On
-  # the bump commit the test jobs are skipped and this job is skipped with
-  # them, so the bump push prompts nobody (D35).
+  # the bump commit, and on a PR with the label `ci:skip` (D153), the test
+  # jobs are skipped and this job is skipped with them, so the bump push
+  # prompts nobody (D35).
   prepare-release:
     name: Prepare Release
     needs: [pr-summary, typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr]

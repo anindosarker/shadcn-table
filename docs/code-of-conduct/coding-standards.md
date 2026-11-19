@@ -117,7 +117,7 @@ Every story file has at least one play; a feature story file has one play per be
 shows. A story file without a play is a finding (v0.8.x D59).
 
 CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty-two jobs:
-`Head` (reads the PR head commit, D35), `Typecheck (base|radix|aria)`, `Lint`,
+`Head` (reads the PR head commit, D35, and the `ci:skip` label, D153), `Typecheck (base|radix|aria)`, `Lint`,
 `Storybook Tests (base|radix|aria)`,
 `Docs E2E Tests (base|radix|aria)`, `Validate Repo`,
 `Installation E2E (fresh|existing|base|aria|nextjs-base|nextjs-radix|nextjs-aria)`,
@@ -128,7 +128,9 @@ CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty
 `Typecheck / Typecheck (base)`, `Installation E2E / Installation E2E (fresh)`. A PR that changes `packages/shadcn-table/registry`,
 `apps/shadcn-table-docs/components/ui-*` or `skills/` needs exactly one `release:` label
 (`release:patch`, `release:minor`, `release:major`, `release:skip`), and a level label needs
-`## Unreleased` lines in `CHANGELOG.md`. `.github/workflows/release.yml` on every push to
+`## Unreleased` lines in `CHANGELOG.md`. The label `ci:skip` on a PR into `master` reports every
+test job green without running it (D153): maintainers only, for a change the owner said ships
+without a release, together with `release:skip`. `.github/workflows/release.yml` on every push to
 `master`, four jobs: `Check Release`, `Verify Deployment` (waits for www and storybook to serve
 the version, then tags), `Validate Production`, `Publish Release`.
 
