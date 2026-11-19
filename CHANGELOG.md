@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Docs
+
+#### Spec 70
+
+- The home page header, and the 404 page that shares it, shows the library version after the name, as the docs header does: small muted text such as `v0.9.7`, read from the package at build time, linking to the GitHub releases (D152).
+
 ## 0.9.7 - 2026-11-19
 
 ### Docs

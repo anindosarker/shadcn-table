@@ -36,6 +36,11 @@ kanban-plugin: basic
 	- Audit-fix cards on the date filter demo: 4.J fixes 4.I, 2.E fixes 2.D, 3.I fixes 3.G, 1.E fixes 1.A, 6.D fixes 6.A, 5.D fixes 5.A, 2.F fixes 2.A, 3.J fixes 3.A, 4.K fixes 4.A. next-app head d106dec (round 1 fixes 8566a62, round 2 fixes d106dec).
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
+- [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
+	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
+	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
+- [ ] **Q143** The ci:skip label skips the tests on a PR into any branch, not only master
+	- A PR into dev or claude/review that carries ci:skip reports every test job green without running it, while D153, CONTRIBUTING.md and the coding standards say a PR into master: pr.yml reads the label on any pull_request event (.github/workflows/pr.yml, Head job). Only people who can set labels can use it. Found by the review of milestone 71 CI skip label; either scope the read to base master or drop 'into master' from the two sentences.
 
 ## Decided
 
@@ -359,6 +364,12 @@ kanban-plugin: basic
 	- Owner, 2026-11-19, after the reason was explained (the 19 were same-table copies under D106): 'that's fine then. We don't need any duplicate or redirect.' Checked on claude/review f4f4ad5e: none of the 19 removed story ids occurs in any file outside .ai/ and CHANGELOG.md (no link, no guide slug, no storybook map row, no test); the sitemap, sidebar and search are built from the content source.
 - [x] **Q136** The docs site shows the library's current version nowhere #D147
 - [x] **Q137** Storybook shows the library's current version nowhere #D148
+- [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly #D151
+	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
+- [x] **Q141** The home page header shows no version label #D152 #E20
+	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
+	- Owner, 2026-11-19: 'Yes, we can add it', and asks that so small a change ships without a new release and without the full PR check run (see the docs-only shipping card).
+- [x] **Q142** A small docs-only change can reach the live site only through a full release run #D153 #E20
 
 ## Later
 
