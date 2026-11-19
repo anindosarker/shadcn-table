@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D145** The docs code panel check waits for the highlighted code #R6
-	- The 'story code panels' check read the highlighter's placeholder on the slow CI machine and failed PR 140; the pages were right. The check now waits for the highlighted code before it reads (fix milestone of spec 67, merge a263d115). A CI problem, settled by the lead.
-	- Source: Q135
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -949,6 +945,9 @@ kanban-plugin: basic
 - [x] **D144** Section tabs keep equal side padding and the page bar's hover fill #R6
 	- Every section tab has the same padding on both sides, the first one included, and the hover fill is the same for active and inactive tabs (components/section-tabs.tsx, app/global.css). The owner's fix, replaces the Q116 hotfix; shipped in 0.9.5.
 	- Source: Q130
+- [x] **D145** The docs code panel check waits for the highlighted code #R6
+	- The 'story code panels' check read the highlighter's placeholder on the slow CI machine and failed PR 140; the pages were right. The check now waits for the highlighted code before it reads (fix milestone of spec 67, merge a263d115). A CI problem, settled by the lead.
+	- Source: Q135
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
