@@ -7,7 +7,8 @@
  * it stands alone for every story.
  *
  * The text, top to bottom:
- *   - the package imports the text uses, only the names used; `storybook/test`
+ *   - the package imports the text uses, only the names used, one line per
+ *     module however many files import it; `storybook/test`
  *     and the Storybook packages are left out, `@story-support/<part>` (the
  *     story-only parts of a base) is written as `@/components/ui/<part>`, as
  *     the docs copies map it (apps/shadcn-table-docs/lib/story-variants.mjs);
@@ -23,7 +24,9 @@
  *     `render` or `component`. The story's args (the meta's, then the
  *     story's) are written out: `{...args}` as props, `args.x` as its value.
  * Left out: `play`, `parameters`, `tags`, `argTypes`, `beforeEach`, the meta,
- * the default export and every declaration only those use.
+ * the default export and every declaration only those use. A `render`
+ * written as a method throws, so the text never falls back to the meta's
+ * component.
  *
  * TypeScript compiler API, no text matching. Usage:
  *   storyCode({ fileText, exportName, file, base }) -> string
@@ -338,6 +341,12 @@ function resolveObject(mod, bound) {
       });
     } else if (ts.isShorthandPropertyAssignment(property)) {
       properties.set(property.name.text, { node: property.name, env });
+    } else if (
+      ts.isMethodDeclaration(property) &&
+      propertyName(property.name) === 'render'
+    ) {
+      // read as no render, the text would show the meta's component instead
+      throw new Error('a story writes render as a method');
     }
   }
   return { properties };
@@ -714,32 +723,42 @@ function declarationText(statement) {
   return text;
 }
 
-/** One import line with only `names`, the module as the text writes it. */
-function importText({ statement, names, specifier }) {
-  const clause = statement.importClause;
-  if (!clause) return `import '${specifier}';`;
-  const typeOnly = clause.isTypeOnly ? 'type ' : '';
-  const parts = [];
-  if (clause.name && names.has(clause.name.text)) parts.push(clause.name.text);
-  const bindings = clause.namedBindings;
-  if (bindings && ts.isNamespaceImport(bindings)) {
-    if (names.has(bindings.name.text)) parts.push(`* as ${bindings.name.text}`);
-  } else if (bindings) {
-    const named = bindings.elements
-      .filter((element) => names.has(element.name.text))
-      .map((element) => textOf(element));
-    if (named.length) {
-      const one = `{ ${named.join(', ')} }`;
-      const line = `import ${typeOnly}${[...parts, one].join(', ')} from '${specifier}';`;
-      parts.push(
-        line.length <= LINE_WIDTH
-          ? one
-          : `{\n${named.map((n) => `  ${n},`).join('\n')}\n}`,
-      );
-    }
+/**
+ * The import lines of one module specifier, with only the names the text
+ * uses, gathered from every import of it in the story file and the files it
+ * imports from: the default name, a namespace (a line of its own, as the
+ * syntax wants), the named imports in module then file order.
+ */
+function importText({
+  specifier,
+  typeOnly,
+  defaultName,
+  namespaceName,
+  named,
+}) {
+  const type = typeOnly ? 'type ' : '';
+  const line = (parts) =>
+    `import ${type}${parts.join(', ')} from '${specifier}';`;
+  const lines = [];
+  let head = defaultName ? [defaultName] : [];
+  if (namespaceName) {
+    lines.push(line([...head, `* as ${namespaceName}`]));
+    head = [];
   }
-  if (!parts.length) return undefined;
-  return `import ${typeOnly}${parts.join(', ')} from '${specifier}';`;
+  const names = [...named.values()]
+    .sort((a, b) => a.rank - b.rank || a.pos - b.pos)
+    .map((entry) => entry.text);
+  if (names.length) {
+    const one = line([...head, `{ ${names.join(', ')} }`]);
+    lines.push(
+      one.length <= LINE_WIDTH
+        ? one
+        : line([...head, `{\n${names.map((n) => `  ${n},`).join('\n')}\n}`]),
+    );
+    head = [];
+  }
+  if (head.length) lines.push(line(head));
+  return lines.length ? lines.join('\n') : undefined;
 }
 
 const moduleCache = new Map();
@@ -812,16 +831,33 @@ export function storyCode({
           follow(target, [original?.propertyName?.text ?? name]);
           continue;
         }
-        const key = `${specifier}\0${statement.importClause?.isTypeOnly ? 'type' : ''}\0${statement.pos}\0${current.fileName}`;
+        // one entry per module and import kind, whichever file imports it
+        const written = specifier.startsWith(STORY_SUPPORT)
+          ? `@/components/ui/${specifier.slice(STORY_SUPPORT.length)}`
+          : specifier;
+        const clause = statement.importClause;
+        const typeOnly = !!clause?.isTypeOnly;
+        const key = `${written}\0${typeOnly ? 'type' : ''}`;
         const entry = packageImports.get(key) ?? {
-          statement,
-          names: new Set(),
-          specifier: specifier.startsWith(STORY_SUPPORT)
-            ? `@/components/ui/${specifier.slice(STORY_SUPPORT.length)}`
-            : specifier,
+          specifier: written,
+          typeOnly,
+          defaultName: undefined,
+          namespaceName: undefined,
+          named: new Map(),
         };
-        entry.names.add(name);
         packageImports.set(key, entry);
+        const bindings = clause?.namedBindings;
+        if (clause?.name?.text === name) entry.defaultName = name;
+        else if (bindings && ts.isNamespaceImport(bindings))
+          entry.namespaceName = name;
+        else if (bindings && ts.isNamedImports(bindings)) {
+          const element = bindings.elements.find((e) => e.name.text === name);
+          entry.named.set(name, {
+            text: textOf(element),
+            rank: modules.indexOf(current),
+            pos: element.getStart(),
+          });
+        }
         continue;
       }
       for (const statement of current.declarations.get(name) ?? []) {
