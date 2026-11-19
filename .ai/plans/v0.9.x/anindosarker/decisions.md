@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D143** An unknown docs address answers the site's 404 page #R6
-	- The docs route sets dynamicParams = false (apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx), so an address outside the generated list goes to the 404 route and the root layout's head scripts no longer log the script tag console error. Built on the owner's 'fix it', shipped in 0.9.5.
-	- Source: Q129
 - [ ] **D144** Section tabs keep equal side padding and the page bar's hover fill #R6
 	- Every section tab has the same padding on both sides, the first one included, and the hover fill is the same for active and inactive tabs (components/section-tabs.tsx, app/global.css). The owner's fix, replaces the Q116 hotfix; shipped in 0.9.5.
 	- Source: Q130
@@ -949,6 +946,9 @@ kanban-plugin: basic
 	- After 0.9.5 is live the lead reminds the owner to request indexing in Search Console for the home page, the introduction and the comparison page (Q34).
 	- Owner recorded 2026-11-19.
 	- Source: Q132
+- [x] **D143** An unknown docs address answers the site's 404 page #R6
+	- The docs route sets dynamicParams = false (apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx), so an address outside the generated list goes to the 404 route and the root layout's head scripts no longer log the script tag console error. Built on the owner's 'fix it', shipped in 0.9.5.
+	- Source: Q129
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
