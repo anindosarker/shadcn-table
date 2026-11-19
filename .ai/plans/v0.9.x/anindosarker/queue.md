@@ -36,6 +36,8 @@ kanban-plugin: basic
 	- Audit-fix cards on the date filter demo: 4.J fixes 4.I, 2.E fixes 2.D, 3.I fixes 3.G, 1.E fixes 1.A, 6.D fixes 6.A, 5.D fixes 5.A, 2.F fixes 2.A, 3.J fixes 3.A, 4.K fixes 4.A. next-app head d106dec (round 1 fixes 8566a62, round 2 fixes d106dec).
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
+- [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
+	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
 
 ## Decided
 
