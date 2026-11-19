@@ -21,6 +21,9 @@ Checks:
 - Still missing (verifier stopped by the harness before they finished): storybook-static aria (was mid-run, 300 of 626), docs-e2e radix, docs-e2e aria
 - Check (verifier 2): storybook-static, `pnpm test storybook-static --base aria` at a882a4a6: pass, `manager title version "shadcn-table v0.9.6 (React Aria)"`, code tab of 626 stories pass, 0 FAIL lines
 - Check (verifier 2): docs-e2e, `pnpm test docs-e2e --base radix` at a882a4a6: pass, 2637 checks, 0 failed, `header version` and `header version at 390` passed
+- Check (verifier 2): docs-e2e, `pnpm test docs-e2e --base aria` at a882a4a6: pass, 2637 checks, 0 failed, `header version` and `header version at 390` passed
+- Check (verifier 2): Acceptance (spec 1.2, programmatic), the two new checks on the three bases at a882a4a6: pass, docs-e2e `header version` v0.9.6 on base (26bef0e1, docs app unchanged since), radix, aria; storybook-static `manager title version` "shadcn-table v0.9.6 (<library>)" on base (9aab25d1, changelog-only diff since), radix, aria. The visual match to the owner demo `a3d61fe9` is the empty cherry-pick diff above
+- All section 2.2 checks now recorded green at a882a4a6 or a commit whose diff to it does not touch the checked code
 
 - Task 1 The docs check and the header label: 26bef0e1
 - Task 2 The title check and the Storybook title: 9aab25d1
