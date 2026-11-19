@@ -58,9 +58,12 @@ const LIBRARY_VERSION = JSON.parse(
 ).version;
 /** The manager's brand title: Storybook's Brand, a link to the root. */
 const MANAGER_TITLE = '.sidebar-header a';
-/** The manager's preview toolbar and its base switcher (base-tool.ts). */
+/**
+ * The manager's preview toolbar and its base switcher (base-tool.ts): a
+ * Storybook Select, labelled "Base" plus the chosen base ("Base Base UI").
+ */
 const TOOLBAR = '[data-testid="sb-preview-toolbar"]';
-const BASE_SWITCHER = '[aria-label="Base"]';
+const BASE_SWITCHER = 'button[aria-haspopup="listbox"][aria-label^="Base "]';
 const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
 const DOCS_ORIGIN = 'https://www.shadcn-table.com';
