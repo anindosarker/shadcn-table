@@ -13,5 +13,7 @@ Checks:
 - Check: docs-e2e base, `pnpm test docs-e2e --base base` at ec56d00f: pass (117 pages; panels 599 of 599, 70 s)
 - Check: docs-e2e radix, `pnpm test docs-e2e --base radix` at ec56d00f: pass (117 pages; panels 599 of 599, 74 s)
 - Check: docs-e2e aria, `pnpm test docs-e2e --base aria` at ec56d00f: pass (117 pages; panels 599 of 599, 78 s)
+- Check: verifier, all six Task 1 checks of the spec (typecheck radix, lint, validate-repo, docs-e2e base, radix, aria) recorded green at ec56d00f = HEAD, tree clean; not rerun (verifier)
+- Check: epic Acceptance (spec 67 section 1.2) at ec56d00f, run once by the verifier: not reachable yet, as expected before the release: `git ls-remote --tags origin v0.9.6` prints nothing; `gh release view v0.9.6` says release not found; www and storybook `version.txt` print 0.9.5; origin/claude/review e89cf41f, origin/dev 020465a0, origin/master da4f513f differ. It belongs to After release 0.9.6, after this fix merges and PR 140 reruns (verifier)
 
 - Task 1 Docs code panel check passes in CI: ec56d00f
