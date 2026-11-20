@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D158** The phone example toolbar and the ci:skip fixes go live without a new version #R6
+	- claude/review as of E21 (spec 74, the phone example toolbar of D156; spec 72, the ci:skip fixes of D154 and D155) ships by one PR from dev into master with the labels release:skip and ci:skip (D153): no version bump, no tag, the sites stay 0.9.7. The PR is created with both labels and must report CLEAN after its first run with no further push: that is the proof spec 72 still owes, recorded in tracker 72. After the merge the live docs page is read at phone width (two toolbar rows, the More menu and its entries) and at desktop width (unchanged), and claude/review and dev are brought up to master. Owner, 2026-11-20: 'Ship it.'
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
