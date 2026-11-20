@@ -5,6 +5,7 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D157** The quick-refocus tooltip miss on Radix is left to Radix #R6
+	- Supersedes D151.
 	- The 'Click to copy' tooltip that fails to show when focus returns within its exit animation is Radix's own behaviour, not the overflow tooltip's: an uncontrolled Radix tooltip that reopens while its content is still mounted closes itself on its own tooltip.open event (radix-ui 1.8.1, tracker 73). The library does not patch its tooltip around it (stock shadcn styling and behaviour, no workaround to remove later); milestone 73 stops, its red play is not merged. The runner searches the Radix repository for an existing report and records the link in the tracker; a new upstream report is filed only on the owner's word. Settled by the lead.
 
 ## In progress
@@ -18,9 +19,6 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
-- [ ] **D151** The click-to-copy tooltip shows when focus comes back quickly #E21 #R6
-	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
-	- Source: Q140
 - [ ] **D154** The ci:skip label counts only on a PR into master #E21 #R6
 	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
 	- Source: Q143
@@ -978,6 +976,9 @@ kanban-plugin: basic
 	- Supersedes D148.
 	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
 	- Source: Q138
+- [x] **D151** The click-to-copy tooltip shows when focus comes back quickly (superseded by D157) #superseded #E21 #R6
+	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
+	- Source: Q140
 - [x] **D152** The home page header shows the library version too #E20 #R6
 	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
 	- Source: Q141
