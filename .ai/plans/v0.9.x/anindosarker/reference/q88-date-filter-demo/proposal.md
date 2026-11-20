@@ -51,6 +51,13 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - Audit 6 claims that did not reproduce and were left alone: A8, H3, H4. Kept on purpose: A14 (long year list after a far typed year), C3 (two caption headers).
 - Not seen in Firefox, real Safari or on an iPhone.
 
+## Promoted (owner, 2026-11-21: "promote to default. then remove unnecessary ones")
+
+- `components/date-picker/` in next-app is the `.6.2` code, byte-identical at commit 5f529b1; 3,395 lines in 23 files. It is the only picker folder: all `date-picker-4-*` folders are deleted (commit 2759af6).
+- The demo page has twelve rows with one card each, titled `<row>.6.2 (<id>) Date picker`. Rows 1 to 6 use the ids the owner had ticked as Default (`1.Z`, `2.Z`, `3.AE`, `4.AU`, `5.J`, `6.L`), rows 7 to 12 use `E`. `defaults.json` and `picks.json` are the owner's uncommitted edits and were not touched.
+- A new version is again a full copy of `components/date-picker/`, numbered from `.6.3` (fix) or `.7` (feature).
+- Next: the owner's code review of that one folder.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
