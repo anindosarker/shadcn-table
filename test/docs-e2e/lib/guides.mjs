@@ -13,6 +13,7 @@ import {
   names,
   paginationControls,
   panelOf,
+  phoneGuideToolbar,
   propTable,
   sectionFrame,
 } from './helpers.mjs';
@@ -402,6 +403,12 @@ const checks = {
     const remote = await example(page, 'remote', check);
     await paginationControls(remote, 'remote', check);
     await codeToggle(page, 'remote', 'manualPagination: true', check);
+    // Spec 74 (D156): the guide's Example panel on a phone.
+    await phoneGuideToolbar({
+      page,
+      panel: page.locator('article [id^="guide-example-"]').first(),
+      check,
+    });
     const before = await remote.locator('table tbody tr').first().textContent();
     const next = remote
       .locator('button[aria-label*="next" i], a[aria-label*="next" i]')
