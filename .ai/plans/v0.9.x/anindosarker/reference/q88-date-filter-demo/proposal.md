@@ -44,6 +44,13 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - Everywhere below, read the form props and `defaultValue` as removed.
 - `.6.2` also carries the fixes of `audit-6.md` (a fresh reviewer's audit of `.6.1`): bugs A1 to A13 minus the ones that existed only for form use, cleanup B and C, API gaps E. Lead's calls for the owner to review: a half-cleared box reports empty; a time-only range is not reordered, so 22:00 to 06:00 can be entered; a half-typed box shows the browser's message; month and year take `startMonth` and `endMonth` in `calendarProps` again.
 
+## .6.2 accepted (owner, 2026-11-21: ".6.2 looks good")
+
+- `.6.2` is next-app commit 9b6dfd1, folder `components/date-picker-4-6-2`, cards `1.6.2` to `12.6.2`. It is the latest version; the default folder `components/date-picker/` still holds the `.0` code.
+- Final props: every type `type`, `range`, `value`, `onChange`, `disabled`, `min`, `max`, `labels` and HTML attributes (`id` and `aria-*` reach the control); date, datetime, week, month, year also `presentation`, `calendarProps`, `presets`, `open`, `defaultOpen`, `onOpenChange`, `popoverProps`, `dialogProps`; datetime and time also `step`; time also the open state props and `popoverProps`.
+- Audit 6 claims that did not reproduce and were left alone: A8, H3, H4. Kept on purpose: A14 (long year list after a far typed year), C3 (two caption headers).
+- Not seen in Firefox, real Safari or on an iPhone.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
