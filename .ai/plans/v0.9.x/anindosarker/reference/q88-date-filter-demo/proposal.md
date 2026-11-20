@@ -36,6 +36,14 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - `.6.1` is being built on the owner's "fix it": fixes only, on `.6`. Single week calendar reaching December of the last year, a visible message for a required empty picker with hidden inputs, the calendar returning to today's month after a far value is cleared, trigger text following the locale, month and year range panels kept apart, right-to-left arrow keys in the grid, `calendarProps` typed to what month and year use.
 - Not done yet: a review of the code by a fresh reader, and a look in Firefox, real Safari and on an iPhone.
 
+## Form use and defaultValue removed (owner, 2026-11-20: "cut it")
+
+- Form use (`name`, `required`, `form`, `startName`, `endName`, hidden inputs, the required message) and `defaultValue` are removed in `.6.2`. They were built in `.5` on the runner's misreading of the owner's line "now: other languages, form use, defaultValue, open state", which quoted the "Not now" list.
+- Reason: the usual way is a form library or a `Field` wrapper driving the picker through `value` and `onChange`; shadcn's own date picker recipes pass no `name`. The picker only has to put the wrapper's `aria-invalid`, `aria-describedby`, `id` and label on the right element.
+- `labels` and the open state props (`open`, `defaultOpen`, `onOpenChange`) stay for now; the owner has not ruled on them.
+- Everywhere below, read the form props and `defaultValue` as removed.
+- `.6.2` also carries the fixes of `audit-6.md` (a fresh reviewer's audit of `.6.1`): bugs A1 to A13 minus the ones that existed only for form use, cleanup B and C, API gaps E. Lead's calls for the owner to review: a half-cleared box reports empty; a time-only range is not reordered, so 22:00 to 06:00 can be entered; a half-typed box shows the browser's message; month and year take `startMonth` and `endMonth` in `calendarProps` again.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
