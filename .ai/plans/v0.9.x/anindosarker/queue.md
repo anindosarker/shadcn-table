@@ -38,6 +38,7 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q146** The planned fix for the click-to-copy tooltip on quick refocus does not work
 	- A Radix keyboard user still gets no 'Click to copy' tooltip after a quick Tab away and back (D151): the fix of spec 73 (ST_OverflowText stops its open request) was tried and the new play stayed red, and the play also fails with no overflow tooltip in the cell at all. Read in radix-ui 1.8.1: the uncontrolled copy tooltip dispatches tooltip.open from an effect after the render while its own closing content is still mounted and listening, so it closes itself. Base UI and React Aria pass the play unchanged. The fix would sit in ST_Tooltip on radix (spec 73 forbids touching it) or upstream in Radix. Found by the builder of milestone 73; branch v0.9/click-to-copy-tooltip-refocus holds only the red play (23da8782), not merged.
+	- Lead, 2026-11-20: already decided by D157 (left to Radix, radix-ui/primitives issue 4303 with PR 4304).
 
 ## Decided
 
