@@ -1,6 +1,6 @@
 # 72: CI skip label fixes, tracker
 
-Status: running
+Status: done (80f9cfdd)
 Branch `v0.9/ci-skip-label-fixes`, worktree 03
 Checks:
 - Check: Task 1, trial 1, PR 143, head `v0.9/ci-skip-trial-1` = 408e4287 (code before any change), base `master`, `gh pr create --label release:skip --label ci:skip`, one push: three runs of `pr.yml`, opened 44699735544 (suite 120991295186, 22 check runs, Head `skip=true`, 16 legs success), labeled 44699736449 (suite 120991297524, cancelled by the labels concurrency group), labeled 44699737060 (suite 120991299200, the newest, 10 check runs, no leg). `gh pr view 143 --json mergeStateStatus` three reads 30 s apart: `BLOCKED` x3 (`mergeable` MERGEABLE). Validate PR fails in both completed runs with `a PR into master comes from dev only (this PR comes from v0.9/ci-skip-trial-1)` (test/validate-pr/lib/source-branch.mjs, D83 addendum), so a trial branch into master is BLOCKED by Validate PR whatever the label runs do (see Attention)
