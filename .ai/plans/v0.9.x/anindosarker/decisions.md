@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D158** The phone example toolbar and the ci:skip fixes go live without a new version #R6
-	- claude/review as of E21 (spec 74, the phone example toolbar of D156; spec 72, the ci:skip fixes of D154 and D155) ships by one PR from dev into master with the labels release:skip and ci:skip (D153): no version bump, no tag, the sites stay 0.9.7. The PR is created with both labels and must report CLEAN after its first run with no further push: that is the proof spec 72 still owes, recorded in tracker 72. After the merge the live docs page is read at phone width (two toolbar rows, the More menu and its entries) and at desktop width (unchanged), and claude/review and dev are brought up to master. Owner, 2026-11-20: 'Ship it.'
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -18,6 +15,8 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
+- [ ] **D158** The phone example toolbar and the ci:skip fixes go live without a new version #E22 #R6
+	- claude/review as of E21 (spec 74, the phone example toolbar of D156; spec 72, the ci:skip fixes of D154 and D155) ships by one PR from dev into master with the labels release:skip and ci:skip (D153): no version bump, no tag, the sites stay 0.9.7. The PR is created with both labels and must report CLEAN after its first run with no further push: that is the proof spec 72 still owes, recorded in tracker 72. After the merge the live docs page is read at phone width (two toolbar rows, the More menu and its entries) and at desktop width (unchanged), and claude/review and dev are brought up to master. Owner, 2026-11-20: 'Ship it.'
 
 ## Done
 
