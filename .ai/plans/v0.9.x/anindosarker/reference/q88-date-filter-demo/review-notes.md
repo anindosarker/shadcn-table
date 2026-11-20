@@ -34,3 +34,12 @@ Left as built by the rewrite, no ruling yet: half-typed text stays in the box wi
 - `hooks/use-date-box.tsx`: a `.tsx` hook file that also holds the native input component; the least tidy file.
 - `calendar-caption.tsx` and `utils/style.utils.ts`: the two direct `react-day-picker` imports (`useDayPicker`, `getDefaultClassNames`).
 - The bugs of `audit-4.md` are still in the code; its file and line references no longer match.
+
+## Review of the promoted `.6.2` code, 2026-11-21
+
+Code under review: `test-projects/next-app/components/date-picker/` at `5f529b1` (3,395 lines, 23 files). The sections above are about earlier code that no longer exists. Nothing is implemented until the owner says go.
+
+| # | File | Finding (owner) | Status |
+|---|---|---|---|
+| 10 | `hooks/use-controllable.ts`, callers `modes/date-mode.tsx:41`, `modes/period-mode.tsx:365` | "What's this hook? Is it necessary?" It lets the two modes that close on pick hold the open state while the app may also control it. Base UI already does both: its Popover and Dialog roots take `open`, `defaultOpen`, `onOpenChange`, and `actionsRef` has `close()` (`@base-ui/react` 1.9.0, `popover/root/PopoverRoot.d.ts:39`, `dialog/root/DialogRoot.d.ts:84`). Plainer: every mode passes the three props straight through, the two modes call `actionsRef.current.close()`; the hook file goes. Port note: `actionsRef` is Base UI only, the radix copy needs its own way. | open |
+| 11 | `components/period-grid.tsx:22-45` `moveFocus` | "an obscure implementation again." Hand-written arrow-key movement for the month and year grid: one tab stop, left and right by one cell (flipped under rtl), up and down by a row of three, disabled cells skipped, cells found by `querySelectorAll("button")`. No installed part gives two-way movement in a grid of buttons; Base UI's `ToggleGroup` and `RadioGroup` move along one line only (`toggle-group/ToggleGroup.d.ts:55, 61`). Ways out: a stock one-line group (arrows step through the months in order, no jump by a row), or plain buttons that are each a tab stop with no key code at all. | open |
