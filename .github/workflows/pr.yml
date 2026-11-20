@@ -17,7 +17,7 @@ run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installatio
 # installation-e2e-only it runs the seven Installation E2E jobs with
 # --no-diff, whose artifacts carry the captures (the reference refresh path,
 # D86). Head, the first job, reads the PR head commit and the PR labels:
-# on the version bump commit (D35), or on a PR that carries the label
+# on the version bump commit (D35), or on a PR into `master` that carries the label
 # `ci:skip` (D153), Lint and Validate Repo skip and every matrix leg skips
 # its steps. A label event does not run Head, so `ci:skip` is set at
 # `gh pr create --label`, or added later and followed by a re-run of the
@@ -42,8 +42,9 @@ permissions:
 jobs:
   # The PR head commit: bumped=true when it is the `chore: version <v>`
   # commit Prepare Release pushes as github-actions[bot] (D35). skip=true
-  # when bumped is true or the PR carries the label `ci:skip`, read live
-  # (D153); a failed label read leaves skip equal to bumped. On skip=true
+  # when bumped is true or a PR into `master` carries the label `ci:skip`,
+  # read live (D153); on another base the label is not read (D154), and a
+  # failed label read leaves skip equal to bumped. On skip=true
   # the test jobs skip (the called workflows skip every step through their
   # skip input, so each matrix leg still reports its check context, as
   # success). Both false without a PR. The default checkout (the merge
@@ -70,6 +71,7 @@ jobs:
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR: ${{ github.event.pull_request.number }}
+          BASE: ${{ github.event.pull_request.base.ref }}
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
@@ -87,6 +89,8 @@ jobs:
           reason=none
           if [ "$bumped" = true ]; then
             reason='version commit'
+          elif [ -n "$PR" ] && [ "$BASE" != master ]; then
+            reason="none, base $BASE"
           elif [ -n "$PR" ]; then
             if labelled=$(gh pr view "$PR" --json labels --jq 'any(.labels[]; .name == "ci:skip")'); then
               if [ "$labelled" = true ]; then
