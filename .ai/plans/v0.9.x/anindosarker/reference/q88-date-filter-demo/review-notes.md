@@ -58,3 +58,7 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
    - `moveFocus` in `components/period-grid.tsx` is removed with the single tab stop it serves and the `dir` it reads for this. The cells are plain buttons, each a normal tab stop; Enter or Space picks.
    - Owner: it does not earn its place. Nothing breaks without it; it was added on the runner's brief, not on a request.
    - If arrow keys are wanted later, they come from a stock part, not from own key code.
+3. **File order: imports, then type definitions, then constants, then the code.** 2026-11-21.
+   - Owner: "you should define the types at the beginning of the component, not inside randomly."
+   - Every file starts with its imports, then all its types, then its constants, then components and functions. No type declared between functions or in the middle of a file.
+   - Runner's reading, to confirm on the first file: a component's props are a named type in that top block, not an object type written inline in the function signature.
