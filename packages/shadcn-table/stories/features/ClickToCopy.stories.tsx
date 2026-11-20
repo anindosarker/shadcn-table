@@ -358,6 +358,34 @@ ClickToCopyEnabledWithCopyButtonProps.play = async ({
 };
 
 /**
+ * Focus that leaves a copy button and comes back while its tooltip still
+ * animates out opens the "Click to copy" tooltip again (D151).
+ */
+export const TooltipReturnsOnQuickRefocus = {
+  render: ClickToCopyEnabled,
+  play: async ({ canvasElement }: StoryContext) => {
+    const [text] = await within(canvasElement).findAllByText(
+      data[0]!.name.firstName,
+    );
+    const button = text!.closest<HTMLElement>('button')!;
+    const input = pointerInput();
+    button.focus();
+    await input.tab();
+    await tooltipsGone();
+    await input.tab({ shift: true });
+    expect(document.activeElement).toBe(button);
+    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'), {
+      timeout: 3000,
+    });
+    // No wait between the two keys: the tooltip is still in its exit animation.
+    await input.tab();
+    await input.tab({ shift: true });
+    expect(document.activeElement).toBe(button);
+    await waitFor(() => expect(tooltipTexts()).toContain('Click to copy'));
+  },
+};
+
+/**
  * The open tooltips' texts. A closing tooltip stays in the DOM through its
  * exit animation (Radix data-state="closed", Base UI data-closed, React Aria
  * data-exiting) and does not count.
