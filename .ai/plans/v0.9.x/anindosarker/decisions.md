@@ -15,12 +15,6 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
-- [ ] **D154** The ci:skip label counts only on a PR into master #E21 #R6
-	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
-	- Source: Q143
-- [ ] **D155** A PR opened with ci:skip merges without a further push #E21 #R6
-	- A PR created with ci:skip and release:skip merges on its first green run: PR 142 stayed blocked on '16 of 21 required status checks are expected' until a new commit was pushed. The cause is found first (likely the label runs on the same head, whose skipped caller jobs carry no matrix legs) and fixed in pr.yml, proven under act and then with trial PRs carrying ci:skip, which this decision allows. A CI problem, settled by the lead.
-	- Source: Q144
 
 ## Done
 
@@ -978,6 +972,12 @@ kanban-plugin: basic
 - [x] **D153** A PR label skips the test jobs so a small change ships without a release #E20 #R6
 	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
 	- Source: Q142
+- [x] **D154** The ci:skip label counts only on a PR into master #E21 #R6
+	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
+	- Source: Q143
+- [x] **D155** A PR opened with ci:skip merges without a further push #E21 #R6
+	- A PR created with ci:skip and release:skip merges on its first green run: PR 142 stayed blocked on '16 of 21 required status checks are expected' until a new commit was pushed. The cause is found first (likely the label runs on the same head, whose skipped caller jobs carry no matrix legs) and fixed in pr.yml, proven under act and then with trial PRs carrying ci:skip, which this decision allows. A CI problem, settled by the lead.
+	- Source: Q144
 - [x] **D156** On a phone the docs example toolbar is two rows with a More menu #E21 #R6
 	- At phone width the example toolbar on docs pages has two rows: row 1 is previous, the example name stretched between the arrows, next; row 2 is Preview, Code, Both, the base switcher and a More button at the right end. The More button opens a stock menu with labelled entries: Open in Storybook, Copy prompt, Copy install command, Fullscreen. Desktop and tablet keep the single row. Variant A of reference/q145-example-toolbar-phone.excalidraw, picked by the owner on 2026-11-20.
 	- Source: Q145
