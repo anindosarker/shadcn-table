@@ -290,9 +290,7 @@ export async function codeToggle(page, id, needle, check) {
     );
     // Full screen (same button as the table toolbar's) toggles aria-pressed
     // and Escape leaves it again.
-    const full = panel.locator(
-      'header button[aria-label="Toggle full screen"]',
-    );
+    const full = fullscreenButton(panel);
     check(`${id}: full screen button`, (await full.count()) === 1);
     if (await full.count()) {
       await full.first().click();
@@ -330,7 +328,7 @@ export async function codeToggle(page, id, needle, check) {
     }
     // Caret menu: copy install command, then the open-in items. The menu is
     // portaled, so its items are looked up on the page.
-    const caret = panel.locator('button[aria-label="More actions"]');
+    const caret = moreActions(panel);
     check(`${id}: caret button`, (await caret.count()) === 1);
     if (await caret.count()) {
       await caret.first().click();
@@ -360,6 +358,260 @@ export async function codeToggle(page, id, needle, check) {
       await menu.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
     }
   }
+}
+
+/** The phone width of site.mjs, also the phone of spec 74 (D156). */
+const PHONE = { width: 390, height: 844 };
+
+/** The full screen button of a panel's header (hidden on a phone, spec 74). */
+export const fullscreenButton = (panel) =>
+  panel.locator('header button[aria-label="Toggle full screen"]');
+
+/**
+ * The More actions button of a panel's header: one trigger at every width,
+ * the arrow of the "Open example" group from `sm` up and the More button at
+ * the end of row 2 on a phone (spec 74).
+ */
+export const moreActions = (panel) =>
+  panel.locator('header button[aria-label="More actions"]');
+
+/** Runs `run` at viewport `width`, then restores the page's viewport. */
+async function atWidth({ page, width, run }) {
+  const viewport = page.viewportSize() ?? { width: 1440, height: 900 };
+  const height = width === PHONE.width ? PHONE.height : viewport.height;
+  await page.setViewportSize({ width, height });
+  await page.waitForTimeout(300);
+  try {
+    return await run();
+  } finally {
+    await page.setViewportSize(viewport);
+    await page.waitForTimeout(300);
+  }
+}
+
+/**
+ * The visible controls (buttons and links) of a panel's header grouped into
+ * rows by their vertical centre, each row left to right, with the header's
+ * content right edge. A control's label is its aria-label or text; the name
+ * select reads `select`, the step buttons `Previous` and `Next`.
+ */
+const toolbarRows = (panel) =>
+  panel
+    .locator('header')
+    .first()
+    .evaluate((header) => {
+      const style = getComputedStyle(header);
+      const box = header.getBoundingClientRect();
+      const right =
+        box.right -
+        parseFloat(style.borderRightWidth) -
+        parseFloat(style.paddingRight);
+      const rows = [];
+      for (const el of header.querySelectorAll('button, a')) {
+        const r = el.getBoundingClientRect();
+        if (!el.getClientRects().length || r.width < 2) continue;
+        const label =
+          el.getAttribute('role') === 'combobox'
+            ? 'select'
+            : (el.getAttribute('aria-label') ?? el.textContent ?? '')
+                .trim()
+                .replace(/^(Previous|Next)\b.*/, '$1')
+                .replace(/^Copy prompt.*/, 'Copy prompt');
+        const mid = (r.top + r.bottom) / 2;
+        let row = rows.find((x) => Math.abs(x.mid - mid) < 8);
+        if (!row) rows.push((row = { mid, controls: [] }));
+        row.controls.push({ label, left: r.left, right: r.right });
+      }
+      rows.sort((a, b) => a.mid - b.mid);
+      for (const row of rows) row.controls.sort((a, b) => a.left - b.left);
+      return { right, rows: rows.map((row) => row.controls) };
+    });
+
+const labels = (row = []) => row.map((c) => c.label).join(' ');
+const signature = (rows) => rows.map((row) => labels(row)).join(' / ');
+
+/**
+ * Opens the panel's More actions menu and reads its visible entries in
+ * order, a separator as `---` and without the "soon" tag; the menu stays
+ * open.
+ */
+async function openMoreMenu(page, panel) {
+  await moreActions(panel)
+    .click({ timeout: 5000 })
+    .catch(() => {});
+  const menu = page.locator('[role="menu"]');
+  await menu.waitFor({ timeout: 5000 }).catch(() => {});
+  return menu
+    .evaluate((m) =>
+      [...m.querySelectorAll('[role="menuitem"], [role="separator"]')]
+        .filter((el) => el.getClientRects().length > 0)
+        .map((el) =>
+          el.getAttribute('role') === 'separator'
+            ? '---'
+            : (el.textContent ?? '').trim().replace(/soon$/, '').trim(),
+        ),
+    )
+    .catch(() => []);
+}
+
+async function closeMenu(page) {
+  await page.keyboard.press('Escape');
+  await page
+    .locator('[role="menu"]')
+    .waitFor({ state: 'hidden', timeout: 5000 })
+    .catch(() => {});
+}
+
+/** The menu's entries after the separator: today's Open in entries. */
+const OPEN_IN = ['Open in GitHub', 'Open in StackBlitz', 'Open in CodeSandbox'];
+
+/**
+ * Spec 74 (D156): the toolbar of example or story panel `panel` at the phone
+ * width. Two rows: previous, the name select stretched to next, next; then
+ * Preview, Code, Both, the base switcher and the More button at the right
+ * end. The More menu reads Open in Storybook, Copy prompt, Copy install
+ * command, Fullscreen, then today's entries after a separator (a story page,
+ * `story`, has no Copy prompt and no install command); the header shows no
+ * Storybook, Copy prompt or full screen button. The Fullscreen entry sets
+ * `data-fullscreen` on the panel, then reads Exit fullscreen and removes it.
+ */
+export async function phoneToolbar({ page, panel, check, story = false }) {
+  await atWidth({
+    page,
+    width: PHONE.width,
+    run: async () => {
+      const { right, rows } = await toolbarRows(panel);
+      const [one = [], two = []] = rows;
+      const find = (row, label) => row.find((c) => c.label === label);
+      const select = find(one, 'select');
+      const next = find(one, 'Next');
+      const more = find(two, 'More actions');
+      check(
+        'phone toolbar: two rows',
+        rows.length === 2 &&
+          labels(one) === 'Previous select Next' &&
+          labels(two) === 'Preview Code Both Base More actions' &&
+          next.left - select.right <= 12 &&
+          next.right >= right - 2 &&
+          more.right >= right - 2,
+        signature(rows),
+      );
+      const entries = await openMoreMenu(page, panel);
+      await closeMenu(page);
+      const expected = [
+        'Open in Storybook',
+        ...(story ? [] : ['Copy prompt', 'Copy install command']),
+        'Fullscreen',
+        '---',
+        ...OPEN_IN,
+      ];
+      const shown = rows
+        .flat()
+        .map((c) => c.label)
+        .filter((l) =>
+          ['Storybook', 'Copy prompt', 'Toggle full screen'].includes(l),
+        );
+      check(
+        'phone toolbar: More menu',
+        entries.join(',') === expected.join(',') && shown.length === 0,
+        `${entries.join(',')} | header: ${shown.join(',')}`,
+      );
+      const isFull = async () =>
+        (await panel.getAttribute('data-fullscreen')) !== null;
+      const pick = async (name) => {
+        await openMoreMenu(page, panel);
+        const item = page.getByRole('menuitem', { name, exact: true });
+        if (!(await item.count())) {
+          await closeMenu(page);
+          return false;
+        }
+        await item.click();
+        await page.waitForTimeout(300);
+        return true;
+      };
+      const entered = (await pick('Fullscreen')) && (await isFull());
+      const left = entered && (await pick('Exit fullscreen'));
+      const off = !(await isFull());
+      if (!off) await page.keyboard.press('Escape');
+      check(
+        'phone toolbar: Fullscreen entry',
+        entered && left && off,
+        `on=${entered} exit=${left} off=${off}`,
+      );
+    },
+  });
+}
+
+/**
+ * Spec 74 (D156): the toolbar of guide panel `panel` at the phone width. Its
+ * row 2 is Preview, Code, Both, the base switcher and the More button at the
+ * right end, and the More menu opens.
+ */
+export async function phoneGuideToolbar({ page, panel, check }) {
+  await atWidth({
+    page,
+    width: PHONE.width,
+    run: async () => {
+      const { right, rows } = await toolbarRows(panel);
+      const row =
+        rows.find((r) => r.some((c) => c.label === 'More actions')) ?? [];
+      const more = row.at(-1);
+      const entries = await openMoreMenu(page, panel);
+      await closeMenu(page);
+      check(
+        'phone toolbar: guide panel',
+        labels(row) === 'Preview Code Both Base More actions' &&
+          more.right >= right - 2 &&
+          entries.length > 0,
+        `${signature(rows)} | menu: ${entries.join(',')}`,
+      );
+    },
+  });
+}
+
+/**
+ * Spec 74 (D156): from `sm` up the toolbar of panel `panel` is today's, at
+ * viewport `width`: the Storybook link, Copy prompt, the arrow and the full
+ * screen button are visible in the header,
+ * the controls sit in the rows `rows` (signature, ` / ` between rows) and the
+ * menu holds today's entries only.
+ */
+export async function desktopToolbar({
+  page,
+  panel,
+  check,
+  width,
+  rows: expectedRows,
+}) {
+  await atWidth({
+    page,
+    width,
+    run: async () => {
+      const { rows } = await toolbarRows(panel);
+      const shown = rows.flat().map((c) => c.label);
+      const visible = [
+        'Storybook',
+        'Copy prompt',
+        'More actions',
+        'Toggle full screen',
+      ].every((l) => shown.includes(l));
+      const arrow = await moreActions(panel)
+        .locator('svg.lucide-chevron-down')
+        .isVisible()
+        .catch(() => false);
+      const entries = await openMoreMenu(page, panel);
+      await closeMenu(page);
+      const expected = ['Copy install command', '---', ...OPEN_IN];
+      check(
+        `toolbar: desktop unchanged at ${width}`,
+        visible &&
+          arrow &&
+          signature(rows) === expectedRows &&
+          entries.join(',') === expected.join(','),
+        `${signature(rows)} | menu: ${entries.join(',')}`,
+      );
+    },
+  });
 }
 
 /**
