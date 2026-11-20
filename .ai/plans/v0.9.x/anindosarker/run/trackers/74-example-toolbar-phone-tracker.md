@@ -17,6 +17,11 @@ Checks:
 - Compare q145-after-390-menu.png with variant A: matches, the menu opens from More aligned to the right edge with Open in Storybook, Copy prompt, Copy install command, Fullscreen in that order; differs, each entry has its icon and after a separator follow Open in GitHub and the two "soon" entries (spec 1.2), which variant A does not draw
 - Looked at (not committed): 768 and 1440 `/docs/examples/basic` unchanged from before (768 keeps its three wrapped rows, 1440 one row); the guide panel of `/docs/guides/pagination` at 390, row 1 the example link, row 2 as on the example page, menu opens; the story page `/docs/examples/more/styling-theming--custom-dark-theme` at 390, two rows, menu Open in Storybook, Fullscreen, then the open-in entries
 - Not run here (builder): docs-e2e radix and aria (verifier)
+- Check (verifier): docs-e2e, `pnpm test docs-e2e --base radix` at 304c8161: pass, 2654 checks, 0 failed (5 sections, 117 pages); the four phone checks on `/docs/examples/basic` and the story page, `phone toolbar: guide panel` on `/docs/guides/pagination` and `toolbar: desktop unchanged at 1440` and `at 768` in the passed list
+- Check (verifier): docs-e2e, `pnpm test docs-e2e --base aria` at 304c8161: pass, 2654 checks, 0 failed (5 sections, 117 pages); the same phone and desktop checks in the passed list
+- Not rerun (verifier): docs-e2e base, typecheck radix, lint at 8e42da3a, `git diff --name-only 8e42da3a..304c8161` is CHANGELOG.md only; validate-repo and changelog grep recorded at 304c8161 = HEAD; red checks at 000f55d7 are before-change by design
+- Acceptance (verifier, epic 1.2 / spec 1.2): programmatic, the new checks of 1.6.3 pass on base (8e42da3a), radix and aria (304c8161): met; desktop 1440 and 768 signatures unchanged on all three bases
+- Captures read (verifier): q145-before-390.png three rows (steps and name; view modes and base; Storybook, Copy prompt, arrow, full screen); q145-after-390.png two rows (previous, name, next; Preview Code Both, Base UI, More at the right end); q145-after-390-menu.png entries Open in Storybook, Copy prompt, Copy install command, Fullscreen, separator, Open in GitHub, StackBlitz, CodeSandbox: the order of 1.6.2
 
 - Task 1 The checks of 1.6.3, red, and the before capture: 000f55d7
 - Task 2 The layout and the menu: 8e42da3a
