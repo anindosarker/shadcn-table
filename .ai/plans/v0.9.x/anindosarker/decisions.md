@@ -28,9 +28,6 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
-- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
-	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
-	- Source: Q86
 
 ## Done
 
@@ -591,6 +588,9 @@ kanban-plugin: basic
 	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
 	- Owner, 2026-11-14: "k" on option 1.
 	- Source: Q2
+- [x] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
+	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
+	- Source: Q86
 - [x] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #E17 #R4
 	- Release 0.9.4 was on a hold the owner asked for (Q83); the lead lifted it once the fix merged and the runner published without an owner yes. From 0.9.5 on: a release that is part of an epic the owner started ships with that epic; a release not in the plan ships only on the owner's explicit yes; a hold the owner asks for stays until the owner says release, and a merged fix, green checks, the lead or the runner never lift it.
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
