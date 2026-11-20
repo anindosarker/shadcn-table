@@ -62,3 +62,10 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
    - Owner: "you should define the types at the beginning of the component, not inside randomly."
    - Every file starts with its imports, then all its types, then its constants, then components and functions. No type declared between functions or in the middle of a file.
    - Runner's reading, to confirm on the first file: a component's props are a named type in that top block, not an object type written inline in the function signature.
+4. **The year type is a typed box, like the date type, built on a number input.** 2026-11-21.
+   - Owner: "This should be like the default HTML input for date, but only year variant." HTML has no year input (its date and time types are `date`, `datetime-local`, `month`, `week`, `time`), so the box is `<input type="number">` with `min`, `max` and a `yyyy` placeholder, in the same input group frame the date box uses: the X to clear and a calendar button that opens the year grid.
+   - The typed year is the value. The browser gives digits, arrow-key stepping and its own message for a year outside `min`/`max`. A typed year outside 1900 to 2100 is accepted and grows the list by the agreed rule, as in the date boxes; arrows stop at the list's ends.
+   - Year range follows the date range: From and To boxes inside the popup, one above each grid.
+   - The popup header keeps its plain decade text, arrows and Today.
+   - Month and week keep their trigger button and grid; no box there.
+   - Not the rejected `.8`: that version put a year box in the month and week headers, removed their dropdowns, and its box only moved the view.
