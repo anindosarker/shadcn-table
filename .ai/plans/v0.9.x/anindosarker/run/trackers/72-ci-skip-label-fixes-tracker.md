@@ -1,8 +1,11 @@
 # 72: CI skip label fixes, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/ci-skip-label-fixes`, worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 The trial PR on the code before any change, and the cause: running
+- Task 2 The base branch condition: planned
+- Task 3 The fix of the cause and the comments: planned
+
+## Attention
