@@ -1,0 +1,80 @@
+name: PR labels
+run-name: "PR labels: ${{ github.event.pull_request.title }}"
+
+# A label change on a pull request: Validate PR reads the labels again and
+# PR Summary rebuilds the sticky comment's title, status line, Validate PR
+# row and changelog, keeping the other rows (tools/release/pr-summary.mjs on
+# a `labeled` or `unlabeled` event). The jobs carry the names of their twins
+# in pr.yml, so they report the same required check contexts `Validate PR`
+# and `PR Summary` (D155).
+#
+# Why a workflow of its own: GitHub reads the required checks of a workflow
+# from its newest run on the head commit. When pr.yml also ran on label
+# events, a PR created with labels (opened, then one `labeled` event per
+# label) had a label run as its newest pr.yml run, and that run, with every
+# test job skipped, reported none of the sixteen matrix legs: the merge stayed
+# blocked on `16 of 21 required status checks are expected` until a new push
+# (PR 142). Here a label run is the newest run of this workflow only, and
+# pr.yml's one run on the head keeps all twenty-one contexts. A context
+# reported by both workflows is satisfied by their newest runs, which read
+# the same live labels. No concurrency group: when two label events start
+# together, the one GitHub cancels can be the newest run of this workflow
+# (spec 72, trial PR 144), and a cancelled `Validate PR` there is a red
+# context; every run reads the labels live, so each completes on its own.
+on:
+  pull_request:
+    types: [labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  # The job of pr.yml's Validate PR: exactly one `release:` label on a PR
+  # into master (from dev only); on another base a label only when the PR
+  # changes shipped files; the version bump dry run. The labels are read
+  # live.
+  validate-pr:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test validate-pr --ci
+      - name: Hand the record to PR Summary
+        id: record
+        if: always()
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
+
+  # The sticky comment (D87) from the Validate PR record; the rows of the
+  # other jobs stay as pr.yml's last run wrote them.
+  pr-summary:
+    name: PR Summary
+    if: always()
+    needs: [validate-pr]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: node tools/release/pr-summary.mjs
+        env:
+          NEEDS: ${{ toJSON(needs) }}
