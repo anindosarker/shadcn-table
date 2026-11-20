@@ -41,7 +41,9 @@ export const ExampleSwitcher = ({
   const index = pages.findIndex((page) => page.url === current.url);
 
   return (
-    <div className="flex min-w-0 items-center gap-2">
+    // On a phone the row spans the toolbar and the name takes the space
+    // between the steps (D156).
+    <div className="flex min-w-0 items-center gap-2 max-sm:flex-1">
       <StepButton
         direction="previous"
         page={index > 0 ? pages[index - 1] : undefined}
@@ -52,7 +54,7 @@ export const ExampleSwitcher = ({
         pages={scoped}
         current={current}
         onSelect={onSelect}
-        className="h-8 min-w-0 shrink rounded-md border bg-fd-secondary px-2.5 text-sm font-medium text-fd-foreground"
+        className="h-8 min-w-0 shrink rounded-md border bg-fd-secondary px-2.5 text-sm font-medium text-fd-foreground max-sm:max-w-none max-sm:flex-1 max-sm:justify-center"
       />
       <StepButton
         direction="next"
