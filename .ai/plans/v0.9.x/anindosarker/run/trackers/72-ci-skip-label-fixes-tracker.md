@@ -17,7 +17,8 @@ Checks:
 
 - Task 1 The trial PR on the code before any change, and the cause: done (408e4287, runs 44699735544 44699736449 44699737060)
 - Task 2 The base branch condition: done (8cef93c6)
-- Task 3 The fix of the cause and the comments: built (22fe19cf, runs 44704528731 44704529266 44704529376), CLEAN not shown (Attention)
+- Task 3 The fix of the cause and the comments: done (22fe19cf)
+- Task 3 proof: the lead accepted trial 3 (PR 145, one `PR checks` run with all 21 required contexts, the source-branch rule of Validate PR its only red) as proof for the merge (plan/epics/E21.md, Notes, last bullet); the `CLEAN` proof is recorded on the next labelled PR from dev into master
 
 ## Task 1: required contexts on 408e4287 (trial 1, PR 143)
 
@@ -55,5 +56,5 @@ Cause: GitHub resolves the required contexts of a ruleset from the newest check 
 
 ## Attention
 
-- Acceptance `CLEAN` is unreachable with a trial PR: `Validate PR` (test/validate-pr/lib/source-branch.mjs, D83 addendum) fails every PR into master whose head is not `dev`, and the trial head must be `v0.9/ci-skip-trial-<n>`; pushing to dev is not allowed. Trial 1 (old code) and trial 3 (fixed code) are both `BLOCKED`, but trial 3 has exactly one `PR checks` run with all 21 required contexts, the only red is that source-branch failure, while trial 1 and PR 142 have a label run as the newest `PR checks` suite with none of the 16 legs. The CLEAN proof is the next labelled release PR from dev (or a lead or owner choice of another proof); the milestone is built and checked otherwise.
+- Nothing is left to decide for the merge: the lead accepted trial 3 as proof (plan/epics/E21.md, Notes). The `CLEAN` proof is owed on the next labelled PR from dev into master.
 - Judgment call: pr-labels.yml has no concurrency group (trial 2: GitHub cancelled the run with the newest suite id). Cost: on two labels at creation two label runs of about 45 s each run in full.
