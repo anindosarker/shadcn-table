@@ -36,11 +36,6 @@ kanban-plugin: basic
 	- Audit-fix cards on the date filter demo: 4.J fixes 4.I, 2.E fixes 2.D, 3.I fixes 3.G, 1.E fixes 1.A, 6.D fixes 6.A, 5.D fixes 5.A, 2.F fixes 2.A, 3.J fixes 3.A, 4.K fixes 4.A. next-app head d106dec (round 1 fixes 8566a62, round 2 fixes d106dec).
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
-- [ ] **Q139** On a phone the Storybook toolbar runs past the screen edge
-	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
-	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
-	- Owner, 2026-11-20, on the diagram reference/q139-storybook-phone-toolbar.excalidraw: picks C, the version on its own thin row under the toolbar, phones only. Not recorded yet.
-	- Owner, 2026-11-20: skip, not a big issue; the toolbar stays as shipped in 0.9.7.
 - [ ] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows
 
 ## Decided
@@ -438,6 +433,11 @@ kanban-plugin: basic
 - [x] **Q116** Hovering a section tab shows a grey box behind it
 	- Owner, 2026-11-18, screenshot of the tab row on v0.9/docs-layout: hovering GET STARTED (the active tab) draws a filled grey box behind the label, above the 2px underline. 'hover looks bad. need a hotfix.' D101 describes the tabs as muted text, the active one in the accent colour with a 2px underline; it names no hover background.
 	- Lead, 2026-11-19: replaced by Q130, the owner's own fix of the same tabs (first tab padding kept, hover fill back); shipped in 0.9.5.
+- [x] **Q139** On a phone the Storybook toolbar runs past the screen edge
+	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
+	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
+	- Owner, 2026-11-20, on the diagram reference/q139-storybook-phone-toolbar.excalidraw: picks C, the version on its own thin row under the toolbar, phones only. Not recorded yet.
+	- Owner, 2026-11-20: skip, not a big issue; the toolbar stays as shipped in 0.9.7.
 
 ## Autofix
 
