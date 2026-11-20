@@ -20,6 +20,13 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - New types week, month and year, each single and range. Values in the browser's own formats: `2026-W47`, `2026-11`, `2026`.
 - shadcn has no recipe that returns a week, month or year (its "Month and Year Selector" and "Week Numbers" sections still pick a day); read from the calendar docs source on 2026-11-20.
 
+## Version numbers (owner, 2026-11-20)
+
+- From the next version on, versions are numbered `4.<minor>.<patch>`, one number for the component, the same in every demo row: a new feature or changed behaviour is a minor (`4.7`), a fix on a version is a patch (`4.6.1`). A rejected version keeps its number.
+- 4.AS counts as 4.6. Existing cards and folders keep their letters, so the saved Pick and Default ticks stay. New folders are named `date-picker-4-7`, `date-picker-4-6-1`.
+- Mapping of the letters: 4.AL (default folder) 4.0, 4.AM 4.1, 4.AO 4.1.1, 4.AN 4.2 (rejected), 4.AP 4.3, 4.AQ 4.4, 4.AR 4.5, 4.AS 4.6.
+- 4.AS (4.6) is built: `type` and `range` props, week, month and year types, six new demo rows 7 to 12. The browser's week and month boxes work only in Chrome on desktop (MDN compat data), so the three new types use a trigger button and no typed box.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
