@@ -57,12 +57,12 @@ Cause: GitHub resolves the required contexts of a ruleset from the newest check 
 
 ## Attention
 
-## Two workflows, one context
-
-`Validate PR` and `PR Summary` are reported by `PR checks` (pr.yml, on opened, synchronize, reopened) and by `PR labels` (pr-labels.yml, on labeled, unlabeled) on the same head sha. GitHub takes the required checks of each workflow from its newest check suite on the sha (Task 1, PR 142), so each of the two contexts has one candidate per workflow: pr.yml's one run on the head (it is the newest `PR checks` suite, since label events no longer start one) and the newest `PR labels` suite. Both runs read the labels live and run the same `pnpm test validate-pr --ci`, so both candidates agree once the labels are set; a label change afterwards starts a new `PR labels` run, whose result is the newest. The 16 legs and Lint, Validate Repo, Prepare Release come from pr.yml only, so a label event can no longer hide them. A cancelled label run would put a cancelled `Validate PR` in the newest `PR labels` suite (trial 2), hence no concurrency group there. A PR opened without any label change gets every context, both twins included, from its first pr.yml run. Unproven on GitHub: which candidate the ruleset prefers when the two disagree; with the labels read live they disagree only while a label change is in flight.
-
-## Attention
-
 - Nothing is left to decide for the merge: the lead accepted trial 3 as proof (plan/epics/E21.md, Notes). The `CLEAN` proof is owed on the next labelled PR from dev into master.
 - Verifier: spec 2.2 names a fable review of the whole diff; no fable review line was in the tracker, so the verifier reviewed the diff itself (no finding). The lead may run a separate fable review before the merge.
 - Judgment call: pr-labels.yml has no concurrency group (trial 2: GitHub cancelled the run with the newest suite id). Cost: on two labels at creation two label runs of about 45 s each run in full.
+
+## Notes
+
+### Two workflows, one context
+
+`Validate PR` and `PR Summary` are reported by `PR checks` (pr.yml, on opened, synchronize, reopened) and by `PR labels` (pr-labels.yml, on labeled, unlabeled) on the same head sha. GitHub takes the required checks of each workflow from its newest check suite on the sha (Task 1, PR 142), so each of the two contexts has one candidate per workflow: pr.yml's one run on the head (it is the newest `PR checks` suite, since label events no longer start one) and the newest `PR labels` suite. Both runs read the labels live and run the same `pnpm test validate-pr --ci`, so both candidates agree once the labels are set; a label change afterwards starts a new `PR labels` run, whose result is the newest. The 16 legs and Lint, Validate Repo, Prepare Release come from pr.yml only, so a label event can no longer hide them. A cancelled label run would put a cancelled `Validate PR` in the newest `PR labels` suite (trial 2), hence no concurrency group there. A PR opened without any label change gets every context, both twins included, from its first pr.yml run. Unproven on GitHub: which candidate the ruleset prefers when the two disagree; with the labels read live they disagree only while a label change is in flight.
