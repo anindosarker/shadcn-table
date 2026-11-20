@@ -17,14 +17,13 @@ run-name: "PR labels: ${{ github.event.pull_request.title }}"
 # (PR 142). Here a label run is the newest run of this workflow only, and
 # pr.yml's one run on the head keeps all twenty-one contexts. A context
 # reported by both workflows is satisfied by their newest runs, which read
-# the same live labels.
+# the same live labels. No concurrency group: when two label events start
+# together, the one GitHub cancels can be the newest run of this workflow
+# (spec 72, trial PR 144), and a cancelled `Validate PR` there is a red
+# context; every run reads the labels live, so each completes on its own.
 on:
   pull_request:
     types: [labeled, unlabeled]
-
-concurrency:
-  group: pr-labels-${{ github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
