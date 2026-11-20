@@ -359,17 +359,17 @@ kanban-plugin: basic
 	- Owner, 2026-11-19, after the reason was explained (the 19 were same-table copies under D106): 'that's fine then. We don't need any duplicate or redirect.' Checked on claude/review f4f4ad5e: none of the 19 removed story ids occurs in any file outside .ai/ and CHANGELOG.md (no link, no guide slug, no storybook map row, no test); the sitemap, sidebar and search are built from the content source.
 - [x] **Q136** The docs site shows the library's current version nowhere #D147
 - [x] **Q137** Storybook shows the library's current version nowhere #D148
-- [ ] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly #D151
+- [x] **Q140** A click-to-copy tooltip can fail to show when focus returns to the button quickly #D151 #E21
 	- On Radix, a keyboard user who presses Tab away from a click-to-copy button and Shift+Tab back within the tooltip's exit animation (about 150 ms) gets no 'Click to copy' tooltip until focus moves again: the cell's overflow tooltip (ST_OverflowText around ST_CopyButton) opens on the same focus and closes the copy tooltip that is still closing. Found by the builder of the click-to-copy play fix (spec 69) with an instrumented play in a Linux container; base and aria not checked.
 - [x] **Q141** The home page header shows no version label #D152
 	- A visitor of https://www.shadcn-table.com/ sees no version: the home page uses its own header (header.v4-nav: name, Get Started, Examples, Guides, API, GitHub icon), so the label of D147 shows on the docs pages only (read live on 0.9.7 at 1440 and 390 wide). Spec 68 says every page and spec 69's live check names the home page; the docs E2E check header version reads one docs page. Found by the run's live browser check after release 0.9.7.
 	- Owner, 2026-11-19: 'Yes, we can add it', and asks that so small a change ships without a new release and without the full PR check run (see the docs-only shipping card).
 - [x] **Q142** A small docs-only change can reach the live site only through a full release run #D153
-- [ ] **Q143** The ci:skip label skips the tests on a PR into any branch, not only master #D154
+- [x] **Q143** The ci:skip label skips the tests on a PR into any branch, not only master #D154 #E21
 	- A PR into dev or claude/review that carries ci:skip reports every test job green without running it, while D153, CONTRIBUTING.md and the coding standards say a PR into master: pr.yml reads the label on any pull_request event (.github/workflows/pr.yml, Head job). Only people who can set labels can use it. Found by the review of milestone 71 CI skip label; either scope the read to base master or drop 'into master' from the two sentences.
-- [ ] **Q144** A PR opened with ci:skip as documented does not merge until another commit is pushed #D155
+- [x] **Q144** A PR opened with ci:skip as documented does not merge until another commit is pushed #D155 #E21
 	- A maintainer who follows pr.yml and CONTRIBUTING.md (gh pr create with the labels) gets a PR that stays blocked: PR 142 at b2c5963c had every check green or skipped (Head skip=true), yet the merge was refused with '16 of 21 required status checks are expected', the 16 skipped matrix legs. Two reruns (the label run, then the checks run) changed nothing; a fast-forward of dev to a new commit (94aff145, one run on the head) merged within minutes as 229e6113. Not proven, likely: the head had three runs (opened, plus one per label) and the newest check suite was a label run, whose skipped caller jobs carry no matrix legs. Found by the run on PR 142; finding the cause needs trial PRs with ci:skip, which spec 71 forbids.
-- [ ] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows #D156
+- [x] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows #D156 #E21
 	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 
 ## Later
