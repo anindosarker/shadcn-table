@@ -8,8 +8,10 @@ import {
   chipFilter,
   closeChipEditor,
   codeToggle,
+  desktopToolbar,
   example,
   headerLabelsFit,
+  phoneToolbar,
   sectionFrame,
 } from './helpers.mjs';
 import fs from 'node:fs';
@@ -712,6 +714,23 @@ const checks = {
     await storedIconLibrary(page, check);
     await moreExamplesState(page, check);
     await basicSteps(page, w, check);
+    // Spec 74 (D156): two rows and a More menu on a phone; from `sm` up the
+    // toolbar stays as it is.
+    await phoneToolbar({ page, panel: w, check });
+    // The rows of claude/review before spec 74, read at each width.
+    const desktopRows = {
+      1440: 'Previous select Next Preview Code Both Base Storybook Copy prompt More actions Toggle full screen',
+      768: 'Previous select Next / Preview Code Both Base / Storybook Copy prompt More actions Toggle full screen',
+    };
+    for (const [width, rows] of Object.entries(desktopRows)) {
+      await desktopToolbar({
+        page,
+        panel: w,
+        check,
+        width: Number(width),
+        rows,
+      });
+    }
     // Example switcher: previous is disabled on the first example, next
     // steps to the second Featured row, Server-Side Pagination (D103, D119).
     const header = w.locator('header');
@@ -1271,10 +1290,17 @@ const checks = {
     await storyPage(STORY_PAGE)(args);
     await storyCodePanels(args);
   },
-  [`/docs/examples/more/${LAST_STORY_PAGE}`]: storyPage(
-    LAST_STORY_PAGE,
-    LAST_ROW,
-  ),
+  [`/docs/examples/more/${LAST_STORY_PAGE}`]: async (args) => {
+    await storyPage(LAST_STORY_PAGE, LAST_ROW)(args);
+    // Spec 74 (D156): a story page's phone toolbar, without Copy prompt and
+    // the install command.
+    await phoneToolbar({
+      page: args.page,
+      panel: args.page.locator(`[id="example-${LAST_STORY_PAGE}"]`),
+      check: args.check,
+      story: true,
+    });
+  },
 };
 
 export default checks;

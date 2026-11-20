@@ -15,6 +15,10 @@ publishes the section as the GitHub release notes.
 
 - The home page header, and the 404 page that shares it, shows the library version after the name, as the docs header does: small muted text such as `v0.9.7`, read from the package at build time, linking to the GitHub releases (D152).
 
+#### Spec 74
+
+- On a phone the example toolbar is two rows with a More menu: previous, the example name and next, then Preview, Code, Both, the base switcher and a More button whose menu holds Open in Storybook, Copy prompt, Copy install command, Fullscreen and the open-in entries; tablet and desktop keep today's toolbar (D156).
+
 ## 0.9.7 - 2026-11-19
 
 ### Docs
