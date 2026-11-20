@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D157** The quick-refocus tooltip miss on Radix is left to Radix #R6
+	- The 'Click to copy' tooltip that fails to show when focus returns within its exit animation is Radix's own behaviour, not the overflow tooltip's: an uncontrolled Radix tooltip that reopens while its content is still mounted closes itself on its own tooltip.open event (radix-ui 1.8.1, tracker 73). The library does not patch its tooltip around it (stock shadcn styling and behaviour, no workaround to remove later); milestone 73 stops, its red play is not merged. The runner searches the Radix repository for an existing report and records the link in the tracker; a new upstream report is filed only on the owner's word. Settled by the lead.
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
