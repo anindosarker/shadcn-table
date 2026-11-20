@@ -12,6 +12,14 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - Old version folders `date-picker-4x` to `-4al` and their cards are deleted.
 - react-day-picker stays as the calendar: it is what shadcn's `Calendar` is built on.
 
+## Types and range (2026-11-20, build started on the owner's go as 4.AS on 4.AR)
+
+- The owner accepted 4.AR ("looks great"); card 4.AR got a presets on/off switch and translated preset labels at his request. Preset labels are the app's own text, so the app translates them, not the picker.
+- `mode` mixed two things: what is picked and whether it is one value or a range. It is split into two props that combine freely: `type` (`date`, `datetime`, `time`, `week`, `month`, `year`; the browser's own word, `<input type>`) and `range` (off gives one value, on gives a pair).
+- Today's six modes are three types with `range` on or off; behaviour unchanged.
+- New types week, month and year, each single and range. Values in the browser's own formats: `2026-W47`, `2026-11`, `2026`.
+- shadcn has no recipe that returns a week, month or year (its "Month and Year Selector" and "Week Numbers" sections still pick a day); read from the calendar docs source on 2026-11-20.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
