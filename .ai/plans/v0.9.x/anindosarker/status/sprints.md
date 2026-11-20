@@ -147,4 +147,4 @@ Updated: 2026-11-20 14:56
 | E21 72 CI skip label fixes |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
 | E21 73 Click-to-copy tooltip on refocus |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [!] |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | E21 74 Example toolbar on a phone |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |
-| E22 75 Ship the phone example toolbar |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | · |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| E22 75 Ship the phone example toolbar |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | [ ] |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
