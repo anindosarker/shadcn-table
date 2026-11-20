@@ -40,6 +40,7 @@ kanban-plugin: basic
 	- A reader of the Storybook on a phone (390 wide) sees the toolbar's right-hand group run past the edge; the base switcher and the new version item stay visible. Seen by the builder of the toolbar version item (D150) on the base build; not checked whether it was so before that item, nor on radix and aria.
 	- Live on 0.9.7 at 390 wide (base): three toolbar items end past the right edge, the version item itself (365 to 413), Open in isolation mode and Change zoom level; the page does not scroll sideways. The isolation and zoom buttons would start about 54 px further left without the version item, still past 390, so they likely overflowed before; 0.9.6 could not be loaded to compare. Screenshot: scratchpad live-labels/c-390.png of the runner session.
 	- Owner, 2026-11-20, on the diagram reference/q139-storybook-phone-toolbar.excalidraw: picks C, the version on its own thin row under the toolbar, phones only. Not recorded yet.
+	- Owner, 2026-11-20: skip, not a big issue; the toolbar stays as shipped in 0.9.7.
 - [ ] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows
 
 ## Decided
