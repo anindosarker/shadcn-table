@@ -36,8 +36,6 @@ kanban-plugin: basic
 	- Audit-fix cards on the date filter demo: 4.J fixes 4.I, 2.E fixes 2.D, 3.I fixes 3.G, 1.E fixes 1.A, 6.D fixes 6.A, 5.D fixes 5.A, 2.F fixes 2.A, 3.J fixes 3.A, 4.K fixes 4.A. next-app head d106dec (round 1 fixes 8566a62, round 2 fixes d106dec).
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
-- [ ] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows
-	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 
 ## Decided
 
@@ -371,6 +369,8 @@ kanban-plugin: basic
 	- A PR into dev or claude/review that carries ci:skip reports every test job green without running it, while D153, CONTRIBUTING.md and the coding standards say a PR into master: pr.yml reads the label on any pull_request event (.github/workflows/pr.yml, Head job). Only people who can set labels can use it. Found by the review of milestone 71 CI skip label; either scope the read to base master or drop 'into master' from the two sentences.
 - [ ] **Q144** A PR opened with ci:skip as documented does not merge until another commit is pushed #D155
 	- A maintainer who follows pr.yml and CONTRIBUTING.md (gh pr create with the labels) gets a PR that stays blocked: PR 142 at b2c5963c had every check green or skipped (Head skip=true), yet the merge was refused with '16 of 21 required status checks are expected', the 16 skipped matrix legs. Two reruns (the label run, then the checks run) changed nothing; a fast-forward of dev to a new commit (94aff145, one run on the head) merged within minutes as 229e6113. Not proven, likely: the head had three runs (opened, plus one per label) and the newest check suite was a label run, whose skipped caller jobs carry no matrix legs. Found by the run on PR 142; finding the cause needs trial PRs with ci:skip, which spec 71 forbids.
+- [ ] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows #D156
+	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 
 ## Later
 

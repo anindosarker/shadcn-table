@@ -13,6 +13,9 @@ kanban-plugin: basic
 - [ ] **D155** A PR opened with ci:skip merges without a further push #R6
 	- A PR created with ci:skip and release:skip merges on its first green run: PR 142 stayed blocked on '16 of 21 required status checks are expected' until a new commit was pushed. The cause is found first (likely the label runs on the same head, whose skipped caller jobs carry no matrix legs) and fixed in pr.yml, proven under act and then with trial PRs carrying ci:skip, which this decision allows. A CI problem, settled by the lead.
 	- Source: Q144
+- [ ] **D156** On a phone the docs example toolbar is two rows with a More menu #R6
+	- At phone width the example toolbar on docs pages has two rows: row 1 is previous, the example name stretched between the arrows, next; row 2 is Preview, Code, Both, the base switcher and a More button at the right end. The More button opens a stock menu with labelled entries: Open in Storybook, Copy prompt, Copy install command, Fullscreen. Desktop and tablet keep the single row. Variant A of reference/q145-example-toolbar-phone.excalidraw, picked by the owner on 2026-11-20.
+	- Source: Q145
 
 ## In progress
 
