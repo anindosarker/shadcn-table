@@ -27,6 +27,15 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - Mapping of the letters: 4.AL (default folder) 4.0, 4.AM 4.1, 4.AO 4.1.1, 4.AN 4.2 (rejected), 4.AP 4.3, 4.AQ 4.4, 4.AR 4.5, 4.AS 4.6.
 - 4.AS (4.6) is built: `type` and `range` props, week, month and year types, six new demo rows 7 to 12. The browser's week and month boxes work only in Chrome on desktop (MDN compat data), so the three new types use a trigger button and no typed box.
 
+## State after the owner's check (2026-11-20)
+
+- Card titles read `<row>.<version> (<old id>)`, for example `7.6 (7.A)`: the owner asked for the section number first, since a leading 4 on every version meant nothing. The version is the same number in every row. Folders keep the `date-picker-4-6` pattern.
+- `.6` (type and range props, week, month, year) looks good to the owner.
+- `.7` (arrows page past 1900 and 2100) and `.8` (typed year box) are both rejected: "don't look good enough". Week, month and year keep the 1900 to 2100 list by hand; an app widens it through `calendarProps`.
+- The twelve `.6` cards have a closed "Settings" section with one switch per supported prop (shared helper `_components/picker-settings.tsx`).
+- `.6.1` is being built on the owner's "fix it": fixes only, on `.6`. Single week calendar reaching December of the last year, a visible message for a required empty picker with hidden inputs, the calendar returning to today's month after a far value is cleared, trigger text following the locale, month and year range panels kept apart, right-to-left arrow keys in the grid, `calendarProps` typed to what month and year use.
+- Not done yet: a review of the code by a fresh reader, and a look in Firefox, real Safari and on an iPhone.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
