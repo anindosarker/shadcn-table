@@ -22,6 +22,7 @@ Checks:
 - Check (verifier): diff review of `origin/claude/review...HEAD` (pr.yml, pr-labels.yml): no finding; label events leave pr.yml, every label condition and the label concurrency group go, Head reads `BASE` and skips the label read off master, pr-labels.yml keeps the `Validate PR` and `PR Summary` names, tools/release/pr-summary.mjs:383 already handles `labeled`/`unlabeled` events; release.yml, the four called workflows, CONTRIBUTING.md and test/validate-pr/ untouched. Reviewer was the verifier agent, not a separate fable run (see Attention)
 - Not provable on a trial branch: `CLEAN`. test/validate-pr/lib/source-branch.mjs fails `Validate PR` on every PR into master whose head is not `dev`, so each trial is `BLOCKED` by that context whatever the label runs do; the spec's head branch name and the rule against pushing to dev leave no trial that can pass it (see Attention)
 
+- Check (D155, spec 75): the `CLEAN` proof owed by this milestone. PR 146 (`dev` into `master`, created with `release:skip` and `ci:skip`, head 1a299bb9, one push, no rerun): after its first run (`PR checks` 44706614043, `PR labels` 44706615912 and 44706616525, all success, attempt 1) `gh pr view 146 --json mergeStateStatus --jq .mergeStateStatus` printed `CLEAN` three times, read before auto-merge was enabled; merged as 84d1e91f, pass
 - Task 1 The trial PR on the code before any change, and the cause: done (408e4287, runs 44699735544 44699736449 44699737060)
 - Task 2 The base branch condition: done (8cef93c6)
 - Task 3 The fix of the cause and the comments: done (22fe19cf)
