@@ -1,6 +1,6 @@
 # 75: Ship the phone example toolbar, tracker
 
-Status: running
+Status: done (84d1e91f)
 Branch `dev`, worktree 03 for the branch sync (detached, operations only)
 Checks:
 - Check: Task 1, `git merge-base --is-ancestor origin/master origin/claude/review`: exit 0; trackers `72-ci-skip-label-fixes` `done (80f9cfdd)` and `74-example-toolbar-phone` `done (7f5545da)`; `git log --oneline origin/master..origin/claude/review -- . ':!.ai'` lists only the commits of specs 72 and 74; `origin/v0.9/filter-input-fixes` and `origin/v0.9/click-to-copy-tooltip-refocus` are not ancestors (exit 1 each); `gh pr list --state open --json number --jq length`: `0`, pass
@@ -13,9 +13,14 @@ Checks:
 - Check: Task 3, branches: `git merge origin/master` on `claude/review` was a fast-forward; `git rev-parse origin/claude/review origin/dev origin/master`: 84d1e91f three times, pass
 - Check: Task 3, `git ls-remote --heads origin 'v0.9/ci-skip-trial-*'`: nothing (the three trial branches were already deleted by milestone 72), pass
 
+- Check: Task 3, live, `https://www.shadcn-table.com/docs/examples/basic` at 390: pass. Two rows: row 1 Previous, the name select, Next; row 2 Preview, Code, Both, Base, More actions (its right edge at 360, the header's content edge at 361); no Storybook link, Copy prompt or full screen button visible in the header. The new build showed 453 s after the first read
+- Check: Task 3, live, More menu at 390: pass. Entries in order: Open in Storybook, Copy prompt, Copy install command, Fullscreen, separator, Open in GitHub, Open in StackBlitz (soon), Open in CodeSandbox (soon)
+- Check: Task 3, live, at 1440: pass. One row: Previous, select, Next, Preview, Code, Both, Base, Storybook, Copy prompt, More actions (the arrow), Toggle full screen; its menu holds Copy install command, separator, Open in GitHub and the two soon entries
+- Check: Task 3, capture at 390 with the menu open beside `reference/q145-after-390-menu.png`: the entries, icons, separator, soon tags and the two-row header match; the live capture is the full page top, the reference is cropped to the panel
+- Check: Task 3, `https://www.shadcn-table.com/version.txt` and `https://storybook.shadcn-table.com/version.txt`: both `0.9.7`, pass; browser closed
 - Task 1 The precondition and the fast-forward of dev: done (1a299bb9)
 - Task 2 The PR with both labels, its first run, the CLEAN read, then auto-merge and the merge: done (84d1e91f, PR 146, run 44706614043)
-- Task 3 After the merge: running (the live reads)
+- Task 3 After the merge: done (84d1e91f)
 
 ## Attention
 
