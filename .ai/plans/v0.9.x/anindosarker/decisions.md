@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D151** The click-to-copy tooltip shows when focus comes back quickly #R6
-	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
-	- Source: Q140
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -19,15 +15,8 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
-- [ ] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
-	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
-	- Source: Q86
-- [ ] **D152** The home page header shows the library version too #E20 #R6
-	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
-	- Source: Q141
-- [ ] **D153** A PR label skips the test jobs so a small change ships without a release #E20 #R6
-	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
-	- Source: Q142
+- [ ] **D158** The phone example toolbar and the ci:skip fixes go live without a new version #E22 #R6
+	- claude/review as of E21 (spec 74, the phone example toolbar of D156; spec 72, the ci:skip fixes of D154 and D155) ships by one PR from dev into master with the labels release:skip and ci:skip (D153): no version bump, no tag, the sites stay 0.9.7. The PR is created with both labels and must report CLEAN after its first run with no further push: that is the proof spec 72 still owes, recorded in tracker 72. After the merge the live docs page is read at phone width (two toolbar rows, the More menu and its entries) and at desktop width (unchanged), and claude/review and dev are brought up to master. Owner, 2026-11-20: 'Ship it.'
 
 ## Done
 
@@ -588,6 +577,9 @@ kanban-plugin: basic
 	- The 5 popover stories, the chips stories and `FilterChips.stories.tsx` are unchanged (`FilterModePickerTableLevel` already shows chips).
 	- Owner, 2026-11-14: "k" on option 1.
 	- Source: Q2
+- [x] **D99** The React Query example's text columns filter with contains, so the one mode offered shows active #E13 #R4
+	- Spec 52 (D95) limits the five text columns of `examples/<base>/react-query/TS.tsx` to `columnFilterModeOptions: ['contains']`, but they keep the default fuzzy filter function, so the mode button reads auto and Contains shows unchecked. Fix: those five columns also set `filterFn: 'contains'`, in the spec 52 milestone before it merges; the route and the request are unchanged. Settled by the lead (the example must show the mode its server applies), 2026-11-14.
+	- Source: Q86
 - [x] **D100** A release ships only when planned in its epic or on the owner's yes; an owner hold stays until the owner lifts it #E17 #R4
 	- Release 0.9.4 was on a hold the owner asked for (Q83); the lead lifted it once the fix merged and the runner published without an owner yes. From 0.9.5 on: a release that is part of an epic the owner started ships with that epic; a release not in the plan ships only on the owner's explicit yes; a hold the owner asks for stays until the owner says release, and a merged fix, green checks, the lead or the runner never lift it.
 	- D47 stays for the mechanics: once a release is allowed, the runner approves the deployment steps itself.
@@ -973,6 +965,27 @@ kanban-plugin: basic
 	- Supersedes D148.
 	- The Storybook toolbar shows the library version (v<version>) as its own item right after the base switcher, on the three bases, read from packages/shadcn-table/package.json; it is a link to the GitHub releases page, like the docs header label (D147). The sidebar title goes back to shadcn-table (<base>). It ships in 0.9.7: the release waits for it. Owner, 2026-11-19, on a marked screenshot: 'The version label should be here', 'this goes directly to the current release'. Supersedes D148.
 	- Source: Q138
+- [x] **D151** The click-to-copy tooltip shows when focus comes back quickly (superseded by D157) #superseded #E21 #R6
+	- On Radix, focus that returns to a click-to-copy button within the tooltip's exit animation shows the 'Click to copy' tooltip again: the overflow tooltip of the cell (ST_OverflowText around ST_CopyButton) no longer closes it. Base and aria are checked for the same case and fixed when they show it. A bug with one right answer, settled by the lead.
+	- Source: Q140
+- [x] **D152** The home page header shows the library version too #E20 #R6
+	- The home page header, which the 404 page shares, shows the same version label as the docs header (D147): after the library name, v<version>, a link to the GitHub releases page, in the home header's own muted and accent colours. As built on branch v0.9/home-version-label (93405e6e), which the owner saw in wt2: 'looks good'.
+	- Source: Q141
+- [x] **D153** A PR label skips the test jobs so a small change ships without a release #E20 #R6
+	- A PR into master that carries the label ci:skip runs no test job: every required check reports success through the skip input pr.yml already uses for the version commit, and the PR merges at once. With the existing release:skip label there is no version bump, tag or GitHub release; the live sites build from the master push. The runner may set both labels itself, only for a change the owner said ships this way. First use: the home page label (D152) goes live as 0.9.7 with no new version. The pr.yml change is proven under act before it is pushed (P3). Owner, 2026-11-19: 'On the PR, we can simply add a manual marker whether it should be skipped or not', then 'Okay, deploy it, looks good. go'.
+	- Source: Q142
+- [x] **D154** The ci:skip label counts only on a PR into master #E21 #R6
+	- pr.yml reads ci:skip only when the PR's base branch is master; on any other base the label changes nothing and the tests run. Keeps D153 as written; CONTRIBUTING.md and the coding standards stay. Settled by the lead.
+	- Source: Q143
+- [x] **D155** A PR opened with ci:skip merges without a further push #E21 #R6
+	- A PR created with ci:skip and release:skip merges on its first green run: PR 142 stayed blocked on '16 of 21 required status checks are expected' until a new commit was pushed. The cause is found first (likely the label runs on the same head, whose skipped caller jobs carry no matrix legs) and fixed in pr.yml, proven under act and then with trial PRs carrying ci:skip, which this decision allows. A CI problem, settled by the lead.
+	- Source: Q144
+- [x] **D156** On a phone the docs example toolbar is two rows with a More menu #E21 #R6
+	- At phone width the example toolbar on docs pages has two rows: row 1 is previous, the example name stretched between the arrows, next; row 2 is Preview, Code, Both, the base switcher and a More button at the right end. The More button opens a stock menu with labelled entries: Open in Storybook, Copy prompt, Copy install command, Fullscreen. Desktop and tablet keep the single row. Variant A of reference/q145-example-toolbar-phone.excalidraw, picked by the owner on 2026-11-20.
+	- Source: Q145
+- [x] **D157** The quick-refocus tooltip miss on Radix is left to Radix #R6
+	- Supersedes D151.
+	- The 'Click to copy' tooltip that fails to show when focus returns within its exit animation is Radix's own behaviour, not the overflow tooltip's: an uncontrolled Radix tooltip that reopens while its content is still mounted closes itself on its own tooltip.open event (radix-ui 1.8.1, tracker 73). The library does not patch its tooltip around it (stock shadcn styling and behaviour, no workaround to remove later); milestone 73 stops, its red play is not merged. The runner searches the Radix repository for an existing report and records the link in the tracker; a new upstream report is filed only on the owner's word. Settled by the lead.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}

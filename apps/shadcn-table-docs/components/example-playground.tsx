@@ -12,6 +12,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   BookOpenIcon,
+  EllipsisIcon,
   ExternalLinkIcon,
   MaximizeIcon,
   MinimizeIcon,
@@ -262,6 +263,14 @@ export const ExamplePlayground = ({
 
   const showCode = mode !== 'preview' && files.length > 0;
 
+  // The selected base's Storybook at the example's story
+  // (lib/storybook-map.ts); the button and the phone menu entry share it.
+  const storybookHref = storyId
+    ? `${storybookUrl[base]}?path=/story/${storyId}`
+    : storybookExampleUrl(base, exampleSlug);
+  const openStorybook = () =>
+    trackStorybookOpened({ base, surface: 'example' });
+
   // Example pages get the section switcher. A guide's plain example panel
   // gets nothing (switching would navigate away from the guide); one inside
   // <GuideExamples> gets its example page's link, or with several examples
@@ -339,6 +348,8 @@ export const ExamplePlayground = ({
           className={cn(
             'ml-auto flex flex-wrap items-center gap-2',
             guide && '@xl:shrink-0',
+            // Phone (D156): row 2 spans the toolbar, More at its end.
+            'max-sm:w-full',
           )}
         >
           <div
@@ -368,22 +379,21 @@ export const ExamplePlayground = ({
           <div
             role="group"
             aria-label="Open example"
-            className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
+            className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary max-sm:ml-auto [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           >
-            {/* The selected base's Storybook at the example's story
-                (lib/storybook-map.ts). */}
-            <Button asChild variant="ghost" size="sm" className="px-2.5">
+            {/* On a phone Storybook, Copy prompt and full screen are entries
+                of the More menu (D156). */}
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="px-2.5 max-sm:hidden"
+            >
               <a
-                href={
-                  storyId
-                    ? `${storybookUrl[base]}?path=/story/${storyId}`
-                    : storybookExampleUrl(base, exampleSlug)
-                }
+                href={storybookHref}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() =>
-                  trackStorybookOpened({ base, surface: 'example' })
-                }
+                onClick={openStorybook}
               >
                 <BookOpenIcon data-icon="inline-start" />
                 <span className={cn(guide && '@max-3xl:sr-only')}>
@@ -396,7 +406,7 @@ export const ExamplePlayground = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="px-2.5"
+                className="px-2.5 max-sm:hidden"
                 onClick={() => void copy('prompt', prompt)}
               >
                 {copied === 'prompt' ? (
@@ -436,28 +446,61 @@ export const ExamplePlayground = ({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="w-7 border-l"
+                  className="w-7 border-l max-sm:border-l-0"
                   aria-label="More actions"
                 >
-                  <ChevronDownIcon />
+                  <ChevronDownIcon className="max-sm:hidden" />
+                  <EllipsisIcon className="sm:hidden" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="docs-menu w-52">
-                {/* The menu stays open so the "Copied" state is visible. */}
-                {installCommand !== undefined && (
-                  <>
-                    <DropdownMenuItem
-                      onSelect={(event) => {
-                        event.preventDefault();
-                        void copy('install', installCommand);
-                      }}
-                    >
-                      {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
-                      {copied === 'install' ? 'Copied' : 'Copy install command'}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
+                {/* Phone only (D156): the actions the row leaves out, each
+                    calling what its button calls. */}
+                <DropdownMenuItem asChild className="sm:hidden">
+                  <a
+                    href={storybookHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={openStorybook}
+                  >
+                    <BookOpenIcon />
+                    Open in Storybook
+                  </a>
+                </DropdownMenuItem>
+                {/* The copy entries keep the menu open so "Copied" shows. */}
+                {prompt !== undefined && (
+                  <DropdownMenuItem
+                    className="sm:hidden"
+                    onSelect={(event) => {
+                      event.preventDefault();
+                      void copy('prompt', prompt);
+                    }}
+                  >
+                    {copied === 'prompt' ? <CheckIcon /> : <SparklesIcon />}
+                    {copied === 'prompt' ? 'Copied' : 'Copy prompt'}
+                  </DropdownMenuItem>
                 )}
+                {installCommand !== undefined && (
+                  <DropdownMenuItem
+                    onSelect={(event) => {
+                      event.preventDefault();
+                      void copy('install', installCommand);
+                    }}
+                  >
+                    {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
+                    {copied === 'install' ? 'Copied' : 'Copy install command'}
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem
+                  className="sm:hidden"
+                  onSelect={toggleFullscreen}
+                >
+                  {fullscreen ? <MinimizeIcon /> : <MaximizeIcon />}
+                  {fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator
+                  className={cn(installCommand === undefined && 'sm:hidden')}
+                />
                 <DropdownMenuItem asChild>
                   <a href={githubUrl} target="_blank" rel="noreferrer">
                     <GitHubIcon />
@@ -489,6 +532,7 @@ export const ExamplePlayground = ({
                 size="icon"
                 aria-label="Toggle full screen"
                 aria-pressed={fullscreen}
+                className="max-sm:hidden"
                 onBlur={() => setTooltipOpen(false)}
                 onClick={toggleFullscreen}
                 onFocus={() => setTooltipOpen(true)}
