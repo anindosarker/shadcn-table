@@ -69,3 +69,11 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
    - The popup header keeps its plain decade text, arrows and Today.
    - Month and week keep their trigger button and grid; no box there.
    - Not the rejected `.8`: that version put a year box in the month and week headers, removed their dropdowns, and its box only moved the view.
+
+### Built from the review decisions (next-app, not pushed)
+
+- `.6.3` (`ab89e48`, folder `components/date-picker-6-3`, cards on all twelve rows): decisions 1 to 3.
+- `.7` (`a9840a8`): decision 4, year type as a typed number box. A second reader with no history found 6 must-fix; `.7.1` (`0e428d5`) fixed them, stores only a complete four-digit year (typing 1443 emits `1443` once; a year under 1000 is typed `0195`) and moved the date, date-time and year boxes onto one shell, `components/picker-box.tsx`. Round 2 found 2 small must-fix; `.7.2` (`230655f`, folder `components/date-picker-7-2`, cards `11.7.2`, `12.7.2`) fixed them: `0000` is not stored, the single-year branch says what it tests.
+- `.7.2` is the latest; the default folder `components/date-picker/` still holds `.6.2`. Rows 1 to 10 give the same values on `.7.1` as on `.6.3`.
+- From now on a second reader checks every version's diff before the owner sees it.
+- Open for the owner on `.7.2`: a short year like `195` shows a red border and no text (probe: a number box with `min` 1000 would give the browser's own range message); ArrowUp in an empty year box goes to 1 (stock number box); in the year range, typing over a year shows today's decade until the fourth digit, as the date range does when a date is typed over; `presentation="auto"` with no `open` passed probably closes when resized across phone width while open (since `.6.3`, not tested); spinner arrows and mouse-wheel stepping of the number box are left as the browser draws them.
