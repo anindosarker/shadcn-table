@@ -9,7 +9,7 @@ Every stock source line below was opened in the planning run (Base UI 1.9.0, rea
 - Version 9 is a new folder, `components/date-picker-9`, written from this plan. No file is copied from an older version; 7.4 is read only to check behaviour and to copy the class strings section 9 names.
 - Frozen: what a user sees and what `onChange` emits on 7.4. The owner tested and approved it.
 - Changed on purpose, and nothing else:
-  - Owner calls: review-notes decisions 1 to 5 and calls 6 to 9 (one-route swap, stock popover with no focus trap, year as a four-digit text box, open state inside `popoverProps` and `dialogProps`, no hand-written arrow keys, file order), and the owner's folder layout, central `types.ts` and range-order hook of 2026-11-22 (section 4).
+  - Owner calls: review-notes decisions 1 to 5 and calls 6 to 9 (one-route swap, stock popover with no focus trap, year as a four-digit text box, open state inside `popoverProps` and `dialogProps`, no hand-written arrow keys, file order), and the owner's folder layout and `types.ts` for the public and shared types, of 2026-11-22 (section 4).
   - Defects of audit 7 sections 6 and 7, and one more found in the plan review (DT11: the step base of the Time field and clock on a day other than `min`'s). Each is marked "7.4 wrong" in section 2.
   - The behaviour side of the audit's clear-cut removals (1.1, 1.2, 1.5, 1.8, 2.2, 2.5, 4.11, 11.1). Each is marked "differs from 7.4" in section 2.
 - Looks are pixel-frozen (owner call 9, and call 8's rule: "where the look the owner approved would change, keep it and write its reason in one line"). An audit item whose fix would move a pixel is kept as a listed override in section 9 with its reason, not removed.
@@ -192,7 +192,7 @@ All are written in `types.ts` (4.2) and re-exported by `date-picker.tsx`, so an 
 | Type | Written in |
 |---|---|
 | `DatePickerProps`, `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps` | `types.ts`, group "public" |
-| `PickerLabels` | `components/labels.ts`, as the type of its `defaultLabels` table (the one exception of 4.2); `types.ts` passes it on |
+| `PickerLabels` | `components/labels.ts`, as the type of its `defaultLabels` table (4.2); `types.ts` passes it on |
 
 `Popover`, `PopoverContent`, `Dialog` and `DialogContent` below are the stock parts, which `types.ts` imports with `import type` from `@/components/ui/...`.
 
@@ -376,21 +376,21 @@ Not props, never to be added: `open`, `defaultOpen`, `onOpenChange` at the top l
 
 ## 4. File layout
 
-Five folders under one entry, 23 files. Reason: the owner's decision of 2026-11-22 (Review notes), which is the layout of the earlier versions (`review-notes.md` line 23: "Layout decided by the owner: `date-picker.tsx` entry only, `modes/`, `components/`, `hooks/`, `utils/` ... one shared hook `use-range-order`") plus one central `types.ts` ("Since it is gonna be a library, you can have a central file types.ts to define all the types there").
+Three folders under one entry, 22 files. Reason: the owner's decisions of 2026-11-22 (Review notes): the layout of the earlier versions (`review-notes.md` line 23: "Layout decided by the owner: `date-picker.tsx` entry only, `modes/`, `components/`, `hooks/`, `utils/` ...") without `hooks/`, because the picker has no hook of its own ("if there is no hook needed, thats fine"; section 10), plus one `types.ts` for the types an app imports and the types more than one file uses ("if types are used by other components or other places, that means types.ts earns its place").
 
 - `date-picker.tsx` is the entry only: `DatePicker`, `TypedPicker`, the re-export of the public types.
-- `types.ts` holds every type of the picker (4.2).
+- `types.ts` holds the public types and every type two or more files use (4.2). A type one file uses stays at the top of that file.
 - `modes/` holds one file per picker the entry can choose. `type="time"` with one value has no mode file: the entry renders `TimeField` directly.
 - `components/` holds every part a mode draws. `labels.ts` sits there because it holds a React context.
-- `hooks/` holds the one hook of our own (5.8, section 10).
 - `utils/` holds the pure functions (4.1). No JSX, no React call.
+- There is no `hooks/` folder: no hook of our own exists (section 10).
 - File names carry no suffix for their kind (no `.utils`, no `.types`). No two files share a name, so in the sections below a bare file name (`range.ts`, `picker-popup.tsx`) means that file in its folder of the tree.
-- Imports: relative between the folders and inside one (`../components/picker-field`, `./picker-popup`, `../types`), because the folder is copied whole; stock parts through `@/components/ui/...`. Types are imported with `import type` from `types.ts`, and by an app from `date-picker.tsx`.
+- Imports: relative between the folders and inside one (`../components/picker-field`, `./picker-popup`, `../types`), because the folder is copied whole; stock parts through `@/components/ui/...`. The types of `types.ts` are imported with `import type`, and by an app from `date-picker.tsx`.
 
 ```
 components/date-picker-9/
 ├── date-picker.tsx              ← entry only: DatePicker, the one switch
-├── types.ts                     ← every type: public props, shared types, props of each part
+├── types.ts                     ← the public types and the types two or more files use
 ├── modes/
 │   ├── day-picker.tsx           ← date and datetime, one value
 │   ├── day-range-picker.tsx     ← date and datetime range
@@ -409,8 +409,6 @@ components/date-picker-9/
 │   ├── time-field.tsx           ← time box with its clock popover
 │   ├── time-columns.tsx         ← the clock
 │   └── labels.ts                ← the picker's words and their context
-├── hooks/
-│   └── use-range-order.ts       ← orders a reversed pair: on leaving both boxes, on close
 └── utils/
     ├── values.ts                ← the six value formats
     ├── time.ts                  ← time-of-day arithmetic
@@ -421,8 +419,8 @@ components/date-picker-9/
 | File | Single responsibility | Exports | Upper bound: nothing else goes in | Why it exists |
 |---|---|---|---|---|
 | `date-picker.tsx` | Provide labels; check limits and step once; guard same-value once; pick the picker | `DatePicker`; re-exports the types of 3.1 | entry only: no markup beyond the provider and the six picker elements, no type of its own | one component for six types |
-| `types.ts` | Every type of the picker, in the groups of 4.2 | every type another file uses | types only: no value, no function, no JSX; `import type` only, from React, Base UI, react-day-picker, the stock `ui/` parts and `components/labels.ts` | the owner's decision: a library keeps its types in one central file |
-| `components/labels.ts` | Default words and `LabelsContext` | `defaultLabels`, `LabelsContext`, `PickerLabels` | no component, no hook, no JSX; readers call `React.useContext(LabelsContext)`; the one file besides `types.ts` that declares a type (4.2) | the `labels` prop, read by about twelve components |
+| `types.ts` | The public types and the types two or more files use, in the groups of 4.2 | every type it declares; `PickerLabels` passed on | types only: no value, no function, no JSX; no type that one file alone uses; `import type` only, from React, Base UI, react-day-picker, the stock `ui/` parts and `components/labels.ts` | the owner's decision: a type used in other places earns `types.ts` its place |
+| `components/labels.ts` | Default words and `LabelsContext` | `defaultLabels`, `LabelsContext`, `PickerLabels` | no component, no hook, no JSX; readers call `React.useContext(LabelsContext)`; `PickerLabels` is declared here though public (4.2) | the `labels` prop, read by about twelve components |
 | `modes/day-picker.tsx` | Box, calendar popup and, for datetime, the Time field | `DayPicker` | `DayPicker`, `DayPanel` | rows 1 and 3 |
 | `modes/day-range-picker.tsx` | Trigger, the two end boxes and calendars, the two layouts | `DayRangePicker` | `DayRangePicker`, `DayRangePanel`, `RangeEndBox` | rows 2 and 4 |
 | `modes/time-range-picker.tsx` | Two time fields | `TimeRangePicker` | one component | row 6 |
@@ -440,8 +438,7 @@ components/date-picker-9/
 | `components/time-columns.tsx` | The clock's columns | `TimeColumns` | `TimeColumns`, `TimeColumn`, `uses12Hour` | the native time picker is rejected; Safari has none in a date-time box |
 | `utils/values.ts` | Parse, format and check the six formats | see 4.1 | pure functions; no JSX, no DOM | every picker reads values |
 | `utils/time.ts` | Seconds, step, limits of a time of day | see 4.1 | pure functions | the clock and the day click share one sum (9.3) |
-| `utils/range.ts` | Read, replace, order and select a pair's ends | see 4.1 | pure functions; `leftBothBoxes` reads a focus event | five range pickers |
-| `hooks/use-range-order.ts` | Order a reversed pair at its two moments: focus leaves both end boxes, the popup closes | `useRangeOrder` | one function; no state, effect, ref, context or flag; the pure tests stay in `utils/range.ts` | the two range pickers and their two panels wrote the same two handlers |
+| `utils/range.ts` | Read, replace, order and select a pair's ends | see 4.1 | pure functions; `leftBothBoxes` reads a focus event; all the two range pickers and their panels share of the swap is here: `isReversed`, `orderRange`, `leftBothBoxes` | five range pickers |
 | `utils/views.ts` | The year list and a range's two views | see 4.1 | pure functions | calendars and grids page the same way |
 
 ### 4.1 Pure functions
@@ -487,28 +484,52 @@ A function with three or more parameters takes one object (coding standards, Cod
 | | `shownViews({ views, bounds, step })` | the two views held in the list and apart; when the list holds one view, both are that view (R17, PR9) |
 | | `endBounds({ end, bounds, step })` | the views one end may show (From stops one view early, To starts one late); when the list holds one view, the whole list for both ends |
 
-No file of `utils/` declares a type: the input types of these functions (`SelectRangeInput`, `ListSource`, `TimeOnDayInput` and the like) are in `types.ts`.
+The input types of these functions (`SelectRangeInput`, `ListSource`, `TimeOnDayInput` and the like) are used by their own file only and stay at its top (4.2).
 
-### 4.2 `types.ts`
+### 4.2 `types.ts` and the types that stay in their file
 
-Every type of the picker is declared here and nowhere else, under one short heading comment per group, each group ordered so a type is met before its use inside the group. Shapes are the built ones, moved unchanged, except the two rewrites named below.
+The rule: `types.ts` holds the public types (what an app imports; `date-picker.tsx` re-exports them) and every type that two or more files of the folder use. A type one file alone uses stays in that file, at its top. The sorting below is the built code, each type name searched across the folder. Shapes are the built ones, moved or left unchanged.
 
-| Group | Types, in order |
+In `types.ts`, 26 types, under one short heading comment per group, each group ordered so a type is met before its use inside the group:
+
+| Group | Types, in order | Why here |
+|---|---|---|
+| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps` (the union of 3.2 without `labels`), `DatePickerProps`; `PickerLabels` passed on | the eight types of 3.1 are what an app imports; the nine others are the members `DatePickerProps` is written from, and `TypedPickerProps` is also the props of the entry's inner component. Six of the eight are used by other files of the folder too (`CalendarProps` by seven) |
+| values | `HtmlProps`, `Limits`, `ControlProps<Value>` (`HtmlProps & Limits & { value: Value; onChange: (value: Value) => void; disabled?: boolean }`), `PeriodType` | `HtmlProps`: the entry, `PickerField`, `PickerTrigger`, `RangeEndBox`; `Limits`: the entry, the pickers, the calendar, the views, `time.ts`, `range.ts`; `ControlProps`: five mode files; `PeriodType`: the two period modes, `period-views.tsx`, `values.ts`, `views.ts` |
+| range | `RangeEnd`, `RangeTimes` (`Record<RangeEnd, string>`: the first and last time on the step) | `RangeEnd`: `range.ts`, `views.ts`, `day-calendar.tsx`, `day-range-picker.tsx`; `RangeTimes`: `range.ts`, `day-range-picker.tsx` |
+| views | `ListBounds` | `views.ts`, `day-calendar.tsx`, `period-views.tsx` |
+| popup | `PopupOptions`, `PopupActions` | `PopupOptions`: `picker-popup.tsx`, `picker-box.tsx`, `picker-trigger.tsx`; `PopupActions`: those three, `day-picker.tsx`, `period-picker.tsx` |
+
+Stays in its file, 47 types, each used by that file alone:
+
+| File | Types |
 |---|---|
-| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps` (the entry's inner component: the union of 3.2 without `labels`), `DatePickerProps`; `PickerLabels` passed on |
-| values | `HtmlProps`, `Limits`, `ControlProps<Value>` (`HtmlProps & Limits & { value: Value; onChange: (value: Value) => void; disabled?: boolean }`, six pickers, two value types), `IgnoredProp`, `PeriodType`, `FormatPeriodInput`; of `time.ts`: `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput` |
-| range | `RangeEnd`, `RangeTimes` (`Record<RangeEnd, string>`: the first and last time on the step), `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` (`Record<RangeEnd, React.RefObject<HTMLElement \| null>>`: the roots of the two end boxes) |
-| views | `ListBounds`, `ListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
-| popup | `PopupOptions`, `PopupActions`, `PickerPopupProps` |
-| components | `PickerFieldProps`, `Draft`, `PickerBoxProps`, `PickerTriggerProps`, `PickerPresetsProps<Value>`, `DayCalendarProps`, `EndCaptionProps`, `NavArrowProps`, `TodayButtonProps`, `ViewProps`, `WeekCalendarProps`, `PeriodViewProps`, `GridArrow`, `GridHeaderProps`, `GridCell`, `PeriodGridProps`, `TimeFieldProps`, `ClockPopoverProps`, `TimeColumnsProps`, `TimeOption`, `TimeColumnProps`, `UnitList` |
-| modes | `DayPickerProps`, `DayPanelProps`, `DayRangePickerProps`, `DayRangePanelProps`, `RangeEndBoxProps`, `TimeRangePickerProps`, `PeriodPickerProps`, `PeriodPanelProps`, `PeriodRangePickerProps`, `PeriodRangePanelProps` |
-| hook | `RangeOrderInput` (5.8) |
+| `modes/day-picker.tsx` | `DayPickerProps`, `DayPanelProps` |
+| `modes/day-range-picker.tsx` | `DayRangePickerProps`, `DayRangePanelProps`, `RangeEndBoxProps` |
+| `modes/time-range-picker.tsx` | `TimeRangePickerProps` |
+| `modes/period-picker.tsx` | `PeriodPickerProps`, `PeriodPanelProps` |
+| `modes/period-range-picker.tsx` | `PeriodRangePickerProps`, `PeriodRangePanelProps` |
+| `components/picker-field.tsx` | `PickerFieldProps`, `Draft` |
+| `components/picker-box.tsx` | `PickerBoxProps` |
+| `components/picker-trigger.tsx` | `PickerTriggerProps` |
+| `components/picker-popup.tsx` | `PickerPopupProps` |
+| `components/picker-presets.tsx` | `PickerPresetsProps<Value>` |
+| `components/day-calendar.tsx` | `DayCalendarProps`, `EndCaptionProps` |
+| `components/view-nav.tsx` | `NavArrowProps`, `TodayButtonProps` |
+| `components/period-views.tsx` | `ViewProps`, `WeekCalendarProps`, `PeriodViewProps`, `GridArrow`, `GridHeaderProps`, `GridCell`, `PeriodGridProps` |
+| `components/time-field.tsx` | `TimeFieldProps`, `ClockPopoverProps` |
+| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps`, `UnitList` |
+| `utils/values.ts` | `IgnoredProp`, `FormatPeriodInput` |
+| `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput` |
+| `utils/range.ts` | `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` (`Record<RangeEnd, React.RefObject<HTMLElement \| null>>`: the roots of the two end boxes; the panels build the object and do not name the type) |
+| `utils/views.ts` | `ListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
 
-- Every file imports the types it names with `import type { ... } from "../types"` (`"./types"` in the entry). `date-picker.tsx` ends with the re-export of the eight public types of 3.1, so the public import path is unchanged and no card changes.
-- `types.ts` imports no component, mode, hook or util file; its one import from the folder is the type `PickerLabels`. Its imports, all `import type`: `React`; `Popover as PopoverPrimitive` from `@base-ui/react/popover` (`PopupActions`); `DateLib`, `DateRange`, `MonthCaptionProps`, `PropsBase` from react-day-picker; `Calendar`, `Popover`, `PopoverContent`, `Dialog`, `DialogContent` from the stock `ui/` files, read as `React.ComponentProps<typeof ...>` (a type-only import of a value may be read with `typeof`); `PickerLabels` from `./components/labels`.
-- Two types were written from one of our own components and are rewritten from that component's props type, which is the same type: `PickerBoxProps` is `Omit<PickerFieldProps, "children"> & PopupOptions & { ... }` and `TimeFieldProps` is `Omit<PickerFieldProps, "type" | "children"> & { ... }` (both were `Omit<React.ComponentProps<typeof PickerField>, ...>`; `PickerField` is a plain function component, so the two read alike, `ref` included, which `HtmlProps` carries). No other type names a component of ours.
-- The one exception to "no other file declares a type": `PickerLabels` stays in `components/labels.ts` as `typeof defaultLabels`. It is inferred from the 47-key table of that file; moving it would drag the table into `types.ts` or need the 47 keys written a second time. `types.ts` imports it type-only and passes it on. There is no other case: no other type in the folder is a `typeof` of a constant of ours.
-- A value-level `satisfies React.ComponentProps<typeof PopoverContent>` on a constant of `picker-popup.tsx` is not a type declaration and stays where it is.
+- `date-picker.tsx` and `components/labels.ts` keep no type of this list: the entry's types are all public, and `PickerLabels` is the case below.
+- A file imports the shared types it names with `import type { ... } from "../types"` (`"./types"` in the entry). `date-picker.tsx` ends with the re-export of the eight public types of 3.1, so the public import path is unchanged and no card changes.
+- `types.ts` imports no component, mode or util file; its one import from the folder is the type `PickerLabels`. Its imports, all `import type`: `React`; `Popover as PopoverPrimitive` from `@base-ui/react/popover` (`PopupActions`); `PropsBase` from react-day-picker (`CalendarProps`); `Popover`, `PopoverContent`, `Dialog`, `DialogContent` from the stock `ui/` files, read as `React.ComponentProps<typeof ...>` (a type-only import of a value may be read with `typeof`); `PickerLabels` from `./components/labels`.
+- A type that stays is not exported: its file is its only user. `PickerBoxProps` and `TimeFieldProps` stay as built, `Omit<React.ComponentProps<typeof PickerField>, ...>`, so `PickerFieldProps` needs no second user.
+- `PickerLabels` is public and stays in `components/labels.ts` as `typeof defaultLabels` (approved exception). It is read off the 47-key table of that file; moving it would drag the table into `types.ts` or need the 47 keys written a second time. `types.ts` imports it type-only and passes it on. There is no other case: no other type in the folder is a `typeof` of a constant of ours.
+- A type moves to `types.ts` in the change that gives it a second file, and not before.
 
 ## 5. Component tree and data flow
 
@@ -579,21 +600,19 @@ TimeRangePicker
 
 ```
 DayRangePicker                    times = first and last time on the step (datetime only)
-│                                 useRangeOrder({ value, onChange, times }) → orderOnClose
-└── PickerTrigger                 ref triggerRef; onClose = orderOnClose
+└── PickerTrigger                 ref triggerRef; onClose orders the pair
     └── PickerPopup
         └── DayRangePanel         state views, typing; refs boxes.from, boxes.to
-            │                     useRangeOrder({ value, onChange, times }) → orderOnLeave
             ├── per end: FieldLabel + RangeEndBox (ref boxes[end], onBlur leaveBox)
             │                    RangeEndBox → PickerField (+ ClockPopover for datetime)
             ├── per end: DayCalendar mode range, rangeBand, captionEnd
             └── PickerPresets
 ```
 
-- `DayRangePanel` owns the two views, the end being typed and the two box refs. Its `leaveBox(event)` clears `typing`, then calls `orderOnLeave(event, boxes)`; when that returns the ordered pair, it resets the views from it.
-- The swap has one function, `orderRange`, and two triggers, both written once in `useRangeOrder` (5.8): `orderOnLeave`, which the panel calls from `leaveBox`, and `orderOnClose`, which the picker gives to the trigger's `onClose`. The picker and the panel each call the hook with the same `value`, `onChange` and `times`, because the trigger is outside the popup and the boxes are inside it. `selectRange` also starts from the ordered pair, so a day click on a reversed pair is right.
+- `DayRangePanel` owns the two views, the end being typed and the two box refs. Its `leaveBox(event)` clears `typing`; then, when `leftBothBoxes(event, boxes) && isReversed(value)`, it takes `orderRange(value, times)`, gives it to `onChange` and resets the views from it.
+- The swap has one function, `orderRange`, and two triggers, each written where it fires: the panel's `leaveBox`, and the picker's `onClose={() => onChange(orderRange(value, times))}` on the trigger. The trigger is outside the popup and the boxes are inside it, so the two are in two components; what they share is the three functions of `utils/range.ts` (5.8). `selectRange` also starts from the ordered pair, so a day click on a reversed pair is right.
 - A day click calls `onChange(selectRange({ range: value, picked, times, limits: { min, max, step } }))`: the time and the limit of a new end are applied inside `selectRange` (R8, R9). The panel adds nothing to its result.
-- An end's clock is inside its end box in the React tree, and its popup is outside both boxes in the DOM. Focus moves into the popup as it opens (5.3), the clock button's blur reaches `leaveBox` with the popup as the new target, and `leftBothBoxes` (inside `orderOnLeave`) is true: a reversed pair is ordered at that moment, before a pick (R16). A blur between two options of the open clock also reaches `leaveBox` (React events cross the portal) and is not a leave, because its source is not inside a box. No handler on the clock, no open callback, no flag.
+- An end's clock is inside its end box in the React tree, and its popup is outside both boxes in the DOM. Focus moves into the popup as it opens (5.3), the clock button's blur reaches `leaveBox` with the popup as the new target, and `leftBothBoxes` is true: a reversed pair is ordered at that moment, before a pick (R16). A blur between two options of the open clock also reaches `leaveBox` (React events cross the portal) and is not a leave, because its source is not inside a box. No handler on the clock, no open callback, no flag.
 - `RangeEndBox` gives its clock the day's limits as `{...dayTimeLimits({ day, min, max, step })}` (R20). A clock pick calls `onTimeChange`, a typed value `onValueChange`: only typing sets `typing` and resets the views.
 - `React.useContext(PhoneDialogContext)` picks the layout. Columns (R3, R4): per end one `Field` holding the label and the box, then the calendar. Fields first (R5): one grid whose four direct children are `FieldLabel`, `RangeEndBox`, `FieldLabel`, `RangeEndBox` (section 9 row 25), then the two calendars.
 
@@ -613,18 +632,17 @@ PeriodPanel                       state view
 ### 5.6 week, month and year range
 
 ```
-PeriodRangePicker                 useRangeOrder({ value, onChange }) → orderOnClose
-└── PickerTrigger                 onClose = orderOnClose
+PeriodRangePicker
+└── PickerTrigger                 onClose orders the pair
     └── PickerPopup
         └── PeriodRangePanel      state views; refs boxes.from, boxes.to (attached for year only)
-            │                     useRangeOrder({ value, onChange }) → orderOnLeave
             ├── per end: year → Field → FieldLabel + PickerField type year
             │            week, month → FieldTitle
             ├── per end: PeriodView
             └── PickerPresets
 ```
 
-- A pick calls `onChange(pickRange(value, period))`. A typed year calls `onChange(putEnd(...))` and resets the views. The blur route is the same hook: `leaveBox(event)` calls `orderOnLeave(event, boxes)` and resets the views from the pair it returns. No `times`: a period has no time.
+- A pick calls `onChange(pickRange(value, period))`. A typed year calls `onChange(putEnd(...))` and resets the views. The swap is as 5.4, with the same three functions: `leaveBox(event)` tests `leftBothBoxes(event, boxes) && isReversed(value)`, gives `orderRange(value)` to `onChange` and resets the views from it; the picker's `onClose` is `() => onChange(orderRange(value))`. No `times`: a period has no time.
 
 ### 5.7 The popup
 
@@ -722,8 +740,6 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | `PeriodPanel` | `type`, `value`, `onChange`, `min`, `max`, `calendarProps`, `presets` | as the picker's | `PeriodPicker` | the picker's own props, used here |
 | | `onPicked` | `() => void` | `PeriodPicker` | the picker closes its popup after a pick (P3, P6, P11) |
 | `PeriodRangePanel` | `type`, `value`, `onChange`, `min`, `max`, `calendarProps`, `presets` | as the picker's | `PeriodRangePicker` | the picker's own props, used here |
-| `useRangeOrder` (hook, `hooks/use-range-order.ts`; its one argument) | `value`, `onChange` | `RangeValue`, `(value: RangeValue) => void` | the two range pickers, the two range panels | the pair to test, and where the ordered pair goes (R15, PR11) |
-| | `times` | `RangeTimes?` | `DayRangePicker`, `DayRangePanel` | a date-time range's first and last time, handed to `orderRange` (call 8's default-time fix). The period callers pass none |
 
 Settled by this table:
 
@@ -731,48 +747,34 @@ Settled by this table:
 - `label` is always the noun of the thing itself; `pickerLabel` is the name of the popup it opens. The popup's title is `pickerLabel` from a box, and the app's `aria-label` or else `label` from a trigger.
 - No part takes a prop only to hand it on, except `rangeBand` through `PeriodView`, which is the switch between the three views and spreads its props to the one it draws.
 
-The hook, whole. Its input type is in group "hook" of `types.ts`; its return type is inferred.
+The swap, whole. No hook and no fourth range function: the two range pickers and their panels share the three functions of `utils/range.ts` as built, `isReversed`, `orderRange`, `leftBothBoxes`, and nothing else.
 
-```ts
-/** What the swap reads: the pair, where the ordered pair goes, and a date-time range's default times. */
-type RangeOrderInput = {
-  value: RangeValue
-  onChange: (value: RangeValue) => void
-  times?: RangeTimes
-}
-
-/** Orders a pair typed in reverse, at its two moments: focus leaves both end boxes, the popup closes. */
-function useRangeOrder({ value, onChange, times }: RangeOrderInput) {
-  /** For the end boxes' onBlur. Returns the ordered pair when it ordered one, so the panel can reset its views. */
-  function orderOnLeave(event: React.FocusEvent, boxes: EndBoxes) {
-    if (!leftBothBoxes(event, boxes) || !isReversed(value)) {
-      return undefined
-    }
+```tsx
+// DayRangePanel. PeriodRangePanel is the same without setTyping and times, and with its own step.
+function leaveBox(event: React.FocusEvent) {
+  setTyping(null)
+  if (leftBothBoxes(event, boxes) && isReversed(value)) {
     const ordered = orderRange(value, times)
     onChange(ordered)
-    return ordered
+    setViews(viewsForRange(daysOf(ordered), 1))
   }
-
-  /** For the trigger's onClose. */
-  function orderOnClose() {
-    onChange(orderRange(value, times))
-  }
-
-  return { orderOnLeave, orderOnClose }
 }
+
+// DayRangePicker, on its PickerTrigger. PeriodRangePicker passes no times.
+onClose={() => onChange(orderRange(value, times))}
 ```
 
-- What the two built copies share is exactly this: the test, the `orderRange` call and the `onChange` call. What they do not share stays in each panel's `leaveBox`:
+- What the two panels share is one test and one call, already two functions and one function of `range.ts`: a plain line each. A function for "left both boxes and reversed: the ordered pair" would take four inputs as one object (`event`, `boxes`, `range`, `times`) and return a pair or `undefined`, and each call site would still test the result, call `onChange` and reset its views: no line saved, one name added. So none is written.
+- What they do not share stays in each panel's `leaveBox`:
   - `DayRangePanel` clears `typing` first, on every blur; `PeriodRangePanel` has no `typing`.
-  - Each resets its own views from the returned pair: `viewsForRange(daysOf(ordered), 1)` with days read by `fromYmd(datePart(...))`, or `viewsForRange(daysOf(ordered), step)` with days read by `startOfPeriod(type, ...)`.
+  - Each resets its own views from the ordered pair: `viewsForRange(daysOf(ordered), 1)` with days read by `fromYmd(datePart(...))`, or `viewsForRange(daysOf(ordered), step)` with days read by `startOfPeriod(type, ...)`.
   - Only the day range passes `times`.
-- `boxes` is an argument of `orderOnLeave`, not of the hook: the picker, which needs `orderOnClose` only, has no boxes. So no input is optional because of who calls, and each caller takes the one handler it uses.
-- The hook calls no React hook: no state, effect, ref, context or memo. It is a hook by what it reads, a React focus event and two refs, and by the owner's layout, which names it.
-- The three tests it calls (`leftBothBoxes`, `isReversed`, `orderRange`) stay in `utils/range.ts`. No flag, no helper written for the hook, no return type written by hand.
+- The two `onClose` handlers are one call each; `orderRange` returns an ordered pair as it is, and the entry's guard drops a same-value call (G1), so neither tests `isReversed` first.
+- No hook: nothing here holds React state, a ref or an effect that two components share (the refs and the views are each panel's own, section 6), and a function that calls no React hook is not named `use...` (section 10).
 
 ## 6. Every state, effect, ref and context
 
-7 states, 2 effects, 11 refs, 2 contexts. `useRangeOrder` adds none of the four: the two refs it reads are rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`), created in the panel and given to `orderOnLeave` at the call; the views it leads to are states 4 and 7, set by the panel.
+7 states, 2 effects, 11 refs, 2 contexts, no hook of our own. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
 
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
@@ -789,7 +791,7 @@ function useRangeOrder({ value, onChange, times }: RangeOrderInput) {
 | 11 | ref | `popupActions` | `day-picker.tsx` | the root's actions | date closes on a pick (D4) | this is the stock mechanism: `actionsRef.close()` |
 | 12 | ref | `popupActions` | `period-picker.tsx` | same | week, month, year close on a pick | same |
 | 13 | ref | `triggerRef` | `picker-trigger.tsx` | the trigger button | its X unmounts when the value empties; focus must land somewhere (R2) | Base UI `finalFocus` (for a closing popup only) |
-| 14, 15 | ref | `boxes.from`, `boxes.to` | `DayRangePanel` | the two end boxes' roots | "focus left both boxes" (R15), tested by `orderOnLeave` of `useRangeOrder`: the boxes sit in two columns with a calendar between them in the DOM, so no single element holds only the two | `currentTarget.contains(relatedTarget)` on one wrapper (there is none) |
+| 14, 15 | ref | `boxes.from`, `boxes.to` | `DayRangePanel` | the two end boxes' roots | "focus left both boxes" (R15), tested by `leftBothBoxes` in the panel's `leaveBox`: the boxes sit in two columns with a calendar between them in the DOM, so no single element holds only the two | `currentTarget.contains(relatedTarget)` on one wrapper (there is none) |
 | 16, 17 | ref | `boxes.from`, `boxes.to` | `PeriodRangePanel` | the two year boxes' roots | same (PR11) | same |
 | 18, 19 | ref | `columnRef`, `selectedRef` | `TimeColumn` | the scrolling column, the selected button | effect 9 sets the column's scroll from the button's position | a selector query for the pressed button (a DOM query) |
 | 20 | ref | `popupRef` | `time-field.tsx` `ClockPopover` | the clock's popup element, given to the popup as `ref` and as `initialFocus` | focus must enter the clock as it opens, so that a reversed pair is ordered before an option can be pressed (R16; with focus left on the clock button the first press inside the clock ordered the pair and the pick landed on the other date), and must not land on an hour | Base UI's default `initialFocus` (focuses the first hour button with scrolling, which undoes effect 9: `nm/@base-ui/react/floating-ui-react/components/FloatingFocusManager.js:390, 409`); `initialFocus={false}` (the wrong-date pick above); used: `initialFocus` as a ref, which Base UI focuses without scrolling when it is the popup (`PopoverPopup.d.ts:43, 47`) |
@@ -844,7 +846,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | Draft and remount (`picker-field.tsx`) | See section 6 rows 1, 2, 8 | One state shape, one pure `draftOf(input, left)`, one effect |
 | Growing year list (`views.ts` `listBounds`) | react-day-picker's default is 100 years back; the proposal's rule is 1900 to 2100 growing by century | One pure function; both limits always enter both ends (6.10) |
 | Two views kept apart (`views.ts`) | No stock part pages two calendars as one range | Three pure functions and one state per range panel; one `endBounds` for every use (9.5) |
-| One-route swap (`range.ts`, `use-range-order.ts`) | Browsers do not order two inputs | Three pure functions, `isReversed`, `orderRange`, `leftBothBoxes`, and one hook, `useRangeOrder`, which writes the two triggers once: `orderOnLeave` for the blur handler of each range panel, `orderOnClose` for the `onClose` of each range picker (5.8). No flag, no state. An end's clock needs no rule of its own: it takes focus as it opens (section 6 row 20), which is a leave like any other |
+| One-route swap (`range.ts`) | Browsers do not order two inputs | Three pure functions, `isReversed`, `orderRange`, `leftBothBoxes`, called from two plain places: the blur handler of each range panel and the `onClose` of each range picker (5.8). No hook, no flag, no state. An end's clock needs no rule of its own: it takes focus as it opens (section 6 row 20), which is a leave like any other |
 | Default-time fix after a swap (`orderRange`) | Call 8 keeps it: an untouched range would read 23:59 to 00:00 | Inside `orderRange`, with its one-line reason |
 | Popover or dialog switch (`picker-popup.tsx`) | shadcn has no part that is either | One component, two branches, no context for its own parts |
 | Soft limit and step check (`values.ts`) | The one guard against `step={0}` and a half-applied limit | Two functions called once in the entry |
@@ -897,7 +899,8 @@ Layout classes of our own elements (not overrides), all from 7.4: panels `flex f
 
 - `docs/code-of-conduct/coding-standards.md`, section Code: no abstraction with one implementation; three or more parameters take one object; no dead code, no commented-out code, no stale `eslint-disable`; strict TypeScript; comments are JSDoc on exported API or one sentence on a non-obvious invariant or a browser or library quirk, no history, nothing that restates the next line. Section Style: no em dashes.
 - Not applied here, applied at the port to the library: the `ST_` prefix and `@/` self-imports (section Naming, Imports).
-- File order (decision 3, changed by the owner on 2026-11-22: the types leave the file): `"use client"` (component files), imports, constants (class-name objects, tables, contexts), then components and functions, one `export { ... }` list last. Every type is in `types.ts` (4.2) and no other file declares one, `PickerLabels` in `labels.ts` excepted. Props are a named type of `types.ts`, never an object type in a signature.
+- File order (decision 3): `"use client"` (component files), imports, that file's own types, constants (class-name objects, tables, contexts), then components and functions, one `export { ... }` list last. No type is declared further down a file.
+- Where a type lives (the owner, 2026-11-22; 4.2): a public type, and a type two or more files use, is in `types.ts`; a type one file uses is at the top of that file and is not exported. `PickerLabels` in `labels.ts` is the one approved exception. Props are a named type, never an object type in a signature.
 - Names: a component's props type is `<Component>Props`. The name of a control is `label`; a second name on the same component says what it names (`pickerLabel`). A value callback is `onChange` on pickers and panels, `onValueChange` on boxes and the clock. An end is `"from"` or `"to"`, never an index or a side. A view is a `Date`.
 - Checks, from `test-projects/next-app`, one at a time, each under `nice`: `pnpm exec tsc --noEmit`; `pnpm exec eslint components/date-picker-9 app/date-filter-demo`; `pnpm exec prettier --check components/date-picker-9 app/date-filter-demo/_cards`. Zero errors, zero warnings.
 
@@ -909,8 +912,8 @@ Never, each drawn from a finding kind of audit 7:
 - `value[0]`, `value[1]`, an index for an end, a two-item array read by position, a loop that tests its index.
 - A same-value test outside `TypedPicker`. A limit or step check outside the entry.
 - State that copies a prop, a reset on open, a flag that suppresses another handler, a second commit of one change.
-- A context other than the two of section 6. A hook of our own, except where two or more components share logic that reads React state, refs or events: `useRangeOrder` is the one such hook. A one-line reader of a context is still not written. `useMemo`, `useCallback`.
-- A type declared outside `types.ts`, except `PickerLabels` (4.2). An import between the folders that is not relative.
+- A context other than the two of section 6. A hook of our own: none exists in this picker, because no two components share logic that holds React state, refs or effects. A function that calls no React hook named `use...`. A one-line reader of a context. `useMemo`, `useCallback`.
+- A type in `types.ts` that one file alone uses; a type used by two or more files, or a public one, declared outside `types.ts`, except `PickerLabels` (4.2); a type declared below a file's constants or code. An import between the folders that is not relative.
 - A generic type or component with one user; a helper around one call; a type derived from an internal component's props for the public API; template-literal value types; `as` casts; a second, loose copy of a public type other than `PopupOptions` (3.2).
 - A prop that is not in the table of 5.8. A named prop a component takes only to hand on: a hand-on is the rest spread, or the one case 5.8 names.
 - `type="button"` on a Base UI button; a `data-slot` of our own; a selector on a stock slot outside section 9.
@@ -923,11 +926,11 @@ Never, each drawn from a finding kind of audit 7:
 | Design decision | Findings it removes |
 |---|---|
 | A. The clock is plain buttons; the popover opens with focus on the popup itself; no slot attributes | 1.1, 6.8, 9.14, 11.2 |
-| B. The swap is one pure function with two triggers (leave both boxes, popup close), the two written once in `useRangeOrder`: a hook with no flag, no state and no helper of its own, which is what 3.1 objected to in 7.4's hook; no clock handler; the X only prevents its mouse-down default and calls no `focus()` | 3.1, 3.4, 3.5, 4.9, 5.11, 6.5 (for pointer moves between the boxes and for the phone dialog; on desktop Tab from an end box enters its calendar and orders the pair, which is call 6 as worded: R15), 11.7 |
+| B. The swap is one pure function with two triggers (leave both boxes, popup close), each a plain handler that calls the functions of `range.ts`: no hook, no flag, no state and no helper of its own, which is what 3.1 objected to in 7.4's hook; no clock handler; the X only prevents its mouse-down default and calls no `focus()` | 3.1, 3.4, 3.5, 4.9, 5.11, 6.5 (for pointer moves between the boxes and for the phone dialog; on desktop Tab from an end box enters its calendar and orders the pair, which is call 6 as worded: R15), 11.7 |
 | C. Stock non-modal popover | 3.2 |
 | D. View state lives in the panel inside the popup; one view state per panel; views are reset from the value on a typed change, a preset and a swap; one `endBounds` | 1.2, 3.3, 4.2, 6.7, 9.2, 9.5, 11.5 |
 | E. One `PickerPopup` with a trigger prop; one JS test for "phone dialog", read through one context; calendar padding and background set once in `DayCalendar`; the presentation props are typed once for the app (the strict `PresentationProps` union) and once for the parts (the plain `PopupOptions`), both in `types.ts`, each with its reason (3.2), and no part needs a cast; `PopupActions` is Base UI's exported type; `showCloseButton` not in `DialogProps` | 1.7 (the double X; X and Done both stay, call 9), 2.8 (first half), 3.6, 4.4, 5.1, 8.4, 11.4 |
-| F. Public props written directly, member by member, in `types.ts`; internal props are named types there; the entry is the one guard and the one limit check; `ControlProps` is one type of group "values"; `TimeField` is rendered by the entry; one `CalendarProps` name; no `buttonVariant`, no `dir` | 2.10, 4.3, 4.6, 4.7, 5.13, 8.1, 8.5, 8.10, 8.11, 9.1, 11.3, 11.9 |
+| F. Public props written directly, member by member, in `types.ts`; a part's own props are a named type at the top of its file, and a type two files use is in `types.ts`; the entry is the one guard and the one limit check; `ControlProps` is one type of group "values"; `TimeField` is rendered by the entry; one `CalendarProps` name; no `buttonVariant`, no `dir` | 2.10, 4.3, 4.6, 4.7, 5.13, 8.1, 8.5, 8.10, 8.11, 9.1, 11.3, 11.9 |
 | G. react-day-picker's modes do the selecting: `required`, `mode="range"` for days and for weeks, `DateRange` as the type; no defaulted parameters | 2.1, 2.2, 2.3, 2.8 (second half), 9.11 |
 | H. Period pickers split into one-value and range components with their own value types; one `PeriodView`; names as objects; presets passed as given; no year-list grey-out; no `typing` for years; `pickRange` knows a lone To; the decade text is one label; three header buttons written in order from `view-nav.tsx`; band classes live in `day-calendar.tsx` | 2.5, 4.1, 4.11, 4.12, 5.4, 5.10, 6.6, 7.3, 8.9, 9.8, 10.6, 11.1, 11.6, 11.8 |
 | I. `PickerField` has one root, one noun (`label`), one draft shape, one effect with the limits in its deps, no key-up read, no `title` hint; `required` for the time inside a date-time | 1.5, 1.8, 6.1, 6.9, 7.1, 8.2, 8.3, 5.12, 9.12 |
@@ -969,9 +972,9 @@ Cards: a version 9 card is a copy of the row's newest card with `usePickerSettin
 | 3 | date and datetime range | the trigger, the range panel, the band, the phone-dialog layout, the swap | `range.ts` (`RangeTimes`, `isReversed`, `orderRange`, `selectRange`, `formatRange`, `leftBothBoxes`), `values.ts` (`dateLibFor`, `formatValue`), `views.ts` (`RangeViews`, `viewsForRange`, `shownViews`, `endBounds`), `picker-trigger.tsx`, `day-range-picker.tsx`, `day-calendar.tsx` (band, `FromCaption`, `ToCaption`), `date-picker.tsx` (date and date-time range); cards of rows 2, 4 | the clock, the box and every file not named | cases R1 to R20 on rows 2, 4; pixels of those rows, phone dialog included; `PickerTrigger` compiles with no `as` cast |
 | 4 | week, month, year, one value | period values, the three views, the one-value period picker | `values.ts` (`PeriodType`, `inYear`, `periodOf`, `startOfPeriod`, `dayLimits`, `formatPeriod`, the week, month and year formats of `checkedLimits`), `views.ts` (`periodViewStart`, `periodViewStep`), `range.ts` (`rangeState`, which `PeriodView` uses for one value and for a pair), `period-views.tsx`, `period-picker.tsx`, `date-picker.tsx` (`WeekProps`, `MonthYearProps`, one value); cards of rows 7, 9, 11 | day and time pickers and every file not named | cases P1 to P18 on rows 7, 9, 11; pixels of those rows |
 | 5 | week, month, year range | the period range picker | `range.ts` (`pickRange`), `period-range-picker.tsx`, `date-picker.tsx` (final union); cards of rows 8, 10, 12 | every file not named | cases PR1 to PR12 on rows 8, 10, 12; pixels of those rows |
-| 6 | folders, `types.ts`, the hook; then the whole-folder pass | First the restructure, which keeps the code: `git mv` each file into its folder of section 4; fix the relative imports; move every type into `types.ts` in the groups of 4.2 (`PickerLabels` stays); extract `hooks/use-range-order.ts` from the two range pickers and their panels as 5.8 has it. No behaviour, markup, class or type-shape change. Checked by the three checks of section 10 and by rerunning the existing scratch comparison scripts for the R and PR cases and for the pixels of rows 2, 4, 8, 10, 12 against 7.4. Committed on its own as `date picker 9: step 6 folders, types.ts and range-order hook`. Then, nothing new: read all 23 files against sections 3 to 10; type cases; section 13 in full | restructure: all 21 built files (moved; imports and type blocks edited), new `types.ts`, new `hooks/use-range-order.ts`, the two range mode files for the hook. Pass: any file of the folder, for findings only | the cards (their import path `@/components/date-picker-9/date-picker` does not change); in the restructure, any line that is not an import, a type or one of the four swap handlers | section 13 |
+| 6 | folders and `types.ts`; then the whole-folder pass | First the restructure, which keeps the code: `git mv` each file into its folder of section 4; fix the relative imports; move the public types and the types two or more files use into `types.ts` in the groups of 4.2 (26 types; `PickerLabels` stays in `labels.ts`); the 47 types one file uses stay at the top of their file, their `export` dropped where one was written. No hook extraction: the swap handlers stay as built. No behaviour, markup, class or type-shape change. Checked by the three checks of section 10 and by rerunning the existing scratch comparison scripts for the R and PR cases and for the pixels of rows 2, 4, 8, 10, 12 against 7.4. Committed on its own as `date picker 9: step 6 folders and types.ts`. Then, nothing new: read all 22 files against sections 3 to 10; type cases; section 13 in full | restructure: all 21 built files (moved; imports edited; the shared and public type blocks moved out), new `types.ts`. Pass: any file of the folder, for findings only | the cards (their import path `@/components/date-picker-9/date-picker` does not change); in the restructure, any line that is not an import, a type or an export list | section 13 |
 
-Steps 1 to 5 were built and reviewed on the flat layout with types at the top of each file; a reviewer of those steps does not raise the layout, the types file or the missing hook: step 6 does all three. The Files column of steps 1 to 5 names files and types as they were built then: flat, each type in the file listed.
+Steps 1 to 5 were built and reviewed on the flat layout with every type at the top of the file that first used it; a reviewer of those steps does not raise the layout or the types file: step 6 does both. The Files column of steps 1 to 5 names files and types as they were built then: flat, each type in the file listed.
 
 Rules for the table:
 
@@ -1048,7 +1051,7 @@ Step 6 type cases: a scratch file in the session scratchpad, compiled with a scr
 Two readers with no history reviewed this plan; their required changes are applied above. Asked and not applied as asked:
 
 - "The X takes focus in its click handler, as 7.4": not applied. It is the third part of finding 3.4 and conflicts with the other reader's change, which is applied: B6 states the real outcome (focus on the page) and section 10 forbids a `focus()` call in `PickerField`.
-- "No hook of our own except the two context readers": not applied. The other reader's change removes both hooks, which is less code; contexts are read with `React.useContext`. Since 2026-11-22 the folder has one hook of our own, `useRangeOrder` (section 10, and the owner's decision below); a context reader is still not written.
+- "No hook of our own except the two context readers": not applied. The other reader's change removes both hooks, which is less code; contexts are read with `React.useContext`. The folder has no hook of our own (section 10, and the owner's decisions below).
 - "Write the real sequence as the outcome: the first press inside an end's clock orders the pair and the pick lands on the other date": not applied. That outcome writes a time onto a date the user did not pick it for. The clock takes focus as it opens instead, so the pair is ordered before a pick (R16).
 - "`RangeEndBox` passes `popoverProps={{ initialFocus: true }}`; check the hour column's scroll when built": applied in another form. Base UI's default focus scrolls the first hour into view (`FloatingFocusManager.js:390, 409`), which would have left a check open; every clock gives `initialFocus` a ref to its popup, so there is one clock behaviour and nothing to check (section 6 row 20). The alternative, two more refs so a clock popup counts as inside its box, is not applied: more refs, and Safari would still order at the press on the clock button.
 - "Pass `clockLimit(min, day) ?? edgeTime(...)` to `TimeField` and to the end's `ClockPopover`": applied as one function, `dayTimeLimits`, which replaces `clockLimit`, so the rule is written once and `timeOnDay` uses it too.
@@ -1084,6 +1087,9 @@ Found while building, plan against code (step 3):
 - Section 13, datetime range actions, "pick the hour 9 (... 7.4: `[10th T09:00, 20th T10:00]` once the clock closes)": 7.4 gives `[10th T21:00, 20th T10:00]`, because its To box still holds 16:00 when the hour is picked and a picked hour keeps PM. Version 9 gives the value the plan names.
 - Section 13, allowed difference 6, in Playwright's WebKit at 390 wide: the browser's range message of a date box is long enough to wrap once it starts at the box's edge, so the flagged row is one line taller than on 7.4 and everything under it sits lower.
 
-Owner's decision, 2026-11-22:
+Owner's decisions, 2026-11-22:
 
-- Rejected: section 4's flat folder of 21 files with the types at the top of each file, and section 10's ban on every hook of our own. His words: "I agreed with the folder structure of the previous versions: this is not acceptable"; "Since it is gonna be a library, you can have a central file types.ts to define all the types there". Decided: the layout of `review-notes.md` line 23 (`date-picker.tsx` entry only, `modes/`, `components/`, `hooks/`, `utils/`, one shared hook `use-range-order`), plus `types.ts` for every type; 23 files; `type="time"` one value has no mode file; `labels.ts` in `components/`; file names unchanged. Changed here: sections 3 (types written in `types.ts`, re-exported by the entry), 4 (tree, import rule, table, new 4.2), 5.4, 5.6 and 5.8 (`useRangeOrder`), 6, 8, 10 (file order, the hook rule), 11 (B, E, F) and 12 (step 6 restructures first). Behaviour, public API shapes, states, effects, refs, contexts and styling are unchanged; the code built in steps 1 to 5 is kept and moved.
+- Rejected: section 4's flat folder of 21 files. His words: "I agreed with the folder structure of the previous versions: this is not acceptable"; "Since it is gonna be a library, you can have a central file types.ts to define all the types there". Decided first: the layout of `review-notes.md` line 23 (`date-picker.tsx` entry only, `modes/`, `components/`, `hooks/`, `utils/`, one shared hook `use-range-order`), plus `types.ts` for every type; `type="time"` one value has no mode file; `labels.ts` in `components/`; file names unchanged. The two points below replace the hook and the "every type" part of it.
+- No hook. His words: "if there is no hook needed, thats fine". The designed `useRangeOrder` called no React hook, so it was a plain helper with a hook's name. `hooks/` and `use-range-order.ts` are gone; the two range pickers and their panels share `isReversed`, `orderRange` and `leftBothBoxes` of `utils/range.ts` as built, and no fourth function is added (5.8). Rule in section 10: no hook of our own, a function that calls no React hook is never named `use...`, a one-line context reader is not written.
+- `types.ts` holds only the public types and the types two or more files use. His words: "if types are used by other components or other places, that means types.ts earns its place". A type one file uses stays at the top of that file; file order is imports, own types, constants, code. `PickerLabels` stays in `components/labels.ts` as `typeof defaultLabels` (approved exception). Sorted against the built code in 4.2: 26 types in `types.ts`, 47 left in their files.
+- Result: 22 files. Changed here: sections 1, 3 (public types written in `types.ts`, re-exported by the entry), 4 (tree, table, 4.1, 4.2), 5.4, 5.6, 5.8, 6, 8, 10 (file order, where a type lives, the hook rule), 11 (B, F) and 12 (step 6 is `git mv`, imports and `types.ts`; no hook extraction). Behaviour, public API shapes, states, effects, refs, contexts and styling are unchanged; the code built in steps 1 to 5 is kept and moved.
