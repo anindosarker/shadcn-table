@@ -92,3 +92,7 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 6. **Keep the From/To swap, one route only** (audit 7 item 3.1). 2026-11-21.
    - A reversed typed range is still put in order. It happens once: when focus leaves both boxes, or when the popup closes. No per-box route, no second commit.
    - This removes the order being fixed one Tab late from the To box (item 6.5) and the double commit, and most of the hook, flag and helpers that exist for the swap.
+7. **Stock popover, no focus trap** (audit 7 item 3.2). 2026-11-21.
+   - `modal="trap-focus"` goes from the calendar popover and the clock popover, with the hidden Close button that exists only for the trap, its class and the two direct Base UI imports.
+   - Tab past the last control closes the popup, as in every stock shadcn popover. The dialog on phones keeps its own stock focus handling.
+   - To check when built: the clock popover inside the date-time popup without the trap.
