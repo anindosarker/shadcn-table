@@ -269,7 +269,7 @@ components/date-picker-9/
 | `components/view-nav.tsx` | `NavArrow`, `TodayButton` | both | two components | the calendar caption and the two grid headers draw the same three buttons |
 | `components/period-views.tsx` | Draw one week calendar, month grid or year grid for a view | `PeriodView` | `PeriodView`, `WeekCalendar`, `MonthGrid`, `YearGrid`, `GridHeader`, `PeriodGrid` | single and range period pickers both draw them |
 | `components/time-field.tsx` | Time box plus clock popover | `TimeField`, `ClockPopover` | two components | time, time range, the date-time popup; `ClockPopover` alone in a date-time range end |
-| `components/time-columns.tsx` | The clock's columns | `TimeColumns` | `TimeColumns`, `TimeColumn`, `uses12Hour` | the native time picker is rejected; Safari has none in a date-time box |
+| `components/time-columns.tsx` | The clock's columns | `TimeColumns` | `TimeColumns`, `TimeColumn` | the native time picker is rejected; Safari has none in a date-time box |
 | `utils/values.ts` | Parse, format and check the six formats | see 4.1 | pure functions; no JSX, no DOM | every picker reads values |
 | `utils/time.ts` | Seconds, step, limits of a time of day | see 4.1 | pure functions | the clock and the day click share one sum (9.3) |
 | `utils/range.ts` | Read, replace, order and select a pair's ends | see 4.1 | pure functions; `leftBothBoxes` reads a focus event; all the two range pickers and their panels share of the swap is here: `isReversed`, `orderRange`, `leftBothBoxes` | five range pickers |
@@ -297,12 +297,13 @@ A function with three or more parameters takes one object (coding standards, Cod
 | `utils/time.ts` | `toSeconds(time)` | seconds after midnight, `undefined` for other text |
 | | `timeText(seconds)` | `HH:mm`, with `:ss` when not zero |
 | | `firstOnStep({ from, to, base, step })` | first time on the step inside `from..to`, else `undefined` |
+| | `clockColumns({ value, min, max, step, hour12 })` | what each clock column lists, as `ClockUnit`s (`index`, `selected`, `disabled`, and the `time` a press sets): `hour`, `minute`, `second` (`undefined` when the step is whole minutes), `halfDay` (`undefined` on a 24-hour clock). A unit is listed when a time on the step falls in it and greyed when none of those lies inside `min` and `max` (C3 to C7). `toSeconds`, `timeText`, `firstOnStep` and `allowedTime` are used inside `time.ts` only and are not exported |
 | | `allowedTime({ time, min, max, step })` | the time brought inside `min..max`, on the step |
 | | `edgeTime({ edge, step, min })` | first or last time of a day on the step; `00:00`, `23:59` without one |
 | | `dayTimeLimits({ day, min, max, step })` | the `{ min, max }` times of one day, for its Time field and clock: `min`'s time on `min`'s day, `max`'s time on `max`'s day, else `undefined` (DT10). With a `step`, on a day other than `min`'s, `min` is `edgeTime({ edge: "first", step, min })`: the day's first time on the step limits nothing on the step and keeps the step counted from `min`'s time of day (DT11, C4) |
 | | `timeOnDay({ day, time, min, max, step })` | the date-time a clicked day gets: `allowedTime` of `time` inside that day's `dayTimeLimits` (DT3 to DT5, R8, R9) |
 | `utils/range.ts` | `rangeEnds` | `["from", "to"]` |
-| | `putEnd(range, end, text)` | the pair with that end replaced, by name |
+| | `putEnd({ range, end, text })` | the pair with that end replaced, by name |
 | | `isReversed(range)` | both ends set and From after To |
 | | `orderRange(range, times?)` | the pair in order; with `times` an end on its default time gets the other default (1.4) |
 | | `selectRange({ range, picked, times?, limits? })` | the pair after react-day-picker's `DateRange` (R6 to R10). `times` and `limits` (`{ min, max, step }`) are given for a date-time range only: an end on a new day gets `timeOnDay({ day, time: times[end], ...limits })`, so a `min` or `max` day is brought inside its limit here and nowhere else (R8, R9); an end whose day did not change keeps its value. Without `times` an end is its day |
@@ -324,17 +325,18 @@ The input types of these functions (`SelectRangeInput`, `ListSource`, `TimeOnDay
 
 The rule: `types.ts` holds the public types (what an app imports; `date-picker.tsx` re-exports them) and every type that two or more files of the folder use. A type one file alone uses stays in that file, at its top. The sorting below is the built code, each type name searched across the folder. Shapes are the built ones, moved or left unchanged.
 
-In `types.ts`, 26 types, under one short heading comment per group, each group ordered so a type is met before its use inside the group:
+In `types.ts`, 27 types, under one short heading comment per group, each group ordered so a type is met before its use inside the group:
 
 | Group | Types, in order | Why here |
 |---|---|---|
 | public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps` (the union of 3.2 without `labels`), `DatePickerProps`; `PickerLabels` passed on | the eight types of 3.1 are what an app imports; the nine others are the members `DatePickerProps` is written from, and `TypedPickerProps` is also the props of the entry's inner component. Six of the eight are used by other files of the folder too (`CalendarProps` by seven) |
 | values | `HtmlProps`, `Limits`, `ControlProps<Value>` (`HtmlProps & Limits & { value: Value; onChange: (value: Value) => void; disabled?: boolean }`), `PeriodType` | `HtmlProps`: the entry, `PickerField`, `PickerTrigger`, `RangeEndBox`; `Limits`: the entry, the pickers, the calendar, the views, `time.ts`, `range.ts`; `ControlProps`: five mode files; `PeriodType`: the two period modes, `period-views.tsx`, `values.ts`, `views.ts` |
 | range | `RangeEnd`, `RangeTimes` (`Record<RangeEnd, string>`: the first and last time on the step) | `RangeEnd`: `range.ts`, `views.ts`, `day-calendar.tsx`, `day-range-picker.tsx`; `RangeTimes`: `range.ts`, `day-range-picker.tsx` |
+| clock | `ClockUnit` (`{ index: number; selected: boolean; disabled: boolean; time: string }`: one unit a clock column lists) | `time.ts` (`clockColumns` returns them), `time-columns.tsx` (draws them) |
 | views | `ListBounds` | `views.ts`, `day-calendar.tsx`, `period-views.tsx` |
 | popup | `PopupOptions`, `PopupActions` | `PopupOptions`: `picker-popup.tsx`, `picker-box.tsx`, `picker-trigger.tsx`; `PopupActions`: those three, `day-picker.tsx`, `period-picker.tsx` |
 
-Stays in its file, 47 types, each used by that file alone:
+Stays in its file, 49 types, each used by that file alone:
 
 | File | Types |
 |---|---|
@@ -352,10 +354,10 @@ Stays in its file, 47 types, each used by that file alone:
 | `components/view-nav.tsx` | `NavArrowProps`, `TodayButtonProps` |
 | `components/period-views.tsx` | `ViewProps`, `WeekCalendarProps`, `PeriodViewProps`, `GridArrow`, `GridHeaderProps`, `GridCell`, `PeriodGridProps` |
 | `components/time-field.tsx` | `TimeFieldProps`, `ClockPopoverProps` |
-| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps`, `UnitList` |
+| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps` |
 | `utils/values.ts` | `IgnoredProp`, `FormatPeriodInput` |
-| `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput` |
-| `utils/range.ts` | `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` (`Record<RangeEnd, React.RefObject<HTMLElement \| null>>`: the roots of the two end boxes; the panels build the object and do not name the type) |
+| `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput`, `ClockInput`, `UnitList` |
+| `utils/range.ts` | `PutEndInput`, `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` (`Record<RangeEnd, React.RefObject<HTMLElement \| null>>`: the roots of the two end boxes; the panels build the object and do not name the type) |
 | `utils/views.ts` | `ListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
 
 - `date-picker.tsx` and `components/labels.ts` keep no type of this list: the entry's types are all public, and `PickerLabels` is the case below.
@@ -616,7 +618,7 @@ onClose={() => onChange(orderRange(value, times))}
 | 2 | state | `resetKey` | `picker-field.tsx` | a counter used as the input's `key`, raised only by the X | the X must wipe half-typed parts; the value is already `""`, so React writes nothing and the parts stay. Writing `input.value = ""` wipes them in Chromium and not in WebKit (plan review probe). The remount drops the input's focus to the page (B6); nothing puts it back | setting `value` to `""` (a no-op when it already is); `autoFocus` on the remounted input (would also pull focus into a box that did not have it, and on iOS may open the native picker, which cannot be checked under section 14) |
 | 3 | state | `month` | `day-picker.tsx` `DayPanel` | the month the calendar shows | the user pages without changing the value; a preset moves it (D9) | react-day-picker's own month state through `defaultMonth` (a preset cannot move it); used: its controlled `month`, `onMonthChange` |
 | 4 | state | `views` | `day-range-picker.tsx` `DayRangePanel` | the month each calendar was last sent to, and which moved last | two calendars paged apart from the value; the one not moved gives way (R17) | one react-day-picker with `numberOfMonths={2}` (its months cannot be paged apart) |
-| 5 | state | `typing` | `DayRangePanel` | the end whose box is being typed, or `null` | a date box reports years 1, 14, 144 while 1443 is typed; that end stays out of the year list until its box is left (R13) | none: only the picker knows a value is mid-typing |
+| 5 | state | `typing` | `DayRangePanel` | the end whose box is being typed, or `null`; a box that reports `""` (its X, or a half-typed date) sets `null`, because the X fires no blur and an empty end has no year | a date box reports years 1, 14, 144 while 1443 is typed; that end stays out of the year list until its box is left (R13) | none: only the picker knows a value is mid-typing |
 | 6 | state | `view` | `period-picker.tsx` `PeriodPanel` | the month, year or decade shown | same as 3 | same as 3 |
 | 7 | state | `views` | `period-range-picker.tsx` `PeriodRangePanel` | as 4, for months, years or decades | same as 4 (PR9) | none: the grids are custom |
 | 8 | effect | re-read validity | `picker-field.tsx` | deps `value, min, max, step` | a value or limit that arrives from outside is checked like a typed one (B7, B8). It sets `draftOf(input, left)`, where `left` is the old draft's `left` when that draft is for this same value (the value was typed here, so the mark waits until the box is left), else `true` (the value came from outside, so it is flagged at once). Where the value came from is told by the draft, never by where focus is | handlers alone (they do not run for an outside change) |
@@ -675,7 +677,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | Month and year grid (`period-views.tsx`) | react-day-picker picks days only; shadcn has no month or year recipe | `PeriodGrid`: `Button`s in `grid grid-cols-3`, `aria-pressed`, `aria-current`. `GridHeader`: a slot and three buttons. No key code (decision 2) |
 | Caption with previous, Today, next at the right (`day-calendar.tsx`) | The stock arrows are rejected; react-day-picker's `Nav` cannot hold a third button between its two | A `MonthCaption` part that renders its children and `NavArrow`, `TodayButton`, `NavArrow`, paged through `useDayPicker()`; each arrow gets its chevron as children (5.8) |
 | Variants of a react-day-picker part | A custom part cannot take our props | A variant is its own module-level component chosen in `components`: `BlankWeek` for `fixedWeeks: "blank"`, `FromCaption` and `ToCaption` for the phone dialog's badge. No context |
-| Module-level `Root` and `DayButton` parts | The stock `Calendar` builds them inline, so every render remounts the days and a click can be lost (`ui/calendar.tsx:137, 170`) | Two components of a few lines each, same markup as stock |
+| Module-level `Root` and `DayButton` parts | The stock `Calendar` builds them inline, so every render remounts the days and a click can be lost (`ui/calendar.tsx:137, 170`) | `Root`: one component of a few lines, same markup as stock. `DayButton`: the stock `CalendarDayButton` itself, passed as the part; it gets no `locale`, which the stock part reads only for the button's `data-day` attribute, and nothing reads that attribute |
 | iOS placeholder overlay (`picker-field.tsx`) | iOS shows an empty date box blank; `placeholder` does not apply to date inputs. Owner-approved | One `span` shown by `supports-[-webkit-touch-callout:none]`, hidden on focus |
 | Draft and remount (`picker-field.tsx`) | See section 6 rows 1, 2, 8 | One state shape, one pure `draftOf(input, left)`, one effect |
 | Growing year list (`views.ts` `listBounds`) | react-day-picker's default is 100 years back; the proposal's rule is 1900 to 2100 growing by century | One pure function; both limits always enter both ends (6.10) |
@@ -705,7 +707,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | 9 | `bandClassNames.range_start`, `.range_end` | 7.4 `range-mode.tsx:80-81, 92-101` | the stock band is off-centre in a cell wider than the day | audit 12 kept |
 | 10 | `bandClassNames.day_button` | 7.4 `:103`, the transition utilities | the stock button's `transition-all` would fade the band on every change | call 8 (5.5) |
 | 11 | `bandClassNames.root` | `w-full`; phone dialog adds `flex flex-1 flex-col` | a range's calendar is as wide as its end box | 7.4 |
-| 12 | `bandFillClassNames` | `range_middle` `data-[selected=true]:bg-muted`; `day_button` `size-(--cell-size) data-[range-middle=true]:bg-transparent data-[range-middle=true]:hover:bg-foreground/10` | in stretched cells the band is drawn by the cell and the day stays a square | owner-approved dialog |
+| 12 | `bandFillClassNames` | `range_middle` `data-[selected=true]:bg-muted data-[selected=true]:data-[today=true]:bg-muted` (the second outranks today's own `data-[selected=true]:bg-transparent`, so today inside the band is the band's colour, as on 7.4); `day_button` `size-(--cell-size) data-[range-middle=true]:bg-transparent data-[range-middle=true]:hover:bg-foreground/10` | in stretched cells the band is drawn by the cell and the day stays a square | owner-approved dialog |
 | 13 | `DayRangePanel`, `oneDay` modifier | `after:hidden` | a one-day range has no band half | audit 12 kept |
 | 14 | `picker-field.tsx` input | `appearance-none [&::-webkit-calendar-picker-indicator]:hidden` | one calendar button, not two; `appearance-none` is how the owner tested the box on iOS and cannot be checked here | audit 12 kept; 5.8 |
 | 15 | `picker-field.tsx` overlay | 7.4 `picker-field.tsx:195` | the iOS placeholder, placed like the input's own text | approved; call 8 (10.5) |

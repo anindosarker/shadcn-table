@@ -14,7 +14,7 @@ Version 9 is one component, `<DatePicker type range? />`, rebuilt once from a pl
 ### 1.2 Goals
 
 - One folder, 22 files: the entry, `types.ts`, `modes/`, `components/`, `utils/`.
-- `types.ts` holds 26 types: the public ones and the ones two or more files use. 47 types stay at the top of the one file that uses them.
+- `types.ts` holds 27 types: the public ones and the ones two or more files use. 49 types stay at the top of the one file that uses them.
 - No hook of our own. The range order is three plain functions.
 - The restructure changes no behaviour, markup, class or type shape.
 - Acceptance: `tsc`, `eslint` and `prettier` clean (2.2), and the comparison scripts give the same emitted values and the same pixels as before the restructure on all twelve rows, with only the allowed differences of the cases file.
@@ -155,17 +155,18 @@ The rule: `types.ts` holds the public types and every type two or more files of 
 - Does: keep heading comments per group in `types.ts`; import with `import type` only.
 - Does NOT: hold a type one file alone uses; import a component, mode or util file (its one import from the folder is the type `PickerLabels`).
 
-In `types.ts`, 26 types:
+In `types.ts`, 27 types:
 
 | Group | Types | Status |
 |---|---|---|
 | public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps`, `DatePickerProps` | keep, moved |
 | values | `HtmlProps` (a `div`'s attributes without `defaultValue`, `onChange`, `children`), `Limits` (`{ min?: string; max?: string }`), `ControlProps<Value>`, `PeriodType` | keep, moved |
 | range | `RangeEnd`, `RangeTimes` | keep, moved |
+| clock | `ClockUnit` (one unit a clock column lists: `time.ts` works it out, `time-columns.tsx` draws it) | new |
 | views | `ListBounds` | keep, moved |
 | popup | `PopupOptions` (the three popup props as one plain object, for the picker's own parts), `PopupActions` | keep, moved |
 
-Stays in its file, 47 types (status keep):
+Stays in its file, 49 types (status keep):
 
 | File | Types |
 |---|---|
@@ -180,10 +181,10 @@ Stays in its file, 47 types (status keep):
 | `components/view-nav.tsx` | `NavArrowProps`, `TodayButtonProps` |
 | `components/period-views.tsx` | `ViewProps`, `WeekCalendarProps`, `PeriodViewProps`, `GridArrow`, `GridHeaderProps`, `GridCell`, `PeriodGridProps` |
 | `components/time-field.tsx` | `TimeFieldProps`, `ClockPopoverProps` |
-| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps`, `UnitList` |
+| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps` |
 | `utils/values.ts` | `IgnoredProp`, `FormatPeriodInput` |
-| `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput` |
-| `utils/range.ts` | `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` |
+| `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput`, `ClockInput`, `UnitList` |
+| `utils/range.ts` | `PutEndInput`, `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` |
 | `utils/views.ts` | `ListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
 
 A type moves to `types.ts` in the change that gives it a second file, and not before.
@@ -195,7 +196,7 @@ Status is against what is built today. "keep, moved": `git mv` into its folder, 
 | File | Status | Single responsibility | Exports |
 |---|---|---|---|
 | `date-picker.tsx` | refactor: its 12 types | provide labels; check limits and step once; guard same-value once; pick the picker | `DatePicker`; re-exports the eight public types |
-| `types.ts` | new | the 26 types of 1.6.3 | those types; `PickerLabels` passed on |
+| `types.ts` | new | the 27 types of 1.6.3 | those types; `PickerLabels` passed on |
 | `modes/day-picker.tsx` | keep, moved | box, calendar popup and, for datetime, the Time field | `DayPicker` |
 | `modes/day-range-picker.tsx` | keep, moved | trigger, two end boxes and calendars, the two layouts | `DayRangePicker` |
 | `modes/time-range-picker.tsx` | keep, moved | two time fields | `TimeRangePicker` |
