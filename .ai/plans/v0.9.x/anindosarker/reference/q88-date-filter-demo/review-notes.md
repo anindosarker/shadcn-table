@@ -86,3 +86,9 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 - `.7.3` (`8930267`): decision 5, the year box as a four-digit text box (`maxLength`, `pattern`, `inputMode`); the number-box code removed. The second reader's round 3 found 3 must-fix (an unneeded second effect with `setCustomValidity`, `type === "text"` standing for "year", two dead map entries); `.7.4` (`96b85f4`, folder `components/date-picker-7-4`, cards `11.7.4`, `12.7.4`, 3,524 lines) fixed them. Round 4: ready for the owner, no must-fix.
 - `.7.4` is the latest. A complete year outside `min`/`max` is flagged as soon as its fourth digit is typed.
 - Open for the owner on `.7.4`: `title={labels.yearFormat}` ("Four digits, for example 2026") shows only as a hover tooltip in Chromium, whose message under the box for `195` stays "Please match the requested format."; options are our hint as the message, tooltip only, or dropped.
+
+### Owner calls on audit 7 (`audit-7.md`, 107 items on `.7.4`; 88 clear-cut ones are built as `.7.5`, 17 are choices)
+
+6. **Keep the From/To swap, one route only** (audit 7 item 3.1). 2026-11-21.
+   - A reversed typed range is still put in order. It happens once: when focus leaves both boxes, or when the popup closes. No per-box route, no second commit.
+   - This removes the order being fixed one Tab late from the To box (item 6.5) and the double commit, and most of the hook, flag and helpers that exist for the swap.
