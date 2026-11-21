@@ -96,3 +96,11 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
    - `modal="trap-focus"` goes from the calendar popover and the clock popover, with the hidden Close button that exists only for the trap, its class and the two direct Base UI imports.
    - Tab past the last control closes the popup, as in every stock shadcn popover. The dialog on phones keeps its own stock focus handling.
    - To check when built: the clock popover inside the date-time popup without the trap.
+8. **The remaining 15 choice items of audit 7 are settled by the runner, not asked.** 2026-11-21. Owner: "Why are you asking me these questions? This should have been resolved by you automatically." Rule used: where a user loses nothing, take the plain way; where the look or behaviour the owner approved would change, keep it and write its reason in one line. The owner can reopen any line.
+   - 1.7 phone dialog: Done only; the hand-made X and `labels.close` go.
+   - 1.6 week and month range: the From and To panel titles go, since a click in either panel does the same thing.
+   - 6.12 `presentation="auto"`: an open picker closing when the window crosses phone width is accepted and documented.
+   - 8.6 a range outside `min`/`max` turns its trigger red for every range kind, one rule.
+   - 8.7 the iOS placeholder overlay is given to every time box, one rule (to confirm on an iPhone).
+   - 8.11 and 11.3 the month and year grids no longer set their own `dir`; they follow the page.
+   - Kept, each with a one-line reason in the code: 1.4 the default-time fix after a swap (else an untouched range reads 23:59 to 00:00); 4.5 the From/To badge in the phone calendar header (own line would cost height, owner-approved dialog); 5.5 the range band's transition override, 5.6 the smaller dropdown text and 5.7 the today cell classes (owner-approved look); 10.1 the phone cell size, 10.3 the popup offsets and 10.5 the iOS placeholder's padding (owner-approved look, no stock route verified).
