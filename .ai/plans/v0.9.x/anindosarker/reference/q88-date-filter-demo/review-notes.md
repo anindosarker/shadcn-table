@@ -77,3 +77,9 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 - `.7.2` is the latest; the default folder `components/date-picker/` still holds `.6.2`. Rows 1 to 10 give the same values on `.7.1` as on `.6.3`.
 - From now on a second reader checks every version's diff before the owner sees it.
 - Open for the owner on `.7.2`: a short year like `195` shows a red border and no text (probe: a number box with `min` 1000 would give the browser's own range message); ArrowUp in an empty year box goes to 1 (stock number box); in the year range, typing over a year shows today's decade until the fourth digit, as the date range does when a date is typed over; `presentation="auto"` with no `open` passed probably closes when resized across phone width while open (since `.6.3`, not tested); spinner arrows and mouse-wheel stepping of the number box are left as the browser draws them.
+
+5. **The year box is a text box limited to four digits, not a number box.** 2026-11-21 (amends decision 4).
+   - Owner, on `.7.2`: "invalid years, the arrows look bad on empty space", with a screenshot of a year box holding some thirty digits beside the browser's spinner arrows; then "fix" on the runner's recommended option.
+   - The box becomes `<input type="text">` with `inputMode="numeric"`, `maxLength={4}` and a four-digit `pattern`, all stock attributes, in the same frame as before. Typing stops at four characters; no spinner arrows, no mouse-wheel stepping, no ArrowUp jump to year 1; a short entry like `195` gets the browser's own `pattern` message.
+   - Accepted cost: letters can be typed and are flagged, not stored; no arrow-key stepping; the browser does not check `min`/`max` on a text box, so a year outside the limits is flagged by the picker's own check for the year type.
+   - Everything else of decision 4 stands: the typed year is the value, only a complete four-digit year is stored, year range has From and To boxes in the popup.
