@@ -209,6 +209,7 @@ Not props, never to be added: `open`, `defaultOpen`, `onOpenChange` at the top l
 
 `from`, `to`, `done`, `close`, `clear(name)`, `goToToday`, `selectDate`, `selectDateTime`, `selectTime`, `selectTimeFor(end)`, `emptyEnd`, `rangeJoin`, `date`, `dateTime`, `time`, `dateRange`, `dateTimeRange`, `pickDateRange`, `pickDateTimeRange`, `hour`, `minute`, `second`, `amPm`, `am`, `pm`, `weekValue(week, year)`, `year`, `yearPlaceholder`, `yearFormat`, `yearMin(min)`, `yearMax(max)`, `decade(first, last)`, `selectWeek`, `selectMonth`, `selectYear`, `weekRange`, `monthRange`, `yearRange`, `pickWeek`, `pickMonth`, `pickWeekRange`, `pickMonthRange`, `pickYearRange`, `previousYear`, `nextYear`, `previousYears`, `nextYears`.
 
+- Version 9.1 has 47 keys too: `month` is added (the month box's noun), `pickMonth` is removed (the month trigger is gone). No `monthPlaceholder`: owner decision 2026-11-22, plain month input only.
 - Default texts are 7.4's, unchanged (the visible text is frozen: `pickDateRange` stays "Pick a date").
 - Against 7.4: `today` is now `goToToday`, `period` is now `amPm` (8.8); new `date` "Date" and `dateTime` "Date and time" (the box's noun, 7.1); new `decade`, default `first`, space, en dash, space, `last` as 7.4 draws it (10.6); gone `value`, `none`, `pickerValue`, `pickDateFirst`.
 
@@ -611,7 +612,7 @@ onClose={() => onChange(orderRange(value, times))}
 
 ## 6. Every state, effect, ref and context
 
-7 states, 2 effects, 11 refs, 2 contexts, no hook of our own. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
+7 states, 2 effects, 11 refs, 2 contexts, no hook of our own; version 9.1 adds one state (row 9.1), 8 in all. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
 
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
@@ -622,6 +623,7 @@ onClose={() => onChange(orderRange(value, times))}
 | 5 | state | `typing` | `DayRangePanel` | the end whose box is being typed, or `null`; a box that reports `""` (its X, or a half-typed date) sets `null`, because the X fires no blur and an empty end has no year | a date box reports years 1, 14, 144 while 1443 is typed; that end stays out of the year list until its box is left (R13) | none: only the picker knows a value is mid-typing |
 | 6 | state | `view` | `period-picker.tsx` `PeriodPanel` | the month, year or decade shown | same as 3 | same as 3 |
 | 7 | state | `views` | `period-range-picker.tsx` `PeriodRangePanel` | as 4, for months, years or decades | same as 4 (PR9) | none: the grids are custom |
+| 9.1 | state | `typing` | `period-range-picker.tsx` `PeriodRangePanel`, version 9.1 only | the end whose month box is being typed in, or `null`; set for month ends only, and `null` when a box reports `""` (the X empties a box without a blur, and an empty end has no year to keep out of the list) | a month box reports the years 1, 14 and 144 while 1443 is typed, so that end stays out of the year list until its box is left (MR4). A year box reports whole years only | none: same as 5 |
 | 8 | effect | re-read validity | `picker-field.tsx` | deps `value, min, max, step` | a value or limit that arrives from outside is checked like a typed one (B7, B8). It sets `draftOf(input, left)`, where `left` is the old draft's `left` when that draft is for this same value (the value was typed here, so the mark waits until the box is left), else `true` (the value came from outside, so it is flagged at once). Where the value came from is told by the draft, never by where focus is | handlers alone (they do not run for an outside change) |
 | 9 | effect | centre the selection | `time-columns.tsx` `TimeColumn` | runs once on mount | the selected time is in view when the clock opens (C2) | `scrollIntoView` (scrolls the popup and the page too) |
 | 10 | ref | `inputRef` | `picker-field.tsx` | the input | effect 8 reads `validity` and `validationMessage` | none |
