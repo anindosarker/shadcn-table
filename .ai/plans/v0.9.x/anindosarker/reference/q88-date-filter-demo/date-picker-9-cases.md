@@ -217,7 +217,7 @@ Version 9.1 only (card 10.I). The trigger, its text and its X are PR1 as written
 
 Owner decision 2026-11-22, with MDN's page for `<input type="week">` ("Need to update this one as well"): a plain week input only, as the month box: no `pattern` and no placeholder on the input, nothing for a browser without the week control.
 Version 9.2 only (`components/date-picker-9-2`, card 7.I). It replaces P1, P15 and P16 for `type="week"`; P2, P3 and P17 hold as written. "From" names the case the row follows.
-In Chromium a week is typed as its number, then the four digits of the year. Two digits of a week move on to the year by themselves; one digit needs the right arrow or Tab first (5, right arrow, 1443), or the browser reads the next digit into the week. The control's value is `yyyy-Www`, the text the picker stores: nothing is converted. The value line and the calls line are the two lines under the card.
+In Chromium a week is typed as its number, then the four digits of the year. Two digits of a week move on to the year by themselves; one digit needs the right arrow or Tab first (5, right arrow, 1443), or the browser reads the next digit into the week. The control's value is `yyyy-Www`, the text the picker stores: nothing is converted. The value line and the calls line are the two lines under the card. Run on card 7.I in Chromium at 1280 by 800 and 390 by 844: every row but W16 gives the line written here, at both sizes.
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
@@ -229,7 +229,7 @@ In Chromium a week is typed as its number, then the four digits of the year. Two
 | W6 | A far year is typed (5, right arrow, 1443), then the calendar button | the calendar shows January 1443, the month of that week's Monday, with the week as the band; the year select runs 1400 to 2100 | `"1443-W05"`, four calls; opening: no call | M6, D7 |
 | W7 | The same under Limits "min/max" | the year list does not grow; the box is flagged after leaving | the week as typed | M7 |
 | W8 | X | shown when the box holds a value or half-typed text; a press empties the box, half-typed text included | `""`, one call; no call when the value was already `""` | M8, B6 |
-| W9 | Calendar button after a typed week | the calendar opens on the month of the typed week's Monday, that week as the band | no call | M9, D3 |
+| W9 | Calendar button after a typed week | the calendar opens on the month of the typed week's Monday, that week as the band. 2026-W01 opens on December 2025: its Monday is 29 December | no call | M9, D3 |
 | W10 | A day is clicked in the calendar after a week was typed | the popup closes; the box shows the clicked day's week | `YYYY-Www`, one call; a click on a day of the selected week: no call | P3, G1 |
 | W11 | Preset | the calendar moves to it; the popup stays open; the box shows it | the preset's value, one call | M11, P17 |
 | W12 | A fifth year digit: 47, 20311 | Chromium: the year part holds four digits (the box holds `max` 9999-W52), so the fifth digit pushes the first one out and the box shows Week 47, 0311, as the month box of card 9.I does. A week with a five-digit year that a browser does report is not passed on | `"2031-W47"` after four digits, then `"0311-W47"`, one more call | M12, B5 |
@@ -240,16 +240,16 @@ In Chromium a week is typed as its number, then the four digits of the year. Two
 
 ### 2.14 week range, typed in two boxes (version 9.2)
 
-Version 9.2 only (card 8.I). The trigger, its text ("Week 44, 2026 - Week 47, 2026") and its X are PR1 as written; PR4 to PR9 and PR12 hold as written. PR2 is replaced for `type="week"` by WR1.
+Version 9.2 only (card 8.I). The trigger, its text ("Week 44, 2026 - Week 47, 2026") and its X are PR1 as written; PR4 to PR9 and PR12 hold as written. PR2 is replaced for `type="week"` by WR1. Run on card 8.I in Chromium at 1280 by 800 and 390 by 844: every row but WR11 gives the line written here, at both sizes.
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
-| WR1 | Popup | per end: label, week box with its X (no calendar button), week calendar; presets under both. iOS: "Select week" is drawn over each empty end box (B9; read in the code) | - | MR1, PR3 |
+| WR1 | Popup | per end: label, week box with its X (no calendar button), week calendar; presets under both. Each end box is as wide as its calendar (224 px), so the popup is as wide as on version 9: 484 px at 1280, 244 px at 390. On open, focus is in the From box, the first control of the popup. iOS: "Select week" is drawn over each empty end box (B9; read in the code) | - | MR1, PR3 |
 | WR2 | An end is typed: From 23, 2027 | both calendars go to the months of the new pair: From's calendar June 2027 with week 23 as the band, To's calendar the month after | `["2027-W23", ""]`; four calls, one per week the browser reports (W2) | MR2, R12 |
 | WR3 | The other end is typed: To 10, 2030 | From's calendar June 2027, To's calendar March 2030; the band runs from the Monday of week 23, 2027 to the Sunday of week 10, 2030 | `["2027-W23", "2030-W10"]`, four calls | MR3, R12 |
 | WR4 | Year list while an end is typed | the end being typed is left out of the year list until its box is left: the week box reports the years 1, 14 and 144 while 1443 is typed. From 5, right arrow, 1443: while the box has focus the list stays 1900 to 2100 and From's calendar stays on January 1900; when the box is left the list runs from 1400 and From's calendar shows January 1443 | `["1443-W05", to]`, four calls; leaving: no call | MR4, R13 |
 | WR5 | The typed pair is reversed (From 2030-W23, To 2027-W10), focus still in the To box | the band is drawn from the earlier week to the later | the reversed pair as typed | MR5, R14 |
-| WR6 | Focus leaves both boxes for anything else (the popup's padding, a day, an arrow), or the popup closes | the ends swap; the calendars go to the ordered months. A move from one box to the other never swaps. A box cleared by its X fires no blur, so the X never swaps | the ordered pair, once | MR6, R15, PR11 |
+| WR6 | Focus leaves both boxes for anything else (the popup's padding, a day, an arrow), or the popup closes | the ends swap; the calendars go to the ordered months. A move from one box to the other never swaps. A box cleared by its X fires no blur, so the X never swaps. A press on a day does the swap and picks nothing: the calendars go to the ordered months under the pointer before the press ends, as the month grids of card 10.I do | the ordered pair, once | MR6, R15, PR11 |
 | WR7 | X on an end's box | that end is emptied; the other end stays | the pair with that end `""`, one call | MR7, B6 |
 | WR8 | A day is clicked in a calendar after an end was typed | the pick rule of PR4 to PR6; the boxes show the new pair; the popup stays open | the new pair, one call | MR8, PR4 to PR7 |
 | WR9 | An end is half-typed (its year part deleted) | the typed week number stays; flagged after leaving | that end `""`, one call | MR9, B2 |
