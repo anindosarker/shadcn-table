@@ -178,7 +178,7 @@ In Chromium a month is typed as its number, then the right arrow or Tab, then th
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
-| M1 | Closed, empty | a month box (`<input type="month">`, `max` 9999-12 when the app sets none, `pattern` `[0-9]{4}-[0-9]{2}`, placeholder "yyyy-mm"), X hidden, calendar button "Select month" | `""`, 0 | D1, P7 |
+| M1 | Closed, empty | a month box (`<input type="month">`, `max` 9999-12 when the app sets none, `pattern` `[0-9]{4}-[0-9]{2}`, placeholder "yyyy-mm"), X hidden, calendar button "Select month". Chromium draws its own empty parts ("--------- ----") in the box, not the placeholder. iOS: "yyyy-mm" is drawn over the empty box (B9; read in the code, not run in a browser) | `""`, 0 | D1, P7 |
 | M2 | A complete month is typed: 11, right arrow, 2031 | the box shows November 2031; the X shows | `"2031-11"`; four calls, one for each month the browser reports while the year is typed (0002-11, 0020-11, 0203-11, 2031-11), as a date box does | B1 |
 | M3 | Half-typed: the year part of a typed month is deleted | the typed month name stays; no red mark while focused; after leaving: red border and the browser's message under the box | `""`, one call; leaving: no call | B2 |
 | M4 | A complete month outside `min` or `max` is typed (Limits "min/max") | value kept; red border and the browser's range message after leaving | the month as typed | B3 |
@@ -189,7 +189,7 @@ In Chromium a month is typed as its number, then the right arrow or Tab, then th
 | M9 | Calendar button after a typed month | the grid opens on the typed month's year, that month pressed | no call | D3 |
 | M10 | A month is clicked in the grid after one was typed | the popup closes; the box shows the clicked month | `YYYY-MM`, one call; a click on the selected month: no call | P6, G1 |
 | M11 | Preset | the grid moves to it; the popup stays open; the box shows it | the preset's value, one call | P17 |
-| M12 | A year of five digits | where the box holds `max` 9999-12 the year part takes four digits (Chromium); a month with a five-digit year that a browser does report is not passed on | nothing | B5 |
+| M12 | A fifth year digit: 07, right arrow, 20311 | Chromium: the year part takes four digits (the box holds `max` 9999-12), so the fifth digit starts the year over and the box shows July 0311, as the date box of card 1.9 does. A month with a five-digit year that a browser does report is not passed on | `"2031-07"` after four digits, then `"0311-07"`, one more call | B5 |
 | M13 | Name | the app's `<label for>`, `aria-label` or `aria-labelledby` names the box; else "Month". The X is "Clear Month" | - | B10; replaces P16 |
 | M14 | `disabled` | box and calendar button disabled, no X | never | G2 |
 | M15 | A browser with no month control (Firefox, desktop Safari, Playwright's WebKit) | a text box with the placeholder "yyyy-mm". A text that is not four digits, a hyphen and two digits gets the browser's pattern message after leaving; no range message. Accepted as the browser draws it: there is no second code path | a text on the pattern is the value as typed; any other text is `""` | the decision of 2026-11-22; the year box's pattern test (P8) |
@@ -200,7 +200,7 @@ Version 9.1 only (card 10.I). The trigger, its text and its X are PR1 as written
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
-| MR1 | Popup | per end: label, month box with its X (no calendar button), month grid; presets under both | - | PR3 |
+| MR1 | Popup | per end: label, month box with its X (no calendar button), month grid; presets under both. Each column is as wide as its month box, as in the year range: the grid is 156 px wide at 1280 and 171 px at 390, against 152 on version 9. iOS: "yyyy-mm" is drawn over each empty end box (B9; read in the code) | - | PR3 |
 | MR2 | An end is typed: From 6, right arrow, 2027 | both grids go to the years of the new pair: From's grid 2027 with Jun pressed, To's grid the year after | `["2027-06", ""]`; four calls, one per month the browser reports (M2) | R12 |
 | MR3 | The other end is typed: To 3, right arrow, 2030 | From's grid 2027, To's grid 2030; the band runs from Jun 2027 to Mar 2030 | `["2027-06", "2030-03"]`, four calls | R12 |
 | MR4 | Year list while an end is typed | the end being typed is left out of the year list until its box is left: the month box reports the years 1, 14 and 144 while 1443 is typed. From 5, right arrow, 1443: while the box has focus the list stays 1900 to 2100 and From's grid stays on 1900; when the box is left the list runs from 1400 and From's grid shows 1443 | `["1443-05", to]`, four calls; leaving: no call | R13 |
