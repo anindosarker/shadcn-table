@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D159** The docs site's PostHog SDK is updated to the latest 1.x and its setup rechecked #R6
+	- posthog-js in apps/shadcn-table-docs goes from 1.438.13 to the latest 1.x (1.453.2 on 2026-11-23), package.json and lockfile only; no other code changes unless the release notes between the two versions or the setup recheck require one, and then the tracker names it. The setup is rechecked against PostHog's current Next.js install guide (init place and options, key and host, pageview capture, any proxy or rewrite) and each point is recorded as matches or differs. It ships by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag, the sites stay 0.9.7; local checks are install, docs types:check, lint and the docs build. After the merge the live site is loaded and a capture request to PostHog is seen answering 200 with the new SDK version in it. Owner, 2026-11-23: 'Update the SDK, double check if every installation, everything is properly done and then deploy', 'we can skip huge long-running checks'.
+	- Source: Q147
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
