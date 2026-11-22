@@ -27,6 +27,37 @@ The owner agreed to every point below on 2026-11-20 ("I agree to all the proposa
 - Mapping of the letters: 4.AL (default folder) 4.0, 4.AM 4.1, 4.AO 4.1.1, 4.AN 4.2 (rejected), 4.AP 4.3, 4.AQ 4.4, 4.AR 4.5, 4.AS 4.6.
 - 4.AS (4.6) is built: `type` and `range` props, week, month and year types, six new demo rows 7 to 12. The browser's week and month boxes work only in Chrome on desktop (MDN compat data), so the three new types use a trigger button and no typed box.
 
+## State after the owner's check (2026-11-20)
+
+- Card titles read `<row>.<version> (<old id>)`, for example `7.6 (7.A)`: the owner asked for the section number first, since a leading 4 on every version meant nothing. The version is the same number in every row. Folders keep the `date-picker-4-6` pattern.
+- `.6` (type and range props, week, month, year) looks good to the owner.
+- `.7` (arrows page past 1900 and 2100) and `.8` (typed year box) are both rejected: "don't look good enough". Week, month and year keep the 1900 to 2100 list by hand; an app widens it through `calendarProps`.
+- The twelve `.6` cards have a closed "Settings" section with one switch per supported prop (shared helper `_components/picker-settings.tsx`).
+- `.6.1` is being built on the owner's "fix it": fixes only, on `.6`. Single week calendar reaching December of the last year, a visible message for a required empty picker with hidden inputs, the calendar returning to today's month after a far value is cleared, trigger text following the locale, month and year range panels kept apart, right-to-left arrow keys in the grid, `calendarProps` typed to what month and year use.
+- Not done yet: a review of the code by a fresh reader, and a look in Firefox, real Safari and on an iPhone.
+
+## Form use and defaultValue removed (owner, 2026-11-20: "cut it")
+
+- Form use (`name`, `required`, `form`, `startName`, `endName`, hidden inputs, the required message) and `defaultValue` are removed in `.6.2`. They were built in `.5` on the runner's misreading of the owner's line "now: other languages, form use, defaultValue, open state", which quoted the "Not now" list.
+- Reason: the usual way is a form library or a `Field` wrapper driving the picker through `value` and `onChange`; shadcn's own date picker recipes pass no `name`. The picker only has to put the wrapper's `aria-invalid`, `aria-describedby`, `id` and label on the right element.
+- `labels` and the open state props (`open`, `defaultOpen`, `onOpenChange`) stay for now; the owner has not ruled on them.
+- Everywhere below, read the form props and `defaultValue` as removed.
+- `.6.2` also carries the fixes of `audit-6.md` (a fresh reviewer's audit of `.6.1`): bugs A1 to A13 minus the ones that existed only for form use, cleanup B and C, API gaps E. Lead's calls for the owner to review: a half-cleared box reports empty; a time-only range is not reordered, so 22:00 to 06:00 can be entered; a half-typed box shows the browser's message; month and year take `startMonth` and `endMonth` in `calendarProps` again.
+
+## .6.2 accepted (owner, 2026-11-21: ".6.2 looks good")
+
+- `.6.2` is next-app commit 9b6dfd1, folder `components/date-picker-4-6-2`, cards `1.6.2` to `12.6.2`. It is the latest version; the default folder `components/date-picker/` still holds the `.0` code.
+- Final props: every type `type`, `range`, `value`, `onChange`, `disabled`, `min`, `max`, `labels` and HTML attributes (`id` and `aria-*` reach the control); date, datetime, week, month, year also `presentation`, `calendarProps`, `presets`, `open`, `defaultOpen`, `onOpenChange`, `popoverProps`, `dialogProps`; datetime and time also `step`; time also the open state props and `popoverProps`.
+- Audit 6 claims that did not reproduce and were left alone: A8, H3, H4. Kept on purpose: A14 (long year list after a far typed year), C3 (two caption headers).
+- Not seen in Firefox, real Safari or on an iPhone.
+
+## Promoted (owner, 2026-11-21: "promote to default. then remove unnecessary ones")
+
+- `components/date-picker/` in next-app is the `.6.2` code, byte-identical at commit 5f529b1; 3,395 lines in 23 files. It is the only picker folder: all `date-picker-4-*` folders are deleted (commit 2759af6).
+- The demo page has twelve rows with one card each, titled `<row>.6.2 (<id>) Date picker`. Rows 1 to 6 use the ids the owner had ticked as Default (`1.Z`, `2.Z`, `3.AE`, `4.AU`, `5.J`, `6.L`), rows 7 to 12 use `E`. `defaults.json` and `picks.json` are the owner's uncommitted edits and were not touched.
+- A new version is again a full copy of `components/date-picker/`, numbered from `.6.3` (fix) or `.7` (feature).
+- Next: the owner's code review of that one folder.
+
 ## Typed values and limits
 
 - By default the box takes any real date. Today it refuses a date outside 1900 to 2100 and keeps the old value; that goes.
