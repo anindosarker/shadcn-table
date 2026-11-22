@@ -154,3 +154,16 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
   - Week and month text boxes have a `pattern` but no `title`, so the browser's message names no format.
 - Not checked in a browser: a date-time range with a `step` under 60 seconds shows seconds in the box, which may be clipped at the fixed popup width.
 - Not seen: desktop Safari, iPhone, right-to-left, Firefox below 500 px wide. The month case script was not rerun on 9.3.1.
+
+## Version 9.3.2, no own message, 2026-11-23
+
+- Owner decision: the picker is always inside a form wrapper that shows its own error, so the picker shows no message and marks nothing invalid by itself ("remove the picker's own message, build 9.3.2").
+- Folder `test-projects/next-app/components/date-picker-9-3-2`, head `43bd90a` (next-app, not pushed). Cards "Full version, no own message" on all twelve rows. Differs from 9.3.1 in `components/picker-field.tsx` (298 to 228 lines), `components/labels.ts` (48 to 45 keys), `modes/period-range-picker.tsx`, `modes/day-range-picker.tsx`.
+- Removed: the message under the typed box and its wrapper, the picker's own `aria-invalid`, the own limit and not-a-real-week texts, the read of the browser's message, one effect and its ref, the prop `boxClassName`, three label keys.
+- Kept: `aria-invalid`, `aria-describedby`, `disabled`, `required`, `min`, `max`, `step` passed through; the value rules (bad text gives no value, a value outside the limits is kept, a pick replaces bad text, the X clears any text); `pattern` on year, week and month and the `title` on the year box.
+- Also in: a typed week refuses year 0000; the `isUnreal` comment corrected.
+- Checks: a reader with no history (clean; his own Chromium runs: positions and sizes of every part equal to 9.3.1 on all twelve rows at 1280, 390 and 320 wide, 43 value states equal). Real Firefox at 1280 on all twelve rows (clean). Chromium step scripts at 1280, all twelve rows: values equal. The full Chromium pixel chain and the 390 pass were stopped on the owner's word for speed.
+- Open, not built:
+  - `draftOf` in `picker-field.tsx` has one caller left (`read`); the two can be one function.
+  - Firefox, date-time range: the empty popup of 9.3.2 is about 35 px taller than 9.3.1's (blank band under the calendars); the run also saw 9.3.1's popup grow on the first pick in Firefox. Cause not looked up.
+  - Not seen: Safari, iPhone (the placeholder overlay now reads the box, not the message), the picker inside a real form library.
