@@ -264,11 +264,11 @@ components/date-picker-9/
 | `modes/day-picker.tsx` | Box, calendar popup and, for datetime, the Time field | `DayPicker` | `DayPicker`, `DayPanel` | rows 1 and 3 |
 | `modes/day-range-picker.tsx` | Trigger, the two end boxes and calendars, the two layouts | `DayRangePicker` | `DayRangePicker`, `DayRangePanel` | rows 2 and 4 |
 | `modes/time-range-picker.tsx` | Two time fields | `TimeRangePicker` | one component | row 6 |
-| `modes/period-picker.tsx` | Trigger (week, month) or box (year) and one view | `PeriodPicker` | `PeriodPicker`, `PeriodPanel` | rows 7, 9, 11 |
-| `modes/period-range-picker.tsx` | Trigger and two views; year boxes | `PeriodRangePicker` | `PeriodRangePicker`, `PeriodRangePanel` | rows 8, 10, 12 |
+| `modes/period-picker.tsx` | Box and one view (version 9: a trigger for week and month) | `PeriodPicker` | `PeriodPicker`, `PeriodPanel` | rows 7, 9, 11 |
+| `modes/period-range-picker.tsx` | Trigger, two end boxes and two views (version 9: boxes for year only) | `PeriodRangePicker` | `PeriodRangePicker`, `PeriodRangePanel` | rows 8, 10, 12 |
 | `components/picker-field.tsx` | One native or year input: draft, X, message, iOS overlay | `PickerField` | one component, `draftOf`, the input table | nine call sites type a value |
-| `components/picker-box.tsx` | `PickerField` plus a calendar button that opens `PickerPopup` | `PickerBox` | one component | date, datetime and year share it |
-| `components/picker-trigger.tsx` | Button with the value text, X, `PickerPopup` | `PickerTrigger` | one component | seven range and period pickers share it |
+| `components/picker-box.tsx` | `PickerField` plus a calendar button that opens `PickerPopup` | `PickerBox` | one component | date, datetime, week, month and year share it |
+| `components/picker-trigger.tsx` | Button with the value text, X, `PickerPopup` | `PickerTrigger` | one component | the five range pickers that open a popup share it |
 | `components/picker-popup.tsx` | Decide popover or dialog; render it; say "phone dialog" | `PickerPopup`, `PhoneDialogContext` | the only file that imports `ui/popover` and `ui/dialog` as values (`types.ts` imports their types); no hook; readers call `React.useContext(PhoneDialogContext)` | one place for the decision; with group "popup" of `types.ts`, all a port to another base rewrites |
 | `components/picker-presets.tsx` | Buttons that set a value | `PickerPresets` | one component | four panels show presets |
 | `components/day-calendar.tsx` | Stock `Calendar` with the picker's caption, limits, blank weeks, phone fill, range band | `DayCalendar` | the only file that imports `ui/calendar` as a value and react-day-picker's hooks | four panels draw a day calendar |
@@ -507,7 +507,7 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 
 | Part | Prop | Type | Passed by | Why (user need) |
 |---|---|---|---|---|
-| `PickerField` | `type` | `"date" \| "datetime-local" \| "time" \| "year"` | every caller | which box is drawn (2.2); `"year"` is the text box |
+| `PickerField` | `type` | `"date" \| "datetime-local" \| "time" \| "week" \| "month" \| "year"` | every caller | which box is drawn (2.2); `"year"` is the text box |
 | | `value`, `onValueChange` | `string`, `(value: string) => void` | every caller | the box shows the value and passes typed values on (B1, B2) |
 | | `label` | `string` | every caller | the box's noun ("Date", "Time", "Year", "From", "To"): names the X always, names the box when the app gives no `id`, `aria-label` or `aria-labelledby` (B10) |
 | | `placeholder` | `string?` | the callers of B9 and the year boxes | the year box's own placeholder; the iOS overlay's text (B9) |
@@ -524,7 +524,7 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | `PickerTrigger` | `label` | `string` | the four trigger pickers | the picker's noun ("Date range", "Select week"). The app's `aria-label` first, else this, names the popup and the X, as 7.4. It is never set on the trigger button (P16) |
 | | `text`, `placeholder` | `string`, `string` | the trigger pickers | the value as text; `""` shows the placeholder and hides the X (R1, P1, P4, PR1) |
 | | `onClear` | `() => void` | the trigger pickers | the X empties the value; the trigger then takes focus (R2) |
-| | `onClose` | `(() => void)?` | `DayRangePicker`, `PeriodRangePicker` | the pair is ordered when the popup closes (R15, PR11) |
+| | `onClose` | `() => void` (optional up to 9.2) | `DayRangePicker`, `PeriodRangePicker` | the pair is ordered when the popup closes (R15, PR11) |
 | | `popupActions` | as `PickerBox` | `PeriodPicker` (week, month; week alone in 9.1) | close on a pick (P3, P6). Removed in 9.2: nobody passes it |
 | | `disabled` | `boolean?` | the picker's rest | G2 |
 | | `presentation`, `popoverProps`, `dialogProps` | `PopupOptions` | the picker's rest | named here and given to `PickerPopup` |
@@ -650,7 +650,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | Year box limited to four digits | `type="text"`, `inputMode`, `maxLength`, `pattern` | decision 5 |
 | A time box that cannot be empty | native `required` | DT8 |
 | Box frame, X and popup button inside it | `InputGroup`, `InputGroupAddon`, `InputGroupButton` (already `type="button"`) | `ui/input-group.tsx:11-23, 44-64, 83-102` |
-| Box and message laid out with the style's gap; labelled fields | `Field`, `FieldLabel`, `FieldTitle`, `FieldError`, `FieldGroup` | `ui/field.tsx:64-78, 93-108, 110-118, 162-211, 35-46` |
+| Box and message laid out with the style's gap; labelled fields | `Field`, `FieldLabel`, `FieldError`, `FieldGroup` | `ui/field.tsx:64-78, 93-108, 162-211, 35-46` |
 | Popover: open state, placement, portal | `Popover`, `PopoverTrigger`, `PopoverContent` | `ui/popover.tsx:7-47`; `nm/@base-ui/react/popover/root/PopoverRoot.d.ts:21, 25, 29` |
 | No focus trap; Tab out closes | `modal` defaults to `false`; focus-out close | `PopoverRoot.d.ts:58`; `nm/@base-ui/react/floating-ui-react/components/FloatingFocusManager.js:130, 318` |
 | Close on pick | `actionsRef.current.close()` on both roots | `PopoverRoot.d.ts:41, 81-84, 93`; `nm/@base-ui/react/dialog/root/DialogRoot.d.ts:58, 82-85` |
@@ -734,7 +734,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | 30 | `picker-presets.tsx` row | `flex w-0 min-w-full flex-wrap gap-2 border-t pt-4` | many presets wrap and do not widen the popup | audit 12 kept |
 | 31 | `period-views.tsx` cells | `font-normal tabular-nums`; `bg-muted` in a range; `bg-muted text-foreground` today | the stock calendar's own today and middle look | 7.4 |
 | 32 | `view-nav.tsx` `NavArrow` | `aria-disabled:opacity-50` | a focusable disabled button is not `:disabled`, so the stock dimming does not match it; the stock calendar arrows use the same class (`ui/calendar.tsx:59`) | 2.5 |
-| 33 | `picker-field.tsx` input, version 9.3 (from 9.1.3) | under `supports-[-moz-appearance:none]:[&:is([type=date],[type=datetime-local],[type=time])]:` the three classes `-mr-[calc(min(16px,1em)+0.525em)]`, `pr-0`, `[clip-path:inset(0_calc(min(16px,1em)+0.525em)_0_0)]` | Firefox draws its own picker button at the end of a date, date-time and time box, and no selector reaches it; it is clipped away and the layout pulled back by the same width, so the box has one calendar button and a click there no longer reaches Firefox's. Chromium and WebKit do not match the `supports` test. Space in a date part and Tab-then-Enter still open Firefox's picker; right-to-left is not covered | the lengths are the width of Firefox's button from its `toolkit/content/widgets/datetimebox.css` (icon `min(16px, 1em)`, plus padding and margin `0.525em`), not sizes of ours; owner's choice of 9.1.3, 2026-11-22 |
+| 33 | `picker-field.tsx` input, version 9.3 (from 9.1.3) | under `supports-[-moz-appearance:none]:[&:is([type=date],[type=datetime-local],[type=time])]:` the three classes `-mr-[calc(min(16px,1em)+0.525em)]`, `pr-0`, `[clip-path:inset(0_calc(min(16px,1em)+0.525em)_0_0)]` | Firefox draws its own picker button at the end of a date, date-time and time box, and no selector reaches it; it is clipped away and the layout pulled back by the same width, so the box has one calendar button and a click there no longer reaches Firefox's. `pr-0` drops the box's own end padding (6px from the stock group), so that button is the last thing in the box and the clip takes exactly it. Chromium and WebKit do not match the `supports` test. Space in a date part and Tab-then-Enter still open Firefox's picker; right-to-left is not covered | the lengths are the width of Firefox's button from its `toolkit/content/widgets/datetimebox.css` (icon `min(16px, 1em)`, plus padding and margin `0.525em`), not sizes of ours; owner's choice of 9.1.3, 2026-11-22 |
 
 Layout classes of our own elements (not overrides), all from 7.4: panels `flex flex-col gap-4`; a range's columns `flex flex-col gap-4 md:flex-row`, each `flex flex-col gap-2`; phone-dialog range `flex grow flex-col gap-2` with calendars in `flex flex-1 flex-col gap-2`; the Time field `border-t pt-4`; grid `grid grid-cols-3 gap-1`; grid and caption header `flex items-center justify-between gap-0.5`, its buttons in `flex shrink-0 items-center`; decade text `px-1 text-sm font-medium tabular-nums`; clock `flex divide-x`, a column's list `flex flex-col gap-1 p-1`; dialog body `flex min-h-0 grow flex-col items-center overflow-y-auto`; caption with a badge `flex min-w-0 items-center gap-2`; the caption's two chevrons `size-4 rtl:rotate-180` (5.8).
 
@@ -789,7 +789,7 @@ Deliberately not addressed, and why:
 |---|---|---|
 | 1.3 | From and To labels of equal width in the phone dialog | look frozen (call 9); the mechanism changes to one grid with an `auto` label column (section 9 row 25) |
 | 1.4 | the default-time fix after a swap | call 8 |
-| 1.6 | From and To titles over week and month range views | call 9 |
+| 1.6 | From and To titles over week and month range views (version 9; gone in 9.2) | call 9 |
 | 1.9 | dimmer other-month days | look frozen (call 9) |
 | 1.10 (class) | `cn-button-group-orientation-horizontal` | look frozen (call 9) |
 | 2.6, 9.15 | `formatValue` in two steps; "drop empty ends, then sort" inline | the audit's own verdict is keep |
