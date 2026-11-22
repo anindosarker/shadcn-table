@@ -171,6 +171,47 @@ Applies to the date, date-time, time and year boxes, the two boxes of a date, da
 | U8 | Open state | `open`, `defaultOpen`, `onOpenChange` inside `popoverProps` and `dialogProps`; with `auto` an app that controls it writes it in both | same (decision 1) |
 | U9 | `dialogProps` and the X | the app cannot switch a second X on | 7.4 wrong (1.7): `showCloseButton` got through |
 
+### 2.11 month, typed in a box (version 9.1)
+
+Version 9.1 only (`components/date-picker-9-1`, card 9.I). It replaces P4, P15 and P16 for `type="month"`; P5, P6, P12, P14, P17 and P18 hold as written. "From" names the version 9 case the row follows.
+In Chromium a month is typed as its number, then the right arrow or Tab, then the four digits of the year. The value line and the calls line are the two lines under the card.
+
+| # | Case | User sees | Value line, calls | From |
+|---|---|---|---|---|
+| M1 | Closed, empty | a month box (`<input type="month">`, `max` 9999-12 when the app sets none, `pattern` `[0-9]{4}-[0-9]{2}`, placeholder "yyyy-mm"), X hidden, calendar button "Select month" | `""`, 0 | D1, P7 |
+| M2 | A complete month is typed: 11, right arrow, 2031 | the box shows November 2031; the X shows | `"2031-11"`; four calls, one for each month the browser reports while the year is typed (0002-11, 0020-11, 0203-11, 2031-11), as a date box does | B1 |
+| M3 | Half-typed: the year part of a typed month is deleted | the typed month name stays; no red mark while focused; after leaving: red border and the browser's message under the box | `""`, one call; leaving: no call | B2 |
+| M4 | A complete month outside `min` or `max` is typed (Limits "min/max") | value kept; red border and the browser's range message after leaving | the month as typed | B3 |
+| M5 | A month outside `min` or `max` arrives from the grid's value, a preset or the app | the box is flagged at once | - | B7; replaces P15 (the red trigger) |
+| M6 | A far year is typed (5, right arrow, 1443), then the calendar button | the grid shows 1443 with May pressed; the year select runs 1400 to 2100 | `"1443-05"`, four calls; opening: no call | D7 |
+| M7 | The same under Limits "min/max" | the year list does not grow; the box is flagged after leaving | the month as typed | D7, B3 |
+| M8 | X | shown when the box holds a value or half-typed text; a press empties the box, half-typed text included | `""`, one call; no call when the value was already `""` | B6 |
+| M9 | Calendar button after a typed month | the grid opens on the typed month's year, that month pressed | no call | D3 |
+| M10 | A month is clicked in the grid after one was typed | the popup closes; the box shows the clicked month | `YYYY-MM`, one call; a click on the selected month: no call | P6, G1 |
+| M11 | Preset | the grid moves to it; the popup stays open; the box shows it | the preset's value, one call | P17 |
+| M12 | A year of five digits | where the box holds `max` 9999-12 the year part takes four digits (Chromium); a month with a five-digit year that a browser does report is not passed on | nothing | B5 |
+| M13 | Name | the app's `<label for>`, `aria-label` or `aria-labelledby` names the box; else "Month". The X is "Clear Month" | - | B10; replaces P16 |
+| M14 | `disabled` | box and calendar button disabled, no X | never | G2 |
+| M15 | A browser with no month control (Firefox, desktop Safari, Playwright's WebKit) | a text box with the placeholder "yyyy-mm". A text that is not four digits, a hyphen and two digits gets the browser's pattern message after leaving; no range message. Accepted as the browser draws it: there is no second code path | a text on the pattern is the value as typed; any other text is `""` | the decision of 2026-11-22; the year box's pattern test (P8) |
+
+### 2.12 month range, typed in two boxes (version 9.1)
+
+Version 9.1 only (card 10.I). The trigger, its text and its X are PR1 as written; PR4 to PR9 and PR12 hold as written. PR2 is replaced for `type="month"` by MR1.
+
+| # | Case | User sees | Value line, calls | From |
+|---|---|---|---|---|
+| MR1 | Popup | per end: label, month box with its X (no calendar button), month grid; presets under both | - | PR3 |
+| MR2 | An end is typed: From 6, right arrow, 2027 | both grids go to the years of the new pair: From's grid 2027 with Jun pressed, To's grid the year after | `["2027-06", ""]`; four calls, one per month the browser reports (M2) | R12 |
+| MR3 | The other end is typed: To 3, right arrow, 2030 | From's grid 2027, To's grid 2030; the band runs from Jun 2027 to Mar 2030 | `["2027-06", "2030-03"]`, four calls | R12 |
+| MR4 | Year list while an end is typed | the end being typed is left out of the year list until its box is left: the month box reports the years 1, 14 and 144 while 1443 is typed. From 5, right arrow, 1443: while the box has focus the list stays 1900 to 2100 and From's grid stays on 1900; when the box is left the list runs from 1400 and From's grid shows 1443 | `["1443-05", to]`, four calls; leaving: no call | R13 |
+| MR5 | The typed pair is reversed (From 2030-06, To 2027-03), focus still in the To box | the band is drawn from the earlier month to the later | the reversed pair as typed | R14 |
+| MR6 | Focus leaves both boxes for anything else (the popup's padding, a grid button, an arrow), or the popup closes | the ends swap; the grids go to the ordered years. A move from one box to the other never swaps. A box cleared by its X fires no blur, so the X never swaps | the ordered pair, once | R15, PR11 |
+| MR7 | X on an end's box | that end is emptied; the other end stays | the pair with that end `""`, one call | B6 |
+| MR8 | A month is clicked in a grid after an end was typed | the pick rule of PR4 to PR6; the boxes show the new pair; the popup stays open | the new pair, one call | PR4 to PR7 |
+| MR9 | An end is half-typed (its year part deleted) | the typed month name stays; flagged after leaving | that end `""`, one call | B2 |
+| MR10 | A typed end outside `min` or `max` | its box is flagged after leaving; the closed trigger is red; the year list does not grow | the pair as typed | B3, PR12, D7 |
+| MR11 | A browser with no month control | each end box as M15 | as M15, per end | M15 |
+
 ## 12. Implementation steps
 
 Each step is one commit in the `test-projects/next-app` repo (message `date picker 9: step N <name>`, staged by explicit path, no push; step 6 is two commits, as its row says). Each step ends with: the three checks of section 10 clean; then a reader with no history reviews the step's diff against this plan and the bar, and its findings are fixed, before the next step starts.

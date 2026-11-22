@@ -298,6 +298,36 @@ All work is in the `test-projects/next-app` repo: one commit per task, staged by
 - Task 2: repeat task 1 until both are clean, three rounds at most; after a third round that is not clean, stop and report. The last clean round also runs the pixels in WebKit and the type cases of the cases file (old section 12). Checks: as task 1, plus WebKit pixels and the type cases
 - Task 3: Cleanup. Delete scratch files; confirm no file is left flat in `components/date-picker-9` and none imports a removed path; report line counts per file next to 7.4's 3,524. Checks: 2.2; `git status` shows only the owner's `defaults.json` and `picks.json`
 
+### Milestone: Month box (9.1)
+
+The owner's decision of 2026-11-22. `type="month"` is typed in a box, as the date of card 1.9 is: one value is `<input type="month">` in the box-with-calendar-button shell (`PickerBox` around `PickerField`); a range has a From and a To month box over its two grids, as the year range has. One plain month input for every browser. A browser without the control (Firefox, desktop Safari) draws a text box: it gets the `pattern` of MDN's page for `<input type="month">`, `[0-9]{4}-[0-9]{2}`, and a placeholder, on the same input. No browser test, no second code path.
+
+- Files owned: `components/date-picker-9-1/*`, a full copy of `components/date-picker-9`, which stays frozen; one new card (letter `I`) in `app/date-filter-demo/_cards/row-9-month.tsx` and in `row-10-month-range.tsx`
+- Depends on: Verify loop
+- Review: fable, a reader with no history
+- Local CI: none
+- Task 1: `cp -R components/date-picker-9 components/date-picker-9-1`, then the four files of the table below; the two cards (version `9.1`, title "Month typed in a box", ids `fix-9i`, `fix-10i`, import `@/components/date-picker-9-1/date-picker`, the calls line of the `H` card). Commit `date picker 9.1: month and month range typed in a month input`. Checks: 2.2 on `components/date-picker-9-1`; `diff -rq components/date-picker-9 components/date-picker-9-1` lists the four files only; cases M and MR of the cases file (2.11, 2.12) on cards 9.I and 10.I in Chromium at 1280 by 800 and 390 by 844; on rows 9 and 10 every version 9 step that does not involve the trigger button gives the 9 card's value and calls lines on the 9.1 card; M15 once in WebKit at 1280
+
+Against version 9:
+
+| File | Status | Change |
+|---|---|---|
+| `components/picker-field.tsx` | refactor | `type` also takes `"month"`. `nativeInputs` gains the month row (last value `9999-12`) and one column, `textPattern`: MDN's pattern for month, none for date, date-time and time. A box with a `textPattern` gets it as `pattern` and gets the placeholder on the input itself. The refusal of a five-digit year reads the value's text (`/^\d{5}/`) in place of `valueAsNumber >= Date.UTC(10000, 0, 1)`: a month input counts `valueAsNumber` in months, so the old test never refused one. For a date and a date-time the two tests agree on every value |
+| `modes/period-picker.tsx` | refactor | week alone goes to `PickerTrigger`. Month and year share the one `PickerBox` branch; their three words (noun, button name, placeholder) come from one lookup by type |
+| `modes/period-range-picker.tsx` | refactor | month and year share the one end-box branch (`PickerField` with `type={type}`); week keeps its two titles. New state `typing`, for month ends only (case MR4) |
+| `components/labels.ts` | refactor | new keys `month` ("Month": the box's noun, B10) and `monthPlaceholder` ("yyyy-mm"); `pickMonth` is removed, nothing reads it. 48 keys |
+| the other 18 files | keep | byte for byte as in version 9 |
+
+New pieces, each with what a user loses without it:
+
+- `nativeInputs.month`: without it there is no month box.
+- `textPattern` and the placeholder on the input: in a browser that draws a text box, any text would be stored as the value and nothing would say the format. The same `patternMismatch` test that the year box uses turns a text off the pattern into `""`.
+- `/^\d{5}/` (replaces `yearTenThousand`): a month with a five-digit year would be stored, which is not `yyyy-MM` (B5).
+- `labels.month`, `labels.monthPlaceholder`: the box's name, the X's name ("Clear Month") and the format hint.
+- `typing` in `PeriodRangePanel`: a month box reports the years 2, 20 and 203 while 2031 is typed, exactly as a date box does (R13). Without the state the year list would run from year 0 on every typed year and both grids would jump there. The date range has the same state for the same reason; a year box reports whole years only, so it sets none and PR10 holds as built.
+
+Stays unchanged: week (a trigger, one value and range); the month grid, its year select, arrows, Today, presets, limits; the popup; the month range's trigger and its text; every other type; the stored format `yyyy-MM`; `types.ts`; version 9's folder, cards and every other version.
+
 ### 2.2 Checks
 
 From `test-projects/next-app`, one at a time, each under `nice`. Green means zero errors and zero warnings.
