@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D159** The docs site's PostHog SDK is updated to the latest 1.x and its setup rechecked #R6
-	- posthog-js in apps/shadcn-table-docs goes from 1.438.13 to the latest 1.x (1.453.2 on 2026-11-23), package.json and lockfile only; no other code changes unless the release notes between the two versions or the setup recheck require one, and then the tracker names it. The setup is rechecked against PostHog's current Next.js install guide (init place and options, key and host, pageview capture, any proxy or rewrite) and each point is recorded as matches or differs. It ships by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag, the sites stay 0.9.7; local checks are install, docs types:check, lint and the docs build. After the merge the live site is loaded and a capture request to PostHog is seen answering 200 with the new SDK version in it. Owner, 2026-11-23: 'Update the SDK, double check if every installation, everything is properly done and then deploy', 'we can skip huge long-running checks'.
-	- Source: Q147
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -19,6 +15,9 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
+- [ ] **D159** The docs site's PostHog SDK is updated to the latest 1.x and its setup rechecked #E23 #R6
+	- posthog-js in apps/shadcn-table-docs goes from 1.438.13 to the latest 1.x (1.453.2 on 2026-11-23), package.json and lockfile only; no other code changes unless the release notes between the two versions or the setup recheck require one, and then the tracker names it. The setup is rechecked against PostHog's current Next.js install guide (init place and options, key and host, pageview capture, any proxy or rewrite) and each point is recorded as matches or differs. It ships by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag, the sites stay 0.9.7; local checks are install, docs types:check, lint and the docs build. After the merge the live site is loaded and a capture request to PostHog is seen answering 200 with the new SDK version in it. Owner, 2026-11-23: 'Update the SDK, double check if every installation, everything is properly done and then deploy', 'we can skip huge long-running checks'.
+	- Source: Q147
 
 ## Done
 
@@ -414,7 +413,7 @@ kanban-plugin: basic
 	- `proxy.ts` gets `export const config = { matcher: [...] }` limited to the paths the two rewrites can match: `/docs/:path*` and the `.mdx` suffix form; never `/_next/*`, `/ingest/*`, `/r/*`, `/og/*`, static files. The rewrite behaviour on docs URLs is unchanged.
 	- Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL still returns `text/markdown`; a docs URL with `.mdx` suffix still rewrites; `/`, `/sitemap.xml`, `/r/base/registry.json`, `/ingest/e/` unchanged; after deploy the Vercel usage page shows invocations falling to the docs-request count. Small fix, lands directly on `claude/review` (P13 style), ships with the next release.
 	- Owner, 2026-11-12: "10. k".
-- [x] **D67** PostHog session replays on #R4
+- [x] **D67** PostHog session replays on #E23 #R4
 	- Owner request 2026-11-12: watch how visitors use the site. `components/posthog-provider.tsx` initialises posthog-js with `api_host '/ingest'` (the reverse proxy in `next.config.mjs`); replays are off today.
 	- Code: the init options enable session recording (`disable_session_recording: false`, inputs masked, the default), 100 percent sampling for now; the owner lowers the sample rate in the PostHog project settings if the free quota (5,000 replays a month) runs out. PostHog project: the owner turns on "Record user sessions" in Settings, Session replay. Both sides needed; the code side is a small fix that lands directly on `claude/review`.
 	- Checks: on a production build the recorder script loads (network request to `/ingest/static/recorder` or the `$snapshot` events in `/ingest/e/`); a replay appears in the PostHog project after a visit on the deployed site.
