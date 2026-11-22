@@ -1,6 +1,6 @@
 # 76: PostHog SDK update, tracker
 
-Status: running
+Status: done (404f2fec)
 Branch `v0.9/posthog-sdk-update`, worktree 03
 Checks:
 - Check: latest 1.x, `npm view posthog-js version` at f9ed2a79: 1.453.2 (a 1. version)
