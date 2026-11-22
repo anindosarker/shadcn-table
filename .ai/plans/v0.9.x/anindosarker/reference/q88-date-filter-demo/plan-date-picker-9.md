@@ -395,6 +395,17 @@ Left on the keyboard in Firefox, known and accepted: Space in a date part still 
 
 Stays unchanged: everything of 9.2 in every other browser (the classes sit behind `supports-[-moz-appearance:none]`); the WebKit rule `[&::-webkit-calendar-picker-indicator]:hidden`; `types.ts`; the folders of versions 9, 9.1, 9.1.1, 9.1.2, 9.1.3 and 9.2 and their cards.
 
+### Milestone: Size jump fix (9.3.1)
+
+- Cause: Firefox sizes a date-time box by its text, so a filled From or To box is 19 px wider than an empty one (192.67 to 211.7), and on a wide screen the popup of the date-time range took its width from those boxes: the boxes and both calendars grew 19 px, the calendars 16 px taller, the popup 37.6 by 16.3 px at the first pick. Versions 9 and 7.4 do the same; Chromium, the narrow popover and the phone dialog do not.
+- Fix: `components/date-picker-9-3-1/modes/day-range-picker.tsx`, the rule the narrow screen already had now holds at every width: the date-time box has `contain-inline-size` (was `max-md:`) and its month `[--cell-size:--spacing(9)]` (was `max-md:`), so the month sets the width (252) and the box follows; the popup is 540 wide in every browser (was 492 in Chromium, 485 then 523 in Firefox). One new card `9.3.1`, "Full version, no size jump", per row (letters `AI`, `AH`, `AN`, `BC`, `T`, `T`, `K`, `K`, `L`, `L`, `O`, `O`); 9.3 stays frozen.
+- Check: card 4.9.3.1 in Chromium at 1280 by 800 and 390 by 844 and in Firefox 160, popover and dialog: no box changes width or height from empty through two picks, a clock pick, a typed time, a cleared end; the closed control of rows 1 to 12, empty and filled, is the size of the 9.3 card's; the value and calls lines of rows 2 and 4 equal the 9.3 card's.
+
+Week and month typed as text (9.3.1, second commit). Owner decision 2026-11-22, replacing for validation only the decision of the same day that removed every fallback piece: a browser with no week or month control (Firefox, desktop Safari) draws a text box, and what is typed there is checked. Still no browser detection, no second code path, no own text box, no placeholder.
+
+- `components/picker-field.tsx`: the `nativeInputs` table gains a `pattern` column, month `[0-9]{4}-[0-9]{2}` (as MDN writes it), week `[0-9]{4}-W[0-9]{2}` (MDN's week page writes none); a browser with the control ignores it. Text off the pattern reads `""` and carries the browser's own message, as the year box does; a text on the pattern that is no real period (`2026-W99`, `2026-13`, week 53 of a 52-week year) reads `""` too, with the new label `invalidValue` ("Please enter a valid value."); a real value outside `min` or `max` is kept and gets the year box's `yearMin` or `yearMax` message, only where the browser has no message of its own. All three are marked once the box is left.
+- Check: Firefox 160 on cards 7, 8, 9 and 10 of 9.3.1: typing `2026-W47` is one `onChange` call; `2026-W434`, `2026-W4`, `2026-W99`, `2026-13` give value `""` and a flagged box after leaving; a value outside Limits is kept and flagged; X clears; a pick after a bad text shows the pick with no flag; a pair typed in reverse still swaps. Chromium at 1280 by 800: the case scripts of rows 7 to 10 give the same lines on the 9.3.1 cards as on the 9.3 cards (only the `pattern` attribute differs).
+
 ### 2.2 Checks
 
 From `test-projects/next-app`, one at a time, each under `nice`. Green means zero errors and zero warnings.

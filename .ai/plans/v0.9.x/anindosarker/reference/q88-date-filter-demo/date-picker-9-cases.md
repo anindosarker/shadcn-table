@@ -193,7 +193,7 @@ In Chromium a month is typed as its number, then the right arrow or Tab, then th
 | M12 | A fifth year digit: 07, right arrow, 20311 | Chromium: the year part takes four digits (the box holds `max` 9999-12), so the fifth digit starts the year over and the box shows July 0311, as the date box of card 1.9 does. A month with a five-digit year that a browser does report is not passed on | `"2031-07"` after four digits, then `"0311-07"`, one more call | B5 |
 | M13 | Name | the app's `<label for>`, `aria-label` or `aria-labelledby` names the box; else "Month". The X is "Clear Month" | - | B10; replaces P16 |
 | M14 | `disabled` | box and calendar button disabled, no X | never | G2 |
-| M15 | A browser with no month control (Firefox, desktop Safari, Playwright's WebKit) | a plain text box with no placeholder and no pattern: it takes any text, with no message. Accepted as the browser draws it: there is no second code path. Not rerun in a browser after the pattern was removed | the text as typed, whatever it is | the decision of 2026-11-22 |
+| M15 | A browser with no month control (Firefox, desktop Safari, Playwright's WebKit) | a plain text box with no placeholder. Up to 9.3 it has no pattern and takes any text, with no message. From 9.3.1 (owner decision 2026-11-22, replacing the earlier one for validation only) the box has the pattern `[0-9]{4}-[0-9]{2}`: text off it (`2026-1`, `2026-123`) is flagged after leaving with the browser's message ("Please match the requested format."); `2026-13` and `2026-00` with "Please enter a valid value."; a real month outside `min` or `max` with "Value must be 2026-10 or later."; the X clears; a pick replaces a bad text. Still one code path. Run in Firefox 160 on card 9.3.1 of row 9 | up to 9.3 the text as typed, whatever it is. From 9.3.1: `""` until the text is a real month (typing `2026-11` is one call); a real month outside the limits is kept | the decisions of 2026-11-22 |
 
 ### 2.12 month range, typed in two boxes (version 9.1)
 
@@ -211,7 +211,7 @@ Version 9.1 only (card 10.I). The trigger, its text and its X are PR1 as written
 | MR8 | A month is clicked in a grid after an end was typed | the pick rule of PR4 to PR6; the boxes show the new pair; the popup stays open | the new pair, one call | PR4 to PR7 |
 | MR9 | An end is half-typed (its year part deleted) | the typed month name stays; flagged after leaving | that end `""`, one call | B2 |
 | MR10 | A typed end outside `min` or `max` | its box is flagged after leaving; the closed trigger is red; the year list does not grow | the pair as typed | B3, PR12, D7 |
-| MR11 | A browser with no month control | each end box as M15 | as M15, per end | M15 |
+| MR11 | A browser with no month control | each end box as M15; from 9.3.1 a pair typed in reverse still swaps when both boxes are left. Run in Firefox 160 on card 9.3.1 of row 10 | as M15, per end | M15 |
 
 ### 2.13 week, typed in a box (version 9.2)
 
@@ -236,7 +236,7 @@ In Chromium a week is typed as its number, then the four digits of the year. Two
 | W13 | Name | the app's `<label for>`, `aria-label` or `aria-labelledby` names the box; else "Week". The X is "Clear Week" | - | M13, B10; replaces P16 |
 | W14 | `disabled` | box and calendar button disabled, no X | never | M14, G2 |
 | W15 | Week 53 is typed for a year that has 52 weeks: 53, 2031 | the browser's own rule, nothing of ours: Chromium holds no such week, the box keeps the typed parts and reads as half-typed (W3). On the way it reports 0020-W53, a week that exists, then nothing. 53, 2026 is a week and is stored | `""`; two calls (`"0020-W53"`, then `""`) | B2 |
-| W16 | A browser with no week control (Firefox, desktop Safari, iOS Safari before 18.2, Playwright's WebKit) | a plain text box with no placeholder and no pattern: it takes any text, with no message. Accepted as the browser draws it: there is no second code path. Not run in a browser | the text as typed, whatever it is | M15; the decision of 2026-11-22 |
+| W16 | A browser with no week control (Firefox, desktop Safari, iOS Safari before 18.2, Playwright's WebKit) | a plain text box with no placeholder. Up to 9.3 it has no pattern and takes any text, with no message. From 9.3.1 (owner decision 2026-11-22, replacing the earlier one for validation only) the box has the pattern `[0-9]{4}-W[0-9]{2}`: text off it (`2026-W4`, `2026-W434`) is flagged after leaving with the browser's message ("Please match the requested format."); `2026-W99` and week 53 of a 52-week year (`2025-W53`) with "Please enter a valid value."; a real week outside `min` or `max` with "Value must be 2026-W40 or later."; the X clears; a pick replaces a bad text. Still one code path. Run in Firefox 160 on card 9.3.1 of row 7 | up to 9.3 the text as typed, whatever it is. From 9.3.1: `""` until the text is a real week (typing `2026-W47` is one call; `2026-W434` passes `2026-W43`, then `""`); a real week outside the limits is kept | M15; the decisions of 2026-11-22 |
 
 ### 2.14 week range, typed in two boxes (version 9.2)
 
@@ -254,7 +254,7 @@ Version 9.2 only (card 8.I). The trigger, its text ("Week 44, 2026 - Week 47, 20
 | WR8 | A day is clicked in a calendar after an end was typed | the pick rule of PR4 to PR6; the boxes show the new pair; the popup stays open | the new pair, one call | MR8, PR4 to PR7 |
 | WR9 | An end is half-typed (its year part deleted) | the typed week number stays; flagged after leaving | that end `""`, one call | MR9, B2 |
 | WR10 | A typed end outside `min` or `max` | its box is flagged after leaving; the closed trigger is red; the year list does not grow | the pair as typed | MR10, B3, PR12, D7 |
-| WR11 | A browser with no week control | each end box as W16 | as W16, per end | W16 |
+| WR11 | A browser with no week control | each end box as W16; from 9.3.1 a pair typed in reverse still swaps when both boxes are left. Run in Firefox 160 on card 9.3.1 of row 8 | as W16, per end | W16 |
 
 ## 12. Implementation steps
 
