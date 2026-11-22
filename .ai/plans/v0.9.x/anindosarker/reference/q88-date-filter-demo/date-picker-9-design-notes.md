@@ -210,6 +210,7 @@ Not props, never to be added: `open`, `defaultOpen`, `onOpenChange` at the top l
 `from`, `to`, `done`, `close`, `clear(name)`, `goToToday`, `selectDate`, `selectDateTime`, `selectTime`, `selectTimeFor(end)`, `emptyEnd`, `rangeJoin`, `date`, `dateTime`, `time`, `dateRange`, `dateTimeRange`, `pickDateRange`, `pickDateTimeRange`, `hour`, `minute`, `second`, `amPm`, `am`, `pm`, `weekValue(week, year)`, `year`, `yearPlaceholder`, `yearFormat`, `yearMin(min)`, `yearMax(max)`, `decade(first, last)`, `selectWeek`, `selectMonth`, `selectYear`, `weekRange`, `monthRange`, `yearRange`, `pickWeek`, `pickMonth`, `pickWeekRange`, `pickMonthRange`, `pickYearRange`, `previousYear`, `nextYear`, `previousYears`, `nextYears`.
 
 - Version 9.1 has 47 keys too: `month` is added (the month box's noun), `pickMonth` is removed (the month trigger is gone). No `monthPlaceholder`: owner decision 2026-11-22, plain month input only.
+- Version 9.2 has 47 keys too: `week` is added (the week box's noun, "Week"), `pickWeek` is removed (the week trigger is gone). `weekValue` stays: the week range's trigger writes its two ends with it.
 - Default texts are 7.4's, unchanged (the visible text is frozen: `pickDateRange` stays "Pick a date").
 - Against 7.4: `today` is now `goToToday`, `period` is now `amPm` (8.8); new `date` "Date" and `dateTime` "Date and time" (the box's noun, 7.1); new `decade`, default `first`, space, en dash, space, `last` as 7.4 draws it (10.6); gone `value`, `none`, `pickerValue`, `pickDateFirst`.
 
@@ -469,6 +470,7 @@ PeriodPanel                       state view
 ```
 
 - `PeriodPanel` owns `view` (a `Date`: the month, the year, the decade). A pick calls `onChange(period)` and `onPicked()`.
+- Version 9.1: month joins the `PickerBox` branch (`<input type="month">`); week alone keeps `PickerTrigger`. Version 9.2: week joins it too (`<input type="week">`), so `PeriodPicker` has one branch, `PickerBox` with its three words read from `boxWords[type]`, and imports no `PickerTrigger`, `formatPeriod`, `dateLibFor` or `outsideLimits`. The week value is the control's own text, `yyyy-Www`, which `periodFormats.week` (`RRRR-'W'II`) already writes: nothing is converted. `valueAsNumber` and `step` of the control are not read.
 
 ### 5.6 week, month and year range
 
@@ -484,6 +486,7 @@ PeriodRangePicker
 ```
 
 - A pick calls `onChange(pickRange(value, period))`. A typed year calls `onChange(putEnd(...))` and resets the views. The swap is as 5.4, with the same three functions: `leaveBox(event)` tests `leftBothBoxes(event, boxes) && isReversed(value)`, gives `orderRange(value)` to `onChange` and resets the views from it; the picker's `onClose` is `() => onChange(orderRange(value))`. No `times`: a period has no time.
+- Version 9.1: a month end has a `PickerField` as a year end has, and the panel has the state `typing` (section 6, row 9.1). Version 9.2: a week end has one too, so every end is `Field` → `FieldLabel` + `PickerField type={type}`, the `FieldTitle` pair is gone, the two box refs are attached for every type, the end box's placeholder is read from `boxPlaceholders[type]`, and `typing` is set for week ends as for month ends. `PickerTrigger` stays: the three ranges open from it.
 
 ### 5.7 The popup
 
@@ -604,7 +607,7 @@ onClose={() => onChange(orderRange(value, times))}
 
 - What the two panels share is one test and one call, already two functions and one function of `range.ts`: a plain line each. A function for "left both boxes and reversed: the ordered pair" would take four inputs as one object (`event`, `boxes`, `range`, `times`) and return a pair or `undefined`, and each call site would still test the result, call `onChange` and reset its views: no line saved, one name added. So none is written.
 - What they do not share stays in each panel's `leaveBox`:
-  - `DayRangePanel` clears `typing` first, on every blur; `PeriodRangePanel` has no `typing`.
+  - `DayRangePanel` clears `typing` first, on every blur; `PeriodRangePanel` has no `typing` in version 9, and clears its own first in versions 9.1 and 9.2 (section 6, row 9.1).
   - Each has its own `changeAndShow(next)`, which a typed end, a preset and the swap call: `onChange(next)`, then `setViews(viewsForRange(daysOf(next), viewMonths))`, with `viewMonths` 1 and days read by `fromYmd(datePart(...))`, or `viewMonths` `periodViewMonths[type]` and days read by `startOfPeriod(type, ...)`.
   - Only the day range passes `times`.
 - The two `onClose` handlers are one call each; `orderRange` returns an ordered pair as it is, and the entry's guard drops a same-value call (G1), so neither tests `isReversed` first.
@@ -612,7 +615,7 @@ onClose={() => onChange(orderRange(value, times))}
 
 ## 6. Every state, effect, ref and context
 
-7 states, 2 effects, 11 refs, 2 contexts, no hook of our own; version 9.1 adds one state (row 9.1), 8 in all. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
+7 states, 2 effects, 11 refs, 2 contexts, no hook of our own; version 9.1 adds one state (row 9.1), 8 in all. Version 9.2 adds none and removes none: the same 8 states, 2 effects, 11 refs and 2 contexts. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
 
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
@@ -623,15 +626,15 @@ onClose={() => onChange(orderRange(value, times))}
 | 5 | state | `typing` | `DayRangePanel` | the end whose box is being typed, or `null`; a box that reports `""` (its X, or a half-typed date) sets `null`, because the X fires no blur and an empty end has no year | a date box reports years 1, 14, 144 while 1443 is typed; that end stays out of the year list until its box is left (R13) | none: only the picker knows a value is mid-typing |
 | 6 | state | `view` | `period-picker.tsx` `PeriodPanel` | the month, year or decade shown | same as 3 | same as 3 |
 | 7 | state | `views` | `period-range-picker.tsx` `PeriodRangePanel` | as 4, for months, years or decades | same as 4 (PR9) | none: the grids are custom |
-| 9.1 | state | `typing` | `period-range-picker.tsx` `PeriodRangePanel`, version 9.1 only | the end whose month box is being typed in, or `null`; set for month ends only, and `null` when a box reports `""` (the X empties a box without a blur, and an empty end has no year to keep out of the list) | a month box reports the years 1, 14 and 144 while 1443 is typed, so that end stays out of the year list until its box is left (MR4). A year box reports whole years only | none: same as 5 |
+| 9.1 | state | `typing` | `period-range-picker.tsx` `PeriodRangePanel`, versions 9.1 and 9.2 | the end whose month box (9.1), or week or month box (9.2), is being typed in, or `null`; never set for a year end, and `null` when a box reports `""` (the X empties a box without a blur, and an empty end has no year to keep out of the list) | a week or month box reports the years 1, 14 and 144 while 1443 is typed, so that end stays out of the year list until its box is left (MR4, WR4). A year box reports whole years only | none: same as 5 |
 | 8 | effect | re-read validity | `picker-field.tsx` | deps `value, min, max, step` | a value or limit that arrives from outside is checked like a typed one (B7, B8). It sets `draftOf(input, left)`, where `left` is the old draft's `left` when that draft is for this same value (the value was typed here, so the mark waits until the box is left), else `true` (the value came from outside, so it is flagged at once). Where the value came from is told by the draft, never by where focus is | handlers alone (they do not run for an outside change) |
 | 9 | effect | centre the selection | `time-columns.tsx` `TimeColumn` | runs once on mount | the selected time is in view when the clock opens (C2) | `scrollIntoView` (scrolls the popup and the page too) |
 | 10 | ref | `inputRef` | `picker-field.tsx` | the input | effect 8 reads `validity` and `validationMessage` | none |
 | 11 | ref | `popupActions` | `day-picker.tsx` | the root's actions | date closes on a pick (D4) | this is the stock mechanism: `actionsRef.close()` |
-| 12 | ref | `popupActions` | `period-picker.tsx` | same | week, month, year close on a pick | same |
+| 12 | ref | `popupActions` | `period-picker.tsx` | same | week, month, year close on a pick; in 9.2 it is handed to `PickerBox` for every type | same |
 | 13 | ref | `triggerRef` | `picker-trigger.tsx` | the trigger button | its X unmounts when the value empties; focus must land somewhere (R2) | Base UI `finalFocus` (for a closing popup only) |
 | 14, 15 | ref | `boxes.from`, `boxes.to` | `DayRangePanel` | the two end boxes' roots | "focus left both boxes" (R15), tested by `leftBothBoxes` in the panel's `leaveBox`: the boxes sit in two columns with a calendar between them in the DOM, so no single element holds only the two | `currentTarget.contains(relatedTarget)` on one wrapper (there is none) |
-| 16, 17 | ref | `boxes.from`, `boxes.to` | `PeriodRangePanel` | the two year boxes' roots | same (PR11) | same |
+| 16, 17 | ref | `boxes.from`, `boxes.to` | `PeriodRangePanel` | the two year boxes' roots; in 9.1 the month boxes' too, in 9.2 every period type's | same (PR11, MR6, WR6) | same |
 | 18, 19 | ref | `columnRef`, `selectedRef` | `TimeColumn` | the scrolling column, the selected button | effect 9 sets the column's scroll from the button's position | a selector query for the pressed button (a DOM query) |
 | 20 | ref | `popupRef` | `time-field.tsx` `ClockPopover` | the clock's popup element, given to the popup as `ref` and as `initialFocus` | focus must enter the clock as it opens, so that a reversed pair is ordered before an option can be pressed (R16; with focus left on the clock button the first press inside the clock ordered the pair and the pick landed on the other date), and must not land on an hour | Base UI's default `initialFocus` (focuses the first hour button with scrolling, which undoes effect 9: `nm/@base-ui/react/floating-ui-react/components/FloatingFocusManager.js:390, 409`); `initialFocus={false}` (the wrong-date pick above); used: `initialFocus` as a ref, which Base UI focuses without scrolling when it is the popup (`PopoverPopup.d.ts:43, 47`) |
 | 21 | context | `LabelsContext` | `labels.ts` | the 47 words | about twelve components at every depth read them | props (a thread through every file) |
