@@ -112,3 +112,21 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
    - The patch run on `.7.5` is stopped. It had applied audit 7 sections 9, 11, 1, 2, 4, 5, 3, 6 and 7 in `components/date-picker-7-5` (18 commits, last `9d2a20c`), section 8 half done and never verified end to end; its unfinished edits are saved as a patch in the session scratchpad. `.7.5` is reference material, not a version to review.
    - Version 9 is a clean rebuild in `components/date-picker-9` from `plan-date-picker-9.md` in this folder: behaviour frozen as on `.7.4` plus calls 6 and 7, structure designed. Planner and reviewers are fable agents; the implementer is too.
    - After the plan is written and reviewed, the runner rolls over and the next session implements it step by step, each step's diff read by a reader with no history, ending with the same-values and pixel comparison against `.7.4` and a strict audit. The owner is told when the code is ready to read.
+
+## Version 9 built, 2026-11-22
+
+- Folder `test-projects/next-app/components/date-picker-9`, head `ba18488` (next-app, not pushed). 22 files, 3,598 lines (7.4: 23 files, 3,524).
+- Layout decided by the owner on 2026-11-22: `date-picker.tsx` (entry), `types.ts` (public types and types used by more than one file), `modes/`, `components/`, `utils/`. No hook of our own: nothing shared holds React state. `PickerLabels` stays beside the word list.
+- Commits: steps 1 to 5 `ac7600f`, `26720f2`, `1b8833e`, `0df2d8a`, `8b26cf5`, `bc7eddb`, `65e719e`, `4c8d55c`, `0d9919f`; folders and `types.ts` `407b4c9`; review rounds `b8a3991`, `9390332`, `ba18488`.
+- Plan: `plan-date-picker-9.md` (template, 305 lines), `date-picker-9-cases.md`, `date-picker-9-design-notes.md`.
+- Review: three rounds, each by a reader with no history asking the owner's questions of every piece (440, 520 and 410 pieces). 29 findings, 25 fixed, the rest below.
+- Comparison with 7.4 at `ba18488`, all twelve rows, Chromium and WebKit, 1280 by 800 and 390 by 844: 563 scripted steps and 706 pixel crops per browser and size. No difference outside the allowed table. Type cases: 14 of 14 must-fail lines fail, 14 must-compile pickers compile.
+- Allowed differences seen: 2, 3, 4, 5, 6, 7, 8, 9, 11, 13 of the table in `date-picker-9-cases.md`, and the marked "7.4 wrong" cases. Pixels differ only in: the Time field's X in the date-time popup (row 3), the box message in the phone dialog under limits (rows 2 and 4), month-arrow edge shading after a first pick (row 8, Chromium only, same markup and styles).
+- Left as on 7.4, raised by a reader, not changed (same behaviour as 7.4, outside the cases):
+  - A swapped date-time range under `min` or `max` can get a default time outside that day's limit.
+  - A date-time `step` that does not divide a day (25 min, 5 h) lands picks on times the box flags.
+  - A year under 100 makes the year grid's first decade show 0001 twice.
+  - The X of a week or month trigger is named "Clear Select week" / "Clear Select month".
+  - With the Time field half typed, a press on the clock's highlighted time does nothing.
+- Demo only: under the Deutsch labels three words stay English on the version 9 cards, because the demo's label file carries 7.4's key names.
+- Not seen: Firefox, real Safari, iPhone, the iOS placeholder overlay in a browser (checked by string equality with 7.4).
