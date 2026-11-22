@@ -256,6 +256,29 @@ Version 9.2 only (card 8.I). The trigger, its text ("Week 44, 2026 - Week 47, 20
 | WR10 | A typed end outside `min` or `max` | its box is flagged after leaving; the closed trigger is red; the year list does not grow | the pair as typed | MR10, B3, PR12, D7 |
 | WR11 | A browser with no week control | each end box as W16; from 9.3.1 a pair typed in reverse still swaps when both boxes are left. Run in Firefox 160 on card 9.3.1 of row 8 | as W16, per end | W16 |
 
+### 2.15 9.3.2: allowed differences from 9.3.1
+
+Owner decision 2026-11-23: the picker shows no message and marks nothing invalid by itself; the form around it does. Version 9.3.2 only (`components/date-picker-9-3-2`, the cards "Full version, no own message"). The cases above are not rewritten: where a row says "red border", "message", "flagged" or "the trigger is red" for something the picker did by itself, 9.3.2 draws nothing, and the value line is the one written there. `aria-invalid` and `aria-describedby` from the app still reach the input or the trigger as given (row 4's "Error from the form" switch).
+
+| # | State | 9.3.1 | 9.3.2 | Value line (unchanged) | Cases |
+|---|---|---|---|---|---|
+| N1 | A date, date-time, time, week or month box is half-typed and left | red border, the browser's message under the box | nothing; the typed parts stay, the X shows | `""` | B2, M3, W3, W15, MR9, WR9 |
+| N2 | The year box holds under four digits, letters or `0000` and is left | red border, the browser's pattern message | nothing; the text stays; the `title` still names the format | `""` | B2, P8 |
+| N3 | A complete value outside `min` or `max`, typed and left, or set by a pick, a preset or the app | red border, the browser's range message | nothing | the value, kept | B3, B7, M4, M5, M7, W4, W5, W7 |
+| N4 | A time off `step` | the browser's step message | nothing | the value, kept | B4 |
+| N5 | A year of five digits or more in a date or date-time box (WebKit) | the browser flags it | nothing | nothing passed on | B5 |
+| N6 | A year outside `min` or `max` in the year box | at once: "Value must be 2025 or later." | nothing | the year, kept | P9, PR10 |
+| N7 | The Time field of the date-time popup is emptied and left | red border, the browser's "fill out this field" message | nothing; the box stays empty | the date-time keeps its time | DT8 |
+| N8 | A week or month text box (Firefox, desktop Safari) holds text off the pattern (`2026-W4`, `2026-123`) | after leaving: "Please match the requested format." | nothing | `""` | M15, W16, MR11, WR11 |
+| N9 | The same box holds a week or month that does not exist (`2026-W99`, `2025-W53`, `2026-13`) | after leaving: "Please enter a valid value." | nothing | `""` | M15, W16 |
+| N10 | The same box holds a real week or month outside `min` or `max` | after leaving: "Value must be 2026-10 or later." | nothing | the value, kept | M15, W16 |
+| N11 | A week, month or year range has an end outside `min` or `max`, popup closed | the trigger is red (`aria-invalid`) | the trigger is not red | the pair as typed | P15, PR12, MR10, WR10 |
+| N12 | The app changes `min`, `max` or `step` | the mark and message are re-read | there is none to re-read | no call | B8 |
+| N13 | The box's root element | a `Field` holding the box and its message | the box frame (`InputGroup`) itself; same size and place | - | B11 |
+| N14 | A week text box holds `0000-W01` | taken as a week | off the pattern `(?!0000)[0-9]{4}-W[0-9]{2}`, as the year box refuses `0000` | 9.3.1 `"0000-W01"`; 9.3.2 `""` | W16 |
+
+Run on the 9.3.2 cards. Chromium at 1280 by 800: N1 (date, time), N2, N3 (date, month), N6, N7 and N11 show no `role="alert"` and no `aria-invalid`; N1 (date, time), N3 (month), N7 and N11 were run beside the 9.3.1 card, which shows both, with the same value line. Firefox, cards 7, 8, 9 and 10: N8, N9, N10 and N14, with the value and calls lines of the 9.3.1 run. N4, N5 and N12 are read in the code, not run.
+
 ## 12. Implementation steps
 
 Each step is one commit in the `test-projects/next-app` repo (message `date picker 9: step N <name>`, staged by explicit path, no push; step 6 is two commits, as its row says). Each step ends with: the three checks of section 10 clean; then a reader with no history reviews the step's diff against this plan and the bar, and its findings are fixed, before the next step starts.

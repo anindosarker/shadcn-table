@@ -406,6 +406,37 @@ Week and month typed as text (9.3.1, second commit). Owner decision 2026-11-22, 
 - `components/picker-field.tsx`: the `nativeInputs` table gains a `pattern` column, month `[0-9]{4}-[0-9]{2}` (as MDN writes it), week `[0-9]{4}-W[0-9]{2}` (MDN's week page writes none); a browser with the control ignores it. Text off the pattern reads `""` and carries the browser's own message, as the year box does; a text on the pattern that is no real period (`2026-W99`, `2026-13`, week 53 of a 52-week year) reads `""` too, with the new label `invalidValue` ("Please enter a valid value."); a real value outside `min` or `max` is kept and gets the year box's `yearMin` or `yearMax` message, only where the browser has no message of its own. All three are marked once the box is left.
 - Check: Firefox 160 on cards 7, 8, 9 and 10 of 9.3.1: typing `2026-W47` is one `onChange` call; `2026-W434`, `2026-W4`, `2026-W99`, `2026-13` give value `""` and a flagged box after leaving; a value outside Limits is kept and flagged; X clears; a pick after a bad text shows the pick with no flag; a pair typed in reverse still swaps. Chromium at 1280 by 800: the case scripts of rows 7 to 10 give the same lines on the 9.3.1 cards as on the 9.3 cards (only the `pattern` attribute differs).
 
+### Milestone: No own message (9.3.2)
+
+Owner decision 2026-11-23 ("remove the picker's own message, build 9.3.2"): the picker is always used inside a form wrapper (React Hook Form, TanStack Form) that shows its own error. So the picker shows no message and marks nothing invalid by itself. Nothing is added in its place: no prop that turns messages on, no callback that reports validity.
+
+- Built from: `components/date-picker-9-3-1`, a full copy, which stays frozen. One new card `9.3.2`, "Full version, no own message", per row (letters `AJ`, `AI`, `AO`, `BD`, `U`, `U`, `L`, `L`, `M`, `M`, `P`, `P` for rows 1 to 12; ids `fix-1aj`, `fix-2ai`, `fix-3ao`, `fix-4bd`, `fix-5u`, `fix-6u`, `fix-7l`, `fix-8l`, `fix-9m`, `fix-10m`, `fix-11p`, `fix-12p`), each a copy of its row's 9.3.1 card with the import `@/components/date-picker-9-3-2/date-picker`.
+- Folded in from the review of 9.3.1: the week pattern refuses year 0000, as the year box's does: `(?!0000)[0-9]{4}-W[0-9]{2}`; the comment on `isUnreal` says what it returns (true when the week or month does not exist).
+
+Against version 9.3.1:
+
+| File | Status | Change |
+|---|---|---|
+| `components/picker-field.tsx` | refactor | 298 lines to 228. Removed: the `FieldError` under the box and its `messageId`; the `Field` wrapper (the root is now the `InputGroup`); the own `aria-invalid` and the message id added to `aria-describedby`; the limit texts for a year, week or month; the effect that re-read the box on a new value or limit, and its `inputRef`; the draft's `message` and `left`; the `boxClassName` prop. The draft gains `filled` (the box holds a text or typed parts), read from `validity.badInput`, which the X and the iOS placeholder asked the message for before. A draft whose value is no longer the picker's is dropped in render, the job the effect did. Week pattern and `isUnreal` comment as above |
+| `components/labels.ts` | refactor | `invalidValue`, `yearMin`, `yearMax` removed: only the message used them. 45 keys |
+| `modes/period-range-picker.tsx` | refactor | the trigger no longer gets `aria-invalid` when an end is outside `min` or `max`; the app's `aria-invalid` reaches it through the rest props as given |
+| `modes/day-range-picker.tsx` | refactor | the date-time box's classes go in `className` (was `boxClassName`) |
+| the other 18 files | keep | byte for byte as in version 9.3.1 |
+
+Stays, each with its reason:
+
+- `aria-invalid`, `aria-describedby`, `id`, `aria-label`, `aria-labelledby` from the app reach the input or the trigger exactly as given: the form marks the control and ties its own message to it.
+- `disabled`, and `required` on the Time field of the date-time popup (a date-time always has a time): native attributes.
+- `min`, `max`, `step` and `pattern` on the input, and `title` on the year box: the browser's own control reads them (greyed parts, spin steps, the format hint), and `validity.patternMismatch` is how a text off its pattern is told from a value.
+- The value rules: a text off its pattern, and a week or month that does not exist, give `""`; a typed value outside `min` or `max` is kept and passed on; a calendar pick replaces a bad text; a box that cannot be empty keeps the value when it is emptied; a year of five digits is not passed on; the X clears a box that holds a value or any text.
+- The read of the box when it is left: the first part typed into an empty date box changes no value, so React sends no change, and the X would not show.
+- `console.error` outside production for a `min`, `max` or `step` the picker ignores (`utils/values.ts`): a note to the developer, not a message of the control.
+- `outsideLimits` (`utils/values.ts`): the month and year grids grey their buttons with it.
+
+What a user loses: the red border and the text under a box that the picker drew by itself. The form draws both. The browser still knows the input is invalid (`:invalid`, `validity`); nothing in the picker or the stock styles shows it.
+
+- Checks: 2.2 on `components/date-picker-9-3-2` and `app/date-filter-demo`; `diff -rq components/date-picker-9-3-1 components/date-picker-9-3-2` lists the four files of the table. Chromium at 1280 by 800: page 200, no console error, the 9.3.2 card first in each of the twelve sections; the closed control of rows 1 to 12 and the popups of rows 2, 3, 4, 8, 10 and 12 are the size of the 9.3.1 card's; the states of "9.3.2: allowed differences from 9.3.1" in `date-picker-9-cases.md` show no `role="alert"` and no `aria-invalid`, with the value line of 9.3.1; row 4's "Error from the form" still gives the trigger `aria-invalid` and `aria-describedby`. Firefox on cards 7, 8, 9 and 10 of 9.3.2: the value and calls lines of the 9.3.1 run, no flag and no message; `0000-W01` gives `""`.
+
 ### 2.2 Checks
 
 From `test-projects/next-app`, one at a time, each under `nice`. Green means zero errors and zero warnings.

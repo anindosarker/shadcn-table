@@ -211,6 +211,8 @@ Not props, never to be added: `open`, `defaultOpen`, `onOpenChange` at the top l
 
 - Version 9.1 has 47 keys too: `month` is added (the month box's noun), `pickMonth` is removed (the month trigger is gone). No `monthPlaceholder`: owner decision 2026-11-22, plain month input only.
 - Version 9.2 has 47 keys too: `week` is added (the week box's noun, "Week"), `pickWeek` is removed (the week trigger is gone). `weekValue` stays: the week range's trigger writes its two ends with it.
+- Version 9.3.1 has 48 keys: `invalidValue` is added (the message for a week or month that does not exist).
+- Version 9.3.2 has 45 keys: `invalidValue`, `yearMin` and `yearMax` are removed with the picker's own message. `yearFormat` stays: it is the `title` of the year box's pattern.
 - Default texts are 7.4's, unchanged (the visible text is frozen: `pickDateRange` stays "Pick a date").
 - Against 7.4: `today` is now `goToToday`, `period` is now `amPm` (8.8); new `date` "Date" and `dateTime` "Date and time" (the box's noun, 7.1); new `decade`, default `first`, space, en dash, space, `last` as 7.4 draws it (10.6); gone `value`, `none`, `pickerValue`, `pickDateFirst`.
 
@@ -505,6 +507,8 @@ PickerPopup
 
 Every own prop of every shared part, panel and inner part. A prop not in this table is not written. "Rest" is the part's `...props`, which goes to the element named. The six pickers themselves take `ControlProps<Value>`, the public props of their type (3.2), and `withTime` (the two day pickers) or `type` (the two period pickers); nothing else.
 
+Version 9.3.2 (no own message), against the `PickerField` rows below: `boxClassName` is gone, and the root is the stock `InputGroup` itself, with no `Field` and no `FieldError` around it. Rest still sends `id` and the four `aria-*` props to the input, as given, and everything else (`className`, `ref`, `onBlur`, ...) to the root, which is now the box frame; `DayRangePanel` passes the date-time box's classes as `className`. `required` no longer flags an emptied time: the box keeps the value and draws no X.
+
 | Part | Prop | Type | Passed by | Why (user need) |
 |---|---|---|---|---|
 | `PickerField` | `type` | `"date" \| "datetime-local" \| "time" \| "week" \| "month" \| "year"` | every caller | which box is drawn (2.2); `"year"` is the text box |
@@ -616,6 +620,8 @@ onClose={() => onChange(orderRange(value, times))}
 ## 6. Every state, effect, ref and context
 
 7 states, 2 effects, 11 refs, 2 contexts, no hook of our own; version 9.1 adds one state (row 9.1), 8 in all. Version 9.2 adds none and removes none: the same 8 states, 2 effects, 11 refs and 2 contexts. The swap adds none of the four: `leftBothBoxes` is a pure function given the two refs of rows 14 and 15 (`DayRangePanel`) or 16 and 17 (`PeriodRangePanel`) at the call; the views it leads to are states 4 and 7, set by the panel.
+
+Version 9.3.2 (no own message): 8 states, 1 effect, 10 refs, 2 contexts. Effect 8 (re-read validity) and ref 10 (`inputRef`) are gone with the message. State 1, `draft`, holds `text`, `value` and `filled` (the box holds a text, or typed parts the browser reads as `""`, told by `validity.badInput`); `message` and `left` are gone. The X and the iOS placeholder read `filled`. A draft whose `value` is no longer the picker's is set to `null` in render, so it cannot come back when the old value returns: the job effect 8 did. The box is still read when it is left, because a first part typed into an empty date box sends no change. `LabelsContext` (row 21) holds 45 words.
 
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
