@@ -167,3 +167,8 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
   - `draftOf` in `picker-field.tsx` has one caller left (`read`); the two can be one function.
   - Firefox, date-time range, blank band under the calendars: looked up the same day, not a defect and not new. 9.3.1 and 9.3.2 measure the same in Firefox and Chromium at 1280 (popup 540 by 409.88 in empty, one pick, two picks, From cleared). The band is the sixth week row kept blank so the popup keeps its height from month to month (`components/day-calendar.tsx`, `fixedWeeks = "blank"`), as in 7.4. The first run's 375 px for an empty 9.3.1 popup did not reproduce.
   - Not seen: Safari, iPhone (the placeholder overlay now reads the box, not the message), the picker inside a real form library.
+
+## Version 9.3.3, one read helper, 2026-11-23
+
+- Folder `test-projects/next-app/components/date-picker-9-3-3`, head `9f04e6c` (next-app, not pushed). Cards "Full version, one read helper" on all twelve rows. Differs from 9.3.2 in `components/picker-field.tsx` only: `draftOf`, left with one caller, is merged into `read`. Same rules, no behaviour change.
+- Checks: `tsc`, `eslint`, `prettier` clean; diff read by the runner; Chromium 1280, rows 1 and 11 against 9.3.2: value and calls lines equal at each step, no console error.
