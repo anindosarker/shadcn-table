@@ -19,6 +19,13 @@ Checks:
 - Check: new version text, `grep -rl '1\.453\.2' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5: `.next/static/chunks/2lvshzfglx-8h.js`
 - Check: old version text, `grep -rl '1\.438\.13' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5: prints nothing
 - Check: clean worktree, `git status --short` at c78a1df5: prints nothing; no server started
+- Check: verifier files, `git diff --name-only f9ed2a79..HEAD` at c78a1df5: CHANGELOG.md, CONTRIBUTING.md, apps/shadcn-table-docs/package.json, pnpm-lock.yaml only; nothing under .ai/
+- Check: verifier lockfile diff, `git diff f9ed2a79..HEAD -- pnpm-lock.yaml | grep -E '^[+-] ' | grep -v -i posthog` at c78a1df5: only posthog block lines; dompurify 3.4.17 and preact 10.29.8 already locked at f9ed2a79
+- Check: verifier frozen install, `pnpm install --frozen-lockfile` at c78a1df5: exit 0, git status clean
+- Check: verifier one version, `pnpm why posthog-js --filter shadcn-table-docs` at c78a1df5: posthog-js 1.453.2 only
+- Check: verifier new version text, `grep -rl '1\.453\.2' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5 (build of 05:45, after the commit): `.next/static/chunks/2lvshzfglx-8h.js`
+- Check: verifier old version text, `grep -rl '1\.438\.13' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5: prints nothing
+- Check: verifier recheck spot-check, points 1, 3 and 8 against both guide pages fetched 2026-11-23: as recorded (`instrumentation-client.ts`, `/yourpath/array/:path*` to `us-assets.i.posthog.com/array/:path*`, `defaults: '2026-08-30'`)
 
 - Task 1 release notes and setup recheck: done (9b768869, plan commit)
 - Task 2 bump, CONTRIBUTING sentence, changelog block: done (c78a1df5)
