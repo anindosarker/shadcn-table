@@ -19,6 +19,10 @@ publishes the section as the GitHub release notes.
 
 - On a phone the example toolbar is two rows with a More menu: previous, the example name and next, then Preview, Code, Both, the base switcher and a More button whose menu holds Open in Storybook, Copy prompt, Copy install command, Fullscreen and the open-in entries; tablet and desktop keep today's toolbar (D156).
 
+#### Spec 76
+
+- The docs site's analytics SDK `posthog-js` goes from 1.438.13 to 1.453.2 (D159).
+
 ## 0.9.7 - 2026-11-19
 
 ### Docs
