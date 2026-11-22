@@ -181,11 +181,11 @@ Stays in its file, 49 types (status keep):
 | `components/view-nav.tsx` | `NavArrowProps`, `TodayButtonProps` |
 | `components/period-views.tsx` | `ViewProps`, `WeekCalendarProps`, `PeriodViewProps`, `GridArrow`, `GridHeaderProps`, `GridCell`, `PeriodGridProps` |
 | `components/time-field.tsx` | `TimeFieldProps`, `ClockPopoverProps` |
-| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeOption`, `TimeColumnProps` |
+| `components/time-columns.tsx` | `TimeColumnsProps`, `TimeColumnProps` |
 | `utils/values.ts` | `IgnoredProp`, `FormatPeriodInput` |
 | `utils/time.ts` | `StepSearch`, `AllowedTimeInput`, `EdgeTimeInput`, `DayTimeLimitsInput`, `TimeOnDayInput`, `ClockInput`, `UnitList` |
 | `utils/range.ts` | `PutEndInput`, `SelectRangeInput`, `FormatRangeInput`, `EndBoxes` |
-| `utils/views.ts` | `ListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
+| `utils/views.ts` | `ListSource`, `PeriodListSource`, `RangeViews`, `ShownViewsInput`, `EndBoundsInput` |
 
 A type moves to `types.ts` in the change that gives it a second file, and not before.
 
