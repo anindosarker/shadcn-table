@@ -140,3 +140,17 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 - Checks at `3011fd6`: a full read by a reviewer with no history (clean; three small points fixed); Chromium at both sizes, each 9.3 card against the card it came from, values and pixels (clean); real Firefox on all twelve rows, range popups included (clean).
 - Demo page: rows are accordion sections, newest card first, one open/close-all button, a sort button, card titles by row and version, the id letters kept only as the saved tick key.
 - Not seen: Safari, iPhone, right-to-left. In Firefox and desktop Safari the month and week boxes are plain text fields.
+
+## Version 9.3.1, no size jump and typed week and month checked, 2026-11-23
+
+- Folder `test-projects/next-app/components/date-picker-9-3-1`, head `8b670e7` (next-app, not pushed). 22 files. Cards "Full version, no size jump" on all twelve rows. Differs from 9.3 in `modes/day-range-picker.tsx`, `components/picker-field.tsx`, `components/labels.ts`.
+- Size jump: the date-time range popup keeps its size through empty, two picks, a clock pick, a typed time, a cleared From and close (Chromium 1280 and 390 wide, Firefox 1280 and 500 wide). Cause: Firefox sizes a datetime-local box by its text. Cost: in Chrome on desktop the popup is 540 px wide, 492 before.
+- Validation, on the owner's word after Firefox accepted `2026-W434`: MDN's `pattern` on the month and week inputs plus a real-value and limits check, one code path, no browser detection, no placeholder, no own text box. Firefox, rows 7 to 10: malformed text and a week or month that does not exist give no value and the browser's message; a value outside the limits is kept and flagged.
+- Review on 2026-11-23 by a reader with no history, of the 9.3.1 diff and the review fixes of 9.3 (`3011fd6`) and 9.2 (`ca11940`): no major finding; the two older fixes are clean. Five minor points, all in `components/picker-field.tsx`, not built, for the next version if one is made:
+  - A week text box accepts year 0000 (`0000-W01`); month and year refuse it.
+  - The year box shows its limit message while typing, week and month only after the box is left.
+  - `labels.yearMin` and `labels.yearMax` now also serve week and month; the names no longer fit.
+  - The comment on `isUnreal` says the opposite of what the function returns.
+  - Week and month text boxes have a `pattern` but no `title`, so the browser's message names no format.
+- Not checked in a browser: a date-time range with a `step` under 60 seconds shows seconds in the box, which may be clipped at the fixed popup width.
+- Not seen: desktop Safari, iPhone, right-to-left, Firefox below 500 px wide. The month case script was not rerun on 9.3.1.
