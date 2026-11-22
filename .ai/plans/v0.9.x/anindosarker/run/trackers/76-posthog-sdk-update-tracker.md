@@ -5,8 +5,24 @@ Branch `v0.9/posthog-sdk-update`, worktree 03
 Checks:
 - Check: latest 1.x, `npm view posthog-js version` at f9ed2a79: 1.453.2 (a 1. version)
 - Check: no app code change, `git diff --stat origin/claude/review -- apps/shadcn-table-docs/lib apps/shadcn-table-docs/components apps/shadcn-table-docs/next.config.mjs` at f9ed2a79: prints nothing
+- Check: no app code change, same command at c78a1df5: prints nothing
+- Check: old range gone, `grep -c '"posthog-js": "\^1\.438\.13"' apps/shadcn-table-docs/package.json` at c78a1df5: 0
+- Check: frozen install, `pnpm install --frozen-lockfile` at c78a1df5: exit 0
+- Check: one version, `pnpm why posthog-js --filter shadcn-table-docs` at c78a1df5: posthog-js 1.453.2 only
+- Check: lockfile diff, `git diff origin/claude/review -- pnpm-lock.yaml | grep -E '^[+-] ' | grep -v -i posthog` at c78a1df5: only lines of the posthog-js and @posthog/* blocks; @posthog/browser-common 0.12.2 now depends on dompurify 3.4.17 and preact 10.29.8, both already locked at those versions, no other package moved
+- Check: contributing, `grep -c 'lib/posthog-client.ts' CONTRIBUTING.md` at c78a1df5: 1
+- Check: changelog, `grep -c '^#### Spec 76' CHANGELOG.md` at c78a1df5: 1
+- Check: types, `pnpm --filter shadcn-table-docs types:check` at c78a1df5: pass
+- Check: lint, `pnpm test lint` at c78a1df5: pass (exit 0, 9 existing warnings, none in a changed file)
+- Check: validate-repo, `pnpm test validate-repo` at c78a1df5: pass
+- Check: docs build, `pnpm --filter shadcn-table-docs build` at c78a1df5: pass
+- Check: new version text, `grep -rl '1\.453\.2' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5: `.next/static/chunks/2lvshzfglx-8h.js`
+- Check: old version text, `grep -rl '1\.438\.13' apps/shadcn-table-docs/.next/static | head -1` at c78a1df5: prints nothing
+- Check: clean worktree, `git status --short` at c78a1df5: prints nothing; no server started
 
-- Task 1 release notes and setup recheck: running
+- Task 1 release notes and setup recheck: done (9b768869, plan commit)
+- Task 2 bump, CONTRIBUTING sentence, changelog block: done (c78a1df5)
+- Task 3 docs build and version text: done (c78a1df5, no commit needed)
 
 ## Release notes, 1.438.13 to 1.453.2
 
