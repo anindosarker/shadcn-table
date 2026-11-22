@@ -369,6 +369,31 @@ Removed, each with what read it:
 
 Stays unchanged: the week calendar, its header, year and month selects, arrows, Today, week numbers, presets, limits; the popup; the week range's trigger, its text ("Week 44, 2026 - Week 47, 2026") and its X; the swap rule (`isReversed`, `orderRange`, `leftBothBoxes`), now reached by week ends too; month, year and every other type; the stored format `yyyy-Www`; `types.ts`; the folders of versions 9 and 9.1, their cards and every other version.
 
+### Milestone: Full version (9.3)
+
+The owner's request of 2026-11-22: one version that carries everything. 9.3 is 9.2 (month and week typed in a box) plus the Firefox rule chosen from the three icon variants, 9.1.3: Firefox's own picker button at the end of a date, date-time or time box is clipped away. Nothing else is new; no code of 9.2 changes.
+
+- Files owned: `components/date-picker-9-3/*`, a full copy of `components/date-picker-9-2`, which stays frozen; one new card, version `9.3`, title "Full version", in each of the twelve row files (letters `AH`, `AG`, `AM`, `BB`, `S`, `S`, `J`, `J`, `K`, `K`, `N`, `N` for rows 1 to 12); `app/date-filter-demo/page.tsx` and `_components/card-shell.tsx` for the top list
+- Depends on: Week box (9.2); the 9.1.3 variant (brief: `firefox-icon-brief.md`)
+- Review: none; both parts were reviewed where they were built
+- Local CI: none
+- Task 1: `cp -R components/date-picker-9-2 components/date-picker-9-3`, then the one file of the table below; the twelve cards, each a copy of its row's newest feature card (rows 1 to 6, 11 and 12: the 9 card; rows 7 to 10: the 9.2 card) with ids `fix-1ah`, `fix-2ag`, `fix-3am`, `fix-4bb`, `fix-5s`, `fix-6s`, `fix-7j`, `fix-8j`, `fix-9k`, `fix-10k`, `fix-11n`, `fix-12n` and import `@/components/date-picker-9-3/date-picker`; the "Picked / Default" list at the top of the page is removed, every section header shows it by version, and the "Save failed" notice stays. Commit `date picker 9.3: full version, 9.2 plus Firefox's icon removed by clipping; top summary removed`. Checks: 2.2 on `components/date-picker-9-3` and `app/date-filter-demo`; `diff -rq components/date-picker-9-2 components/date-picker-9-3` lists `picker-field.tsx` only, and its diff is the diff of 9.1 against 9.1.3; Chromium at 1280 by 800: page 200, no console error, the 9.3 card first in each of the twelve sections, `clip-path: none` and `margin-right: 0` on the date box (the classes do not apply); Firefox 160: the date, date-time and time boxes of cards 1, 3 and 5 have the box geometry, `padding-right`, `margin-right` and `clip-path` of their 9.1.3 cards, a mouse click on every 4 px across the place of Firefox's button opens no Firefox picker, typing gives `2026-11-22`, `2026-11-22T14:45`, `14:45`; the week, month and year boxes have `clip-path: none` and `margin-right: 0`
+
+Against version 9.2:
+
+| File | Status | Change |
+|---|---|---|
+| `components/picker-field.tsx` | refactor | the input's `className` gains three classes under `supports-[-moz-appearance:none]:[&:is([type=date],[type=datetime-local],[type=time])]:`: `-mr-[calc(min(16px,1em)+0.525em)]`, `pr-0` and `[clip-path:inset(0_calc(min(16px,1em)+0.525em)_0_0)]`, with a two-line comment. Byte for byte the change of 9.1.3. Design notes section 9 row 33 |
+| the other 21 files | keep | byte for byte as in version 9.2 |
+
+New piece, with what a user loses without it:
+
+- The three Firefox classes: without them Firefox draws its own calendar button beside ours in a date, date-time and time box, two buttons for one job, and a click on it opens Firefox's picker in place of ours. The length is the width of Firefox's button from its `toolkit/content/widgets/datetimebox.css`, not a size of ours. A week or month box gets no button in Firefox (it draws a text field), so the selector leaves both alone.
+
+Left on the keyboard in Firefox, known and accepted: Space in a date part still opens Firefox's picker, and so does Tab to the hidden button, then Enter. Right-to-left is not covered.
+
+Stays unchanged: everything of 9.2 in every other browser (the classes sit behind `supports-[-moz-appearance:none]`); the WebKit rule `[&::-webkit-calendar-picker-indicator]:hidden`; `types.ts`; the folders of versions 9, 9.1, 9.1.1, 9.1.2, 9.1.3 and 9.2 and their cards.
+
 ### 2.2 Checks
 
 From `test-projects/next-app`, one at a time, each under `nice`. Green means zero errors and zero warnings.
