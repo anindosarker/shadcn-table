@@ -14,7 +14,7 @@ Version 9 is one component, `<DatePicker type range? />`, rebuilt once from a pl
 ### 1.2 Goals
 
 - One folder, 22 files: the entry, `types.ts`, `modes/`, `components/`, `utils/`.
-- `types.ts` holds 27 types: the public ones and the ones two or more files use. 49 types stay at the top of the one file that uses them.
+- `types.ts` holds 28 types: the public ones and the ones two or more files use. 48 types stay at the top of the one file that uses them.
 - No hook of our own. The range order is three plain functions.
 - The restructure changes no behaviour, markup, class or type shape.
 - Acceptance: `tsc`, `eslint` and `prettier` clean (2.2), and the comparison scripts give the same emitted values and the same pixels as before the restructure on all twelve rows, with only the allowed differences of the cases file.
@@ -114,8 +114,9 @@ export type CalendarProps = Omit<
   | "components" | "hideNavigation" | "navLayout" | "fixedWeeks" | "today" | "timeZone"
 > & { fixedWeeks?: boolean | "blank" }
 /** The stock popover's, and the stock dialog's, open state and content props. */
+type PopoverContentProps = Omit<React.ComponentProps<typeof PopoverContent>, "children">
 export type PopoverProps = Pick<React.ComponentProps<typeof Popover>, "open" | "defaultOpen" | "onOpenChange"> &
-  Omit<React.ComponentProps<typeof PopoverContent>, "children">
+  PopoverContentProps
 export type DialogProps = Pick<React.ComponentProps<typeof Dialog>, "open" | "defaultOpen" | "onOpenChange"> &
   Omit<React.ComponentProps<typeof DialogContent>, "children" | "showCloseButton">
 
@@ -131,7 +132,7 @@ type DateProps = PresentationProps & WithPresets & { type: "date"; step?: never;
 type DateTimeProps = PresentationProps & WithPresets & { type: "datetime"; step?: number; calendarProps?: CalendarProps }
 type TimeProps = { type: "time"; step?: number; presets?: never } & (
   | (One & { popoverProps?: PopoverProps })
-  | (Two & { popoverProps?: Omit<PopoverProps, "open" | "defaultOpen" | "onOpenChange"> })
+  | (Two & { popoverProps?: PopoverContentProps })
 )
 type WeekProps = PresentationProps & WithPresets & {
   type: "week"; step?: never; calendarProps?: Omit<CalendarProps, "showWeekNumber" | "ISOWeek">
@@ -155,23 +156,23 @@ The rule: `types.ts` holds the public types and every type two or more files of 
 - Does: keep heading comments per group in `types.ts`; import with `import type` only.
 - Does NOT: hold a type one file alone uses; import a component, mode or util file (its one import from the folder is the type `PickerLabels`).
 
-In `types.ts`, 27 types:
+In `types.ts`, 28 types:
 
 | Group | Types | Status |
 |---|---|---|
-| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps`, `DatePickerProps` | keep, moved |
+| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverContentProps` (the popover's content props: half of `PopoverProps`, and all a time range offers), `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps`, `DatePickerProps` | keep, moved |
 | values | `HtmlProps` (a `div`'s attributes without `defaultValue`, `onChange`, `children`), `Limits` (`{ min?: string; max?: string }`), `ControlProps<Value>`, `PeriodType` | keep, moved |
 | range | `RangeEnd`, `RangeTimes` | keep, moved |
 | clock | `ClockUnit` (one unit a clock column lists: `time.ts` works it out, `time-columns.tsx` draws it) | new |
 | views | `ListBounds` | keep, moved |
 | popup | `PopupOptions` (the three popup props as one plain object, for the picker's own parts), `PopupActions` | keep, moved |
 
-Stays in its file, 49 types (status keep):
+Stays in its file, 48 types (status keep):
 
 | File | Types |
 |---|---|
 | `modes/day-picker.tsx` | `DayPickerProps`, `DayPanelProps` |
-| `modes/day-range-picker.tsx` | `DayRangePickerProps`, `DayRangePanelProps`, `RangeEndBoxProps` |
+| `modes/day-range-picker.tsx` | `DayRangePickerProps`, `DayRangePanelProps` |
 | `modes/time-range-picker.tsx` | `TimeRangePickerProps` |
 | `modes/period-picker.tsx` | `PeriodPickerProps`, `PeriodPanelProps` |
 | `modes/period-range-picker.tsx` | `PeriodRangePickerProps`, `PeriodRangePanelProps` |
@@ -196,7 +197,7 @@ Status is against what is built today. "keep, moved": `git mv` into its folder, 
 | File | Status | Single responsibility | Exports |
 |---|---|---|---|
 | `date-picker.tsx` | refactor: its 12 types | provide labels; check limits and step once; guard same-value once; pick the picker | `DatePicker`; re-exports the eight public types |
-| `types.ts` | new | the 27 types of 1.6.3 | those types; `PickerLabels` passed on |
+| `types.ts` | new | the 28 types of 1.6.3 | those types; `PickerLabels` passed on |
 | `modes/day-picker.tsx` | keep, moved | box, calendar popup and, for datetime, the Time field | `DayPicker` |
 | `modes/day-range-picker.tsx` | keep, moved | trigger, two end boxes and calendars, the two layouts | `DayRangePicker` |
 | `modes/time-range-picker.tsx` | keep, moved | two time fields | `TimeRangePicker` |
@@ -285,7 +286,7 @@ All work is in the `test-projects/next-app` repo: one commit per task, staged by
 - Depends on: Twelve pickers; the owner's read of this plan
 - Review: none (the verify loop reviews it)
 - Local CI: none
-- Task 1: `git mv` each file into its folder of 1.4; fix the relative imports; create `types.ts` with the 26 types of 1.6.3 in their groups; leave the 47 others at the top of their file, `export` dropped where one was written. No hook extraction. No line is changed that is not an import, a type or an export list. Commit `date picker 9: step 6 folders and types.ts`. Checks: 2.2; `rg "function use[A-Z]" components/date-picker-9` finds nothing and no `hooks/` folder exists; each of the 47 names is found in one file only
+- Task 1: `git mv` each file into its folder of 1.4; fix the relative imports; create `types.ts` with the 28 types of 1.6.3 in their groups; leave the 48 others at the top of their file, `export` dropped where one was written. No hook extraction. No line is changed that is not an import, a type or an export list. Commit `date picker 9: step 6 folders and types.ts`. Checks: 2.2; `rg "function use[A-Z]" components/date-picker-9` finds nothing and no `hooks/` folder exists; each of the 48 names is found in one file only
 
 ### Milestone: Verify loop
 

@@ -71,12 +71,18 @@ export type CalendarProps = Omit<
   fixedWeeks?: boolean | "blank"
 }
 
+/** The stock popover's content props. */
+type PopoverContentProps = Omit<
+  React.ComponentProps<typeof PopoverContent>,
+  "children"
+>
+
 /** The stock popover's open state and content props. */
 export type PopoverProps = Pick<
   React.ComponentProps<typeof Popover>,
   "open" | "defaultOpen" | "onOpenChange"
 > &
-  Omit<React.ComponentProps<typeof PopoverContent>, "children">
+  PopoverContentProps
 
 /** The stock dialog's open state and content props. */
 export type DialogProps = Pick<
@@ -127,9 +133,7 @@ type DateTimeProps = PresentationProps &
 
 type TimeProps = { type: "time"; step?: number; presets?: never } & (
   | (One & { popoverProps?: PopoverProps })
-  | (Two & {
-      popoverProps?: Omit<PopoverProps, "open" | "defaultOpen" | "onOpenChange">
-    })
+  | (Two & { popoverProps?: PopoverContentProps })
 )
 
 type WeekProps = PresentationProps &
@@ -256,7 +260,7 @@ components/date-picker-9/
 | `types.ts` | The public types and the types two or more files use, in the groups of 4.2 | every type it declares; `PickerLabels` passed on | types only: no value, no function, no JSX; no type that one file alone uses; `import type` only, from React, Base UI, react-day-picker, the stock `ui/` parts and `components/labels.ts` | the owner's decision: a type used in other places earns `types.ts` its place |
 | `components/labels.ts` | Default words and `LabelsContext` | `defaultLabels`, `LabelsContext`, `PickerLabels` | no component, no hook, no JSX; readers call `React.useContext(LabelsContext)`; `PickerLabels` is declared here though public (4.2) | the `labels` prop, read by about twelve components |
 | `modes/day-picker.tsx` | Box, calendar popup and, for datetime, the Time field | `DayPicker` | `DayPicker`, `DayPanel` | rows 1 and 3 |
-| `modes/day-range-picker.tsx` | Trigger, the two end boxes and calendars, the two layouts | `DayRangePicker` | `DayRangePicker`, `DayRangePanel`, `RangeEndBox` | rows 2 and 4 |
+| `modes/day-range-picker.tsx` | Trigger, the two end boxes and calendars, the two layouts | `DayRangePicker` | `DayRangePicker`, `DayRangePanel` | rows 2 and 4 |
 | `modes/time-range-picker.tsx` | Two time fields | `TimeRangePicker` | one component | row 6 |
 | `modes/period-picker.tsx` | Trigger (week, month) or box (year) and one view | `PeriodPicker` | `PeriodPicker`, `PeriodPanel` | rows 7, 9, 11 |
 | `modes/period-range-picker.tsx` | Trigger and two views; year boxes | `PeriodRangePicker` | `PeriodRangePicker`, `PeriodRangePanel` | rows 8, 10, 12 |
@@ -312,7 +316,7 @@ A function with three or more parameters takes one object (coding standards, Cod
 | | `formatRange({ range, formatEnd, emptyEnd, rangeJoin })` | trigger text; `""` when both ends are empty |
 | | `leftBothBoxes(event, boxes)` | whether focus was inside an end box and moved outside both: `event.target` is inside one of the two box elements and `event.relatedTarget` is inside neither. The first half matters: React sends a blur from inside an end's clock popup up to its end box too, and that is not a leave |
 | `utils/views.ts` | `listBounds({ days, min, max, startMonth, endMonth })` | the year list as first and last month (D7, D8). Per side, the first that is set: `startMonth` or `endMonth`; the limit's month, whatever the days; 1900 or 2100 grown to the century of the furthest year beyond it among the days and the other side's limit (D8) |
-| | `clampView(view, bounds)` | the view held inside the list; today's when `undefined` |
+| | `clampView(view, bounds)` | the view held inside the list. The grids and `shownViews` use it; the day calendar of one value gets `month` as it is, and react-day-picker holds it inside `startMonth` and `endMonth` and shows today's month when there is none (`nm/react-day-picker/dist/esm/helpers/getInitialMonth.js:13-26`) |
 | | `periodViewStart(type, date)` | the month, the year's January, the decade's first January |
 | | `periodViewMonths` | months one view spans: week 1, month 12, year 120. `step` names seconds everywhere in the folder; the months one view spans are `viewMonths` (the day range panel's constant is 1) |
 | | `periodBounds({ type, days, min, max, startMonth, endMonth })` | a period picker's year list as views: `listBounds` with the limits as days (`dayLimits`), each side at its `periodViewStart`. Both period panels call it |
@@ -326,23 +330,23 @@ The input types of these functions (`SelectRangeInput`, `ListSource`, `TimeOnDay
 
 The rule: `types.ts` holds the public types (what an app imports; `date-picker.tsx` re-exports them) and every type that two or more files of the folder use. A type one file alone uses stays in that file, at its top. The sorting below is the built code, each type name searched across the folder. Shapes are the built ones, moved or left unchanged.
 
-In `types.ts`, 27 types, under one short heading comment per group, each group ordered so a type is met before its use inside the group:
+In `types.ts`, 28 types, under one short heading comment per group, each group ordered so a type is met before its use inside the group:
 
 | Group | Types, in order | Why here |
 |---|---|---|
-| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps` (the union of 3.2 without `labels`), `DatePickerProps`; `PickerLabels` passed on | the eight types of 3.1 are what an app imports; the nine others are the members `DatePickerProps` is written from, and `TypedPickerProps` is also the props of the entry's inner component. Six of the eight are used by other files of the folder too (`CalendarProps` by seven) |
-| values | `HtmlProps`, `Limits`, `ControlProps<Value>` (`HtmlProps & Limits & { value: Value; onChange: (value: Value) => void; disabled?: boolean }`), `PeriodType` | `HtmlProps`: the entry, `PickerField`, `PickerTrigger`, `RangeEndBox`; `Limits`: the entry, the pickers, the calendar, the views, `time.ts`, `range.ts`; `ControlProps`: five mode files; `PeriodType`: the two period modes, `period-views.tsx`, `values.ts`, `views.ts` |
+| public | `DatePickerType`, `RangeValue`, `Preset`, `CalendarProps`, `PopoverContentProps`, `PopoverProps`, `DialogProps`, `PresentationProps`, `One`, `Two`, `WithPresets`, `DateProps`, `DateTimeProps`, `TimeProps`, `WeekProps`, `MonthYearProps`, `TypedPickerProps` (the union of 3.2 without `labels`), `DatePickerProps`; `PickerLabels` passed on | the eight types of 3.1 are what an app imports; the ten others are the members `DatePickerProps` is written from; `TypedPickerProps` is also the props of the entry's inner component, and `PopoverContentProps` the type of `TimeRangePicker`'s `popoverProps`. Six of the eight are used by other files of the folder too (`CalendarProps` by seven) |
+| values | `HtmlProps`, `Limits`, `ControlProps<Value>` (`HtmlProps & Limits & { value: Value; onChange: (value: Value) => void; disabled?: boolean }`), `PeriodType` | `HtmlProps`: the entry, `PickerField`, `PickerTrigger`; `Limits`: the entry, the pickers, the calendar, the views, `time.ts`, `range.ts`; `ControlProps`: five mode files; `PeriodType`: the two period modes, `period-views.tsx`, `values.ts`, `views.ts` |
 | range | `RangeEnd`, `RangeTimes` (`Record<RangeEnd, string>`: the first and last time on the step) | `RangeEnd`: `range.ts`, `views.ts`, `day-calendar.tsx`, `day-range-picker.tsx`; `RangeTimes`: `range.ts`, `day-range-picker.tsx` |
 | clock | `ClockUnit` (`{ index: number; selected: boolean; disabled: boolean; time: string }`: one unit a clock column lists) | `time.ts` (`clockColumns` returns them), `time-columns.tsx` (draws them) |
 | views | `ListBounds` | `views.ts`, `day-calendar.tsx`, `period-views.tsx` |
 | popup | `PopupOptions`, `PopupActions` | `PopupOptions`: `picker-popup.tsx`, `picker-box.tsx`, `picker-trigger.tsx`; `PopupActions`: those three, `day-picker.tsx`, `period-picker.tsx` |
 
-Stays in its file, 49 types, each used by that file alone:
+Stays in its file, 48 types, each used by that file alone:
 
 | File | Types |
 |---|---|
 | `modes/day-picker.tsx` | `DayPickerProps`, `DayPanelProps` |
-| `modes/day-range-picker.tsx` | `DayRangePickerProps`, `DayRangePanelProps`, `RangeEndBoxProps` |
+| `modes/day-range-picker.tsx` | `DayRangePickerProps`, `DayRangePanelProps` |
 | `modes/time-range-picker.tsx` | `TimeRangePickerProps` |
 | `modes/period-picker.tsx` | `PeriodPickerProps`, `PeriodPanelProps` |
 | `modes/period-range-picker.tsx` | `PeriodRangePickerProps`, `PeriodRangePanelProps` |
@@ -431,7 +435,7 @@ TimeRangePicker
 ```
 
 - No state in `TimeField`, `ClockPopover`, `TimeColumns` or `TimeRangePicker`: the shown columns are computed from `value`, `min`, `max`, `step`.
-- `ClockPopover` gives `PickerPopup` `popoverProps={{ ref: popupRef, initialFocus: popupRef, ...popoverProps, className: cn("p-0", popoverProps?.className) }}`: focus goes to the popup itself when the clock opens (C2). The same in all four places a clock is drawn; no caller sets it.
+- `ClockPopover` gives `PickerPopup` `popoverProps={{ initialFocus: popupRef, ...popoverProps, ref: popupRef, className: cn("p-0", popoverProps?.className) }}`: focus goes to the popup itself when the clock opens (C2). `ref` is written after the app's props, so an app's `ref` cannot take the place of the one `initialFocus` points at; an app may still give its own `initialFocus`. The same in all four places a clock is drawn; no caller sets it.
 
 ### 5.4 date and datetime range
 
@@ -440,18 +444,17 @@ DayRangePicker                    times = first and last time on the step (datet
 └── PickerTrigger                 ref triggerRef; onClose orders the pair
     └── PickerPopup
         └── DayRangePanel         state views, typing; refs boxes.from, boxes.to
-            ├── per end: FieldLabel + RangeEndBox (ref boxes[end], onBlur leaveBox)
-            │                    RangeEndBox → PickerField (+ ClockPopover for datetime)
+            ├── per end: FieldLabel + PickerField (ref boxes[end], onBlur leaveBox; + ClockPopover for datetime)
             ├── per end: DayCalendar mode range, rangeBand, captionEnd
             └── PickerPresets
 ```
 
-- `DayRangePanel` owns the two views, the end being typed and the two box refs. Its `leaveBox(event)` clears `typing`; then, when `leftBothBoxes(event, boxes) && isReversed(value)`, it takes `orderRange(value, times)`, gives it to `onChange` and resets the views from it.
+- `DayRangePanel` owns the two views, the end being typed and the two box refs. Its `leaveBox(event)` clears `typing`; then, when `leftBothBoxes(event, boxes) && isReversed(value)`, it gives `orderRange(value, times)` to the panel's `changeAndShow(next)`, which calls `onChange(next)` and resets the views from it. A typed end and a preset call the same function.
 - The swap has one function, `orderRange`, and two triggers, each written where it fires: the panel's `leaveBox`, and the picker's `onClose={() => onChange(orderRange(value, times))}` on the trigger. The trigger is outside the popup and the boxes are inside it, so the two are in two components; what they share is the three functions of `utils/range.ts` (5.8). `selectRange` also starts from the ordered pair, so a day click on a reversed pair is right.
 - A day click calls `onChange(selectRange({ range: value, picked, times, limits: { min, max, step } }))`: the time and the limit of a new end are applied inside `selectRange` (R8, R9). The panel adds nothing to its result.
 - An end's clock is inside its end box in the React tree, and its popup is outside both boxes in the DOM. Focus moves into the popup as it opens (5.3), the clock button's blur reaches `leaveBox` with the popup as the new target, and `leftBothBoxes` is true: a reversed pair is ordered at that moment, before a pick (R16). A blur between two options of the open clock also reaches `leaveBox` (React events cross the portal) and is not a leave, because its source is not inside a box. No handler on the clock, no open callback, no flag.
-- `RangeEndBox` gives its clock the day's limits as `{...dayTimeLimits({ day, min, max, step })}` (R20). A clock pick calls `onTimeChange`, a typed value `onValueChange`: only typing sets `typing` and resets the views.
-- `React.useContext(PhoneDialogContext)` picks the layout. Columns (R3, R4): per end one `Field` holding the label and the box, then the calendar. Fields first (R5): one grid whose four direct children are `FieldLabel`, `RangeEndBox`, `FieldLabel`, `RangeEndBox` (section 9 row 25), then the two calendars.
+- The panel's `endBox(end)` returns that end's `PickerField` (a date box, or a date-time box with `dateTimeBoxClassName`) and, for a date-time, its `ClockPopover` with the day's limits as `{...dayTimeLimits({ day, min, max, step })}` (R20). There is no end-box component: the box is written once, in the panel. A clock pick calls `onChange` alone; a typed value sets `typing` and calls `changeAndShow`: only typing resets the views.
+- `React.useContext(PhoneDialogContext)` picks the layout. Columns (R3, R4): per end one `Field` holding the label and the box, then the calendar. Fields first (R5): one grid whose four direct children are `FieldLabel`, `PickerField`, `FieldLabel`, `PickerField` (section 9 row 25), then the two calendars.
 
 ### 5.5 week, month, year, one value
 
@@ -506,8 +509,8 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | | `placeholder` | `string?` | the callers of B9 and the year boxes | the year box's own placeholder; the iOS overlay's text (B9) |
 | | `disabled`, `min`, `max`, `step` | `boolean?`, `string?`, `string?`, `number?` | every caller that has them | native attributes (G2, B3, B4) |
 | | `required` | `boolean?` | `DayPanel`, through `TimeField`'s rest | native `required` flags an emptied time (DT8); a required box draws no X, because it cannot be empty (DT9). One caller, one hop, a native attribute |
-| | `boxClassName` | `string?` | `RangeEndBox`, date-time only | classes for the box frame (`InputGroup`): section 9 row 23. `className` goes to the root, which also holds the message. One caller, one hop |
-| | `children` | `React.ReactNode?` | `PickerBox`, `TimeField`, `RangeEndBox` | the popup button drawn inside the box after the X |
+| | `boxClassName` | `string?` | `DayRangePanel`, date-time only | classes for the box frame (`InputGroup`): section 9 row 23. `className` goes to the root, which also holds the message. One caller, one hop |
+| | `children` | `React.ReactNode?` | `PickerBox`, `TimeField`, `DayRangePanel` | the popup button drawn inside the box after the X |
 | | rest | `HtmlProps` | callers | `id`, `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid` go to the input; everything else (`className`, `ref`, `onBlur`, ...) to the root. The root is one stock `Field` holding the `InputGroup` and the `FieldError` (B11) |
 | `PickerBox` | `pickerLabel` | `string` | `DayPicker`, `PeriodPicker` (year) | names the calendar button and the popup ("Select date") |
 | | `popupActions` | `React.RefObject<PopupActions \| null>?` | `DayPicker`, `PeriodPicker` | the picker closes the popup on a pick (D4, P11) |
@@ -557,7 +560,7 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | `TimeField` | `pickerLabel` | `string` | the entry, `TimeRangePicker`, `DayPanel` | names the clock button and its popup ("Select time", "Select time for From") |
 | | `popoverProps` | `PopoverProps?` | the entry, `TimeRangePicker` | the app's props for the clock popover (T5) |
 | | rest | `PickerFieldProps` without `type` and `children` | the same three | to `PickerField`; `value`, `onValueChange`, `disabled`, `min`, `max`, `step` are also given to the clock |
-| `ClockPopover` | `label` | `string` | `TimeField`, `RangeEndBox` | names the clock button and the popup |
+| `ClockPopover` | `label` | `string` | `TimeField`, `DayRangePanel` | names the clock button and the popup |
 | | `disabled` | `boolean?` | the same two | G2, R20 |
 | | `popoverProps` | `PopoverProps?` | `TimeField` | T5 |
 | | rest: `value`, `onValueChange`, `min`, `max`, `step` | `React.ComponentProps<typeof TimeColumns>` | the same two | the clock's own props, handed on as the rest spread and not named here: the time shown and a picked time (C7), the options greyed and listed (C3 to C6) |
@@ -568,12 +571,6 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | | `onPicked` | `(() => void)?` | `DayPicker`, date only | called after a day click set the value; the date picker closes its popup (D4). Date-time passes none (DT3). One caller, one hop |
 | `DayRangePanel` | `value`, `onChange`, `min`, `max`, `step`, `calendarProps`, `presets` | as the picker's | `DayRangePicker` | the picker's own props, used here |
 | | `times` | `RangeTimes?` | `DayRangePicker` | set for a date-time range: the first and last time on the step, worked out once in the picker because its `onClose` needs them too (R8, R15). `undefined` means a date range; the panel has no separate `withTime` |
-| `RangeEndBox` (in `day-range-picker.tsx`) | `end` | `RangeEnd` | `DayRangePanel` | From or To: the box's label and the clock's name |
-| | `withTime` | `boolean` | `DayRangePanel` | a date box, or a date-time box with a clock |
-| | `value`, `onValueChange` | `string`, `(value: string) => void` | `DayRangePanel` | that end, and a typed end (R12) |
-| | `onTimeChange` | `(time: string) => void` | `DayRangePanel` | a clock pick (R20). Separate from `onValueChange` because only typing sets `typing` and resets the views |
-| | `min`, `max`, `step` | as `PickerField` | `DayRangePanel` | B3, B4; the clock's day limits |
-| | rest | `HtmlProps` | `DayRangePanel` | `id`, `ref` and `onBlur` to `PickerField` (the label's target, the box element of R15, `leaveBox`) |
 | `PeriodPanel` | `type`, `value`, `onChange`, `min`, `max`, `calendarProps`, `presets` | as the picker's | `PeriodPicker` | the picker's own props, used here |
 | | `onPicked` | `() => void` | `PeriodPicker` | the picker closes its popup after a pick (P3, P6, P11) |
 | `PeriodRangePanel` | `type`, `value`, `onChange`, `min`, `max`, `calendarProps`, `presets` | as the picker's | `PeriodRangePicker` | the picker's own props, used here |
@@ -588,12 +585,15 @@ The swap, whole. No hook and no fourth range function: the two range pickers and
 
 ```tsx
 // DayRangePanel. PeriodRangePanel is the same without setTyping and times, and with its own viewMonths.
+function changeAndShow(next: RangeValue) {
+  onChange(next)
+  setViews(viewsForRange(daysOf(next), viewMonths))
+}
+
 function leaveBox(event: React.FocusEvent) {
   setTyping(null)
   if (leftBothBoxes(event, boxes) && isReversed(value)) {
-    const ordered = orderRange(value, times)
-    onChange(ordered)
-    setViews(viewsForRange(daysOf(ordered), viewMonths))
+    changeAndShow(orderRange(value, times))
   }
 }
 
@@ -604,7 +604,7 @@ onClose={() => onChange(orderRange(value, times))}
 - What the two panels share is one test and one call, already two functions and one function of `range.ts`: a plain line each. A function for "left both boxes and reversed: the ordered pair" would take four inputs as one object (`event`, `boxes`, `range`, `times`) and return a pair or `undefined`, and each call site would still test the result, call `onChange` and reset its views: no line saved, one name added. So none is written.
 - What they do not share stays in each panel's `leaveBox`:
   - `DayRangePanel` clears `typing` first, on every blur; `PeriodRangePanel` has no `typing`.
-  - Each resets its own views from the ordered pair: `viewsForRange(daysOf(ordered), viewMonths)` in both, with `viewMonths` 1 and days read by `fromYmd(datePart(...))`, or `viewMonths` `periodViewMonths[type]` and days read by `startOfPeriod(type, ...)`.
+  - Each has its own `changeAndShow(next)`, which a typed end, a preset and the swap call: `onChange(next)`, then `setViews(viewsForRange(daysOf(next), viewMonths))`, with `viewMonths` 1 and days read by `fromYmd(datePart(...))`, or `viewMonths` `periodViewMonths[type]` and days read by `startOfPeriod(type, ...)`.
   - Only the day range passes `times`.
 - The two `onClose` handlers are one call each; `orderRange` returns an ordered pair as it is, and the entry's guard drops a same-value call (G1), so neither tests `isReversed` first.
 - No hook: nothing here holds React state, a ref or an effect that two components share (the refs and the views are each panel's own, section 6), and a function that calls no React hook is not named `use...` (section 10).
@@ -666,7 +666,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | Cell size | the stock `--cell-size` variable | style sheet `cn-calendar` (`styles/style-vega.css:228`) |
 | Text in the calendar's locale | `DateLib` | `nm/react-day-picker/dist/esm/classes/DateLib.d.ts:68, 237` |
 | `DateRange`, default class names | exported type and helper | `types/shared.d.ts:171`; `helpers/getDefaultClassNames.d.ts:11` |
-| Parse, format, validate, month and year sums | date-fns `parse`, `format`, `isValid`, `startOfMonth`, `addMonths`, `addDays`, `clamp`, `endOfISOWeek`, `endOfMonth`, `endOfYear`, `setYear`, `getYear`, `isAfter`, `isBefore` | `nm/date-fns/<name>.d.ts` (`parse` 319, `format` 307, `isValid` 32, `clamp` 58, `endOfYear` 29) |
+| Parse, format, validate, month and year sums | date-fns `parse`, `format`, `isValid`, `startOfMonth`, `startOfYear`, `startOfDecade`, `addMonths`, `clamp`, `endOfISOWeek`, `endOfMonth`, `endOfYear`, `endOfDecade`, `eachMonthOfInterval`, `eachYearOfInterval`, `setYear`, `getYear`, `isAfter`, `isBefore` | `nm/date-fns/<name>.d.ts` (`parse` 319, `format` 307, `isValid` 32, `clamp` 58, `endOfYear` 29) |
 | Buttons, trigger group, year select, badge | `Button`, `ButtonGroup`, `NativeSelect`, `Badge` | `ui/button.tsx:35-48`, `ui/button-group.tsx:25-39`, `ui/native-select.tsx:9-36`, `ui/badge.tsx:25-45` |
 | An arrow that is disabled but keeps focus | `disabled focusableWhenDisabled` | `nm/@base-ui/react/button/Button.d.ts:21`; `utils/useFocusableWhenDisabled.js:38-43`; `internals/use-button/useButton.js:84-90` |
 | 12 or 24 hour clock | `new Intl.DateTimeFormat(undefined, { hour: "numeric" }).resolvedOptions().hour12`. The `hour` option is required: without it `hour12` is `undefined` and every locale would get the 24-hour clock | browser; 7.4 `time-columns.tsx:40-44` |
@@ -721,7 +721,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | 22 | `picker-popup.tsx` dialog X | `DialogClose` rendering a ghost `icon-sm` `Button` with `cn-dialog-close` and `aria-label={labels.close}`; `showCloseButton={false}` set after the app's props | the stock X says a fixed English "Close" (`ui/dialog.tsx:71`) | call 9 keeps X and Done |
 | 23 | `day-range-picker.tsx` date-time end box (`PickerField`'s `boxClassName`, 5.8) | `overflow-hidden max-md:contain-inline-size *:data-[slot=input-group-addon]:pr-1 *:data-[slot=input-group-addon]:not-last-of-type:mr-0 *:data-[slot=input-group-control]:pr-0 *:data-[slot=input-group-control]:pl-2` | a date-time and two buttons must fit a box one month wide (owner finding 9); a long value must not widen the popup on iOS | 5.2 |
 | 24 | `day-range-picker.tsx` date-time calendars | `max-md:[--cell-size:--spacing(9)]` | on a narrow screen the month is as wide as the date-time box above it | call 8 (10.1) |
-| 25 | `day-range-picker.tsx` phone-dialog fields | not an override: our own wrapper `cn-field grid grid-cols-[auto_1fr] items-center gap-y-2` with four direct children, `FieldLabel`, `RangeEndBox`, `FieldLabel`, `RangeEndBox`. No `Field` per row, no subgrid, no class on a stock part. The gaps are 7.4's: the style's own field gap between label and box (the style-sheet hook `cn-field`: `gap-3` or `gap-2` by style) and `gap-2` between the rows | one label column as wide as the longer word, so the two boxes line up; the bracket is the one way to say "as wide as the labels, then the rest" | 1.3, look frozen (call 9) |
+| 25 | `day-range-picker.tsx` phone-dialog fields | not an override: our own wrapper `cn-field grid grid-cols-[auto_1fr] items-center gap-y-2` with four direct children, `FieldLabel`, `PickerField`, `FieldLabel`, `PickerField`. No `Field` per row, no subgrid, no class on a stock part. The gaps are 7.4's: the style's own field gap between label and box (the style-sheet hook `cn-field`: `gap-3` or `gap-2` by style) and `gap-2` between the rows | one label column as wide as the longer word, so the two boxes line up; the bracket is the one way to say "as wide as the labels, then the rest" | 1.3, look frozen (call 9) |
 | 26 | `picker-trigger.tsx` `ButtonGroup` | `cn-button-group-orientation-horizontal` | the installed part hard-codes `lg` corners (`ui/button-group.tsx:14`); this style-sheet hook follows the style's radius | 1.10, look frozen (call 9) |
 | 27 | `picker-trigger.tsx` button | `min-w-0 flex-1 justify-start px-2.5 font-normal` | the value reads as text, starts at the left and truncates | shadcn date picker recipe |
 | 28 | `time-field.tsx` clock popover | `p-0` | the columns bring their own padding | 7.4 |
@@ -805,7 +805,7 @@ Two readers with no history reviewed this plan; their required changes are appli
 - "Write the real sequence as the outcome: the first press inside an end's clock orders the pair and the pick lands on the other date": not applied. That outcome writes a time onto a date the user did not pick it for. The clock takes focus as it opens instead, so the pair is ordered before a pick (R16).
 - "`RangeEndBox` passes `popoverProps={{ initialFocus: true }}`; check the hour column's scroll when built": applied in another form. Base UI's default focus scrolls the first hour into view (`FloatingFocusManager.js:390, 409`), which would have left a check open; every clock gives `initialFocus` a ref to its popup, so there is one clock behaviour and nothing to check (section 6 row 20). The alternative, two more refs so a clock popup counts as inside its box, is not applied: more refs, and Safari would still order at the press on the clock button.
 - "Pass `clockLimit(min, day) ?? edgeTime(...)` to `TimeField` and to the end's `ClockPopover`": applied as one function, `dayTimeLimits`, which replaces `clockLimit`, so the rule is written once and `timeOnDay` uses it too.
-- "A props table for ... the five panels": there are four panels; `RangeEndBox`, `GridHeader`, `PeriodGrid` and `TimeColumn` are in the table as well.
+- "A props table for ... the five panels": there are four panels; `GridHeader`, `PeriodGrid` and `TimeColumn` are in the table as well.
 - "`items-center` plus the gap the pixel check gives" (row 25): the gaps are written out from 7.4 (`gap-x-3 gap-y-2`), so no value is left to find.
 
 Found while building, plan against code (step 1):
