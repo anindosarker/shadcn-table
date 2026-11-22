@@ -341,7 +341,7 @@ In `types.ts`, 28 types, under one short heading comment per group, each group o
 | range | `RangeEnd`, `RangeTimes` (`Record<RangeEnd, string>`: the first and last time on the step) | `RangeEnd`: `range.ts`, `views.ts`, `day-calendar.tsx`, `day-range-picker.tsx`; `RangeTimes`: `range.ts`, `day-range-picker.tsx` |
 | clock | `ClockUnit` (`{ index: number; selected: boolean; disabled: boolean; time: string }`: one unit a clock column lists) | `time.ts` (`clockColumns` returns them), `time-columns.tsx` (draws them) |
 | views | `ListBounds` | `views.ts`, `day-calendar.tsx`, `period-views.tsx` |
-| popup | `PopupOptions`, `PopupActions` | `PopupOptions`: `picker-popup.tsx`, `picker-box.tsx`, `picker-trigger.tsx`; `PopupActions`: those three, `day-picker.tsx`, `period-picker.tsx` |
+| popup | `PopupOptions`, `PopupActions` | `PopupOptions`: `picker-popup.tsx`, `picker-box.tsx`, `picker-trigger.tsx`; `PopupActions`: those three, `day-picker.tsx`, `period-picker.tsx` (in 9.2 not `picker-trigger.tsx`) |
 
 Stays in its file, 48 types, each used by that file alone:
 
@@ -470,7 +470,7 @@ PeriodPanel                       state view
 ```
 
 - `PeriodPanel` owns `view` (a `Date`: the month, the year, the decade). A pick calls `onChange(period)` and `onPicked()`.
-- Version 9.1: month joins the `PickerBox` branch (`<input type="month">`); week alone keeps `PickerTrigger`. Version 9.2: week joins it too (`<input type="week">`), so `PeriodPicker` has one branch, `PickerBox` with its three words read from `boxWords[type]`, and imports no `PickerTrigger`, `formatPeriod`, `dateLibFor` or `outsideLimits`. The week value is the control's own text, `yyyy-Www`, which `periodFormats.week` (`RRRR-'W'II`) already writes: nothing is converted. `valueAsNumber` and `step` of the control are not read.
+- Version 9.1: month joins the `PickerBox` branch (`<input type="month">`); week alone keeps `PickerTrigger`. Version 9.2: week joins it too (`<input type="week">`), so `PeriodPicker` has one branch, `PickerBox` with its words read from `boxWords[type]` (noun and button name; a placeholder for month and year, none for a week), and imports no `PickerTrigger`, `formatPeriod`, `dateLibFor` or `outsideLimits`. The week value is the control's own text, `yyyy-Www`, which `periodFormats.week` (`RRRR-'W'II`) already writes: nothing is converted. `valueAsNumber` and `step` of the control are not read.
 
 ### 5.6 week, month and year range
 
@@ -486,7 +486,7 @@ PeriodRangePicker
 ```
 
 - A pick calls `onChange(pickRange(value, period))`. A typed year calls `onChange(putEnd(...))` and resets the views. The swap is as 5.4, with the same three functions: `leaveBox(event)` tests `leftBothBoxes(event, boxes) && isReversed(value)`, gives `orderRange(value)` to `onChange` and resets the views from it; the picker's `onClose` is `() => onChange(orderRange(value))`. No `times`: a period has no time.
-- Version 9.1: a month end has a `PickerField` as a year end has, and the panel has the state `typing` (section 6, row 9.1). Version 9.2: a week end has one too, so every end is `Field` → `FieldLabel` + `PickerField type={type}`, the `FieldTitle` pair is gone, the two box refs are attached for every type, the end box's placeholder is read from `boxPlaceholders[type]`, and `typing` is set for week ends as for month ends. `PickerTrigger` stays: the three ranges open from it.
+- Version 9.1: a month end has a `PickerField` as a year end has, and the panel has the state `typing` (section 6, row 9.1). Version 9.2: a week end has one too, so every end is `Field` → `FieldLabel` + `PickerField type={type}`, the `FieldTitle` pair is gone, the two box refs are attached for every type, the end box's placeholder is read from `boxPlaceholders[type]` (none for a week: the iOS overlay of B9 would draw it on iOS before 18.2, which has no week control), and `typing` is set for week ends as for month ends. `PickerTrigger` stays: the three ranges open from it. It loses its `popupActions` prop in 9.2: no picker that opens from it closes on a pick.
 
 ### 5.7 The popup
 
@@ -525,7 +525,7 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | | `text`, `placeholder` | `string`, `string` | the trigger pickers | the value as text; `""` shows the placeholder and hides the X (R1, P1, P4, PR1) |
 | | `onClear` | `() => void` | the trigger pickers | the X empties the value; the trigger then takes focus (R2) |
 | | `onClose` | `(() => void)?` | `DayRangePicker`, `PeriodRangePicker` | the pair is ordered when the popup closes (R15, PR11) |
-| | `popupActions` | as `PickerBox` | `PeriodPicker` (week, month) | close on a pick (P3, P6) |
+| | `popupActions` | as `PickerBox` | `PeriodPicker` (week, month; week alone in 9.1) | close on a pick (P3, P6). Removed in 9.2: nobody passes it |
 | | `disabled` | `boolean?` | the picker's rest | G2 |
 | | `presentation`, `popoverProps`, `dialogProps` | `PopupOptions` | the picker's rest | named here and given to `PickerPopup` |
 | | `children` | `React.ReactNode` | the picker | the panel |
@@ -535,7 +535,7 @@ Every own prop of every shared part, panel and inner part. A prop not in this ta
 | | `trigger` | `React.ReactElement` | the same three | the button that opens the popup, given to the stock trigger's `render`; it keeps its own children (section 7) |
 | | `disabled` | `boolean?` | the same three | disables the stock trigger (G2; the end clock without a date, R20) |
 | | `inBox` | `boolean?` | `PickerBox`, `ClockPopover` | the trigger is an icon inside a typed box: it is wrapped in the box's end addon and the popover hangs from the box's edge (5.7, section 9 row 19) |
-| | `popupActions` | `React.RefObject<PopupActions \| null>?` | `PickerBox`, `PickerTrigger` | the root's `actionsRef` |
+| | `popupActions` | `React.RefObject<PopupActions \| null>?` | `PickerBox`, `PickerTrigger` (`PickerBox` alone in 9.2) | the root's `actionsRef` |
 | | `onClose` | `(() => void)?` | `PickerTrigger` | called when the popup closes, before the app's `onOpenChange` |
 | | `children` | `React.ReactNode` | the same three | the popup's content |
 | `PickerPresets` | `presets` | `Preset<Value>[]?` | the four panels | the row; nothing is drawn without presets |

@@ -221,7 +221,7 @@ In Chromium a week is typed as its number, then the four digits of the year. Two
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
-| W1 | Closed, empty | a week box (`<input type="week">`, `max` 9999-W52 when the app sets none, no `pattern`, no placeholder attribute), X hidden, calendar button "Select week". Chromium draws its own empty parts ("Week --, ----") in the box. iOS: "Select week" is drawn over the empty box (B9; read in the code, not run in a browser) | `""`, 0 | M1 |
+| W1 | Closed, empty | a week box (`<input type="week">`, `max` 9999-W52 when the app sets none, no `pattern`, no placeholder attribute), X hidden, calendar button "Select week". Chromium draws its own empty parts ("Week --, ----") in the box. No text of ours is drawn in an empty week box on any browser: the week box passes no placeholder to the iOS overlay (B9), because iOS before 18.2 has no week control | `""`, 0 | M1 |
 | W2 | A complete week is typed: 47, 2031 | the box shows Week 47, 2031; the X shows | `"2031-W47"`; four calls, one for each week the browser reports while the year is typed (0002-W47, 0020-W47, 0203-W47, 2031-W47), as a month box does | M2, B1 |
 | W3 | Half-typed: the year part of a typed week is deleted | the typed week number stays; no red mark while focused; after leaving: red border and the browser's message under the box | `""`, one call; leaving: no call | M3, B2 |
 | W4 | A complete week outside `min` or `max` is typed (Limits "min/max") | value kept; red border and the browser's range message after leaving ("Value must be Week 53, 2026 or earlier.") | the week as typed | M4, B3 |
@@ -236,7 +236,7 @@ In Chromium a week is typed as its number, then the four digits of the year. Two
 | W13 | Name | the app's `<label for>`, `aria-label` or `aria-labelledby` names the box; else "Week". The X is "Clear Week" | - | M13, B10; replaces P16 |
 | W14 | `disabled` | box and calendar button disabled, no X | never | M14, G2 |
 | W15 | Week 53 is typed for a year that has 52 weeks: 53, 2031 | the browser's own rule, nothing of ours: Chromium holds no such week, the box keeps the typed parts and reads as half-typed (W3). On the way it reports 0020-W53, a week that exists, then nothing. 53, 2026 is a week and is stored | `""`; two calls (`"0020-W53"`, then `""`) | B2 |
-| W16 | A browser with no week control (Firefox, desktop Safari, Playwright's WebKit) | a plain text box with no placeholder and no pattern: it takes any text, with no message. Accepted as the browser draws it: there is no second code path. Not run in a browser | the text as typed, whatever it is | M15; the decision of 2026-11-22 |
+| W16 | A browser with no week control (Firefox, desktop Safari, iOS Safari before 18.2, Playwright's WebKit) | a plain text box with no placeholder and no pattern: it takes any text, with no message. Accepted as the browser draws it: there is no second code path. Not run in a browser | the text as typed, whatever it is | M15; the decision of 2026-11-22 |
 
 ### 2.14 week range, typed in two boxes (version 9.2)
 
@@ -244,7 +244,7 @@ Version 9.2 only (card 8.I). The trigger, its text ("Week 44, 2026 - Week 47, 20
 
 | # | Case | User sees | Value line, calls | From |
 |---|---|---|---|---|
-| WR1 | Popup | per end: label, week box with its X (no calendar button), week calendar; presets under both. Each end box is as wide as its calendar (224 px), so the popup is as wide as on version 9: 484 px at 1280, 244 px at 390. On open, focus is in the From box, the first control of the popup. iOS: "Select week" is drawn over each empty end box (B9; read in the code) | - | MR1, PR3 |
+| WR1 | Popup | per end: label, week box with its X (no calendar button), week calendar; presets under both. Each end box is as wide as its calendar (224 px), so the popup is as wide as on version 9: 484 px at 1280, 244 px at 390. On open, focus is in the From box, the first control of the popup. No text of ours is drawn in an empty end box (W1) | - | MR1, PR3 |
 | WR2 | An end is typed: From 23, 2027 | both calendars go to the months of the new pair: From's calendar June 2027 with week 23 as the band, To's calendar the month after | `["2027-W23", ""]`; four calls, one per week the browser reports (W2) | MR2, R12 |
 | WR3 | The other end is typed: To 10, 2030 | From's calendar June 2027, To's calendar March 2030; the band runs from the Monday of week 23, 2027 to the Sunday of week 10, 2030 | `["2027-W23", "2030-W10"]`, four calls | MR3, R12 |
 | WR4 | Year list while an end is typed | the end being typed is left out of the year list until its box is left: the week box reports the years 1, 14 and 144 while 1443 is typed. From 5, right arrow, 1443: while the box has focus the list stays 1900 to 2100 and From's calendar stays on January 1900; when the box is left the list runs from 1400 and From's calendar shows January 1443 | `["1443-W05", to]`, four calls; leaving: no call | MR4, R13 |

@@ -339,17 +339,17 @@ The stored value does not change and is the control's own: `periodFormats.week` 
 - Depends on: Month box (9.1)
 - Review: fable, a reader with no history
 - Local CI: none
-- Task 1: `cp -R components/date-picker-9-1 components/date-picker-9-2`, then the four files of the table below; the four cards (version `9.2`; title "Week typed in a box" on rows 7 and 8, "Month typed in a box" on rows 9 and 10; ids `fix-7i`, `fix-8i`, `fix-9j`, `fix-10j`; import `@/components/date-picker-9-2/date-picker`; the calls line of the row's newest card). Commit `date picker 9.2: week and week range typed in a week input`. Checks: 2.2 on `components/date-picker-9-2`; `diff -rq components/date-picker-9-1 components/date-picker-9-2` lists the four files only; `rg "pattern=|placeholder="` on the four files finds nothing new; cases W and WR of the cases file (2.13, 2.14) on cards 7.I and 8.I in Chromium at 1280 by 800 and 390 by 844; on rows 7 and 8 every version 9 step that does not involve the trigger button gives the 9 card's value and calls lines on the 9.2 card; cases M and MR on cards 9.J and 10.J give the lines of cards 9.I and 10.I. No WebKit or Firefox run: neither has a week control
+- Task 1: `cp -R components/date-picker-9-1 components/date-picker-9-2`, then the five files of the table below; the four cards (version `9.2`; title "Week typed in a box" on rows 7 and 8, "Month typed in a box" on rows 9 and 10; ids `fix-7i`, `fix-8i`, `fix-9j`, `fix-10j`; import `@/components/date-picker-9-2/date-picker`; the calls line of the row's newest card). Commit `date picker 9.2: week and week range typed in a week input`. Checks: 2.2 on `components/date-picker-9-2`; `diff -rq components/date-picker-9-1 components/date-picker-9-2` lists the five files only; `rg "pattern=|placeholder="` on the five files finds nothing new; cases W and WR of the cases file (2.13, 2.14) on cards 7.I and 8.I in Chromium at 1280 by 800 and 390 by 844; on rows 7 and 8 every version 9 step that does not involve the trigger button gives the 9 card's value and calls lines on the 9.2 card; cases M and MR on cards 9.J and 10.J give the lines of cards 9.I and 10.I. No WebKit or Firefox run: neither has a week control
 
 Against version 9.1:
 
 | File | Status | Change |
 |---|---|---|
 | `components/picker-field.tsx` | refactor | `type` also takes `"week"`. `nativeInputs` gains the week row (last value `9999-W52`, the last week of a four-digit year; no step base, a week takes no step); the week box takes `type`, `min` and `max` from its row exactly as the month box does. The refusal of a five-digit year (`/^\d{5,}-/`) already reads `10000-W01`. Three comments name the week. No other line |
-| `modes/period-picker.tsx` | refactor | the trigger branch is removed: `boxWords` gains the week row (`week`, `selectWeek`, `selectWeek`) and every period type returns the one `PickerBox`. The imports of `PickerTrigger`, `formatPeriod`, `dateLibFor` and `outsideLimits` go with it |
-| `modes/period-range-picker.tsx` | refactor | every end is a `PickerField`; the two `FieldTitle`s of the week range and their import go. The end box's placeholder comes from one lookup by type (`selectWeek`, `selectMonth`, `yearPlaceholder`). `typing` is set for week ends as for month ends (case WR4) |
+| `modes/period-picker.tsx` | refactor | the trigger branch is removed: `boxWords` gains the week row (noun `week`, button name `selectWeek`, no placeholder) and every period type returns the one `PickerBox`. The imports of `PickerTrigger`, `formatPeriod`, `dateLibFor` and `outsideLimits` go with it |
+| `modes/period-range-picker.tsx` | refactor | every end is a `PickerField`; the two `FieldTitle`s of the week range and their import go. The end box's placeholder comes from one lookup by type (none for a week, `selectMonth`, `yearPlaceholder`). `typing` is set for week ends as for month ends (case WR4) |
 | `components/labels.ts` | refactor | new key `week` ("Week": the box's noun, B10); `pickWeek` is removed, nothing reads it. 47 keys |
-| `components/picker-trigger.tsx` | keep | the week, month and year ranges and the date ranges still open from it |
+| `components/picker-trigger.tsx` | refactor | the `popupActions` prop and the `PopupActions` import are removed: its one passer was the week branch of `PeriodPicker`. The week, month and year ranges and the date ranges still open from the trigger, and none of them closes on a pick |
 | the other 17 files | keep | byte for byte as in version 9.1 |
 
 New pieces, each with what a user loses without it:
@@ -363,6 +363,8 @@ Removed, each with what read it:
 
 - The `PickerTrigger` branch of `PeriodPicker`: its last user was the week. With it go the red trigger of P15 (the box flags itself, W5) and the trigger text "Week 47, 2026" for one value (the box shows the week as the browser writes it).
 - `labels.pickWeek`: the week trigger's placeholder.
+- `PickerTrigger`'s `popupActions` prop: the week branch of `PeriodPicker` passed it to close on a pick. `PickerPopup` keeps its own for `PickerBox`.
+- No week placeholder: a placeholder on a native box feeds only the overlay drawn on every iOS (B9), and iOS before 18.2 has no week control (MDN browser-compat-data, `safari_ios` 18.2), so there it would be our text over a plain text box. A week box passes none, in the single picker and in the range's end boxes: nothing of ours is drawn in a week box on any browser. On iOS 18.2 or later an empty week box is as iOS draws it; not seen on a device.
 - The `FieldTitle` pair of `PeriodRangePanel`: each end's box has a `FieldLabel` in its place.
 
 Stays unchanged: the week calendar, its header, year and month selects, arrows, Today, week numbers, presets, limits; the popup; the week range's trigger, its text ("Week 44, 2026 - Week 47, 2026") and its X; the swap rule (`isReversed`, `orderRange`, `leftBothBoxes`), now reached by week ends too; month, year and every other type; the stored format `yyyy-Www`; `types.ts`; the folders of versions 9 and 9.1, their cards and every other version.
