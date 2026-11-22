@@ -130,3 +130,13 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
   - With the Time field half typed, a press on the clock's highlighted time does nothing.
 - Demo only: under the Deutsch labels three words stay English on the version 9 cards, because the demo's label file carries 7.4's key names.
 - Not seen: Firefox, real Safari, iPhone, the iOS placeholder overlay in a browser (checked by string equality with 7.4).
+
+## Version 9.3, the full version, 2026-11-22
+
+- Folder `test-projects/next-app/components/date-picker-9-3`, head `3011fd6` (next-app, not pushed). 22 files. Cards "Full version" on all twelve rows.
+- Built from: 9 (the rebuild), 9.1 (month typed in `<input type="month">`), 9.2 (week typed in `<input type="week">`), and the Firefox rule of 9.1.3.
+- Owner decisions on the way: plain native inputs, nothing added for a browser that lacks a control (a `pattern` and placeholder were built for 9.1 and removed on his word); versions numbered from their base (icon variants of 9.1 are 9.1.1 shown, 9.1.2 invisible, 9.1.3 clipped).
+- Firefox's own picker button: no selector reaches it. The colour trick (9.1.2) leaves it clickable. Clipping the input's right edge by the button's own box, `min(16px, 1em) + 0.525em` from Firefox's `datetimebox.css`, with the same negative margin, removes paint, gap and mouse click (proven in Firefox 160.0.1). Left: Space in a date part and Tab then Enter on the hidden button still open Firefox's picker; right-to-left not covered.
+- Checks at `3011fd6`: a full read by a reviewer with no history (clean; three small points fixed); Chromium at both sizes, each 9.3 card against the card it came from, values and pixels (clean); real Firefox on all twelve rows, range popups included (clean).
+- Demo page: rows are accordion sections, newest card first, one open/close-all button, a sort button, card titles by row and version, the id letters kept only as the saved tick key.
+- Not seen: Safari, iPhone, right-to-left. In Firefox and desktop Safari the month and week boxes are plain text fields.
