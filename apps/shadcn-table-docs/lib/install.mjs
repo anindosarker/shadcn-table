@@ -36,6 +36,16 @@
  * merged item did not write is removed (spec 41.2), so a file the registry
  * moved or dropped leaves no stale copy; the parts beside it are untouched.
  *
+ * The date picker (spec 81): when the core item depends on the base's picker
+ * item (`anindosarker/shadcn-date-picker/date-picker-<base>#<tag>`), the CLI
+ * resolves it from GitHub. The temporary components.json also points the
+ * `components` and `hooks` aliases into components/ui-<base>/, so the picker
+ * lands in components/ui-<base>/date-picker/ and its hook in
+ * components/ui-<base>/hooks/, one copy per base. Its `@/components/ui/`,
+ * `@/components/date-picker/` and `@/hooks/` imports, and the library copy's,
+ * point at that base's copy (toBase). Both folders are cleared before the
+ * add, so a rerun or a dropped picker leaves no stale file.
+ *
  * Manual equivalent: pnpm exec shadcn add <rewritten item json> table --overwrite --yes
  * with components.json temporarily set to {"style":"<style>","aliases":{"ui":"@/components/ui-<base>"}}.
  *
@@ -153,11 +163,18 @@ for (const set of Object.keys(ICON_SETS)) {
     });
   }
 }
+/** Points the shared `@/` imports of an installed file at this base's copy. */
+const toBase = (content) =>
+  content
+    .replace(/(['"])@\/components\/ui\//g, `$1${uiAlias}/`)
+    .replace(/(['"])@\/components\/date-picker\//g, `$1${uiAlias}/date-picker/`)
+    .replace(/(['"])@\/hooks\//g, `$1${uiAlias}/hooks/`);
+/** The folders the date picker item installs into, below uiDir. */
+const PICKER_DIRS = ['date-picker', 'hooks'].map((dir) =>
+  path.join(uiDir, dir),
+);
 for (const file of item.files) {
-  file.content = file.content.replace(
-    /(['"])@\/components\/ui\//g,
-    `$1${uiAlias}/`,
-  );
+  file.content = toBase(file.content);
   if (base !== REFERENCE_BASE) {
     file.content = file.content.replace(
       /\bst-collapsible\b/g,
@@ -173,6 +190,9 @@ const kept = new Map(KEEP.map((file) => [file, fs.readFileSync(file, 'utf8')]));
 const config = JSON.parse(kept.get(COMPONENTS_JSON));
 config.style = style;
 config.aliases.ui = uiAlias;
+config.aliases.components = uiAlias;
+config.aliases.hooks = `${uiAlias}/hooks`;
+for (const dir of PICKER_DIRS) fs.rmSync(dir, { recursive: true, force: true });
 fs.writeFileSync(COMPONENTS_JSON, JSON.stringify(config, null, 2) + '\n');
 try {
   execFileSync(
@@ -193,9 +213,10 @@ try {
   fs.rmSync(tmp, { recursive: true, force: true });
 }
 const pruned = pruneLibrary();
+const picker = rewritePicker();
 const parts = await installHookedParts();
 console.log(
-  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in, ${pruned} dropped files removed), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}; components.json, app/global.css, package.json and the lockfile kept as they were`,
+  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in, ${pruned} dropped files removed), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}, ${picker} date picker files; components.json, app/global.css, package.json and the lockfile kept as they were`,
 );
 
 /**
@@ -233,6 +254,27 @@ function pruneLibrary() {
   };
   walk(libDir);
   return removed;
+}
+
+/**
+ * Rewrites the imports of every file the date picker item wrote (below
+ * PICKER_DIRS) with toBase; returns how many.
+ */
+function rewritePicker() {
+  let count = 0;
+  const walk = (dir) => {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(file);
+      else {
+        fs.writeFileSync(file, toBase(fs.readFileSync(file, 'utf8')));
+        count++;
+      }
+    }
+  };
+  for (const dir of PICKER_DIRS) walk(dir);
+  return count;
 }
 
 /**
