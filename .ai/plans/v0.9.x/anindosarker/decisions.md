@@ -24,6 +24,9 @@ kanban-plugin: basic
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
 	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
+- [ ] **D167** The date picker gets one right-to-left look; Safari and iPhone are the owner's tests #R6
+	- Desktop Safari and iPhone are tested by the owner, look and feel accepted (2026-11-24); no agent re-tests them. Right-to-left: one manual look, once, on the Base UI picker in the new repository (each mode opened on a dir=rtl page, screenshots); a broken thing becomes a card with its screenshot, a clean result one line in the tracker. No CI job and no test is added for it. The five-digit year in Safari is left alone.
+	- Source: Q152
 
 ## In progress
 
