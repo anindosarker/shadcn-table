@@ -1,11 +1,11 @@
 # 79: Date picker Radix and React Aria versions, Date picker Radix version, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `date-picker-radix-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-radix-version
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: identical files, `cmp registry/base/components/date-picker/<file> registry/radix/components/date-picker/<file>` for each of the 18 files the design plan marks identical for Radix, at 1b06b47: pass (exit 0, 18 of 18)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 identical files: done (1b06b47)
 
 ## Notes
 
