@@ -22,6 +22,9 @@ kanban-plugin: basic
 - [ ] **D173** The date picker's install files are generated with shadcn's own style transform #R6
 	- Option 1 of Q161: the registry build of shadcn-date-picker runs shadcn's own createStyleMap and transformStyle with the nova style over the source and writes a generated, committed folder per base; the items serve those files as registry:component, so the CLI rewrites import aliases and the dialog close button, the field and the button group carry real classes. The source in registry/<base> stays the exact approved code (D162) and is never edited for it; the generated folder is never hand-edited and a check fails when it is out of step with the source. One item per base as D163 names them; a user on another shadcn style gets nova's values for those three places, named in the README. This is how shadcn styles its own parts at build time. Tooling, settled by the lead under the owner's 'implement everything autonomously'; replaces the item-type part of D172.
 	- Source: Q161
+- [ ] **D174** The React Aria popup's rare stuck-open case is left to React Aria #R6
+	- The React Aria picker keeps the stock popover (D171): a close that lands in the first two frames of a delayed fade-in can leave the popup on the page, and on a touch screen the popup can flicker once as it opens; both are stock react-aria-components behaviour (Popover.mjs:91,103,180,185), not picker code. No workaround and no restyled stock part in the library; the README names both under React Aria. An upstream report is filed only on the owner's word. Settled by the lead.
+	- Source: Q164
 
 ## In progress
 
