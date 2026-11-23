@@ -36,10 +36,6 @@ kanban-plugin: basic
 	- Audit-fix cards on the date filter demo: 4.J fixes 4.I, 2.E fixes 2.D, 3.I fixes 3.G, 1.E fixes 1.A, 6.D fixes 6.A, 5.D fixes 5.A, 2.F fixes 2.A, 3.J fixes 3.A, 4.K fixes 4.A. next-app head d106dec (round 1 fixes 8566a62, round 2 fixes d106dec).
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
-- [ ] **Q149** Where the date picker lives: its own package and docs site
-	- Today the picker exists only in the demo app (test-projects/next-app/components/date-picker, version 9.3.6); the library has no date picker, so the table's date filter cannot use it and nobody can install it.
-	- Owner's points of 2026-11-23, not yet a decision: own package packages/shadcn-calendar and docs app apps/shadcn-calendar-docs in this repo; the Base UI version is the test app's components/date-picker (9.3.6), used unchanged; Radix and React Aria versions to be built; served from the table registry under @shadcn-table for now. Report: reference/q149-calendar-library/report.md.
-	- Lookup 2026-11-24: same repo needs 22 places changed (registry build, test runner, release tools, workflows, vercel.json) and the current build cannot serve calendar items under @shadcn-table; a separate repo recreates 11 pieces in full, about 4 when thin; a cross-repo dependency is a supported form (owner/repo/item#tag, the form the table's core items use), no directory listing needed; either way this repo needs the import mapping at tools/registry/lib.mjs:116 and one dependency per base. Owner, 2026-11-24: the calendar only needs thin Storybook and CI; 'Separate repo is fine by me.' Not recorded yet.
 
 ## Decided
 
@@ -377,6 +373,10 @@ kanban-plugin: basic
 	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 - [x] **Q147** PostHog reports the docs site's analytics SDK as outdated #D159
 - [x] **Q148** The docs site does not set PostHog's dated defaults option that the install guide now sets #D161
+- [ ] **Q149** Where the date picker lives: its own package and docs site #D162
+	- Today the picker exists only in the demo app (test-projects/next-app/components/date-picker, version 9.3.6); the library has no date picker, so the table's date filter cannot use it and nobody can install it.
+	- Owner's points of 2026-11-23, not yet a decision: own package packages/shadcn-calendar and docs app apps/shadcn-calendar-docs in this repo; the Base UI version is the test app's components/date-picker (9.3.6), used unchanged; Radix and React Aria versions to be built; served from the table registry under @shadcn-table for now. Report: reference/q149-calendar-library/report.md.
+	- Lookup 2026-11-24: same repo needs 22 places changed (registry build, test runner, release tools, workflows, vercel.json) and the current build cannot serve calendar items under @shadcn-table; a separate repo recreates 11 pieces in full, about 4 when thin; a cross-repo dependency is a supported form (owner/repo/item#tag, the form the table's core items use), no directory listing needed; either way this repo needs the import mapping at tools/registry/lib.mjs:116 and one dependency per base. Owner, 2026-11-24: the calendar only needs thin Storybook and CI; 'Separate repo is fine by me.' Not recorded yet.
 
 ## Later
 

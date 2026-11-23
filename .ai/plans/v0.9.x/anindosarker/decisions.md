@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D162** The date picker becomes its own small library in its own repository #R6
+	- Table v1 comes first; the calendar work never delays it.
+	- Source: Q149
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
