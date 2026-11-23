@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   useEffect,
@@ -10,6 +11,7 @@ import {
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { DatePicker } from '@/components/date-picker/date-picker';
 import { Badge } from '@/components/ui/badge';
 import {
   Combobox,
@@ -279,10 +281,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   };
 
   // A date, datetime or time input holds a valid value after each typed
-  // digit, so a typed value applies on Enter or blur only; a change with no
-  // key press since the last commit is a pick in the native picker.
-  const [isDateTyped, setIsDateTyped] = useState(false);
-  // The typed date not applied yet; an unmount without a blur applies it.
+  // digit, so a typed value applies on Enter or blur only. The typed date not
+  // applied yet; an unmount without a blur applies it.
   const [typedDate, setTypedDate] = useState<{
     guard: ReturnType<typeof getCommitGuard>;
     value: string;
@@ -295,18 +295,41 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       }
     };
   });
+  const dateBlurCommit = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
     const commit = commitTypedDateOnUnmount;
-    return () => commit.current();
+    return () => {
+      clearTimeout(dateBlurCommit.current);
+      commit.current();
+    };
   }, []);
 
   const commitTypedValue = () => {
-    if (isDateFilter && isDateTyped) {
-      setIsDateTyped(false);
+    if (typedDate) {
       setTypedDate(null);
-      handlePick((filterValue as string) || null);
+      handlePick(typedDate.value || null);
     } else {
       debouncedCommit.flush();
+    }
+  };
+
+  const filterInputKey = `${column.id}-${rangeFilterIndex ?? 0}`;
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // A change while the date picker's input has focus is typed, unless a
+  // click on one of its buttons made it.
+  const isDatePickerButtonClick = useRef(false);
+  const handleDateChange = (newValue: string) => {
+    if (
+      document.activeElement instanceof HTMLInputElement &&
+      datePickerRef.current?.contains(document.activeElement) &&
+      !isDatePickerButtonClick.current
+    ) {
+      setFilterValue(newValue);
+      setTypedDate({ guard: getCommitGuard(), value: newValue });
+    } else {
+      setTypedDate(null);
+      handlePick(newValue || null);
     }
   };
 
@@ -494,8 +517,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         : filterPlaceholder,
     ref: (inputRef) => {
       // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
-      filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
-        inputRef as HTMLInputElement;
+      filterInputRefs.current[filterInputKey] = inputRef as HTMLInputElement;
     },
     title: filterPlaceholder,
     ...textFieldProps,
@@ -510,36 +532,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     },
     onKeyDown: (e) => {
       e.stopPropagation();
-      if (e.key === 'Enter') {
-        commitTypedValue();
-      } else if (
-        isDateFilter &&
-        // Space, F4 and Alt+ArrowDown open the native picker: not typing.
-        !(e.altKey && ['ArrowDown', 'ArrowUp'].includes(e.key)) &&
-        ![' ', 'ArrowLeft', 'ArrowRight', 'Escape', 'F4', 'Tab'].includes(
-          e.key,
-        ) &&
-        !['Alt', 'Control', 'Meta', 'Shift'].includes(e.key)
-      ) {
-        setIsDateTyped(true);
-      }
+      if (e.key === 'Enter') commitTypedValue();
       textFieldProps.onKeyDown?.(e);
     },
-  };
-
-  const commonDatePickerProps = {
-    // Tighter inset so the native placeholder fits at the date minimum width.
-    className: cn('px-1.5', commonTextFieldProps.className),
-    onChange: (event: ChangeEvent<HTMLInputElement>) => {
-      if (isDateTyped) {
-        setFilterValue(event.target.value);
-        setTypedDate({ guard: getCommitGuard(), value: event.target.value });
-      } else {
-        handlePick(event.target.value || null);
-      }
-    },
-
-    value: filterValue || '',
   };
 
   // Option values offered by the autocomplete list, already narrowed by the
@@ -559,17 +554,98 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     ? (dropdownOptions?.map((option) => getValueAndLabel(option).value) ?? [])
     : [];
 
-  // Shared by both comboboxes: the inner shadcn part brings its own border and
-  // focus ring, which the surrounding InputGroup already draws.
+  // Shared by both comboboxes and the date picker: the inner shadcn part
+  // brings its own border and focus ring, which the surrounding InputGroup
+  // already draws.
   const nestedGroupClassName =
     'h-auto min-h-0 flex-1 rounded-none border-0 bg-transparent shadow-none dark:bg-transparent has-[[data-slot=input-group-control]:focus-visible]:border-0! has-[[data-slot=input-group-control]:focus-visible]:ring-0! focus-within:ring-0!';
+
+  const dateBoxProps = {
+    ...textFieldProps,
+    ...(filterVariant?.startsWith('time')
+      ? timePickerProps
+      : filterVariant?.startsWith('datetime')
+        ? dateTimePickerProps
+        : datePickerProps),
+  };
+
+  const datePickerStep =
+    dateBoxProps.step === undefined ? undefined : Number(dateBoxProps.step);
+
+  const datePickerTypeProps = filterVariant?.startsWith('time')
+    ? ({ step: datePickerStep, type: 'time' } as const)
+    : filterVariant?.startsWith('datetime')
+      ? ({ step: datePickerStep, type: 'datetime' } as const)
+      : ({ type: 'date' } as const);
+
+  const datePickerBoxProps = {
+    'aria-label': filterPlaceholder,
+    ...Object.fromEntries(
+      Object.entries(dateBoxProps).filter(
+        ([key]) => key.startsWith('aria-') || key.startsWith('data-'),
+      ),
+    ),
+    className: cn(
+      nestedGroupClassName,
+      filterChipLabel && 'hidden',
+      dateBoxProps.className,
+    ),
+    disabled: dateBoxProps.disabled ?? !!filterChipLabel,
+    id: dateBoxProps.id,
+    max: dateBoxProps.max === undefined ? undefined : String(dateBoxProps.max),
+    min: dateBoxProps.min === undefined ? undefined : String(dateBoxProps.min),
+    onBlur: (e: FocusEvent<HTMLDivElement>) => {
+      // Focus may be moving to the popup, which React counts as inside.
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        dateBlurCommit.current = setTimeout(commitTypedValue);
+      }
+      dateBoxProps.onBlur?.(e as unknown as FocusEvent<HTMLInputElement>);
+    },
+    onChange: handleDateChange,
+    onClick: () => {
+      isDatePickerButtonClick.current = false;
+    },
+    onClickCapture: (e: MouseEvent<HTMLDivElement>) => {
+      isDatePickerButtonClick.current = !(e.target instanceof HTMLInputElement);
+    },
+    onFocus: (e: FocusEvent<HTMLDivElement>) => {
+      clearTimeout(dateBlurCommit.current);
+      dateBoxProps.onFocus?.(e as unknown as FocusEvent<HTMLInputElement>);
+    },
+    onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      const isBoxInput =
+        e.target instanceof HTMLInputElement &&
+        e.currentTarget.contains(e.target);
+      // An Escape on one of the box's buttons goes on to close the editor.
+      if (
+        e.key !== 'Escape' ||
+        isBoxInput ||
+        !e.currentTarget.contains(e.target as Node)
+      ) {
+        e.stopPropagation();
+      }
+      if (e.key === 'Enter' && isBoxInput) commitTypedValue();
+      dateBoxProps.onKeyDown?.(e as unknown as KeyboardEvent<HTMLInputElement>);
+    },
+    // The picker mounts a new input when it is cleared: read on every render.
+    ref: (root: HTMLDivElement | null) => {
+      datePickerRef.current = root;
+      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+      filterInputRefs.current[filterInputKey] = root?.querySelector(
+        'input',
+      ) as HTMLInputElement;
+    },
+    style: dateBoxProps.style,
+    title: filterPlaceholder,
+    value: (filterValue as string) || '',
+  };
 
   return (
     <>
       <div
         className={cn(
           filterTextFieldVariants(),
-          // Chromium's date input needs 126px of content for its placeholder.
+          // A date box holds its input, a clear button and the popup button.
           isDateFilter
             ? 'min-w-35'
             : isMultiSelectFilter
@@ -590,27 +666,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           ref={comboboxAnchor}
         >
           {startAdornment}
-          {filterVariant?.startsWith('time') ? (
-            <InputGroupInput
-              {...commonTextFieldProps}
-              {...commonDatePickerProps}
-              {...timePickerProps}
-              type="time"
-            />
-          ) : filterVariant?.startsWith('datetime') ? (
-            <InputGroupInput
-              {...commonTextFieldProps}
-              {...commonDatePickerProps}
-              {...dateTimePickerProps}
-              type="datetime-local"
-            />
-          ) : filterVariant?.startsWith('date') ? (
-            <InputGroupInput
-              {...commonTextFieldProps}
-              {...commonDatePickerProps}
-              {...datePickerProps}
-              type="date"
-            />
+          {isDateFilter ? (
+            <DatePicker {...datePickerBoxProps} {...datePickerTypeProps} />
           ) : isAutocompleteFilter ? (
             // The input is the filter text field: typing filters right away,
             // choosing an option sets the filter to that option's value.
