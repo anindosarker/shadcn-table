@@ -7,6 +7,7 @@ Checks:
 - Check: file list, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker` at 89ee92d: pass (lists only the plan's 9 differing files, as "Only in" base until task 2)
 
 - Task 1 identical files: done (89ee92d)
+- Reader task 1 at 89ee92d: no deviation
 
 ## Notes
 
