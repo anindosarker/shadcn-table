@@ -16,6 +16,9 @@ kanban-plugin: basic
 - [ ] **D178** The date picker gets a small docs site with the table site's look #R6
 	- shadcn-date-picker gets a docs app that reuses the shell of the table's docs site (header, theme, fonts, section layout, code panels, install command blocks), served at date-picker.shadcn-table.com. Pages stay few: home, install, one page per picker type (date, date-time, time, week, month, year, ranges) with a live demo and its code, and props. The Storybook moves off the site root to its own address under the same project, as the table's does. The content is thin (D162); the look is the table's. Owner, 2026-11-24: 'the docs app looks bad, make it like table', 'k'.
 	- Source: Q167
+- [ ] **D179** The date picker ships with shadcn's Base UI arrow-key bug and a short note #R6
+	- The picker and the table keep shadcn's stock Base UI calendar part everywhere, their own trees, Storybooks and docs included, so a demo shows what a user gets: on Base UI, arrow keys in the day grid move the highlight but not keyboard focus (shadcn-ui/ui issue 9401, fix PRs 9402 and 9082 open since January 2026). No calendar file of ours is shipped and the approved code is not changed for it. The picker README carries a short note under Base UI: the symptom, the issue link, and the one line (ref={ref} on the day Button of components/ui/calendar.tsx) a user can add. Nothing is posted on shadcn-ui/ui; the draft comment in reference/q149-calendar-library/q160-upstream-draft.md stays unsent. Owner, 2026-11-24: 'no, ship with bug. tiny disclaimer is fine'.
+	- Source: Q160
 
 ## In progress
 
