@@ -40,10 +40,11 @@ Checks:
 - Task 1 The read, the inventory, the parts, the replacements, the behaviour at risk, the not-in-the-versions list: done (eb543afa)
 - Task 2 The day calendar on React Aria: done (5c6ada7b): no way named, K1 staged
 - Task 3 Self-check of every `identical` claim: done (plan at 5c6ada7b; the lines above)
+- Review round 1 (fable, no history): 1 major, 7 minors, all taken; fixed in 62def790 (the major is staged as K6 below; K5 has three more facts)
 
 ## Attention
 
-Five points the plan does not decide. The plan marks the files as waiting on K1 to K5; the runner files the queue card and writes its id after the K number here.
+Six points the plan does not decide. The plan marks the files as waiting on K1 to K6; the runner files the queue card and writes its id after the K number here.
 
 ### K1 (card: to be filed). The React Aria style has another calendar, so the day calendar file has no stock part to stand on there.
 
@@ -98,10 +99,29 @@ Five points the plan does not decide. The plan marks the files as waiting on K1 
 - Files: `components/picker-popup.tsx` (the popover branch) and `components/time-field.tsx` on React Aria. The plan's rows for both are written for the stock popover.
 - Cases: U2 (no focus trap, Tab past the last control closes), WR1 (on open, focus is in the From box), C2 and R16 (the clock opens with focus on the popup). No case speaks of page scroll or of the page behind a popover; on Base UI both stay free (`@base-ui/react@1.9.0/popover/root/PopoverRoot.d.ts:43-58`, `modal` default `false`).
 - React Aria, a popover opened from the style's `PopoverTrigger`: an underlay over the page (`react-aria-components@1.22.1/dist/private/Popover.mjs:219-226`), page scroll prevented and the outside made inert (`react-aria@3.53.1/dist/private/overlays/usePopover.mjs:45-47,54`), focus contained (`Popover.mjs:216`), focus moved to the popup itself on open (`Popover.mjs:133-137`). So: Tab cycles inside; a press outside closes and does nothing else; the page does not scroll while a popup is open; C2 and R16 hold without any code; WR1 differs by one Tab.
+- The stock modal popover also renders two visually hidden `button` elements that dismiss it, one before and one after the content, outside the tab order (`react-aria-components@1.22.1/dist/private/Popover.mjs:200-210`; `react-aria@3.53.1/dist/private/overlays/DismissButton.mjs:33-36`, `tabIndex: -1`). Case U2 and review decision 7 say "no hidden Close button"; a screen reader's cursor reaches them.
+- Two more facts of the same stock overlays, shown here so they are seen once; neither option below changes them:
+  - The phone dialog opens with focus on the dialog element, not on the X: "Focus the dialog itself on mount" (`react-aria@3.53.1/dist/private/dialog/useDialog.mjs:29-32`). On Base UI and Radix focus starts on the first control. A keyboard user needs one Tab more (cases U4 to U6).
+  - The box's popover is moved 8 px along the box by `crossOffset: 8`, which React Aria adds to the left coordinate without looking at the text direction (`react-aria@3.53.1/dist/private/overlays/calculatePosition.mjs:169`); Base UI's `alignOffset` follows the direction. In a right-to-left page the shift goes the other way than on Base UI. Right-to-left is looked at on Base UI only (D167).
 - The other mode, `isNonModal`: "Most popovers should not use this option" (`react-aria@3.53.1/dist/types/src/overlays/usePopover.d.ts:22-30`). It removes the underlay, the scroll lock and the trap, and with them the dialog role (`Popover.mjs:121-124`) and the focus on open (`Popover.mjs:137` needs the dialog role); it closes on blur, not on a press outside (`usePopover.mjs:32-33`).
 - Options:
-  1. Keep the stock modal popover and name the differences: U2 (Tab stays inside), the page behind is blocked and does not scroll, WR1 (focus starts on the popup). `time-field.tsx` then needs no focus code at all.
-  2. `isNonModal` on the picker's popovers: no trap and no lock, but focus does not enter on open (C2, WR1 and R16 differ; R16 needs focus to enter the clock), the popup has no dialog role for its `aria-label`, and getting focus in would need code of our own.
+  1. Keep the stock modal popover and name the differences: U2 (Tab stays inside, two hidden dismiss buttons), the page behind is blocked and does not scroll, WR1 (focus starts on the popup), the phone dialog's focus starting on the dialog, the 8 px shift in a right-to-left page. `time-field.tsx` then needs no focus code at all.
+  2. `isNonModal` on the picker's popovers: no trap and no lock, but focus does not enter on open (C2, WR1 and R16 differ; R16 needs focus to enter the clock), the popup has no dialog role for its `aria-label`, one hidden dismiss button stays (`Popover.mjs:208-210`), and getting focus in would need code of our own.
+- Recommended: option 1.
+
+### K6 (card: to be filed). On React Aria a screen reader hears a range picker's popup named by the button's text, not by the picker's label.
+
+- File: `components/picker-popup.tsx` on React Aria (the popover branch, plan 3.6 row `:148-158`). No line waits; the difference comes from the stock primitive.
+- Base UI and Radix: the popup is a dialog named by `aria-label={title}` (`B/components/picker-popup.tsx:149`). Radix writes `aria-labelledby` only when a Title part exists, then the app's props (`@radix-ui/react-popover@1.3.1/dist/index.mjs:282-285`).
+- React Aria: the stock `PopoverTrigger` gives the popover `aria-labelledby` with the trigger's id through `PopoverContext` (`react-aria-components@1.22.1/dist/private/Dialog.mjs:57-59,79-85`); the popover merges context and props (`Popover.mjs:52`, `utils.mjs:100`) and writes it beside `aria-label` (`Popover.mjs:190-191`). `aria-labelledby` wins over `aria-label`, so the popup is named by the trigger button.
+- Where it shows: for a box's calendar button and for the clock button the two are the same text (`B/components/picker-box.tsx:36-38`, `B/components/time-field.tsx:59-61`). For a range trigger `title` is the label (`B/components/picker-trigger.tsx:44,54`, for example `labels.dateRange`, `B/modes/day-range-picker.tsx:90`), while the button's name is its content, the chosen range or the placeholder (`picker-trigger.tsx:67`), unless the app gives the trigger an `aria-label`.
+- The phone dialog is not touched: there the title part wins over the trigger (`Dialog.mjs:52-55,104-107`).
+- No stock prop removes it: a prop left `undefined` keeps the context value (`react-aria@3.53.1/dist/private/utils/mergeProps.mjs:37`).
+- A shared play that finds a range popup by `title` as the dialog's name fails on React Aria, and the stories may not differ per base (spec 79, milestone Task 3).
+- Options:
+  1. Keep the stock popover and name the difference: on React Aria a range popup is announced with the trigger's text. A play that finds the popup by its name becomes a fix of spec 78's stories, to a way that holds on all three bases.
+  2. The picker gives the popover an `aria-labelledby` of its own, which replaces the context one (a defined prop wins, `mergeProps.mjs:37`). It needs a value: an empty string, or the id of an element that holds the title, which the popover does not have. Either is code the Base UI version does not have. Not tested.
+  3. `isNonModal` (K5 option 2): the popup has no dialog role, so it has no name at all.
 - Recommended: option 1.
 
 ## Notes
