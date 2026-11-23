@@ -14,10 +14,18 @@ Checks:
 - Check: `node --test tools/registry/lib.test.mjs` at d1d313ed: pass (9 tests: the fixture gives `anindosarker/shadcn-date-picker/date-picker-<base>#v0.1.0` on base, radix, aria, plain and `--dev`; no import, no address)
 - Check: `pnpm -w registry:build` then `git diff --stat -- packages/shadcn-table/registry.json registry.json` at d1d313ed: pass (empty)
 - Check: `grep -c "v0.1.0" tools/registry/*.mjs` at d1d313ed: pass (1, `lib.mjs`, the constant; 0 in every other file)
+- Check: scratch proof at 2552a233, per base (script: fixture line `export { DatePicker as ST_DatePickerFixture } from '@/components/date-picker/date-picker';` appended to `registry/<base>/components/ui/shadcn-table/index.ts`; `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>`; `pnpm --filter shadcn-table-docs types:check`; then `git checkout --` of the touched tracked files and `git clean -fd -- apps/shadcn-table-docs/components/ui-<base>`):
+  - base: core item carried `anindosarker/shadcn-date-picker/date-picker-base#v0.1.0`; `components/ui-base/date-picker/date-picker.tsx` existed, hook at `components/ui-base/hooks/use-mobile.ts`, imports `@/components/ui-base/...`; `types:check` exit 0; after the discard `git status --short` empty: pass
+  - radix: `components/ui-radix/date-picker/date-picker.tsx` existed; `types:check` exit 0; after the discard `git status --short` empty: pass
+  - aria: `components/ui-aria/date-picker/date-picker.tsx` existed; `types:check` exit 0; after the discard `git status --short` empty: pass
+- Check: scratch proof, base, at b6312d3d: fail (one CLI run for library and picker: the CLI resolved the library's `.../shadcn-table/types` imports to the picker's `types.ts`; then with the `components` alias moved for both runs, imports became `@/components/ui-base/ui-base/...`); fixed in 2552a233 (picker in a run of its own, the moved aliases for that run only)
+- Check: `pnpm -w registry:build`, then plain `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria` at 2552a233: pass (no `date-picker/` or `hooks/` below any `components/ui-<base>/`, `git status --short` empty)
+- Check: `pnpm --filter shadcn-table-docs types:check` after the plain installs at 2552a233: pass (exit 0, `git status --short` empty)
 
 - Task 1 site map: done (a9378baf)
 - Task 2 packages, parts, tool, trees: done (20cd9241, 591d6d57)
 - Task 3 registry build mapping and test: done (d1d313ed)
+- Task 4 docs install and scratch proof: done (b6312d3d, 2552a233)
 
 ## Site map
 
@@ -49,6 +57,8 @@ Every place that reads imports, aliases or dependencies for an item, a tree or t
 - Q160: `packages/shadcn-table/registry/base/components/ui/calendar.tsx` as add-part wrote it has no ref line on the day button: `CalendarDayButton` creates `ref` and its focus effect at lines 199-202, but the `<Button>` at line 205 has no `ref={ref}`; the radix part has it at `registry/radix/components/ui/calendar.tsx:206`. Nothing changed for it.
 - The picker files import `cn` from the npm package `cn` (5 files, e.g. `components/date-picker/components/day-calendar.tsx:12`), so `cn` (`^0.5.0`, the picker's package.json range) joined `packages/shadcn-table/package.json` beside `react-day-picker` and `date-fns`; without it the trees do not type-check. The picker item carries it for users.
 - The registry scripts test is the new `tools/registry/lib.test.mjs`, run by validate-repo's unit check (`tools/**/*.test.mjs`); the fixture is written to a temporary folder.
+- `apps/shadcn-table-docs/package.json` gained `date-fns` and `react-day-picker` (the picker's ranges): `lib:install` restores the docs package.json and lockfile after the CLI run (its header: every package the item needs is already a dependency here), so the docs copy of the picker type-checks only with them declared. This milestone owns the lockfile for the epic, so spec 82 needs no install. `cn` was there already (`^0.4.0`).
+- `lib:install` adds the picker in a second CLI run: in one run the CLI resolves imports by file name among the files it writes, and the picker's `types.ts` captured the library's `shadcn-table/types` imports. The scratch proof read the built items in `packages/shadcn-table/public/r/`, which is what `lib:install` reads; the dev registry on 5310 was not needed.
 - `packages/shadcn-table/tsconfig.radix.json` (base and aria extend it) gained `node` in `types`: `components/date-picker/utils/values.ts:98` reads `process.env.NODE_ENV`, as the picker repo's own tsconfigs allow. Owned here as the fix of the typecheck the spec runs.
 
 ## Attention
