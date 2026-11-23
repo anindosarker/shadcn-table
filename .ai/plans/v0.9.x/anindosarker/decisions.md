@@ -24,9 +24,6 @@ kanban-plugin: basic
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
 	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
-- [ ] **D166** The date-time range popover keeps its approved width #R6
-	- The date-time range popover stays as wide as the approved code makes it in Chrome (540 px on 2026-11-23, 492 px in an earlier version); the cause of the difference is not looked for and the approved code is not changed for it. It is looked at again only if it overflows a small screen.
-	- Source: Q151
 
 ## In progress
 
@@ -1017,6 +1014,9 @@ kanban-plugin: basic
 - [x] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #E24 #R6
 	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
 	- Source: Q148
+- [x] **D166** The date-time range popover keeps its approved width #R6
+	- The date-time range popover stays as wide as the approved code makes it in Chrome (540 px on 2026-11-23, 492 px in an earlier version); the cause of the difference is not looked for and the approved code is not changed for it. It is looked at again only if it overflows a small screen.
+	- Source: Q151
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
