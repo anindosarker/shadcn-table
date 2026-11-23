@@ -16,8 +16,15 @@ const BASE_PROJECTS = {
 export default defineConfig([
   // Parts (registry/<base>/components/ui/<part>.tsx) are what `shadcn add`
   // installs, written by tools/registry/add-part.mjs and never edited; the
-  // library lives below components/ui/shadcn-table/ and is linted.
-  globalIgnores(['dist', 'storybook-static', 'registry/*/components/ui/*.tsx']),
+  // date picker and its hook likewise, by tools/registry/add-date-picker.mjs.
+  // The library lives below components/ui/shadcn-table/ and is linted.
+  globalIgnores([
+    'dist',
+    'storybook-static',
+    'registry/*/components/ui/*.tsx',
+    'registry/*/components/date-picker',
+    'registry/*/hooks',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

@@ -19,6 +19,7 @@
     "registry:items": "node tools/registry/examples.mjs",
     "registry:hosted": "node tools/registry/hosted.mjs",
     "add-part": "node tools/registry/add-part.mjs",
+    "add-date-picker": "node tools/registry/add-date-picker.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook:base": "turbo run storybook:base --filter=shadcn-table",
     "storybook:radix": "turbo run storybook:radix --filter=shadcn-table",
