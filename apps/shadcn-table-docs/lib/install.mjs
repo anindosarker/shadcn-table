@@ -37,9 +37,9 @@
  * moved or dropped leaves no stale copy; the parts beside it are untouched.
  *
  * The date picker (spec 81): when the core item depends on the base's picker
- * item (`anindosarker/shadcn-date-picker/date-picker-<base>#<tag>`), the CLI
- * resolves it from GitHub. The temporary components.json also points the
- * `components` and `hooks` aliases into components/ui-<base>/, so the picker
+ * item (`anindosarker/shadcn-date-picker/date-picker-<base>#<tag>`), that item
+ * is added from GitHub in a second CLI run, whose temporary components.json also
+ * points the `components` and `hooks` aliases into components/ui-<base>/, so the picker
  * lands in components/ui-<base>/date-picker/ and its hook in
  * components/ui-<base>/hooks/, one copy per base. Its `@/components/ui/`,
  * `@/components/date-picker/` and `@/hooks/` imports, and the library copy's,
@@ -70,6 +70,7 @@ import { fileURLToPath } from 'node:url';
 import {
   BASES,
   baseItems,
+  datePickerItemAddress,
   ICON_SETS,
   REFERENCE_BASE,
 } from '../../../tools/registry/lib.mjs';
@@ -139,6 +140,14 @@ const lucide = readItem(itemName);
 item.name = itemName;
 item.files.push(...lucide.files);
 item.dependencies = [...(item.dependencies ?? []), ...lucide.dependencies];
+// The CLI resolves each run's imports by file name among the files that run
+// writes, so the picker's types.ts would capture the library's types imports:
+// the picker is added in a run of its own.
+const pickerAddress = datePickerItemAddress(base);
+const withPicker = item.registryDependencies?.includes(pickerAddress) ?? false;
+item.registryDependencies = item.registryDependencies?.filter(
+  (dep) => dep !== pickerAddress,
+);
 const localeItems = fs
   .readdirSync(LIB_R)
   .filter((f) => f.startsWith(`${itemName}-locale-`) && f.endsWith('.json'))
@@ -190,24 +199,30 @@ const kept = new Map(KEEP.map((file) => [file, fs.readFileSync(file, 'utf8')]));
 const config = JSON.parse(kept.get(COMPONENTS_JSON));
 config.style = style;
 config.aliases.ui = uiAlias;
-config.aliases.components = uiAlias;
-config.aliases.hooks = `${uiAlias}/hooks`;
+// The picker run only: its `@components/` and `@/hooks` targets land below
+// uiDir. The library run keeps the real aliases, which its imports resolve to.
+const pickerAliases = {
+  ...config.aliases,
+  components: uiAlias,
+  hooks: `${uiAlias}/hooks`,
+};
 for (const dir of PICKER_DIRS) fs.rmSync(dir, { recursive: true, force: true });
-fs.writeFileSync(COMPONENTS_JSON, JSON.stringify(config, null, 2) + '\n');
 try {
-  execFileSync(
-    'pnpm',
-    [
-      'exec',
-      'shadcn',
-      'add',
-      mergedFile,
-      ...EXTRA_PARTS,
-      '--overwrite',
-      '--yes',
-    ],
-    { cwd: APP, stdio: 'inherit' },
-  );
+  const runs = [
+    { items: [mergedFile, ...EXTRA_PARTS], aliases: config.aliases },
+  ];
+  if (withPicker) runs.push({ items: [pickerAddress], aliases: pickerAliases });
+  for (const { items, aliases } of runs) {
+    fs.writeFileSync(
+      COMPONENTS_JSON,
+      JSON.stringify({ ...config, aliases }, null, 2) + '\n',
+    );
+    execFileSync(
+      'pnpm',
+      ['exec', 'shadcn', 'add', ...items, '--overwrite', '--yes'],
+      { cwd: APP, stdio: 'inherit' },
+    );
+  }
 } finally {
   for (const [file, content] of kept) fs.writeFileSync(file, content);
   fs.rmSync(tmp, { recursive: true, force: true });
