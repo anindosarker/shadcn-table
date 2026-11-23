@@ -381,6 +381,7 @@ The version milestone of a base copies its list into `README.md` of the new repo
 - Place: the heading stands directly before `## License`, after the `## Usage` section (`README.md:5,17,39` on `main` at `df11236`: `## Install`, `## Usage`, `## License`).
 - Order: the Radix UI list first, the React Aria list second, each lead line followed by an empty line and its list as below. The milestone that merges second finds the heading there: it keeps one heading and both lists in this order, also when the merge reports a conflict.
 - The lead lines and the list lines are copied as written here.
+- Install command: under `## Install`, after the Base UI command block and before the paragraph that starts "The files land in", the version milestone adds its base's lead line, `Radix UI (shadcn style `radix-nova`):` or `React Aria (shadcn style `aria-nova`):`, an empty line and a `bash` block with `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-<base>`, as the Base UI block is written. Order: Base UI, Radix UI, React Aria, also when the merge reports a conflict.
 
 Radix UI:
 
