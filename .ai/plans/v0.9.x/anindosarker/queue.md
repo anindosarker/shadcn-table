@@ -372,7 +372,7 @@ kanban-plugin: basic
 - [x] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows #D156
 	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 - [x] **Q147** PostHog reports the docs site's analytics SDK as outdated #D159
-- [ ] **Q148** The docs site does not set PostHog's dated defaults option that the install guide now sets #D161
+- [x] **Q148** The docs site does not set PostHog's dated defaults option that the install guide now sets #D161 #E24
 
 ## Later
 

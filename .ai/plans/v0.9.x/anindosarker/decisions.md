@@ -4,12 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #R6
-	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
-- [ ] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #R6
-	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
-	- Source: Q148
-
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
@@ -21,6 +15,11 @@ kanban-plugin: basic
 - [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
 	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
 	- Source: Q80
+- [ ] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #E24 #R6
+	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
+- [ ] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #E24 #R6
+	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
+	- Source: Q148
 
 ## Done
 
