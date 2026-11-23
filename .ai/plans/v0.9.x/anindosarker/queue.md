@@ -39,6 +39,7 @@ kanban-plugin: basic
 - [ ] **Q149** Where the date picker lives: its own package and docs site
 	- Today the picker exists only in the demo app (test-projects/next-app/components/date-picker, version 9.3.6); the library has no date picker, so the table's date filter cannot use it and nobody can install it.
 	- Owner's points of 2026-11-23, not yet a decision: own package packages/shadcn-calendar and docs app apps/shadcn-calendar-docs in this repo; the Base UI version is the test app's components/date-picker (9.3.6), used unchanged; Radix and React Aria versions to be built; served from the table registry under @shadcn-table for now. Report: reference/q149-calendar-library/report.md.
+	- Lookup 2026-11-24: same repo needs 22 places changed (registry build, test runner, release tools, workflows, vercel.json) and the current build cannot serve calendar items under @shadcn-table; a separate repo recreates 11 pieces in full, about 4 when thin; a cross-repo dependency is a supported form (owner/repo/item#tag, the form the table's core items use), no directory listing needed; either way this repo needs the import mapping at tools/registry/lib.mjs:116 and one dependency per base. Owner, 2026-11-24: the calendar only needs thin Storybook and CI; 'Separate repo is fine by me.' Not recorded yet.
 
 ## Decided
 
