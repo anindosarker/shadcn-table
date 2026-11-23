@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D168** The React Aria day calendar is built on react-day-picker directly #R6
 	- K1 option 1: registry/aria day-calendar.tsx uses react-day-picker's DayPicker and carries what the stock react-day-picker calendar part adds, so the native select, the caption, week numbers, the public calendarProps and the look equal the Base UI version (report section 3, D162). The React Aria style's own calendar part is not used and no components/ui/calendar.tsx is shipped or replaced. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K1.
 	- Source: Q154
+- [ ] **D169** Radix and React Aria pickers close after a pick through one open state inside the popup file #R6
+	- K2 option 1: picker-popup.tsx on radix and aria holds one open state and exposes close() with useImperativeHandle, so every pick that closes on Base UI closes there too (cases D4, D5, P3, P6, P11, M10, W10); no other file differs for it and no hidden button is clicked from code. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K2.
+	- Source: Q155
 
 ## In progress
 
