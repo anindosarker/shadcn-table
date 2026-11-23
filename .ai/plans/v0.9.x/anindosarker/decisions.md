@@ -17,6 +17,9 @@ kanban-plugin: basic
 - [ ] **D163** The date picker library is named shadcn-date-picker everywhere #R6
 	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
 	- Source: Q150
+- [ ] **D164** The table's date filters use the date picker library, all three bases together #R6
+	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
+	- Source: Q88
 
 ## In progress
 
