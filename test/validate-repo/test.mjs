@@ -1,10 +1,11 @@
-// validate-repo: eight repository checks in order, all of them before the
-// exit: bases-identical, icon-maps, tailwind-classes, registry-valid,
-// registry-fresh, story-pages, story-source, unit. Summary `bases identical,
-// icon maps complete, tailwind valid, registry valid, registry fresh, story
-// pages match, story code complete, <n> unit tests`, the failing checks named
-// on a failure.
+// validate-repo: nine repository checks in order, all of them before the
+// exit: bases-identical, date-picker, icon-maps, tailwind-classes,
+// registry-valid, registry-fresh, story-pages, story-source, unit. Summary
+// `bases identical, date picker matches, icon maps complete, tailwind valid,
+// registry valid, registry fresh, story pages match, story code complete, <n>
+// unit tests`, the failing checks named on a failure.
 import { check as basesIdentical } from './lib/bases-identical.mjs';
+import { check as datePicker } from './lib/date-picker.mjs';
 import { check as iconMaps } from './lib/icon-maps.mjs';
 import { check as registryFresh } from './lib/registry-fresh.mjs';
 import { check as registryValid } from './lib/registry-valid.mjs';
@@ -30,6 +31,9 @@ export const run = async (ctx) => {
   };
   await step('bases-identical', 'bases identical', () =>
     basesIdentical(ctx.log),
+  );
+  await step('date-picker', 'date picker matches', () =>
+    datePicker(ctx.log, ctx.root, ctx.ci),
   );
   await step('icon-maps', 'icon maps complete', () => iconMaps(ctx.log));
   await step('tailwind-classes', 'tailwind valid', () =>
