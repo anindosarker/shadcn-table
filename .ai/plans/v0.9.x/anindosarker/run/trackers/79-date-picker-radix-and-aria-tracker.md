@@ -49,7 +49,7 @@ Checks:
 
 ## Attention
 
-Six points the plan does not decide. The plan marks the files as waiting on K1 to K6; the runner files the queue card and writes its id after the K number here.
+Six points the plan did not decide. All six are decided (D168 to D171, the "Decided" line of each) and no file waits in the plan any more; a "File waiting" line below records what waited before the decision. The runner filed the queue card and wrote its id after the K number here.
 
 ### K1 (card: Q154). The React Aria style has another calendar, so the day calendar file has no stock part to stand on there.
 
