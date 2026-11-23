@@ -1,6 +1,6 @@
 # 83: Release 0.9.8, tracker
 
-Status: planned
+Status: waiting (lead: hold)
 Branch `[branch]`, worktree [name]
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
