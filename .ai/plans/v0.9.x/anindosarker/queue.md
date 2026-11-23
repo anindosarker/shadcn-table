@@ -14,6 +14,8 @@ kanban-plugin: basic
 	- K3. components/view-nav.tsx:25-26 waits on both bases: Base UI focusableWhenDisabled has no stock equal. Options: 1 aria-disabled in place of disabled and no click handler while disabled, case D11 holds (recommended by the plan; one condition the Base UI code does not have); 2 plain disabled, the arrow leaves the tab order at the end, D11 differs. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K3.
 - [ ] **Q157** In the Radix date picker Tab goes round inside the popup and does not close it
 	- K4. Stock Radix popover: focus scope always loops (@radix-ui/react-popover 1.3.1 index.mjs:257-261); case U2 says Tab past the last control closes. Also on touch Radix focuses the first control, Base UI the popup. Options: 1 keep stock Radix and name both differences (recommended by the plan); 2 own key handler and onOpenAutoFocus, code the Base UI version does not have. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K4.
+- [ ] **Q158** The React Aria date picker popup blocks the page behind it, keeps Tab inside and stops page scroll
+	- K5. Stock aria-nova popover is modal: underlay, scroll lock, focus contained, two hidden dismiss buttons, focus starts on the popup (cases U2, WR1 differ); the phone dialog starts focus on the dialog. Options: 1 keep the stock modal popover and name the differences (recommended by the plan); 2 isNonModal: no trap or lock, but focus does not enter on open and the popup has no dialog role. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K5.
 
 ## Decided
 
