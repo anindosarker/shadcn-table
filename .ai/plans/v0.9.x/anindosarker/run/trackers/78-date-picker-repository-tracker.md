@@ -27,12 +27,35 @@ Checks:
 - Check: scratch app deleted at 607d384: pass
 - Check: `grep -c 'anindosarker/shadcn-date-picker/date-picker-base' README.md` at 216d5d4: pass (1)
 - Check: Local CI `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 216d5d4: pass
+- Check (verifier): `git diff --name-only origin/main...HEAD` at 216d5d4: fail (lists `.prettierignore`, not in the owned files; every other path owned)
+- Check (verifier): `git -C test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` at 216d5d4: pass (exit 0)
+- Check (verifier): `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 216d5d4: pass (prints nothing)
+- Check (verifier): `find registry/base/components/date-picker -type f | wc -l` at 216d5d4: pass (22)
+- Check (verifier): `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 216d5d4: pass (0)
+- Check (verifier): `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` at 216d5d4: pass (main)
+- Check (verifier): `git -C shadcn-date-picker log --oneline origin/main | wc -l` at 216d5d4: pass (1, clone on main)
+- Check (verifier): `ls registry/<base>/components/ui` for base, radix, aria at 216d5d4: pass (nine parts in each)
+- Check (verifier): second shadcn `add` of the nine parts and use-mobile on base (registry/README.md steps), then `git diff --stat` at 216d5d4: pass (prints nothing, tree clean)
+- Check (verifier): `pnpm install --frozen-lockfile` at 216d5d4: pass (exit 0)
+- Check (verifier): `pnpm lint` at 216d5d4: pass (exit 0)
+- Check (verifier): `pnpm typecheck` at 216d5d4: pass (exit 0)
+- Check (verifier): `pnpm registry:check` at 216d5d4: pass (exit 0)
+- Check (verifier): `node -e` on the three `registry.json` at 216d5d4: pass (base: one item date-picker-base, 22 files, the ten registryDependencies and five dependencies; radix 0 items; aria 0 items)
+- Check (verifier): deleted `utils/time.ts`, then `pnpm registry:check` at 216d5d4: pass (exit 1, restored, exit 0)
+- Check (verifier): install proof sha 607d384 is an ancestor of origin/date-picker-repository; `git diff --name-only 607d384..HEAD` at 216d5d4: pass (README.md only, nothing under registry/ or registry.json)
+- Check (verifier): `git -C test-projects/next-app status --short` at 216d5d4: pass (nothing under components/date-picker)
+- Check (verifier): `vercel.json` at 216d5d4: pass (`{ "git": { "deploymentEnabled": false } }`)
 
 - Task 1 clone, excludes, initial commit, branch and worktree: done (4587f8a)
 - Task 2 scaffold: done (2d89c47)
 - Task 3 exact copy: done (a44305a)
 - Task 4 registry: done (10e41b0, 607d384)
 - Task 5 install proof and README: done (216d5d4)
+
+## Attention
+
+- The owner must decide whether `.prettierignore` may stay in the repository, since the milestone's owned files do not list it.
+- Options: (1, recommended) add `shadcn-date-picker/.prettierignore` to the owned files of the milestone; it is Prettier's own ignore file and keeps the CLI-written parts out of `prettier --check .`; (2) drop the file and pass the ignored paths as negated globs in the `lint` script of `package.json`.
 
 ## Notes
 
