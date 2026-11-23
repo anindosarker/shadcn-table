@@ -21,6 +21,8 @@ kanban-plugin: basic
 	- Supersedes D96.
 	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
 	- Source: Q88
+- [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
+	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
 
 ## In progress
 
