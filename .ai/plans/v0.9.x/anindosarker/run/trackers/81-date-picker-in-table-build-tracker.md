@@ -1,6 +1,6 @@
 # 81: Date picker in the table's build, tracker
 
-Status: running
+Status: done
 Branch `v0.9/date-picker-in-table-build`, worktree 03
 Checks:
 
