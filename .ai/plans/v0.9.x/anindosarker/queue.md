@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q160** Arrow keys in the day grid of the Base UI date picker may not move focus in the new library
 	- The stock base-nova calendar part has no ref on the day button (base-nova/calendar.tsx:222); radix-nova/calendar.tsx:223 and the approved app's components/ui/calendar.tsx:205 have it, and the focus effect at calendar.tsx:216-219 needs it. Found by reading while the design plan was written; not reproduced in a browser.
+	- Lead, 2026-11-24: not a choice yet. The run reproduces it in a browser first, in a fresh base-nova app with the stock calendar part and the installed picker (arrow keys in the day grid); it also names where the approved app's calendar.tsx got its day button ref (a newer shadcn version, or an edit). Reproduced: the facts go on this card; not reproduced: the card is closed.
 
 ## Decided
 
