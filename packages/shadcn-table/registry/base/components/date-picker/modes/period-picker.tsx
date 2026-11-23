@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { LabelsContext } from "../utils/labels"
 import { PeriodView } from "../components/period-views"

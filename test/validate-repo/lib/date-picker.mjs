@@ -1,7 +1,7 @@
 // date-picker, the check after bases-identical in `pnpm test validate-repo`
 // (spec 81): each tree's date picker and hook equal what
-// `pnpm add-date-picker <base>` writes for DATE_PICKER_TAG, through the
-// tool's own `--check`. The tool reads the picker from GitHub: when GitHub
+// `pnpm add-date-picker <base>` writes for DATE_PICKER_TAG (the hook from the
+// live shadcn registry), through the tool's own `--check`. The tool reads the picker from GitHub: when GitHub
 // cannot be reached the check is skipped with a printed line locally, and
 // fails under --ci.
 import {

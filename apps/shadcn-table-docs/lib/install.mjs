@@ -41,9 +41,10 @@
  * is added from GitHub in a second CLI run, whose temporary components.json also
  * points the `components` and `hooks` aliases into components/ui-<base>/, so the picker
  * lands in components/ui-<base>/date-picker/ and its hook in
- * components/ui-<base>/hooks/, one copy per base. Its `@/components/ui/`,
- * `@/components/date-picker/` and `@/hooks/` imports, and the library copy's,
- * point at that base's copy (toBase). Both folders are cleared before the
+ * components/ui-<base>/hooks/, one copy per base. The CLI writes the picker's
+ * imports through those aliases; the library copy's `@/components/ui/`,
+ * `@/components/date-picker/` and `@/hooks/` imports point at that base's
+ * copy through toBase. Both folders are cleared before the
  * add, so a rerun or a dropped picker leaves no stale file.
  *
  * Manual equivalent: pnpm exec shadcn add <rewritten item json> table --overwrite --yes
@@ -140,9 +141,9 @@ const lucide = readItem(itemName);
 item.name = itemName;
 item.files.push(...lucide.files);
 item.dependencies = [...(item.dependencies ?? []), ...lucide.dependencies];
-// The CLI resolves each run's imports by file name among the files that run
-// writes, so the picker's types.ts would capture the library's types imports:
-// the picker is added in a run of its own.
+// The picker gets a run of its own: in one run with this install's merged
+// item the library's shadcn-table/types imports were rewritten to the picker's
+// types.ts (scratch proof, spec 81 tracker).
 const pickerAddress = datePickerItemAddress(base);
 const withPicker = item.registryDependencies?.includes(pickerAddress) ?? false;
 item.registryDependencies = item.registryDependencies?.filter(
@@ -228,10 +229,9 @@ try {
   fs.rmSync(tmp, { recursive: true, force: true });
 }
 const pruned = pruneLibrary();
-const picker = rewritePicker();
 const parts = await installHookedParts();
 console.log(
-  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in, ${pruned} dropped files removed), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}, ${picker} date picker files; components.json, app/global.css, package.json and the lockfile kept as they were`,
+  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in, ${pruned} dropped files removed), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}; components.json, app/global.css, package.json and the lockfile kept as they were`,
 );
 
 /**
@@ -269,27 +269,6 @@ function pruneLibrary() {
   };
   walk(libDir);
   return removed;
-}
-
-/**
- * Rewrites the imports of every file the date picker item wrote (below
- * PICKER_DIRS) with toBase; returns how many.
- */
-function rewritePicker() {
-  let count = 0;
-  const walk = (dir) => {
-    if (!fs.existsSync(dir)) return;
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const file = path.join(dir, entry.name);
-      if (entry.isDirectory()) walk(file);
-      else {
-        fs.writeFileSync(file, toBase(fs.readFileSync(file, 'utf8')));
-        count++;
-      }
-    }
-  };
-  for (const dir of PICKER_DIRS) walk(dir);
-  return count;
 }
 
 /**

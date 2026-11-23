@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { DayCalendar } from "../components/day-calendar"
