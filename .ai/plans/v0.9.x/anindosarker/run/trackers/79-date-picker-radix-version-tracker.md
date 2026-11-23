@@ -22,6 +22,10 @@ Checks:
 - Check: `pnpm test --base radix`, at 132d291: pass (exit 0, 39 of 39 plays, first run, no rerun)
 - Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 132d291: pass (prints nothing)
 - Check: `pnpm test --base base`, at 132d291: pass (exit 0, 39 of 39 plays)
+- Check: `DP_BASE=base storybook build -o /private/tmp/claude-501/dp-radix-look/base` and `DP_BASE=radix storybook build -o /private/tmp/claude-501/dp-radix-look/radix`, at 132d291: pass (exit 0, both)
+- Check: the look comparison, `bash /private/tmp/claude-501/dp-radix-look/run.sh` (static servers on 5344 and 5345, `compare.mjs` with playwright), at 132d291: pass (48 of 48 cells measured; 47 equal, 1 named difference L1; no part in one version only)
+- Check: both servers stopped, `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN`, at 132d291: pass (no line)
+- Check: no comparison script in the repository, `git status --short` in the worktree, at 132d291: pass (prints nothing; the script is `/private/tmp/claude-501/dp-radix-look/compare.mjs`)
 
 - Task 1 identical files: done (1b06b47)
 - Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
@@ -29,6 +33,62 @@ Checks:
 - Reader task 2 at d5880df4992ee5587ba74bfcc7d884fa239d947c: no deviation
 - Task 3 item definition and plays: done (5224ac3 item, generated install files and README; 132d291 merge of origin/main with the stories fix 78.2, every play passes)
 - Reader task 3 at 132d291a669bdc3e719593de16faa9501e489a1d: no deviation (note: item dependencies hold no radix-ui, correct by derivation: plan 3.1 removes the only primitive import and no Radix picker file imports radix-ui; registry.ts is unchanged against origin/main, the item was already there)
+- Task 4 the same look: done (no code change, branch head 132d291; 48 look lines below)
+
+## Look
+
+- How: two static Storybooks of the branch at 132d291 (`DP_BASE=base`, `DP_BASE=radix`), Chromium by playwright, viewport 1280 x 800 and 390 x 844, no touch, the play not run (checked per cell: 0 `onChange` calls and no dialog before the click). Open: one click on the calendar or clock button of a box, the trigger of a range, the From clock button of the time range.
+- Parts: every element of the picker and of the popup (the box or trigger, the buttons and icons, the popup, the calendar or grid and each row and cell, the navigation, the time columns, the footer), matched by tag, role, label and order. Elements of 1 px or less that paint nothing (the focus guards of Base UI, a live region) are left out. Per part: the box relative to the picker, colour, background, the four borders, the four radii, font size, font weight, opacity and shadow; also which element holds focus.
+- Equal: every box within 1 px and every computed value the same.
+- L1, named difference, no card (plan section 5, row "The popup scrolls inside the room left"): a popover taller than the room under its trigger ends at the window's edge on Radix and 5 px above it on Base UI. Seen in one cell, the date and time range at 390 x 844: the popup is 792 px high, on Base UI 787; its content (806 px) scrolls inside on both; every other part of the cell is equal. Stock part: `registry/radix/components/ui/popover.tsx:25-34`, `PopoverPrimitive.Content` gets no `collisionPadding`, and the Radix default is 0; the Base UI positioner keeps 5.
+- Look: `Types/Date` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Date` Single, open, 1280: equal (131 parts)
+- Look: `Types/Date` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Date` Range, open, 1280: equal (267 parts)
+- Look: `Types/DateTime` Single, closed, 1280: equal (8 parts)
+- Look: `Types/DateTime` Single, open, 1280: equal (138 parts)
+- Look: `Types/DateTime` Range, closed, 1280: equal (6 parts)
+- Look: `Types/DateTime` Range, open, 1280: equal (273 parts)
+- Look: `Types/Time` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Time` Single, open, 1280: equal (90 parts)
+- Look: `Types/Time` Range, closed, 1280: equal (21 parts)
+- Look: `Types/Time` Range, open, 1280: equal (103 parts)
+- Look: `Types/Week` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Week` Single, open, 1280: equal (144 parts)
+- Look: `Types/Week` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Week` Range, open, 1280: equal (293 parts)
+- Look: `Types/Month` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Month` Single, open, 1280: equal (35 parts)
+- Look: `Types/Month` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Month` Range, open, 1280: equal (75 parts)
+- Look: `Types/Year` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Year` Single, open, 1280: equal (31 parts)
+- Look: `Types/Year` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Year` Range, open, 1280: equal (67 parts)
+- Look: `Types/Date` Single, closed, 390: equal (8 parts)
+- Look: `Types/Date` Single, open, 390: equal (131 parts)
+- Look: `Types/Date` Range, closed, 390: equal (6 parts)
+- Look: `Types/Date` Range, open, 390: equal (267 parts)
+- Look: `Types/DateTime` Single, closed, 390: equal (8 parts)
+- Look: `Types/DateTime` Single, open, 390: equal (138 parts)
+- Look: `Types/DateTime` Range, closed, 390: equal (6 parts)
+- Look: `Types/DateTime` Range, open, 390: named difference L1: the popup is 792 px high, on Base UI 787 px (273 parts, all others equal)
+- Look: `Types/Time` Single, closed, 390: equal (8 parts)
+- Look: `Types/Time` Single, open, 390: equal (90 parts)
+- Look: `Types/Time` Range, closed, 390: equal (21 parts)
+- Look: `Types/Time` Range, open, 390: equal (103 parts)
+- Look: `Types/Week` Single, closed, 390: equal (8 parts)
+- Look: `Types/Week` Single, open, 390: equal (144 parts)
+- Look: `Types/Week` Range, closed, 390: equal (6 parts)
+- Look: `Types/Week` Range, open, 390: equal (293 parts)
+- Look: `Types/Month` Single, closed, 390: equal (8 parts)
+- Look: `Types/Month` Single, open, 390: equal (35 parts)
+- Look: `Types/Month` Range, closed, 390: equal (6 parts)
+- Look: `Types/Month` Range, open, 390: equal (75 parts)
+- Look: `Types/Year` Single, closed, 390: equal (8 parts)
+- Look: `Types/Year` Single, open, 390: equal (31 parts)
+- Look: `Types/Year` Range, closed, 390: equal (6 parts)
+- Look: `Types/Year` Range, open, 390: equal (67 parts)
 
 ## Notes
 
