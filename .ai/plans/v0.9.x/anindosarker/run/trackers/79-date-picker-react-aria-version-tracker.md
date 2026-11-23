@@ -42,6 +42,15 @@ Checks:
 - Check: `pnpm registry:check` at decb84d: pass (base, radix and aria `registry.json` up to date, 22 files each; `pnpm registry:build` not run, no source file changed)
 - Check: `pnpm test --base aria` at decb84d: pass (exit 0, 7 files, 39 of 39 plays, first run)
 - Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix registry/aria/components/ui` at decb84d (origin/main 5d13f4a): pass (prints nothing)
+- Check (verifier): `git diff --name-only origin/main...HEAD` at decb84d (origin/main 5d13f4a, not moved): pass (only `README.md`, the 22 files of `registry/aria/components/date-picker`, the 22 of `registry/aria/generated/components/date-picker`, `registry/aria/registry.json`); `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/aria/components/ui`: pass (prints nothing)
+- Check (verifier): `find registry/aria/components/date-picker -type f | wc -l`, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker`, `cmp` per file, `grep -rn '@base-ui' registry/aria/components/date-picker`, JSDoc count at decb84d: pass (22; diff lists exactly the plan's 9 React Aria files; cmp exit 0 for the 13 identical; grep prints nothing; 3)
+- Check (verifier): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at decb84d: pass (the lines above at this exact head, not rerun)
+- Check (verifier): `pnpm test --base aria` at decb84d: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check (verifier): `pnpm test --base base` at decb84d: pass (exit 0, 7 files, 39 of 39 plays)
+- Check (verifier): `registry/aria/registry.json` at decb84d: pass (one item `date-picker-aria`, `registry:component`, 22 files, `dependencies` with `react-aria-components`, without `@base-ui/react`); `pnpm registry:build` then `git status --short`: pass (exit 0, prints nothing)
+- Check (verifier): look lines: pass (48 `Look:` lines; cited lines opened: `registry/aria/components/ui/popover.tsx:31-41` the popover without `isNonModal`, `:37` the `data-entering:fade-in-0` classes, `registry/base/components/ui/popover.tsx:27-32` the positioner, each as cited); `lsof -nP -iTCP:5354 -iTCP:5355 -sTCP:LISTEN`: pass (prints nothing); `git ls-files | grep -ci 'compare\|probe\|flash'`: pass (0)
+- Check (verifier): install proof at 2be8d33: pass (`git merge-base --is-ancestor 2be8d33 decb84d` exit 0; `git diff --name-only 2be8d33..decb84d` touches nothing under `registry/aria`; not rerun)
+- Check (verifier): `README.md` at decb84d: pass (`date-picker-aria` install block after the Radix UI block; the React Aria list under `## Differences between the bases` after the Radix UI list, as plan 5.2 writes it)
 
 - Task 1 identical files: done (89ee92d)
 - Reader task 1 at 89ee92d: no deviation
