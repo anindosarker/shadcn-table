@@ -36,6 +36,17 @@
  * merged item did not write is removed (spec 41.2), so a file the registry
  * moved or dropped leaves no stale copy; the parts beside it are untouched.
  *
+ * The date picker (spec 81): when the core item depends on the base's picker
+ * item (`anindosarker/shadcn-date-picker/date-picker-<base>#<tag>`), that item
+ * is added from GitHub in a second CLI run, whose temporary components.json also
+ * points the `components` and `hooks` aliases into components/ui-<base>/, so the picker
+ * lands in components/ui-<base>/date-picker/ and its hook in
+ * components/ui-<base>/hooks/, one copy per base. The CLI writes the picker's
+ * imports through those aliases; the library copy's `@/components/ui/`,
+ * `@/components/date-picker/` and `@/hooks/` imports point at that base's
+ * copy through toBase. Both folders are cleared before the
+ * add, so a rerun or a dropped picker leaves no stale file.
+ *
  * Manual equivalent: pnpm exec shadcn add <rewritten item json> table --overwrite --yes
  * with components.json temporarily set to {"style":"<style>","aliases":{"ui":"@/components/ui-<base>"}}.
  *
@@ -60,6 +71,7 @@ import { fileURLToPath } from 'node:url';
 import {
   BASES,
   baseItems,
+  datePickerItemAddress,
   ICON_SETS,
   REFERENCE_BASE,
 } from '../../../tools/registry/lib.mjs';
@@ -129,6 +141,14 @@ const lucide = readItem(itemName);
 item.name = itemName;
 item.files.push(...lucide.files);
 item.dependencies = [...(item.dependencies ?? []), ...lucide.dependencies];
+// The picker gets a run of its own: in one run with this install's merged
+// item the library's shadcn-table/types imports were rewritten to the picker's
+// types.ts (scratch proof, spec 81 tracker).
+const pickerAddress = datePickerItemAddress(base);
+const withPicker = item.registryDependencies?.includes(pickerAddress) ?? false;
+item.registryDependencies = item.registryDependencies?.filter(
+  (dep) => dep !== pickerAddress,
+);
 const localeItems = fs
   .readdirSync(LIB_R)
   .filter((f) => f.startsWith(`${itemName}-locale-`) && f.endsWith('.json'))
@@ -153,11 +173,18 @@ for (const set of Object.keys(ICON_SETS)) {
     });
   }
 }
+/** Points the shared `@/` imports of an installed file at this base's copy. */
+const toBase = (content) =>
+  content
+    .replace(/(['"])@\/components\/ui\//g, `$1${uiAlias}/`)
+    .replace(/(['"])@\/components\/date-picker\//g, `$1${uiAlias}/date-picker/`)
+    .replace(/(['"])@\/hooks\//g, `$1${uiAlias}/hooks/`);
+/** The folders the date picker item installs into, below uiDir. */
+const PICKER_DIRS = ['date-picker', 'hooks'].map((dir) =>
+  path.join(uiDir, dir),
+);
 for (const file of item.files) {
-  file.content = file.content.replace(
-    /(['"])@\/components\/ui\//g,
-    `$1${uiAlias}/`,
-  );
+  file.content = toBase(file.content);
   if (base !== REFERENCE_BASE) {
     file.content = file.content.replace(
       /\bst-collapsible\b/g,
@@ -173,21 +200,30 @@ const kept = new Map(KEEP.map((file) => [file, fs.readFileSync(file, 'utf8')]));
 const config = JSON.parse(kept.get(COMPONENTS_JSON));
 config.style = style;
 config.aliases.ui = uiAlias;
-fs.writeFileSync(COMPONENTS_JSON, JSON.stringify(config, null, 2) + '\n');
+// The picker run only: its `@components/` and `@/hooks` targets land below
+// uiDir. The library run keeps the real aliases, which its imports resolve to.
+const pickerAliases = {
+  ...config.aliases,
+  components: uiAlias,
+  hooks: `${uiAlias}/hooks`,
+};
+for (const dir of PICKER_DIRS) fs.rmSync(dir, { recursive: true, force: true });
 try {
-  execFileSync(
-    'pnpm',
-    [
-      'exec',
-      'shadcn',
-      'add',
-      mergedFile,
-      ...EXTRA_PARTS,
-      '--overwrite',
-      '--yes',
-    ],
-    { cwd: APP, stdio: 'inherit' },
-  );
+  const runs = [
+    { items: [mergedFile, ...EXTRA_PARTS], aliases: config.aliases },
+  ];
+  if (withPicker) runs.push({ items: [pickerAddress], aliases: pickerAliases });
+  for (const { items, aliases } of runs) {
+    fs.writeFileSync(
+      COMPONENTS_JSON,
+      JSON.stringify({ ...config, aliases }, null, 2) + '\n',
+    );
+    execFileSync(
+      'pnpm',
+      ['exec', 'shadcn', 'add', ...items, '--overwrite', '--yes'],
+      { cwd: APP, stdio: 'inherit' },
+    );
+  }
 } finally {
   for (const [file, content] of kept) fs.writeFileSync(file, content);
   fs.rmSync(tmp, { recursive: true, force: true });

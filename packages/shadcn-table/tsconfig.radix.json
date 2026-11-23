@@ -5,7 +5,8 @@
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client"],
+    // The date picker reads process.env.NODE_ENV (registry/<base>/components/date-picker).
+    "types": ["vite/client", "node"],
     "skipLibCheck": true,
 
     /* Bundler mode */
