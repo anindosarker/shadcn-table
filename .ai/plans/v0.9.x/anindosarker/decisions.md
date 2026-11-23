@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
 	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
+- [ ] **D168** The React Aria day calendar is built on react-day-picker directly #R6
+	- K1 option 1: registry/aria day-calendar.tsx uses react-day-picker's DayPicker and carries what the stock react-day-picker calendar part adds, so the native select, the caption, week numbers, the public calendarProps and the look equal the Base UI version (report section 3, D162). The React Aria style's own calendar part is not used and no components/ui/calendar.tsx is shipped or replaced. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K1.
+	- Source: Q154
 
 ## In progress
 
