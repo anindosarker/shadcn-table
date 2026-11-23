@@ -37,6 +37,7 @@ kanban-plugin: basic
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q150** The calendar library has no repository name, item name or subdomain yet
+- [ ] **Q151** The date-time range popover is wider in Chrome than before
 
 ## Decided
 
