@@ -23,6 +23,11 @@ Checks:
 - Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/aria/components/ui` at 2be8d33 (origin/main 108d72e): pass (prints nothing)
 - Check: `pnpm test --base base` at 2be8d33: pass (exit 0, 39 of 39 plays)
 - Check: `pnpm lint` and `pnpm typecheck` at 2be8d33: pass (exit 0 each)
+- Check: `git fetch origin && git merge origin/main` at 2be8d33 before task 4: pass (already up to date, origin/main 108d72e)
+- Check: `DP_BASE=base storybook build --quiet -o /private/tmp/claude-501/dp-aria-look/base` and the same with `DP_BASE=aria` and `/aria` at 2be8d33: pass (both built), served by `python3 -m http.server` on 5354 (Base UI) and 5355 (React Aria)
+- Check: look comparison, `node /private/tmp/claude-501/dp-aria-look/compare.mjs` (playwright of the worktree, Chromium, viewport 1280 and 390 by 900, `iframe.html?id=types-<story>&viewMode=story&embed=true` so the play does not run, the popup opened by a click on the trigger, read after its animations ended) at 2be8d33: pass (48 of 48 cases: every part of Base UI has its match on React Aria by role, label and order; box within 1 px and colour, background, border, radius, font size and weight equal on every matched part, except the focus ring of L3; the differences are L1 to L4 below)
+- Check: both servers stopped, `kill <pid>` of the two started, then `lsof -nP -iTCP:5354 -iTCP:5355 -sTCP:LISTEN`: pass (prints nothing)
+- Check: no comparison script in the repository, `git status --short` and `git ls-files | grep -c "compare\|probe\|flash"` in the worktree at 2be8d33: pass (nothing, 0); the scripts stay in /private/tmp/claude-501/dp-aria-look/
 
 - Task 1 identical files: done (89ee92d)
 - Reader task 1 at 89ee92d: no deviation
@@ -33,6 +38,67 @@ Checks:
   - A1 (plan 5.1), 1 play: `Options` Presets, step "U2 Tab past the last control closes the popover" (`stories/Options.stories.tsx:566-571`): `expectClosed("Select date")` after `userEvent.tab()` on the last control; the stock popover keeps Tab inside, the dialog stays
   - Not in 5.1, 1 play: `Options` Year Presets, `stories/Options.stories.tsx:672-674`, `expect(screen.getByRole("dialog", { name: "Select year" })).toBeVisible()` outside `waitFor`: "Received element is not visible", the popup has `data-entering`. Failed in both full runs, passes alone. Measured with a scratch setup file that logs each `getComputedStyle` on the popup: the popup is in the page for about two frames at opacity 1 without `data-entering` (`openPopup` passes at once), then the stock part's `data-entering:fade-in-0` animation starts at opacity 0 and the play, 37 ms long, reads that first frame. The two frames are the library's: `react-aria-components` `Popover.mjs:91,103,185` defers `data-entering` by `runAfterKeyboard` (`react-aria` `utils/runAfterKeyboard.mjs`: two animation frames when `supportsKeyboard()`), and `utils/keyboard.mjs:195-210` answers yes on a touch device or after it saw the viewport shrink within 600 ms of a text box focus, which the plays' viewport changes and typed boxes produce. The same un-waited line ends Presets (`:562-564`), Week Presets (`:604-606`), Month Presets (`:637-639`) and Range Presets (`:707-709`). No file of the picker is involved: the classes are the stock `popover.tsx`
   - Flake, 1 play: `Options` Open State (`stories/Options.stories.tsx:428-429`, Escape then `expectClosed("Select time")`) failed in run 1 (the popup stayed with `data-exiting` for the 5 s wait), passed in run 2 and in 3 further runs of the file, and 15 of 15 Escape closes in a scratch browser script closed. Cause not found; likely the same deferred enter meeting the exit (unverified)
+- Reader task 3 at 2be8d330e0b78497c2d1c34c9f51526d8aa9a556: no deviation
+- Task 4 the same look: done at 2be8d33, no change of the version and none of the plan. The twelve type stories open a popover at both widths (no type story opens the phone dialog; it is not in this comparison). Parts read: every drawn element under the picker and under its popup (the box or trigger, buttons, icons, the popup, tables, rows, cells, navigation, presets, time columns, footer), 6 to 277 per case. Named differences:
+  - L1, every open case: React Aria has one more element, a transparent box over the whole page under the popup, no colour, no border. Stock part `registry/aria/components/ui/popover.tsx:31-41` (the popover without `isNonModal`; `react-aria-components` `Popover.mjs:219-221`). Nothing is drawn; it is A2 of the plan's 5.1 (D171)
+  - L2, every open case: Base UI has one more element, the positioner around the popup, transparent, no border, the popup's own box (`registry/base/components/ui/popover.tsx:27-32`). On React Aria the popup is placed itself (`registry/aria/components/ui/popover.tsx:31-35`). Nothing is drawn
+  - L3, open cases but the two Time stories: on Base UI the first control of the popup has focus after the click, on React Aria the popup itself (`registry/aria/components/ui/popover.tsx:31-41` passes no focus target; `Popover.mjs:133-137`). Drawn where that control shows a ring: the From box of the five range stories and the Year menu of Month Single have `border-ring` and the 3 px ring on Base UI, `border-input` and no ring on React Aria. A user sees it. It is A3 of the plan's 5.1, decided by D171 and in the README list; no new owner item. Screenshots: `reference/q149-calendar-library/look/aria-date-range-open-1280-base.png` and `-aria.png`
+  - L4, touch device only, not part of the 48 cases (see Attention): the popup is drawn for two frames at full opacity before its fade-in starts from 0
+- Look: Date Single, closed, 1280: equal (8 parts)
+- Look: Date Single, closed, 390: equal (8 parts)
+- Look: Date Single, open, 1280: equal boxes and values on the 116 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Date Single, open, 390: equal boxes and values on the 116 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Date Range, closed, 1280: equal (6 parts)
+- Look: Date Range, closed, 390: equal (6 parts)
+- Look: Date Range, open, 1280: equal boxes and values on the 237 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Date Range, open, 390: equal boxes and values on the 237 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: DateTime Single, closed, 1280: equal (8 parts)
+- Look: DateTime Single, closed, 390: equal (8 parts)
+- Look: DateTime Single, open, 1280: equal boxes and values on the 123 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: DateTime Single, open, 390: equal boxes and values on the 123 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: DateTime Range, closed, 1280: equal (6 parts)
+- Look: DateTime Range, closed, 390: equal (6 parts)
+- Look: DateTime Range, open, 1280: equal boxes and values on the 243 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: DateTime Range, open, 390: equal boxes and values on the 243 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Time Single, closed, 1280: equal (8 parts)
+- Look: Time Single, closed, 390: equal (8 parts)
+- Look: Time Single, open, 1280: equal boxes and values on the 90 matched parts; named L1, L2
+- Look: Time Single, open, 390: equal boxes and values on the 90 matched parts; named L1, L2
+- Look: Time Range, closed, 1280: equal (21 parts)
+- Look: Time Range, closed, 390: equal (21 parts)
+- Look: Time Range, open, 1280: equal boxes and values on the 103 matched parts; named L1, L2
+- Look: Time Range, open, 390: equal boxes and values on the 103 matched parts; named L1, L2
+- Look: Week Single, closed, 1280: equal (8 parts)
+- Look: Week Single, closed, 390: equal (8 parts)
+- Look: Week Single, open, 1280: equal boxes and values on the 144 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Week Single, open, 390: equal boxes and values on the 144 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Week Range, closed, 1280: equal (6 parts)
+- Look: Week Range, closed, 390: equal (6 parts)
+- Look: Week Range, open, 1280: equal boxes and values on the 276 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Week Range, open, 390: equal boxes and values on the 276 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Month Single, closed, 1280: equal (8 parts)
+- Look: Month Single, closed, 390: equal (8 parts)
+- Look: Month Single, open, 1280: equal boxes and values on the 35 matched parts; named L1, L2, L3 (the Year menu has the focus ring on Base UI)
+- Look: Month Single, open, 390: equal boxes and values on the 35 matched parts; named L1, L2, L3 (the Year menu has the focus ring on Base UI)
+- Look: Month Range, closed, 1280: equal (6 parts)
+- Look: Month Range, closed, 390: equal (6 parts)
+- Look: Month Range, open, 1280: equal boxes and values on the 75 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Month Range, open, 390: equal boxes and values on the 75 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Year Single, closed, 1280: equal (8 parts)
+- Look: Year Single, closed, 390: equal (8 parts)
+- Look: Year Single, open, 1280: equal boxes and values on the 31 matched parts; named L1, L2, L3 (focus on Previous years on Base UI, nothing drawn)
+- Look: Year Single, open, 390: equal boxes and values on the 31 matched parts; named L1, L2, L3 (focus on Previous years on Base UI, nothing drawn)
+- Look: Year Range, closed, 1280: equal (6 parts)
+- Look: Year Range, closed, 390: equal (6 parts)
+- Look: Year Range, open, 1280: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Year Range, open, 390: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+
+## Attention
+
+- On a phone the React Aria picker's popup flickers once as it opens: it shows fully for a moment, vanishes, then fades in.
+  - Measured in Chromium with touch emulation at 390 wide (`hasTouch`, `isMobile`), opacity of the popup per frame after the tap, Date Single and Date Range: React Aria `1 1 0 0.22 0.58 0.80 0.92 0.98 1`, Base UI `0 0 0.22 0.58 0.80 0.92 0.98 1`. Without touch React Aria starts at 0 as Base UI does. Not looked at on a real phone.
+  - Source: the stock part's fade-in hangs on `data-entering` (`registry/aria/components/ui/popover.tsx:37`, `data-entering:animate-in data-entering:fade-in-0`), and the library sets `data-entering` two frames late when it thinks an on-screen keyboard is possible (`react-aria-components` `Popover.mjs:180`, `runAfterKeyboard`). No file of the picker is involved; a fix would restyle a stock part, which spec 79, 1.6.2 rules out.
+  - Screenshots of the settled popup (equal on both, a still cannot show the flicker): `reference/q149-calendar-library/look/aria-date-single-open-390-base.png` and `-aria.png`
 
 ## Notes
 
