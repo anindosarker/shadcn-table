@@ -1,6 +1,6 @@
 # 79: Date picker Radix and React Aria versions, tracker
 
-Status: running
+Status: done (83b45dde)
 Branch: none (a plan file on `claude/review`)
 Checks:
 - Check: Task 1, inventory rows, `awk '/^## 1\. Inventory/{f=1} /^## 2\. Parts/{f=0} f && /^\| [0-9]+ \|/' design-radix-aria.md | wc -l` at eb543afa: pass (22, both base columns filled)
@@ -36,6 +36,9 @@ Checks:
 - Check: Task 3, React Aria, `components/picker-box.tsx:5` `InputGroupButton`: same. `size="icon-xs"` (`aria-nova/input-group.tsx:75-76, 86-105`) and `aria-label`, which the React Aria button writes on the element (`react-aria@3.53.1/dist/private/button/useButton.mjs:59-61`)
 - Check: Task 3, React Aria, `components/picker-presets.tsx:3` `Button`: same. `variant="outline"`, `size="sm"`, `className` as a string (`aria-nova/button.tsx:20-21, 33, 50-69`) and `onClick`, a typed alias of `onPress` (`@react-types/shared@3.37.0/src/events.d.ts:134-139`)
 - Check: Task 3, the three files that use `PopupActions` (`modes/day-picker.tsx:14, 52, 77`, `modes/period-picker.tsx:13, 47, 83`, `components/picker-box.tsx:6, 16`): identical on both bases under every option of K2 that keeps a ref with `close()`; K2 option 2 names them as differing on React Aria
+- Check: Close, inventory rows, the same `awk` at 83b45dde: pass (22)
+- Check: Close, inventory cells at 83b45dde: pass (31 `identical`, 13 `differs`, sum 44)
+- Check: Close, `grep -c $'\u2014' design-radix-aria.md` at 83b45dde: pass (0)
 
 - Task 1 The read, the inventory, the parts, the replacements, the behaviour at risk, the not-in-the-versions list: done (eb543afa)
 - Task 2 The day calendar on React Aria: done (5c6ada7b): no way named, K1 staged
