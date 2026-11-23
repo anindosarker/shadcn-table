@@ -626,6 +626,8 @@ Version 9.3.2 (no own message): 8 states, 1 effect, 10 refs, 2 contexts. Effect 
 
 Version 9.3.4 (fewer own rules): 6 states, 1 effect, 10 refs, 2 contexts. States 5 and 9.1 (`typing`) are gone from both range panels: the year list is worked out from the value on every render, so a `leaveBox` clears nothing and a typed end calls `changeAndShow` alone (sections 5.4, 5.6 and 5.8 describe the older versions). `read` in `picker-field.tsx` no longer refuses a year of five digits. `LabelsContext` (row 21) holds 44 words.
 
+Version 9.3.4, structure: `labels.ts` is in `utils/`, not `components/`. `date-picker.tsx` re-exports no types: an app imports them from `types.ts`. Every type of `types.ts` was checked for its users and none moved: each is public, a part of a public type, or used by two files or more. The calendar's own spacing (row 6 of the class table, 10.4) and the Time field's iOS placeholder (8.7) are as in 9.3.3.
+
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
 | 1 | state | `draft` | `picker-field.tsx` | text the box holds that is not a storable value; the picker's value while the box holds it (`value`: the typed value, `""` for half-typed text, the unchanged value when nothing is passed on, B5); the browser's message; whether the box was left since (`left`) | a half-typed date reads `""` in the DOM and the message exists only on request; React has to draw the X, the red mark and the message (B2, B3, B6). A draft counts only while its `value` is the picker's value: that one comparison, where the draft is read, is what drops a stale draft; there is no reset | CSS `:user-invalid` (no message text, no X); the browser's validation bubble (forms only) |
@@ -717,7 +719,6 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | 4 | `calendarClassNames.today` | 7.4 `:67`, first five utilities. The first four are the stock class (`ui/calendar.tsx:122`); the fifth, `data-[selected=true]:bg-transparent`, is the override | a selected today shows the selection, not a muted square behind it | call 8 (5.7) |
 | 5 | `calendarClassNames.outside` | 7.4 `:71-73` | an end in an other-month day shows in both calendars of a range; dimmed there | 1.9, look frozen (call 9) |
 | 6 | `calendarClassNames.month`, `.week` | `gap-[calc(var(--cell-size)*0.4)]`, `mt-[calc(var(--cell-size)*0.2)]` | 7.4's row spacing, tied to the stock cell size; stock spacing makes every calendar 0.8rem taller | 10.4, look frozen (call 9) |
-| 6, version 9.3.4 | - | none: the stock `gap-4` and `mt-2` | the override is gone; a calendar in a popover is 19.25 px taller at the 28 px cell (6.5 px at the date-time range's 36 px cell), measured in Chromium. Row 7's `month` and `week` are written out in full, same classes | owner 2026-11-23, own rules questioned |
 | 7 | `fillClassNames` (phone dialog) | root `w-full`; `week_number_header` `flex-1`; `months` `flex-1 gap-0`; `month` `flex-1 gap-1`; `month_grid`, `weeks` `flex flex-1 flex-col`; `week` `mt-0 min-h-9 flex-1 *:flex *:aspect-auto *:h-auto *:flex-1 *:items-center *:justify-center *:rounded-none`; `today` `not-data-[selected=true]:bg-transparent not-data-[selected=true]:*:bg-muted` | the calendar stretches to fill the phone screen; rows keep a height a finger can hit; today's shade moves to the button so a wide cell is not a muted bar | owner-approved dialog |
 | 8 | `DayCalendar` root, phone dialog | `[--cell-size:--spacing(9)]` | cells large enough to tap, through the stock variable | call 8 (10.1) |
 | 9 | `bandClassNames.range_start`, `.range_end` | 7.4 `range-mode.tsx:80-81, 92-101` | the stock band is off-centre in a cell wider than the day | audit 12 kept |
@@ -810,10 +811,8 @@ Deliberately not addressed, and why:
 | 6.12 | an open `auto` picker closes when the window crosses 768 | accepted and documented (call 8) |
 | 8.6 (rule) | only period triggers turn red | call 9 |
 | 8.7 | the iOS placeholder stays on the boxes that have it | call 9 |
-| 8.7, version 9.3.4 | the Time field of the date-time popup passes no placeholder: no time box has the iOS overlay; the date and date-time boxes keep it | owner 2026-11-23, own rules questioned |
 | 8.8 (texts) | "Pick a date", "Select date", "Pick a week" | visible text frozen (call 9) |
 | 10.4 | two bracket lengths in the calendar's spacing | look frozen (call 9) |
-| 10.4, version 9.3.4 | removed: the stock spacing applies | owner 2026-11-23, own rules questioned |
 
 ## Review notes
 
