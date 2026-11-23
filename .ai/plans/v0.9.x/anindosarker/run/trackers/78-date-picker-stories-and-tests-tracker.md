@@ -12,9 +12,21 @@ Checks:
 - Check: case table below, one line per case id of `date-picker-9-cases.md` at 59de146: pass
 - Check: `grep -rn -E 'data-(open|popup|starting|ending|side)|base-ui' stories` at 59de146: pass (prints nothing)
 - Check: `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 59de146: pass (prints nothing)
+- Check: `pnpm storybook:build` at cd48b75: pass (`storybook-static/index.html`, `storybook-static/base/index.html`, `storybook-static/version.txt` = `0.1.0`)
+- Check: `storybook-static/radix` and `storybook-static/aria` at cd48b75: pass (do not exist)
+- Check: landing page links at cd48b75: pass (`./base/` and the GitHub repository only)
+- Check: `act push -W .github/workflows/ci.yml -P ubuntu-latest=catthehacker/ubuntu:act-latest --env npm_config_store_dir=/tmp/pnpm-store` at cd48b75 (run on the working tree before the push): pass (job succeeded: install, lint, typecheck, registry:check, Playwright Chromium, test 32 passed)
+- Check: what `act` could not reproduce at cd48b75: the run is a linux/arm64 container on this Mac, not GitHub's x64 runner; `actions/checkout` copies the local tree instead of fetching; without `npm_config_store_dir` pnpm put its store in the workspace under act and `prettier --check .` failed on `.pnpm-store/` (a first run, act only; GitHub keeps the store outside the checkout)
+- Check: `grep -c deploymentEnabled vercel.json` at cd48b75: pass (0)
+- Check: right-to-left look, 24 lines below, Storybook dev of the branch on port 5341 with DP_BASE=base, plays left out of the served story modules so each story shows its first render, `dir="rtl"` set on the preview document by the script at cd48b75: pass (16 clean, 8 card pending, one finding)
+- Check: `git diff --stat origin/main -- stories .storybook .github` names no file with `rtl` at cd48b75: pass
+- Check: Storybook server on port 5341 stopped at cd48b75: pass (nothing listens on 5341)
+- Check: Local CI `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test`, `pnpm storybook:build`, one at a time, at cd48b75: pass (test: 7 files, 32 plays)
 
 - Task 1 Vite, Vitest and Storybook on `DP_BASE`, seven story files: done (69a66a2)
 - Task 2 plays and the case table: done (69a66a2, 59de146)
+- Task 3 site build, Introduction.mdx, vercel.json, CI workflow: done (cd48b75)
+- Task 4 right-to-left look: done (screenshots and lines in this tracker's commit)
 
 ## Notes
 
@@ -136,8 +148,38 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - U8: Options OpenState "U8, T5"
 - U9: Options Dialog "U4, U9" (one Close button)
 
+## Right to left
+
+Base UI picker, popup open, `dir="rtl"` on the preview document. Screenshots of clean lines stay in /private/tmp/claude-501/dp-rtl/.
+
+- Types/Date Single, 1280: clean
+- Types/Date Single, 390: clean
+- Types/Date Range, 1280: clean
+- Types/Date Range, 390: clean
+- Types/DateTime Single, 1280: clean
+- Types/DateTime Single, 390: clean
+- Types/DateTime Range, 1280: clean
+- Types/DateTime Range, 390: clean
+- Types/Time Single, 1280: clean
+- Types/Time Single, 390: clean
+- Types/Time Range, 1280: clean
+- Types/Time Range, 390: clean
+- Types/Week Single, 1280: clean
+- Types/Week Single, 390: clean
+- Types/Week Range, 1280: clean
+- Types/Week Range, 390: clean
+- Types/Month Single, 1280: card pending: period grid arrows
+- Types/Month Single, 390: card pending: period grid arrows
+- Types/Month Range, 1280: card pending: period grid arrows
+- Types/Month Range, 390: card pending: period grid arrows
+- Types/Year Single, 1280: card pending: period grid arrows
+- Types/Year Single, 390: card pending: period grid arrows
+- Types/Year Range, 1280: card pending: period grid arrows
+- Types/Year Range, 390: card pending: period grid arrows
+
 ## Attention
 
 - The spec's check `pnpm test --base base` fails at 59de146 with `node: bad option: --base`: the `test` script in package.json (milestone 1, not owned here) runs `node -e`, which takes `--base` as its own option. `pnpm test -- --base base` and `pnpm test` work. Fix: put `--` before the forwarded arguments in the script, or read the base from `DP_BASE`.
 - `pnpm typecheck` does not run `tsconfig.stories.json` (package.json, milestone 1), so the stories are type-checked only by hand. Fix: add `tsc -p tsconfig.stories.json` to the `typecheck` script.
 - Spec 1.6.5 lists `required` for the Options file, but the approved `DatePickerProps` (types.ts) has no `required` prop; it reaches the box only untyped through `...props`. The Options file has no Required story. The code stays.
+- Right to left (D167), card pending "period grid arrows": the previous and next arrows of the month and year grids point the wrong way in right-to-left (the chevrons of `GridHeader` in `period-views.tsx` have no `rtl:rotate-180`, those of `MonthCaption` in `day-calendar.tsx` have), in Types/Month Single, Types/Month Range, Types/Year Single and Types/Year Range at 1280 and 390; screenshots .ai/plans/v0.9.x/anindosarker/reference/q149-calendar-library/rtl/month-single-1280.png, month-single-390.png, month-range-1280.png, month-range-390.png, year-single-1280.png, year-single-390.png, year-range-1280.png, year-range-390.png.
