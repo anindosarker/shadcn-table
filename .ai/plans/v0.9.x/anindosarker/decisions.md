@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
+	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
+	- Source: Q165
+
 ## In progress
 
 - [ ] **D164** The table's date filters use the date picker library, all three bases together #E26 #R6
