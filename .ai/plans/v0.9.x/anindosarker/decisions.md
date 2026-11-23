@@ -22,6 +22,7 @@ kanban-plugin: basic
 	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
 	- Source: Q88
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
+	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
 
 ## In progress
@@ -29,9 +30,6 @@ kanban-plugin: basic
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
 	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
 	- Source: Q77
-- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
-	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
-	- Source: Q78
 
 ## Done
 
@@ -571,6 +569,9 @@ kanban-plugin: basic
 	- Runs as a fix milestone added to the running E12 epic, after `Filter editor fixes` has merged (same files' import lines), so 0.9.4 ships with it.
 	- Owner, 2026-11-14: "These are bad coding patterns"; on the first suggested layout: "this looks better. record and add to current epic".
 	- Source: Q82
+- [x] **D93** Clearing an is-empty filter returns the column to its default filter mode (superseded by D165) #superseded #E13 #R4
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
+	- Source: Q78
 - [x] **D94** The column filtering guide states the date defaults of D81 #E13 #R4
 	- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
 	- Source: Q79
