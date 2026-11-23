@@ -8,6 +8,16 @@ Checks:
 - Check: lint, `pnpm lint` at e27727e: pass (exit 0)
 - Check: ready bases, `node -e` on `tools/bases.mjs` `readyBases()` at e27727e: pass (base,radix,aria)
 - Check: owned files, `git diff --name-only origin/main...HEAD` at e27727e: pass (README.md only)
+- Check: head, `git rev-parse HEAD` = `git rev-parse origin/main` in the worktree: pass (908300d)
+- Check: install, `pnpm install --frozen-lockfile` at 908300d: pass (exit 0)
+- Check: lint, `pnpm lint` at 908300d: pass (exit 0)
+- Check: types, `pnpm typecheck` at 908300d: pass (exit 0)
+- Check: registry, `pnpm registry:check` at 908300d: pass (exit 0, three items up to date, 22 files each)
+- Check: tests base, `pnpm test --base base` at 908300d: pass (7 files, 39 tests, no rerun)
+- Check: tests radix, `pnpm test --base radix` at 908300d: pass (7 files, 39 tests, no rerun)
+- Check: tests aria, `pnpm test --base aria` at 908300d: pass (7 files, 39 tests, no rerun; Q164 race not hit)
+- Check: site build, `pnpm storybook:build` at 908300d: pass (exit 0)
+- Check: site files, `storybook-static/{base,radix,aria}/index.html` and `version.txt` at 908300d: pass (all exist, version.txt 0.1.0, landing links ./base/ ./radix/ ./aria/)
 - Note: D173 changed the install; installed folders equal `registry/<base>/generated/components/date-picker`, so the diff -r of 1.6.3 runs against the generated folder of each base, not the source folder.
 
 - Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
