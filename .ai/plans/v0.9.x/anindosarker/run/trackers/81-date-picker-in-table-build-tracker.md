@@ -21,11 +21,18 @@ Checks:
 - Check: scratch proof, base, at b6312d3d: fail (one CLI run for library and picker: the CLI resolved the library's `.../shadcn-table/types` imports to the picker's `types.ts`; then with the `components` alias moved for both runs, imports became `@/components/ui-base/ui-base/...`); fixed in 2552a233 (picker in a run of its own, the moved aliases for that run only)
 - Check: `pnpm -w registry:build`, then plain `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria` at 2552a233: pass (no `date-picker/` or `hooks/` below any `components/ui-<base>/`, `git status --short` empty)
 - Check: `pnpm --filter shadcn-table-docs types:check` after the plain installs at 2552a233: pass (exit 0, `git status --short` empty)
+- Check: `pnpm test validate-repo` at 6a5b3db0: pass (bases identical, date picker matches, icon maps complete, tailwind valid, registry valid, registry fresh, story pages match, story code complete, 52 unit tests)
+- Check: one byte changed in `packages/shadcn-table/registry/radix/components/date-picker/utils/time.ts` (first `export` to `Export`), `pnpm test validate-repo` at 6a5b3db0: fails as intended, `date-picker: registry/radix: differs: packages/shadcn-table/registry/radix/components/date-picker/utils/time.ts`; byte restored with `git checkout --`, `git status --short` empty
+- Check: `pnpm test installation-e2e --no-diff` at 6a5b3db0: pass (7 passed, 0 failed; agent ports 5340 to 5349, all stopped by the runner)
+- Check: Local CI `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 06da91e0: pass (tsc clean each)
+- Check: Local CI `pnpm test lint` at 06da91e0: pass (0 errors; 9 docs warnings)
+- Check: Local CI `pnpm test validate-repo` and `pnpm test installation-e2e --no-diff`: pass at 6a5b3db0; 06da91e0 adds only `CHANGELOG.md`, which neither test reads
 
 - Task 1 site map: done (a9378baf)
 - Task 2 packages, parts, tool, trees: done (20cd9241, 591d6d57)
 - Task 3 registry build mapping and test: done (d1d313ed)
 - Task 4 docs install and scratch proof: done (b6312d3d, 2552a233)
+- Task 5 repo check and CONTRIBUTING section: done (6a5b3db0); CHANGELOG `#### Spec 81` (06da91e0)
 
 ## Site map
 
@@ -56,6 +63,7 @@ Every place that reads imports, aliases or dependencies for an item, a tree or t
 
 - Q160: `packages/shadcn-table/registry/base/components/ui/calendar.tsx` as add-part wrote it has no ref line on the day button: `CalendarDayButton` creates `ref` and its focus effect at lines 199-202, but the `<Button>` at line 205 has no `ref={ref}`; the radix part has it at `registry/radix/components/ui/calendar.tsx:206`. Nothing changed for it.
 - The picker files import `cn` from the npm package `cn` (5 files, e.g. `components/date-picker/components/day-calendar.tsx:12`), so `cn` (`^0.5.0`, the picker's package.json range) joined `packages/shadcn-table/package.json` beside `react-day-picker` and `date-fns`; without it the trees do not type-check. The picker item carries it for users.
+- The date-picker check is registered in `test/validate-repo/test.mjs` (where the step list lives); `test/validate-repo/run.mjs` needed no change, its paths already cover `tools/**` and `packages/shadcn-table/registry/**`. It is skipped with a printed line when GitHub cannot be reached locally and fails under `--ci`.
 - The registry scripts test is the new `tools/registry/lib.test.mjs`, run by validate-repo's unit check (`tools/**/*.test.mjs`); the fixture is written to a temporary folder.
 - `apps/shadcn-table-docs/package.json` gained `date-fns` and `react-day-picker` (the picker's ranges): `lib:install` restores the docs package.json and lockfile after the CLI run (its header: every package the item needs is already a dependency here), so the docs copy of the picker type-checks only with them declared. This milestone owns the lockfile for the epic, so spec 82 needs no install. `cn` was there already (`^0.4.0`).
 - `lib:install` adds the picker in a second CLI run: in one run the CLI resolves imports by file name among the files it writes, and the picker's `types.ts` captured the library's `shadcn-table/types` imports. The scratch proof read the built items in `packages/shadcn-table/public/r/`, which is what `lib:install` reads; the dev registry on 5310 was not needed.
