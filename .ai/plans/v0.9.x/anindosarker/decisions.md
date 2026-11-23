@@ -14,8 +14,8 @@ kanban-plugin: basic
 	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
 	- Table v1 comes first; the calendar work never delays it.
 	- Source: Q149
-- [ ] **D163** The calendar library is named shadcn-calendar everywhere #R6
-	- Repository shadcn-calendar under the owner's GitHub account, registry items calendar-base, calendar-radix and calendar-aria, docs and demo at calendar.shadcn-table.com. The owner creates the repository, the Vercel project and the subdomain himself by reference/q149-calendar-library/setup-steps.md. Owner, 2026-11-24: 'calendar.'
+- [ ] **D163** The date picker library is named shadcn-date-picker everywhere #R6
+	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
 	- Source: Q150
 
 ## In progress
