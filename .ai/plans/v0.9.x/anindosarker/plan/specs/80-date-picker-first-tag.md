@@ -17,7 +17,7 @@ After specs 78 and 79 the repository `anindosarker/shadcn-date-picker` holds the
 - The annotated tag `v0.1.0` sits on the head of `main` and is pushed; a GitHub release of that tag carries the three install commands (D162).
 - Each of `date-picker-base`, `date-picker-radix` and `date-picker-aria` installs at `#v0.1.0` into a fresh app of its style, type-checks and builds (D162, D163).
 - The site is live: the landing page lists the three bases, each base's Storybook opens a picker, `version.txt` answers `0.1.0` (D162, D163).
-- The lead gets the three addresses the table will depend on (D164, a later epic).
+- The lead gets the three addresses the table will depend on, for decision D164 in a later epic.
 - Acceptance: programmatic. `git ls-remote --tags https://github.com/anindosarker/shadcn-date-picker v0.1.0` prints one line; `gh release view v0.1.0 -R anindosarker/shadcn-date-picker --json tagName --jq .tagName` prints `v0.1.0`; the three install proofs of 1.6.3 pass; the live reads of 1.6.4 pass on `https://date-picker.shadcn-table.com/`, or on the Vercel production address of the project while the owner's DNS record is not in place.
 
 ### 1.3 Current structure
