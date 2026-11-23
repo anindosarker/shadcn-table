@@ -9,6 +9,7 @@ kanban-plugin: basic
 	- Owner test 2026-11-14 (localhost:5330, Base UI, filter-variants, Hire Date chip, dd/mm/yyyy locale): click in the middle of the auto-focused Min box, typed 03032025: day empty, month 03, year 32025. Owner then asked why the filters use native date inputs and not shadcn's date picker; see the date picker card.
 	- Owner, 2026-11-16: every date picker and time picker item, this one included, is handled once the Q88 demo is done. Spec 50 stays held until then.
 	- Lead, 2026-11-24, held branch v0.9/filter-input-fixes read: it holds the D96 fix (9bfdf247), the D93 fix (fd7059b6) and plays; no commit for D92. Recommendation given: drop this card and the D96 fix, keep D93 as a small fix of its own. Owner moved to the next items without the word.
+	- Owner, 2026-11-24: 'k' to: this card and the D96 click fix are dropped (the picker removes that box, D164); the is-empty reset fix rides with the table switch; spec 50 and its branch close after that.
 - [ ] **Q151** The date-time range popover is wider in Chrome than before
 - [ ] **Q152** The date picker is untested in Safari, on an iPhone and on right-to-left pages
 
