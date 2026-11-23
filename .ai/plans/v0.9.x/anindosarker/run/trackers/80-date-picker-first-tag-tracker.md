@@ -32,6 +32,11 @@ Checks:
 - Check: files radix, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
 - Check: diff radix, `diff -r components/date-picker registry/radix/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
 - Check: build radix, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
+- Check: install aria, fresh Next.js app (`shadcn create -t next -b aria -p nova`, style aria-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-aria#v0.1.0` at tag v0.1.0 (908300d): pass (34 files created, button skipped as identical)
+- Check: files aria, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
+- Check: diff aria, `diff -r components/date-picker registry/aria/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
+- Check: build aria, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
 
 - Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
 - Task 2 tag and release: annotated tag v0.1.0 on 908300d pushed; GitHub release v0.1.0 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.0), notes = one line per base plus the README install section.
+- Task 3 install proofs: done at tag v0.1.0 (908300d); base, radix, aria each pass install, 22 files, empty diff -r against registry/<base>/generated/components/date-picker (D173), tsc and next build exit 0; scratch apps /private/tmp/claude-501/dp-tag-{base,radix,aria} deleted.
