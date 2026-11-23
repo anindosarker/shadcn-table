@@ -45,17 +45,15 @@ Checks:
 - Check (verifier): install proof sha 607d384 is an ancestor of origin/date-picker-repository; `git diff --name-only 607d384..HEAD` at 216d5d4: pass (README.md only, nothing under registry/ or registry.json)
 - Check (verifier): `git -C test-projects/next-app status --short` at 216d5d4: pass (nothing under components/date-picker)
 - Check (verifier): `vercel.json` at 216d5d4: pass (`{ "git": { "deploymentEnabled": false } }`)
+- Check: `pnpm lint` (eslint and `prettier --check .` with the CLI-written parts and `pnpm-lock.yaml` negated in the script) at b69dd5f: pass
+- Check: `git diff --name-only origin/main...HEAD` at b69dd5f: pass (every path owned, no `.prettierignore`)
 
 - Task 1 clone, excludes, initial commit, branch and worktree: done (4587f8a)
 - Task 2 scaffold: done (2d89c47)
 - Task 3 exact copy: done (a44305a)
 - Task 4 registry: done (10e41b0, 607d384)
 - Task 5 install proof and README: done (216d5d4)
-
-## Attention
-
-- The owner must decide whether `.prettierignore` may stay in the repository, since the milestone's owned files do not list it.
-- Options: (1, recommended) add `shadcn-date-picker/.prettierignore` to the owned files of the milestone; it is Prettier's own ignore file and keeps the CLI-written parts out of `prettier --check .`; (2) drop the file and pass the ignored paths as negated globs in the `lint` script of `package.json`.
+- Fix: `.prettierignore` dropped, its paths moved to negated globs in the `lint` script of `package.json`: done (b69dd5f)
 
 ## Notes
 
@@ -64,6 +62,6 @@ Checks:
 - Item files are `registry:file` with `@components/date-picker/...` targets. As `registry:component`, the CLI's install transforms dropped the `cn-*` hook classes in three places (`picker-popup.tsx:101`, `picker-trigger.tsx:47`, `day-range-picker.tsx:248`), so the installed files were not the approved ones. As `registry:file` the CLI writes them as they are; the cost is that the CLI does not rewrite the `@/` imports for a project with other aliases.
 - The picker is controlled only (`value` and `onChange` are required), so the proof page passed `value` and `onChange` to `<DatePicker type="date" />` and `<DatePicker type="date" range />`.
 - The parts come from the shadcn CLI in a scratch project that carries the tree's `components.json` and `index.css` (the CLI does not run in a folder without its own package.json); the steps are in `registry/README.md`. `rsc` is `false` in the trees' `components.json`, as in the table repository's trees; the aliases are the test application's.
-- `.prettierignore` added (not in the owned list): it keeps the CLI-written parts and the hook and `pnpm-lock.yaml` out of `prettier --check`, since these are never edited. ESLint ignores the same folders.
+- `prettier --check .` skips `pnpm-lock.yaml`, `registry/*/components/ui` and `registry/*/hooks` through negated globs in the `lint` script (no `.prettierignore`, which the milestone does not own): these are written by pnpm and the shadcn CLI, never edited. ESLint ignores the same folders.
 - `index.css` is `app/globals.css` of the test application without its eight `styles/style-*.css` imports, which belong to the test application's design system switch.
 - `package.json` already carries the scripts `test`, `storybook` and `storybook:build` of milestone 2 (that milestone owns no `package.json`), and `@tailwindcss/vite`, `@vitejs/plugin-react`, `@types/react`, `@types/react-dom`, `@types/node` besides the 1.7 list, so milestone 2 runs no `pnpm add`. `vite` is `rolldown-vite@7.1.12`, as the table repository pins it.
