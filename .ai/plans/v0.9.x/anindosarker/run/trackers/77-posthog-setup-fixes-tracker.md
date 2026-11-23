@@ -1,6 +1,6 @@
 # 77: PostHog setup fixes, tracker
 
-Status: running
+Status: done (333060ce)
 Branch `v0.9/posthog-setup-fixes`, worktree 03
 Checks:
 - Check: proxy guide, `curl https://posthog.com/docs/advanced/proxy/nextjs.md` read 2026-11-23: 200; US rewrite line: `source: '/yourpath/array/:path*', destination: 'https://us-assets.i.posthog.com/array/:path*',` (after the static entry, before the catch-all; "The static and array rewrites must come before the catch-all")
