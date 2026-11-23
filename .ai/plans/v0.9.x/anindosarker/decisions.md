@@ -13,6 +13,9 @@ kanban-plugin: basic
 - [ ] **D169** Radix and React Aria pickers close after a pick through one open state inside the popup file #R6
 	- K2 option 1: picker-popup.tsx on radix and aria holds one open state and exposes close() with useImperativeHandle, so every pick that closes on Base UI closes there too (cases D4, D5, P3, P6, P11, M10, W10); no other file differs for it and no hidden button is clicked from code. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K2.
 	- Source: Q155
+- [ ] **D170** The month arrow at the end of the range stays reachable by Tab on Radix and React Aria #R6
+	- K3 option 1: view-nav.tsx on radix and aria sets aria-disabled in place of disabled and ignores the click while disabled, so case D11 holds as on Base UI. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K3.
+	- Source: Q156
 
 ## In progress
 
