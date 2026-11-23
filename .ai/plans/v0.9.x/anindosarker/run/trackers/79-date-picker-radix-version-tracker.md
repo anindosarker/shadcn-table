@@ -54,6 +54,17 @@ Checks:
 - Check (verifier): `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN` and `git ls-files` for a comparison script, at 379aefc: pass (no line, none)
 - Check (verifier): install proof sha 132d291 ancestor of 379aefc, `git diff --name-only 132d291..HEAD -- registry/radix`, at 379aefc: pass (ancestor, prints nothing; proof not rerun)
 - Check (verifier): `README.md` install command of `date-picker-radix` and the Radix list under `## Differences between the bases`, at 379aefc: pass (place, order and text as plan 5.2)
+- Check (verifier 2): `git fetch origin`, head 379aefc, origin/main 108d72e, `git log HEAD..origin/main`: nothing to merge
+- Check (verifier 2): `git diff --name-only origin/main...HEAD` and `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 379aefc: pass (README.md, 22 source, 22 generated, `registry/radix/registry.json`; stat prints nothing)
+- Check (verifier 2): 22 files, `diff -rq` 4 files (plan 3.1 to 3.4 list), 18 of 18 `cmp` exit 0, no `@base-ui`, JSDoc 3, every `diff -u` hunk a plan 3.1 to 3.4 row, at 379aefc: pass
+- Check (verifier 2): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test --base base` at 379aefc: not rerun, the lines above at 379aefc hold
+- Check (verifier 2): `pnpm test --base radix`, at 379aefc: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check (verifier 2): `pnpm registry:build` then `git status --short`, at 379aefc: pass (exit 0, prints nothing)
+- Check (verifier 2): `registry/radix/registry.json`, at 379aefc: pass against the verifier brief (derived dependencies): one item `date-picker-radix`, `registry:component`, 22 files, dependencies `cn`, `date-fns`, `lucide-react`, `react-day-picker` equal the packages the 22 files import, no `@base-ui/react`; `radix-ui` rightly absent (no picker file imports it, the parts bring it). The earlier verifier FAIL on this point was against spec 79 `:100` wording, left to the lead
+- Check (verifier 2): look lines, at 379aefc: pass (48 lines; the one named difference L1 cites `registry/radix/components/ui/popover.tsx:25-34`, opened: `PopoverPrimitive.Content` with no `collisionPadding`)
+- Check (verifier 2): `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN` and `git ls-files` for a comparison script, at 379aefc: pass (no line, none)
+- Check (verifier 2): install proof sha 132d291 ancestor of 379aefc, `git diff --name-only 132d291..HEAD -- registry/radix` prints nothing: pass, proof not rerun
+- Check (verifier 2): `README.md` install command and Radix list under `## Differences between the bases`, at 379aefc: pass (text as plan 5.2)
 - Task 1 identical files: done (1b06b47)
 - Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
 - Task 2 differing files: done (d5880df)
