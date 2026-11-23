@@ -35,6 +35,7 @@ Checks:
 - Check: review round 1, plain `pnpm --filter shadcn-table-docs lib:install base`: pass (no picker folder, `git status` clean below `components/ui-base`)
 - Check: review round 1, scratch proof base without `rewritePicker` (fixture line in `registry/base/components/ui/shadcn-table/index.ts`, `pnpm -w registry:build`, `lib:install base`, `types:check`): pass (`components/ui-base/date-picker/date-picker.tsx` and `hooks/use-mobile.ts` existed; every `@/` import of the picker is `@/components/ui-base/<part>` or `@/components/ui-base/hooks/use-mobile`; `types:check` exit 0); state discarded, registry rebuilt, `git status` shows only the round 1 files
 - Check: review round 1, `pnpm test installation-e2e`: not rerun; no file it reads changed (the trees' picker is in no item yet, `registry.json` unchanged)
+- Check: review round 2: no rerun; the round changes only this tracker. Reviewer reran at 8e0ba9b0: `pnpm add-date-picker <base> --check` match on base, radix, aria (23 files each); `pnpm test lint` 0 errors, 9 warnings
 
 - Task 1 site map: done (a9378baf)
 - Task 2 packages, parts, tool, trees: done (20cd9241, 591d6d57)
@@ -42,6 +43,7 @@ Checks:
 - Task 4 docs install and scratch proof: done (b6312d3d, 2552a233)
 - Task 5 repo check and CONTRIBUTING section: done (6a5b3db0); CHANGELOG `#### Spec 81` (06da91e0)
 - Review round 1: 1 major, 6 minors, fixed at 05106d91 (the major staged under Attention; two minors answered in Notes)
+- Review round 2: 0 majors, 2 minors, fixed at 8e0ba9b0 (no code change: both answered in Notes and Attention)
 
 ## Site map
 
@@ -85,9 +87,12 @@ Every place that reads imports, aliases or dependencies for an item, a tree or t
 - Review round 1, `--dev` cases of `lib.test.mjs` kept: `DEV` is read from `process.argv` at import (`tools/registry/lib.mjs:36`) and `itemAddress` changes under it (`lib.mjs:45`); the child run guards spec 1.6.3's rule that the picker address stays the same under `--dev` if `datePickerItemAddress` (`lib.mjs:63-64`) ever reads `DEV`.
 - Review round 1, `process`: the `node` types line in `packages/shadcn-table/tsconfig.radix.json` stays for now (the trees are tool output and must type-check); staged under Attention.
 
+- Review round 2, `node` in `packages/shadcn-table/tsconfig.radix.json:9`: stays at HEAD on purpose; it goes in the commit that moves `DATE_PICKER_TAG` to the fixed picker (Attention). Until then the tree type-check proves nothing for a Vite user's `tsc` and lets library files use Node globals unnoticed.
+- Review round 2, `rewritePicker` removal proved on base only: radix and aria proofs at b6312d3d ran with the rewrite. No rerun here: the CLI's import transform (`@shadcn/registry` 0.2.0, `dist/chunk-ECVSMHVI.js`, function `L`) maps `@/components/ui` and `@/hooks` by alias on every base, and the picker at v0.1.0 imports only `@/components/ui/<part>` and `@/hooks/use-mobile`. Spec 82 records the real proof: `lib:install` on base, radix, aria plus `types:check`.
+
 ## Attention
 
 - A Vite user's `tsc` fails once spec 82 makes the table install the date picker: picker v0.1.0 reads `process.env.NODE_ENV` and a stock Vite app has no Node types.
   - Source: `packages/shadcn-table/registry/<base>/components/date-picker/utils/values.ts:98`; reviewer proof: stock `shadcn init --template vite --base base --preset nova`, `shadcn add anindosarker/shadcn-date-picker/date-picker-base#v0.1.0`, `tsc --noEmit -p tsconfig.app.json` exit 2, `TS2591: Cannot find name 'process'`. The table's tree type-check passes only through `"node"` in `packages/shadcn-table/tsconfig.radix.json:9`, which also lets library files use Node globals unnoticed. Spec 82's installation-e2e vite scenarios would fail at `test/installation-e2e/test.mjs:262-264, 382-384`.
-  - Recommended: a picker v0.1.1 without the `process` read (beside Q160 and Q162), then `DATE_PICKER_TAG` moves and the `node` line goes; spec 82 does not merge on v0.1.0.
+  - Recommended: a picker v0.1.1 without the `process` read (beside Q160 and Q162), then `DATE_PICKER_TAG` moves and the `node` line goes in that commit; spec 82 does not merge on v0.1.0 and its merge gate names this item. For the lead: a queue card beside Q160 and Q162.
   - Other option: keep v0.1.0 and the `node` line; every Vite user of the table fails `tsc` after install.
