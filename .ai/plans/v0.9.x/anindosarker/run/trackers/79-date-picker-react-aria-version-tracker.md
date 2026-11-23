@@ -1,6 +1,7 @@
 # 79: Date picker Radix and React Aria versions, Date picker React Aria version, tracker
 
-Status: running
+Status: done
+Merge: `8bd993c` on main of shadcn-date-picker (merge: date-picker-react-aria-version (79)); origin/main 5d13f4a was an ancestor of the branch head decb84d, so no remerge; worktree removed, branch deleted locally and on origin
 Branch `date-picker-react-aria-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-react-aria-version
 Checks:
 - Check: identical files, `cmp registry/base/components/date-picker/<file> registry/aria/components/date-picker/<file>` for each of the 13 files the plan marks identical for React Aria (`date-picker.tsx`, the five `modes/*.tsx`, `components/picker-box.tsx`, `components/picker-presets.tsx`, the five `utils/*.ts`) at 89ee92d: pass (13 of 13 exit 0)
