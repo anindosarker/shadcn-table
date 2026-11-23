@@ -18,6 +18,12 @@ Checks:
 - Check: tests aria, `pnpm test --base aria` at 908300d: pass (7 files, 39 tests, no rerun; Q164 race not hit)
 - Check: site build, `pnpm storybook:build` at 908300d: pass (exit 0)
 - Check: site files, `storybook-static/{base,radix,aria}/index.html` and `version.txt` at 908300d: pass (all exist, version.txt 0.1.0, landing links ./base/ ./radix/ ./aria/)
+- Check: CI, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45275772159 at 908300d: pass (completed, success)
+- Check: tag absent before, `git ls-remote --tags origin v0.1.0` at 908300d: pass (empty)
+- Check: tag pushed, `git ls-remote --tags https://github.com/anindosarker/shadcn-date-picker v0.1.0`: pass (one line, tag object 310b4a0)
+- Check: tag commit, `git rev-parse 'v0.1.0^{commit}'`: pass (908300d)
+- Check: release, `gh release view v0.1.0 -R anindosarker/shadcn-date-picker --json tagName --jq .tagName`: pass (v0.1.0)
 - Note: D173 changed the install; installed folders equal `registry/<base>/generated/components/date-picker`, so the diff -r of 1.6.3 runs against the generated folder of each base, not the source folder.
 
 - Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
+- Task 2 tag and release: annotated tag v0.1.0 on 908300d pushed; GitHub release v0.1.0 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.0), notes = one line per base plus the README install section.
