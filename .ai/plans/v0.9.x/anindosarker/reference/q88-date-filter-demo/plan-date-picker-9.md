@@ -437,6 +437,32 @@ What a user loses: the red border and the text under a box that the picker drew 
 
 - Checks: 2.2 on `components/date-picker-9-3-2` and `app/date-filter-demo`; `diff -rq components/date-picker-9-3-1 components/date-picker-9-3-2` lists the four files of the table. Chromium at 1280 by 800: page 200, no console error, the 9.3.2 card first in each of the twelve sections; the closed control of rows 1 to 12 and the popups of rows 2, 3, 4, 8, 10 and 12 are the size of the 9.3.1 card's; the states of "9.3.2: allowed differences from 9.3.1" in `date-picker-9-cases.md` show no `role="alert"` and no `aria-invalid`, with the value line of 9.3.1; row 4's "Error from the form" still gives the trigger `aria-invalid` and `aria-describedby`. Firefox on cards 7, 8, 9 and 10 of 9.3.2: the value and calls lines of the 9.3.1 run, no flag and no message; `0000-W01` gives `""`.
 
+### Milestone: Fewer own rules (9.3.4)
+
+Owner, 2026-11-23, on `read` in `picker-field.tsx`: "why do we need this?". Every rule the picker adds on top of the browser, React, Base UI, react-day-picker or date-fns was questioned, in all 22 files, by an auditor with no history. A rule is dropped when the platform already does the job and a user loses nothing they would notice; "it behaved so in 7.4" is no reason to keep one. Nothing is added in place of a dropped piece.
+
+- Built from: `components/date-picker-9-3-3`, a full copy, which stays frozen. One new card `9.3.4`, "Full version, fewer own rules", per row (letters `AL`, `AK`, `AQ`, `BF`, `W`, `W`, `N`, `N`, `O`, `O`, `R`, `R` for rows 1 to 12; ids `fix-1al`, `fix-2ak`, `fix-3aq`, `fix-4bf`, `fix-5w`, `fix-6w`, `fix-7n`, `fix-8n`, `fix-9o`, `fix-10o`, `fix-11r`, `fix-12r`), each a copy of its row's 9.3.3 card with the import `@/components/date-picker-9-3-4/date-picker`.
+
+Against version 9.3.3:
+
+| File | Status | Change |
+|---|---|---|
+| `components/picker-field.tsx` | refactor | 223 lines to 220. `fiveDigitYear` is gone: `read` refuses only nothing in a box that cannot be empty (owner: the box's `max`, `9999-12-31` and the like, is the limit). The year box has no `title` |
+| `components/labels.ts` | refactor | `yearFormat` removed: only the title used it. 44 keys |
+| `components/day-calendar.tsx` | refactor | 309 lines to 300. The `month` and `week` entries of `calendarClassNames` (our own gap and margin) are gone: the stock Calendar's `gap-4` and `mt-2` apply. The phone dialog's two entries are written out with the same classes as before |
+| `modes/day-picker.tsx` | refactor | the Time field of the date-time popup passes no `placeholder`, as the time picker and the time range pass none |
+| `modes/day-range-picker.tsx` | refactor | 319 lines to 310. The state `typing` is gone: the year list is worked out from the value on every render, as in the one-value pickers |
+| `modes/period-range-picker.tsx` | refactor | 230 lines to 220. The same state is gone; the `RangeEnd` import with it |
+| the other 16 files | keep | byte for byte as in version 9.3.3 |
+
+Stays, each settled by the owner: a required box that is emptied keeps the old value (the Time field of the date-time popup); the draft that lets a text box hold unfinished text; `filled`, the read of the box when it is left, and the remount on X (without them the X cannot clear a half-typed native date).
+
+What a user sees: "9.3.4: allowed differences from 9.3.3" in `date-picker-9-cases.md`. Two of the six go against call 9 (looks frozen; "the iOS placeholder stays where it is"): the calendar's row spacing (F3) and the Time field's iOS placeholder (F4).
+
+Open, not patched (owner: report, do not patch around it): a year of five digits that still arrives. Playwright's WebKit lets one be typed and only flags it (`rangeOverflow`); an app value or a preset can carry one in any browser. Seen on the 9.3.4 cards in WebKit: `12027-03-15` is passed on and the calendar shows no selection (`fromYmd` returns `undefined`); in the date-time popup the Time field is enabled and empty, and a time typed there emits `12027-03-1T11:45` (`datePart` and `timePart` cut at fixed places); in a date range `["2026-01-15", "12027-03-15"]` is swapped when the popup closes (`isReversed` compares text) and the trigger reads `12027-03-15 - Jan 15, 2026`. On 9.3.3 the same typing left the value at the first four digits (`1202-03-15`), which was not the typed date either.
+
+- Checks: 2.2 on `components/date-picker-9-3-4` and `app/date-filter-demo`; `diff -rq components/date-picker-9-3-3 components/date-picker-9-3-4` lists the six files of the table. Chromium at 1280 by 800: page 200, no console error, twelve 9.3.4 cards render; each row of the cases table run on the 9.3.3 and the 9.3.4 card. Chromium at 390 by 844, rows 1, 2, 4 and 8 in the phone dialog: calendars the same size on both cards. Not run: Firefox (the auditor's run on 9.3.3 stands: four year digits), real Safari, an iPhone.
+
 ### 2.2 Checks
 
 From `test-projects/next-app`, one at a time, each under `nice`. Green means zero errors and zero warnings.
