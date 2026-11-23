@@ -14,6 +14,9 @@ kanban-plugin: basic
 	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
 	- Table v1 comes first; the calendar work never delays it.
 	- Source: Q149
+- [ ] **D163** The calendar library is named shadcn-calendar everywhere #R6
+	- Repository shadcn-calendar under the owner's GitHub account, registry items calendar-base, calendar-radix and calendar-aria, docs and demo at calendar.shadcn-table.com. The owner creates the repository, the Vercel project and the subdomain himself by reference/q149-calendar-library/setup-steps.md. Owner, 2026-11-24: 'calendar.'
+	- Source: Q150
 
 ## In progress
 
