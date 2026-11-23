@@ -1,11 +1,12 @@
 # 79: Date picker Radix and React Aria versions, Date picker React Aria version, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `date-picker-react-aria-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-react-aria-version
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: identical files, `cmp registry/base/components/date-picker/<file> registry/aria/components/date-picker/<file>` for each of the 13 files the plan marks identical for React Aria (`date-picker.tsx`, the five `modes/*.tsx`, `components/picker-box.tsx`, `components/picker-presets.tsx`, the five `utils/*.ts`) at 89ee92d: pass (13 of 13 exit 0)
+- Check: file list, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker` at 89ee92d: pass (lists only the plan's 9 differing files, as "Only in" base until task 2)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 identical files: done (89ee92d)
 
 ## Notes
 
