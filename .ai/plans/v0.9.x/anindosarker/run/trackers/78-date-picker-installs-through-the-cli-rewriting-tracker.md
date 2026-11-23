@@ -1,6 +1,7 @@
 # 78: Date picker installs through the CLI rewriting, tracker
 
-Status: running
+Status: done
+Merge: df11236 on main (merge: date-picker-install-rewriting (78)); branch and worktree removed
 Branch `date-picker-install-rewriting`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-install-rewriting (from origin/main b28d91a)
 Checks:
 - Check: `pnpm install --frozen-lockfile` in the worktree at b28d91a: pass
@@ -41,6 +42,8 @@ Checks:
 - Check: verifier install proof, fresh `create-next-app --no-src-dir --import-alias "#app/*"`, `shadcn init -b base -p nova` (style base-nova, aliases `#app/components`, `#app/hooks`), `shadcn add anindosarker/shadcn-date-picker/date-picker-base#5cd864659c62be510469eca996d9a56adbe218c3` at 5cd8646: pass (22 files, every local import `#app/components/ui/*` or `#app/hooks/use-mobile`, no `@/` left; only import lines differ from generated; `tsc --noEmit` exit 0, `next build` exit 0 with a page of single and range `presentation="auto"` pickers)
 - Check: verifier, playwright chromium 390x844 against `next start` :5343, range picker dialog at 5cd8646: pass (close button position absolute, top 8px right 8px, 8 from the dialog's top and right edge, 28 wide; range field grid column-gap 8px, row-gap 8px); server stopped, scratch app deleted
 - Check: verifier, README.md and registry/README.md at 5cd8646: pass (install command kept, nova values named for the three places; registry/README.md describes the generated folder)
+- Check: `git merge origin/main` (4ef057a, stories milestone) into the branch: pass (clean, b20bd56)
+- Check: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at b20bd56: pass (exit 0 each; date-picker-base 22 files, radix and aria no items)
 
 - Task 1 the mechanism: done (tracker only, no repository commit)
 - Task 2 the generated install files: done (ea68420)
