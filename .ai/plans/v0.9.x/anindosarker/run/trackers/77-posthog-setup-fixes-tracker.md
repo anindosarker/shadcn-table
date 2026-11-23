@@ -29,6 +29,12 @@ Checks:
 - Check: defaults text, `grep -rl 'defaults:"2026-08-30"' apps/shadcn-table-docs/.next/static | head -1` at 00ec323f: `.next/static/chunks/3oc6rqnabywvn.js`
 - Check: SDK version text, `grep -rl '1\.453\.2' apps/shadcn-table-docs/.next/static | head -1` at 00ec323f: `.next/static/chunks/2lvshzfglx-8h.js`
 - Check: clean worktree, `git status --short` at 00ec323f: prints nothing; no server started
+- Check: verifier files, `git diff --name-only 14948e64..HEAD` at 00ec323f: CHANGELOG.md, CONTRIBUTING.md, lib/posthog-options.ts, next.config.mjs; no extra file, nothing under .ai/
+- Check: verifier guides, both guide pages read 2026-11-23: 200; array destination `https://us-assets.i.posthog.com/array/:path*`, `defaults: '2026-08-30'`: match the code
+- Check: verifier SDK source, installed `posthog-js@1.453.2` `dist/module.js` at 00ec323f: `capture_pageview:!t||"2025-05-24">t||"history_change"` and `c=Kr({},u,h,...)` with `Kr` skipping `undefined`: removal and explicit-wins proof confirmed
+- Check: verifier install, `pnpm install --frozen-lockfile` at 00ec323f: exit 0, git status clean
+- Check: verifier manifest order, same `node -e` command on the build output of 00ec323f: `/ingest/static/:path* /ingest/array/:path* /ingest/:path*`, array to `https://us-assets.i.posthog.com/array/:path*`
+- Check: verifier build greps, `grep -rl 'defaults:"2026-08-30"'` and `grep -rl '1\.453\.2'` on `.next/static` at 00ec323f: `chunks/3oc6rqnabywvn.js`, `chunks/2lvshzfglx-8h.js`
 
 - Task 1 guides read again and red checks: done (14948e64, no code commit)
 - Task 2 array rewrite and its comment: done (d5c01b5a)
