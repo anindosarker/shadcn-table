@@ -7,6 +7,7 @@ kanban-plugin: basic
 - [ ] **Q160** Arrow keys in the day grid of the Base UI date picker may not move focus in the new library
 	- The stock base-nova calendar part has no ref on the day button (base-nova/calendar.tsx:222); radix-nova/calendar.tsx:223 and the approved app's components/ui/calendar.tsx:205 have it, and the focus effect at calendar.tsx:216-219 needs it. Found by reading while the design plan was written; not reproduced in a browser.
 	- Lead, 2026-11-24: not a choice yet. The run reproduces it in a browser first, in a fresh base-nova app with the stock calendar part and the installed picker (arrow keys in the day grid); it also names where the approved app's calendar.tsx got its day button ref (a newer shadcn version, or an edit). Reproduced: the facts go on this card; not reproduced: the card is closed.
+	- Reproduced 2026-11-24 in a fresh base-nova app (shadcn init -d, date-picker-base#b28d91a, controlled DatePicker type=date on 2026-11-18, next build + start, headless chromium). Stock base-nova calendar part: focus 18, then ArrowRight, ArrowLeft, ArrowDown, ArrowUp leave document.activeElement on 18 (Wednesday, November 18th, 2026, selected) after every key, while react-day-picker's focused cell moves 19, 18, 25, 18; the focus ring moves but keyboard focus stays put. Same app with the approved next-app calendar.tsx copied over it: activeElement follows each key, 19 (Thursday, November 19th), 18, 25 (Wednesday, November 25th), 18.
 
 ## Decided
 
