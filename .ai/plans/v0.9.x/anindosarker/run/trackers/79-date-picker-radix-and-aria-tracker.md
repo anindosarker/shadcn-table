@@ -52,6 +52,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K1 (card: Q154). The React Aria style has another calendar, so the day calendar file has no stock part to stand on there.
 
+- Decided: D168, option 1
 - File waiting: `registry/aria/components/date-picker/components/day-calendar.tsx`. The other 21 files of the React Aria version can be written; its type check and its plays stay red until this file exists, because `components/period-views.tsx` and the three day modes import it.
 - The `aria-nova` calendar part is the React Aria calendar, not react-day-picker (`https://ui.shadcn.com/r/styles/aria-nova/calendar.json`, read 2026-11-24: `dependencies` `["cn"]`, `registryDependencies` `["button", "select"]`; `aria-nova/calendar.tsx:6-21, 287`). The Base UI and Radix styles ship the react-day-picker calendar, which `day-calendar.tsx` is built on (`Calendar`, `CalendarDayButton`, `classNames`, `components`, `modifiers`: `B/components/day-calendar.tsx:14, 223-257`).
 - The React Aria part has: month and year menus that are the style's `Select` with a popup list, not native `select` elements (`aria-nova/calendar.tsx:24-31, 243-285`; report section 3 asks for native `select`); a fixed header with no slot for our caption (arrows, Today, the From or To badge) (`:147-192`); no week number column (`:38-41, 209`); no `classNames`, `components`, `modifiers` or `fixedWeeks`; `DateValue` values, not `Date`.
@@ -64,6 +65,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K2 (card: Q155). Radix and React Aria have no ready way to close the popup from code after a pick.
 
+- Decided: D169, option 1
 - Files waiting: `components/picker-popup.tsx` (the two `actionsRef` lines, `B/components/picker-popup.tsx:77,141`) and `types.ts` (`PopupActions`, `B/types.ts:154`), on both bases.
 - Base UI: the root takes `actionsRef` and `close()` is called on it (`@base-ui/react@1.9.0/popover/root/PopoverRoot.d.ts:41,81-84`, `dialog/root/DialogRoot.d.ts:58,82-85`). The pickers that close on a pick hold the ref (`B/modes/day-picker.tsx:52,77`, `B/modes/period-picker.tsx:47,83`). Cases D4, D5, P3, P6, P11, M10, W10.
 - History: the owner had the open-state hook `hooks/use-controllable.ts` removed because Base UI already did the job (review notes, row 10 and decision 1). That row ends: "Port note: `actionsRef` is Base UI only, the radix copy needs its own way."
@@ -78,6 +80,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K3 (card: Q156). An arrow at the end of the list cannot stay a tab stop with the stock buttons of Radix and React Aria.
 
+- Decided: D170, option 1
 - File waiting: `components/view-nav.tsx` (`NavArrow`, `B/components/view-nav.tsx:25-26`), on both bases.
 - Base UI: `disabled focusableWhenDisabled` writes `aria-disabled`, keeps the button in the tab order and swallows its keys (`@base-ui/react@1.9.0/button/Button.d.ts:21`, `utils/useFocusableWhenDisabled.mjs:20-37`). Case D11: "dimmed, does nothing, stays a tab stop", a decided difference from 7.4.
 - Radix: the style's `Button` is a native `button` (`radix-nova/button.tsx:49`); `disabled` takes it out of the tab order and drops focus from an arrow that was just pressed.
@@ -89,6 +92,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K4 (card: Q157). In a Radix popover Tab goes round inside the popup; it does not close it.
 
+- Decided: D171, option 1
 - File: `components/picker-popup.tsx` on Radix. No line waits; the difference comes from the stock primitive.
 - Case U2 and review decision 7: "Tab past the last control closes the popup, as in every stock shadcn popover"; no focus trap; no hidden Close button.
 - Radix: the popover's focus scope is always `loop: true`, modal or not (`@radix-ui/react-popover@1.3.1/dist/index.mjs:257-261`); with it Tab on the last control focuses the first and Shift+Tab on the first focuses the last (`@radix-ui/react-focus-scope@1.3.1/dist/index.mjs:124,135-140`). No prop of `Popover.Content` turns it off. Escape and a press outside close as on Base UI (`index.mjs:274`). There is no hidden Close button.
@@ -100,6 +104,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K5 (card: Q158). The stock React Aria popover is modal: it keeps focus inside, locks page scroll and blocks the page behind it.
 
+- Decided: D171, option 1
 - Files: `components/picker-popup.tsx` (the popover branch) and `components/time-field.tsx` on React Aria. The plan's rows for both are written for the stock popover.
 - Cases: U2 (no focus trap, Tab past the last control closes), WR1 (on open, focus is in the From box), C2 and R16 (the clock opens with focus on the popup). No case speaks of page scroll or of the page behind a popover; on Base UI both stay free (`@base-ui/react@1.9.0/popover/root/PopoverRoot.d.ts:43-58`, `modal` default `false`).
 - React Aria, a popover opened from the style's `PopoverTrigger`: an underlay over the page (`react-aria-components@1.22.1/dist/private/Popover.mjs:219-226`), page scroll prevented and the outside made inert (`react-aria@3.53.1/dist/private/overlays/usePopover.mjs:45-47,54`), focus contained (`Popover.mjs:216`), focus moved to the popup itself on open (`Popover.mjs:133-137`). So: Tab cycles inside; a press outside closes and does nothing else; the page does not scroll while a popup is open; C2 and R16 hold without any code; WR1 differs by one Tab.
@@ -115,6 +120,7 @@ Six points the plan does not decide. The plan marks the files as waiting on K1 t
 
 ### K6 (card: Q159). On React Aria a screen reader hears a range picker's popup named by the button's text, not by the picker's label.
 
+- Decided: D171, option 1
 - File: `components/picker-popup.tsx` on React Aria (the popover branch, plan 3.6 row `:148-158`). No line waits; the difference comes from the stock primitive.
 - Base UI and Radix: the popup is a dialog named by `aria-label={title}` (`B/components/picker-popup.tsx:149`). Radix writes `aria-labelledby` only when a Title part exists, then the app's props (`@radix-ui/react-popover@1.3.1/dist/index.mjs:282-285`).
 - React Aria: the stock `PopoverTrigger` gives the popover `aria-labelledby` with the trigger's id through `PopoverContext` (`react-aria-components@1.22.1/dist/private/Dialog.mjs:57-59,79-85`); the popover merges context and props (`Popover.mjs:52`, `utils.mjs:100`) and writes it beside `aria-label` (`Popover.mjs:190-191`). `aria-labelledby` wins over `aria-label`, so the popup is named by the trigger button.
