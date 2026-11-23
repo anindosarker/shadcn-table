@@ -163,6 +163,13 @@ pnpm --filter shadcn-table tsc:aria
 
   After `pnpm add-part <base> --all`, `git status --short` must print nothing.
 
+- **The date picker.** `registry/<base>/components/date-picker/` and `registry/<base>/hooks/use-mobile.ts` come from [anindosarker/shadcn-date-picker](https://github.com/anindosarker/shadcn-date-picker), item `date-picker-<base>`, exactly as the shadcn CLI installs it; never edit them by hand. The tag is one constant, `DATE_PICKER_TAG` in `tools/registry/lib.mjs`. A library file that imports `@/components/date-picker/...` gives its base's core item the registry dependency `anindosarker/shadcn-date-picker/date-picker-<base>#<tag>`. The parts the picker needs are added with `pnpm add-part` like any other. To move to a new tag, change the constant and rewrite every tree:
+
+  ```bash
+  pnpm add-date-picker base                # writes the picker of registry/base (also radix, aria)
+  pnpm add-date-picker base --check        # compares without writing; pnpm test validate-repo runs it on every base
+  ```
+
 - **Props differ per base.** Menu, select, tooltip, checkbox, slider and popover take different props on Base UI (`render` instead of `asChild`, `closeOnClick`, `alignItemWithTrigger`, the `indeterminate` prop, `onValueCommitted`, ...). React Aria parts differ again (`isDisabled`, `isSelected`, `onPress`, `DialogTrigger` plus `Modal`, the trigger wrapping the menu or tooltip). The files in `base-diff.json` and `aria-diff.json` are plain code against those parts; do not port a Radix prop over and expect it to type-check.
 
 ## 3. Sync the Docs App
