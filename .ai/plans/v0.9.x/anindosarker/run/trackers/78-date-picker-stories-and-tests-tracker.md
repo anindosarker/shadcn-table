@@ -165,7 +165,7 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - PR11: Types/Year Range "PR11"
 - PR12: not covered: 9.3.2 N11, the trigger is not red
 - U1: not covered: placement is pixels; seen in the right-to-left look below
-- U2: Types/Date Single "D10" (Escape) and "U2" (press outside), Options Presets "U2" (Tab past the last control)
+- U2: Types/Date Single "D10" (Escape) and "U2" (press outside); Tab past the last control: not covered: differs per base by decision (D171), named in the README
 - U3: Types/DateTime Single "U3, C2"
 - U4: Options Dialog "U4, U9" and "U4 Done closes"
 - U5: Options PhoneLayout "U5, U6, R5" (Vitest only, 390 wide)
