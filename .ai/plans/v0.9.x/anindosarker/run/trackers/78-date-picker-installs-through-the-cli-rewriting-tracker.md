@@ -1,6 +1,6 @@
 # 78: Date picker installs through the CLI rewriting, tracker
 
-Status: running
+Status: waiting (owner: Q161, how the install gets its styles)
 Branch `date-picker-install-rewriting`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-install-rewriting (from origin/main b28d91a)
 Checks:
 - Check: `pnpm install --frozen-lockfile` in the worktree at b28d91a: pass
