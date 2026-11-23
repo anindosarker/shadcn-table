@@ -193,3 +193,11 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 - Promotion: the old default is kept as `components/date-picker-6-2` (`fc7fddf`, the 14 demo files that imported it point there); `components/date-picker/` was 9.3.4 (`9efa6b1`) and is now 9.3.5 (`1375472`). Nothing outside the demo imported the old default; nothing imports the new one yet.
 - 9.3.5: folder `components/date-picker-9-3-5`, commit `52611e9`, cards "Full version, fewer comments" on all twelve rows. Comments only: 416 comment lines to 111, 3,529 lines to 3,218. A script printing each file without comments shows all 22 files equal to 9.3.4. `tsc`, `eslint`, `prettier` clean.
 - Comment rule used: a comment stays only where the code cannot say why (a browser quirk, a rule a reader would otherwise undo, the source of a length), in one line.
+
+## Version 9.3.6, comments only for outside facts, 2026-11-23
+
+- Owner on 9.3.5: "It still has unnecessary comments. Stuff that can be understood from the code isn't necessary to reiterate in comments again", and "use ASD-STE100 pls".
+- Folder `components/date-picker-9-3-6`, commits `acbb4da` and `e1bfbaa`; default `components/date-picker/` is 9.3.6 (`9cfba19`). Cards "Full version, comments only for outside facts" on all twelve rows.
+- Rule: a comment stays only for a fact outside our code (a browser, React, a library, a stock shadcn part), written in ASD-STE100. No description of a type, prop or helper. One exception: one line on `DatePicker` giving the format of `value`, for the editor tooltip.
+- 114 comment lines to 38; 3,218 lines to 3,141. Code equal to 9.3.5 and 9.3.4 in all 22 files (printed without comments). `tsc`, `eslint`, `prettier` clean.
+- Four kept lines repeat older comments and were not checked against the browser or library: `modes/day-range-picker.tsx:67`, `components/picker-popup.tsx:89`, `components/picker-field.tsx:36` (this one was measured in Chromium by the 9.3.4 audit), `components/time-field.tsx:54`.
