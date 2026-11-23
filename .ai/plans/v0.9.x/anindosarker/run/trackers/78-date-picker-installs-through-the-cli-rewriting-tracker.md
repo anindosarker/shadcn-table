@@ -29,11 +29,13 @@ Checks:
   - 390 and 1280, trigger button group (one child, dialog-trigger at 390, popover-trigger at 1280): installed radius 10px on all four corners; reference the same
   - 1280: popover (428 wide at x 16, y 100), no dialog close or range field there; installed and reference the same
 - Check: scratch servers on 5341 and 5342 stopped, scratch app and reference deleted at ea68420: pass
+- Check: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 5cd8646: pass (exit 0 each)
+- Check: `grep -c 'anindosarker/shadcn-date-picker/date-picker-base' README.md` at 5cd8646: pass (1, install line kept)
 
 - Task 1 the mechanism: done (tracker only, no repository commit)
 - Task 2 the generated install files: done (ea68420)
 - Task 3 install proof: done (ea68420, no repository change)
-- Task 4 README lines: not started
+- Task 4 README lines: done (5cd8646)
 
 ## The mechanism
 
