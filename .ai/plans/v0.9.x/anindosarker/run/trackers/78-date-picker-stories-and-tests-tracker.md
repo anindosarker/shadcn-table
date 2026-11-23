@@ -34,6 +34,15 @@ Checks:
 - Check: `pnpm lint`, `pnpm exec tsc -p tsconfig.stories.json`, `pnpm storybook:build` at 1f87b05: pass
 - Check: `git diff --stat origin/main -- registry package.json pnpm-lock.yaml` at 1f87b05: pass (prints nothing)
 - Check: case table at 1f87b05: pass (D8, R9, R13, R16, P13, PR8, P17 now name a play)
+- Check (verifier): `git diff --name-only origin/main...HEAD` at 1f87b05: pass (18 files, all owned); `git diff --stat origin/main -- registry package.json pnpm-lock.yaml`: pass (prints nothing)
+- Check (verifier): `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 1f87b05: pass (prints nothing)
+- Check (verifier): stories at 1f87b05: pass (seven files, twelve type stories, controlled, value and calls as text; the grep prints nothing; plays assert roles, text, values and ARIA states only; no fixed wait)
+- Check (verifier): case table at 1f87b05: pass (111 ids, 111 lines; D8, R9 (R8 defaults brought to 09:10 and 17:00), R13 (F5), R16, P13, PR8, P17 plays exercise their rows; the not covered reasons hold)
+- Check (verifier): `pnpm lint`, `pnpm typecheck`, `pnpm exec tsc -p tsconfig.stories.json`, `pnpm registry:check` at 1f87b05: pass
+- Check (verifier): `pnpm test` at 1f87b05: pass (7 files, 39 passed)
+- Check (verifier): `pnpm storybook:build` at 1f87b05: pass (`index.html`, `base/index.html`, `version.txt` 0.1.0; no radix or aria; landing links `./base/` and the GitHub repository only)
+- Check (verifier): vercel.json, ci.yml at 1f87b05: pass (as 1.6.6, no deploymentEnabled; one job, push to main and pull_request; ci.yml unchanged since the act run at cd48b75)
+- Check (verifier): right to left at 1f87b05: pass (24 lines; 8 screenshots committed for the 8 non-clean lines, none for clean; no rtl file in stories, .storybook, .github; nothing listens on 5340 to 5360)
 
 - Task 1 Vite, Vitest and Storybook on `DP_BASE`, seven story files: done (69a66a2)
 - Task 2 plays and the case table: done (69a66a2, 59de146)
