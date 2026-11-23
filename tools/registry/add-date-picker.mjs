@@ -7,8 +7,11 @@
 // components/date-picker/ and the hook hooks/use-mobile.ts. The CLI runs in a
 // scratch project carrying the base's components.json, like add-part.mjs;
 // only those files are copied out, as written (no prettier pass, no import
-// rewrite), so they equal what a user of that style gets. The parts the
-// picker needs are add-part.mjs's job (`pnpm add-part <base> <part>`).
+// rewrite), so they equal what a user of that style gets, with every
+// "use client" line of the source kept (rsc true in the scratch). The hook
+// comes from the live shadcn registry, not from the tag, so `--check` also
+// fails when shadcn changes it. The parts the picker needs are
+// add-part.mjs's job (`pnpm add-part <base> <part>`).
 //
 // `--check` runs the same install and exits 1 listing every file that differs
 // from the tree, is missing from it or is extra in it; it writes nothing.
@@ -79,7 +82,12 @@ const makeScratch = () => {
   fs.writeFileSync(
     path.join(dir, 'components.json'),
     JSON.stringify(
-      { ...components, tailwind: { ...components.tailwind, css: 'index.css' } },
+      {
+        ...components,
+        // With rsc false the CLI's stateful /g regex strips "use client" from every other file.
+        rsc: true,
+        tailwind: { ...components.tailwind, css: 'index.css' },
+      },
       null,
       2,
     ),

@@ -27,6 +27,14 @@ Checks:
 - Check: Local CI `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 06da91e0: pass (tsc clean each)
 - Check: Local CI `pnpm test lint` at 06da91e0: pass (0 errors; 9 docs warnings)
 - Check: Local CI `pnpm test validate-repo` and `pnpm test installation-e2e --no-diff`: pass at 6a5b3db0; 06da91e0 adds only `CHANGELOG.md`, which neither test reads
+- Check: review round 1 fixes (working tree on fecd5c2e, committed below): `pnpm add-date-picker base`, `radix`, `aria` rewrote the trees (only change: `"use client"` added to the 8 files per base that had lost it); then `--check` on the three bases: pass (23 files each)
+- Check: review round 1, `pnpm test typecheck --base base`, `--base radix`, `--base aria`: pass (tsc clean each)
+- Check: review round 1, `pnpm test lint`: pass (0 errors; 9 docs warnings)
+- Check: review round 1, `node --test tools/registry/lib.test.mjs`: pass (9 of 9)
+- Check: review round 1, `pnpm test validate-repo`: pass (bases identical, date picker matches, icon maps complete, tailwind valid, registry valid, registry fresh, story pages match, story code complete, 52 unit tests)
+- Check: review round 1, plain `pnpm --filter shadcn-table-docs lib:install base`: pass (no picker folder, `git status` clean below `components/ui-base`)
+- Check: review round 1, scratch proof base without `rewritePicker` (fixture line in `registry/base/components/ui/shadcn-table/index.ts`, `pnpm -w registry:build`, `lib:install base`, `types:check`): pass (`components/ui-base/date-picker/date-picker.tsx` and `hooks/use-mobile.ts` existed; every `@/` import of the picker is `@/components/ui-base/<part>` or `@/components/ui-base/hooks/use-mobile`; `types:check` exit 0); state discarded, registry rebuilt, `git status` shows only the round 1 files
+- Check: review round 1, `pnpm test installation-e2e`: not rerun; no file it reads changed (the trees' picker is in no item yet, `registry.json` unchanged)
 
 - Task 1 site map: done (a9378baf)
 - Task 2 packages, parts, tool, trees: done (20cd9241, 591d6d57)
@@ -68,5 +76,17 @@ Every place that reads imports, aliases or dependencies for an item, a tree or t
 - `apps/shadcn-table-docs/package.json` gained `date-fns` and `react-day-picker` (the picker's ranges): `lib:install` restores the docs package.json and lockfile after the CLI run (its header: every package the item needs is already a dependency here), so the docs copy of the picker type-checks only with them declared. This milestone owns the lockfile for the epic, so spec 82 needs no install. `cn` was there already (`^0.4.0`).
 - `lib:install` adds the picker in a second CLI run: in one run the CLI resolves imports by file name among the files it writes, and the picker's `types.ts` captured the library's `shadcn-table/types` imports. The scratch proof read the built items in `packages/shadcn-table/public/r/`, which is what `lib:install` reads; the dev registry on 5310 was not needed.
 - `packages/shadcn-table/tsconfig.radix.json` (base and aria extend it) gained `node` in `types`: `components/date-picker/utils/values.ts:98` reads `process.env.NODE_ENV`, as the picker repo's own tsconfigs allow. Owned here as the fix of the typecheck the spec runs.
+- Review round 1, `"use client"`: the CLI's rsc transform (`@shadcn/registry` 0.2.0, `dist/chunk-GP5XIDBG.js`) tests a `/g` regex with `.test()`, so with `rsc: false` it strips the directive from every other file and the set depends on the parts before it in the run. `add-date-picker.mjs` now installs into a scratch with `rsc: true`: the trees keep every directive of the picker source, the same on every run; harmless at runtime in the trees' `rsc: false` projects.
+- Review round 1, hook: `hooks/use-mobile.ts` comes from the live shadcn registry, not the tag; the tool header and `test/validate-repo/lib/date-picker.mjs` now say so. A `--check` failure from a shadcn change of the hook is wanted: users get the new hook.
+- Review round 1, `rewritePicker()` in `apps/shadcn-table-docs/lib/install.mjs` removed: the picker run's aliases already make the CLI write `@/components/ui-base/...` imports and the picker's own imports are relative (scratch proof above). Spec 1.6.4's rewrite is met by the aliases.
+- Review round 1, two runs in `lib:install`: the comment at `install.mjs:143-145` now states only what the scratch proof at b6312d3d saw in this install (library types imports rewritten to the picker's `types.ts` in one run with the docs' merged item), not a general CLI fact. The reviewer's user-shaped one-run install kept them intact, so spec 82's user install is not affected.
+- Review round 1, files outside the owned list: each is already explained above (`apps/shadcn-table-docs/package.json`, `packages/shadcn-table/tsconfig.radix.json`, `tools/registry/lib.test.mjs`, `test/validate-repo/test.mjs` in place of `run.mjs`, `cn` in `packages/shadcn-table/package.json`).
+- Review round 1, `--dev` cases of `lib.test.mjs` kept: `DEV` is read from `process.argv` at import (`tools/registry/lib.mjs:36`) and `itemAddress` changes under it (`lib.mjs:45`); the child run guards spec 1.6.3's rule that the picker address stays the same under `--dev` if `datePickerItemAddress` (`lib.mjs:63-64`) ever reads `DEV`.
+- Review round 1, `process`: the `node` types line in `packages/shadcn-table/tsconfig.radix.json` stays for now (the trees are tool output and must type-check); staged under Attention.
 
 ## Attention
+
+- A Vite user's `tsc` fails once spec 82 makes the table install the date picker: picker v0.1.0 reads `process.env.NODE_ENV` and a stock Vite app has no Node types.
+  - Source: `packages/shadcn-table/registry/<base>/components/date-picker/utils/values.ts:98`; reviewer proof: stock `shadcn init --template vite --base base --preset nova`, `shadcn add anindosarker/shadcn-date-picker/date-picker-base#v0.1.0`, `tsc --noEmit -p tsconfig.app.json` exit 2, `TS2591: Cannot find name 'process'`. The table's tree type-check passes only through `"node"` in `packages/shadcn-table/tsconfig.radix.json:9`, which also lets library files use Node globals unnoticed. Spec 82's installation-e2e vite scenarios would fail at `test/installation-e2e/test.mjs:262-264, 382-384`.
+  - Recommended: a picker v0.1.1 without the `process` read (beside Q160 and Q162), then `DATE_PICKER_TAG` moves and the `node` line goes; spec 82 does not merge on v0.1.0.
+  - Other option: keep v0.1.0 and the `node` line; every Vite user of the table fails `tsc` after install.

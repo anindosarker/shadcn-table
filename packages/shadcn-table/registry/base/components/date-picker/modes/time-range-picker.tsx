@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { LabelsContext } from "../utils/labels"
