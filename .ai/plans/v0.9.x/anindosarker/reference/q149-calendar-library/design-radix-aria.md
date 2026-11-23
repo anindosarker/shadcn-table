@@ -258,7 +258,30 @@ Waits on K1. Section 4.
 
 ## 4. The day calendar on React Aria
 
-Written in task 2 of the milestone.
+### 4.1 Facts, read on 2026-11-24
+
+- `https://ui.shadcn.com/r/styles/aria-nova/calendar.json`: `dependencies` `["cn"]`, `registryDependencies` `["button", "select"]`. The same file of `radix-nova` and of `base-nova`: `dependencies` `["cn", "react-day-picker@latest", "date-fns"]`, `registryDependencies` `["button"]`.
+- The `aria-nova` part is built on the React Aria calendar: it imports `Calendar`, `RangeCalendar`, `CalendarGrid`, `CalendarCell`, `CalendarMonthPicker`, `CalendarYearPicker` and the type `DateValue` from `react-aria-components` (`aria-nova/calendar.tsx:6-21`) and exports `Calendar` and `RangeCalendar` (`:287`). It has no `CalendarDayButton`, no `classNames`, no `components`, no `modifiers`: its props are those of the React Aria calendar plus `buttonVariant`, `captionLayout`, `numberOfMonths`, `showWeekNumber`, `headerFormat`, `renderCell` (`:65-81`, `:97-110`).
+- Its month and year menus are the style's own `Select` with a popup list, not a native `select` (`aria-nova/calendar.tsx:24-31`, `:243-285`). Report section 3: "The calendars use the native `select` element for the month and the year."
+- Its header is fixed: two arrow buttons laid over the top (`:147-176`) and a centred caption (`:179-192`). There is no slot for the picker's caption with the arrows, the Today button and the From or To badge (`B/components/day-calendar.tsx:124-176`).
+- `showWeekNumber` only picks a class for the cell corners (`aria-nova/calendar.tsx:38-41`, `:209`); no week number column is drawn. The week picker draws one (`B/components/period-views.tsx:98-112`, `showWeekNumber`, `ISOWeek`).
+- Its values are `DateValue` objects of `@internationalized/date` (a dependency of `react-aria-components`, `package.json:58`), not `Date`.
+- What `B/components/day-calendar.tsx` takes from the react-day-picker part: `Calendar` and `CalendarDayButton` (`:14`), and through `Calendar` the props `captionLayout="dropdown"`, `hideNavigation`, `fixedWeeks`, `startMonth`, `endMonth`, `disabled` matchers, `className`, `classNames`, `modifiers`, `modifiersClassNames`, `components` with `Root`, `DayButton`, `MonthCaption`, `Week` (`:223-257`); from react-day-picker itself `getDefaultClassNames`, `useDayPicker` and four types (`:5-11`). The native `select` of the caption is react-day-picker's own (`react-day-picker@10.0.2/dist/esm/components/Dropdown.js:16`, `Select.js:9`).
+- react-day-picker stays a dependency of the React Aria version whatever happens to this file: `B/types.ts:3` (`PropsBase`, the public `calendarProps`), `B/utils/range.ts:2` (`DateRange`), `B/utils/values.ts:10-11` (`DateLib`, `defaultLocale`, `DayPickerLocale`). With `B/components/day-calendar.tsx:5-11` these are the six import sites of spec 79, 1.3. `react-day-picker` and `date-fns` are installed in the new repository (spec 78, 1.7).
+
+### 4.2 The candidates
+
+| Candidate | Report section 3 | Same look and behaviour | New against the Base UI code |
+|---|---|---|---|
+| A. `day-calendar.tsx` on React Aria imports `DayPicker` from react-day-picker and carries what the stock react-day-picker part adds | kept: the caption's native `select` is react-day-picker's | can be kept, but only by a copy: the root classes and cell sizes (`radix-nova/calendar.tsx:33-38`), the month-name formatter (`:41-45`), the class map (`:46-135`), `Chevron` (`:147-187`), `WeekNumber` (`:191-199`) and the day button (`:207-244`) with its `ref` and its effect (`:216-219`). The day button cannot be the style's `Button`: react-day-picker gives it `disabled`, `tabIndex` and its own key and focus handlers (`react-day-picker@10.0.2/dist/esm/DayPicker.js:332-336`), and the React Aria button does not put `disabled` or `tabIndex` on the element (section 2.3); it would be a native `button` with `buttonVariants` (`aria-nova/button.tsx:91`). Not provable by reading; the geometry comparison would be the proof | about 150 lines of a stock part inside the picker's file, with three small components, one ref and one effect that `B/components/day-calendar.tsx` does not have; the file is no longer "on the stock shadcn Calendar" (report 2.2); a second copy of shadcn's calendar classes to keep in step |
+| B. The react-day-picker calendar part of another style becomes `components/ui/calendar.tsx` of the React Aria tree; `day-calendar.tsx` is a byte copy | kept | not as the part stands: its day button is the style's `Button` (`radix-nova/calendar.tsx:222-242`), so on React Aria the `disabled` and `tabIndex` of each day are lost (as in A). The part would have to be edited | no code in the picker folder; but the part is no longer what the shadcn CLI writes for `aria-nova` (spec 79, 1.6.2), the item can no longer name `calendar` as a registry dependency (the user's style would install the React Aria calendar), and the user's own `components/ui/calendar.tsx` would be replaced. A fix milestone of spec 78 |
+| C. `day-calendar.tsx` is rewritten on the stock `aria-nova` `Calendar` and `RangeCalendar` | bends: the month and year menus are not native `select` elements | differs: no caption slot, no week number column, no `fixedWeeks`, no `components`, `classNames` or `modifiers`; `calendarProps` (`B/types.ts:14-30`) has nothing to be passed to; the week picker has no stock way | a new calendar file, new value conversion between `Date` and `DateValue`, a new public `calendarProps` type |
+
+### 4.3 Result
+
+- No candidate keeps all of: report section 3, the same look and behaviour, and the rule of section 6 (nothing new against the Base UI code, stock parts as the CLI writes them). A keeps the first two by copying a stock part into the picker; B keeps the picker's file by replacing a stock part; C keeps the stock part and loses the rule and the look.
+- So this plan names no way. `registry/aria/components/date-picker/components/day-calendar.tsx` waits on K1, with the three candidates as the card's options.
+- Until the card is decided the React Aria version builds the other 21 files. `B/components/period-views.tsx:30` and the three day modes import `DayCalendar`, so the type check of the React Aria tree and its plays stay red until then; the React Aria milestone records that in its tracker and does not write a stand-in file.
 
 ## 5. Behaviour at risk
 
