@@ -25,24 +25,6 @@ kanban-plugin: basic
 
 ## In progress
 
-- [ ] **D162** The date picker becomes its own small library in its own repository #E25 #R6
-	- The calendar library lives in a new repository, not in the table repository: `reference/q149-calendar-library/report.md` stands except sections 4, 6 and 7 (folders, distribution, the later move), which this decision replaces. The table repository gets no calendar folder.
-	- Base UI version: the approved picker, exact copy of `test-projects/next-app/components/date-picker/` (22 files, version 9.3.6, commit `53f4b4f`); only an import path may differ, proven by `diff -r`; any other change is the owner's (report 2.1). Radix and React Aria versions are new work with the same files and names, the same look and behaviour, tested against the Base UI version.
-	- The owner's picker rules of report section 3 hold in every version.
-	- Thin tooling: a small registry build, types and lint, Storybook stories with tests. No installation tests, no perf checks, no visual captures.
-	- Users install it with the shadcn CLI by GitHub address (`owner/repo/item`), the form the table's core items use; an entry in shadcn's registry directory is optional and later.
-	- The table depends on it per base at a tag; in the table repository that is the import mapping of `tools/registry/lib.mjs` and one dependency per base.
-	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
-	- Table v1 comes first; the calendar work never delays it.
-	- Source: Q149
-- [ ] **D163** The date picker library is named shadcn-date-picker everywhere #E25 #R6
-	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
-	- Source: Q150
-- [ ] **D164** The table's date filters use the date picker library, all three bases together #E25 #R6
-	- Supersedes D96.
-	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
-	- Source: Q88
-
 ## Done
 
 - [x] **D1** The select filter's clear button sits right of the chevron #E1 #R1
@@ -1030,6 +1012,23 @@ kanban-plugin: basic
 - [x] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #E24 #R6
 	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
 	- Source: Q148
+- [x] **D162** The date picker becomes its own small library in its own repository #E25 #R6
+	- The calendar library lives in a new repository, not in the table repository: `reference/q149-calendar-library/report.md` stands except sections 4, 6 and 7 (folders, distribution, the later move), which this decision replaces. The table repository gets no calendar folder.
+	- Base UI version: the approved picker, exact copy of `test-projects/next-app/components/date-picker/` (22 files, version 9.3.6, commit `53f4b4f`); only an import path may differ, proven by `diff -r`; any other change is the owner's (report 2.1). Radix and React Aria versions are new work with the same files and names, the same look and behaviour, tested against the Base UI version.
+	- The owner's picker rules of report section 3 hold in every version.
+	- Thin tooling: a small registry build, types and lint, Storybook stories with tests. No installation tests, no perf checks, no visual captures.
+	- Users install it with the shadcn CLI by GitHub address (`owner/repo/item`), the form the table's core items use; an entry in shadcn's registry directory is optional and later.
+	- The table depends on it per base at a tag; in the table repository that is the import mapping of `tools/registry/lib.mjs` and one dependency per base.
+	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
+	- Table v1 comes first; the calendar work never delays it.
+	- Source: Q149
+- [x] **D163** The date picker library is named shadcn-date-picker everywhere #E25 #R6
+	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
+	- Source: Q150
+- [x] **D164** The table's date filters use the date picker library, all three bases together #E25 #R6
+	- Supersedes D96.
+	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
+	- Source: Q88
 - [x] **D166** The date-time range popover keeps its approved width #R6
 	- The date-time range popover stays as wide as the approved code makes it in Chrome (540 px on 2026-11-23, 492 px in an earlier version); the cause of the difference is not looked for and the approved code is not changed for it. It is looked at again only if it overflows a small screen.
 	- Source: Q151
