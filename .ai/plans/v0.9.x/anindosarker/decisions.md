@@ -24,6 +24,9 @@ kanban-plugin: basic
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
 	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
+- [ ] **D166** The date-time range popover keeps its approved width #R6
+	- The date-time range popover stays as wide as the approved code makes it in Chrome (540 px on 2026-11-23, 492 px in an earlier version); the cause of the difference is not looked for and the approved code is not changed for it. It is looked at again only if it overflows a small screen.
+	- Source: Q151
 
 ## In progress
 
