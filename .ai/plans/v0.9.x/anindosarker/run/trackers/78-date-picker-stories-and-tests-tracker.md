@@ -1,7 +1,8 @@
 # 78: Date picker repository, Date picker stories and tests, tracker
 
-Status: running
+Status: done
 Branch `date-picker-stories-and-tests`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-stories-and-tests
+Merge: 4ef057a8a4e9e5e9835ed50292a077c129bf7b0d on main (branch and worktree removed)
 Checks:
 - Check: `pnpm typecheck` at 69a66a2: pass
 - Check: `pnpm exec tsc -p tsconfig.stories.json` at 69a66a2: pass (the `typecheck` script does not run this config; see Attention)
