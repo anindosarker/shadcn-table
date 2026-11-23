@@ -36,6 +36,12 @@ Checks:
 - Check: install proof, `pnpm exec next build` in the scratch app at 2be8d33: pass (exit 0, `/` prerendered as static content)
 - Check: scratch app deleted, `rm -rf /private/tmp/claude-501/dp-aria-install` then `ls /private/tmp/claude-501/dp-aria-install`: pass (No such file or directory)
 - Check: Local CI at 2be8d33: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test --base aria` (39 of 39), `pnpm test --base base` (39 of 39) are the lines recorded above at this exact head, each pass; not rerun, the head did not move (task 5 changes no file of the repository, `git status --short` prints nothing)
+- Check: `git fetch origin && git merge origin/main` (5d13f4a, the Radix UI version) at decb84d: pass (one conflict, `README.md`, resolved as the plan's 5.2 orders: install blocks Base UI, Radix UI, React Aria; one heading, the Radix UI list first, the React Aria list second; `git diff origin/main -- README.md` shows only the React Aria block and list added; pushed)
+- Check: `pnpm lint` at decb84d: pass (exit 0)
+- Check: `pnpm typecheck` at decb84d: pass (exit 0)
+- Check: `pnpm registry:check` at decb84d: pass (base, radix and aria `registry.json` up to date, 22 files each; `pnpm registry:build` not run, no source file changed)
+- Check: `pnpm test --base aria` at decb84d: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix registry/aria/components/ui` at decb84d (origin/main 5d13f4a): pass (prints nothing)
 
 - Task 1 identical files: done (89ee92d)
 - Reader task 1 at 89ee92d: no deviation
@@ -101,6 +107,11 @@ Checks:
 - Look: Year Range, open, 1280: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
 - Look: Year Range, open, 390: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
 - Task 5 install proof: done at 2be8d33 (2be8d330e0b78497c2d1c34c9f51526d8aa9a556), no change of the version and none of the plan; Local CI complete at the same head
+- Review round 1: 0 majors, 7 minors, fixed at decb84d (decb84db8fab8bfa11cf74b8794ef01bdeb7949c). No file of the version and no line of the plan changed; the head moved by the merge of origin/main only. Per point:
+  - 1 result, 2 scope, 3 D169, 4 D170: the reviewer confirms, no action. The plays the review did not run are the `pnpm test --base aria` line at decb84d above
+  - 5 README lines on the parts and on the nova classes: the reviewer is right. `registry/aria/registry.json` does not name `calendar` (plan 4.5) and `registry/aria/components/date-picker/components/day-calendar.tsx:213-215,226-256` carries the nova calendar's classes (`[--cell-radius:var(--radius-md)]`, `[--cell-size:--spacing(7)]`, the class map), so "button, calendar, popover and others come from your own style" and "Three places" do not hold for React Aria. Both lines are outside what this milestone may edit and the plan's 5.2 has no line for them; the wording is a choice: staged under Attention, not edited
+  - 6 day button ref: the reviewer is right on the source. `registry/base/components/ui/calendar.tsx:192-195` makes the ref and the focus effect, `:198-200` `<Button variant="ghost" size="icon"` has no `ref`; `registry/aria/components/date-picker/components/day-calendar.tsx:359-366` has `ref={ref}` as the plan's 4.4 orders (`CLI/radix/calendar.tsx:198`). The React Aria file is as planned; the gap is in the Base UI stock part (spec 78). No play presses an arrow key in the day grid (`grep -rn Arrow stories`: `Month.stories.tsx:119` and `Date.stories.tsx:269`, both in typed boxes). Not looked at in a browser: staged under Attention
+  - 7 left to the plays: the clock inside the modal popover and the phone dialog, the app id on a range trigger (P16) and the phone dialog layout stay with the plays, as the plan says; 39 of 39 pass at decb84d. Which play covers each was not traced in this round; no new check added
 
 ## Attention
 
@@ -108,6 +119,14 @@ Checks:
   - Measured in Chromium with touch emulation at 390 wide (`hasTouch`, `isMobile`), opacity of the popup per frame after the tap, Date Single and Date Range: React Aria `1 1 0 0.22 0.58 0.80 0.92 0.98 1`, Base UI `0 0 0.22 0.58 0.80 0.92 0.98 1`. Without touch React Aria starts at 0 as Base UI does. Not looked at on a real phone.
   - Source: the stock part's fade-in hangs on `data-entering` (`registry/aria/components/ui/popover.tsx:37`, `data-entering:animate-in data-entering:fade-in-0`), and the library sets `data-entering` two frames late when it thinks an on-screen keyboard is possible (`react-aria-components` `Popover.mjs:180`, `runAfterKeyboard`). No file of the picker is involved; a fix would restyle a stock part, which spec 79, 1.6.2 rules out.
   - Screenshots of the settled popup (equal on both, a still cannot show the flicker): `reference/q149-calendar-library/look/aria-date-single-open-390-base.png` and `-aria.png`
+- The README tells a React Aria user that the calendar comes from their own style and that only three places carry nova classes; on React Aria the picker brings its own day calendar with the nova classes.
+  - `README.md:26` ("The shadcn parts it uses (button, calendar, popover and others) come from your own style") and `:28` ("Three places in the picker carry the classes of shadcn's nova style"), both written for Base UI and unchanged by this milestone.
+  - React Aria: the item does not name `calendar` (plan 4.5, D168) and `registry/aria/components/date-picker/components/day-calendar.tsx:196-390` holds the react-day-picker calendar of the nova style. On another style the day calendar keeps the nova look until the user edits the file.
+  - Not edited: the lines are outside this milestone's part of the README and the plan's 5.2 names no text for them. Recommended: one README sentence for React Aria, through the plan.
+- On Base UI the arrow keys in the day calendar may not move the focus from day to day; on React Aria they do (read in the source, not looked at in a browser).
+  - `registry/base/components/ui/calendar.tsx:192-200`: the stock `base-nova` day button makes a ref and a focus effect and does not put the ref on its `Button`, so the effect focuses nothing. The plan's 4.4 names the one-line difference from `radix-nova`.
+  - `registry/aria/components/date-picker/components/day-calendar.tsx:359-366` has the ref (plan 4.4), as react-day-picker's own day button does. React Aria is the intended side; nothing to change in this milestone.
+  - No play presses an arrow key in the day grid. Owner of the Base UI part: spec 78. Recommended: look at it on Base UI in a browser, then decide on the stock part.
 
 ## Notes
 
