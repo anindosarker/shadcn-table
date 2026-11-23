@@ -26,7 +26,7 @@ Checks:
 - Task 1 Vite, Vitest and Storybook on `DP_BASE`, seven story files: done (69a66a2)
 - Task 2 plays and the case table: done (69a66a2, 59de146)
 - Task 3 site build, Introduction.mdx, vercel.json, CI workflow: done (cd48b75)
-- Task 4 right-to-left look: done (screenshots and lines in this tracker's commit)
+- Task 4 right-to-left look: done (e931cf5c in the table repository; no change in the date picker repository)
 
 ## Notes
 
