@@ -31,6 +31,16 @@ Checks:
 - Check: scratch servers on 5341 and 5342 stopped, scratch app and reference deleted at ea68420: pass
 - Check: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 5cd8646: pass (exit 0 each)
 - Check: `grep -c 'anindosarker/shadcn-date-picker/date-picker-base' README.md` at 5cd8646: pass (1, install line kept)
+- Check: verifier, `git diff --name-only origin/main...HEAD` at 5cd8646: pass (only owned files: .prettierignore, README.md, eslint.config.mjs, registry/README.md, registry/{base,radix,aria}/registry.ts, registry/base/registry.json, registry/styles/style-nova.css, tools/registry-build.mjs, tsconfig.{baseui,radix,aria,stories}.json ignore lines, 22 files under registry/base/generated)
+- Check: verifier, `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 5cd8646: pass (prints nothing; 22 source files, 22 generated files)
+- Check: verifier, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 5cd8646: pass (exit 0 each)
+- Check: verifier, `pnpm registry:build` then `git status --short` at 5cd8646: pass (prints nothing)
+- Check: verifier, hand edit of `generated/.../utils/range.ts`, `pnpm registry:check` at 5cd8646: pass (exit 1 "out of step with the source"; restored, exit 0)
+- Check: verifier, read `tools/registry-build.mjs` at 5cd8646: pass (class transform only `createStyleMap` and `transformStyle` from `shadcn/utils`; the only regex is the existing import scan for dependencies; `registry/styles/style-nova.css` byte-equal to shadcn-ui/ui 4233ed1 and to current main `apps/v4/registry/styles/style-nova.css`, source named in registry/README.md)
+- Check: verifier, `diff -r` source against generated at 5cd8646: pass (3 changed lines, each a cn-* line: picker-popup.tsx:101, picker-trigger.tsx:47, day-range-picker.tsx:248, values as the nova style; no other line; no cn-* class left in generated)
+- Check: verifier install proof, fresh `create-next-app --no-src-dir --import-alias "#app/*"`, `shadcn init -b base -p nova` (style base-nova, aliases `#app/components`, `#app/hooks`), `shadcn add anindosarker/shadcn-date-picker/date-picker-base#5cd864659c62be510469eca996d9a56adbe218c3` at 5cd8646: pass (22 files, every local import `#app/components/ui/*` or `#app/hooks/use-mobile`, no `@/` left; only import lines differ from generated; `tsc --noEmit` exit 0, `next build` exit 0 with a page of single and range `presentation="auto"` pickers)
+- Check: verifier, playwright chromium 390x844 against `next start` :5343, range picker dialog at 5cd8646: pass (close button position absolute, top 8px right 8px, 8 from the dialog's top and right edge, 28 wide; range field grid column-gap 8px, row-gap 8px); server stopped, scratch app deleted
+- Check: verifier, README.md and registry/README.md at 5cd8646: pass (install command kept, nova values named for the three places; registry/README.md describes the generated folder)
 
 - Task 1 the mechanism: done (tracker only, no repository commit)
 - Task 2 the generated install files: done (ea68420)
