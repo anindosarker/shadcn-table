@@ -29,10 +29,16 @@ Checks:
 - Check (verifier): case table at cd48b75: fail (111 lines, every covered line names a play that runs the case; seven "not covered" lines give no reason a play cannot cover the case on Chromium: D8, R9, R13, R16, P13, PR8, P17)
 - Check (verifier): vercel.json, ci.yml, site output at cd48b75: pass (install, build, output as 1.6.6, no deploymentEnabled; one job, push to main and pull_request; `storybook-static/base/index.html`, `version.txt` 0.1.0, no radix or aria, landing links `./base/` only)
 - Check (verifier): right to left at cd48b75: pass (24 lines; 8 screenshots committed for the 8 non-clean lines, none for clean; no rtl file in stories, .storybook, .github; nothing listens on 5340 to 5360)
+- Check: `pnpm test` at 1f87b05: pass (7 files, 39 plays)
+- Check: new real-key steps run, R13 and R16 each with one expectation changed on purpose, `vitest run` of Date and DateTime at 1f87b05: fail as meant (2 failed), files restored
+- Check: `pnpm lint`, `pnpm exec tsc -p tsconfig.stories.json`, `pnpm storybook:build` at 1f87b05: pass
+- Check: `git diff --stat origin/main -- registry package.json pnpm-lock.yaml` at 1f87b05: pass (prints nothing)
+- Check: case table at 1f87b05: pass (D8, R9, R13, R16, P13, PR8, P17 now name a play)
 
 - Task 1 Vite, Vitest and Storybook on `DP_BASE`, seven story files: done (69a66a2)
 - Task 2 plays and the case table: done (69a66a2, 59de146)
 - Task 3 site build, Introduction.mdx, vercel.json, CI workflow: done (cd48b75)
+- Fix: plays for D8, R9, R13 (F5), R16, P13, PR8, P17: done (1f87b05)
 - Task 4 right-to-left look: done (e931cf5c in the table repository; no change in the date picker repository)
 
 ## Notes
@@ -66,7 +72,7 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - D5: Types/Date Single "D5, G1"
 - D6: Options Limits "D6"
 - D7: Types/Date Single (1900 to 2100), Options Limits "D7" (a side with a limit ends at it), Types/Year Single "P10" (1443 opens its decade)
-- D8: not covered: no story sets only a `max` before 1900 or only a `min` after 2100
+- D8: Options MaxBeforeList "D8" (1800 to 1850), Options MinAfterList "D8" (2250 to 2300)
 - D9: Options Presets "D9"
 - D10: Types/Date Single "D10"
 - D11: Options Limits "D11"
@@ -103,14 +109,14 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - R6: Types/Date Range "R6, R7"
 - R7: Types/Date Range "R7, R11" and "R6, R7"
 - R8: Types/DateTime Range "R8"
-- R9: not covered: no date-time range story sets limits; the rule is the one of DT5 (Options DateTimeLimits)
+- R9: Options DateTimeRangeLimits "R9" (min's day 09:10, max's day 17:00)
 - R10: Types/Date Range "R10"
 - R11: Types/Date Range "R7, R11"
 - R12: Types/Date Range "R12, R14" (Vitest only)
-- R13: not covered: 9.3.4 F5 replaced it (the list follows every digit); no play types a far year into a range end
+- R13: Types/Date Range "R13, F5" (Vitest only; 9.3.4 F5 applies: the value at every digit 0001, 0014, 0144, 1443, year list from 1400 with focus still in the box, the first click on a day picks, one call)
 - R14: Types/Date Range "R12, R14" (Vitest only)
 - R15: Types/Date Range "R15" (Vitest only), Options PhoneLayout "R15" (Tab box to box, no swap)
-- R16: not covered: the swap as a date-time range end's clock opens needs a typed reversed date-time pair; not written
+- R16: Types/DateTime Range "R16" (Vitest only; typed reversed pair ordered once as To's clock opens, the hour then replaces the time of the end To's box holds)
 - R17: Types/Date Range "R17"
 - R18: Options RangePresets "R18"
 - R19: not covered: 9.3.2 N3 and N11, the picker marks nothing
@@ -127,11 +133,11 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - P10: Types/Year Single "P10"
 - P11: Types/Year Single "P11"
 - P12: Options MonthLimits "P12"
-- P13: not covered: no story has a year outside the year list but inside the limits
+- P13: Options YearOutsideList "P13" (min 2000, 2105 in the 2100 decade enabled and picked)
 - P14: Types/Month Single "P14"
 - P15: not covered: 9.1 M5, 9.2 W5 and 9.3.2 N3 replace it; nothing is drawn
 - P16: Options TriggerName "P16" (range trigger); one value: Options InputAttributes (B10, M13, W13)
-- P17: not covered for week, month and year: the same preset row as D9 (Options Presets)
+- P17: Options Presets "D9" (date), Options WeekPresets, MonthPresets, YearPresets "P17"
 - P18: not covered by a play: text direction is the right-to-left look below (D167)
 - PR1: Types/Week Range, Types/Month Range, Types/Year Range "PR1"
 - PR2: Types/Week Range "WR1", Types/Month Range "MR1, PR9" (9.1 MR1 and 9.2 WR1 replace PR2)
@@ -140,7 +146,7 @@ Plays run in Vitest browser mode, Chromium. "Vitest only": the step types real k
 - PR5: Types/Week Range "PR5", Types/Month Range "PR5", Types/Year Range "PR4, PR5"
 - PR6: Types/Week Range "PR6"
 - PR7: Types/Week Range "PR4, PR7", Types/Month Range "PR4, PR7"
-- PR8: not covered: no story opens a period range with only To set
+- PR8: Types/Week Range "PR8" (From cleared, closed, reopened: To's calendar on October, From's on September)
 - PR9: Types/Month Range "MR1, PR9" and "PR9", Types/Year Range "PR3, PR9"
 - PR10: Types/Year Range "PR10"
 - PR11: Types/Year Range "PR11"
