@@ -12,6 +12,8 @@ kanban-plugin: basic
 	- K2. picker-popup.tsx:77,141 and types.ts:154 wait on both bases: Base UI actionsRef has no Radix or React Aria equal. Options: 1 one open state and useImperativeHandle inside picker-popup.tsx (recommended by the plan; one state the Base UI code does not have); 2 React Aria panels read OverlayTriggerStateContext, three more files differ; 3 a hidden Close button clicked from code; 4 no close on a pick (cases D4, P3, P6, P11, M10, W10 differ). Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K2.
 - [ ] **Q156** On Radix and React Aria the month arrow at the end of the list cannot stay reachable by Tab with the stock button
 	- K3. components/view-nav.tsx:25-26 waits on both bases: Base UI focusableWhenDisabled has no stock equal. Options: 1 aria-disabled in place of disabled and no click handler while disabled, case D11 holds (recommended by the plan; one condition the Base UI code does not have); 2 plain disabled, the arrow leaves the tab order at the end, D11 differs. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K3.
+- [ ] **Q157** In the Radix date picker Tab goes round inside the popup and does not close it
+	- K4. Stock Radix popover: focus scope always loops (@radix-ui/react-popover 1.3.1 index.mjs:257-261); case U2 says Tab past the last control closes. Also on touch Radix focuses the first control, Base UI the popup. Options: 1 keep stock Radix and name both differences (recommended by the plan); 2 own key handler and onOpenAutoFocus, code the Base UI version does not have. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K4.
 
 ## Decided
 
