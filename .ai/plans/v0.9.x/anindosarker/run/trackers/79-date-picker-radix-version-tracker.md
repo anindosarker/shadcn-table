@@ -28,6 +28,7 @@ Checks:
 - Task 2 differing files: done (d5880df)
 - Reader task 2 at d5880df4992ee5587ba74bfcc7d884fa239d947c: no deviation
 - Task 3 item definition and plays: done (5224ac3 item, generated install files and README; 132d291 merge of origin/main with the stories fix 78.2, every play passes)
+- Reader task 3 at 132d291a669bdc3e719593de16faa9501e489a1d: no deviation (note: item dependencies hold no radix-ui, correct by derivation: plan 3.1 removes the only primitive import and no Radix picker file imports radix-ui; registry.ts is unchanged against origin/main, the item was already there)
 
 ## Notes
 
