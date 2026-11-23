@@ -13,13 +13,60 @@ Date: 2026-11-23. Status: the owner gave these points. The decision is not recor
 ## 2. Source of the code
 
 - Folder: `test-projects/next-app/components/date-picker/` in the workspace `React-table`.
-- Version: 9.3.6. The folder has 22 files.
-- Parts: `date-picker.tsx` (the component), `types.ts`, `modes/`, `components/`, `utils/`.
-- The owner approved this code. Copy it into the library. Do not change the code, the file names or the folder names.
+- Version: 9.3.6. Commit in the test application: `53f4b4f`. The folder has 22 files.
+- The owner approved this code.
 - The component is `<DatePicker type="date|datetime|time|week|month|year" range? />`.
-- The code uses these parts: shadcn components on Base UI, `react-day-picker` and `date-fns`.
 - The code has no import from the table.
 - The history of the picker is in `reference/q88-date-filter-demo/review-notes.md`.
+
+### 2.1 The exact-copy rule
+
+- The Base UI version of the library must be EXACTLY the approved code.
+- Copy each of the 22 files. Do not change a line of code, a comment, a file name or a folder name.
+- Do not add a file to the folder. Do not remove a file. Do not move a file.
+- Only one change is permitted: an import path, when the library has a different path for the same part.
+- Proof: `diff -r` between the approved folder and the library folder shows import paths only.
+- A necessary change to the code is a decision of the owner. An agent does not make this change.
+
+### 2.2 Code structure
+
+```
+date-picker/
+  date-picker.tsx              the DatePicker component; it selects the mode for `type` and `range`
+  types.ts                     the public types, and the types that two or more files use
+  modes/                       one file for each kind of picker
+    day-picker.tsx             date and date-time
+    day-range-picker.tsx       date range and date-time range
+    period-picker.tsx          week, month and year
+    period-range-picker.tsx    week range, month range and year range
+    time-range-picker.tsx      time range
+  components/                  the parts that the modes use
+    day-calendar.tsx           the day calendar, on the stock shadcn Calendar
+    period-views.tsx           the week calendar, the month grid and the year grid
+    picker-box.tsx             a typed box with a button that opens a popover
+    picker-field.tsx           the browser input for one value
+    picker-popup.tsx           the popover, or the dialog on a phone
+    picker-presets.tsx         the list of presets
+    picker-trigger.tsx         the button that shows a range and opens the popover
+    time-columns.tsx           the clock lists
+    time-field.tsx             the time box with its clock
+    view-nav.tsx               the previous, Today and next buttons
+  utils/                       functions without React components
+    labels.ts                  the default labels and the labels context
+    range.ts                   functions for the two ends of a range
+    time.ts                    functions for times, limits and steps
+    values.ts                  functions that read and write value strings
+    views.ts                   functions for the months and years that a calendar shows
+```
+
+- A single time picker uses `components/time-field.tsx`. It has no file in `modes/`.
+
+### 2.3 Parts that the code imports
+
+- shadcn parts: `badge`, `button`, `button-group`, `calendar`, `dialog`, `field`, `input-group`, `native-select`, `popover`.
+- The hook `use-mobile` of shadcn.
+- The `cn` function.
+- npm packages: `react`, `react-day-picker`, `date-fns`, `lucide-react`, `@base-ui/react`.
 
 ## 3. Rules that the owner made for the picker
 
@@ -52,7 +99,8 @@ apps/
 ## 5. Versions for the three base libraries
 
 - The table has three versions: Base UI, Radix and React Aria. The calendar library gets the same three versions.
-- The Base UI version is the code from section 2.
+- The Base UI version is the code from section 2. The exact-copy rule of section 2.1 applies.
+- The Radix version and the React Aria version use the same folder structure and the same file names as section 2.2.
 - The Radix version and the React Aria version are new work. Each version must have the same behaviour and the same appearance as the Base UI version.
 - The Base UI version is the reference for the tests of the other two versions.
 
@@ -91,13 +139,13 @@ pnpm dlx shadcn@latest add @shadcn-table/date-picker
 
 ## 9. Open points
 
-| Point | Status |
-|---|---|
-| Name of the registry item (`date-picker` or `calendar`) | Not decided |
-| Address of the calendar documentation site | Not decided |
-| Width of the date-time range popover in Chrome (540 px now, 492 px before) | Not decided |
-| A year of five digits in Safari | Not tested in Safari |
-| Desktop Safari, iPhone, right-to-left pages | Not tested |
+| Point                                                                      | Status               |
+| -------------------------------------------------------------------------- | -------------------- |
+| Name of the registry item (`date-picker` or `calendar`)                | Not decided          |
+| Address of the calendar documentation site                                 | Not decided          |
+| Width of the date-time range popover in Chrome (540 px now, 492 px before) | Not decided          |
+| A year of five digits in Safari                                            | Not tested in Safari |
+| Desktop Safari, iPhone, right-to-left pages                                | Not tested           |
 
 ## 10. Facts that are not examined yet
 
