@@ -4,7 +4,13 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D162** The date picker becomes its own small library in its own repository #R6
+- [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
+	- Supersedes D93.
+	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
+
+## In progress
+
+- [ ] **D162** The date picker becomes its own small library in its own repository #E25 #R6
 	- The calendar library lives in a new repository, not in the table repository: `reference/q149-calendar-library/report.md` stands except sections 4, 6 and 7 (folders, distribution, the later move), which this decision replaces. The table repository gets no calendar folder.
 	- Base UI version: the approved picker, exact copy of `test-projects/next-app/components/date-picker/` (22 files, version 9.3.6, commit `53f4b4f`); only an import path may differ, proven by `diff -r`; any other change is the owner's (report 2.1). Radix and React Aria versions are new work with the same files and names, the same look and behaviour, tested against the Base UI version.
 	- The owner's picker rules of report section 3 hold in every version.
@@ -14,21 +20,16 @@ kanban-plugin: basic
 	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
 	- Table v1 comes first; the calendar work never delays it.
 	- Source: Q149
-- [ ] **D163** The date picker library is named shadcn-date-picker everywhere #R6
+- [ ] **D163** The date picker library is named shadcn-date-picker everywhere #E25 #R6
 	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
 	- Source: Q150
-- [ ] **D164** The table's date filters use the date picker library, all three bases together #R6
+- [ ] **D164** The table's date filters use the date picker library, all three bases together #E25 #R6
 	- Supersedes D96.
 	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
 	- Source: Q88
-- [ ] **D165** The is-empty reset fix lands with the table's date picker switch #R6
-	- Supersedes D93.
-	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
-- [ ] **D167** The date picker gets one right-to-left look; Safari and iPhone are the owner's tests #R6
+- [ ] **D167** The date picker gets one right-to-left look; Safari and iPhone are the owner's tests #E25 #R6
 	- Desktop Safari and iPhone are tested by the owner, look and feel accepted (2026-11-24); no agent re-tests them. Right-to-left: one manual look, once, on the Base UI picker in the new repository (each mode opened on a dir=rtl page, screenshots); a broken thing becomes a card with its screenshot, a clean result one line in the tracker. No CI job and no test is added for it. The five-digit year in Safari is left alone.
 	- Source: Q152
-
-## In progress
 
 ## Done
 

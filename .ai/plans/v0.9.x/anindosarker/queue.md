@@ -341,12 +341,12 @@ kanban-plugin: basic
 	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
 - [x] **Q147** PostHog reports the docs site's analytics SDK as outdated #D159
 - [x] **Q148** The docs site does not set PostHog's dated defaults option that the install guide now sets #D161
-- [ ] **Q149** Where the date picker lives: its own package and docs site #D162
+- [x] **Q149** Where the date picker lives: its own package and docs site #D162 #E25
 	- Today the picker exists only in the demo app (test-projects/next-app/components/date-picker, version 9.3.6); the library has no date picker, so the table's date filter cannot use it and nobody can install it.
 	- Owner's points of 2026-11-23, not yet a decision: own package packages/shadcn-calendar and docs app apps/shadcn-calendar-docs in this repo; the Base UI version is the test app's components/date-picker (9.3.6), used unchanged; Radix and React Aria versions to be built; served from the table registry under @shadcn-table for now. Report: reference/q149-calendar-library/report.md.
 	- Lookup 2026-11-24: same repo needs 22 places changed (registry build, test runner, release tools, workflows, vercel.json) and the current build cannot serve calendar items under @shadcn-table; a separate repo recreates 11 pieces in full, about 4 when thin; a cross-repo dependency is a supported form (owner/repo/item#tag, the form the table's core items use), no directory listing needed; either way this repo needs the import mapping at tools/registry/lib.mjs:116 and one dependency per base. Owner, 2026-11-24: the calendar only needs thin Storybook and CI; 'Separate repo is fine by me.' Not recorded yet.
-- [ ] **Q150** The calendar library has no repository name, item name or subdomain yet #D163
-- [ ] **Q88** Date filters use the browser's date boxes instead of shadcn's date picker #D164
+- [x] **Q150** The calendar library has no repository name, item name or subdomain yet #D163 #E25
+- [x] **Q88** Date filters use the browser's date boxes instead of shadcn's date picker #D164 #E25
 	- Owner, 2026-11-14: 'Did we invent a date picker for ourselves instead of using the shadcn one?', pointing at https://ui.shadcn.com/docs/components/base/date-picker#input (the Input variant). Today: native input type date, datetime-local and time in ST_FilterTextField.tsx (base :595-609, radix :596-610, aria :661-675). Related: Q84, a native-input caret problem.
 	- Owner, 2026-11-14: 'Of course, we are gonna use shadcn date picker.' Direction set; the open parts are what the lookup finds: ranges, time and date-time filters, the React Aria base, new dependencies.
 	- Owner, 2026-11-14: 'We are gonna use shadcn input and shadcn date picker wherever it's relevant.' Scope is every place the library renders its own input or date control, not only the date filters.
@@ -375,7 +375,7 @@ kanban-plugin: basic
 	- Independent check of the fix cards, 3 rounds (look and behaviour checkers): round 1 found 1 blocker (mid-typing swap stored a wrong range), fixed with 10 more items; round 2 fixed 7 more; round 3 check only. Open after round 3: 0 blocker, 3 major, 5 minor. Report: .ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/audit-3.md.
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [x] **Q151** The date-time range popover is wider in Chrome than before #D166
-- [ ] **Q152** The date picker is untested in Safari, on an iPhone and on right-to-left pages #D167
+- [x] **Q152** The date picker is untested in Safari, on an iPhone and on right-to-left pages #D167 #E25
 
 ## Later
 
