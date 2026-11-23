@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q153** The date picker install keeps @/ import paths as written, so an app with other import aliases gets broken imports
 	- shadcn-date-picker registry/base/registry.ts: the 22 item files are type registry:file (written as is). As registry:component the shadcn CLI dropped the cn-* classes at picker-popup.tsx:101, picker-trigger.tsx:47, day-range-picker.tsx:248, so the installed files no longer equalled the approved code. Cost of registry:file: the CLI does not rewrite @/components/ui and @/hooks imports for a project whose aliases differ. Found by the builder of spec 78; tracker 78-date-picker-repository.
+- [ ] **Q154** The React Aria date picker needs a day calendar, and the React Aria style ships a different calendar than the approved one
+	- K1. registry/aria/components/date-picker/components/day-calendar.tsx waits. aria-nova calendar is the React Aria calendar (no native select, fixed header, no week numbers), not react-day-picker. Options: 1 the file uses react-day-picker directly and carries about 150 lines of the stock part (recommended by the plan, keeps native select and the public types); 2 the react-day-picker part replaces components/ui/calendar.tsx in the aria tree; 3 rewrite on the React Aria calendar, look and behaviour differ. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K1; plan reference/q149-calendar-library/design-radix-aria.md section 4.
 
 ## Decided
 
