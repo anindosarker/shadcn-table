@@ -197,6 +197,14 @@ One private package at the repository root; no workspace, no turbo. Dependency v
 - Task 3: The site build, `Introduction.mdx`, `vercel.json` and the CI workflow (1.6.6). Checks: `pnpm storybook:build` exits 0 and writes `storybook-static/index.html`, `storybook-static/base/index.html` and `storybook-static/version.txt` (`0.1.0`); `storybook-static/radix` and `storybook-static/aria` do not exist; the landing page links to `./base/` only; `act push -W .github/workflows/ci.yml` ends green, the line in the tracker with what `act` could not reproduce; `grep -c deploymentEnabled vercel.json` prints `0`
 - Task 4: The right-to-left look (1.6.7, D167). Checks: one tracker line per story and width (24 lines) with `clean` or the card id; a screenshot committed under `reference/q149-calendar-library/rtl/` for every card and for no clean line; `git diff --stat origin/main -- stories .storybook .github` shows no file that names `rtl`; the Storybook server stopped
 
+### Milestone: Date picker installs through the CLI rewriting
+
+- Files owned: `shadcn-date-picker/registry/base/registry.ts`, `shadcn-date-picker/registry/base/registry.json`, `shadcn-date-picker/registry/radix/registry.ts`, `shadcn-date-picker/registry/aria/registry.ts`, `shadcn-date-picker/tools/registry-build.mjs`, `shadcn-date-picker/registry/README.md`, `shadcn-date-picker/README.md`
+- Depends on: Date picker repository, Date picker Radix version, Date picker React Aria version, Date picker first tag
+- Review: none
+- Starts: S38
+- Task 1: Date picker installs through the CLI rewriting. Checks: pnpm lint, pnpm typecheck, pnpm registry:check; install proof in a fresh base-nova app with other import aliases: imports resolve, tsc and next build pass, the dialog close button, field and button group styled as in the approved app (D172)
+
 ### 2.2 Checks
 
 - Date picker repository: the `diff -r` of the exact copy printing nothing, 22 files, lint, types and the registry check green, the install proof lines at the pushed sha
