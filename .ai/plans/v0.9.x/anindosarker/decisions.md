@@ -5,6 +5,13 @@ kanban-plugin: basic
 ## To do
 
 - [ ] **D162** The date picker becomes its own small library in its own repository #R6
+	- The calendar library lives in a new repository, not in the table repository: `reference/q149-calendar-library/report.md` stands except sections 4, 6 and 7 (folders, distribution, the later move), which this decision replaces. The table repository gets no calendar folder.
+	- Base UI version: the approved picker, exact copy of `test-projects/next-app/components/date-picker/` (22 files, version 9.3.6, commit `53f4b4f`); only an import path may differ, proven by `diff -r`; any other change is the owner's (report 2.1). Radix and React Aria versions are new work with the same files and names, the same look and behaviour, tested against the Base UI version.
+	- The owner's picker rules of report section 3 hold in every version.
+	- Thin tooling: a small registry build, types and lint, Storybook stories with tests. No installation tests, no perf checks, no visual captures.
+	- Users install it with the shadcn CLI by GitHub address (`owner/repo/item`), the form the table's core items use; an entry in shadcn's registry directory is optional and later.
+	- The table depends on it per base at a tag; in the table repository that is the import mapping of `tools/registry/lib.mjs` and one dependency per base.
+	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
 	- Table v1 comes first; the calendar work never delays it.
 	- Source: Q149
 
