@@ -1,6 +1,6 @@
 # 80: Date picker first tag, tracker
 
-Status: waiting (lead: Q163, the site does not serve main: Vercel production branch)
+Status: running
 Branch `date-picker-first-tag` (removed after task 4: worktree, local and remote branch deleted; clone on main 908300d)
 Checks:
 - Check: README tag count, `grep -c '#v0.1.0' README.md` at e27727e: pass (3)
@@ -53,3 +53,4 @@ Checks:
 ## Attention
 
 - The site date-picker.shadcn-table.com does not show the library because Vercel treats main as a preview; the project's production branch has to be set to main (Q163).
+- RESUME 80 from the lead, 2026-11-24: Q163 fixed (Vercel production branch is main, the site answers 200, version.txt 0.1.0). D174: two README lines under React Aria, then the live reads.
