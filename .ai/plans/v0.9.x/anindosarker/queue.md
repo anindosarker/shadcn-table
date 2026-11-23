@@ -38,6 +38,7 @@ kanban-plugin: basic
 	- Open, need owner choice: 4.J closed trigger cuts off the To time in a 12 hour locale (two-line trigger, drop :00, or time only when chosen); swap timing: reversed range stays while focus is in the box, and the other box's X or clock acts on the swapped value. Open minor: time picker scroll thumb (originals too), Firefox half-typed year, triple click under calendar, lost click after one-digit year, typed date with no time. Accepted: Firefox icon, 1 px narrower boxes, year 0000, 5.D half-typed hour, Base UI empty Tab stops, seconds in values, iOS, Android, screen reader not verified.
 - [ ] **Q149** Where the date picker lives: its own package and docs site
 	- Today the picker exists only in the demo app (test-projects/next-app/components/date-picker, version 9.3.6); the library has no date picker, so the table's date filter cannot use it and nobody can install it.
+	- Owner's points of 2026-11-23, not yet a decision: own package packages/shadcn-calendar and docs app apps/shadcn-calendar-docs in this repo; the Base UI version is the test app's components/date-picker (9.3.6), used unchanged; Radix and React Aria versions to be built; served from the table registry under @shadcn-table for now. Report: reference/q149-calendar-library/report.md.
 
 ## Decided
 
