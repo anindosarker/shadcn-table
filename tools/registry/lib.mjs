@@ -48,6 +48,21 @@ const itemAddress = (item) =>
     ? `${process.env.REGISTRY_BASE_URL ?? 'http://localhost:5310/r'}/${item}.json`
     : `${GITHUB_REPO}/${item}`;
 
+// The date picker the library imports from `@/components/date-picker/`: one
+// item per base in anindosarker/shadcn-date-picker, pinned to one tag. A new
+// tag is this line plus `pnpm add-date-picker <base>` on every base.
+export const DATE_PICKER_REPO = 'anindosarker/shadcn-date-picker';
+export const DATE_PICKER_TAG = 'v0.1.0';
+
+/**
+ * The address of a base's date picker item at DATE_PICKER_TAG, the same in
+ * the plain build and under `--dev` (the dev server serves the table only).
+ *
+ * @param {string} base
+ */
+export const datePickerItemAddress = (base) =>
+  `${DATE_PICKER_REPO}/${baseItemName('date-picker', base)}#${DATE_PICKER_TAG}`;
+
 /**
  * The address of a base's core item, `shadcn-table-<base>-core`, in the form
  * registryDependencies take: the GitHub item address, or the local server URL
