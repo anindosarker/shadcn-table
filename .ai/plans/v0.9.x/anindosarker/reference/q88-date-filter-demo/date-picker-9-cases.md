@@ -279,6 +279,21 @@ Owner decision 2026-11-23: the picker shows no message and marks nothing invalid
 
 Run on the 9.3.2 cards. Chromium at 1280 by 800: N1 (date, time), N2, N3 (date, month), N6, N7 and N11 show no `role="alert"` and no `aria-invalid`; N1 (date, time), N3 (month), N7 and N11 were run beside the 9.3.1 card, which shows both, with the same value line. Firefox, cards 7, 8, 9 and 10: N8, N9, N10 and N14, with the value and calls lines of the 9.3.1 run. N4, N5 and N12 are read in the code, not run.
 
+### 2.16 9.3.4: allowed differences from 9.3.3
+
+Owner, 2026-11-23: every own rule the platform already covers is dropped. Version 9.3.4 only (`components/date-picker-9-3-4`, the cards "Full version, fewer own rules"). The cases above are not rewritten: where a row describes one of the rules below, 9.3.4 does what this table says.
+
+| # | State | 9.3.3 | 9.3.4 | Value line | Cases |
+|---|---|---|---|---|---|
+| F1 | A year of five digits or more typed in a date, date-time, week or month box | Chromium and Firefox: cannot be typed, the box stops at four digits (`max` is `9999-12-31` and the like). WebKit: the box takes it and the browser flags it; the picker passes nothing on | Chromium and Firefox: the same. WebKit: the browser flags it and the value is passed on | Chromium `01 01 123456`: `"3456-01-01"` on both. WebKit `03 15 12027`: 9.3.3 `"1202-03-15"` (the first four digits), 9.3.4 `"12027-03-15"`, one call more | B5, N5 |
+| F2 | The year box | has the `title` "Four digits, for example 2026" (a tooltip on hover) | no `title`; the placeholder `yyyy`, `maxLength` 4 and the pattern are as before | unchanged | P8, N2 |
+| F3 | A calendar in a popover (date, date-time, week and their ranges) | our own row spacing: month gap 0.4 and week margin 0.2 of the cell size (11.2 px and 5.6 px at a 28 px cell) | the stock Calendar's spacing (16 px and 8 px): the calendar and its popup are 19.25 px taller; 6.5 px taller in the date-time range, whose cell is 36 px. The phone dialog is unchanged | unchanged | - |
+| F4 | iOS: the Time field of the date-time popup, empty and disabled (no date yet) | the overlay text "Select time" | no overlay; a blank box, as the time picker's and the time range's boxes | unchanged | B9 |
+| F5 | A year is typed digit by digit over a date or date-time range end (`1443` over 2026) | while the box has focus the year list stays 1900 to 2100 and that end's calendar is held on January 1900; it shows the typed year when the box is left | the calendar and the year list follow the value at every digit (years 0001, 0014, 0144, 1443); nothing changes when the box is left | unchanged: the same pairs, the same number of calls | R13 |
+| F6 | The same over a week or month range end | as F5: the calendar or grid is held on 1900 until the box is left | as F5: the calendar or grid follows the typed years | unchanged | MR4, WR4 |
+
+Run on the 9.3.3 and 9.3.4 cards, Chromium at 1280 by 800: F1 (rows 1, 3, 7, 9), F2, F3 (rows 1, 2, 3, 4, 7, 8; phone dialog at 390 by 844, rows 1, 2, 4, 8), F5 (rows 2, 4), F6 (rows 8, 10). F1 also in Playwright's WebKit (rows 1, 2, 3). F4 is read in the markup (the overlay `span` is there on 9.3.3 and not on 9.3.4), not seen on an iPhone.
+
 ## 12. Implementation steps
 
 Each step is one commit in the `test-projects/next-app` repo (message `date picker 9: step N <name>`, staged by explicit path, no push; step 6 is two commits, as its row says). Each step ends with: the three checks of section 10 clean; then a reader with no history reviews the step's diff against this plan and the bar, and its findings are fixed, before the next step starts.

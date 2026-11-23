@@ -213,6 +213,7 @@ Not props, never to be added: `open`, `defaultOpen`, `onOpenChange` at the top l
 - Version 9.2 has 47 keys too: `week` is added (the week box's noun, "Week"), `pickWeek` is removed (the week trigger is gone). `weekValue` stays: the week range's trigger writes its two ends with it.
 - Version 9.3.1 has 48 keys: `invalidValue` is added (the message for a week or month that does not exist).
 - Version 9.3.2 has 45 keys: `invalidValue`, `yearMin` and `yearMax` are removed with the picker's own message. `yearFormat` stays: it is the `title` of the year box's pattern.
+- Version 9.3.4 has 44 keys: `yearFormat` is removed with the year box's `title`.
 - Default texts are 7.4's, unchanged (the visible text is frozen: `pickDateRange` stays "Pick a date").
 - Against 7.4: `today` is now `goToToday`, `period` is now `amPm` (8.8); new `date` "Date" and `dateTime` "Date and time" (the box's noun, 7.1); new `decade`, default `first`, space, en dash, space, `last` as 7.4 draws it (10.6); gone `value`, `none`, `pickerValue`, `pickDateFirst`.
 
@@ -623,6 +624,8 @@ onClose={() => onChange(orderRange(value, times))}
 
 Version 9.3.2 (no own message): 8 states, 1 effect, 10 refs, 2 contexts. Effect 8 (re-read validity) and ref 10 (`inputRef`) are gone with the message. State 1, `draft`, holds `text`, `value` and `filled` (the box holds a text, or typed parts the browser reads as `""`, told by `validity.badInput`); `message` and `left` are gone. The X and the iOS placeholder read `filled`. A draft whose `value` is no longer the picker's is set to `null` in render, so it cannot come back when the old value returns: the job effect 8 did. The box is still read when it is left, because a first part typed into an empty date box sends no change. `LabelsContext` (row 21) holds 45 words.
 
+Version 9.3.4 (fewer own rules): 6 states, 1 effect, 10 refs, 2 contexts. States 5 and 9.1 (`typing`) are gone from both range panels: the year list is worked out from the value on every render, so a `leaveBox` clears nothing and a typed end calls `changeAndShow` alone (sections 5.4, 5.6 and 5.8 describe the older versions). `read` in `picker-field.tsx` no longer refuses a year of five digits. `LabelsContext` (row 21) holds 44 words.
+
 | # | Kind | Name | File | Holds | Why it is needed | Stock mechanism considered |
 |---|---|---|---|---|---|---|
 | 1 | state | `draft` | `picker-field.tsx` | text the box holds that is not a storable value; the picker's value while the box holds it (`value`: the typed value, `""` for half-typed text, the unchanged value when nothing is passed on, B5); the browser's message; whether the box was left since (`left`) | a half-typed date reads `""` in the DOM and the message exists only on request; React has to draw the X, the red mark and the message (B2, B3, B6). A draft counts only while its `value` is the picker's value: that one comparison, where the draft is read, is what drops a stale draft; there is no reset | CSS `:user-invalid` (no message text, no X); the browser's validation bubble (forms only) |
@@ -714,6 +717,7 @@ Not in the table because they do not exist: an open state of our own, a copy of 
 | 4 | `calendarClassNames.today` | 7.4 `:67`, first five utilities. The first four are the stock class (`ui/calendar.tsx:122`); the fifth, `data-[selected=true]:bg-transparent`, is the override | a selected today shows the selection, not a muted square behind it | call 8 (5.7) |
 | 5 | `calendarClassNames.outside` | 7.4 `:71-73` | an end in an other-month day shows in both calendars of a range; dimmed there | 1.9, look frozen (call 9) |
 | 6 | `calendarClassNames.month`, `.week` | `gap-[calc(var(--cell-size)*0.4)]`, `mt-[calc(var(--cell-size)*0.2)]` | 7.4's row spacing, tied to the stock cell size; stock spacing makes every calendar 0.8rem taller | 10.4, look frozen (call 9) |
+| 6, version 9.3.4 | - | none: the stock `gap-4` and `mt-2` | the override is gone; a calendar in a popover is 19.25 px taller at the 28 px cell (6.5 px at the date-time range's 36 px cell), measured in Chromium. Row 7's `month` and `week` are written out in full, same classes | owner 2026-11-23, own rules questioned |
 | 7 | `fillClassNames` (phone dialog) | root `w-full`; `week_number_header` `flex-1`; `months` `flex-1 gap-0`; `month` `flex-1 gap-1`; `month_grid`, `weeks` `flex flex-1 flex-col`; `week` `mt-0 min-h-9 flex-1 *:flex *:aspect-auto *:h-auto *:flex-1 *:items-center *:justify-center *:rounded-none`; `today` `not-data-[selected=true]:bg-transparent not-data-[selected=true]:*:bg-muted` | the calendar stretches to fill the phone screen; rows keep a height a finger can hit; today's shade moves to the button so a wide cell is not a muted bar | owner-approved dialog |
 | 8 | `DayCalendar` root, phone dialog | `[--cell-size:--spacing(9)]` | cells large enough to tap, through the stock variable | call 8 (10.1) |
 | 9 | `bandClassNames.range_start`, `.range_end` | 7.4 `range-mode.tsx:80-81, 92-101` | the stock band is off-centre in a cell wider than the day | audit 12 kept |
@@ -768,6 +772,7 @@ Never, each drawn from a finding kind of audit 7:
 - `type="button"` on a Base UI button; a `data-slot` of our own; a selector on a stock slot outside section 9.
 - A fix for one browser applied to all, except the approved iOS overlay and the rows of section 9 that say so.
 - A `title` tooltip as a hint, except `yearFormat` on the year box and the Today button (both 7.4).
+  - Version 9.3.4: the year box has no `title`; the Today button keeps its own.
 - A ternary nested in a ternary; a parameter that shadows an import; two names for one thing.
 
 ## 11. How each audit 7 finding is designed out
@@ -805,8 +810,10 @@ Deliberately not addressed, and why:
 | 6.12 | an open `auto` picker closes when the window crosses 768 | accepted and documented (call 8) |
 | 8.6 (rule) | only period triggers turn red | call 9 |
 | 8.7 | the iOS placeholder stays on the boxes that have it | call 9 |
+| 8.7, version 9.3.4 | the Time field of the date-time popup passes no placeholder: no time box has the iOS overlay; the date and date-time boxes keep it | owner 2026-11-23, own rules questioned |
 | 8.8 (texts) | "Pick a date", "Select date", "Pick a week" | visible text frozen (call 9) |
 | 10.4 | two bracket lengths in the calendar's spacing | look frozen (call 9) |
+| 10.4, version 9.3.4 | removed: the stock spacing applies | owner 2026-11-23, own rules questioned |
 
 ## Review notes
 
