@@ -13,8 +13,8 @@ import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar
 
 /**
  * The chips mode value editor's width: 260 px, or 308 px for a range of two
- * date, datetime or time fields, which keep a 140 px minimum each (126 px of
- * native placeholder), so both fit beside the 8 px gap and the 10 px padding.
+ * date, datetime or time fields, which keep a 140 px minimum each, so both
+ * fit beside the 8 px gap and the 10 px padding.
  */
 export const filterEditorClassName = <TData extends ST_RowData>(
   column: ST_Column<TData>,
@@ -56,14 +56,15 @@ export const useFocusFilterInputOnMount = <TData extends ST_RowData>(
  * The filter inputs and the select trigger stop Escape from bubbling to the
  * popover's dismiss handler, so an Escape on one of them closes the editor in
  * the capture phase; while the control's own list is open, the Escape is the
- * list's.
+ * list's, and an Escape in a popup the editor's field opened is the popup's.
  */
 export const closeOnEscape =
   (close: () => void) => (event: KeyboardEvent<HTMLElement>) => {
-    const { key, target } = event;
+    const { currentTarget, key, target } = event;
     if (
       key === 'Escape' &&
       target instanceof HTMLElement &&
+      currentTarget.contains(target) &&
       (target instanceof HTMLInputElement ||
         target.dataset.slot === 'select-trigger') &&
       target.getAttribute('aria-expanded') !== 'true'

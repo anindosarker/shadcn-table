@@ -16,8 +16,8 @@ import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuA
 
 /**
  * The chips mode value editor's width: 260 px, or 308 px for a range of two
- * date, datetime or time fields, which keep a 140 px minimum each (126 px of
- * native placeholder), so both fit beside the 8 px gap and the 10 px padding.
+ * date, datetime or time fields, which keep a 140 px minimum each, so both
+ * fit beside the 8 px gap and the 10 px padding.
  */
 export const filterEditorClassName = <TData extends ST_RowData>(
   column: ST_Column<TData>,
