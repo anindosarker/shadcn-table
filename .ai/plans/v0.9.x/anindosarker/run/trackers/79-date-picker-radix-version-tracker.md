@@ -26,6 +26,15 @@ Checks:
 - Check: the look comparison, `bash /private/tmp/claude-501/dp-radix-look/run.sh` (static servers on 5344 and 5345, `compare.mjs` with playwright), at 132d291: pass (48 of 48 cells measured; 47 equal, 1 named difference L1; no part in one version only)
 - Check: both servers stopped, `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN`, at 132d291: pass (no line)
 - Check: no comparison script in the repository, `git status --short` in the worktree, at 132d291: pass (prints nothing; the script is `/private/tmp/claude-501/dp-radix-look/compare.mjs`)
+- Check: install proof, fresh Next.js app in `/private/tmp/claude-501/dp-radix-install/app` (`pnpm dlx create-next-app@latest app --ts --tailwind --eslint --app --no-src-dir --import-alias "@/*" --use-pnpm --turbopack --yes`, next 16.4.6; `pnpm dlx shadcn@latest init -b radix -p nova --no-rtl -y`: style `radix-nova`, the default `@/` aliases), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-radix#132d291a669bdc3e719593de16faa9501e489a1d`, at 132d291: pass (exit 0, 36 files created: the 22 of the picker, 13 parts, `hooks/use-mobile.ts`)
+- Check: install proof, `find components/date-picker -type f | wc -l`, at 132d291: pass (22)
+- Check: install proof, `diff -r components/date-picker <worktree>/registry/radix/generated/components/date-picker`, at 132d291: pass (prints nothing, exit 0). D173: the installed bytes equal the GENERATED folder, not the source; against the source `registry/radix/components/date-picker`, `diff -rq` lists the three files the style transform writes (`components/picker-popup.tsx`, `components/picker-trigger.tsx`, `modes/day-range-picker.tsx`)
+- Check: install proof, `pnpm exec tsc --noEmit`, at 132d291: pass (exit 0; `app/page.tsx` renders a controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />`, each with `value` and `onChange`)
+- Check: install proof, `pnpm exec next build`, at 132d291: pass (exit 0, route `/` prerendered as static content)
+- Check: scratch app deleted, `ls /private/tmp/claude-501/dp-radix-install`, at 132d291: pass (no such folder)
+- Check: `pnpm lint`, at 132d291: pass (exit 0)
+- Check: `pnpm typecheck`, at 132d291: pass (exit 0)
+- Check: Local CI at the head 132d291: `pnpm lint`, `pnpm typecheck` (the two lines above), `pnpm registry:check`, `pnpm test --base radix`, `pnpm test --base base` (their lines at 132d291 above, not rerun: the head did not move, origin/main is still 108d72e): pass, five of five
 
 - Task 1 identical files: done (1b06b47)
 - Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
@@ -34,6 +43,7 @@ Checks:
 - Task 3 item definition and plays: done (5224ac3 item, generated install files and README; 132d291 merge of origin/main with the stories fix 78.2, every play passes)
 - Reader task 3 at 132d291a669bdc3e719593de16faa9501e489a1d: no deviation (note: item dependencies hold no radix-ui, correct by derivation: plan 3.1 removes the only primitive import and no Radix picker file imports radix-ui; registry.ts is unchanged against origin/main, the item was already there)
 - Task 4 the same look: done (no code change, branch head 132d291; 48 look lines below)
+- Task 5 install proof: done (no code change, branch head 132d291; the proof and the Local CI lines above)
 
 ## Look
 
