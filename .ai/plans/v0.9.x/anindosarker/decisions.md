@@ -4,6 +4,9 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #R6
+	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
+
 ## In progress
 
 - [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
