@@ -3,6 +3,9 @@
 Status: done
 Branch `date-picker-stories-and-tests`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-stories-and-tests
 Merge: 4ef057a8a4e9e5e9835ed50292a077c129bf7b0d on main (branch and worktree removed)
+- Deploy: Vercel status of 4ef057a: success, deployment dpl_2FoDit6jk6w3XaarpFnNsnEKE4sq (https://vercel.com/anindo-sarkers-projects/shadcn-date-picker/2FoDit6jk6w3XaarpFnNsnEKE4sq), target preview, not production
+- Live: https://date-picker.shadcn-table.com/version.txt 404 NOT_FOUND; https://date-picker.shadcn-table.com/base/ 404 NOT_FOUND; the domain still serves production dpl_F3JtxETRT8GogN4K719MFoH2JE6x (58 min before the merge, 2 s build)
+- Cause: the Vercel project production branch is `master`; the repository branch is `main`, so main builds land as previews (see Attention)
 Checks:
 - Check: `pnpm typecheck` at 69a66a2: pass
 - Check: `pnpm exec tsc -p tsconfig.stories.json` at 69a66a2: pass (the `typecheck` script does not run this config; see Attention)
@@ -206,3 +209,4 @@ Base UI picker, popup open, `dir="rtl"` on the preview document. Screenshots of 
 - `pnpm typecheck` does not run `tsconfig.stories.json` (package.json, milestone 1), so the stories are type-checked only by hand. Fix: add `tsc -p tsconfig.stories.json` to the `typecheck` script.
 - Spec 1.6.5 lists `required` for the Options file, but the approved `DatePickerProps` (types.ts) has no `required` prop; it reaches the box only untyped through `...props`. The Options file has no Required story. The code stays.
 - Right to left (D167), card pending "period grid arrows": the previous and next arrows of the month and year grids point the wrong way in right-to-left (the chevrons of `GridHeader` in `period-views.tsx` have no `rtl:rotate-180`, those of `MonthCaption` in `day-calendar.tsx` have), in Types/Month Single, Types/Month Range, Types/Year Single and Types/Year Range at 1280 and 390; screenshots .ai/plans/v0.9.x/anindosarker/reference/q149-calendar-library/rtl/month-single-1280.png, month-single-390.png, month-range-1280.png, month-range-390.png, year-single-1280.png, year-single-390.png, year-range-1280.png, year-range-390.png.
+- Vercel production branch is `master` (project prj_aQAJqyzoX3sKR0A70BDOYTMigiB8), but the repository has only `main`: the merge build 4ef057a deployed as a preview and date-picker.shadcn-table.com still serves the older production deployment (404 on version.txt and /base/). Fix: set the production branch to `main` in the Vercel project settings, then redeploy 4ef057a to production. A Vercel setting, not changed by the merger.
