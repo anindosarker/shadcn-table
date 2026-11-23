@@ -5,10 +5,34 @@ Branch `date-picker-install-rewriting`, worktree /Users/anindosarker/Work/Person
 Checks:
 - Check: `pnpm install --frozen-lockfile` in the worktree at b28d91a: pass
 - Check: probe install, `shadcn add ./item.json` (shadcn 4.23.0) of picker-popup.tsx, picker-trigger.tsx, day-range-picker.tsx as `registry:component` into a scratch app with `~/` aliases at b28d91a: imports rewritten to `~/components/ui/*` and `~/hooks/*`; `className="cn-dialog-close"` removed (picker-popup.tsx:101); `cn("cn-button-group-orientation-horizontal", className)` became `cn("", className)` (picker-trigger.tsx:47); `cn-field` removed from `cn-field grid grid-cols-[auto_1fr] items-center gap-y-2` (day-range-picker.tsx:248). Scratch app deleted.
+- Check: `git merge origin/main` in the worktree (main still b28d91a): pass (already up to date)
+- Check: nova style input `registry/styles/style-nova.css` is the stock file of shadcn-ui/ui at 4233ed1 (`apps/v4/registry/styles/style-nova.css`, last commit touching it), byte-equal to `test-projects/next-app/styles/style-nova.css`: pass (`diff` prints nothing); `shadcn` 4.23.0 does not ship it
+- Check: `pnpm lint` at ea68420: pass (exit 0)
+- Check: `pnpm typecheck` at ea68420: pass (exit 0)
+- Check: `pnpm registry:check` at ea68420: pass (exit 0; date-picker-base 22 files, radix and aria no items)
+- Check: `git -C test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` then `diff -r <approved folder> registry/base/components/date-picker` at ea68420: pass (exit 0, prints nothing)
+- Check: `diff -r registry/base/components/date-picker registry/base/generated/components/date-picker` at ea68420: pass (3 lines, each a cn-* line):
+  - `picker-popup.tsx:101` `className="cn-dialog-close"` became `className="absolute top-2 right-2"`
+  - `picker-trigger.tsx:47` `cn("cn-button-group-orientation-horizontal", className)` became `cn("[&>[data-slot]:not(:has(~[data-slot]))]:rounded-r-lg!", className)`
+  - `day-range-picker.tsx:248` `"cn-field grid grid-cols-[auto_1fr] items-center gap-y-2"` became `"data-[invalid=true]:text-destructive gap-2 grid grid-cols-[auto_1fr] items-center gap-y-2"`
+- Check: hand edit of `generated/.../types.ts`, then `pnpm registry:check` at ea68420: pass (exit 1 "out of step with the source"; restored, exit 0)
+- Check: source `types.ts` changed without a rebuild, then `pnpm registry:check` at ea68420: pass (exit 1; restored, exit 0)
+- Check: extra generated file, and a deleted generated file, then `pnpm registry:check` at ea68420: pass (exit 1 each, "no source file" / "missing" and "item file missing"; restored)
+- Check: `pnpm registry:build` twice, then `git status --short` at ea68420: pass (prints nothing)
+- Check: radix readiness, temporary copy of the picker into `registry/radix/components/date-picker`, `pnpm registry:build` and `registry:check` at ea68420: pass (date-picker-radix, 22 files, exit 0); copy removed and rebuilt, tree clean
+- Check: install proof, fresh Next.js app (`create-next-app --src-dir --import-alias "~/*"`, `shadcn init -b base -p nova`: style base-nova, aliases `~/components`, `~/hooks`), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base#ea684201b00f28c1abee64fd07b6fd9a8278ceb2` at ea68420: pass (22 files in `src/components/date-picker`; no `@/` import left, all `~/components/ui/*`, `~/hooks/use-mobile`; the three lines carry the nova classes, no `cn-` left; only import lines differ from the generated folder)
+- Check: scratch app `pnpm exec tsc --noEmit` at ea68420: pass (exit 0)
+- Check: scratch app `pnpm exec next build` at ea68420: pass (exit 0), page with controlled `<DatePicker type="date" presentation="auto" />` and `<DatePicker type="date" presentation="auto" range />` (`auto` gives the phone dialog at 390)
+- Check: rendered comparison, playwright (chromium) at 390x844 and 1280x844, range picker, installed app (next start :5341) against a reference (vite :5342 rendering the SOURCE picker of registry/base with `@/` aliased to it, `<html class="style-nova">`, the approved app's `app/globals.css` and `styles/style-*.css` copied, `--radius: 0.625rem` as in the scratch app since the approved app sets radius at runtime) at ea68420: pass, equal on every value:
+  - 390, dialog close button relative to the dialog (390x844): installed top 8 right 8, 28x28, position absolute, top 8px right 8px; reference the same
+  - 390, range field (dialog grid): installed column-gap 8px, row-gap 8px, label to box 8px, width 358; reference the same
+  - 390 and 1280, trigger button group (one child, dialog-trigger at 390, popover-trigger at 1280): installed radius 10px on all four corners; reference the same
+  - 1280: popover (428 wide at x 16, y 100), no dialog close or range field there; installed and reference the same
+- Check: scratch servers on 5341 and 5342 stopped, scratch app and reference deleted at ea68420: pass
 
 - Task 1 the mechanism: done (tracker only, no repository commit)
-- Task 2 the item: stopped, owner decision (Attention)
-- Task 3 install proof: not started
+- Task 2 the generated install files: done (ea68420)
+- Task 3 install proof: done (ea68420, no repository change)
 - Task 4 README lines: not started
 
 ## The mechanism
