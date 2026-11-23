@@ -11,6 +11,7 @@ kanban-plugin: basic
 	- Origin of the ref: an edit in the app, not a shadcn version. next-app calendar.tsx came in stock at 2368425 (no ref); 30e13ba (2026-11-14, date-filter-demo) added ref={ref} on the day Button together with the cn-* classes. The current base-nova/calendar.json and shadcn main bases/base/ui/calendar.tsx both lack the ref; radix-nova/calendar.json and bases/radix/ui/calendar.tsx have it, so the line matches the radix part. Diff of the CLI-written stock base-nova file against next-app: only the cn-* classes, chevron cn-rtl-flip and ref={ref} at line 205.
 - [ ] **Q162** In a right-to-left page the previous and next arrows of the month and year grids point the wrong way
 	- D167 look, Base UI picker: the chevrons of GridHeader in registry/base/components/date-picker/components/period-views.tsx have no rtl:rotate-180, those of MonthCaption in day-calendar.tsx have. Seen in Month and Year, single and range, at 1280 and 390; the other 16 looks are clean. Screenshots: reference/q149-calendar-library/rtl/month-single-1280.png and the seven beside it. A fix changes the approved code.
+- [ ] **Q165** The table's three date picker props are typed as input props, which the date picker cannot take as they are
 
 ## Decided
 
