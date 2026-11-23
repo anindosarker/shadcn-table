@@ -6,6 +6,9 @@ kanban-plugin: basic
 
 - [ ] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #R6
 	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
+- [ ] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #R6
+	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
+	- Source: Q148
 
 ## In progress
 
