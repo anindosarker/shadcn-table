@@ -194,14 +194,14 @@ Base UI picker, popup open, `dir="rtl"` on the preview document. Screenshots of 
 - Types/Week Single, 390: clean
 - Types/Week Range, 1280: clean
 - Types/Week Range, 390: clean
-- Types/Month Single, 1280: card pending: period grid arrows
-- Types/Month Single, 390: card pending: period grid arrows
-- Types/Month Range, 1280: card pending: period grid arrows
-- Types/Month Range, 390: card pending: period grid arrows
-- Types/Year Single, 1280: card pending: period grid arrows
-- Types/Year Single, 390: card pending: period grid arrows
-- Types/Year Range, 1280: card pending: period grid arrows
-- Types/Year Range, 390: card pending: period grid arrows
+- Types/Month Single, 1280: card Q162: period grid arrows
+- Types/Month Single, 390: card Q162: period grid arrows
+- Types/Month Range, 1280: card Q162: period grid arrows
+- Types/Month Range, 390: card Q162: period grid arrows
+- Types/Year Single, 1280: card Q162: period grid arrows
+- Types/Year Single, 390: card Q162: period grid arrows
+- Types/Year Range, 1280: card Q162: period grid arrows
+- Types/Year Range, 390: card Q162: period grid arrows
 
 ## Attention
 
