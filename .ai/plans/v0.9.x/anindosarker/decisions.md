@@ -16,6 +16,9 @@ kanban-plugin: basic
 - [ ] **D170** The month arrow at the end of the range stays reachable by Tab on Radix and React Aria #R6
 	- K3 option 1: view-nav.tsx on radix and aria sets aria-disabled in place of disabled and ignores the click while disabled, so case D11 holds as on Base UI. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K3.
 	- Source: Q156
+- [ ] **D171** Popup focus, Tab and page blocking follow each base's stock popover #R6
+	- K4, K5 and K6, option 1 each: the Radix picker keeps the stock Radix popover (Tab goes round inside the popup, first control focused on touch); the React Aria picker keeps the stock aria-nova modal popover (underlay, page scroll locked, focus contained, popup named by the trigger). No key handler, focus override or label of the picker's own is added: the picker has no rule of its own where the library does the task (report section 3). The differences from Base UI (cases U2, WR1) are listed in the repository README per base. Covers Q158 and Q159. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K4 to K6.
+	- Source: Q157
 
 ## In progress
 
