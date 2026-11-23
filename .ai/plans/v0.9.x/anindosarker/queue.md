@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q153** The date picker install keeps @/ import paths as written, so an app with other import aliases gets broken imports
+	- shadcn-date-picker registry/base/registry.ts: the 22 item files are type registry:file (written as is). As registry:component the shadcn CLI dropped the cn-* classes at picker-popup.tsx:101, picker-trigger.tsx:47, day-range-picker.tsx:248, so the installed files no longer equalled the approved code. Cost of registry:file: the CLI does not rewrite @/components/ui and @/hooks imports for a project whose aliases differ. Found by the builder of spec 78; tracker 78-date-picker-repository.
 
 ## Decided
 
