@@ -15,6 +15,7 @@ Checks:
 - Task 1 identical files: done (1b06b47)
 - Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
 - Task 2 differing files: done (d5880df)
+- Reader task 2 at d5880df4992ee5587ba74bfcc7d884fa239d947c: no deviation
 
 ## Notes
 
