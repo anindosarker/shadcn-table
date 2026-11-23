@@ -371,7 +371,7 @@ kanban-plugin: basic
 	- A maintainer who follows pr.yml and CONTRIBUTING.md (gh pr create with the labels) gets a PR that stays blocked: PR 142 at b2c5963c had every check green or skipped (Head skip=true), yet the merge was refused with '16 of 21 required status checks are expected', the 16 skipped matrix legs. Two reruns (the label run, then the checks run) changed nothing; a fast-forward of dev to a new commit (94aff145, one run on the head) merged within minutes as 229e6113. Not proven, likely: the head had three runs (opened, plus one per label) and the newest check suite was a label run, whose skipped caller jobs carry no matrix legs. Found by the run on PR 142; finding the cause needs trial PRs with ci:skip, which spec 71 forbids.
 - [x] **Q145** On a phone the example toolbar on docs pages wraps into three uneven rows #D156
 	- Owner, 2026-11-20, on the diagram reference/q145-example-toolbar-phone.excalidraw: picks A, two rows plus a More menu. Not recorded yet.
-- [x] **Q147** PostHog reports the docs site's analytics SDK as outdated #D159 #E23
+- [x] **Q147** PostHog reports the docs site's analytics SDK as outdated #D159
 
 ## Later
 
