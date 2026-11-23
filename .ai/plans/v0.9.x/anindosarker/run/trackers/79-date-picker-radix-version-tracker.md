@@ -41,6 +41,19 @@ Checks:
 - Check: `pnpm registry:check`, at 379aefc: pass (exit 0; `date-picker-radix`, 22 files, up to date; `pnpm registry:build` not run: no source file changed)
 - Check: `pnpm test --base radix`, at 379aefc: pass (exit 0, 39 of 39 plays)
 
+- Check (verifier): `git diff --name-only origin/main...HEAD`, at 379aefc: pass (README.md, the 22 files of `registry/radix/components/date-picker`, the 22 of `registry/radix/generated/components/date-picker`, `registry/radix/registry.json`; all owned)
+- Check (verifier): `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 379aefc: pass (prints nothing)
+- Check (verifier): `find registry/radix/components/date-picker -type f | wc -l`, `diff -rq` against the Base UI tree, `cmp` per identical file, `grep -rn '@base-ui'`, JSDoc count, at 379aefc: pass (22; 4 differing files, the plan's list; 18 of 18 cmp exit 0; no line; 3)
+- Check (verifier): `diff -u` of the 4 differing files against plan 3.1 to 3.4, at 379aefc: pass (every hunk is a plan row, nothing else)
+- Check (verifier): `pnpm test --base radix`, at 379aefc: pass (exit 0, 39 of 39 plays, first run)
+- Check (verifier): `pnpm test --base base`, at 379aefc: pass (exit 0, 39 of 39 plays)
+- Check (verifier): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 379aefc: not rerun, the lines above at 379aefc hold
+- Check (verifier): `pnpm registry:build` then `git status --short`, at 379aefc: pass (exit 0, prints nothing)
+- Check (verifier): `registry/radix/registry.json`, at 379aefc: FAIL against spec 79 `:100` and the verifier brief: one item `date-picker-radix`, `registry:component`, 22 files, no `@base-ui/react`, but dependencies `cn`, `date-fns`, `lucide-react`, `react-day-picker` hold no `radix-ui`. The build derives them from the imports (`registry/radix/registry.ts:1`) and no picker file imports `radix-ui`; spec 79 `:100` says both "derived from the imports" and "`radix-ui` in place of `@base-ui/react`", which cannot both hold. Install proof passes (the parts bring `radix-ui`). For the lead: the spec wording or the build tool, not the version.
+- Check (verifier): look lines, at 379aefc: pass (48 lines; one named difference L1, cite `registry/radix/components/ui/popover.tsx:25-34` opened: no `collisionPadding`, Radix default 0 at `@radix-ui/react-popper@1.4.0/dist/index.mjs:110`; only one named difference exists to open)
+- Check (verifier): `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN` and `git ls-files` for a comparison script, at 379aefc: pass (no line, none)
+- Check (verifier): install proof sha 132d291 ancestor of 379aefc, `git diff --name-only 132d291..HEAD -- registry/radix`, at 379aefc: pass (ancestor, prints nothing; proof not rerun)
+- Check (verifier): `README.md` install command of `date-picker-radix` and the Radix list under `## Differences between the bases`, at 379aefc: pass (place, order and text as plan 5.2)
 - Task 1 identical files: done (1b06b47)
 - Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
 - Task 2 differing files: done (d5880df)
