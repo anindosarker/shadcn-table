@@ -41,6 +41,7 @@ Checks:
 - Task 2 The day calendar on React Aria: done (5c6ada7b): no way named, K1 staged
 - Task 3 Self-check of every `identical` claim: done (plan at 5c6ada7b; the lines above)
 - Review round 1 (fable, no history): 1 major, 7 minors, all taken; fixed in 62def790 (the major is staged as K6 below; K5 has three more facts)
+- Review round 2 (fable, no history): 0 majors, 2 minors; fixed in 83b45dde (plan 3.6 row `:148-158` now says the dialog role is the stock modal popover's, `Popover.mjs:121-124,188`; the K6 option 2 point needs no change, its "Not tested" words stay for the card)
 
 ## Attention
 
