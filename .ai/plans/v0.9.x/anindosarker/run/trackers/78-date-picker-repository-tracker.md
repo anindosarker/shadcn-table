@@ -1,6 +1,7 @@
 # 78: Date picker repository, tracker
 
-Status: running
+Status: done
+Merge: b28d91a on main (merge: date-picker-repository (78))
 Branch `date-picker-repository`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-repository
 Checks:
 - Check: `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 4587f8a: pass (0)
