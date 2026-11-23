@@ -1,7 +1,7 @@
 # 80: Date picker first tag, tracker
 
-Status: running
-Branch `date-picker-first-tag`, worktree shadcn-date-picker.worktrees/date-picker-first-tag (kept, fast-forwarded to main 908300d for task 2)
+Status: waiting (lead: Q163, the site does not serve main: Vercel production branch)
+Branch `date-picker-first-tag` (removed after task 4: worktree, local and remote branch deleted; clone on main 908300d)
 Checks:
 - Check: README tag count, `grep -c '#v0.1.0' README.md` at e27727e: pass (3)
 - Check: README item count, `grep -c -E 'date-picker-(base|radix|aria)#v0.1.0' README.md` at e27727e: pass (3)
@@ -36,7 +36,20 @@ Checks:
 - Check: files aria, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
 - Check: diff aria, `diff -r components/date-picker registry/aria/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
 - Check: build aria, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
+- Check: deployments, `gh api repos/anindosarker/shadcn-date-picker/deployments?per_page=5`: none listed (empty array, also for environment Production and Preview)
+- Check: Vercel status of 908300d, `gh api .../commits/908300d/status`: success, deployment dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU "Deployment has completed"
+- Check: deployment target, `vercel inspect dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU`: target preview, Ready, https://shadcn-date-picker-lbpg4u2b9-anindo-sarkers-projects.vercel.app, alias shadcn-date-picker-git-main-anindo-sarkers-projects.vercel.app
+- Check: preview public, python3 urllib on <preview>/version.txt at 908300d: fail (redirect to vercel.com/login, Vercel login wall)
+- Check: production deployment of 908300d, `vercel ls shadcn-date-picker --environment production`: none (only production deployment dpl_F3JtxETRT8GogN4K719MFoH2JE6x, created 2 hours before the 908300d build, so not 908300d)
+- Check: domain, python3 urllib on https://date-picker.shadcn-table.com/version.txt, /, /base/, /radix/, /aria/: fail (all HTTP 404)
+- Check: DNS, `dig +short date-picker.shadcn-table.com`: in place (7c01400999e33fe7.vercel-dns-017.com., 64.29.17.1, 216.198.79.1)
+- Check: clean-up, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-first-tag deleted locally and on origin
 
 - Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
 - Task 2 tag and release: annotated tag v0.1.0 on 908300d pushed; GitHub release v0.1.0 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.0), notes = one line per base plus the README install section.
 - Task 3 install proofs: done at tag v0.1.0 (908300d); base, radix, aria each pass install, 22 files, empty diff -r against registry/<base>/generated/components/date-picker (D173), tsc and next build exit 0; scratch apps /private/tmp/claude-501/dp-tag-{base,radix,aria} deleted.
+- Task 4 live reads: not run; the build of 908300d is a Vercel preview behind login and no production deployment of it exists; the domain answers 404 (Q163). Clean-up done.
+
+## Attention
+
+- The site date-picker.shadcn-table.com does not show the library because Vercel treats main as a preview; the project's production branch has to be set to main (Q163).
