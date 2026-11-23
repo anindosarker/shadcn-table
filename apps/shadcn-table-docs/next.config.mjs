@@ -62,13 +62,19 @@ const config = {
         source: '/r/:style(aria-.*)/:name.json',
         destination: '/r/aria/:name.json',
       },
-      // PostHog ingest reverse proxy (components/posthog-provider.tsx sets
-      // api_host '/ingest'): the events leave from this origin, so ad
-      // blockers that drop posthog.com requests do not drop them. External
-      // rewrites run on the edge, no function invocations.
+      // PostHog ingest reverse proxy (lib/posthog-options.ts sets api_host
+      // '/ingest'): the events leave from this origin, so ad blockers that
+      // drop posthog.com requests do not drop them. The static files and the
+      // config files go to the assets host, everything else to the ingest
+      // host; the catch-all comes last because rewrites match in order.
+      // External rewrites run on the edge, no function invocations.
       {
         source: '/ingest/static/:path*',
         destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/array/:path*',
+        destination: 'https://us-assets.i.posthog.com/array/:path*',
       },
       {
         source: '/ingest/:path*',

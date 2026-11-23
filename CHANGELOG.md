@@ -23,6 +23,11 @@ publishes the section as the GitHub release notes.
 
 - The docs site's analytics SDK `posthog-js` goes from 1.438.13 to 1.453.2 (D159).
 
+#### Spec 77
+
+- The docs site's PostHog proxy sends the remote config requests (`/ingest/array/*`) to PostHog's assets host, as PostHog's Next.js proxy guide does (D160).
+- The docs site's PostHog init sets the dated `defaults: '2026-08-30'` of PostHog's Next.js install guide; page views on history changes now come from them (D161).
+
 ## 0.9.7 - 2026-11-19
 
 ### Docs
