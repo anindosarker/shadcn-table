@@ -1,6 +1,7 @@
 # 80: Date picker first tag, tracker
 
-Status: running
+Status: done
+Merge: 908300d (tagged merge, v0.1.0), a3390db (README lines, D174), c42b8bb (Introduction install commands at #v0.1.0)
 Branch `date-picker-first-tag` (removed after task 4: worktree, local and remote branch deleted; clone on main 908300d)
 Branch `date-picker-readme-react-aria` (D174, commit 5dcd8b1, merged into main as a3390db; worktree, local and remote branch deleted; clone on main a3390db)
 Checks:
@@ -60,6 +61,18 @@ Checks:
 - Check: live Introduction, playwright on https://date-picker.shadcn-table.com/base/iframe.html?id=introduction--docs&viewMode=docs: fail (200, install command is `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base` without #v0.1.0; source stories/Introduction.mdx:14, outside the owned file README.md)
 - Check: DNS at a3390db, `dig +short date-picker.shadcn-table.com`: in place (7c01400999e33fe7.vercel-dns-017.com., 216.198.79.65, 64.29.17.65)
 - Check: clean-up after a3390db, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-readme-react-aria deleted locally and on origin; scratch scripts deleted
+- Check: Introduction install, `pnpm install --frozen-lockfile` at cc34b23: pass (exit 0)
+- Check: Introduction lint, `pnpm lint` at cc34b23: pass (exit 0)
+- Check: Introduction site build, `pnpm storybook:build` at cc34b23: pass (exit 0)
+- Check: Introduction tag count, `grep -c '#v0.1.0' stories/Introduction.mdx` at cc34b23: pass (3; no install command without the tag)
+- Check: Introduction owned files, `git diff --name-only origin/main...HEAD` at cc34b23: pass (stories/Introduction.mdx only)
+- Check: Introduction merge, `merge --no-ff origin/date-picker-introduction-tag` pushed to main: c42b8bb ("merge: date-picker-introduction-tag (80)"); no new tag (no installed file changed)
+- Check: Vercel status of c42b8bb, `gh api .../commits/c42b8bb/status`: pass (success)
+- Check: CI of c42b8bb, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45278859948: pass (completed, success)
+- Check: live Introduction at c42b8bb, playwright on https://date-picker.shadcn-table.com/base/iframe.html?id=introduction--docs&viewMode=docs: pass (base, radix, aria install commands, each with #v0.1.0)
+- Check: live version at c42b8bb, python3 urllib on https://date-picker.shadcn-table.com/version.txt: pass (0.1.0)
+- Check: clean-up after c42b8bb, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-introduction-tag deleted locally and on origin
+- Introduction page: install commands at #v0.1.0, merge c42b8bb, live read pass
 
 - Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
 - Task 2 tag and release: annotated tag v0.1.0 on 908300d pushed; GitHub release v0.1.0 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.0), notes = one line per base plus the README install section.
