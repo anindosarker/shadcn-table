@@ -18,6 +18,7 @@ kanban-plugin: basic
 	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
 	- Source: Q150
 - [ ] **D164** The table's date filters use the date picker library, all three bases together #R6
+	- Supersedes D96.
 	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
 	- Source: Q88
 
@@ -29,9 +30,6 @@ kanban-plugin: basic
 - [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
 	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
 	- Source: Q78
-- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
-	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
-	- Source: Q80
 
 ## Done
 
@@ -577,6 +575,9 @@ kanban-plugin: basic
 - [x] **D95** The React Query example offers only the filter modes its server applies #E13 #R4
 	- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
 	- Source: Q81
+- [x] **D96** A click in a date or time filter box starts typing at its first part (superseded by D164) #superseded #E13 #R4
+	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
+	- Source: Q80
 - [x] **D97** React Aria filter popups are modal again as in 0.9.3; the Escape fix stays #E12 #R4
 	- Supersedes D83.
 	- Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
