@@ -22,6 +22,13 @@ Checks:
 - Check: `git diff --stat origin/main -- stories .storybook .github` names no file with `rtl` at cd48b75: pass
 - Check: Storybook server on port 5341 stopped at cd48b75: pass (nothing listens on 5341)
 - Check: Local CI `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test`, `pnpm storybook:build`, one at a time, at cd48b75: pass (test: 7 files, 32 plays)
+- Check (verifier): `git diff --name-only origin/main...HEAD` at cd48b75: pass (18 files, all owned); `git diff --stat origin/main -- registry package.json pnpm-lock.yaml`: pass (prints nothing)
+- Check (verifier): `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at cd48b75: pass (prints nothing)
+- Check (verifier): stories at cd48b75: pass (seven files, twelve type stories, controlled, value and calls as text; the grep prints nothing; no class name or library attribute asserted; no fixed wait, `asyncUtilTimeout` 5000 on conditions only)
+- Check (verifier): `pnpm test` at cd48b75: pass (7 files, 32 passed)
+- Check (verifier): case table at cd48b75: fail (111 lines, every covered line names a play that runs the case; seven "not covered" lines give no reason a play cannot cover the case on Chromium: D8, R9, R13, R16, P13, PR8, P17)
+- Check (verifier): vercel.json, ci.yml, site output at cd48b75: pass (install, build, output as 1.6.6, no deploymentEnabled; one job, push to main and pull_request; `storybook-static/base/index.html`, `version.txt` 0.1.0, no radix or aria, landing links `./base/` only)
+- Check (verifier): right to left at cd48b75: pass (24 lines; 8 screenshots committed for the 8 non-clean lines, none for clean; no rtl file in stories, .storybook, .github; nothing listens on 5340 to 5360)
 
 - Task 1 Vite, Vitest and Storybook on `DP_BASE`, seven story files: done (69a66a2)
 - Task 2 plays and the case table: done (69a66a2, 59de146)
