@@ -11,9 +11,13 @@ Checks:
 - Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 591d6d57: pass (tsc clean each)
 - Check: `pnpm test lint` at 591d6d57: pass (0 errors; 9 docs warnings)
 - Check: `git diff --stat origin/claude/review -- 'packages/shadcn-table/registry/*/components/ui/shadcn-table'` at 591d6d57: pass (empty)
+- Check: `node --test tools/registry/lib.test.mjs` at d1d313ed: pass (9 tests: the fixture gives `anindosarker/shadcn-date-picker/date-picker-<base>#v0.1.0` on base, radix, aria, plain and `--dev`; no import, no address)
+- Check: `pnpm -w registry:build` then `git diff --stat -- packages/shadcn-table/registry.json registry.json` at d1d313ed: pass (empty)
+- Check: `grep -c "v0.1.0" tools/registry/*.mjs` at d1d313ed: pass (1, `lib.mjs`, the constant; 0 in every other file)
 
 - Task 1 site map: done (a9378baf)
 - Task 2 packages, parts, tool, trees: done (20cd9241, 591d6d57)
+- Task 3 registry build mapping and test: done (d1d313ed)
 
 ## Site map
 
@@ -44,6 +48,7 @@ Every place that reads imports, aliases or dependencies for an item, a tree or t
 
 - Q160: `packages/shadcn-table/registry/base/components/ui/calendar.tsx` as add-part wrote it has no ref line on the day button: `CalendarDayButton` creates `ref` and its focus effect at lines 199-202, but the `<Button>` at line 205 has no `ref={ref}`; the radix part has it at `registry/radix/components/ui/calendar.tsx:206`. Nothing changed for it.
 - The picker files import `cn` from the npm package `cn` (5 files, e.g. `components/date-picker/components/day-calendar.tsx:12`), so `cn` (`^0.5.0`, the picker's package.json range) joined `packages/shadcn-table/package.json` beside `react-day-picker` and `date-fns`; without it the trees do not type-check. The picker item carries it for users.
+- The registry scripts test is the new `tools/registry/lib.test.mjs`, run by validate-repo's unit check (`tools/**/*.test.mjs`); the fixture is written to a temporary folder.
 - `packages/shadcn-table/tsconfig.radix.json` (base and aria extend it) gained `node` in `types`: `components/date-picker/utils/values.ts:98` reads `process.env.NODE_ENV`, as the picker repo's own tsconfigs allow. Owned here as the fix of the typecheck the spec runs.
 
 ## Attention
