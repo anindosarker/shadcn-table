@@ -19,6 +19,9 @@ kanban-plugin: basic
 - [ ] **D171** Popup focus, Tab and page blocking follow each base's stock popover #R6
 	- K4, K5 and K6, option 1 each: the Radix picker keeps the stock Radix popover (Tab goes round inside the popup, first control focused on touch); the React Aria picker keeps the stock aria-nova modal popover (underlay, page scroll locked, focus contained, popup named by the trigger). No key handler, focus override or label of the picker's own is added: the picker has no rule of its own where the library does the task (report section 3). The differences from Base UI (cases U2, WR1) are listed in the repository README per base. Covers Q158 and Q159. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K4 to K6.
 	- Source: Q157
+- [ ] **D172** The date picker installs through the shadcn CLI's own rewriting; the exact-copy rule binds the repository source #R6
+	- The 22 files in registry/base of shadcn-date-picker stay the exact approved code (D162, diff -r). What the shadcn CLI writes into a user's app may differ from it by the CLI's own rewriting: import aliases follow the app's components.json and the style hook classes (cn-dialog-close, cn-field, cn-button-group-orientation-horizontal) are resolved the way the CLI resolves them for shadcn's own parts. The item type is the one that gives a working picker in a fresh app of each style with other aliases: imports resolve, tsc and next build pass, the dialog close button, field and button group are styled as in the approved app. The install proof compares the rendered picker with the approved one, not the installed bytes. A fix milestone of spec 78 finds the stock mechanism first (how the CLI treats cn-* classes for an outside registry) and names it in the tracker.
+	- Source: Q153
 
 ## In progress
 
