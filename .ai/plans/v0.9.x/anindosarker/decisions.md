@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D176** The date picker's developer warning for a wrong min, max or step is removed #R6
 	- utils/values.ts of the date picker no longer prints 'DatePicker: <name> <value> is ignored': a min or max that is not a value of the picker's type and a step that is not a whole number above zero are dropped silently, as the browser does with a bad min on its own input. The process.env.NODE_ENV read goes with it, so a Vite app that installs the picker type-checks without Node types; the helper ignored() and its type go, nothing else changes. On the three bases, in shadcn-date-picker; this is an owner-allowed change to the approved code (report 2.1), so from here the Base UI source differs from test-projects/next-app by this change. The 'node' line added to packages/shadcn-table/tsconfig.radix.json in spec 81 is removed when the table moves to the new tag. Owner, 2026-11-24, told it is a development-only message: 'remove'.
 	- Source: Q166
+- [ ] **D177** The month and year grid arrows flip on right-to-left pages #R6
+	- The previous and next chevrons of GridHeader in components/period-views.tsx of the date picker get rtl:rotate-180, the class the day calendar's caption arrows already have, on the three bases in shadcn-date-picker. An owner-allowed change to the approved code (report 2.1). Owner, 2026-11-24: '162 k'.
+	- Source: Q162
 
 ## In progress
 
