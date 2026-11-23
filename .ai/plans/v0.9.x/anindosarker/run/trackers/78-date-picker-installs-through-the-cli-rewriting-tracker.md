@@ -1,6 +1,6 @@
 # 78: Date picker installs through the CLI rewriting, tracker
 
-Status: waiting (owner: Q161, how the install gets its styles)
+Status: running
 Branch `date-picker-install-rewriting`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-install-rewriting (from origin/main b28d91a)
 Checks:
 - Check: `pnpm install --frozen-lockfile` in the worktree at b28d91a: pass
@@ -27,3 +27,4 @@ Source: shadcn-ui/ui at 055aa6b (packages/shadcn 4.23.0, the version in the work
 ## Attention
 
 - No item type gives both: a non-file type rewrites the aliases and strips two styled classes (`update-files.ts:168-198`, `transform-cleanup.ts:17-29`); `registry:file` keeps the classes but no import is rewritten and no rule exists for them in a user's app. The way shadcn styles its own parts is a build-time `transformStyle` per style (`build-registry.mts:637`), and a GitHub registry serves only committed files (`source.ts:168`). Owner choice; options in the builder's return.
+- Settled by D173 (Q161, option 1): the registry build runs shadcn's createStyleMap and transformStyle with the nova style into a generated, committed folder per base, items typed registry:component. RESUME from the lead, 2026-11-24.
