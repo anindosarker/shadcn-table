@@ -28,6 +28,14 @@ Checks:
 - Check: look comparison, `node /private/tmp/claude-501/dp-aria-look/compare.mjs` (playwright of the worktree, Chromium, viewport 1280 and 390 by 900, `iframe.html?id=types-<story>&viewMode=story&embed=true` so the play does not run, the popup opened by a click on the trigger, read after its animations ended) at 2be8d33: pass (48 of 48 cases: every part of Base UI has its match on React Aria by role, label and order; box within 1 px and colour, background, border, radius, font size and weight equal on every matched part, except the focus ring of L3; the differences are L1 to L4 below)
 - Check: both servers stopped, `kill <pid>` of the two started, then `lsof -nP -iTCP:5354 -iTCP:5355 -sTCP:LISTEN`: pass (prints nothing)
 - Check: no comparison script in the repository, `git status --short` and `git ls-files | grep -c "compare\|probe\|flash"` in the worktree at 2be8d33: pass (nothing, 0); the scripts stay in /private/tmp/claude-501/dp-aria-look/
+- Check: `git fetch origin && git merge origin/main` at 2be8d33 before task 5: pass (already up to date, origin/main 108d72e; the branch head 2be8d330e0b78497c2d1c34c9f51526d8aa9a556 is pushed)
+- Check: install proof, fresh Next.js app in `/private/tmp/claude-501/dp-aria-install/app` (`pnpm dlx create-next-app@latest app --ts --tailwind --eslint --app --no-src-dir --import-alias "@/*" --use-pnpm --turbopack --yes`, next 16.4.6; `pnpm dlx shadcn@latest init -b aria -p nova --no-rtl -y`, shadcn 4.23.0: style `aria-nova`, the default `@/` aliases), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-aria#2be8d330e0b78497c2d1c34c9f51526d8aa9a556`, at 2be8d33: pass (exit 0, 35 files created: the 22 of the picker, 12 parts, `hooks/use-mobile.ts`)
+- Check: install proof, `find components/date-picker -type f | wc -l` in the scratch app at 2be8d33: pass (22)
+- Check: install proof, `diff -r components/date-picker <worktree>/registry/aria/generated/components/date-picker` at 2be8d33: pass (prints nothing). D173: the installed bytes equal the GENERATED folder, not the source; against the source `registry/aria/components/date-picker` three files differ, the ones with the style hook classes (`components/picker-popup.tsx`, `components/picker-trigger.tsx`, `modes/day-range-picker.tsx`)
+- Check: install proof, `pnpm exec tsc --noEmit` in the scratch app at 2be8d33: pass (exit 0; `app/page.tsx` is a client page with a controlled `<DatePicker type="date" value onChange />` and `<DatePicker type="date" range value onChange />`, the range value a `[string, string]` state)
+- Check: install proof, `pnpm exec next build` in the scratch app at 2be8d33: pass (exit 0, `/` prerendered as static content)
+- Check: scratch app deleted, `rm -rf /private/tmp/claude-501/dp-aria-install` then `ls /private/tmp/claude-501/dp-aria-install`: pass (No such file or directory)
+- Check: Local CI at 2be8d33: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test --base aria` (39 of 39), `pnpm test --base base` (39 of 39) are the lines recorded above at this exact head, each pass; not rerun, the head did not move (task 5 changes no file of the repository, `git status --short` prints nothing)
 
 - Task 1 identical files: done (89ee92d)
 - Reader task 1 at 89ee92d: no deviation
@@ -92,6 +100,7 @@ Checks:
 - Look: Year Range, closed, 390: equal (6 parts)
 - Look: Year Range, open, 1280: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
 - Look: Year Range, open, 390: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Task 5 install proof: done at 2be8d33 (2be8d330e0b78497c2d1c34c9f51526d8aa9a556), no change of the version and none of the plan; Local CI complete at the same head
 
 ## Attention
 
