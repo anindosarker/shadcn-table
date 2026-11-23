@@ -41,6 +41,7 @@ Checks:
 - Task 3 registry build mapping and test: done (d1d313ed)
 - Task 4 docs install and scratch proof: done (b6312d3d, 2552a233)
 - Task 5 repo check and CONTRIBUTING section: done (6a5b3db0); CHANGELOG `#### Spec 81` (06da91e0)
+- Review round 1: 1 major, 6 minors, fixed at 05106d91 (the major staged under Attention; two minors answered in Notes)
 
 ## Site map
 
