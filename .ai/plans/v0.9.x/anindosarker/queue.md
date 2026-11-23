@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q158** The React Aria date picker popup blocks the page behind it, keeps Tab inside and stops page scroll
 	- K5. Stock aria-nova popover is modal: underlay, scroll lock, focus contained, two hidden dismiss buttons, focus starts on the popup (cases U2, WR1 differ); the phone dialog starts focus on the dialog. Options: 1 keep the stock modal popover and name the differences (recommended by the plan); 2 isNonModal: no trap or lock, but focus does not enter on open and the popup has no dialog role. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K5.
+	- Lead, 2026-11-24: settled with Q157 in one decision, stock popover behaviour per base.
 - [ ] **Q159** On React Aria a screen reader hears a range picker popup named by the button text, not by the picker label
 	- K6. Stock PopoverTrigger sets aria-labelledby to the trigger id, which wins over the picker's aria-label (react-aria-components 1.22.1 Dialog.mjs:57-59, Popover.mjs:190-191). Options: 1 keep stock and name the difference (recommended by the plan); 2 an aria-labelledby of the picker's own, code the Base UI version does not have; 3 isNonModal, no name at all. Options with their source lines: run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K6.
 - [ ] **Q160** Arrow keys in the day grid of the Base UI date picker may not move focus in the new library
