@@ -13,6 +13,8 @@ import { BASE_LABELS, BASES } from '../../../tools/registry/bases.mjs';
 import {
   baseSwitch,
   codeToggle,
+  copiedShown,
+  copyAndRead,
   demoLoop,
   example,
   headerBaseLabel,
@@ -152,8 +154,7 @@ async function agentBar(page, check) {
   check('agent bar', (await bar.count()) === 1, String(await bar.count()));
   if (!(await bar.count())) return;
   const copy = bar.getByRole('button', { name: 'Copy prompt' });
-  await copy.click();
-  const written = await page.evaluate(() => window.__stClipboard ?? '');
+  const written = await copyAndRead(page, () => copy.click());
   check(
     'copy prompt writes the skill prompt',
     written.startsWith('Install shadcn-table in my app: ') &&
@@ -162,7 +163,7 @@ async function agentBar(page, check) {
   );
   check(
     'copied state',
-    (await bar.getByRole('button', { name: 'Copied' }).count()) === 1,
+    await copiedShown(bar.getByRole('button', { name: 'Copied' })),
   );
 }
 
