@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q176** The table's date range filters show two separate date boxes instead of the date picker's own range type
+	- Owner, 2026-11-24, on live 0.9.8, /docs/examples/subheader-filters (Hire Date, under the header) and /docs/examples/filter-variants (Hire Date in the filter popover): 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.' Seen in the same captures: in the popover the picked date reads 18/11/202, cut off, at desktop width.
 
 ## Decided
 
