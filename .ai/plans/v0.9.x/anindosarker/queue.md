@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q178** The date picker repository is not laid out like the table's: no monorepo with apps and packages folders
+	- Owner, 2026-11-24: 'Why is the Date Picker repository not structured like the table one? Why is it not a monorepo with properly handled folders like apps and packages?'
 
 ## Decided
 
