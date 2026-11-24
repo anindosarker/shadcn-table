@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q175** The date picker docs site does not look good: it should carry the table site's theme changer and whole docs layout, exactly
+	- Owner, 2026-11-24, on the live site https://date-picker.shadcn-table.com/: 'The site doesn't look good. I want the theme changer exactly from the table. Why didn't you copy the entire docs system theme and layout?'
 
 ## Decided
 
