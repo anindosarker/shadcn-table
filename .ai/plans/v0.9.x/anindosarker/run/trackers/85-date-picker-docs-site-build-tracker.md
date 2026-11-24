@@ -1,6 +1,6 @@
 # 85: Date picker docs site build, tracker
 
-Status: running
+Status: waiting (owner: open the branch preview of date-picker-docs-site on Vercel in a logged-in browser and confirm /, /docs/install and /storybook/base/ load; then the merge runs)
 Branch `date-picker-docs-site`, worktree shadcn-date-picker.worktrees/date-picker-docs-site (from origin/main 2cf6e6f)
 Checks:
 - Check: frozen install, `pnpm install --frozen-lockfile` after the one `pnpm install` that wrote the lockfile, at be986a7: pass (exit 0)
