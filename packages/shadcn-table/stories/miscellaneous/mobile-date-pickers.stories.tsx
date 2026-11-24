@@ -96,6 +96,29 @@ MobileDateTimePickers.play = async ({ canvasElement }: StoryContext) => {
   await waitFor(() => expect(inputs('date')).toHaveLength(1));
   expect(inputs('datetime-local')).toHaveLength(1);
   expect(inputs('time')).toHaveLength(3);
+  for (const [column, type] of [
+    ['Hire Date', 'date'],
+    ['Arrival time', 'datetime-local'],
+  ] as const) {
+    const name = `Filter by ${column}`;
+    fireEvent.click(
+      within(canvasElement).getByRole('button', { name, hidden: true }),
+    );
+    const popup = await waitFor(() => {
+      const dialog = document.querySelector<HTMLElement>(
+        `[role="dialog"][aria-label="${name}"]`,
+      );
+      expect(dialog).not.toBeNull();
+      return dialog!;
+    });
+    expect(popup.querySelectorAll(`input[type="${type}"]`)).toHaveLength(2);
+    fireEvent.keyDown(popup, { key: 'Escape' });
+    await waitFor(() =>
+      expect(
+        document.querySelector(`[role="dialog"][aria-label="${name}"]`),
+      ).toBeNull(),
+    );
+  }
   const before = canvasElement.querySelectorAll('tbody tr').length;
   expect(before).toBe(10);
   // A Birth Date before every row's leaves no row.

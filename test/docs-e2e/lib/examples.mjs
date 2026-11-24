@@ -989,13 +989,32 @@ const checks = {
           .locator('thead [role="slider"], thead input[type="range"]')
           .count()) > 0,
       );
-      // A date range is one box, its end inputs in the popup (D183).
-      check(
-        'date range filter box',
-        (await w
-          .locator('thead button[aria-label="Filter by Hire Date"]')
-          .count()) > 0,
+      // A date range is one box, its two date inputs in the popup (D183).
+      const hireDateBox = w.locator(
+        'thead button[aria-label="Filter by Hire Date"]',
       );
+      check('date range filter box', (await hireDateBox.count()) === 1);
+      if (await hireDateBox.count()) {
+        const popup = page.locator(
+          '[role="dialog"][aria-label="Filter by Hire Date"]',
+        );
+        let dateInputs = 0;
+        try {
+          await hireDateBox.first().click();
+          await popup.first().waitFor({ timeout: 5000 });
+          dateInputs = await popup.locator('input[type="date"]').count();
+        } catch {}
+        check(
+          'date range popup holds two date inputs',
+          dateInputs === 2,
+          `inputs=${dateInputs}`,
+        );
+        await page.keyboard.press('Escape');
+        await popup
+          .first()
+          .waitFor({ state: 'hidden', timeout: 5000 })
+          .catch(() => {});
+      }
       check(
         'checkbox filter',
         (await w

@@ -355,7 +355,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const focusedRangeInput = useRef<HTMLInputElement | null>(null);
   const handleDateChange = (newValue: string | string[]) => {
     const active = document.activeElement;
+    const current = toRangeValue(filterValue);
+    // Typing changes one end; the picker changes both when it orders the pair.
+    const changesBothEnds =
+      isDateRange &&
+      toRangeValue(newValue).every((end, index) => end !== current[index]);
     if (
+      !changesBothEnds &&
       active instanceof HTMLInputElement &&
       (datePickerRef.current?.contains(active) ||
         (isDateRange && active === focusedRangeInput.current)) &&
