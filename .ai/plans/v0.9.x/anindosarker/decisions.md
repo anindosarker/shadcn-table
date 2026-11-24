@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D186** The date picker home page gets the table home page's star field and dune background effect #R6
+	- The picker docs site's home page and footer render the table site's Starfield and Dune as they are there (table: components/dev-home/v12/home-page.tsx:28,33, components/dev-home/v12/footer.tsx:57, v4/starfield.tsx, v12/dune.tsx with its atlas helpers), following the chosen theme's colours as on the table site. Replaces the not-taken rows 162 and 163 of design-docs-site.md. Compared after the build against captures of the table home in a fresh profile (reference/q149-calendar-library/docs-site/q179/), dark and light, 1440 and 390, looked at side by side, not grepped. Not part of this decision: the colours (identical for a new visitor: emerald is the default, the owner's orange on the table site is his stored choice) and the red border on the select and pickers in the owner's browser (not reproduced in a fresh profile; a cause found in the site's code becomes its own card). Owner, 2026-11-24: 'the home page effect doesn't match', 'The background effect matches the emerald color, so it is missing', '179k'.
+	- Source: Q179
+
 ## In progress
 
 - [ ] **D183** The table's date range filters use the date picker's own range type #E29 #R6
