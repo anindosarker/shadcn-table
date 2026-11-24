@@ -64,12 +64,16 @@ Checks:
 - Check: captures, `capture.cjs` (Playwright Chromium, full page, 1440x900 and 390x844, light and dark): 24 PNG under reference/q149-calendar-library/docs-site/, named `<home|install|example>-<table|site>-<width>-<theme>.png` (table `/`, `/docs/getting-started/install`, `/docs/examples/basic` beside site `/`, `/docs/install`, `/docs/date`)
 - Check: server stopped, `kill` of pids 3043, 3010, 2990, then `lsof -nP -iTCP:5356 -sTCP:LISTEN`: pass (prints nothing)
 - Check: Local CI at 505417a, one at a time: `pnpm install --frozen-lockfile` exit 0; `pnpm lint` exit 0; `pnpm typecheck` exit 0; `pnpm registry:check` exit 0; `pnpm test` exit 0 (7 files and 39 tests on each of three bases); `pnpm --filter docs lint` exit 0 (0 errors, the 1 warning of plan 4.3); `pnpm --filter docs types:check` exit 0; `pnpm --filter docs build` exit 0 (16 static pages); `pnpm storybook:build` exit 0 (storybook-static/storybook/ with index.html, base, radix, aria); `git status --short` prints nothing after
+- Check: review round 1, `pnpm --filter docs lint` at ac4094f (working tree): pass (exit 0, 0 errors, the 1 warning of plan 4.3)
+- Check: review round 1, `pnpm --filter docs types:check` at ac4094f (working tree): pass (exit 0)
+- Check: review round 1, `pnpm lint` at ac4094f (working tree): pass (exit 0)
 
 - Task 1 workspace and shell: done (be986a7)
 - Task 2 pages and demos: done (0a3b01e)
 - Task 3 Storybook under /storybook/, vercel.json, CI, README: done (505417a)
 - Task 4 local production build read and captures: done (checks at 505417a, no code change; captures and this list committed in the table repository)
 - Task 5 live reads after the merge: planned
+- Review round 1: 0 majors, 3 minors, fixed at ac4094f. Home "Storybook" link is a plain `<a href="/storybook/">` (was IntentLink, a router link to a path the docs app does not own; plan 6.4 line added, 74d766dc); time.mdx closing line reads "More options (limits, labels)" (registry/base/components/date-picker/types.ts:91 `presets?: never`, and no dialog on a time picker); lockfile minor accepted, no change: the transitive @emnapi/* 1.11.0 and yaml@2.9.1 peer came in at be986a7, the only lockfile commit, and `pnpm test` and `pnpm storybook:build` passed on it at 505417a (Local CI line)
 
 ## Notes
 
