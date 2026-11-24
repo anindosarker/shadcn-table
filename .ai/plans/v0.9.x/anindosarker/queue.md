@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q188** The repository's git history should be deleted so the old plans and personal details are gone for good
 	- Owner, 2026-11-24, after a note that master still shows the old plan folders until 0.9.9: 'Delete the entire history pls. thx'. Scope not yet fixed: the whole history of the repository, or only the plan files out of history. Nothing done; D188 left a history rewrite as a later choice.
+	- Owner, 2026-11-24: 'for the history, make sure the plans etc are not available on github. thats what I meant.' So: the plan files out of GitHub, history included; the code history is not the target.
 
 ## Decided
 
