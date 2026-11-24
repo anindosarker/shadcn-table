@@ -7,18 +7,8 @@ kanban-plugin: basic
 - [ ] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
 	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
 	- Source: Q165
-- [ ] **D181** Date picker docs site: a GitHub button on code panels, a short footer, the base select on the home header #R6
-	- Tracker 85 A3. Code panel: the More menu with the single entry Open in GitHub becomes a plain GitHub button (a menu of one entry is no menu). Home and 404 pages: the table's footer trimmed to the name, the licence line, GitHub and Storybook (D178: the look is the table's). Home header: the base select stays, the home demos need a base choice. Lead, 2026-11-24 (weight test: small docs looks, cheap to change).
-	- Source: Q169
 
 ## In progress
-
-- [ ] **D178** The date picker gets a small docs site with the table site's look #E27 #R6
-	- shadcn-date-picker gets a docs app that reuses the shell of the table's docs site (header, theme, fonts, section layout, code panels, install command blocks), served at date-picker.shadcn-table.com. Pages stay few: home, install, one page per picker type (date, date-time, time, week, month, year, ranges) with a live demo and its code, and props. The Storybook moves off the site root to its own address under the same project, as the table's does. The content is thin (D162); the look is the table's. Owner, 2026-11-24: 'the docs app looks bad, make it like table', 'k'.
-	- Source: Q167
-- [ ] **D179** The date picker ships with shadcn's Base UI arrow-key bug and a short note #E27 #R6
-	- The picker and the table keep shadcn's stock Base UI calendar part everywhere, their own trees, Storybooks and docs included, so a demo shows what a user gets: on Base UI, arrow keys in the day grid move the highlight but not keyboard focus (shadcn-ui/ui issue 9401, fix PRs 9402 and 9082 open since January 2026). No calendar file of ours is shipped and the approved code is not changed for it. The picker README carries a short note under Base UI: the symptom, the issue link, and the one line (ref={ref} on the day Button of components/ui/calendar.tsx) a user can add. Nothing is posted on shadcn-ui/ui; the draft comment in reference/q149-calendar-library/q160-upstream-draft.md stays unsent. Owner, 2026-11-24: 'no, ship with bug. tiny disclaimer is fine'.
-	- Source: Q160
 
 ## Done
 
@@ -1060,9 +1050,18 @@ kanban-plugin: basic
 - [x] **D177** The month and year grid arrows flip on right-to-left pages #E27 #R6
 	- The previous and next chevrons of GridHeader in components/period-views.tsx of the date picker get rtl:rotate-180, the class the day calendar's caption arrows already have, on the three bases in shadcn-date-picker. An owner-allowed change to the approved code (report 2.1). Owner, 2026-11-24: '162 k'.
 	- Source: Q162
+- [x] **D178** The date picker gets a small docs site with the table site's look #E27 #R6
+	- shadcn-date-picker gets a docs app that reuses the shell of the table's docs site (header, theme, fonts, section layout, code panels, install command blocks), served at date-picker.shadcn-table.com. Pages stay few: home, install, one page per picker type (date, date-time, time, week, month, year, ranges) with a live demo and its code, and props. The Storybook moves off the site root to its own address under the same project, as the table's does. The content is thin (D162); the look is the table's. Owner, 2026-11-24: 'the docs app looks bad, make it like table', 'k'.
+	- Source: Q167
+- [x] **D179** The date picker ships with shadcn's Base UI arrow-key bug and a short note #E27 #R6
+	- The picker and the table keep shadcn's stock Base UI calendar part everywhere, their own trees, Storybooks and docs included, so a demo shows what a user gets: on Base UI, arrow keys in the day grid move the highlight but not keyboard focus (shadcn-ui/ui issue 9401, fix PRs 9402 and 9082 open since January 2026). No calendar file of ours is shipped and the approved code is not changed for it. The picker README carries a short note under Base UI: the symptom, the issue link, and the one line (ref={ref} on the day Button of components/ui/calendar.tsx) a user can add. Nothing is posted on shadcn-ui/ui; the draft comment in reference/q149-calendar-library/q160-upstream-draft.md stays unsent. Owner, 2026-11-24: 'no, ship with bug. tiny disclaimer is fine'.
+	- Source: Q160
 - [x] **D180** The date picker docs site keeps one sidebar list of its nine pages #R6
 	- Tracker 85 A2, option 1: one flat sidebar list under the three labels Get Started, Pickers, Props. Three sections as on the table site would leave two sidebars with one row each; the section line above the page title and the page switcher in the breadcrumb are not shown. Lead, 2026-11-24 (weight test: docs layout, cheap to change).
 	- Source: Q168
+- [x] **D181** Date picker docs site: a GitHub button on code panels, a short footer, the base select on the home header #R6
+	- Tracker 85 A3. Code panel: the More menu with the single entry Open in GitHub becomes a plain GitHub button (a menu of one entry is no menu). Home and 404 pages: the table's footer trimmed to the name, the licence line, GitHub and Storybook (D178: the look is the table's). Home header: the base select stays, the home demos need a base choice. Lead, 2026-11-24 (weight test: small docs looks, cheap to change).
+	- Source: Q169
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
