@@ -26,6 +26,7 @@ import {
   getDefaultColumnFilterFn,
   resetColumnSizeAnimated,
 } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
+import { getFilterFocusTarget } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_FilterOptionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
@@ -88,7 +89,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
       localization,
       renderColumnActionsMenuItems,
     },
-    refs: { filterInputRefs },
     setColumnFilterFns,
     setColumnOrder,
     setColumnResizing,
@@ -438,7 +438,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
 
   const takeFilterInput = () => {
     const filterInput = focusFilterOnCloseRef.current
-      ? filterInputRefs.current?.[`${column.id}-0`]
+      ? getFilterFocusTarget(table, column.id)
       : undefined;
     focusFilterOnCloseRef.current = false;
     return filterInput;

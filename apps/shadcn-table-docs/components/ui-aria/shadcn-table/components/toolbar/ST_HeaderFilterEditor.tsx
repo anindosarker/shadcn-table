@@ -9,12 +9,13 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-aria/shadcn-table/shared/utils/drag.utils';
+import { getFilterFocusTarget } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_FilterEditor } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_FilterEditor';
 
 /**
- * The chips mode value editor's width: 260 px, or 308 px for a range of two
- * date, datetime or time fields, which keep a 140 px minimum each, so both
- * fit beside the 8 px gap and the 10 px padding.
+ * The chips mode value editor's width: 260 px, or 308 px for a date, datetime
+ * or time range, whose one range box keeps the 288 px minimum of the two
+ * boxes it replaced, so it fits beside the 10 px padding.
  */
 export const filterEditorClassName = <TData extends ST_RowData>(
   column: ST_Column<TData>,
@@ -35,7 +36,7 @@ export const filterEditorClassName = <TData extends ST_RowData>(
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
   columnId: string,
-) => table.refs.filterInputRefs.current?.[`${columnId}-0`]?.focus();
+) => getFilterFocusTarget(table, columnId)?.focus();
 
 /**
  * A ref callback that focuses the column's filter input once, when the aria

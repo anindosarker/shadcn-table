@@ -17,7 +17,10 @@ import {
   getColumnFilterInfo,
   useDropdownOptions,
 } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
-import { getValueAndLabel } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
+import {
+  getFilterFocusTarget,
+  getValueAndLabel,
+} from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 
 const tableHeadCellFilterLabelVariants = cva(
   'size-6 align-middle transition-all duration-150 ease-in-out',
@@ -131,8 +134,9 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   const handleShowColumnFilters = (event: MouseEvent<FocusableElement>) => {
     event.stopPropagation();
     flushSync(() => setShowColumnFilters(true));
-    filterInput()?.focus();
-    filterInput()?.select();
+    const target = getFilterFocusTarget(table, column.id);
+    target?.focus();
+    if (target instanceof HTMLInputElement) target.select();
   };
 
   const buttonProps = {
