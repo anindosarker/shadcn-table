@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q171** A day picked in the calendar does not filter the table until you leave the box, when it is the same day you just typed
-	- Spec 82, all three bases: the table hands the typed date to the picker as its value (picker-field.tsx:106-109), so picking that same day in the popup is no change for the picker and no onChange fires (date-picker.tsx:93-97); spec 82 1.6.2 counts the popup as inside the box, so a typed date waits for Enter or for focus to leave. The final value is right. Built as: keep. Other option: apply the typed date when the popup opens, against the wording of 1.6.2. Tracker run/trackers/82-date-filters-on-date-picker-tracker.md, Attention.
-	- Lead, 2026-11-24: a bug against D88 (a date applies on Enter, on blur or on a pick from the picker): a pick must apply. Fix in the table's code in spec 82, no change to the picker; sent to the runner as NOTE E26.
 
 ## Decided
 
@@ -562,6 +559,9 @@ kanban-plugin: basic
 	- After the merge 4ef057a on main of shadcn-date-picker the Vercel build passed (dpl_2FoDit6jk6w3XaarpFnNsnEKE4sq) with target preview; https://date-picker.shadcn-table.com/version.txt and /base/ answer 404 and the domain still serves the older production deployment. The Vercel project's production branch is master, the repository's only branch is main. The run changes no Vercel setting (spec 78, 1.6.1): the production branch has to be set to main in the project settings, or the run is told it may do it. Until then the live checks of the first tag (spec 80) cannot pass.
 	- State at the tag v0.1.0 (908300d, 2026-11-24): the tag, the GitHub release and the three install proofs are done. The DNS record is in place (dig returns Vercel addresses). The build of 908300d is deployment dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU, target preview, behind the Vercel login; the only production deployment is the older dpl_F3JtxETRT8GogN4K719MFoH2JE6x, so the domain answers 404 on /, /version.txt, /base/, /radix/, /aria/. Spec 80's live reads and its done mark wait on this one setting.
 	- Lead, 2026-11-24: fixed. The Vercel project's production branch was master (the repository was empty when it was connected); set to main through the Vercel API, the build of main 908300d promoted to production. Read after it: https://date-picker.shadcn-table.com/ 200, /version.txt 0.1.0, /base/, /radix/ and /aria/index.html 200.
+- [x] **Q171** A day picked in the calendar does not filter the table until you leave the box, when it is the same day you just typed
+	- Spec 82, all three bases: the table hands the typed date to the picker as its value (picker-field.tsx:106-109), so picking that same day in the popup is no change for the picker and no onChange fires (date-picker.tsx:93-97); spec 82 1.6.2 counts the popup as inside the box, so a typed date waits for Enter or for focus to leave. The final value is right. Built as: keep. Other option: apply the typed date when the popup opens, against the wording of 1.6.2. Tracker run/trackers/82-date-filters-on-date-picker-tracker.md, Attention.
+	- Lead, 2026-11-24: a bug against D88 (a date applies on Enter, on blur or on a pick from the picker): a pick must apply. Fix in the table's code in spec 82, no change to the picker; sent to the runner as NOTE E26.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
