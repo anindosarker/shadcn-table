@@ -1,6 +1,7 @@
 # 85: Docs site: GitHub button, short footer, base select on home, tracker
 
-Status: running
+Status: done
+Merge: 0c007cfe3901ef5a8b6e0b264d60be3e295055b7 (merge: date-picker-docs-site-d181 (85)) on main of anindosarker/shadcn-date-picker
 Branch `date-picker-docs-site-d181`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-docs-site-d181
 Checks:
 - Check: docs lint, `pnpm --filter docs lint` (heavy.sh) at eee77f9: pass (exit 0, 0 errors, the 1 warning of plan 4.3 on app/layout.tsx)
@@ -15,6 +16,18 @@ Checks:
 - Check: servers stopped, `kill` of pids 66164, 22801 and the pnpm parents, then `lsof -nP -iTCP:5356 -sTCP:LISTEN` and 5357: pass (prints nothing)
 - Check: captures, 1440 and 390 light, home footer, 404 footer, code panel: reference/q149-calendar-library/docs-site/d181-*.png (6 files)
 
+- Check: merge gate, origin/main ancestor of origin/date-picker-docs-site-d181 at eee77f9: yes, no remerge needed; builder checks green at eee77f9
+- Check: deployment of 0c007cf, `gh api repos/anindosarker/shadcn-date-picker/commits/0c007cf/status`: success (Vercel success)
+- Check: CI of 0c007cf, `gh run list -R anindosarker/shadcn-date-picker --branch main`: run 45332593946 completed success
+- Check: live `/` at 0c007cf, Playwright Chromium 1440 light: 200, title "shadcn-date-picker: Date Picker for shadcn/ui", 0 console errors, short footer (links `//shadcn-date-picker` to `/`, GitHub, Storybook to `/storybook/`; "MIT licensed. Built on shadcn/ui.")
+- Check: live `/docs/install` at 0c007cf: 200, title "Install | shadcn-date-picker", 0 console errors
+- Check: live `/docs/date` at 0c007cf: 200, title "Date | shadcn-date-picker", 0 console errors; day picked "2026-11-21" to "2026-11-22"; code panel group holds one `<a>` "Open in GitHub" to docs/demos/date.tsx; "More actions" count 0
+- Check: live `/storybook/base/` at 0c007cf: 200, title "Introduction - Docs ⋅ Storybook", 0 console errors
+- Check: live `/storybook/radix/` at 0c007cf: 200, title "Introduction - Docs ⋅ Storybook", 0 console errors
+- Check: live `/storybook/aria/` at 0c007cf: 200, title "Introduction - Docs ⋅ Storybook", 0 console errors
+- Check: live `/version.txt` at 0c007cf: 200, body "0.1.1", 0 console errors
+- Check: live `/no-such-page-m85` at 0c007cf: 404, title "Page not found | shadcn-date-picker", short footer same as `/`, only the browser's own 404 line in the console
+- Check: cleanup, `git worktree remove` of the d181 worktree, branch date-picker-docs-site-d181 deleted locally and on origin: pass
 - Task 1 D181: code panel GitHub button, short footer on home and 404, base select stays on the home header: done (eee77f9)
 
 Notes:
