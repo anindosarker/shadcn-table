@@ -70,6 +70,13 @@ Checks:
 - Check: capture pair advanced-start-date aria 1280, `test/.out/spec87/before/advanced-start-date-aria-1280.png` and `after/advanced-start-date-aria-1280.png`: the box takes `min-w-[250px]` and the calendar button now lies inside its border; before, the inner group was 250 and the button sat on the border (D184); editor width 260 unchanged
 - Check: capture pair advanced-start-date aria 390, `test/.out/spec87/before/advanced-start-date-aria-390.png` and `after/advanced-start-date-aria-390.png`: the box takes `min-w-[250px]` and the calendar button now lies inside its border; before, the inner group was 250 and the button sat on the border (D184); editor width 260 unchanged
 - Check: a difference a user would notice that no decision covers: none found; every pair above is D183 or D184. Extra views `after/extra-*` (time range in the subheader, a filled range box, its open popup) show the ends named Min and Max.
+- Check: `pnpm test validate-repo` (Task 6 tree): first run failed `tailwind-classes` (21: `[&_[data-slot=...]]:` written as `**:data-[slot=...]:`), fixed; rerun pass (bases identical, date picker matches, icon maps complete, tailwind valid, registry valid, registry fresh, story pages match, story code complete, 52 unit tests)
+- Check: `pnpm test lint` (Task 6 tree): first run failed (an unused and a misplaced `react-hooks/immutability` directive in the new ref callback); the callback now writes the refs from one place under the existing directive; rerun pass (9 warnings, all in the docs app, none in a changed file)
+- Check: `node lib/story-pages.mjs` (apps/shadcn-table-docs): 8 new story pages, meta.json written; each page given its description, Try it steps and Related guides
+- Check: `pnpm -w registry:build`, then `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`: run clean (177 table files each, components.json, global.css, package.json and lockfile kept)
+- Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` (Task 6 tree): pass (tsc clean each)
+- Check: `pnpm --filter shadcn-table-docs types:check` (Task 6 tree): pass
+- Check: `grep -c '^#### Spec 87' CHANGELOG.md`: prints 1
 
 Site map (task 2). Lines are base; radix the same to :529, then select :729, chips :773, caption :829; aria +37 to +50 (args :154, placeholder :229, key :355, date className :644, combobox ref :730, select :801, chips :846, caption :913):
 - :95-100 `rangeFilterIndex` prop: stays; a date-like range without index stands for the pair.
@@ -107,4 +114,5 @@ Notes:
 - Task 2 The site map and the before captures: done (c39a08cf1)
 - Task 3 The width class on the outer box: done (5eabc84a1)
 - Task 4 The range picker in the box: done (e823f404d)
-- Task 5 The existing plays and the look: done (see next commit)
+- Task 5 The existing plays and the look: done (62dc3074a)
+- Task 6 Docs texts, docs copies, the changelog: running (docs, copies and changelog in the next commit; docs E2E and installation E2E follow)
