@@ -9,4 +9,4 @@ Checks:
 - Check: validate-repo, `pnpm test validate-repo` at f1d1bff50: pass (no CHANGELOG line asked; test-only change)
 - Check: process.md P5 untouched, `git diff origin/claude/review -- .ai/plans/v0.9.x/anindosarker/process.md` at f1d1bff50: pass (empty)
 
-- Task 1 Docs copied check waits for the label: running (f1d1bff50)
+- Task 1 Docs copied check waits for the label: done (f1d1bff50)
