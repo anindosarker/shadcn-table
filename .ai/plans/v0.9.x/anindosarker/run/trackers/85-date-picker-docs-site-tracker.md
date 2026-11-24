@@ -15,9 +15,9 @@ Checks:
 - Check: `git ls-remote --heads https://github.com/anindosarker/shadcn-date-picker date-picker-docs-vercel-proof` prints nothing: fail, the branch is kept at 8f41b47 until A1 is settled
 - Check: `git -C shadcn-date-picker status --short` prints nothing: pass (the proof lives in its own worktree, which is kept)
 
-- Task 1 The read, inventory, not-taken list, dependencies, styles: running
-- Task 2 Demos and the base switcher, routes and content: running
-- Task 3 Vercel routing proof and Storybook prefix, checks list: blocked on A1 (plan sections 7.1 to 7.3 and 8 written; 7.4 waits)
+- Task 1 The read, inventory, not-taken list, dependencies, styles: done (c6c0e745, plan sections 1 to 4)
+- Task 2 Demos and the base switcher, routes and content: done (c6c0e745, plan sections 5 and 6)
+- Task 3 Vercel routing proof and Storybook prefix, checks list: blocked on A1 (c6c0e745; plan sections 7.1 to 7.3 and 8 written; 7.4 waits)
 
 Notes:
 - The build check of spec 85 ("for each taken trimmed row the diff shows deletions and the import paths only") is wider in the plan: a trimmed row may also list value replacements (names, addresses, NAV_LINKS, one function body). Each is named in its row. Without them the header would read shadcn-table.
