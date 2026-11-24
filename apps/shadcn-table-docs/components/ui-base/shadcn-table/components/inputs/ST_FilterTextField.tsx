@@ -314,15 +314,16 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // A date, datetime or time input holds a valid value after each typed
   // digit, so a typed value applies on Enter or blur only. The typed date not
   // applied yet; an unmount without a blur applies it.
-  const [typedDate, setTypedDate] = useState<{
+  const typedDate = useRef<{
     guard: ReturnType<typeof getCommitGuard>;
     value: string | string[];
   } | null>(null);
   const commitTypedDateOnUnmount = useRef(() => {});
   useLayoutEffect(() => {
     commitTypedDateOnUnmount.current = () => {
-      if (typedDate && isCommitGuardHeld(typedDate.guard)) {
-        commitFilterValue(typedDate.value || null);
+      const typed = typedDate.current;
+      if (typed && isCommitGuardHeld(typed.guard)) {
+        commitFilterValue(typed.value || null);
       }
     };
   });
@@ -336,10 +337,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   }, []);
 
   const commitTypedValue = () => {
-    if (typedDate) {
-      setTypedDate(null);
-      if (isCommitGuardHeld(typedDate.guard)) {
-        handlePick(typedDate.value || null);
+    const typed = typedDate.current;
+    if (typed) {
+      typedDate.current = null;
+      if (isCommitGuardHeld(typed.guard)) {
+        handlePick(typed.value || null);
       }
     } else {
       debouncedCommit.flush();
@@ -369,9 +371,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       !isDatePickerButtonClick.current
     ) {
       setFilterValue(newValue);
-      setTypedDate({ guard: getCommitGuard(), value: newValue });
+      typedDate.current = { guard: getCommitGuard(), value: newValue };
     } else {
-      setTypedDate(null);
+      typedDate.current = null;
       handlePick(newValue || null);
     }
   };
@@ -407,7 +409,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClear = () => {
     debouncedCommit.cancel();
-    setTypedDate(null);
+    typedDate.current = null;
     if (isMultiSelectFilter) {
       setFilterValue([]);
       column.setFilterValue([]);
@@ -429,7 +431,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleClearEmptyFilterChip = () => {
     debouncedCommit.cancel();
-    setTypedDate(null);
+    typedDate.current = null;
     setFilterValue('');
     column.setFilterValue(undefined);
     setColumnFilterFns((prev) => ({
@@ -550,6 +552,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     </InputGroupAddon>
   ) : null;
 
+  const textFieldClassName = cn('text-ellipsis', filterChipLabel && 'w-0');
+
   const commonTextFieldProps: InputProps = {
     'aria-label': filterPlaceholder,
     autoComplete: 'off',
@@ -564,7 +568,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     },
     title: filterPlaceholder,
     ...textFieldProps,
-    className: cn('text-ellipsis', filterChipLabel && 'w-0'),
+    className: textFieldClassName,
     onBlur: (e) => {
       commitTypedValue();
       textFieldProps.onBlur?.(e);
@@ -707,6 +711,19 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     value: (filterValue as string) || '',
   };
 
+  // A date range popup drops its end inputs unblurred: its close applies a typed end.
+  const rangePickerTypeProps =
+    datePickerTypeProps.type === 'time'
+      ? datePickerTypeProps
+      : {
+          ...datePickerTypeProps,
+          popoverProps: {
+            onOpenChange: (open: boolean) => {
+              if (!open) commitTypedValue();
+            },
+          },
+        };
+
   return (
     <>
       <div
@@ -741,7 +758,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           {isDateRange ? (
             <DatePicker
               {...datePickerBoxProps}
-              {...datePickerTypeProps}
+              {...rangePickerTypeProps}
               labels={{ from: localization.min, to: localization.max }}
               range
               value={toRangeValue(filterValue)}
@@ -768,7 +785,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 {...autocompleteProps}
                 className={cn(
                   nestedGroupClassName,
-                  commonTextFieldProps.className,
+                  textFieldClassName,
                   autocompleteProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}

@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import {
   type ST_ColumnDef,
+  type ST_ColumnFiltersState,
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { useSelector } from '@tanstack/react-store';
 
 // Date filter values are strings ('YYYY-MM-DD', 'HH:mm', 'YYYY-MM-DDTHH:mm')
 // while a `joined` accessor returns `Date` values: the comparison modes read
@@ -762,6 +765,24 @@ const typeEnd = async (
   return popup;
 };
 
+/** Types an end and leaves it pending: no Enter, no blur. */
+const typePendingEnd = async (
+  trigger: HTMLElement,
+  end: 'Max' | 'Min',
+  keys: string,
+) => {
+  if (
+    !document.querySelector('[role="dialog"][aria-label="Filter by Joined"]')
+  ) {
+    await realClick(trigger);
+  }
+  const popup = await rangePopup('Filter by Joined');
+  const input = popup.getByLabelText(end);
+  input.focus();
+  await realKeyboard().keyboard(keys);
+  return input;
+};
+
 const clearRange = async (
   trigger: HTMLElement,
   scope: ReturnType<typeof within>,
@@ -1023,6 +1044,178 @@ export const RangeEscapeAppliesOrderedEnds = {
     await realKeyboard().keyboard('{Escape}');
     await expectRangePopupClosed('Filter by Joined');
     await waitFor(() => expect(names(canvasElement)).toEqual(['Eve']));
+  },
+};
+
+// D200: the box never shows a range the filter does not have. The table
+// prints the Joined filter value, which the plays compare with the box.
+const RangeStateTable = ({
+  controlled = false,
+  place,
+}: Pick<RangeCase, 'place'> & { controlled?: boolean }) => {
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>(
+    [],
+  );
+  const table = useShadcnTable({
+    columnFilterDisplayMode: place,
+    columns: [nameColumn, dateRangeColumn],
+    data,
+    enableColumnFilterModes: true,
+    initialState: { showColumnFilters: place === 'subheader' },
+    ...(controlled && {
+      onColumnFiltersChange: setColumnFilters,
+      state: { columnFilters },
+    }),
+  });
+  const tableColumnFilters = useSelector(table.atoms.columnFilters);
+  return (
+    <>
+      <output data-testid="joined-filter">
+        {JSON.stringify(
+          tableColumnFilters.find((filter) => filter.id === 'joined')?.value ?? [],
+        )}
+      </output>
+      <ShadcnTable table={table} />
+    </>
+  );
+};
+
+const rangeText = (pair: [string, string]) =>
+  pair.every((end) => !end)
+    ? 'Pick a date'
+    : pair
+        .map((end) =>
+          end
+            ? new Date(`${end}T00:00`).toLocaleDateString('en-US', {
+                dateStyle: 'medium',
+              })
+            : '...',
+        )
+        .join(' - ');
+
+/** With the popup closed, the box and the column's filter value name one pair. */
+const expectBoxAndFilter = async (
+  trigger: HTMLElement,
+  pair: [string, string],
+) => {
+  await expectRangePopupClosed('Filter by Joined');
+  await waitFor(() => {
+    const value = JSON.parse(
+      body().getByTestId('joined-filter').textContent ?? '[]',
+    ) as Array<string | null>;
+    expect([value[0] ?? '', value[1] ?? '']).toEqual(pair);
+    expect(trigger).toHaveTextContent(rangeText(pair));
+  });
+};
+
+// A typed end with no Enter applies when Escape closes the popup; the editor
+// or popover around the box stays open.
+const typedMaxAppliesOnEscapeCase = (place: RangeCase['place']) => ({
+  render: () => <RangeStateTable place={place} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, place);
+    const trigger = await rangeTrigger(scope);
+    const max = await typePendingEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(max).toHaveValue('2025-11-11'));
+    expect(names(canvasElement)).toHaveLength(6);
+    await realKeyboard().keyboard('{Escape}');
+    await expectBoxAndFilter(trigger, ['', '2025-11-11']);
+    expect(names(canvasElement)).toEqual(['Ann', 'Ben', 'Cara', 'Dan', 'Finn']);
+    expect(await rangeTrigger(scope)).toBeVisible();
+  },
+});
+
+export const RangeTypedMaxAppliesOnEscape =
+  typedMaxAppliesOnEscapeCase('subheader');
+
+export const RangeTypedMaxAppliesOnEscapeInChipsEditor =
+  typedMaxAppliesOnEscapeCase('chips');
+
+export const RangeTypedMaxAppliesOnEscapeInPopoverFilter =
+  typedMaxAppliesOnEscapeCase('popover');
+
+export const RangeTypedMinAppliesOnEscapeWithMaxSet = {
+  render: () => <RangeStateTable place="subheader" />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(5));
+    const min = await typePendingEnd(trigger, 'Min', '10102025');
+    await waitFor(() => expect(min).toHaveValue('2025-10-10'));
+    expect(names(canvasElement)).toHaveLength(5);
+    await realKeyboard().keyboard('{Escape}');
+    await expectBoxAndFilter(trigger, ['2025-10-10', '2025-11-11']);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']);
+  },
+};
+
+// The picker orders a reversed pair when the popup closes: the ordered pair
+// applies, not the typed one.
+const typedReversedEndAppliesOrderedOnEscapeCase = (controlled: boolean) => ({
+  render: () => <RangeStateTable controlled={controlled} place="subheader" />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(5));
+    const min = await typePendingEnd(trigger, 'Min', '12122025');
+    await waitFor(() => expect(min).toHaveValue('2025-12-12'));
+    await realKeyboard().keyboard('{Escape}');
+    await expectBoxAndFilter(trigger, ['2025-11-11', '2025-12-12']);
+    expect(names(canvasElement)).toEqual(['Eve']);
+  },
+});
+
+export const RangeTypedReversedEndAppliesOrderedOnEscape =
+  typedReversedEndAppliesOrderedOnEscapeCase(false);
+
+export const RangeTypedReversedEndAppliesOrderedOnEscapeControlled =
+  typedReversedEndAppliesOrderedOnEscapeCase(true);
+
+/** A real press at the element's centre, whatever covers the page there. */
+const realPressAt = (element: HTMLElement) => {
+  const real = (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (
+          element: HTMLElement,
+          options: { force: boolean },
+        ) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent;
+  return real ? real.click(element, { force: true }) : userEvent.click(element);
+};
+
+// The 1.0.0 behaviour, pinned: a click outside blurs the end input.
+export const RangeTypedEndAppliesOnClickOutside = {
+  render: () => <RangeStateTable place="subheader" />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    const max = await typePendingEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(max).toHaveValue('2025-11-11'));
+    await realPressAt(within(canvasElement).getByText('Ann'));
+    await expectBoxAndFilter(trigger, ['', '2025-11-11']);
+    expect(names(canvasElement)).toEqual(['Ann', 'Ben', 'Cara', 'Dan', 'Finn']);
+  },
+};
+
+// Day and month alone are no date: nothing applies, the box keeps its range.
+export const RangeHalfTypedEndDropsOnEscape = {
+  render: () => <RangeStateTable place="subheader" />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Min', '10102025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(4));
+    const max = await typePendingEnd(trigger, 'Max', '1111');
+    expect(max).toHaveValue('');
+    expect((max as HTMLInputElement).validity.badInput).toBe(true);
+    await realKeyboard().keyboard('{Escape}');
+    await expectBoxAndFilter(trigger, ['2025-10-10', '']);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']);
   },
 };
 
