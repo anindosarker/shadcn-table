@@ -96,13 +96,17 @@ Shadcn Table has several built-in filter variants for advanced filtering. These 
 - `'range-slider'` - shows a slider for filtering a range of values
 - `'date'` - shows a date picker for filtering by date values
 - `'datetime'` - shows a date and time picker for filtering by date and time values
-- `'date-range'` - shows a date range picker for filtering by date ranges
-- `'datetime-range'` - shows a date and time range picker for filtering by date and time ranges
+- `'date-range'` - shows two date pickers, min and max, for filtering by date ranges
+- `'datetime-range'` - shows two date and time pickers, min and max, for filtering by date and time ranges
 - `'time'` - shows a time picker for filtering by time values
-- `'time-range'` - shows a time range picker for filtering by time ranges
+- `'time-range'` - shows two time pickers, min and max, for filtering by time ranges
 - `'checkbox'` - shows a checkbox for filtering by `'true'` or `'false'` values
 
 The `'date'`, `'datetime'` and `'time'` variants compare values as dates: by local day, to the minute, or by time of day, also when the accessor returns a `Date`.
+
+The date and time variants render `DatePicker` from [shadcn-date-picker](https://github.com/anindosarker/shadcn-date-picker), which installs with the table: a box to type in, with a calendar or a clock in a popup. A picked value applies at once; a typed value applies on Enter or when focus leaves the box. The filter value stays a string: `YYYY-MM-DD`, `YYYY-MM-DDTHH:mm` or `HH:mm`.
+
+`stFilterDatePickerProps`, `stFilterDateTimePickerProps` and `stFilterTimePickerProps` pass these on to the picker: `min`, `max`, `step` (date and time filters, and time filters), `disabled`, `id`, `className`, `style`, `aria-*` and `data-*` attributes, and the `onFocus`, `onBlur` and `onKeyDown` handlers. The other input props have no effect.
 
 <CustomizeFilterVariantsExample />
 

@@ -1,0 +1,145 @@
+# 79: Date picker Radix and React Aria versions, Date picker Radix version, tracker
+
+Status: done
+Merge: `5d13f4a` on main, merge: date-picker-radix-version (79); branch already contained origin/main 108d72e, no recheck needed; worktree and branch removed
+Branch `date-picker-radix-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-radix-version
+Checks:
+- Check: identical files, `cmp registry/base/components/date-picker/<file> registry/radix/components/date-picker/<file>` for each of the 18 files the design plan marks identical for Radix, at 1b06b47: pass (exit 0, 18 of 18)
+- Check: file count, `find registry/radix/components/date-picker -type f | wc -l`, at d5880df: pass (22)
+- Check: differing files, `diff -rq registry/base/components/date-picker registry/radix/components/date-picker`, at d5880df: pass (4 files: `types.ts`, `components/picker-popup.tsx`, `components/time-field.tsx`, `components/view-nav.tsx`, the plan's list for Radix)
+- Check: no Base UI import, `grep -rn '@base-ui' registry/radix/components/date-picker`, at d5880df: pass (no line)
+- Check: `pnpm typecheck`, at d5880df: pass (exit 0)
+- Check: `pnpm lint`, at d5880df: pass (exit 0)
+- Check: JSDoc count, `grep -rc '/\*\*' registry/radix/components/date-picker | awk -F: '{s+=$2} END {print s}'`, at d5880df: pass (3)
+- Check: `pnpm exec prettier --check registry/radix/components/date-picker`, at d5880df: pass (exit 0)
+- Check: `pnpm registry:check`, at 5224ac3: pass (exit 0; `registry/radix/registry.json` holds one item `date-picker-radix`, title `Date Picker (Radix UI)`, 22 files)
+- Check: `pnpm lint`, at 5224ac3: pass (exit 0)
+- Check: `pnpm typecheck`, at 5224ac3: pass (exit 0)
+- Check: `pnpm test --base radix`, at 5224ac3: FAIL (exit 1; 37 of 39 plays passed; `stories/DateTime.stories.tsx > Range` and `stories/Options.stories.tsx > Presets` failed, each again on its rerun)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 5224ac3: pass (prints nothing)
+- Check: `pnpm test --base base`, at 5224ac3: pass (exit 0, 39 of 39 plays)
+- Check: `git merge origin/main` (108d72e, the stories fix 78.2), at 132d291: pass (merge commit, no conflict, pushed)
+- Check: `pnpm registry:check`, at 132d291: pass (exit 0; `registry/radix/registry.json` holds one item `date-picker-radix`, title `Date Picker (Radix UI)`, 22 files)
+- Check: `pnpm test --base radix`, at 132d291: pass (exit 0, 39 of 39 plays, first run, no rerun)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 132d291: pass (prints nothing)
+- Check: `pnpm test --base base`, at 132d291: pass (exit 0, 39 of 39 plays)
+- Check: `DP_BASE=base storybook build -o /private/tmp/claude-501/dp-radix-look/base` and `DP_BASE=radix storybook build -o /private/tmp/claude-501/dp-radix-look/radix`, at 132d291: pass (exit 0, both)
+- Check: the look comparison, `bash /private/tmp/claude-501/dp-radix-look/run.sh` (static servers on 5344 and 5345, `compare.mjs` with playwright), at 132d291: pass (48 of 48 cells measured; 47 equal, 1 named difference L1; no part in one version only)
+- Check: both servers stopped, `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN`, at 132d291: pass (no line)
+- Check: no comparison script in the repository, `git status --short` in the worktree, at 132d291: pass (prints nothing; the script is `/private/tmp/claude-501/dp-radix-look/compare.mjs`)
+- Check: install proof, fresh Next.js app in `/private/tmp/claude-501/dp-radix-install/app` (`pnpm dlx create-next-app@latest app --ts --tailwind --eslint --app --no-src-dir --import-alias "@/*" --use-pnpm --turbopack --yes`, next 16.4.6; `pnpm dlx shadcn@latest init -b radix -p nova --no-rtl -y`: style `radix-nova`, the default `@/` aliases), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-radix#132d291a669bdc3e719593de16faa9501e489a1d`, at 132d291: pass (exit 0, 36 files created: the 22 of the picker, 13 parts, `hooks/use-mobile.ts`)
+- Check: install proof, `find components/date-picker -type f | wc -l`, at 132d291: pass (22)
+- Check: install proof, `diff -r components/date-picker <worktree>/registry/radix/generated/components/date-picker`, at 132d291: pass (prints nothing, exit 0). D173: the installed bytes equal the GENERATED folder, not the source; against the source `registry/radix/components/date-picker`, `diff -rq` lists the three files the style transform writes (`components/picker-popup.tsx`, `components/picker-trigger.tsx`, `modes/day-range-picker.tsx`)
+- Check: install proof, `pnpm exec tsc --noEmit`, at 132d291: pass (exit 0; `app/page.tsx` renders a controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />`, each with `value` and `onChange`)
+- Check: install proof, `pnpm exec next build`, at 132d291: pass (exit 0, route `/` prerendered as static content)
+- Check: scratch app deleted, `ls /private/tmp/claude-501/dp-radix-install`, at 132d291: pass (no such folder)
+- Check: `pnpm lint`, at 132d291: pass (exit 0)
+- Check: `pnpm typecheck`, at 132d291: pass (exit 0)
+- Check: Local CI at the head 132d291: `pnpm lint`, `pnpm typecheck` (the two lines above), `pnpm registry:check`, `pnpm test --base radix`, `pnpm test --base base` (their lines at 132d291 above, not rerun: the head did not move, origin/main is still 108d72e): pass, five of five
+- Check: `git fetch origin`, `git log HEAD..origin/main`, at 379aefc: pass (prints nothing; origin/main is still 108d72e, nothing to merge)
+- Check: `pnpm lint`, at 379aefc: pass (exit 0)
+- Check: `pnpm typecheck`, at 379aefc: pass (exit 0)
+- Check: `pnpm registry:check`, at 379aefc: pass (exit 0; `date-picker-radix`, 22 files, up to date; `pnpm registry:build` not run: no source file changed)
+- Check: `pnpm test --base radix`, at 379aefc: pass (exit 0, 39 of 39 plays)
+
+- Check (verifier): `git diff --name-only origin/main...HEAD`, at 379aefc: pass (README.md, the 22 files of `registry/radix/components/date-picker`, the 22 of `registry/radix/generated/components/date-picker`, `registry/radix/registry.json`; all owned)
+- Check (verifier): `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 379aefc: pass (prints nothing)
+- Check (verifier): `find registry/radix/components/date-picker -type f | wc -l`, `diff -rq` against the Base UI tree, `cmp` per identical file, `grep -rn '@base-ui'`, JSDoc count, at 379aefc: pass (22; 4 differing files, the plan's list; 18 of 18 cmp exit 0; no line; 3)
+- Check (verifier): `diff -u` of the 4 differing files against plan 3.1 to 3.4, at 379aefc: pass (every hunk is a plan row, nothing else)
+- Check (verifier): `pnpm test --base radix`, at 379aefc: pass (exit 0, 39 of 39 plays, first run)
+- Check (verifier): `pnpm test --base base`, at 379aefc: pass (exit 0, 39 of 39 plays)
+- Check (verifier): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at 379aefc: not rerun, the lines above at 379aefc hold
+- Check (verifier): `pnpm registry:build` then `git status --short`, at 379aefc: pass (exit 0, prints nothing)
+- Check (verifier): `registry/radix/registry.json`, at 379aefc: FAIL against spec 79 `:100` and the verifier brief: one item `date-picker-radix`, `registry:component`, 22 files, no `@base-ui/react`, but dependencies `cn`, `date-fns`, `lucide-react`, `react-day-picker` hold no `radix-ui`. The build derives them from the imports (`registry/radix/registry.ts:1`) and no picker file imports `radix-ui`; spec 79 `:100` says both "derived from the imports" and "`radix-ui` in place of `@base-ui/react`", which cannot both hold. Install proof passes (the parts bring `radix-ui`). For the lead: the spec wording or the build tool, not the version.
+- Check (verifier): look lines, at 379aefc: pass (48 lines; one named difference L1, cite `registry/radix/components/ui/popover.tsx:25-34` opened: no `collisionPadding`, Radix default 0 at `@radix-ui/react-popper@1.4.0/dist/index.mjs:110`; only one named difference exists to open)
+- Check (verifier): `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN` and `git ls-files` for a comparison script, at 379aefc: pass (no line, none)
+- Check (verifier): install proof sha 132d291 ancestor of 379aefc, `git diff --name-only 132d291..HEAD -- registry/radix`, at 379aefc: pass (ancestor, prints nothing; proof not rerun)
+- Check (verifier): `README.md` install command of `date-picker-radix` and the Radix list under `## Differences between the bases`, at 379aefc: pass (place, order and text as plan 5.2)
+- Check (verifier 2): `git fetch origin`, head 379aefc, origin/main 108d72e, `git log HEAD..origin/main`: nothing to merge
+- Check (verifier 2): `git diff --name-only origin/main...HEAD` and `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix/components/ui`, at 379aefc: pass (README.md, 22 source, 22 generated, `registry/radix/registry.json`; stat prints nothing)
+- Check (verifier 2): 22 files, `diff -rq` 4 files (plan 3.1 to 3.4 list), 18 of 18 `cmp` exit 0, no `@base-ui`, JSDoc 3, every `diff -u` hunk a plan 3.1 to 3.4 row, at 379aefc: pass
+- Check (verifier 2): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test --base base` at 379aefc: not rerun, the lines above at 379aefc hold
+- Check (verifier 2): `pnpm test --base radix`, at 379aefc: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check (verifier 2): `pnpm registry:build` then `git status --short`, at 379aefc: pass (exit 0, prints nothing)
+- Check (verifier 2): `registry/radix/registry.json`, at 379aefc: pass against the verifier brief (derived dependencies): one item `date-picker-radix`, `registry:component`, 22 files, dependencies `cn`, `date-fns`, `lucide-react`, `react-day-picker` equal the packages the 22 files import, no `@base-ui/react`; `radix-ui` rightly absent (no picker file imports it, the parts bring it). The earlier verifier FAIL on this point was against spec 79 `:100` wording, left to the lead
+- Check (verifier 2): look lines, at 379aefc: pass (48 lines; the one named difference L1 cites `registry/radix/components/ui/popover.tsx:25-34`, opened: `PopoverPrimitive.Content` with no `collisionPadding`)
+- Check (verifier 2): `lsof -nP -iTCP:5344 -iTCP:5345 -sTCP:LISTEN` and `git ls-files` for a comparison script, at 379aefc: pass (no line, none)
+- Check (verifier 2): install proof sha 132d291 ancestor of 379aefc, `git diff --name-only 132d291..HEAD -- registry/radix` prints nothing: pass, proof not rerun
+- Check (verifier 2): `README.md` install command and Radix list under `## Differences between the bases`, at 379aefc: pass (text as plan 5.2)
+- Task 1 identical files: done (1b06b47)
+- Reader task 1 at 1b06b475bdad8166fbf449eaade15799348ed603: no deviation
+- Task 2 differing files: done (d5880df)
+- Reader task 2 at d5880df4992ee5587ba74bfcc7d884fa239d947c: no deviation
+- Task 3 item definition and plays: done (5224ac3 item, generated install files and README; 132d291 merge of origin/main with the stories fix 78.2, every play passes)
+- Reader task 3 at 132d291a669bdc3e719593de16faa9501e489a1d: no deviation (note: item dependencies hold no radix-ui, correct by derivation: plan 3.1 removes the only primitive import and no Radix picker file imports radix-ui; registry.ts is unchanged against origin/main, the item was already there)
+- Task 4 the same look: done (no code change, branch head 132d291; 48 look lines below)
+- Task 5 install proof: done (no code change, branch head 132d291; the proof and the Local CI lines above)
+
+## Look
+
+- How: two static Storybooks of the branch at 132d291 (`DP_BASE=base`, `DP_BASE=radix`), Chromium by playwright, viewport 1280 x 800 and 390 x 844, no touch, the play not run (checked per cell: 0 `onChange` calls and no dialog before the click). Open: one click on the calendar or clock button of a box, the trigger of a range, the From clock button of the time range.
+- Parts: every element of the picker and of the popup (the box or trigger, the buttons and icons, the popup, the calendar or grid and each row and cell, the navigation, the time columns, the footer), matched by tag, role, label and order. Elements of 1 px or less that paint nothing (the focus guards of Base UI, a live region) are left out. Per part: the box relative to the picker, colour, background, the four borders, the four radii, font size, font weight, opacity and shadow; also which element holds focus.
+- Equal: every box within 1 px and every computed value the same.
+- L1, named difference, no card (plan section 5, row "The popup scrolls inside the room left"): a popover taller than the room under its trigger ends at the window's edge on Radix and 5 px above it on Base UI. Seen in one cell, the date and time range at 390 x 844: the popup is 792 px high, on Base UI 787; its content (806 px) scrolls inside on both; every other part of the cell is equal. Stock part: `registry/radix/components/ui/popover.tsx:25-34`, `PopoverPrimitive.Content` gets no `collisionPadding`, and the Radix default is 0; the Base UI positioner keeps 5.
+- Look: `Types/Date` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Date` Single, open, 1280: equal (131 parts)
+- Look: `Types/Date` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Date` Range, open, 1280: equal (267 parts)
+- Look: `Types/DateTime` Single, closed, 1280: equal (8 parts)
+- Look: `Types/DateTime` Single, open, 1280: equal (138 parts)
+- Look: `Types/DateTime` Range, closed, 1280: equal (6 parts)
+- Look: `Types/DateTime` Range, open, 1280: equal (273 parts)
+- Look: `Types/Time` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Time` Single, open, 1280: equal (90 parts)
+- Look: `Types/Time` Range, closed, 1280: equal (21 parts)
+- Look: `Types/Time` Range, open, 1280: equal (103 parts)
+- Look: `Types/Week` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Week` Single, open, 1280: equal (144 parts)
+- Look: `Types/Week` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Week` Range, open, 1280: equal (293 parts)
+- Look: `Types/Month` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Month` Single, open, 1280: equal (35 parts)
+- Look: `Types/Month` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Month` Range, open, 1280: equal (75 parts)
+- Look: `Types/Year` Single, closed, 1280: equal (8 parts)
+- Look: `Types/Year` Single, open, 1280: equal (31 parts)
+- Look: `Types/Year` Range, closed, 1280: equal (6 parts)
+- Look: `Types/Year` Range, open, 1280: equal (67 parts)
+- Look: `Types/Date` Single, closed, 390: equal (8 parts)
+- Look: `Types/Date` Single, open, 390: equal (131 parts)
+- Look: `Types/Date` Range, closed, 390: equal (6 parts)
+- Look: `Types/Date` Range, open, 390: equal (267 parts)
+- Look: `Types/DateTime` Single, closed, 390: equal (8 parts)
+- Look: `Types/DateTime` Single, open, 390: equal (138 parts)
+- Look: `Types/DateTime` Range, closed, 390: equal (6 parts)
+- Look: `Types/DateTime` Range, open, 390: named difference L1: the popup is 792 px high, on Base UI 787 px (273 parts, all others equal)
+- Look: `Types/Time` Single, closed, 390: equal (8 parts)
+- Look: `Types/Time` Single, open, 390: equal (90 parts)
+- Look: `Types/Time` Range, closed, 390: equal (21 parts)
+- Look: `Types/Time` Range, open, 390: equal (103 parts)
+- Look: `Types/Week` Single, closed, 390: equal (8 parts)
+- Look: `Types/Week` Single, open, 390: equal (144 parts)
+- Look: `Types/Week` Range, closed, 390: equal (6 parts)
+- Look: `Types/Week` Range, open, 390: equal (293 parts)
+- Look: `Types/Month` Single, closed, 390: equal (8 parts)
+- Look: `Types/Month` Single, open, 390: equal (35 parts)
+- Look: `Types/Month` Range, closed, 390: equal (6 parts)
+- Look: `Types/Month` Range, open, 390: equal (75 parts)
+- Look: `Types/Year` Single, closed, 390: equal (8 parts)
+- Look: `Types/Year` Single, open, 390: equal (31 parts)
+- Look: `Types/Year` Range, closed, 390: equal (6 parts)
+- Look: `Types/Year` Range, open, 390: equal (67 parts)
+
+## Notes
+
+- Waited on the owner cards Q154 to Q159 (2026-11-24); settled by D168 (K1), D169 (K2), D170 (K3), D171 (K4 to K6). RESUME 79 from the lead.
+- Task 3, origin/main taken at ed74d58 (already in the branch). The item's dependencies as the build derives them: `cn`, `date-fns`, `lucide-react`, `react-day-picker`; no `radix-ui`, because no file of the version imports it (the parts do). Registry dependencies: the same ten as the Base UI item.
+- Task 3, plan line added first (c1f2836f, section 5.2): the install command of a base in `README.md`, its place and order.
+- Task 3, blocked play 1: `stories/Options.stories.tsx > Presets`, step "U2 Tab past the last control closes the popover" (`:566-571`): `expectClosed("Select date")` after `userEvent.tab()` on the last control. A Base UI reading, named difference R1 (plan 5.1, D171): on Radix Tab goes to the first control and the popover stays open. Not fixed here.
+- Task 3, blocked play 2: `stories/DateTime.stories.tsx > Range`, step "R16 opening an end's clock orders a reversed pair, then edits that end" (`:237-281`): the last `expectValue` gets `["2026-11-05T08:00","2026-11-20T10:00"]`, expected `["2026-11-05T08:00","2026-11-20T09:00"]`. Cause, read from an event log of the run: the first `dateKeys` call of the file runs the helper `isDayFirst` (`stories/support/play.ts:96-108`) while the range popup is open; it appends a probe `input` to `document.body` and focuses it. On Radix a focus outside an open popover closes it (`@radix-ui/react-popover@1.3.1/dist/index.mjs:273-274`, `@radix-ui/react-dismissable-layer@1.2.1/dist/index.mjs:86-88`); Base UI leaves it open. The popup and the clock opened in it are gone about 130 ms later (the exit animation), before the click on the hour. A user cannot do this: Tab stays in the popover (R1) and a press outside closes on both bases. Proof: a script that opens the `Date` range popup and focuses an `input` appended to `body` finds 1 dialog before and 0 after; with a real pointer and keys and no probe the step gives the expected value on Radix. A helper that relies on Base UI's popover staying open: a stories fix (for example the probe before the popup opens), not fixed here and the version not bent.
+- Task 3, resumed after the stories fix 78.2 (origin/main 108d72e): both blocked plays pass on Radix at 132d291 with no change to the version.
+- Review round 1: 0 majors, 3 minors, fixed at 379aefc
+- Review round 1, minor 1, the phone dialog opened by touch: reviewer right. Base UI focuses the dialog itself (`@base-ui/react@1.9.0/dialog/popup/DialogPopup.js:59`, `utils/popups/popupStoreUtils.js:45`); Radix focuses the first tabbable control, the X, on every device (`@radix-ui/react-focus-scope@1.3.1/dist/index.mjs:99`, used by `@radix-ui/react-dialog@1.3.1/dist/index.mjs:248-254`). The plan was silent. Plan first (139ac2c4): section 5 row "The phone dialog", new named difference R3 in 5.1, the Radix README line of 5.2 extended to the phone dialog. Then `README.md:50` (379aefc). No code change: D171, the picker adds no focus override, as for A4 on React Aria.
+- Review round 1, minor 2, `README.md` not in the milestone's "Files owned" (spec 79 `:145`): reviewer right about the list. The edit is ordered by plan 5.2 (D171) and matches it word for word; no change in the version. The spec line is the lead's to extend, not edited here.
+- Review round 1, minor 3, no `radix-ui` in the item's dependencies against spec 79 `:100`: the item is correct by the same line's rule "derived from the imports": `grep -rn 'radix-ui' registry/radix/components/date-picker` prints nothing (plan 3.1 removes the only primitive import); the ten parts in `registryDependencies` bring `radix-ui`. No change; the spec wording is the lead's.
+- Review round 1, the two "checked and clean" points: no action.

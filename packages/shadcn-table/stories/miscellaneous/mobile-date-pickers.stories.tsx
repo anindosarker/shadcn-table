@@ -13,9 +13,9 @@ export default meta;
 // API GAP: the original MRT story relied on MUI X `<DatePicker>` /
 // `<MobileDateTimePicker>` for the date/time filter UI. ST has no MUI date
 // picker dependency; the `date`, `date-range`, `datetime`, `datetime-range`,
-// `time`, and `time-range` filter variants are backed by native HTML date/time
-// inputs instead. This port keeps the same column/filterVariant config so the
-// native-input equivalents are exercised.
+// `time`, and `time-range` filter variants render the shadcn date picker
+// instead. This port keeps the same column/filterVariant config so every
+// variant is exercised.
 const data = [...Array(120)].map(() => ({
   arrivalTime: faker.date.recent(),
   birthDate: faker.date.birthdate({ max: 2020, min: 1980, mode: 'age' }),
@@ -84,8 +84,8 @@ export const MobileDateTimePickers = () => (
   />
 );
 
-// The date and time filters are native inputs of the right type, and a date
-// filter narrows the rows.
+// Each date picker holds a box of the right type, and a date filter narrows
+// the rows.
 MobileDateTimePickers.play = async ({ canvasElement }: StoryContext) => {
   await within(canvasElement).findAllByRole('columnheader');
   const inputs = (type: string) =>

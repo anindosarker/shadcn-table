@@ -44,7 +44,8 @@
         "slider",
         "spinner",
         "switch",
-        "tooltip"
+        "tooltip",
+        "anindosarker/shadcn-date-picker/date-picker-base#v0.1.1"
       ],
       "files": [
         {
@@ -1464,7 +1465,8 @@
         "slider",
         "spinner",
         "switch",
-        "tooltip"
+        "tooltip",
+        "anindosarker/shadcn-date-picker/date-picker-radix#v0.1.1"
       ],
       "files": [
         {
@@ -2884,7 +2886,8 @@
         "slider",
         "spinner",
         "switch",
-        "tooltip"
+        "tooltip",
+        "anindosarker/shadcn-date-picker/date-picker-aria#v0.1.1"
       ],
       "files": [
         {
@@ -4304,7 +4307,8 @@
         "slider",
         "spinner",
         "switch",
-        "tooltip"
+        "tooltip",
+        "anindosarker/shadcn-date-picker/date-picker-base#v0.1.1"
       ],
       "files": [
         {

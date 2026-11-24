@@ -172,3 +172,32 @@ Each line is the owner's ruling in the review chat. Not D items; the lead record
 
 - Folder `test-projects/next-app/components/date-picker-9-3-3`, head `9f04e6c` (next-app, not pushed). Cards "Full version, one read helper" on all twelve rows. Differs from 9.3.2 in `components/picker-field.tsx` only: `draftOf`, left with one caller, is merged into `read`. Same rules, no behaviour change.
 - Checks: `tsc`, `eslint`, `prettier` clean; diff read by the runner; Chromium 1280, rows 1 and 11 against 9.3.2: value and calls lines equal at each step, no console error.
+
+## Version 9.3.4, fewer own rules, 2026-11-23
+
+- Why: the owner asked of `read` "why do we need this?" and then "shouldn't you have done this yourself in the first place": the reviews had left own rules alone because they were behaviour of an older version. An auditor with no history listed every rule the picker adds on top of the browser and the libraries, all 22 files: 87 pieces, 6 marked drop.
+- Folder `test-projects/next-app/components/date-picker-9-3-4`, head `d1ff1f2` (next-app, not pushed). Cards "Full version, fewer own rules" on all twelve rows.
+- Dropped:
+  - The refusal of a year with five or more digits in `read`; the box's `max` is the limit (owner).
+  - The year box `title` and the label key `yearFormat` (44 keys).
+  - The state `typing` in the date range and in the week and month range: the calendar and year list now follow a typed year at once. With it gone, the first click on a day after a far typed year (outside 1900 to 2100) picks; on 9.3.3 it picked nothing.
+- Marked drop by the audit, put back by the runner because the owner approved the look on 2026-11-21 (call 9): the calendar's own row spacing (stock spacing made popups about 19 px taller) and the "Select time" text of the Time field on iPhone.
+- Structure, on the owner's word: `labels.ts` moved to `utils/`; the type re-export removed from `date-picker.tsx` (apps import types from `types.ts`); `types.ts` kept, every type in it is public, part of a public type, or used by two or more files, so none moved.
+- Kept with the reason, among others: the draft that holds unfinished text in a text box; a required box keeps its value when emptied; `filled`, the re-read on leaving the box and the remount on X (the X clears a half-typed date); the default `max` with a four-digit year; the week and month `pattern` and the real-value check; the step base at midnight.
+- Checks: reader on the diff (one finding, docs only, fixed); Chromium 1280 on each change and a basic pass on all twelve rows (clean); Firefox on rows 7, 9, 11 (clean); after the last step `tsc`, `eslint`, `prettier` clean and the row 1 popup the same height as 9.3.3.
+- Open: Chromium and Firefox stop a typed year at four digits. Playwright WebKit lets a five-digit year through (it only flags it), and such a year breaks the picker: no selection in the calendar, a date-time cut wrong after a time is typed (`datePart`, `timePart` in `utils/values.ts` cut at fixed places), a range swapped on close (`isReversed` compares text). 9.3.3 was wrong there too (the value stuck at the first four digits). Real Safari not seen.
+
+## Promotion and version 9.3.5, fewer comments, 2026-11-23
+
+- Owner on 9.3.4: "The code lgtm. just adjust the comments. remember less is more". The idea of the shadcn `Select` in place of the native selects in the calendars was looked up and left (stock shadcn Calendar uses the native select; a swap needs a made-up change event, loses the phone's own wheel, and has no virtual list for 200 years).
+- Promotion: the old default is kept as `components/date-picker-6-2` (`fc7fddf`, the 14 demo files that imported it point there); `components/date-picker/` was 9.3.4 (`9efa6b1`) and is now 9.3.5 (`1375472`). Nothing outside the demo imported the old default; nothing imports the new one yet.
+- 9.3.5: folder `components/date-picker-9-3-5`, commit `52611e9`, cards "Full version, fewer comments" on all twelve rows. Comments only: 416 comment lines to 111, 3,529 lines to 3,218. A script printing each file without comments shows all 22 files equal to 9.3.4. `tsc`, `eslint`, `prettier` clean.
+- Comment rule used: a comment stays only where the code cannot say why (a browser quirk, a rule a reader would otherwise undo, the source of a length), in one line.
+
+## Version 9.3.6, comments only for outside facts, 2026-11-23
+
+- Owner on 9.3.5: "It still has unnecessary comments. Stuff that can be understood from the code isn't necessary to reiterate in comments again", and "use ASD-STE100 pls".
+- Folder `components/date-picker-9-3-6`, commits `acbb4da` and `e1bfbaa`; default `components/date-picker/` is 9.3.6 (`9cfba19`). Cards "Full version, comments only for outside facts" on all twelve rows.
+- Rule: a comment stays only for a fact outside our code (a browser, React, a library, a stock shadcn part), written in ASD-STE100. No description of a type, prop or helper. One exception: one line on `DatePicker` giving the format of `value`, for the editor tooltip.
+- 114 comment lines to 38; 3,218 lines to 3,141. Code equal to 9.3.5 and 9.3.4 in all 22 files (printed without comments). `tsc`, `eslint`, `prettier` clean.
+- Four kept lines repeat older comments and were not checked against the browser or library: `modes/day-range-picker.tsx:67`, `components/picker-popup.tsx:89`, `components/picker-field.tsx:36` (this one was measured in Chromium by the 9.3.4 audit), `components/time-field.tsx:54`.

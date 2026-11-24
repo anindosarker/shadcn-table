@@ -736,9 +736,15 @@ export const SubheaderRangeFieldsNarrow = {
         ] as const) {
           const th = thFor(name);
           const cell = th.getBoundingClientRect();
+          // A date box holds the picker's own group inside the field's.
           const [min, max] = Array.from(
             th.querySelectorAll('[data-slot="input-group"]'),
-          ).map((group) => group.getBoundingClientRect());
+          )
+            .filter(
+              (group) =>
+                !group.parentElement?.closest('[data-slot="input-group"]'),
+            )
+            .map((group) => group.getBoundingClientRect());
           // D61: Min and Max stay on one row at every width.
           expect(
             Math.abs(max.top - min.top),

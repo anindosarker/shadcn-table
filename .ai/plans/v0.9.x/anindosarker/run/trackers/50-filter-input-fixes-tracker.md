@@ -1,6 +1,6 @@
 # 50: Filter input fixes, tracker
 
-Status: planned
+Status: stopped (D164)
 Branch `[branch]`, worktree [name]
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]

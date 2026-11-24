@@ -1,0 +1,86 @@
+# 80: Date picker first tag, tracker
+
+Status: done
+Merge: 908300d (tagged merge, v0.1.0), a3390db (README lines, D174), c42b8bb (Introduction install commands at #v0.1.0)
+Branch `date-picker-first-tag` (removed after task 4: worktree, local and remote branch deleted; clone on main 908300d)
+Branch `date-picker-readme-react-aria` (D174, commit 5dcd8b1, merged into main as a3390db; worktree, local and remote branch deleted; clone on main a3390db)
+Checks:
+- Check: README tag count, `grep -c '#v0.1.0' README.md` at e27727e: pass (3)
+- Check: README item count, `grep -c -E 'date-picker-(base|radix|aria)#v0.1.0' README.md` at e27727e: pass (3)
+- Check: lint, `pnpm lint` at e27727e: pass (exit 0)
+- Check: ready bases, `node -e` on `tools/bases.mjs` `readyBases()` at e27727e: pass (base,radix,aria)
+- Check: owned files, `git diff --name-only origin/main...HEAD` at e27727e: pass (README.md only)
+- Check: head, `git rev-parse HEAD` = `git rev-parse origin/main` in the worktree: pass (908300d)
+- Check: install, `pnpm install --frozen-lockfile` at 908300d: pass (exit 0)
+- Check: lint, `pnpm lint` at 908300d: pass (exit 0)
+- Check: types, `pnpm typecheck` at 908300d: pass (exit 0)
+- Check: registry, `pnpm registry:check` at 908300d: pass (exit 0, three items up to date, 22 files each)
+- Check: tests base, `pnpm test --base base` at 908300d: pass (7 files, 39 tests, no rerun)
+- Check: tests radix, `pnpm test --base radix` at 908300d: pass (7 files, 39 tests, no rerun)
+- Check: tests aria, `pnpm test --base aria` at 908300d: pass (7 files, 39 tests, no rerun; Q164 race not hit)
+- Check: site build, `pnpm storybook:build` at 908300d: pass (exit 0)
+- Check: site files, `storybook-static/{base,radix,aria}/index.html` and `version.txt` at 908300d: pass (all exist, version.txt 0.1.0, landing links ./base/ ./radix/ ./aria/)
+- Check: CI, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45275772159 at 908300d: pass (completed, success)
+- Check: tag absent before, `git ls-remote --tags origin v0.1.0` at 908300d: pass (empty)
+- Check: tag pushed, `git ls-remote --tags https://github.com/anindosarker/shadcn-date-picker v0.1.0`: pass (one line, tag object 310b4a0)
+- Check: tag commit, `git rev-parse 'v0.1.0^{commit}'`: pass (908300d)
+- Check: release, `gh release view v0.1.0 -R anindosarker/shadcn-date-picker --json tagName --jq .tagName`: pass (v0.1.0)
+- Note: D173 changed the install; installed folders equal `registry/<base>/generated/components/date-picker`, so the diff -r of 1.6.3 runs against the generated folder of each base, not the source folder.
+- Check: install base, fresh Next.js app (`shadcn create -t next -b base -p nova`, style base-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base#v0.1.0` at tag v0.1.0 (908300d): pass (35 files created, button skipped as identical)
+- Check: files base, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
+- Check: diff base, `diff -r components/date-picker registry/base/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
+- Check: build base, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
+- Check: install radix, fresh Next.js app (`shadcn create -t next -b radix -p nova`, style radix-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-radix#v0.1.0` at tag v0.1.0 (908300d): pass (35 files created, button skipped as identical)
+- Check: files radix, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
+- Check: diff radix, `diff -r components/date-picker registry/radix/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
+- Check: build radix, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
+- Check: install aria, fresh Next.js app (`shadcn create -t next -b aria -p nova`, style aria-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-aria#v0.1.0` at tag v0.1.0 (908300d): pass (34 files created, button skipped as identical)
+- Check: files aria, `find components/date-picker -type f | wc -l` at v0.1.0 (908300d): pass (22)
+- Check: diff aria, `diff -r components/date-picker registry/aria/generated/components/date-picker` (clone main = v0.1.0, 908300d; generated folder per D173): pass (no output)
+- Check: build aria, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
+- Check: deployments, `gh api repos/anindosarker/shadcn-date-picker/deployments?per_page=5`: none listed (empty array, also for environment Production and Preview)
+- Check: Vercel status of 908300d, `gh api .../commits/908300d/status`: success, deployment dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU "Deployment has completed"
+- Check: deployment target, `vercel inspect dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU`: target preview, Ready, https://shadcn-date-picker-lbpg4u2b9-anindo-sarkers-projects.vercel.app, alias shadcn-date-picker-git-main-anindo-sarkers-projects.vercel.app
+- Check: preview public, python3 urllib on <preview>/version.txt at 908300d: fail (redirect to vercel.com/login, Vercel login wall)
+- Check: production deployment of 908300d, `vercel ls shadcn-date-picker --environment production`: none (only production deployment dpl_F3JtxETRT8GogN4K719MFoH2JE6x, created 2 hours before the 908300d build, so not 908300d)
+- Check: domain, python3 urllib on https://date-picker.shadcn-table.com/version.txt, /, /base/, /radix/, /aria/: fail (all HTTP 404)
+- Check: DNS, `dig +short date-picker.shadcn-table.com`: in place (7c01400999e33fe7.vercel-dns-017.com., 64.29.17.1, 216.198.79.1)
+- Check: clean-up, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-first-tag deleted locally and on origin
+- Check: D174 lint, `pnpm lint` at 5dcd8b1: pass (exit 0)
+- Check: D174 owned files, `git diff --name-only origin/main...HEAD` at 5dcd8b1: pass (README.md only)
+- Check: D174 merge, `merge --no-ff origin/date-picker-readme-react-aria` pushed to main: a3390db ("merge: date-picker-readme-react-aria (80)")
+- Note: no new tag after a3390db; no installed file changed, the three addresses at #v0.1.0 (908300d) are unchanged.
+- Check: Vercel status of a3390db, `gh api .../commits/a3390db/status`: pass (success, "Deployment has completed")
+- Check: CI of a3390db, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45277990986: pass (completed, success)
+- Check: domain at a3390db, python3 urllib on https://date-picker.shadcn-table.com/version.txt, /, /base/, /radix/, /aria/: pass (all 200, version.txt 0.1.0)
+- Check: live landing, playwright on https://date-picker.shadcn-table.com/: pass (200, links ./base/ ./radix/ ./aria/)
+- Check: live version, playwright on https://date-picker.shadcn-table.com/version.txt: pass (200, 0.1.0)
+- Check: live base, playwright on https://date-picker.shadcn-table.com/base/iframe.html?id=types-date--single: pass (renders, popup opens on click, November 15th picked, value "" to "2026-11-15", popup closed, no console error)
+- Check: live radix, playwright on https://date-picker.shadcn-table.com/radix/iframe.html?id=types-date--single: pass (same as base, no console error)
+- Check: live aria, playwright on https://date-picker.shadcn-table.com/aria/iframe.html?id=types-date--single: pass (same as base, no console error)
+- Check: live Introduction, playwright on https://date-picker.shadcn-table.com/base/iframe.html?id=introduction--docs&viewMode=docs: fail (200, install command is `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base` without #v0.1.0; source stories/Introduction.mdx:14, outside the owned file README.md)
+- Check: DNS at a3390db, `dig +short date-picker.shadcn-table.com`: in place (7c01400999e33fe7.vercel-dns-017.com., 216.198.79.65, 64.29.17.65)
+- Check: clean-up after a3390db, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-readme-react-aria deleted locally and on origin; scratch scripts deleted
+- Check: Introduction install, `pnpm install --frozen-lockfile` at cc34b23: pass (exit 0)
+- Check: Introduction lint, `pnpm lint` at cc34b23: pass (exit 0)
+- Check: Introduction site build, `pnpm storybook:build` at cc34b23: pass (exit 0)
+- Check: Introduction tag count, `grep -c '#v0.1.0' stories/Introduction.mdx` at cc34b23: pass (3; no install command without the tag)
+- Check: Introduction owned files, `git diff --name-only origin/main...HEAD` at cc34b23: pass (stories/Introduction.mdx only)
+- Check: Introduction merge, `merge --no-ff origin/date-picker-introduction-tag` pushed to main: c42b8bb ("merge: date-picker-introduction-tag (80)"); no new tag (no installed file changed)
+- Check: Vercel status of c42b8bb, `gh api .../commits/c42b8bb/status`: pass (success)
+- Check: CI of c42b8bb, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45278859948: pass (completed, success)
+- Check: live Introduction at c42b8bb, playwright on https://date-picker.shadcn-table.com/base/iframe.html?id=introduction--docs&viewMode=docs: pass (base, radix, aria install commands, each with #v0.1.0)
+- Check: live version at c42b8bb, python3 urllib on https://date-picker.shadcn-table.com/version.txt: pass (0.1.0)
+- Check: clean-up after c42b8bb, `git -C shadcn-date-picker worktree list | wc -l`: pass (1); `status --short`: pass (empty); branch date-picker-introduction-tag deleted locally and on origin
+- Introduction page: install commands at #v0.1.0, merge c42b8bb, live read pass
+
+- Task 1 README: done (e27727e, merged into main as 908300d "merge: date-picker-first-tag (80)"; no workflow run). Per-base calendar sentence: Base UI and Radix UI use the style's calendar part, React Aria brings its own react-day-picker day calendar with the nova calendar classes (D168).
+- Task 2 tag and release: annotated tag v0.1.0 on 908300d pushed; GitHub release v0.1.0 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.0), notes = one line per base plus the README install section.
+- Task 3 install proofs: done at tag v0.1.0 (908300d); base, radix, aria each pass install, 22 files, empty diff -r against registry/<base>/generated/components/date-picker (D173), tsc and next build exit 0; scratch apps /private/tmp/claude-501/dp-tag-{base,radix,aria} deleted.
+- Task 4 live reads: first pass not run (Q163, domain 404). Second pass after RESUME: D174 README lines merged as a3390db; landing, version.txt and the Date story on base, radix, aria pass; the Introduction page fails (install command without #v0.1.0, stories/Introduction.mdx:14, not an owned file). Clean-up done. Status stays running.
+
+## Attention
+
+- The site date-picker.shadcn-table.com does not show the library because Vercel treats main as a preview; the project's production branch has to be set to main (Q163).
+- RESUME 80 from the lead, 2026-11-24: Q163 fixed (Vercel production branch is main, the site answers 200, version.txt 0.1.0). D174: two README lines under React Aria, then the live reads.
+- Live Introduction page shows `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base` without `#v0.1.0` (stories/Introduction.mdx:14); spec 1.6.4 wants the tag in it. Introduction.mdx is outside this milestone's owned file (README.md); the lead decides whether to add #v0.1.0 there (a site-only change, no installed file changes).

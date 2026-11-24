@@ -1,0 +1,144 @@
+# 79: Date picker Radix and React Aria versions, Date picker React Aria version, tracker
+
+Status: done
+Merge: `8bd993c` on main of shadcn-date-picker (merge: date-picker-react-aria-version (79)); origin/main 5d13f4a was an ancestor of the branch head decb84d, so no remerge; worktree removed, branch deleted locally and on origin
+Branch `date-picker-react-aria-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-react-aria-version
+Checks:
+- Check: identical files, `cmp registry/base/components/date-picker/<file> registry/aria/components/date-picker/<file>` for each of the 13 files the plan marks identical for React Aria (`date-picker.tsx`, the five `modes/*.tsx`, `components/picker-box.tsx`, `components/picker-presets.tsx`, the five `utils/*.ts`) at 89ee92d: pass (13 of 13 exit 0)
+- Check: file list, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker` at 89ee92d: pass (lists only the plan's 9 differing files, as "Only in" base until task 2)
+- Check: file count, `find registry/aria/components/date-picker -type f | wc -l` at e244ed0: pass (22)
+- Check: differing files, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker` at e244ed0: pass (lists exactly the plan's 9: `types.ts`, `components/day-calendar.tsx`, `components/period-views.tsx`, `components/picker-field.tsx`, `components/picker-popup.tsx`, `components/picker-trigger.tsx`, `components/time-columns.tsx`, `components/time-field.tsx`, `components/view-nav.tsx`)
+- Check: no Base UI import, `grep -rn '@base-ui' registry/aria/components/date-picker` at e244ed0: pass (prints nothing)
+- Check: `pnpm typecheck` at e244ed0: pass (exit 0)
+- Check: `pnpm lint` at e244ed0: pass (exit 0)
+- Check: JSDoc count, `grep -rc '/\*\*' registry/aria/components/date-picker | awk -F: '{s+=$2} END {print s}'` at e244ed0: pass (3)
+- Check: `pnpm exec prettier --check registry/aria/components/date-picker` at e244ed0: pass
+- Check: `pnpm registry:build` then `pnpm registry:check` at 425b257: pass (exit 0; `registry/aria/registry.json` holds one item `date-picker-aria`, "Date Picker (React Aria)", `registry:component`, 22 files under `generated/components/date-picker/`; `dependencies` `cn`, `date-fns`, `lucide-react`, `react-aria-components`, `react-day-picker`; `registryDependencies` the nine of the plan's 4.5, no `calendar`)
+- Check: `pnpm lint` and `pnpm typecheck` at 425b257: pass (exit 0 each)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/aria/components/ui` at 425b257 (origin/main ed74d58): pass (prints nothing)
+- Check: `pnpm test --base base` at 425b257: pass (exit 0, 39 of 39 plays)
+- Check: `pnpm test --base aria` at 425b257: FAIL (exit 1; run 1: 28 of 39 passed, run 2: 29 of 39; the failing plays are listed under Task 3, none is fixed here)
+- Check: `git fetch origin && git merge origin/main` (108d72e, the stories fix 78.2) at 2be8d33: pass (no conflict, pushed)
+- Check: `pnpm registry:check` at 2be8d33: pass (exit 0; `registry/aria/registry.json` up to date, one item `date-picker-aria`, "Date Picker (React Aria)", 22 files)
+- Check: `pnpm test --base aria` at 2be8d33: pass (exit 0, 39 of 39 plays in the first run, no rerun; `Options` Open State passed)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/aria/components/ui` at 2be8d33 (origin/main 108d72e): pass (prints nothing)
+- Check: `pnpm test --base base` at 2be8d33: pass (exit 0, 39 of 39 plays)
+- Check: `pnpm lint` and `pnpm typecheck` at 2be8d33: pass (exit 0 each)
+- Check: `git fetch origin && git merge origin/main` at 2be8d33 before task 4: pass (already up to date, origin/main 108d72e)
+- Check: `DP_BASE=base storybook build --quiet -o /private/tmp/claude-501/dp-aria-look/base` and the same with `DP_BASE=aria` and `/aria` at 2be8d33: pass (both built), served by `python3 -m http.server` on 5354 (Base UI) and 5355 (React Aria)
+- Check: look comparison, `node /private/tmp/claude-501/dp-aria-look/compare.mjs` (playwright of the worktree, Chromium, viewport 1280 and 390 by 900, `iframe.html?id=types-<story>&viewMode=story&embed=true` so the play does not run, the popup opened by a click on the trigger, read after its animations ended) at 2be8d33: pass (48 of 48 cases: every part of Base UI has its match on React Aria by role, label and order; box within 1 px and colour, background, border, radius, font size and weight equal on every matched part, except the focus ring of L3; the differences are L1 to L4 below)
+- Check: both servers stopped, `kill <pid>` of the two started, then `lsof -nP -iTCP:5354 -iTCP:5355 -sTCP:LISTEN`: pass (prints nothing)
+- Check: no comparison script in the repository, `git status --short` and `git ls-files | grep -c "compare\|probe\|flash"` in the worktree at 2be8d33: pass (nothing, 0); the scripts stay in /private/tmp/claude-501/dp-aria-look/
+- Check: `git fetch origin && git merge origin/main` at 2be8d33 before task 5: pass (already up to date, origin/main 108d72e; the branch head 2be8d330e0b78497c2d1c34c9f51526d8aa9a556 is pushed)
+- Check: install proof, fresh Next.js app in `/private/tmp/claude-501/dp-aria-install/app` (`pnpm dlx create-next-app@latest app --ts --tailwind --eslint --app --no-src-dir --import-alias "@/*" --use-pnpm --turbopack --yes`, next 16.4.6; `pnpm dlx shadcn@latest init -b aria -p nova --no-rtl -y`, shadcn 4.23.0: style `aria-nova`, the default `@/` aliases), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-aria#2be8d330e0b78497c2d1c34c9f51526d8aa9a556`, at 2be8d33: pass (exit 0, 35 files created: the 22 of the picker, 12 parts, `hooks/use-mobile.ts`)
+- Check: install proof, `find components/date-picker -type f | wc -l` in the scratch app at 2be8d33: pass (22)
+- Check: install proof, `diff -r components/date-picker <worktree>/registry/aria/generated/components/date-picker` at 2be8d33: pass (prints nothing). D173: the installed bytes equal the GENERATED folder, not the source; against the source `registry/aria/components/date-picker` three files differ, the ones with the style hook classes (`components/picker-popup.tsx`, `components/picker-trigger.tsx`, `modes/day-range-picker.tsx`)
+- Check: install proof, `pnpm exec tsc --noEmit` in the scratch app at 2be8d33: pass (exit 0; `app/page.tsx` is a client page with a controlled `<DatePicker type="date" value onChange />` and `<DatePicker type="date" range value onChange />`, the range value a `[string, string]` state)
+- Check: install proof, `pnpm exec next build` in the scratch app at 2be8d33: pass (exit 0, `/` prerendered as static content)
+- Check: scratch app deleted, `rm -rf /private/tmp/claude-501/dp-aria-install` then `ls /private/tmp/claude-501/dp-aria-install`: pass (No such file or directory)
+- Check: Local CI at 2be8d33: `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test --base aria` (39 of 39), `pnpm test --base base` (39 of 39) are the lines recorded above at this exact head, each pass; not rerun, the head did not move (task 5 changes no file of the repository, `git status --short` prints nothing)
+- Check: `git fetch origin && git merge origin/main` (5d13f4a, the Radix UI version) at decb84d: pass (one conflict, `README.md`, resolved as the plan's 5.2 orders: install blocks Base UI, Radix UI, React Aria; one heading, the Radix UI list first, the React Aria list second; `git diff origin/main -- README.md` shows only the React Aria block and list added; pushed)
+- Check: `pnpm lint` at decb84d: pass (exit 0)
+- Check: `pnpm typecheck` at decb84d: pass (exit 0)
+- Check: `pnpm registry:check` at decb84d: pass (base, radix and aria `registry.json` up to date, 22 files each; `pnpm registry:build` not run, no source file changed)
+- Check: `pnpm test --base aria` at decb84d: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check: `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/radix registry/aria/components/ui` at decb84d (origin/main 5d13f4a): pass (prints nothing)
+- Check (verifier): `git diff --name-only origin/main...HEAD` at decb84d (origin/main 5d13f4a, not moved): pass (only `README.md`, the 22 files of `registry/aria/components/date-picker`, the 22 of `registry/aria/generated/components/date-picker`, `registry/aria/registry.json`); `git diff --stat origin/main -- stories .storybook tools package.json pnpm-lock.yaml registry/base registry/aria/components/ui`: pass (prints nothing)
+- Check (verifier): `find registry/aria/components/date-picker -type f | wc -l`, `diff -rq registry/base/components/date-picker registry/aria/components/date-picker`, `cmp` per file, `grep -rn '@base-ui' registry/aria/components/date-picker`, JSDoc count at decb84d: pass (22; diff lists exactly the plan's 9 React Aria files; cmp exit 0 for the 13 identical; grep prints nothing; 3)
+- Check (verifier): `pnpm lint`, `pnpm typecheck`, `pnpm registry:check` at decb84d: pass (the lines above at this exact head, not rerun)
+- Check (verifier): `pnpm test --base aria` at decb84d: pass (exit 0, 7 files, 39 of 39 plays, first run)
+- Check (verifier): `pnpm test --base base` at decb84d: pass (exit 0, 7 files, 39 of 39 plays)
+- Check (verifier): `registry/aria/registry.json` at decb84d: pass (one item `date-picker-aria`, `registry:component`, 22 files, `dependencies` with `react-aria-components`, without `@base-ui/react`); `pnpm registry:build` then `git status --short`: pass (exit 0, prints nothing)
+- Check (verifier): look lines: pass (48 `Look:` lines; cited lines opened: `registry/aria/components/ui/popover.tsx:31-41` the popover without `isNonModal`, `:37` the `data-entering:fade-in-0` classes, `registry/base/components/ui/popover.tsx:27-32` the positioner, each as cited); `lsof -nP -iTCP:5354 -iTCP:5355 -sTCP:LISTEN`: pass (prints nothing); `git ls-files | grep -ci 'compare\|probe\|flash'`: pass (0)
+- Check (verifier): install proof at 2be8d33: pass (`git merge-base --is-ancestor 2be8d33 decb84d` exit 0; `git diff --name-only 2be8d33..decb84d` touches nothing under `registry/aria`; not rerun)
+- Check (verifier): `README.md` at decb84d: pass (`date-picker-aria` install block after the Radix UI block; the React Aria list under `## Differences between the bases` after the Radix UI list, as plan 5.2 writes it)
+
+- Task 1 identical files: done (89ee92d)
+- Reader task 1 at 89ee92d: no deviation
+- Task 2 differing files: done (e244ed0); `pnpm registry:build` not yet run. Plan line added first for `components/picker-popup.tsx` (table repository ddb8d00c, section 3.6): the unread `Button` import removed, the place of the `ButtonContext` import, prettier formatting
+- Reader task 2 at e244ed0f0b433aa96b7b677ede5f177cca619c63: no deviation
+- Task 3 item and plays: item, install files and README lines committed (425b257); `registry/aria/registry.ts` already held the item as spec 78 wrote it, unchanged. README per the plan's 5.2: the React Aria install block after the Base UI block, `## Differences between the bases` with the React Aria list before `## License` (the Radix list is not on main yet). Done at 2be8d33 (merge of origin/main 108d72e, no code change of the version): with the stories fix 78.2 every play passes on React Aria. What the plays showed at 425b257, before that fix, the version not changed for any of them:
+  - A5 (plan 5.1), 8 plays: `Date` Range, `DateTime` Range, `Week` Range, `Month` Range, `Year` Range, `Options` Date Time Range Limits, Range Presets, Phone Layout. Assertion: `stories/support/play.ts:43`, `screen.findByRole("dialog", { name })` with the picker's `title` ("Date range", "Date and time range", "Week range", "Month range", "Year range"): "Unable to find role=dialog and name". On React Aria a range popover is named by its trigger button. Each fails at its first `openPopup`; what follows in these plays is not yet seen on React Aria
+  - A1 (plan 5.1), 1 play: `Options` Presets, step "U2 Tab past the last control closes the popover" (`stories/Options.stories.tsx:566-571`): `expectClosed("Select date")` after `userEvent.tab()` on the last control; the stock popover keeps Tab inside, the dialog stays
+  - Not in 5.1, 1 play: `Options` Year Presets, `stories/Options.stories.tsx:672-674`, `expect(screen.getByRole("dialog", { name: "Select year" })).toBeVisible()` outside `waitFor`: "Received element is not visible", the popup has `data-entering`. Failed in both full runs, passes alone. Measured with a scratch setup file that logs each `getComputedStyle` on the popup: the popup is in the page for about two frames at opacity 1 without `data-entering` (`openPopup` passes at once), then the stock part's `data-entering:fade-in-0` animation starts at opacity 0 and the play, 37 ms long, reads that first frame. The two frames are the library's: `react-aria-components` `Popover.mjs:91,103,185` defers `data-entering` by `runAfterKeyboard` (`react-aria` `utils/runAfterKeyboard.mjs`: two animation frames when `supportsKeyboard()`), and `utils/keyboard.mjs:195-210` answers yes on a touch device or after it saw the viewport shrink within 600 ms of a text box focus, which the plays' viewport changes and typed boxes produce. The same un-waited line ends Presets (`:562-564`), Week Presets (`:604-606`), Month Presets (`:637-639`) and Range Presets (`:707-709`). No file of the picker is involved: the classes are the stock `popover.tsx`
+  - Flake, 1 play: `Options` Open State (`stories/Options.stories.tsx:428-429`, Escape then `expectClosed("Select time")`) failed in run 1 (the popup stayed with `data-exiting` for the 5 s wait), passed in run 2 and in 3 further runs of the file, and 15 of 15 Escape closes in a scratch browser script closed. Cause not found; likely the same deferred enter meeting the exit (unverified)
+- Reader task 3 at 2be8d330e0b78497c2d1c34c9f51526d8aa9a556: no deviation
+- Task 4 the same look: done at 2be8d33, no change of the version and none of the plan. The twelve type stories open a popover at both widths (no type story opens the phone dialog; it is not in this comparison). Parts read: every drawn element under the picker and under its popup (the box or trigger, buttons, icons, the popup, tables, rows, cells, navigation, presets, time columns, footer), 6 to 277 per case. Named differences:
+  - L1, every open case: React Aria has one more element, a transparent box over the whole page under the popup, no colour, no border. Stock part `registry/aria/components/ui/popover.tsx:31-41` (the popover without `isNonModal`; `react-aria-components` `Popover.mjs:219-221`). Nothing is drawn; it is A2 of the plan's 5.1 (D171)
+  - L2, every open case: Base UI has one more element, the positioner around the popup, transparent, no border, the popup's own box (`registry/base/components/ui/popover.tsx:27-32`). On React Aria the popup is placed itself (`registry/aria/components/ui/popover.tsx:31-35`). Nothing is drawn
+  - L3, open cases but the two Time stories: on Base UI the first control of the popup has focus after the click, on React Aria the popup itself (`registry/aria/components/ui/popover.tsx:31-41` passes no focus target; `Popover.mjs:133-137`). Drawn where that control shows a ring: the From box of the five range stories and the Year menu of Month Single have `border-ring` and the 3 px ring on Base UI, `border-input` and no ring on React Aria. A user sees it. It is A3 of the plan's 5.1, decided by D171 and in the README list; no new owner item. Screenshots: `reference/q149-calendar-library/look/aria-date-range-open-1280-base.png` and `-aria.png`
+  - L4, touch device only, not part of the 48 cases (see Attention): the popup is drawn for two frames at full opacity before its fade-in starts from 0
+- Look: Date Single, closed, 1280: equal (8 parts)
+- Look: Date Single, closed, 390: equal (8 parts)
+- Look: Date Single, open, 1280: equal boxes and values on the 116 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Date Single, open, 390: equal boxes and values on the 116 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Date Range, closed, 1280: equal (6 parts)
+- Look: Date Range, closed, 390: equal (6 parts)
+- Look: Date Range, open, 1280: equal boxes and values on the 237 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Date Range, open, 390: equal boxes and values on the 237 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: DateTime Single, closed, 1280: equal (8 parts)
+- Look: DateTime Single, closed, 390: equal (8 parts)
+- Look: DateTime Single, open, 1280: equal boxes and values on the 123 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: DateTime Single, open, 390: equal boxes and values on the 123 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: DateTime Range, closed, 1280: equal (6 parts)
+- Look: DateTime Range, closed, 390: equal (6 parts)
+- Look: DateTime Range, open, 1280: equal boxes and values on the 243 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: DateTime Range, open, 390: equal boxes and values on the 243 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Time Single, closed, 1280: equal (8 parts)
+- Look: Time Single, closed, 390: equal (8 parts)
+- Look: Time Single, open, 1280: equal boxes and values on the 90 matched parts; named L1, L2
+- Look: Time Single, open, 390: equal boxes and values on the 90 matched parts; named L1, L2
+- Look: Time Range, closed, 1280: equal (21 parts)
+- Look: Time Range, closed, 390: equal (21 parts)
+- Look: Time Range, open, 1280: equal boxes and values on the 103 matched parts; named L1, L2
+- Look: Time Range, open, 390: equal boxes and values on the 103 matched parts; named L1, L2
+- Look: Week Single, closed, 1280: equal (8 parts)
+- Look: Week Single, closed, 390: equal (8 parts)
+- Look: Week Single, open, 1280: equal boxes and values on the 144 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Week Single, open, 390: equal boxes and values on the 144 matched parts; named L1, L2, L3 (focus on the month menu of the calendar on Base UI, nothing drawn)
+- Look: Week Range, closed, 1280: equal (6 parts)
+- Look: Week Range, closed, 390: equal (6 parts)
+- Look: Week Range, open, 1280: equal boxes and values on the 276 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Week Range, open, 390: equal boxes and values on the 276 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Month Single, closed, 1280: equal (8 parts)
+- Look: Month Single, closed, 390: equal (8 parts)
+- Look: Month Single, open, 1280: equal boxes and values on the 35 matched parts; named L1, L2, L3 (the Year menu has the focus ring on Base UI)
+- Look: Month Single, open, 390: equal boxes and values on the 35 matched parts; named L1, L2, L3 (the Year menu has the focus ring on Base UI)
+- Look: Month Range, closed, 1280: equal (6 parts)
+- Look: Month Range, closed, 390: equal (6 parts)
+- Look: Month Range, open, 1280: equal boxes and values on the 75 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Month Range, open, 390: equal boxes and values on the 75 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Year Single, closed, 1280: equal (8 parts)
+- Look: Year Single, closed, 390: equal (8 parts)
+- Look: Year Single, open, 1280: equal boxes and values on the 31 matched parts; named L1, L2, L3 (focus on Previous years on Base UI, nothing drawn)
+- Look: Year Single, open, 390: equal boxes and values on the 31 matched parts; named L1, L2, L3 (focus on Previous years on Base UI, nothing drawn)
+- Look: Year Range, closed, 1280: equal (6 parts)
+- Look: Year Range, closed, 390: equal (6 parts)
+- Look: Year Range, open, 1280: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Look: Year Range, open, 390: equal boxes and values on the 67 matched parts; named L1, L2, L3 (the From box has the focus ring on Base UI)
+- Task 5 install proof: done at 2be8d33 (2be8d330e0b78497c2d1c34c9f51526d8aa9a556), no change of the version and none of the plan; Local CI complete at the same head
+- Review round 1: 0 majors, 7 minors, fixed at decb84d (decb84db8fab8bfa11cf74b8794ef01bdeb7949c). No file of the version and no line of the plan changed; the head moved by the merge of origin/main only. Per point:
+  - 1 result, 2 scope, 3 D169, 4 D170: the reviewer confirms, no action. The plays the review did not run are the `pnpm test --base aria` line at decb84d above
+  - 5 README lines on the parts and on the nova classes: the reviewer is right. `registry/aria/registry.json` does not name `calendar` (plan 4.5) and `registry/aria/components/date-picker/components/day-calendar.tsx:213-215,226-256` carries the nova calendar's classes (`[--cell-radius:var(--radius-md)]`, `[--cell-size:--spacing(7)]`, the class map), so "button, calendar, popover and others come from your own style" and "Three places" do not hold for React Aria. Both lines are outside what this milestone may edit and the plan's 5.2 has no line for them; the wording is a choice: staged under Attention, not edited
+  - 6 day button ref: the reviewer is right on the source. `registry/base/components/ui/calendar.tsx:192-195` makes the ref and the focus effect, `:198-200` `<Button variant="ghost" size="icon"` has no `ref`; `registry/aria/components/date-picker/components/day-calendar.tsx:359-366` has `ref={ref}` as the plan's 4.4 orders (`CLI/radix/calendar.tsx:198`). The React Aria file is as planned; the gap is in the Base UI stock part (spec 78). No play presses an arrow key in the day grid (`grep -rn Arrow stories`: `Month.stories.tsx:119` and `Date.stories.tsx:269`, both in typed boxes). Not looked at in a browser: staged under Attention
+  - 7 left to the plays: the clock inside the modal popover and the phone dialog, the app id on a range trigger (P16) and the phone dialog layout stay with the plays, as the plan says; 39 of 39 pass at decb84d. Which play covers each was not traced in this round; no new check added
+
+## Attention
+
+- On a phone the React Aria picker's popup flickers once as it opens: it shows fully for a moment, vanishes, then fades in.
+  - Measured in Chromium with touch emulation at 390 wide (`hasTouch`, `isMobile`), opacity of the popup per frame after the tap, Date Single and Date Range: React Aria `1 1 0 0.22 0.58 0.80 0.92 0.98 1`, Base UI `0 0 0.22 0.58 0.80 0.92 0.98 1`. Without touch React Aria starts at 0 as Base UI does. Not looked at on a real phone.
+  - Source: the stock part's fade-in hangs on `data-entering` (`registry/aria/components/ui/popover.tsx:37`, `data-entering:animate-in data-entering:fade-in-0`), and the library sets `data-entering` two frames late when it thinks an on-screen keyboard is possible (`react-aria-components` `Popover.mjs:180`, `runAfterKeyboard`). No file of the picker is involved; a fix would restyle a stock part, which spec 79, 1.6.2 rules out.
+  - Screenshots of the settled popup (equal on both, a still cannot show the flicker): `reference/q149-calendar-library/look/aria-date-single-open-390-base.png` and `-aria.png`
+- The README tells a React Aria user that the calendar comes from their own style and that only three places carry nova classes; on React Aria the picker brings its own day calendar with the nova classes.
+  - `README.md:26` ("The shadcn parts it uses (button, calendar, popover and others) come from your own style") and `:28` ("Three places in the picker carry the classes of shadcn's nova style"), both written for Base UI and unchanged by this milestone.
+  - React Aria: the item does not name `calendar` (plan 4.5, D168) and `registry/aria/components/date-picker/components/day-calendar.tsx:196-390` holds the react-day-picker calendar of the nova style. On another style the day calendar keeps the nova look until the user edits the file.
+  - Not edited: the lines are outside this milestone's part of the README and the plan's 5.2 names no text for them. Recommended: one README sentence for React Aria, through the plan.
+- On Base UI the arrow keys in the day calendar may not move the focus from day to day; on React Aria they do (read in the source, not looked at in a browser).
+  - `registry/base/components/ui/calendar.tsx:192-200`: the stock `base-nova` day button makes a ref and a focus effect and does not put the ref on its `Button`, so the effect focuses nothing. The plan's 4.4 names the one-line difference from `radix-nova`.
+  - `registry/aria/components/date-picker/components/day-calendar.tsx:359-366` has the ref (plan 4.4), as react-day-picker's own day button does. React Aria is the intended side; nothing to change in this milestone.
+  - No play presses an arrow key in the day grid. Owner of the Base UI part: spec 78. Recommended: look at it on Base UI in a browser, then decide on the stock part.
+
+## Notes
+
+- Waited on the owner cards Q154 to Q159 (2026-11-24); settled by D168 (K1), D169 (K2), D170 (K3), D171 (K4 to K6). RESUME 79 from the lead.
+- Task 3 (2026-11-24): on a device with an on-screen keyboard the stock React Aria popover is in the page at full opacity for two frames before its fade-in starts from 0 (measured in the test browser, 34 ms; not looked at on a phone). Stock library and stock part; for the look task to check at 390 wide.

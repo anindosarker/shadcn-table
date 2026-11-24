@@ -1,0 +1,423 @@
+# Design plan: the date picker on Radix and on React Aria
+
+Spec: `plan/specs/79-date-picker-radix-and-aria.md`, 1.6.1. Epic E25, D162. Written 2026-11-24 from sources read on that day.
+
+This plan says, for each of the 22 approved files and for each of the two bases, whether the file is a byte copy of the Base UI file or differs, and for each difference which Base UI API is replaced by what, with the source line that proves it. It holds decisions and interfaces. It proposes no change to the Base UI code.
+
+## 0. Sources and short names
+
+| Short name | What it is |
+|---|---|
+| `B/` | `registry/base/components/date-picker/` in `anindosarker/shadcn-date-picker`: the approved Base UI code, 22 files, read in full from `test-projects/next-app/components/date-picker/` at commit `53f4b4f` (the same bytes, spec 78, 1.6.3) |
+| `base-nova/`, `radix-nova/`, `aria-nova/` | the part sources of the three styles, read on 2026-11-24 from `https://ui.shadcn.com/r/styles/<style>/<part>.json` (`main` of the new repository holds no part yet) and saved as `/private/tmp/claude-501/dp-design-parts/<style>/<part>.tsx`. Line numbers are those of the saved files. The files the shadcn CLI wrote into the branch `date-picker-repository` have the same content with the icon placeholder replaced by a lucide import, so their line numbers are a few lines lower in `dialog.tsx`, `calendar.tsx` and `native-select.tsx` |
+| `BUI/` | `@base-ui/react@1.9.0/` |
+| `RP` | `@radix-ui/react-popover@1.3.1/dist/index.mjs` |
+| `RP.d` | `@radix-ui/react-popover@1.3.1/dist/index.d.ts` |
+| `RD` | `@radix-ui/react-dialog@1.3.1/dist/index.mjs` |
+| `RFS` | `@radix-ui/react-focus-scope@1.3.1/dist/index.mjs` |
+| `RPOP` | `@radix-ui/react-popper@1.4.0/dist/index.mjs` |
+| `RSLOT` | `@radix-ui/react-slot@1.5.0/dist/index.mjs` |
+| `RAC/` | `react-aria-components@1.22.1/dist/` |
+| `RA/` | `react-aria@3.53.1/dist/` |
+| `RTS/` | `@react-types/shared@3.37.0/src/` |
+| `RS/` | `react-stately@3.51.0/dist/types/src/` |
+| `FUI` | `@floating-ui/core@1.8.0/dist/floating-ui.core.mjs` |
+| cases | `reference/q88-date-filter-demo/date-picker-9-cases.md` (case ids) |
+| notes | `reference/q88-date-filter-demo/date-picker-9-design-notes.md`, `review-notes.md` |
+
+- All library paths are under `shadcn-react-table/node_modules/.pnpm/`. The versions are the ones the new repository pins (`radix-ui ^1.8.1`, `react-aria-components ^1.22.1`, `@base-ui/react ^1.9.0`, `react-day-picker ^10.0.2`).
+- The parts adapted once in `shadcn-react-table/packages/shadcn-table/registry/{base,radix,aria}/components/ui/` were compared with the style sources: they differ in formatting and the `cn` import only, so they add no fact.
+- Five type claims of section 3 were also compiled in a scratch file against the installed `react-aria-components` types (TypeScript 5.8.3, `strict`): marked "compiled" where used.
+- Cards: the six points this plan left open, `K1` to `K6`, are decided in `decisions.md`: D168 (K1), D169 (K2), D170 (K3), D171 (K4, K5, K6). Their facts and options stay under `## Attention` in `run/trackers/79-date-picker-radix-and-aria-tracker.md`. No file waits on a card: the version milestones build all 22 files of each base from sections 3 and 4.
+- Sources read for D168 to D171, on 2026-11-24. `CLI/<base>/` is `registry/<base>/components/ui/` on `main` of the new repository at `b28d91a`: the parts as the shadcn CLI wrote them, cited by their own line numbers (a few lines off the saved style sources above, by the import lines). `RUCS` is `@radix-ui/react-use-controllable-state@1.3.0/dist/index.mjs`. `RSP/` is `react-stately@3.51.0/dist/private/`. `REACT.d` is `@types/react@19.3.0/index.d.ts`. `RDOM` is `react-dom@19.3.1/cjs/react-dom-client.development.js`. `RDP/` is `react-day-picker@10.0.2/dist/esm/`, read under `test-projects/next-app/node_modules/.pnpm/` (the version the new repository pins).
+
+## 1. Inventory
+
+A file is `identical` only when it imports nothing whose API differs on that base.
+
+| # | File (`B/` prefix) | Radix | React Aria |
+|---|---|---|---|
+| 1 | `date-picker.tsx` | identical | identical |
+| 2 | `types.ts` | differs (D169) | differs (D169) |
+| 3 | `modes/day-picker.tsx` | identical | identical |
+| 4 | `modes/day-range-picker.tsx` | identical | identical |
+| 5 | `modes/period-picker.tsx` | identical | identical |
+| 6 | `modes/period-range-picker.tsx` | identical | identical |
+| 7 | `modes/time-range-picker.tsx` | identical | identical |
+| 8 | `components/day-calendar.tsx` | identical | differs (D168) |
+| 9 | `components/period-views.tsx` | identical | differs |
+| 10 | `components/picker-box.tsx` | identical | identical |
+| 11 | `components/picker-field.tsx` | identical | differs |
+| 12 | `components/picker-popup.tsx` | differs (D169; the stock popover, D171) | differs (D169; the stock popover, D171) |
+| 13 | `components/picker-presets.tsx` | identical | identical |
+| 14 | `components/picker-trigger.tsx` | identical | differs |
+| 15 | `components/time-columns.tsx` | identical | differs |
+| 16 | `components/time-field.tsx` | differs | differs (D171) |
+| 17 | `components/view-nav.tsx` | differs (D170) | differs (D170) |
+| 18 | `utils/labels.ts` | identical | identical |
+| 19 | `utils/range.ts` | identical | identical |
+| 20 | `utils/time.ts` | identical | identical |
+| 21 | `utils/values.ts` | identical | identical |
+| 22 | `utils/views.ts` | identical | identical |
+
+- Radix: 18 identical, 4 differ (`types.ts`, `components/picker-popup.tsx`, `components/time-field.tsx`, `components/view-nav.tsx`).
+- React Aria: 13 identical, 9 differ (`types.ts`, `components/day-calendar.tsx`, `components/period-views.tsx`, `components/picker-field.tsx`, `components/picker-popup.tsx`, `components/picker-trigger.tsx`, `components/time-columns.tsx`, `components/time-field.tsx`, `components/view-nav.tsx`).
+- 31 identical and 13 differs: 44 cells.
+- `modes/day-picker.tsx`, `modes/period-picker.tsx` and `components/picker-box.tsx` use the type `PopupActions` and the ref `popupActions` (`B/modes/day-picker.tsx:52,65,77`, `B/modes/period-picker.tsx:47,72,83`, `B/components/picker-box.tsx:6,16,22,43`). They stay byte copies on both bases under D169: the type keeps its name and the ref keeps a `close()` method (3.1, 3.2, 3.5, 3.6).
+- `diff -rq registry/base/components/date-picker registry/<base>/components/date-picker` must list exactly the differing files of that base.
+
+## 2. Parts
+
+What the picker uses of each part, and what the same part offers in the other two styles. "same" means the same export name, the same prop names and the same `data-slot` values.
+
+### 2.1 popover
+
+| Used by the picker | base-nova | radix-nova | aria-nova |
+|---|---|---|---|
+| root `Popover` with `open`, `defaultOpen`, `onOpenChange`, `actionsRef` (`B/components/picker-popup.tsx:132-142`) | `base-nova/popover.tsx:7-9`, props of `PopoverPrimitive.Root`; `BUI/popover/root/PopoverRoot.d.ts:21,25,29,41` | `radix-nova/popover.tsx:7-11`, props of `PopoverPrimitive.Root`: `open`, `defaultOpen`, `onOpenChange(open)` (`RP:40-43`, `RP.d:12-16`). No `actionsRef` | the root is `PopoverTrigger` (`aria-nova/popover.tsx:13-19`, a `DialogTrigger`): `isOpen`, `defaultOpen`, `onOpenChange(isOpen)` (`RS/overlays/useOverlayTriggerState.d.ts:1-8`). No `actionsRef` |
+| `PopoverTrigger` with `disabled` and `render={trigger}` (`:130`) | `base-nova/popover.tsx:11-13`; `BUI/popover/trigger/PopoverTrigger.d.ts:24` | `radix-nova/popover.tsx:13-17`: a `button`, `asChild` in place of `render` (`RP:100-112`) | no trigger part. The root's `PressResponder` hands the trigger props to any `usePress` consumer below it that is not behind the overlay's `ClearPressResponder` (`RAC/private/Dialog.mjs:88-92`, `RA/private/overlays/Overlay.mjs:50`); the picker's root holds only the trigger and the overlay, so the trigger gets them |
+| `PopoverContent` with `aria-label`, `align`, `alignOffset`, `sideOffset`, `className`, `ref`, `initialFocus` (`:148-156`, `:36-44`, `B/components/time-field.tsx:53-58`) | `base-nova/popover.tsx:15-47`: `align`, `alignOffset`, `side`, `sideOffset` `:17-20`, the rest to the popup `:42`; `initialFocus` at `BUI/popover/popup/PopoverPopup.d.ts:47` | `radix-nova/popover.tsx:19-39`: `align` and `sideOffset` named `:21-22`, every other prop of `PopoverPrimitive.Content` passed on `:35` (so `alignOffset`, `side`, `aria-label`, `ref`, `onOpenAutoFocus`). No `initialFocus` | the content is `Popover` (`aria-nova/popover.tsx:21-43`): `placement`, `offset`, `crossOffset` `:23-25`, `className` a string `:27-29`, the rest to the primitive `:40`. No `align`, `alignOffset`, `sideOffset`, `initialFocus`. No export named `PopoverContent` (`:81-87`). `aria-label` is written, but beside an `aria-labelledby` the root sets to the trigger's id, which wins (3.6, D171) |
+| CSS variable `--available-height` in a class (`:153`) | `BUI/popover/positioner/PopoverPositionerCssVars.d.ts:10` | `--radix-popover-content-available-height` (`RP:293`) | none; the library writes `max-height` on the element itself (`RA/private/overlays/useOverlayPosition.mjs:117`) |
+| stock width `w-72`, overridden by `w-auto` | `base-nova/popover.tsx:39` | `radix-nova/popover.tsx:32` | `aria-nova/popover.tsx:37` |
+
+### 2.2 dialog
+
+| Used by the picker | base-nova | radix-nova | aria-nova |
+|---|---|---|---|
+| root `Dialog` with `open`, `defaultOpen`, `onOpenChange`, `actionsRef` (`B/components/picker-popup.tsx:68-78`) | `base-nova/dialog.tsx:10-12`; `BUI/dialog/root/DialogRoot.d.ts:40,58` | `radix-nova/dialog.tsx:10-14`: `open`, `defaultOpen`, `onOpenChange(open)`, `modal` default `true` (`RD:34-37`). No `actionsRef` | the root is `DialogTrigger` (`aria-nova/dialog.tsx:19-21`): `isOpen`, `defaultOpen`, `onOpenChange(isOpen)`. No `actionsRef` |
+| `DialogTrigger` with `disabled` and `render` (`:66`) | `base-nova/dialog.tsx:14-16` | `radix-nova/dialog.tsx:16-20`: a `button`, `asChild` (`RD:74-86`) | no trigger part; the trigger gets the root's props as in 2.1 |
+| `DialogContent` with `showCloseButton={false}`, `className`, the app's props (`:84-92`) | `base-nova/dialog.tsx:42-86`, `showCloseButton` `:45`, classes `:56` | `radix-nova/dialog.tsx:50-91`, `showCloseButton` `:53`, the same class list `:64` | the content is `Dialog` (`aria-nova/dialog.tsx:63-109`): overlay, modal and dialog in one; `showCloseButton` `:66`, `isDismissable` default `true` `:67`, `className` goes to the modal `:80`, the children sit one element deeper in `section[data-slot=dialog]` `:84-87`. No export named `DialogContent` (`:177-188`) |
+| `DialogClose` with `render={<Button ... />}` (`:96-107`, `:119-121`) | `base-nova/dialog.tsx:22-24` | `radix-nova/dialog.tsx:28-32`: a `button`, `asChild` (`RD:301-311`) | `DialogClose` is itself the style's `Button` with `slot="close"` (`aria-nova/dialog.tsx:23-39`); its default `variant` is `"outline"` `:25` |
+| `DialogHeader`, `DialogTitle`, `DialogFooter` with `className` (`:93-95`, `:118`) | `base-nova/dialog.tsx:88-96`, `:125-136`, `:98-123` | same: `radix-nova/dialog.tsx:93-101`, `:130-144`, `:103-128` | same names: `aria-nova/dialog.tsx:111-119`, `:144-159` (a `Heading` with `slot="title"`), `:121-142` |
+
+### 2.3 button
+
+| Used by the picker | base-nova | radix-nova | aria-nova |
+|---|---|---|---|
+| `variant` `default`, `ghost`, `outline`; `size` `default`, `sm`, `icon`, `icon-xs`, `icon-sm`; `className` | `base-nova/button.tsx:9-33`, `:43-55` | the same class text `radix-nova/button.tsx:10-34`, `:43-64` | the same class text `aria-nova/button.tsx:17-41`, `:50-69`; `className` is a string `:55-59` |
+| `disabled` (`B/components/period-views.tsx:254`, `B/components/time-columns.tsx:47`, `B/components/view-nav.tsx:25`) | a prop of the Base UI button | native `disabled` (`radix-nova/button.tsx:49`, `React.ComponentProps<"button">`) | `isDisabled` (`RA/types/src/button/useButton.d.ts:4-5`), written as native `disabled` (`RA/private/button/useButton.mjs:26`). `disabled` does not compile (compiled) |
+| `focusableWhenDisabled` (`B/components/view-nav.tsx:26`) | `BUI/button/Button.d.ts:21`; `BUI/utils/useFocusableWhenDisabled.mjs:20-37` | none: a native button | none in the typed props. `aria-disabled` is a prop (`RA/types/src/button/useButton.d.ts:11`, `RA/private/button/useButton.mjs:70`) |
+| `onClick` | native | native | a prop: "`onClick` is an alias for `onPress` provided for compatibility with other libraries" (`RTS/events.d.ts:134-139`) |
+| `onMouseDown` (`B/components/picker-field.tsx:159`) | native | native | passed to the element (`RA/private/utils/filterDOMProps.mjs:43`, `RAC/private/Button.mjs:82-87`) |
+| `ref`, `id`, `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-pressed`, `aria-current` | native | native | `ref` (`aria-nova/button.tsx:56`), `id` and the three labelling attributes (`RA/private/button/useButton.mjs:59-61`, `labelable: true`), `aria-pressed` and `aria-current` (`RA/private/button/useButton.mjs:68-69`) |
+| `aria-invalid` (`B/components/picker-trigger.tsx:63`), `title` (`B/components/view-nav.tsx:42`) | native | native | not passed to the element: the button keeps only the names of `filterDOMProps` with `global: true` (`RAC/private/Button.mjs:82-84`; the lists at `RA/private/utils/filterDOMProps.mjs`, no `title`, no `aria-invalid`). `title` does not compile (compiled). The `render` prop reaches the element: "Overrides the default DOM element with a custom render function" (`RAC/types/src/utils.d.ts:193-208`, `:122`, `RAC/types/src/Button.d.ts:44`) |
+| `aria-expanded` set by the trigger, read by the class `aria-expanded:bg-muted` | `BUI/popover/trigger/PopoverTrigger.mjs:117`, `BUI/dialog/trigger/DialogTrigger.mjs:74` | `RP:105`, `RD:84` | `RA/private/overlays/useOverlayTrigger.mjs:37` |
+| `data-icon="inline-start"` on the icon, read by `has-data-[icon=inline-start]:pl-2` | `base-nova/button.tsx:23` | `radix-nova/button.tsx:24` | `aria-nova/button.tsx:31` |
+
+### 2.4 button-group
+
+| Used by the picker | base-nova | radix-nova | aria-nova |
+|---|---|---|---|
+| `ButtonGroup` with `className` and the app's `div` props (`B/components/picker-trigger.tsx:46-49`) | `base-nova/button-group.tsx:25-39` | same signature `radix-nova/button-group.tsx:24-38` | same signature `aria-nova/button-group.tsx:23-37` |
+| the stock corner classes of the horizontal variant | `base-nova/button-group.tsx:14` | other selectors, the same result for two direct children `radix-nova/button-group.tsx:13` | descendant selectors `aria-nova/button-group.tsx:12` |
+
+### 2.5 input-group
+
+| Used by the picker | base-nova | radix-nova | aria-nova |
+|---|---|---|---|
+| `InputGroup` with the app's `div` props, `ref`, `onBlur`, `className` (`B/components/picker-field.tsx:125`) | a `div` with `role="group"` `base-nova/input-group.tsx:11-23` | same `radix-nova/input-group.tsx:11-23` | a React Aria `Group` typed `GroupProps` (`aria-nova/input-group.tsx:12-23`); `role` is `'group' \| 'region' \| 'presentation'`, default `'group'` (`RAC/types/src/Group.d.ts:59`, `RAC/private/Group.mjs:52`); every other prop, `onBlur` included, reaches the `div` (`RAC/private/Group.mjs:49`) |
+| `InputGroupInput` with native input props | `base-nova/input-group.tsx:119-133`, `data-slot="input-group-control"` `:125` | `radix-nova/input-group.tsx:117-131`, the same slot `:123` | `aria-nova/input-group.tsx:119-133`, typed `React.ComponentProps<"input">`, the same slot `:125`; the React Aria `Input` passes every prop on (`RAC/private/Input.mjs:53`) |
+| `InputGroupAddon` with `align="inline-end"` | `base-nova/input-group.tsx:46-66`, `data-slot` `:54` | same lines `radix-nova/input-group.tsx:46-66` | same lines `aria-nova/input-group.tsx:46-66` |
+| `InputGroupButton` with `size="icon-xs"`, `aria-label`, `className`, `onMouseDown`, `onClick` | `base-nova/input-group.tsx:86-105` | `radix-nova/input-group.tsx:86-103` | `aria-nova/input-group.tsx:86-105` (the style's `Button`, so 2.3 applies) |
+
+### 2.6 native-select, field, badge, calendar, use-mobile
+
+| Part | Used by the picker | radix-nova | aria-nova |
+|---|---|---|---|
+| native-select | `NativeSelect` with `size="sm"`, `aria-label`, `value`, `onChange`; `NativeSelectOption` (`B/components/period-views.tsx:143-154`) | the file is byte-equal to `base-nova/native-select.tsx` | byte-equal |
+| field | `Field`, `FieldGroup`, `FieldLabel` with `htmlFor`, `className`, `role` (`B/modes/*.tsx`) | equal but for two import paths (`radix-nova/field.tsx:7-8`); the label is a Radix `Label.Root` | equal but for the imports and one class list (`aria-nova/field.tsx:109`); the label is a React Aria `Label` that takes `htmlFor` (`aria-nova/label.tsx:11-27`) |
+| badge | `Badge` with `variant="secondary"` (`B/components/day-calendar.tsx:163`) | same `radix-nova/badge.tsx:29-46` | same `aria-nova/badge.tsx:27-55` |
+| calendar | `Calendar`, `CalendarDayButton`, `React.ComponentProps<typeof Calendar>` (`B/components/day-calendar.tsx:14,21,223-257`) | the same react-day-picker calendar: equal to `base-nova/calendar.tsx` but for one import path and one added line, `ref={ref}` on the day button (`radix-nova/calendar.tsx:223`); exports `Calendar`, `CalendarDayButton` `:246` | another calendar: React Aria `Calendar` and `RangeCalendar` (`aria-nova/calendar.tsx:65-124`), no `CalendarDayButton` (`:287`). Section 4 |
+| use-mobile | `useIsMobile()` (`B/components/picker-popup.tsx:22,61`) | byte-equal to `base-nova/use-mobile.ts` | byte-equal |
+
+- Three class names of the picker are hooks of the style sheet, not of a base: `cn-dialog-close` (`B/components/picker-popup.tsx:101`), `cn-field` (`B/modes/day-range-picker.tsx:248`), `cn-button-group-orientation-horizontal` (`B/components/picker-trigger.tsx:47`). They are the same text on every base and get what the tree's style sheet gives them.
+- The picker's own class names read only these attributes of a part: `data-[slot=input-group-addon]`, `data-[slot=input-group-control]` (`B/modes/day-range-picker.tsx:67`), `aria-disabled` (`B/components/view-nav.tsx:27`), and the react-day-picker and calendar attributes inside `B/components/day-calendar.tsx:44-114`. No Base UI state attribute (`data-open`, `data-popup-open`, `data-side`) is read anywhere in the 22 files.
+
+## 3. Per differing file and base
+
+Each row: the Base UI line, the API, the replacement, the proof. A line that is not listed stays as it is.
+
+### 3.1 `types.ts`, Radix
+
+| Base UI site | Base UI API | On Radix | Proof |
+|---|---|---|---|
+| `B/types.ts:2` | `import type { Popover as PopoverPrimitive } from "@base-ui/react/popover"` | the line is removed | the only use is `:154` |
+| `B/types.ts:4-5`, `:32-50` | the types of `Dialog`, `DialogContent`, `Popover`, `PopoverContent`; `Pick<..., "open" \| "defaultOpen" \| "onOpenChange">` | unchanged text | the four exports and the three root props exist: `radix-nova/dialog.tsx:10-14,50-57`, `radix-nova/popover.tsx:7-11,19-24`, `RP:40-42`, `RD:34-36` |
+| `B/types.ts:154` | `PopupActions = PopoverPrimitive.Root.Actions` (`BUI/popover/root/PopoverRoot.d.ts:81-84`) | D169: `type PopupActions = { close: () => void }`. The name `PopupActions` and its export at `:170` stay | Radix has no actions ref: `RP:36-44` lists every prop of the root. `close` is the one member the picker calls (`B/modes/day-picker.tsx:77`, `B/modes/period-picker.tsx:83`); the handle of 3.2 gives it |
+
+- Derived public types follow the part: on Radix `onOpenChange` gets one argument (`RP.d:14-16`), and `popoverProps` takes the props of Radix `Popover.Content` (no `initialFocus`, `finalFocus`).
+
+### 3.2 `components/picker-popup.tsx`, Radix
+
+| Base UI site | Base UI API | On Radix | Proof |
+|---|---|---|---|
+| `:36-44` | `align`, `alignOffset: -8`, `sideOffset: 10` on `PopoverContent` | unchanged | the same three props with the same meaning: `RPOP:103-106`, and both libraries hand `alignOffset` to floating-ui as `alignmentAxis` (`RPOP:148`, `BUI/internals/useAnchorPositioning.mjs:156-164`) |
+| `:66`, `:130` | `<DialogTrigger disabled render={trigger} />`, `<PopoverTrigger disabled render={trigger} />` | the same element with `asChild` and `trigger` as its one child | the trigger is a `Primitive.button` (`RP:100-112`, `RD:74-86`); with `asChild` its props, `disabled` and the composed `ref` included, are merged onto the child (`RSLOT:50-54`, `:78-103`) |
+| `:71-76`, `:135-140` | `onOpenChange={(nextOpen, details) => ...}`: `onClose?.()` when closing (`:72-74`, `:136-138`), then the app's handler called with both | one argument: `(nextOpen)`. The handler calls `setOpen(nextOpen)` (the D169 rows below, which hold the `onClose` call), then the app's handler with `nextOpen` | `RP.d:14-16`: `bivarianceHack(open: boolean): void`; `RP:50-55` |
+| `:77`, `:141` | `actionsRef={popupActions}` | D169: both lines are removed; the four rows below do the job | no such prop (`RP:36-44`, `RD:30-38` list every prop of the two roots) |
+| D169, new lines between `:61` and `:63`, in the order of these four rows | the condition of `:63` | `const dialog = presentation === "dialog" \|\| (presentation === "auto" && phone)`; `:63` becomes `if (dialog) {` | the state below must know which of the two roots is in use |
+| the same place | the open state each Base UI root holds for itself | the one state: `const [ownOpen, setOwnOpen] = React.useState<{ dialog: boolean; open: boolean }>()`. It starts `undefined` and holds the last open value the picker's root reported, with the root it came from. Directly under it, in render and not in an effect: `if (ownOpen && ownOpen.dialog !== dialog) { setOwnOpen(undefined) }`, written on three lines as the `if` of `:72-74` | the two Base UI roots are two components (`B/components/picker-popup.tsx:68`, `:132`), so when `auto` changes root the open state is lost: the picker closes (U7) and the new root starts from its own `defaultOpen`. One state above both roots does the same only if it is cleared when the root changes; a state set during render is applied before anything is shown, React renders the component again at once (`RDOM:9598-9607`, `:8115-8126`) |
+| the same place | none | `function setOpen(nextOpen: boolean): void`, two statements in this order: `setOwnOpen({ dialog, open: nextOpen })`, then `if (!nextOpen) { onClose?.() }` as `:72-74` writes it | the `onClose` call of `:72-74` and `:136-138`, written once |
+| the same place | `actionsRef={popupActions}`; its `close()` sets the root's state and goes through `onOpenChange` (`BUI/popover/root/PopoverRoot.mjs:56-59`, `BUI/popover/store/PopoverStore.mjs:58`; `BUI/dialog/root/useRenderDialogRoot.mjs:63-65`) | the one hook call: `React.useImperativeHandle(popupActions, () => ({ close: () => ... }))` with no dependency list. The inline `close` makes two calls: `setOpen(false)`, then `(dialog ? dialogProps : popoverProps)?.onOpenChange?.(false)`. Both the state and this call stand before the `if`, so they run on every render | the ref type of `:31` is unchanged and fits: `useImperativeHandle<T, R extends T>(ref: Ref<T> \| undefined, init: () => R, deps?)` with `Ref<T>` holding `RefObject<T \| null>` (`REACT.d:194,1807`). The three files that hold the ref call `popupActions.current?.close()` and stay byte copies (section 1) |
+| `:68-70`, `:132-134` | `open={open}`, `defaultOpen={defaultOpen}` on the root | D169: `open={open ?? ownOpen?.open ?? defaultOpen ?? false}`; the `defaultOpen` line is removed. The destructuring at `:64-65` and `:128-129` is unchanged, all three names are still read | U8: the app's `open` wins when given; else the picker's own state; else the root's `defaultOpen`, read from `dialogProps` in the dialog branch and from `popoverProps` in the popover branch as today. The root always gets a boolean, so it is controlled for its whole life (`RUCS:20-21`; a change of mode would warn, `:22-35`) and reports every open and close through `onOpenChange` (`RUCS:36-42`, `RP:50-55`, `RD:42-47`). An app that controls `open` gets `onOpenChange(false)` from `close()` and decides, as on Base UI |
+| `:84-92` | `DialogContent` with `showCloseButton={false}` and the class list | unchanged | `radix-nova/dialog.tsx:53`; the stock class list is the same text (`radix-nova/dialog.tsx:64`, `base-nova/dialog.tsx:56`) |
+| `:96-107` | `<DialogClose render={<Button variant="ghost" size="icon-sm" className="cn-dialog-close" aria-label />}>` with `XIcon` as child | `<DialogClose asChild>` around that `Button`, the `XIcon` inside the `Button` | `RD:301-311`: a `Primitive.button` whose click closes; the stock part does the same at `radix-nova/dialog.tsx:71-86` |
+| `:119-121` | `<DialogClose render={<Button className />}>` with the label as child | `<DialogClose asChild>` around that `Button`, the label inside the `Button` | as above; `radix-nova/dialog.tsx:122-124` |
+| `:149` | `aria-label={title}` on the popup | unchanged | the content has `role="dialog"` and takes the rest of the props (`RP:280-285`) |
+| `:153` | `max-h-(--available-height)` | `max-h-(--radix-popover-content-available-height)` | `RP:293` (from `--radix-popper-available-height`, `RPOP:164`) |
+
+- Everything else in the file is unchanged: the imports (the same export names, `radix-nova/dialog.tsx:162-173`, `radix-nova/popover.tsx:80-88`), `useIsMobile`, `PhoneDialogContext`, `InputGroupAddon`.
+- D171: the popover of this file is the stock Radix popover as the rows above write it. No key handler and no `onOpenAutoFocus` is added here (the one of 3.3 is the clock's, for C2 and R16). The differences from Base UI are named in 5.1.
+- D169 adds one state and one hook call to this file and nothing else: no effect, no context, no hidden button. Cases D4, D5, P3, P6, P11, M10, W10.
+- K2 option 1 words the state as "used when the app does not control it". The state is read only then (`open ??` stands first in the row `:68-70`). It is written on every report of the root, controlled or not, so there is one write path, and it is cleared when the root changes, which U7 needs (the row of the state). Still one state and one hook call.
+- `defaultOpen` is read on every render until the picker first opens or closes; a Base UI root reads it once, at mount (`BUI/popover/root/PopoverRoot.mjs:26-28`, `BUI/dialog/root/useRenderDialogRoot.mjs:44`). An app that changes `defaultOpen` after mount and before the first open or close opens or closes the picker on Radix and React Aria only. Named in section 5 (U8). Reading it once would put it into the state's first value and leave the name unread in the two destructurings (`:64-65`, `:128-129`), where it must stay to keep it out of `contentProps`; the lint refuses an unread name (`eslint.config.mjs:16-19`).
+
+### 3.3 `components/time-field.tsx`, Radix
+
+| Base UI site | Base UI API | On Radix | Proof |
+|---|---|---|---|
+| `:54` | `initialFocus: popupRef` in `popoverProps`: focus goes to the popup itself (C2, R16) | `onOpenAutoFocus`, a handler that prevents the default and focuses `popupRef.current`. It stays before `...popoverProps`, so an app's own handler replaces it, as `initialFocus` can be replaced today | `RP.d:62-65`: "Event handler called when auto-focusing on open. Can be prevented."; `RFS:95-103`: when the event is prevented nothing is focused, so the handler focuses; the content is focusable (`RFS:147`, `tabIndex: -1`) |
+| `:49`, `:56` | `popupRef` and `ref: popupRef` | unchanged | `radix-nova/popover.tsx:35` passes `ref` to the content |
+
+- D171 adds no focus override, and this handler is none: it is the Radix form of a line the Base UI file has (`initialFocus: popupRef`, `B/components/time-field.tsx:54`). The clock is the one popover of the Radix version that does not open with focus on its first control (5.1, R2).
+
+### 3.4 `components/view-nav.tsx`, Radix
+
+| Base UI site | Base UI API | On Radix | Proof |
+|---|---|---|---|
+| `:25-26`, `:28` | `disabled` with `focusableWhenDisabled`: the arrow is dimmed, does nothing and stays a tab stop (D11); `onClick={onClick}` | D170: `:25` becomes `aria-disabled={disabled}`, `:26` is removed, `:28` becomes `onClick={disabled ? undefined : onClick}` | `radix-nova/button.tsx:49`: the props are those of a native `button`, spread onto the element (`:56-62`). Without the native `disabled` attribute the button keeps its place in the tab order and its focus; with no click handler a click, Enter and Space do nothing; `aria-disabled` is what Base UI writes too, with no native `disabled` (`BUI/utils/useFocusableWhenDisabled.mjs:20-37`). `focusableWhenDisabled` does not compile (compiled) |
+| `:27` | `aria-disabled:opacity-50` | unchanged | a plain attribute selector; it matches `aria-disabled="true"` only |
+| `:38-46` | `TodayButton` | unchanged | native `title`, `aria-label`, `onClick` |
+
+- D170 changes three lines of `NavArrow` and nothing else: `NavArrowProps`, the other props and the children stay.
+
+### 3.5 `types.ts`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:2` | the Base UI type import | removed | as 3.1 |
+| `:4` | `import type { Dialog, DialogContent }` | `import type { Dialog, DialogTrigger }` | `aria-nova/dialog.tsx:177-188` |
+| `:5` | `import type { Popover, PopoverContent }` | `import type { Popover, PopoverTrigger }` | `aria-nova/popover.tsx:81-87` |
+| `:32-35` | `PopoverContentProps`: the props of `PopoverContent` without `children` | the props of `Popover` (the content) without `children`, `isOpen`, `defaultOpen`, `onOpenChange` | the content's own type carries the three open props (`RAC/types/src/Popover.d.ts:7`); they are left out so a time range still refuses them (`B/types.ts:93`) |
+| `:37-41` | `PopoverProps`: `open`, `defaultOpen`, `onOpenChange` of the root, and the content props | `isOpen`, `defaultOpen`, `onOpenChange` of `PopoverTrigger`, and the content props | `RS/overlays/useOverlayTriggerState.d.ts:1-8`; compiled |
+| `:43-50` | `DialogProps`: the three open props of `Dialog`, and the props of `DialogContent` without `children`, `showCloseButton` | the three open props of `DialogTrigger`, and the props of `Dialog` (the content) without `children`, `showCloseButton`, `isOpen`, `defaultOpen`, `onOpenChange` | `aria-nova/dialog.tsx:63-74`; compiled |
+| `:154` | `PopupActions` | D169: `type PopupActions = { close: () => void }`, as 3.1 | no actions ref on `DialogTrigger` (`RAC/types/src/Dialog.d.ts:6-8`) |
+
+- The open prop is named `isOpen` on React Aria because the type is the part's own, as it is on Base UI. Named in section 5 (U8).
+- This is a public API difference per base. On React Aria `popoverProps` takes `isOpen`, `placement`, `offset`, `crossOffset` where Base UI and Radix take `open`, `align`, `alignOffset`, `sideOffset`; `onOpenChange` has one argument on Radix (3.1) and on React Aria, two on Base UI. The version milestones leave `stories/**` untouched (spec 79, milestone Task 3), so an `Options` story that passes one of these names is corrected by a fix milestone of spec 78 on the stories (`plan/new_fix.py`; spec 79, 1.6.3), opened by the version milestone whose type check or play meets it first. No milestone of spec 79 owns a docs file: the names per base go into the docs with the milestone that writes them.
+
+### 3.6 `components/picker-popup.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:7-15`, `:17-21` | imports of `DialogContent`, `PopoverContent`, `PopoverTrigger` (as a trigger part) | `Dialog`, `DialogClose`, `DialogFooter`, `DialogHeader`, `DialogTitle`, `DialogTrigger`; `Popover`, `PopoverTrigger`; and `ButtonContext` from `react-aria-components` | `aria-nova/dialog.tsx:177-188`, `aria-nova/popover.tsx:81-87`, `RAC/types/src/Button.d.ts:61` |
+| `:36-38` | `triggerPopover = { align: "start" }` | `{ placement: "bottom start" }`, still `satisfies` the content's props | `aria-nova/popover.tsx:23`; `Placement` holds `'bottom start'` (`RA/types/src/overlays/useOverlayPosition.d.ts:2`); `start` follows the text direction (`RA/private/overlays/useOverlayPosition.mjs:224-226`). The Base UI side is `bottom` by default (`base-nova/popover.tsx:19`) |
+| `:40-44` | `boxPopover = { align: "end", alignOffset: -8, sideOffset: 10 }` | `{ placement: "bottom end", crossOffset: 8, offset: 10 }` | `aria-nova/popover.tsx:23-25`. `offset` is the gap on the main axis (`RAC/types/src/Popover.d.ts:50-56`). Sign: floating-ui turns `alignmentAxis` around for an end alignment (`FUI:759-760`), so `-8` moves the popup 8 px to the right; React Aria adds `crossOffset` to the left coordinate as given (`RA/private/overlays/calculatePosition.mjs:169`), so `8`. Section 5 names the right-to-left case |
+| `:64-65`, `:128-129` | `open` taken out of the app's props | `isOpen` taken out | 3.5 |
+| `:66`, `:130` | `disabled` and `render={trigger}` on the trigger part | no trigger part. The trigger element is rendered as the first child of the root, inside `<ButtonContext.Provider value={{ isDisabled: disabled }}>` | the root's `PressResponder` hands the trigger props to the `usePress` consumer below it, here the trigger (2.1; `RAC/private/Dialog.mjs:88-92`); the style's `Button` reads `ButtonContext` (`RAC/private/Button.mjs:36`) and `isDisabled` disables it (`RA/private/button/useButton.mjs:26`); compiled. The props `trigger` and `disabled` of `PickerPopup` stay, so the three callers do not change |
+| `:68-78` | `<Dialog open defaultOpen onOpenChange actionsRef>` | `<DialogTrigger isOpen={isOpen ?? ownOpen?.open ?? defaultOpen ?? false} onOpenChange>`: no `defaultOpen` line, no `actionsRef` line. The handler has one argument: it calls `setOpen(nextOpen)`, then the app's handler with `nextOpen` | `aria-nova/dialog.tsx:19-21`; D169, the rows below |
+| `:84-92` | `<DialogContent {...contentProps} showCloseButton={false} className>` | `<Dialog {...contentProps} showCloseButton={false} className>`. The class list keeps the Base UI text and adds, for the inner element, `*:data-[slot=dialog]:min-h-0 *:data-[slot=dialog]:grow *:data-[slot=dialog]:flex-col` | `aria-nova/dialog.tsx:63-109`. The children sit in `section[data-slot=dialog]`, which takes over `display` and `gap` only (`:84-87`), so the column direction, the growth and the shrink the Base UI popup has from `flex ... flex-col` must be given to it. The geometry comparison of spec 79, 1.6.4 is the check of these three classes |
+| `:96-107` | `<DialogClose render={<Button variant="ghost" size="icon-sm" className="cn-dialog-close" aria-label />}>` | `<DialogClose variant="ghost" size="icon-sm" className="cn-dialog-close" aria-label>` with the `XIcon` | `aria-nova/dialog.tsx:23-39`: it is the `Button`, with `slot="close"`; the dialog closes on its press (`RAC/private/Dialog.mjs:150-158`); the stock part writes its own X this way (`aria-nova/dialog.tsx:90-103`) |
+| `:119-121` | `<DialogClose render={<Button className />}>` | `<DialogClose variant="default" className>` with the label | the part's default is `"outline"` (`aria-nova/dialog.tsx:25`); the Base UI `Button` default is `"default"` (`base-nova/button.tsx:44`) |
+| `:132-142` | `<Popover open defaultOpen onOpenChange actionsRef>` | `<PopoverTrigger isOpen={isOpen ?? ownOpen?.open ?? defaultOpen ?? false} onOpenChange>`: no `defaultOpen` line, no `actionsRef` line. The handler as in the row `:68-78` | `aria-nova/popover.tsx:13-19`; D169, the rows below |
+| D169, new lines between `:61` and `:63`, in this order | the condition of `:63`; the open state of each Base UI root; `actionsRef` | the four pieces of 3.2 with the same text: `const dialog = ...` and `if (dialog) {`; `const [ownOpen, setOwnOpen] = React.useState<{ dialog: boolean; open: boolean }>()` with `if (ownOpen && ownOpen.dialog !== dialog) { setOwnOpen(undefined) }` in render; `function setOpen(nextOpen: boolean): void` (`setOwnOpen({ dialog, open: nextOpen })`, then `onClose?.()` when closing); `React.useImperativeHandle(popupActions, () => ({ close: () => ... }))` with no dependency list, the inline `close` calling `setOpen(false)` and then `(dialog ? dialogProps : popoverProps)?.onOpenChange?.(false)` | 3.2 for U7, the ref type and the Base UI `close()`. The root is controlled when `isOpen` is not `undefined` and reports every change through `onOpenChange`: the root reads its props with `useMenuTriggerState` (`RAC/private/Dialog.mjs:44-47`), which is `useOverlayTriggerState(props)` (`RSP/menu/useMenuTriggerState.mjs:16-17`), which is `useControlledState(props.isOpen, props.defaultOpen \|\| false, props.onOpenChange)` (`RSP/overlays/useOverlayTriggerState.mjs:17`; `RSP/utils/useControlledState.mjs:22,33,38-49`; a change of mode would warn, `:23-29`). U8 as 3.2, with `isOpen` for `open` (3.5) |
+| `:148-158` | `<PopoverContent aria-label {...} {...contentProps} className>` | `<Popover aria-label {...} {...contentProps} className>` | `aria-nova/popover.tsx:21-43`; `aria-label` is written on the element, which on the stock modal popover has `role="dialog"` (`RAC/private/Popover.mjs:188-190`; `role` is `isDialog ? 'dialog' : undefined`, true unless `isNonModal`, `:121-124`). It does not name the popup as on Base UI: the stock root gives the popover `aria-labelledby` with the trigger's id through `PopoverContext` (`RAC/private/Dialog.mjs:57-59,79-85`), the popover merges context and props (`RAC/private/Popover.mjs:52`, `RAC/private/utils.mjs:100`) and writes it beside `aria-label` (`RAC/private/Popover.mjs:190-191`); `aria-labelledby` wins, so the popup is named by the trigger. Same text for `PickerBox` and the clock (`B/components/picker-box.tsx:36-38`, `B/components/time-field.tsx:59-61`); another text for a range trigger, whose `title` is the label (`B/components/picker-trigger.tsx:44,54`) and whose name is its content (`:67`). No stock prop removes it: a prop left `undefined` keeps the context value (`RA/private/utils/mergeProps.mjs:37`). Radix has no such attribute without a Title part (`RP:282-285`). D171: left as the stock popover has it, named in 5.1 |
+| `:153` | `max-h-(--available-height) w-auto overflow-y-auto` | `w-auto overflow-y-auto` | the library sets `max-height` itself (`RA/private/overlays/useOverlayPosition.mjs:117`) |
+
+- Unchanged: `DialogHeader`, `DialogTitle`, `DialogFooter`, `InputGroupAddon`, `useIsMobile`, `PhoneDialogContext`, `LabelsContext` (React contexts cross the portal).
+- D171: the popover of this file is the stock modal `aria-nova` popover as the rows above write it. No `isNonModal`, no key handler, no focus override and no `aria-labelledby` of the picker's own is added. The differences from Base UI are named in 5.1.
+- D169 adds one state and one hook call to this file and nothing else, as on Radix. `OverlayTriggerStateContext` is not read, so `modes/day-picker.tsx`, `modes/period-picker.tsx` and `components/picker-box.tsx` stay byte copies.
+- Import lines and formatting of this file on React Aria. `:6`, `import { Button } from "@/components/ui/button"`, is removed: after the rows `:96-107` and `:119-121` no line reads `Button`, and the lint refuses an unread name (`eslint.config.mjs:16-19`). The `ButtonContext` import is its own line directly after the `lucide-react` import (`:4`), the place `B/components/day-calendar.tsx:4-5` gives a library import. The two trigger constants (`:66`, `:130`) keep their names and hold the provider with `trigger` as its one child. The four D169 pieces stand with no empty line between them, as in the Radix file. The file is then written by `prettier --write` with the repository's configuration, as 4.4 says for the day calendar: it sorts the three added class names before `md:w-max` and writes the popover's `cn(...)` of `:152-155` on one line.
+
+### 3.7 `components/time-field.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:49`, `:54`, `:56` | `popupRef`, `initialFocus: popupRef`, `ref: popupRef` | all three removed; `popoverProps` keeps `...popoverProps` and `className` | the stock popover does this by itself: "Focus the popover itself on mount, unless a child element is already focused" (`RAC/private/Popover.mjs:133-137`) |
+
+- D171: the stock popover stays, so this row is final. The file has no focus code on React Aria.
+
+### 3.8 `components/view-nav.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:25-26`, `:28` | `disabled` with `focusableWhenDisabled`; `onClick={onClick}` | D170: `:25` becomes `aria-disabled={disabled}`, `:26` is removed, `:28` becomes `onClick={disabled ? undefined : onClick}`. `isDisabled` is not set | `aria-disabled` is the prop that carries it: typed on the React Aria button (`RA/types/src/button/useButton.d.ts:11`) and written on the element (`RA/private/button/useButton.mjs:70`, `RAC/private/Button.mjs:95`). Without `isDisabled` there is no native `disabled` (`RA/private/button/useButton.mjs:26`), so the arrow stays a tab stop and keeps focus. The press fires nothing: `onClick` is the only press handler `NavArrow` passes, and with it `undefined` the press code has nothing to call (`RA/private/interactions/usePress.mjs:219-221`, `:226-237`). `focusableWhenDisabled` and `disabled` do not compile (compiled) |
+| `:42` | `title={labels.goToToday}` | the `render` prop of the `Button`: a function that returns the same `button` with `title` added | `title` is dropped (2.3); `render` is typed for `'button'` (`RAC/types/src/Button.d.ts:44`, `RAC/types/src/utils.d.ts:193-208`); compiled |
+
+### 3.9 `components/period-views.tsx` and `components/time-columns.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `B/components/period-views.tsx:254` | `disabled={cell.disabled}` | `isDisabled={cell.disabled}` | `RA/types/src/button/useButton.d.ts:4-5`; written as native `disabled` (`RA/private/button/useButton.mjs:26`), so `disabled:opacity-50` of the button classes applies as on Base UI |
+| `B/components/time-columns.tsx:47` | `disabled={unit.disabled}` | `isDisabled={unit.disabled}` | the same |
+
+- Unchanged in both: `variant`, `size`, `aria-pressed`, `aria-current`, `className`, `ref`, `onClick` (2.3), `NativeSelect` (2.6).
+
+### 3.10 `components/picker-trigger.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:63` | `aria-invalid={ariaInvalid}` on the trigger `Button` | the `render` prop of the `Button`: a function that returns the same `button` with `aria-invalid` added | the attribute is dropped (2.3); `render` as 3.8; compiled |
+
+- Unchanged: `ButtonGroup` (2.4), `ref`, `id`, the three labelling attributes, the X `Button` with `onClick` (2.3). The root of `PickerPopup` renders no element on React Aria either (`RAC/private/Dialog.mjs:64-92`: providers and a `PressResponder`), so the trigger and the X stay the two children of the group. `title={name}` (`:54`) is unchanged code too, but on React Aria the popover it opens is named by the trigger button, not by `name` (3.6, D171).
+
+### 3.11 `components/picker-field.tsx`, React Aria
+
+| Base UI site | Base UI API | On React Aria | Proof |
+|---|---|---|---|
+| `:15` | `PickerFieldProps = HtmlProps & ...`, spread on `InputGroup` at `:125` | `Omit<HtmlProps, "role"> & ...`. A type change only | `HtmlProps` has `role?: AriaRole`; the part takes `'group' \| 'region' \| 'presentation'` (`RAC/types/src/Group.d.ts:59`), so the spread does not compile as copied and compiles with `role` left out (compiled, both ways). A `role` an app gives still reaches the element through the spread (`RAC/private/Group.mjs:49-52`) |
+
+- Unchanged: `InputGroupInput` and every attribute on it, `InputGroupAddon`, the X `InputGroupButton` with `onMouseDown` and `onClick` (2.3, 2.5), the iOS overlay.
+
+### 3.12 `components/day-calendar.tsx`, React Aria
+
+D168: the file uses react-day-picker's `DayPicker` directly and carries what the stock react-day-picker calendar part adds. Section 4.4 names every line.
+
+## 4. The day calendar on React Aria
+
+### 4.1 Facts, read on 2026-11-24
+
+- `https://ui.shadcn.com/r/styles/aria-nova/calendar.json`: `dependencies` `["cn"]`, `registryDependencies` `["button", "select"]`. The same file of `radix-nova` and of `base-nova`: `dependencies` `["cn", "react-day-picker@latest", "date-fns"]`, `registryDependencies` `["button"]`.
+- The `aria-nova` part is built on the React Aria calendar: it imports `Calendar`, `RangeCalendar`, `CalendarGrid`, `CalendarCell`, `CalendarMonthPicker`, `CalendarYearPicker` and the type `DateValue` from `react-aria-components` (`aria-nova/calendar.tsx:6-21`) and exports `Calendar` and `RangeCalendar` (`:287`). It has no `CalendarDayButton`, no `classNames`, no `components`, no `modifiers`: its props are those of the React Aria calendar plus `buttonVariant`, `captionLayout`, `numberOfMonths`, `showWeekNumber`, `headerFormat`, `renderCell` (`:65-81`, `:97-110`).
+- Its month and year menus are the style's own `Select` with a popup list, not a native `select` (`aria-nova/calendar.tsx:24-31`, `:243-285`). Report section 3: "The calendars use the native `select` element for the month and the year."
+- Its header is fixed: two arrow buttons laid over the top (`:147-176`) and a centred caption (`:179-192`). There is no slot for the picker's caption with the arrows, the Today button and the From or To badge (`B/components/day-calendar.tsx:124-176`).
+- `showWeekNumber` only picks a class for the cell corners (`aria-nova/calendar.tsx:38-41`, `:209`); no week number column is drawn. The week picker draws one (`B/components/period-views.tsx:98-112`, `showWeekNumber`, `ISOWeek`).
+- Its values are `DateValue` objects of `@internationalized/date` (a dependency of `react-aria-components`, `package.json:58`), not `Date`.
+- What `B/components/day-calendar.tsx` takes from the react-day-picker part: `Calendar` and `CalendarDayButton` (`:14`), and through `Calendar` the props `captionLayout="dropdown"`, `hideNavigation`, `fixedWeeks`, `startMonth`, `endMonth`, `disabled` matchers, `className`, `classNames`, `modifiers`, `modifiersClassNames`, `components` with `Root`, `DayButton`, `MonthCaption`, `Week` (`:223-257`); from react-day-picker itself `getDefaultClassNames`, `useDayPicker` and four types (`:5-11`). The native `select` of the caption is react-day-picker's own (`react-day-picker@10.0.2/dist/esm/components/Dropdown.js:16`, `Select.js:9`).
+- react-day-picker stays a dependency of the React Aria version whatever happens to this file: `B/types.ts:3` (`PropsBase`, the public `calendarProps`), `B/utils/range.ts:2` (`DateRange`), `B/utils/values.ts:10-11` (`DateLib`, `defaultLocale`, `DayPickerLocale`). With `B/components/day-calendar.tsx:5-11` these are the six import sites of spec 79, 1.3. `react-day-picker` and `date-fns` are installed in the new repository (spec 78, 1.7).
+
+### 4.2 The candidates
+
+| Candidate | Report section 3 | Same look and behaviour | New against the Base UI code |
+|---|---|---|---|
+| A. `day-calendar.tsx` on React Aria imports `DayPicker` from react-day-picker and carries what the stock react-day-picker part adds | kept: the caption's native `select` is react-day-picker's | can be kept, but only by a copy: the root classes and cell sizes (`radix-nova/calendar.tsx:33-38`), the month-name formatter (`:41-45`), the class map (`:46-135`), `Chevron` (`:147-187`), `WeekNumber` (`:191-199`) and the day button (`:207-244`) with its `ref` and its effect (`:216-219`). The day button cannot be the style's `Button`: react-day-picker gives it `disabled`, `tabIndex` and its own key and focus handlers (`react-day-picker@10.0.2/dist/esm/DayPicker.js:332-336`), and the React Aria button does not put `disabled` or `tabIndex` on the element (section 2.3); it would be a native `button` with `buttonVariants` (`aria-nova/button.tsx:91`). Not provable by reading; the geometry comparison would be the proof | about 150 lines of a stock part inside the picker's file, with three small components, one ref and one effect that `B/components/day-calendar.tsx` does not have; the file is no longer "on the stock shadcn Calendar" (report 2.2); a second copy of shadcn's calendar classes to keep in step |
+| B. The react-day-picker calendar part of another style becomes `components/ui/calendar.tsx` of the React Aria tree; `day-calendar.tsx` is a byte copy | kept | not as the part stands: its day button is the style's `Button` (`radix-nova/calendar.tsx:222-242`), so on React Aria the `disabled` and `tabIndex` of each day are lost (as in A). The part would have to be edited | no code in the picker folder; but the part is no longer what the shadcn CLI writes for `aria-nova` (spec 79, 1.6.2), the item can no longer name `calendar` as a registry dependency (the user's style would install the React Aria calendar), and the user's own `components/ui/calendar.tsx` would be replaced. A fix milestone of spec 78 |
+| C. `day-calendar.tsx` is rewritten on the stock `aria-nova` `Calendar` and `RangeCalendar` | bends: the month and year menus are not native `select` elements | differs: no caption slot, no week number column, no `fixedWeeks`, no `components`, `classNames` or `modifiers`; `calendarProps` (`B/types.ts:14-30`) has nothing to be passed to; the week picker has no stock way | a new calendar file, new value conversion between `Date` and `DateValue`, a new public `calendarProps` type |
+
+### 4.3 Result
+
+- No candidate keeps all of: report section 3, the same look and behaviour, and the rule of section 6 (nothing new against the Base UI code, stock parts as the CLI writes them). A keeps the first two by copying a stock part into the picker; B keeps the picker's file by replacing a stock part; C keeps the stock part and loses the rule and the look.
+- D168 (K1, option 1) decides for candidate A. `registry/aria/components/date-picker/components/day-calendar.tsx` is built with the other 21 files, as 4.4 names it.
+- The React Aria style's own calendar part is not used by the picker. No `components/ui/calendar.tsx` is shipped, replaced or edited on React Aria (4.5).
+
+### 4.4 What `day-calendar.tsx` holds on React Aria (D168)
+
+The file is `B/components/day-calendar.tsx` with the changes of this table and nothing else. The stock part is `CLI/radix/calendar.tsx`, the react-day-picker calendar as the CLI writes it for `radix-nova`. `CLI/base/calendar.tsx` is the same file without `ref={ref}` on the day button (`diff` prints that one line, `:199`); the approved application's own part has the line (tracker, Notes).
+
+| Site | In the Base UI file | On React Aria | Source |
+|---|---|---|---|
+| `B/components/day-calendar.tsx:4` | `import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"` | `ChevronDownIcon` is added: `import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"` | the part imports the three (`CLI/radix/calendar.tsx:13`); the carried `Chevron` uses the third (`:161`) |
+| `:5` | `import { getDefaultClassNames, useDayPicker } from "react-day-picker"` | `DayPicker` is added: `import { DayPicker, getDefaultClassNames, useDayPicker } from "react-day-picker"` | `CLI/radix/calendar.tsx:5-10`, used at `:31` |
+| `:6-11` | the type import of `Matcher`, `MonthCaptionProps`, `RootProps`, `WeekProps` | `DayButton` and `Locale` are added to the same type import, in alphabetical order: `DayButton`, `Locale`, `Matcher`, `MonthCaptionProps`, `RootProps`, `WeekProps` | `CLI/radix/calendar.tsx:8-9`; both are read in a type position only (`:189`, `typeof DayButton`) |
+| `:14` | `import { Calendar, CalendarDayButton } from "@/components/ui/calendar"` | replaced by `import { Button, buttonVariants } from "@/components/ui/button"` | the part's own line (`CLI/radix/calendar.tsx:12`): `Button` for the type of `buttonVariant` (`:26`), `buttonVariants` for the class map (`:58`, `:63`) and the day button. `aria-nova` exports both (`CLI/aria/button.tsx:89`) |
+| between `:188` and `:190`, first | none: `Calendar` is the part | a local function `Calendar`, not exported: `CLI/radix/calendar.tsx:15-181` byte for byte, less the three pieces of the next row | the pieces carried, each whole: the signature with its defaults `showOutsideDays = true`, `captionLayout = "label"`, `buttonVariant = "ghost"` and its type `React.ComponentProps<typeof DayPicker> & { buttonVariant?: React.ComponentProps<typeof Button>["variant"] }` (`:15-27`); `<DayPicker` with `showOutsideDays` (`:31-32`); the root class list with `--cell-radius` and `--cell-size` (`:33-38`); `captionLayout` and `locale` (`:39-40`); the month-name formatter (`:41-45`); the class map, all 25 keys and `...classNames` (`:46-135`); `Chevron` with its three directions (`:147-163`); `WeekNumber` (`:167-175`); `...components` (`:176`); `{...props}` (`:178`) |
+| inside that function | the part's `:28`, `:137-146`, `:164-166` | not carried: `const defaultClassNames = getDefaultClassNames()` (`:28`), the `Root` entry (`:137-146`), the `DayButton` entry (`:164-166`) | `:28`: the file has the same constant at module level (`B/components/day-calendar.tsx:31`). `Root` and `DayButton`: the file gives its own in every render (`:250`, `:251`), and the part spreads `components` after its own entries (`CLI/radix/calendar.tsx:176`), so the part's two never render. No caller of `DayCalendar` passes `components` (`B/modes/day-picker.tsx:108-126`, `B/modes/day-range-picker.tsx:214-239`, `B/components/period-views.tsx:98-112`) |
+| between `:188` and `:190`, second | none: `CalendarDayButton` is the part | a local function `CalendarDayButton`, not exported: `CLI/radix/calendar.tsx:183-220` byte for byte, less `:190` (the constant again) and with the element changed as the next row says | the pieces carried, each whole: the signature `React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }` (`:183-189`); the ref (`:192`); the effect that focuses the button when `modifiers.focused` is set (`:193-195`); `data-day` (`:202`); `data-selected-single`, `data-range-start`, `data-range-end`, `data-range-middle` (`:203-211`); the class string, `defaultClassNames.day` and `className` (`:213-215`); `{...props}` (`:217`) |
+| the day button's element | `<Button ref={ref} variant="ghost" size="icon"` (`CLI/radix/calendar.tsx:198-201`) | a native `<button ref={ref} data-slot="button" data-variant="ghost" data-size="icon"`; its `className` is `cn(buttonVariants({ variant: "ghost", size: "icon" }), ...)` followed by the part's three arguments (`:213-215`) | this is what the style's `Button` writes for these two props: the three attributes and `buttonVariants` (`CLI/aria/button.tsx:60-63`). The class text of `buttonVariants` is equal in the three styles (`diff` of `CLI/base/button.tsx:5-40`, `CLI/radix/button.tsx:6-41` and `CLI/aria/button.tsx:11-46` prints nothing) and uses plain `hover:`, `focus-visible:` and `disabled:` selectors, which a native `button` answers. Not the style's `Button`: react-day-picker gives the day button `disabled`, `aria-disabled`, `tabIndex` and its own handlers (`RDP/DayPicker.js:332-336`), and the React Aria button keeps neither `disabled` nor `tabIndex` (`RAC/private/Button.mjs:82-87`; `RA/private/utils/filterDOMProps.mjs:30-37`; section 2.3). react-day-picker's own day button is a native `button` with the same ref and effect (`RDP/components/DayButton.js:8-16`) |
+
+- Unchanged: every other line of the file (`:1-3`, `:12-13`, `:15-261`). `DayCalendarProps` still reads `React.ComponentProps<typeof Calendar>` (`:21`), and `<Calendar` (`:223`) and `DayButton: CalendarDayButton` (`:251`) now name the two local functions. The file exports `DayCalendar` only (`:261`).
+- Formatting: the carried lines come from a folder the lint script leaves out (`package.json:10`), and the picker folder is checked. After the copy the whole file, the import lines of this table included, is written by `prettier --write` with the repository's configuration (`.prettierrc`: `printWidth` 80). The table gives each import as one line for reading only: prettier writes the `lucide-react` import of row `:4` (81 wide) over five lines, may break a long carried line (`CLI/radix/calendar.tsx:156` is 81 wide) and sorts the class names inside a string. Nothing else is changed in a carried piece.
+- New against the Base UI file, all from the stock part: two local functions, one ref and one effect (D168). No prop, no state.
+- The same look is by copy: the classes and the elements are those of the stock part. The check is the geometry comparison of spec 79, 1.6.4.
+
+### 4.5 Dependencies and parts of the React Aria item (D168)
+
+- `react-day-picker` and `date-fns` stay dependencies of `date-picker-aria`. The build derives them from the imports (`tools/registry-build.mjs:33-52` at `b28d91a`, the function `importsOf`): `react-day-picker` from `types.ts:3`, `utils/range.ts:2`, `utils/values.ts:10-11` and `components/day-calendar.tsx:5-11`; `date-fns` from `components/period-views.tsx`, `utils/values.ts` and `utils/views.ts`. Both are installed (`package.json:22,27`). No new package.
+- The item's `dependencies`: `cn`, `date-fns`, `lucide-react`, `react-aria-components` (the `ButtonContext` import of 3.6), `react-day-picker`.
+- The item's `registryDependencies`: those of `date-picker-base` (`registry/base/registry.json`) without `calendar`: `badge`, `button`, `button-group`, `dialog`, `field`, `input-group`, `native-select`, `popover`, `use-mobile`. No file of the React Aria picker imports `@/components/ui/calendar`.
+- `CLI/aria/calendar.tsx`, the React Aria calendar the CLI wrote, stays as it is and is not imported. No `components/ui/calendar.tsx` is shipped or replaced in a user's app: the item does not name the part.
+
+## 5. Behaviour at risk
+
+Stories are the files of spec 78, 1.6.5: `Date`, `DateTime`, `Time`, `Week`, `Month`, `Year` (a single and a range story each) and `Options`.
+
+| Behaviour | Cases | Story | Radix | React Aria |
+|---|---|---|---|---|
+| Closing from inside the popup after a pick | D4, D5, P3, P6, P11, M10, W10 | `Date`, `Week`, `Month`, `Year`, single | D169: `close()` on the popup's ref sets the picker's open state and calls `onClose` and the app's handler (3.2). Same | D169 (3.6). Same |
+| Focus return after close | R2, D4 | every story with a popup | the trigger gets focus when the content unmounts, unless the close came from a press outside (`RP:204-212`, `RFS:105-118`); Base UI: the trigger (`BUI/popover/popup/PopoverPopup.d.ts:49-57`). Same | `restoreFocus: true` (`RA/private/overlays/Overlay.mjs:45`). Same |
+| R2: the X of a trigger gives focus to the trigger | R2 | range stories | unchanged code (`B/components/picker-trigger.tsx:82`) | unchanged code; the `ref` is the `button` (`aria-nova/button.tsx:56`) |
+| Tab past the last control closes the popover; no focus trap; no hidden Close button | U2 | `Options` and every popover | D171, named difference R1 (5.1): Tab moves from the last control to the first (`RP:260`, `RFS:124,135-137`). Escape and a press outside close as on Base UI (`RP:274`) | D171, named difference A1 (5.1): the stock popover keeps focus inside (`RAC/private/Popover.mjs:216`), and it renders two visually hidden dismiss `button` elements, before and after the content, outside the tab order (`RAC/private/Popover.mjs:200-210`, `RA/private/overlays/DismissButton.mjs:33-36`) |
+| Where focus lands when a popover opens | WR1, C2, R16 | range stories, `Time`, `DateTime` | the first control, as on Base UI (`RFS:99`); the clock: the popup (3.3). On a touch screen Base UI focuses the popup instead of the first control (`BUI/popover/popup/PopoverPopup.d.ts:38-39`); Radix always focuses the first control. D171, named difference R2 (5.1) | the popup itself for every popover (`RAC/private/Popover.mjs:133-137`): C2 and R16 as on Base UI, WR1 one Tab later. D171, named difference A3 (5.1) |
+| The clock inside the date-time popup: a popover in a popover | DT, R16, R20 | `DateTime` | nested layers are tracked by the library; to be confirmed by the plays | nested popovers under a modal popover; to be confirmed by the plays |
+| The phone dialog | U4, U5, U6, R5 | `Options` (phone layout), range stories at 390 | the same class list on the same element (3.2); focus on open goes to the first control, the X, as on Base UI (`RFS:99`). Opened by touch, Base UI focuses the dialog instead (`BUI/dialog/popup/DialogPopup.js:59`, `BUI/utils/popups/popupStoreUtils.js:45`); Radix always focuses the X. D171, named difference R3 (5.1); scroll lock and focus trap by the library (`RD:126,165,251-252`) | the layout needs the three classes of 3.6; focus on open goes to the dialog element, not the X: "Focus the dialog itself on mount" (`RA/private/dialog/useDialog.mjs:29-32`), so a keyboard user needs one Tab more to reach the X. D171, named difference A4 (5.1) |
+| `auto` crossing 768 while open closes the picker | U7 | `Options` | D169: one state above both roots, cleared in render when the root changes, so the picker closes and the new root starts from its own `defaultOpen` (3.2). Same | D169 (3.6). Same |
+| Portals and scroll lock of the popover | U1 | every popover | portal to `body` (`radix-nova/popover.tsx:26`), no scroll lock when not modal (`RP:43,132`) | portal to `body`; page scroll is locked and the outside is inert while a stock popover is open (`RA/private/overlays/usePopover.mjs:45-47,54`). D171, named difference A2 (5.1) |
+| The popup scrolls inside the room left | U1 | tall popups at 390 | the Radix variable (3.2). Its collision padding is 0 where Base UI's is 5, so the room is 5 px larger | `max-height` by the library with a padding of 12 (`RA/private/overlays/useOverlayPosition.mjs:31,117`), so the room is 7 px smaller. Both are named differences for the geometry lines of the version trackers (spec 79, 1.6.4), no card |
+| The popover lines up with the box's end or the trigger's start | U1 | every popover | the same props (3.2) | 3.6. In a right-to-left page `crossOffset: 8` moves the wrong way (`RA/private/overlays/calculatePosition.mjs:169` has no direction; floating-ui has, `FUI:51`). D171, named difference A6 (5.1); right-to-left is looked at on Base UI only (D167) |
+| Keyboard order inside the popup | C8, D11, WR1 | every popup | the same elements in the same order. D11: D170 (3.4) | the same elements. D11: D170 (3.8) |
+| An arrow at the end of the list stays a tab stop | D11 | `Date`, `Month`, `Year` | D170: `aria-disabled` and no click handler while disabled (3.4). Same | D170 (3.8). Same |
+| `disabled` | G2, M14, W14, DT6, R20 | `Options` | the trigger part passes `disabled` to the button (3.2) | `ButtonContext` (3.6); cells and time options by `isDisabled` (3.9) |
+| `required`, `min`, `max`, `step`, `aria-invalid`, `aria-describedby` on the browser input | B1 to B10, T4, report section 3 | `Options` | unchanged code; `InputGroupInput` is a native input (`radix-nova/input.tsx:4-16`) | unchanged code; the React Aria `Input` passes every prop on (2.5) |
+| `aria-invalid` on a range trigger | PR12, N11, report section 3 | range stories | unchanged code | 3.10 |
+| The app's `id` on a range trigger names it | P16 | range stories | unchanged code | the root gives the trigger a generated id (`RAC/private/Dialog.mjs:57`) that is merged with the app's `id`; a plain `id` wins over a generated one (`RA/private/utils/mergeProps.mjs:35`, `RA/private/utils/useId.mjs:84-95`). To be confirmed by the play |
+| Open state through `popoverProps` and `dialogProps` | U8 | `Options` | `open`, `defaultOpen`, `onOpenChange(open)`: the handler has no second argument. `defaultOpen` is read until the picker first opens or closes, not once at mount: a change of it in between is followed here and not on Base UI (3.2) | `isOpen`, `defaultOpen`, `onOpenChange(isOpen)`: the part's own name. `defaultOpen` as on Radix (3.2, 3.6). A story that passes `open` or a placement prop reads something one base has; that is a fix milestone of spec 78 on the stories, never an edit by a version milestone (3.5; spec 79, 1.6.3) |
+| The X of a box keeps focus where it was | B6 | every box story | unchanged code | unchanged code, the one way. The app's `onMouseDown` reaches the button (2.3) and is merged before the library's own handler (`RAC/private/Button.mjs:82-87`; handlers are chained, `RA/private/utils/mergeProps.mjs:32-33`); that handler does not focus the button on mouse down, it only stops propagation (`RA/private/interactions/usePress.mjs:367-376`). So `preventDefault` keeps focus in the input as on Base UI |
+| The Today button's tooltip | none | every calendar | native `title` | 3.8 |
+| The popup's name for a screen reader | none | range stories | `aria-label={title}`, as on Base UI (3.2) | D171, named difference A5 (5.1): named by the trigger button, not by `title` (3.6). The same text for a box's calendar button and the clock; another text for a range trigger. A play that finds a range popup by `title` as the dialog's name fails here |
+
+- Base UI inserts focus guards beside the trigger while a popover is open, which is why `B/modes/day-range-picker.tsx:67` says `not-last-of-type:mr-0` (notes, section 9 row 23). Radix and React Aria insert nothing beside the trigger, so the class does nothing there and the file stays identical.
+
+### 5.1 Named differences from Base UI per base (D171)
+
+Each is what the stock popover or dialog of the base does. The picker adds no code for or against any of them.
+
+| Id | Base | What a user meets | Cases | Source |
+|---|---|---|---|---|
+| R1 | Radix | Tab on the last control of an open popover goes to the first, Shift+Tab on the first to the last; Tab does not leave or close the popover. Escape and a press outside close it | U2 | `RP:257-261`, `RFS:124,135-140`, `RP:274` |
+| R2 | Radix | On a touch screen a popover opens with focus on its first control, in a range popup the From box. Base UI focuses the popup there, "to avoid opening the virtual keyboard". Not the clock's popover: it opens with focus on the popup on every device, as on Base UI (3.3; C2, R16) | WR1 | `RFS:99`; `BUI/popover/popup/PopoverPopup.d.ts:38-39` |
+| R3 | Radix | On a touch screen the phone dialog opens with focus on its first control, the X. Base UI focuses the dialog there, so a screen reader announces the dialog first. No keyboard opens on either: the X is a button | U4, U5, U6 | `RFS:99`; `BUI/dialog/popup/DialogPopup.js:59`, `BUI/utils/popups/popupStoreUtils.js:45` |
+| A1 | React Aria | Tab stays inside an open popover. The popover holds two visually hidden dismiss buttons, before and after its content, outside the tab order; a screen reader's cursor reaches them | U2 | `RAC/private/Popover.mjs:216`, `:200-210`; `RA/private/overlays/DismissButton.mjs:33-36` |
+| A2 | React Aria | While a popover is open the page behind it does not scroll and takes no press; a press outside closes the popover and does nothing else | U1 | `RAC/private/Popover.mjs:219-226`; `RA/private/overlays/usePopover.mjs:45-47,54` |
+| A3 | React Aria | A popover opens with focus on the popup itself: in a range popup the From box is one Tab away. The clock opens as on Base UI (C2, R16) | WR1 | `RAC/private/Popover.mjs:133-137` |
+| A4 | React Aria | The phone dialog opens with focus on the dialog itself; the X is one Tab further than on Base UI | U4, U5, U6 | `RA/private/dialog/useDialog.mjs:29-32` |
+| A5 | React Aria | A range picker's popover is announced with the text of its trigger button (the chosen range or the placeholder), not with the picker's label. A box's calendar popover and the clock have the same name as on Base UI | none | `RAC/private/Dialog.mjs:57-59,79-85`; `RAC/private/Popover.mjs:190-191` |
+| A6 | React Aria | In a right-to-left page the popover of a box is shifted 8 px to the other side than on Base UI | U1; right-to-left is looked at on Base UI only (D167) | `RA/private/overlays/calculatePosition.mjs:169` |
+
+- A play that presses Tab past the last control (U2), that expects focus in the From box on open (WR1), or that finds a range popup by `title` as the dialog's name reads something only Base UI renders. It is a fix milestone of spec 78 on the stories (spec 79, 1.6.3), never an edit by a version milestone and never a change to the version.
+
+### 5.2 README differences per base (D171)
+
+The version milestone of a base copies its list into `README.md` of the new repository, under one heading `## Differences between the bases`, with the base's name as the list's lead line. The Base UI version is the reference and has no list.
+
+- Place: the heading stands directly before `## License`, after the `## Usage` section (`README.md:5,17,39` on `main` at `df11236`: `## Install`, `## Usage`, `## License`).
+- Order: the Radix UI list first, the React Aria list second, each lead line followed by an empty line and its list as below. The milestone that merges second finds the heading there: it keeps one heading and both lists in this order, also when the merge reports a conflict.
+- The lead lines and the list lines are copied as written here.
+- Install command: under `## Install`, after the Base UI command block and before the paragraph that starts "The files land in", the version milestone adds its base's lead line, `Radix UI (shadcn style `radix-nova`):` or `React Aria (shadcn style `aria-nova`):`, an empty line and a `bash` block with `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-<base>`, as the Base UI block is written. Order: Base UI, Radix UI, React Aria, also when the merge reports a conflict.
+
+Radix UI:
+
+- Tab moves round the controls of an open popover and does not close it. Escape or a press outside closes it.
+- On a touch screen a popover and the phone dialog open with focus on their first control. The clock's popover opens as on Base UI.
+
+React Aria:
+
+- Tab stays inside an open popover. Two hidden dismiss buttons for screen readers sit before and after its content.
+- While a popover is open the page behind it does not scroll or take a press; a press outside only closes the popover.
+- A popover opens with focus on the popover itself; its first control is one Tab away.
+- The phone dialog opens with focus on the dialog itself; its close button is one Tab away.
+- A range picker's popover is announced with the text of its trigger button, not with the picker's label.
+- In a right-to-left page the popover of a box is shifted 8 px to the other side.
+
+## 6. What is not in the versions
+
+- No new prop, state, helper, effect or workaround that the Base UI code does not have, but for what D168, D169 and D170 name in the rows below. Each place where a base seems to need one:
+
+| Place | What does the job instead | Where |
+|---|---|---|
+| The trigger element given as a prop | Radix `asChild` (`RSLOT:50-54`); React Aria: the root's `PressResponder` hands the trigger props to the trigger below it (`RAC/private/Dialog.mjs:88-92`) | 3.2, 3.6 |
+| A disabled trigger on React Aria | `ButtonContext` of the library (`RAC/types/src/Button.d.ts:61`) | 3.6 |
+| Focus on the clock popup | Radix `onOpenAutoFocus` (`RP.d:62-65`); React Aria: the popover's own behaviour (`RAC/private/Popover.mjs:133-137`) | 3.3, 3.7 |
+| The room for the popup | the Radix CSS variable (`RP:293`); React Aria's own `max-height` (`RA/private/overlays/useOverlayPosition.mjs:117`) | 3.2, 3.6 |
+| `title` and `aria-invalid` on a React Aria button | the `render` prop of the library (`RAC/types/src/utils.d.ts:193-208`) | 3.8, 3.10 |
+| The dialog's X and Done on React Aria | the part's `DialogClose` (`aria-nova/dialog.tsx:23-39`) | 3.6 |
+| The inner element of the React Aria dialog | three class names on the part's slot (`aria-nova/dialog.tsx:84-87`) | 3.6 |
+| The app's `div` props spread on the React Aria `InputGroup` | no library feature: a type-only change, `Omit<HtmlProps, "role">`, because the part's `role` is narrower (`RAC/types/src/Group.d.ts:59`). An allowed difference of the React Aria version; no runtime line changes | 3.11 |
+| Closing after a pick | no library feature on Radix; on React Aria a context exists but changes three more files. D169: one open state and one `useImperativeHandle` call in `picker-popup.tsx` on both bases, new against the Base UI code | 3.2, 3.6 |
+| A dimmed arrow that stays a tab stop | no library feature on either base. D170: `aria-disabled` and no click handler while disabled, one condition in `NavArrow`, new against the Base UI code | 3.4, 3.8 |
+| Tab leaving a Radix popover | nothing found: `loop: true` is fixed in the library (`RP:260`). D171: left as the library has it | 5.1 (R1) |
+| A React Aria popover without trap and scroll lock | `isNonModal` exists but also removes the dialog role and the focus on open (`RAC/private/Popover.mjs:121-124,133-137`). D171: the stock modal popover stays | 5.1 (A1, A2, A3) |
+| The day calendar on React Aria | no stock part on this style. D168: the file carries the stock react-day-picker calendar part, two local functions with one ref and one effect, new against the Base UI code | 4.4 |
+| A React Aria popover named by `title` for a range trigger | nothing found: the context's `aria-labelledby` stays when the prop is `undefined` (`RA/private/utils/mergeProps.mjs:37`). D171: left as the library has it | 5.1 (A5) |
+
+- Also not in the versions: a 23rd file, a renamed file, a changed comment (the three JSDoc blocks stay where they are: `B/date-picker.tsx:14-21`, `B/utils/values.ts:31,61`), a restyled stock part, a new npm package, a change to `registry/base/**`.
+- D168 to D171 need no part and no package beyond what spec 78 installed (4.5). A part or a package a later line of this plan needs is a fix milestone of spec 78 (spec 79, 1.6.2), never an edit made by a version milestone.

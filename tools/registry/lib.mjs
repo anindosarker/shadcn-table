@@ -1,8 +1,8 @@
 // Shared by the registry scripts and the per-base item definitions
 // (registry/<base>/registry.ts): the base list, then the item builder, which
 // lists an item's files (the tree's library files), derives the
-// registryDependencies from the `@/components/ui/<part>` imports and pins npm
-// versions from package.json. The file list is never hand-maintained.
+// registryDependencies from the `@/components/ui/<part>` and
+// `@/components/date-picker/` imports and pins npm versions from package.json. The file list is never hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -47,6 +47,21 @@ const itemAddress = (item) =>
   DEV
     ? `${process.env.REGISTRY_BASE_URL ?? 'http://localhost:5310/r'}/${item}.json`
     : `${GITHUB_REPO}/${item}`;
+
+// The date picker the library imports from `@/components/date-picker/`: one
+// item per base in anindosarker/shadcn-date-picker, pinned to one tag. A new
+// tag is this line plus `pnpm add-date-picker <base>` on every base.
+export const DATE_PICKER_REPO = 'anindosarker/shadcn-date-picker';
+export const DATE_PICKER_TAG = 'v0.1.1';
+
+/**
+ * The address of a base's date picker item at DATE_PICKER_TAG, the same in
+ * the plain build and under `--dev` (the dev server serves the table only).
+ *
+ * @param {string} base
+ */
+export const datePickerItemAddress = (base) =>
+  `${DATE_PICKER_REPO}/${baseItemName('date-picker', base)}#${DATE_PICKER_TAG}`;
 
 /**
  * The address of a base's core item, `shadcn-table-<base>-core`, in the form
@@ -104,10 +119,19 @@ const withVersion = ({ name, pinned }, bucket) => {
   return pinned ? `${name}@${spec}` : name;
 };
 
-// `@/components/ui/shadcn-table` is the library's own entry point (the
-// locales import it); only `@/components/ui/<part>` is a shadcn part.
-const uiImports = (files) => {
+/**
+ * The registryDependencies the imports of `files` give a base's item: every
+ * `@/components/ui/<part>` as the bare part name, sorted (the library's own
+ * entry point `@/components/ui/shadcn-table` excluded: the locales import
+ * it), then datePickerItemAddress(base) when a file imports from
+ * `@/components/date-picker/`.
+ *
+ * @param {string[]} files absolute paths
+ * @param {string} base
+ */
+export const importDependencies = (files, base) => {
   const names = new Set();
+  let datePicker = false;
   for (const f of files) {
     const src = fs.readFileSync(f, 'utf8');
     for (const m of src.matchAll(
@@ -115,8 +139,12 @@ const uiImports = (files) => {
     )) {
       if (m[1] !== 'shadcn-table') names.add(m[1]);
     }
+    if (/from\s+['"]@\/components\/date-picker\//.test(src)) datePicker = true;
   }
-  return [...names].sort();
+  return [
+    ...[...names].sort(),
+    ...(datePicker ? [datePickerItemAddress(base)] : []),
+  ];
 };
 
 /**
@@ -185,8 +213,9 @@ export const buildBaseItems = ({
   const localeFiles = libEntries.filter(
     ([key]) => isLocale(key) && localeCode(key) !== 'en',
   );
-  const registryDependencies = uiImports(
+  const registryDependencies = importDependencies(
     coreFiles.map((entry) => path.join(PKG, entry.path)),
+    path.basename(dir),
   );
   const lucide = dependencies.find((dep) => dep.name === LUCIDE);
   if (!lucide) {

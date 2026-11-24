@@ -4,22 +4,21 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
+	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
+	- Source: Q165
+- [ ] **D181** Date picker docs site: a GitHub button on code panels, a short footer, the base select on the home header #R6
+	- Tracker 85 A3. Code panel: the More menu with the single entry Open in GitHub becomes a plain GitHub button (a menu of one entry is no menu). Home and 404 pages: the table's footer trimmed to the name, the licence line, GitHub and Storybook (D178: the look is the table's). Home header: the base select stays, the home demos need a base choice. Lead, 2026-11-24 (weight test: small docs looks, cheap to change).
+	- Source: Q169
+
 ## In progress
 
-- [ ] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
-	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
-	- Source: Q77
-- [ ] **D93** Clearing an is-empty filter returns the column to its default filter mode #E13 #R4
-	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
-	- Source: Q78
-- [ ] **D96** A click in a date or time filter box starts typing at its first part #E13 #R4
-	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
-	- Source: Q80
-- [ ] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #E24 #R6
-	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
-- [ ] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #E24 #R6
-	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
-	- Source: Q148
+- [ ] **D178** The date picker gets a small docs site with the table site's look #E27 #R6
+	- shadcn-date-picker gets a docs app that reuses the shell of the table's docs site (header, theme, fonts, section layout, code panels, install command blocks), served at date-picker.shadcn-table.com. Pages stay few: home, install, one page per picker type (date, date-time, time, week, month, year, ranges) with a live demo and its code, and props. The Storybook moves off the site root to its own address under the same project, as the table's does. The content is thin (D162); the look is the table's. Owner, 2026-11-24: 'the docs app looks bad, make it like table', 'k'.
+	- Source: Q167
+- [ ] **D179** The date picker ships with shadcn's Base UI arrow-key bug and a short note #E27 #R6
+	- The picker and the table keep shadcn's stock Base UI calendar part everywhere, their own trees, Storybooks and docs included, so a demo shows what a user gets: on Base UI, arrow keys in the day grid move the highlight but not keyboard focus (shadcn-ui/ui issue 9401, fix PRs 9402 and 9082 open since January 2026). No calendar file of ours is shipped and the approved code is not changed for it. The picker README carries a short note under Base UI: the symptom, the issue link, and the one line (ref={ref} on the day Button of components/ui/calendar.tsx) a user can add. Nothing is posted on shadcn-ui/ui; the draft comment in reference/q149-calendar-library/q160-upstream-draft.md stays unsent. Owner, 2026-11-24: 'no, ship with bug. tiny disclaimer is fine'.
+	- Source: Q160
 
 ## Done
 
@@ -559,12 +558,21 @@ kanban-plugin: basic
 	- Runs as a fix milestone added to the running E12 epic, after `Filter editor fixes` has merged (same files' import lines), so 0.9.4 ships with it.
 	- Owner, 2026-11-14: "These are bad coding patterns"; on the first suggested layout: "this looks better. record and add to current epic".
 	- Source: Q82
+- [x] **D92** ISO date-time text values keep comparing as dates in date filters #E13 #R4
+	- Spec 40 (merged) compares string row values that match `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/` as dates in the eight modes, beyond its own 1.6.2 (string values keep today's branches). Kept: for ISO text the order is the same as before, and `equals` now matches by day as D81 asks for Date values, so the two accessor kinds behave alike. Settled by the lead (a deviation that keeps the decided behavior), 2026-11-14.
+	- Source: Q77
+- [x] **D93** Clearing an is-empty filter returns the column to its default filter mode (superseded by D165) #superseded #E13 #R4
+	- `ST_FilterTextField.tsx:292` and `ST_ColumnActionMenu.tsx:170` (three bases) reset a cleared `empty`/`notEmpty` mode to `allowedColumnFilterOptions?.[0] ?? 'fuzzy'`; on a date column that is fuzzy, not the `equals` default of D81. Fix: reset to `getDefaultColumnFilterFn(columnDef)` when the column lists no allowed options. Proof (P11): a play on a date column that sets is-empty, clears it and asserts the mode. Settled by the lead (one right answer), 2026-11-14.
+	- Source: Q78
 - [x] **D94** The column filtering guide states the date defaults of D81 #E13 #R4
 	- `content/docs/guides/column-filtering.mdx:93-98, 175` still says every column defaults to fuzzy and does not mention date comparison. Fix: the guide says date, datetime and time columns default to `equals` and compare by local day, minute or time of day, also for `Date` accessors; no other wording changes. Settled by the lead (a factual correction), 2026-11-14.
 	- Source: Q79
 - [x] **D95** The React Query example offers only the filter modes its server applies #E13 #R4
 	- `app/api/data/route.ts` applies contains to text columns whatever mode is sent, while `examples/<base>/react-query/TS.tsx` offers every mode on them. Fix: the text columns list only the contains mode (`columnFilterModeOptions`), as spec 40 did for Last Login; the route is unchanged. Settled by the lead (the example must not offer what it ignores), 2026-11-14.
 	- Source: Q81
+- [x] **D96** A click in a date or time filter box starts typing at its first part (superseded by D164) #superseded #E13 #R4
+	- Native Chromium date, datetime and time inputs put the caret on the segment under the click; a click at the centre of a filter box lands on the year, so typed digits fill only the year (run E12, spec 41 1.6.3; the owner could not fill the range inputs on live 0.9.3). Fix: in the filter date, datetime and time inputs, single and range, on the three bases, a pointer click into the field moves the caret to the first segment; the native picker icon, keyboard navigation between segments and a click on an already focused field keep the browser's behavior. The spec checks Chromium, Firefox and Safari and names what each allows. Proof (P11): a play that clicks the centre of a date range input, types a full date and asserts the value. Owner, 2026-11-14: "k" on option 1.
+	- Source: Q80
 - [x] **D97** React Aria filter popups are modal again as in 0.9.3; the Escape fix stays #E12 #R4
 	- Supersedes D83.
 	- Spec 41 (1.6.3) met D83's "Clear filters stays clickable" by adding `isNonModal` to three React Aria filter popups (`registry/aria/.../toolbar/ST_FilterChips.tsx:114`, `:225`, `ST_HeaderFilterEditor.tsx:141`, commits `0f0f9f54`, `df03b7f1`). A non-modal React Aria popup closes on page scroll and no public prop turns that off (`react-aria` 3.53.1 `usePopover.mjs:42`); the owner rejects closing on scroll.
@@ -994,6 +1002,67 @@ kanban-plugin: basic
 - [x] **D159** The docs site's PostHog SDK is updated to the latest 1.x and its setup rechecked #E23 #R6
 	- posthog-js in apps/shadcn-table-docs goes from 1.438.13 to the latest 1.x (1.453.2 on 2026-11-23), package.json and lockfile only; no other code changes unless the release notes between the two versions or the setup recheck require one, and then the tracker names it. The setup is rechecked against PostHog's current Next.js install guide (init place and options, key and host, pageview capture, any proxy or rewrite) and each point is recorded as matches or differs. It ships by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag, the sites stay 0.9.7; local checks are install, docs types:check, lint and the docs build. After the merge the live site is loaded and a capture request to PostHog is seen answering 200 with the new SDK version in it. Owner, 2026-11-23: 'Update the SDK, double check if every installation, everything is properly done and then deploy', 'we can skip huge long-running checks'.
 	- Source: Q147
+- [x] **D160** The docs site proxies PostHog's config files through the assets rewrite the guide names #E24 #R6
+	- next.config.mjs of the docs app gets the rewrite /ingest/array/:path* to https://us-assets.i.posthog.com/array/:path*, placed before the /ingest catch-all, as PostHog's Next.js proxy guide has it: since posthog-js 1.451.0 remote config is fetched from /ingest/array/<token>/config and today reaches us.i.posthog.com through the catch-all, without the asset server's cache headers (tracker 76, recheck point 3). Follows the vendor's guide, docs app only; settled by the lead.
+- [x] **D161** The docs site sets PostHog's dated defaults as the install guide does, and the PostHog fixes ship #E24 #R6
+	- posthog.init in the docs app sets defaults to the date PostHog's Next.js install guide names (2026-08-30 on 2026-11-23); an option the app sets by hand to the same value that date gives is removed only when the tracker shows the two are equal, and the deliberate differences stay (lazy load, autocapture off, no identify). This and the rewrite of D160 ship together by one PR from dev into master with release:skip and ci:skip (D153): no version, no tag. After the merge the live site is loaded: the config request goes to /ingest/array/ and answers 200, a capture request answers 200, the seven events of lib/analytics.ts still fire. Owner, 2026-11-23: 'Resolve all the issues. This shouldn't be a decision that I need to make.' Settled by the lead.
+	- Source: Q148
+- [x] **D162** The date picker becomes its own small library in its own repository #E25 #R6
+	- The calendar library lives in a new repository, not in the table repository: `reference/q149-calendar-library/report.md` stands except sections 4, 6 and 7 (folders, distribution, the later move), which this decision replaces. The table repository gets no calendar folder.
+	- Base UI version: the approved picker, exact copy of `test-projects/next-app/components/date-picker/` (22 files, version 9.3.6, commit `53f4b4f`); only an import path may differ, proven by `diff -r`; any other change is the owner's (report 2.1). Radix and React Aria versions are new work with the same files and names, the same look and behaviour, tested against the Base UI version.
+	- The owner's picker rules of report section 3 hold in every version.
+	- Thin tooling: a small registry build, types and lint, Storybook stories with tests. No installation tests, no perf checks, no visual captures.
+	- Users install it with the shadcn CLI by GitHub address (`owner/repo/item`), the form the table's core items use; an entry in shadcn's registry directory is optional and later.
+	- The table depends on it per base at a tag; in the table repository that is the import mapping of `tools/registry/lib.mjs` and one dependency per base.
+	- Docs and demo live on a subdomain of `shadcn-table.com`, served by the calendar's own Vercel project; the table's `vercel.json` does not change.
+	- Table v1 comes first; the calendar work never delays it.
+	- Source: Q149
+- [x] **D163** The date picker library is named shadcn-date-picker everywhere #E25 #R6
+	- Repository `shadcn-date-picker` under the owner's GitHub account, registry items `date-picker-base`, `date-picker-radix` and `date-picker-aria`, docs and demo at `date-picker.shadcn-table.com`, Vercel project `shadcn-date-picker`. The repository, the Vercel project and the domain assignment exist (the lead, 2026-11-24); the one DNS record left is in `reference/q149-calendar-library/setup-steps.md`. Owner, 2026-11-24: 'make the name shadcn-date-picker pls. not calendar.' (first recorded as shadcn-calendar the same day, changed before anything was built).
+	- Source: Q150
+- [x] **D164** The table's date filters use the date picker library, all three bases together #E26 #R6
+	- Supersedes D96.
+	- Every date, date-time and time filter of the table (chips editor, header editor, popover, subheader, range Min and Max) renders DatePicker from shadcn-date-picker (D162, D163) in place of the browser's date box; each base's table item depends on the matching date picker item at a tag, so installing the table installs the picker. The three bases switch together in one table release, after the three picker versions exist. The table's own date-box workarounds go with it, the click fix of D96 among them. The filter values, modes and the public API of the table do not change; any that must is a new decision.
+	- Source: Q88
+- [x] **D165** The is-empty reset fix lands with the table's date picker switch #E26 #R6
+	- Supersedes D93.
+	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
+- [x] **D166** The date-time range popover keeps its approved width #R6
+	- The date-time range popover stays as wide as the approved code makes it in Chrome (540 px on 2026-11-23, 492 px in an earlier version); the cause of the difference is not looked for and the approved code is not changed for it. It is looked at again only if it overflows a small screen.
+	- Source: Q151
+- [x] **D167** The date picker gets one right-to-left look; Safari and iPhone are the owner's tests #E25 #R6
+	- Desktop Safari and iPhone are tested by the owner, look and feel accepted (2026-11-24); no agent re-tests them. Right-to-left: one manual look, once, on the Base UI picker in the new repository (each mode opened on a dir=rtl page, screenshots); a broken thing becomes a card with its screenshot, a clean result one line in the tracker. No CI job and no test is added for it. The five-digit year in Safari is left alone.
+	- Source: Q152
+- [x] **D168** The React Aria day calendar is built on react-day-picker directly #R6
+	- K1 option 1: registry/aria day-calendar.tsx uses react-day-picker's DayPicker and carries what the stock react-day-picker calendar part adds, so the native select, the caption, week numbers, the public calendarProps and the look equal the Base UI version (report section 3, D162). The React Aria style's own calendar part is not used and no components/ui/calendar.tsx is shipped or replaced. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K1.
+	- Source: Q154
+- [x] **D169** Radix and React Aria pickers close after a pick through one open state inside the popup file #R6
+	- K2 option 1: picker-popup.tsx on radix and aria holds one open state and exposes close() with useImperativeHandle, so every pick that closes on Base UI closes there too (cases D4, D5, P3, P6, P11, M10, W10); no other file differs for it and no hidden button is clicked from code. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K2.
+	- Source: Q155
+- [x] **D170** The month arrow at the end of the range stays reachable by Tab on Radix and React Aria #R6
+	- K3 option 1: view-nav.tsx on radix and aria sets aria-disabled in place of disabled and ignores the click while disabled, so case D11 holds as on Base UI. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K3.
+	- Source: Q156
+- [x] **D171** Popup focus, Tab and page blocking follow each base's stock popover #R6
+	- K4, K5 and K6, option 1 each: the Radix picker keeps the stock Radix popover (Tab goes round inside the popup, first control focused on touch); the React Aria picker keeps the stock aria-nova modal popover (underlay, page scroll locked, focus contained, popup named by the trigger). No key handler, focus override or label of the picker's own is added: the picker has no rule of its own where the library does the task (report section 3). The differences from Base UI (cases U2, WR1) are listed in the repository README per base. Covers Q158 and Q159. Settled by the lead under the owner's 'implement everything autonomously' (2026-11-24); options and source lines in run/trackers/79-date-picker-radix-and-aria-tracker.md, Attention K4 to K6.
+	- Source: Q157
+- [x] **D172** The date picker installs through the shadcn CLI's own rewriting; the exact-copy rule binds the repository source #R6
+	- The 22 files in registry/base of shadcn-date-picker stay the exact approved code (D162, diff -r). What the shadcn CLI writes into a user's app may differ from it by the CLI's own rewriting: import aliases follow the app's components.json and the style hook classes (cn-dialog-close, cn-field, cn-button-group-orientation-horizontal) are resolved the way the CLI resolves them for shadcn's own parts. The item type is the one that gives a working picker in a fresh app of each style with other aliases: imports resolve, tsc and next build pass, the dialog close button, field and button group are styled as in the approved app. The install proof compares the rendered picker with the approved one, not the installed bytes. A fix milestone of spec 78 finds the stock mechanism first (how the CLI treats cn-* classes for an outside registry) and names it in the tracker.
+	- Source: Q153
+- [x] **D173** The date picker's install files are generated with shadcn's own style transform #E27 #R6
+	- Option 1 of Q161: the registry build of shadcn-date-picker runs shadcn's own createStyleMap and transformStyle with the nova style over the source and writes a generated, committed folder per base; the items serve those files as registry:component, so the CLI rewrites import aliases and the dialog close button, the field and the button group carry real classes. The source in registry/<base> stays the exact approved code (D162) and is never edited for it; the generated folder is never hand-edited and a check fails when it is out of step with the source. One item per base as D163 names them; a user on another shadcn style gets nova's values for those three places, named in the README. This is how shadcn styles its own parts at build time. Tooling, settled by the lead under the owner's 'implement everything autonomously'; replaces the item-type part of D172.
+	- Source: Q161
+- [x] **D174** The React Aria popup's rare stuck-open case is left to React Aria #R6
+	- The React Aria picker keeps the stock popover (D171): a close that lands in the first two frames of a delayed fade-in can leave the popup on the page, and on a touch screen the popup can flicker once as it opens; both are stock react-aria-components behaviour (Popover.mjs:91,103,180,185), not picker code. No workaround and no restyled stock part in the library; the README names both under React Aria. An upstream report is filed only on the owner's word. Settled by the lead.
+	- Source: Q164
+- [x] **D176** The date picker's developer warning for a wrong min, max or step is removed #E27 #R6
+	- utils/values.ts of the date picker no longer prints 'DatePicker: <name> <value> is ignored': a min or max that is not a value of the picker's type and a step that is not a whole number above zero are dropped silently, as the browser does with a bad min on its own input. The process.env.NODE_ENV read goes with it, so a Vite app that installs the picker type-checks without Node types; the helper ignored() and its type go, nothing else changes. On the three bases, in shadcn-date-picker; this is an owner-allowed change to the approved code (report 2.1), so from here the Base UI source differs from test-projects/next-app by this change. The 'node' line added to packages/shadcn-table/tsconfig.radix.json in spec 81 is removed when the table moves to the new tag. Owner, 2026-11-24, told it is a development-only message: 'remove'.
+	- Source: Q166
+- [x] **D177** The month and year grid arrows flip on right-to-left pages #E27 #R6
+	- The previous and next chevrons of GridHeader in components/period-views.tsx of the date picker get rtl:rotate-180, the class the day calendar's caption arrows already have, on the three bases in shadcn-date-picker. An owner-allowed change to the approved code (report 2.1). Owner, 2026-11-24: '162 k'.
+	- Source: Q162
+- [x] **D180** The date picker docs site keeps one sidebar list of its nine pages #R6
+	- Tracker 85 A2, option 1: one flat sidebar list under the three labels Get Started, Pickers, Props. Three sections as on the table site would leave two sidebars with one row each; the section line above the page title and the page switcher in the breadcrumb are not shown. Lead, 2026-11-24 (weight test: docs layout, cheap to change).
+	- Source: Q168
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}

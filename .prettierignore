@@ -11,6 +11,9 @@ apps/shadcn-table-docs/examples/.aria
 apps/shadcn-table-docs/stories/.radix
 apps/shadcn-table-docs/stories/.base
 apps/shadcn-table-docs/stories/.aria
+# the date picker and its hook as the shadcn CLI writes them, by pnpm add-date-picker <base>
+packages/shadcn-table/registry/*/components/date-picker
+packages/shadcn-table/registry/*/hooks
 # installed copies of the library and its parts, written by pnpm lib:install <base>
 apps/shadcn-table-docs/components/ui-radix
 apps/shadcn-table-docs/components/ui-base
