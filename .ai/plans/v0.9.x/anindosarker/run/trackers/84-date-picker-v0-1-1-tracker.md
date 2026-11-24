@@ -44,3 +44,19 @@ Checks:
 - Task 1 warning removal: done (4873842); props row in stories/Introduction.mdx says a limit in another format is ignored
 - Task 2 grid arrows: done (a05fb19); eight right-to-left captures committed
 - Task 3 generated files, version, README, Introduction: done (0b45dec); package.json 0.1.1, install commands at #v0.1.1, README Base UI note before Radix UI; Local CI green at 0b45dec; not merged
+
+Verifier (milestone Date picker v0.1.1, head 0b45dec):
+- Check: verifier owned files, `git diff --name-only origin/main...HEAD` at 0b45dec: pass (16 files, all in spec 2.1)
+- Check: verifier approved folder, `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 0b45dec: pass (only utils/values.ts: IgnoredProp and ignored() gone, two callers yield undefined; components/period-views.tsx: className="rtl:rotate-180" on the two GridHeader chevrons)
+- Check: verifier three bases, `git diff origin/main -- 'registry/*/components/date-picker/*'` at 0b45dec: pass (same two hunks on base, radix, aria; values.ts identical on the three bases; generated copies match)
+- Check: verifier no warning, `grep -rn -E 'process\.|IgnoredProp|ignored\(' registry/*/components/date-picker registry/*/generated` at 0b45dec: pass (no output)
+- Check: verifier registry, `pnpm registry:build` then `git status --short` then `pnpm registry:check` at 0b45dec: pass (status clean, check exit 0)
+- Check: verifier stock calendar, `grep -c 'ref={ref}' registry/base/components/ui/calendar.tsx` at 0b45dec: pass (0)
+- Check: verifier arrow class, `grep -c 'rtl:rotate-180'` period-views.tsx per base at 0b45dec: pass (2, 2, 2)
+- Check: verifier play, stories/Options.stories.tsx IgnoredLimits at 0b45dec: pass (expects console.error not called with "DatePicker:", keeps November 1st, 2026 enabled under the bad min and step)
+- Check: verifier tests base, `pnpm test --base base` at 0b45dec: pass (7 files, 39 tests)
+- Check: verifier tests radix, `pnpm test --base radix` at 0b45dec: pass (7 files, 39 tests)
+- Check: verifier tests aria, `pnpm test --base aria` at 0b45dec: pass (7 files, 39 tests)
+- Check: verifier lint, typecheck, storybook:build: tracker lines exist at 0b45dec, not rerun
+- Check: verifier texts at 0b45dec: pass (README and Introduction.mdx 3 commands at #v0.1.1 each, 0 v0.1.0; README Base UI note before Radix UI, two lines, issues/9401 once; props row "A limit in another format is ignored."; package.json 0.1.1)
+- Check: verifier captures, `git ls-tree origin/claude/review reference/q149-calendar-library/rtl/after/`: pass (8 files; month-single-390 compared with spec 78 capture by eye, arrows flipped)
