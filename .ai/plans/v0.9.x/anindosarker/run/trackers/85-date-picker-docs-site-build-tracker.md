@@ -23,10 +23,16 @@ Checks:
 - Check: docs types, `pnpm --filter docs types:check` at 0a3b01e: pass (exit 0; 7 demos per base)
 - Check: docs lint, `pnpm --filter docs lint` at 0a3b01e: pass (exit 0, 0 errors, the same 1 warning of plan 4.3)
 - Check: docs build, `pnpm --filter docs build` at 0a3b01e: pass (exit 0; 16 static pages, /docs/[[...slug]] with 9 paths; built HTML of /docs/date and /docs/ranges carries the code view text with `@/components/date-picker/date-picker`, no `registry/base`)
+- Check: storybook build, `pnpm storybook:build` at 505417a: pass (exit 0; storybook-static/ holds only storybook/, with storybook/index.html, the unchanged list page, and storybook/{base,radix,aria}/index.html; no version.txt, plan 7.3 and 8)
+- Check: root lint, `pnpm lint` at 505417a: pass (exit 0)
+- Check: CI, `act push -W .github/workflows/ci.yml -P ubuntu-latest=catthehacker/ubuntu:act-latest --env npm_config_store_dir=/tmp/pnpm-store` at 505417a (working tree before the push): pass (job succeeded: install, lint, typecheck, registry:check, Playwright Chromium, test 39 passed on each of three bases, docs lint, docs types:check, docs build)
+- Check: README, `grep -c 'storybook' README.md` at 505417a: pass (prints 1)
+- Check: vercel.json at 505417a: the file of plan 7.2 (services docs and storybook, the two redirects with permanent false, the three rewrites in order), plus the `$schema` line of the table's file
+- Check: preview of the branch, `/`, `/docs/date`, `/storybook/base/`, `/version.txt`: preview not read: browser not connected (claude-in-chrome lists no connected browser); the status lines are read on production after the merge (task 5, plan 8)
 
 - Task 1 workspace and shell: done (be986a7)
 - Task 2 pages and demos: done (0a3b01e)
-- Task 3 Storybook under /storybook/, vercel.json, CI, README: planned
+- Task 3 Storybook under /storybook/, vercel.json, CI, README: done (505417a)
 - Task 4 local production build read and captures: planned
 - Task 5 live reads after the merge: planned
 
