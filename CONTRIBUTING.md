@@ -359,10 +359,6 @@ Session replay, surveys, feature flags and error tracking are not enabled. There
 
 ## Related
 
-- `.ai/plans/v0.5.x/anindosarker/decisions.md` item 7, the release flow
-- `.ai/plans/v0.2-base-ui/anindosarker/v0.2-base-ui-plan.md`, the Base UI copy and why
-- `.ai/plans/v0.4.0/anindosarker/decisions.md`, the two-tree layout and why
-- `.ai/plans/v0.5.x/anindosarker/decisions.md`, the React Aria copy and the n-tree guard
 - `packages/shadcn-table/registry/README.md`, what lives where
 - `.github/workflows/pr.yml`, the jobs behind step 6; `.github/workflows/release.yml`, step 7
 - `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page
