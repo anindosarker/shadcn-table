@@ -1,6 +1,6 @@
 # 82: Date filters on the date picker, tracker
 
-Status: running
+Status: done
 Branch `v0.9/date-filters-on-date-picker`, worktree 06
 Checks:
 
@@ -61,6 +61,7 @@ Checks:
 - Verify, check: captures, 36 before and 36 after present in `test/.out/spec82/`; the code since 595e0a50 changes no class of the box (13f47578 event handling, v0.1.1 `values.ts` warnings and `rtl:rotate-180` on popup arrows), so the look table stands
 - Verify, check: `lsof -nP -iTCP:5340-5360 -sTCP:LISTEN` and `git status --short` at ac74a422: pass (both print nothing)
 - Verify: pass at ac74a422
+- Merge of `origin/claude/review` at 95f805f7 as 90c81e35: `.ai/` only, no rerun needed; the af2f2594 checks stand
 - Review round 1: 2 majors, 7 minors, fixed at e18c4e16 (major 1 and minor 1 fixed; major 2 waits on Q166; minor 2 under Attention; minors 3 to 7 answered in Notes)
 
 - Task 1 the is-empty reset: done (6dcd219e the fix, df801ff7 the play)
