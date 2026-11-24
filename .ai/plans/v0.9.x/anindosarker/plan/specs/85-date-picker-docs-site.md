@@ -158,6 +158,14 @@ One file, `reference/q149-calendar-library/design-docs-site.md`, written by read
 - Task 4: The local production build read and the captures (1.6.6). Checks: 20 tracker lines (ten pages, two widths) with pass or the fault; three base lines for `/docs/date` and three for `/docs/ranges`; the captures committed under `reference/q149-calendar-library/docs-site/` and the difference list in the tracker; the server stopped (`lsof -nP -iTCP:<port> -sTCP:LISTEN` prints nothing)
 - Task 5: After the merge: the live reads (1.6.6). Checks: one tracker line per read of 1.6.6 with the address; the CI run of the merged commit is `success`; the milestone worktree removed and `git -C <clone> status --short` prints nothing; the DONE line names the site address and the Storybook address
 
+### Milestone: Docs site: GitHub button, short footer, base select on home
+
+- Files owned: `shadcn-date-picker/docs/**`
+- Depends on: Date picker docs site build
+- Review: none
+- Starts: S43
+- Task 1: Docs site: GitHub button, short footer, base select on home. Checks: code panels show a plain GitHub button, no More menu; home and 404 pages show a footer with the name, the licence line, GitHub and Storybook only; the home header keeps the base select (D181); pnpm --filter docs lint, pnpm --filter docs types:check, pnpm --filter docs build green; live read of / , a 404 address and one page with a code panel after the merge
+
 ### 2.2 Checks
 
 - Date picker docs site: the inventory equals the shell's file list, every taken file's imports resolve inside the taken set, the Vercel routing proven on a preview, the review
