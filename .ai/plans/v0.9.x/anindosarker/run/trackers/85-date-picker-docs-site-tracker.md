@@ -1,6 +1,6 @@
 # 85: Date picker docs site, tracker
 
-Status: running
+Status: done (de7c89e9)
 Branch: none (a plan file)
 Checks:
 - Check: inventory rows equal the shell file list, `git ls-files apps/shadcn-table-docs/app apps/shadcn-table-docs/components apps/shadcn-table-docs/lib | grep -v -E 'apps/shadcn-table-docs/(components/ui[^/]*/|components/prop-tables/|components/dev-home/v[^/]*/)' | wc -l` at 38e51f9: 132 files, 132 rows: pass
