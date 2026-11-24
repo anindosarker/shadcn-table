@@ -9,28 +9,41 @@ Checks:
 - Check: the plan names the files that carry the base switch (lib/bases.mjs, lib/base-tabs.mjs, lib/install.ts, components/base-selector.tsx, components/example-variant.tsx, lib/example-variants.mjs, lib/registry-trees.mjs) and the tree each base points at (docs/registry/<base>, a copy of registry/<base>/components and hooks), plan 5.1 to 5.3: pass
 - Check: ten page rows with title, sidebar place and source of the text, plan 6.1: pass
 - Check: each demo row names the story it follows, seven rows, plan 6.3: pass
-- Check: preview of `date-picker-docs-vercel-proof` answers `/` with the one-page app: not read, the address answers HTTP 302 to vercel.com/sso-api (Vercel login) on every path: fail (A1)
-- Check: preview answers `/storybook/` with the static file: not read, same: fail (A1)
-- Check: preview `/base/x` ends at `/storybook/base/x`: not read, same: fail (A1)
-- Check: `git ls-remote --heads https://github.com/anindosarker/shadcn-date-picker date-picker-docs-vercel-proof` prints nothing: fail, the branch is kept at 8f41b47 until A1 is settled
-- Check: `git -C shadcn-date-picker status --short` prints nothing: pass (the proof lives in its own worktree, which is kept)
+- Check: preview of `date-picker-docs-vercel-proof` answers `/` with the one-page app: ends at `/`, body `one-page app (docs service)`: pass (read in the owner's logged-in Chrome, plan 7.4; not a `curl -sI` line, the address answers 302 to the Vercel login without a session)
+- Check: preview answers `/storybook/` with the static file: ends at `/storybook/`, title `proof`, body `storybook list (static file)`: pass (same read)
+- Check: preview `/base/x` ends at `/storybook/base/x`: ends at `/storybook/base/x/` (the storybook service adds its slash), Vercel `404: NOT_FOUND` as the proof holds no such file; `/base/` and `/base` end at `/storybook/base/` with the static page: pass (same read; hop status codes not read, plan 7.4)
+- Check: `git ls-remote --heads https://github.com/anindosarker/shadcn-date-picker date-picker-docs-vercel-proof` prints nothing: pass (`git ls-remote --heads origin` prints `main` 2cf6e6f alone)
+- Check: `git -C shadcn-date-picker status --short` prints nothing: pass (worktree removed, `git worktree list` shows the clone alone)
+- Check: review round 1, the four majors answered in the plan (7 status and 7.4; 5.1 `lib/bases.mjs`; row 122 `siteUrl`; new 1.4 root lint entries): pass
+- Check: no em dash in the plan (`grep -c` prints 0): pass
 
 - Task 1 The read, inventory, not-taken list, dependencies, styles: done (c6c0e745, plan sections 1 to 4)
 - Task 2 Demos and the base switcher, routes and content: done (c6c0e745, plan sections 5 and 6)
-- Task 3 Vercel routing proof and Storybook prefix, checks list: blocked on A1 (c6c0e745; plan sections 7.1 to 7.3 and 8 written; 7.4 waits)
+- Task 3 Vercel routing proof and Storybook prefix, checks list: done (c6c0e745 sections 7.1 to 7.3 and 8; e90d91e4 the proof lines of 7.4, branch and worktree deleted)
+- Review round 1: 4 majors, 13 minors (one of them the passed checks, for the record); all majors and 11 minors corrected in the plan, one minor answered with proof (the JSDoc of `DatePicker` opens at date-picker.tsx:14 with `/**`, as the plan says), the look picks staged as A2 and A3: e90d91e4
 
 Notes:
-- The build check of spec 85 ("for each taken trimmed row the diff shows deletions and the import paths only") is wider in the plan: a trimmed row may also list value replacements (names, addresses, NAV_LINKS, one function body). Each is named in its row. Without them the header would read shadcn-table.
-- The proof deployment built both services: Vercel deployment dpl_2SHMqgtpbRws56SEZXF5obXb7M3w, READY. Only reading it is blocked.
-- No GitHub or Vercel setting was changed. `vercel curl` was not run: the project has no protection bypass secret and the command would create one.
+- The build check of spec 85 ("for each taken trimmed row the diff shows deletions and the import paths only") is wider in the plan: a trimmed row may also list value replacements (names, addresses, NAV_LINKS, one function signature and body, one guard line). Each is named in its row. Without them the header would read shadcn-table.
+- Departure from spec 85, 1.6.1 item 3 and 1.7 (versions of the table's docs app), for the closer: `react`, `react-dom`, `lucide-react` and `cn` take the date picker root's range, because the three trees run on them and `cn` `^0.4.0` and `^0.5.0` share no version (plan section 3). Every other package is the table's.
+- The proof deployment dpl_2SHMqgtpbRws56SEZXF5obXb7M3w (both services built, READY) is still on Vercel behind the login; spec 85, 1.6.1 item 7 says the preview is deleted after: `vercel remove dpl_2SHMqgtpbRws56SEZXF5obXb7M3w` is left to the closer, the runner deleted the branch only.
+- No GitHub or Vercel setting was changed. `vercel curl` was not run. The preview was read through the owner's Chrome with AppleScript (tabs opened in the back and closed after; Chrome's remote debugging and JavaScript from Apple Events stayed off).
+- Row 122: the public site's canonical links come from a constant in `lib/shared.ts` (`https://date-picker.shadcn-table.com`), no environment variable.
 
 ## Attention
 
-### A1 The Vercel preview of the routing proof cannot be read without a login
-- The preview of the proof branch is behind the Vercel login, so the three routing answers the plan needs are not proven.
-- Facts: deployment dpl_2SHMqgtpbRws56SEZXF5obXb7M3w of branch date-picker-docs-vercel-proof built (docs service and storybook service, READY). Every path of https://shadcn-date-picker-7bs28yd3z-anindo-sarkers-projects.vercel.app answers HTTP 302 to vercel.com/sso-api. Project setting: ssoProtection all_except_custom_domains; no protection bypass secret exists. The Chrome extension was not connected, so the owner's logged-in browser could not read it either. A local static serve is not a proof of Vercel's behaviour (run rule).
+### A1 The Vercel preview of the routing proof cannot be read without a login (settled)
+- Settled in review round 1: the owner's Chrome was logged in to Vercel and the addresses were read there; the lines are in plan 7.4.
+- Kept nothing: the branch and its worktree are deleted.
+
+### A2 The docs sidebar can be one list of nine pages or sections as on the table site
+- The plan builds one sidebar list under three labels; the table site shows one section at a time.
+- Facts: with the flat list the `// section` line above a page title and the page switcher in the breadcrumb do not show (plan 6.1, with the code lines). fumadocs folder groups keep the addresses of spec 85 and give the table's behaviour, with two sections of one page each (Get started: Install; Reference: Props).
 - Options:
-  1. The owner opens the six addresses of plan 7.4 in a browser logged in to Vercel, or connects the Chrome extension, and the runner records the answers. No setting changes.
-  2. The owner allows `vercel curl` once: it creates a protection bypass secret on the project (a Vercel setting), the runner reads the lines, the secret can be deleted after.
-  3. The routing is proven on the preview of the build branch instead (spec 85, build task 3 already reads `/`, `/docs/date`, `/storybook/base/` and `/version.txt` there), with the same login question.
-- Kept until settled: branch date-picker-docs-vercel-proof on origin (8f41b47, never merged) and its worktree shadcn-date-picker.worktrees/date-picker-docs-vercel-proof.
+  1. Keep the flat list (the plan's default): nine rows always visible, nothing sparse; the eyebrow and the page switcher are absent.
+  2. Three root folders in parentheses: sidebar, eyebrow and page switcher as on the table site; two of the three sidebars hold one row.
+
+### A3 Three small look points of the public site have no answer in the spec or on the table site
+- The plan takes a default for each so the build can run; the captures of the build show them.
+- The code panel's More menu is left with one entry, "Open in GitHub" (plan row 40). Default: keep the menu as trimmed. Other way: a plain GitHub button in its place, which is more than a deletion.
+- The home page and the 404 page end without a footer (plan row 60, 6.4). Default: none, the table's footer holds the Dune field, Discord and the table's link columns. Other way: the footer trimmed to the name, the licence line, GitHub and Storybook.
+- The home header carries the base select (plan 5.1). Default: on, because the agent bar that held the home's base choice is not taken. Other way: off as on the table's home, and the home demos run on the stored base only.
