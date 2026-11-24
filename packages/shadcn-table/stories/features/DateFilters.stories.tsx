@@ -536,7 +536,8 @@ export const TypedDateAfterButtonClickWaitsForEnter = {
   },
 };
 
-// A range keeps its two boxes: Min picked in its popup, Max typed.
+// The range box (D183): a day picked in its popup applies at once, a typed
+// Max waits for Enter.
 export const RangeMinPickedMaxTyped = {
   render: () =>
     subheaderTable(
@@ -551,22 +552,21 @@ export const RangeMinPickedMaxTyped = {
     await waitFor(() =>
       expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
     );
-    const popup = await openPickerPopup(
-      canvas.getAllByRole('button', { name: 'Select date' })[0]!,
-      'Select date',
-    );
-    await userEvent.click(day(popup, 'November 5th, 2025'));
-    await expectPickerPopupClosed('Select date');
-    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan', 'Eve']));
-    expect(canvas.getByLabelText('Min')).toHaveValue('2025-11-05');
+    await realClick(canvas.getByRole('button', { name: 'Filter by Joined' }));
+    const popup = await rangePopup('Filter by Joined');
+    await userEvent.click(day(popup, 'November 3rd, 2025'));
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ben', 'Cara']));
+    expect(popup.getByLabelText('Max')).toHaveValue('2025-11-03');
 
-    const max = canvas.getByLabelText('Max');
+    const max = popup.getByLabelText('Max');
     max.focus();
     await realKeyboard().keyboard('11112025');
     await waitFor(() => expect(max).toHaveValue('2025-11-11'));
-    expect(names(canvasElement)).toEqual(['Dan', 'Eve']);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara']);
     await realKeyboard().keyboard('{Enter}');
-    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan']));
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
   },
 };
 
@@ -714,6 +714,15 @@ const openRangePlace = async (
     ) as HTMLElement;
     await userEvent.click(
       within(th).getAllByRole('button', { name: /filter/i })[0]!,
+    );
+    return within(
+      await waitFor(() => {
+        const popover = document.querySelector<HTMLElement>(
+          '[data-slot="popover-content"]',
+        );
+        expect(popover).toBeVisible();
+        return popover!;
+      }),
     );
   }
   return body();
@@ -864,15 +873,13 @@ export const TimeRangeBoxInSubheader = {
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
-    const [min, max] = [
-      canvas.getByLabelText('Min'),
-      canvas.getByLabelText('Max'),
-    ];
-    const group = min.closest('[data-slot="field-group"]');
+    const min = () => canvas.getByLabelText('Min');
+    const max = () => canvas.getByLabelText('Max');
+    const group = min().closest('[data-slot="field-group"]');
     expect(group).not.toBeNull();
-    expect(max.closest('[data-slot="field-group"]')).toBe(group);
+    expect(max().closest('[data-slot="field-group"]')).toBe(group);
 
-    min.focus();
+    min().focus();
     await realKeyboard().keyboard('1000A');
     await realKeyboard().keyboard('{Enter}');
     await waitFor(() =>
@@ -881,13 +888,13 @@ export const TimeRangeBoxInSubheader = {
     await userEvent.click(canvas.getByRole('button', { name: 'Clear Min' }));
     await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
 
-    max.focus();
+    max().focus();
     await realKeyboard().keyboard('1000A');
     await realKeyboard().keyboard('{Enter}');
     await waitFor(() =>
       expect(names(canvasElement)).toEqual(['Ann', 'Dan', 'Finn']),
     );
-    min.focus();
+    min().focus();
     await realKeyboard().keyboard('0900A');
     await realKeyboard().keyboard('{Enter}');
     await waitFor(() => expect(names(canvasElement)).toEqual(['Dan']));
