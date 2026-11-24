@@ -307,7 +307,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const commitTypedValue = () => {
     if (typedDate) {
       setTypedDate(null);
-      handlePick(typedDate.value || null);
+      if (isCommitGuardHeld(typedDate.guard)) {
+        handlePick(typedDate.value || null);
+      }
     } else {
       debouncedCommit.flush();
     }
@@ -317,7 +319,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const datePickerRef = useRef<HTMLDivElement>(null);
 
   // A change while the date picker's input has focus is typed, unless a
-  // click on one of its buttons made it.
+  // click on one of its buttons made it after the last key press.
   const isDatePickerButtonClick = useRef(false);
   const handleDateChange = (newValue: string) => {
     if (
@@ -606,15 +608,16 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       dateBoxProps.onBlur?.(e as unknown as FocusEvent<HTMLInputElement>);
     },
     onChange: handleDateChange,
-    onClick: () => {
-      isDatePickerButtonClick.current = false;
-    },
     onClickCapture: (e: MouseEvent<HTMLDivElement>) => {
       isDatePickerButtonClick.current = !(e.target instanceof HTMLInputElement);
     },
     onFocus: (e: FocusEvent<HTMLDivElement>) => {
       clearTimeout(dateBlurCommit.current);
       dateBoxProps.onFocus?.(e as unknown as FocusEvent<HTMLInputElement>);
+    },
+    // A React Aria button stops its click from bubbling: a key press resets.
+    onKeyDownCapture: () => {
+      isDatePickerButtonClick.current = false;
     },
     onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
       const isBoxInput =
