@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q174** A docs check fails now and then in CI because it waits a fixed tenth of a second for the Copied label
+	- Release PR 149, run 45332870689, Docs E2E (radix): /docs/examples/sticky-row-selection 'copied state' red, 1 of 1116; test/docs-e2e/lib/helpers.mjs:313-327 (and :272) clicks, waits 100 ms, counts the Copied button once. No user effect: a release run goes red on a slow runner. Tooling fix, run settles it.
 
 ## Decided
 
