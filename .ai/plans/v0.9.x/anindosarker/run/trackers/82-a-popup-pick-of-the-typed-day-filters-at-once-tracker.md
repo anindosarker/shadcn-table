@@ -17,6 +17,13 @@ Checks:
 - Check: `pnpm test storybook-tests --base aria` at 4390024c: pass, 638 passed
 - Check: `pnpm test docs-e2e --base base`, `radix`, `aria` at 4390024c (rerun: the docs copies and a story page changed): pass, each 5 sections, 117 pages, 0 failed
 
+- Check (verifier): files, `git diff --name-only origin/claude/review...HEAD` at aba45fe1: pass, the four owned files, the tracker, CHANGELOG.md, the docs copies (`pnpm --filter shadcn-table-docs lib:install <base>`) and the story page plus more/meta.json (`apps/shadcn-table-docs/lib/story-pages.mjs`)
+- Check (verifier): play first, `ST_BASE=base vitest run stories/features/DateFilters -t "Pick Typed"` with the base file of origin/claude/review: passed (1 passed), as the builder found; with only the onClickCapture line removed: fail, `expected [ 'Ann', 'Ben', 'Cara', 'Dan', …(2) ] to deeply equal [ 'Ben', 'Cara', 'Dan', 'Eve' ]`; file restored
+- Check (verifier): typecheck, lint, validate-repo, storybook-tests x3, docs types:check, docs-e2e x3 lines at 4390024c stand (only the tracker changed since)
+- Check (verifier): `pnpm test installation-e2e --scenario nextjs-base|nextjs-radix|nextjs-aria --no-diff` at aba45fe1 (the item files changed): pass, each built, browser pass, release gate pass
+- Check (verifier): stays unchanged, `git diff --stat origin/claude/review...HEAD` on registry/*/components/date-picker, types.ts, index.ts, tools/registry, package.json, pnpm-lock.yaml at aba45fe1: pass (prints nothing); the three base diffs identical
+- Check (verifier): no server of this milestone on 5340 to 5360 (5356, 5357 belong to the date picker docs site worktree); worktree clean
+
 - Task 1 A popup pick of the typed day filters at once: done (6fc2534c the fix and the play `Pick Typed Day Applies At Once`; 4390024c docs copies, story page, changelog)
 
 ## Notes
