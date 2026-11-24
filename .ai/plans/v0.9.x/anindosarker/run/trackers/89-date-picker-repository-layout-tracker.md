@@ -1,6 +1,6 @@
 # 89: Date picker repository layout, tracker
 
-Status: running
+Status: blocked
 Branch `date-picker-repository-layout`, worktree shadcn-date-picker.worktrees/date-picker-repository-layout, from origin/main 5404817 (start sha 54048178ff61d4ca5c8fe366de385284ea8dc74a, holds spec 86's merge commit 5404817)
 Checks:
 - Check: setup, `pnpm install --frozen-lockfile` at 5404817: pass
@@ -66,9 +66,21 @@ Checks:
 - Verify: local read browser, playwright on 5350 at d24d40d: `/docs/date` "Customize theme" opens the Theme sheet ("Colors, fonts and radius"); a fresh `/docs/date` "Select date" then day 15 sets the input to 2026-11-15; 0 console errors on all pages read: pass
 - Verify: local read Storybooks, `python3 -m http.server 5351` on `packages/shadcn-date-picker/storybook-static` at d24d40d: `/storybook/` 200, `/storybook/{base,radix,aria}/` 200, "Introduction - Docs", 11 sidebar nodes, preview iframe, 0 console errors: pass
 - Verify: servers stopped by pid (next-server, pnpm, http.server), `lsof -nP -iTCP:5350` and `:5351 -sTCP:LISTEN` print nothing; browser closed; worktree `git status --short` empty at d24d40d: pass
+- Check: T5 merge, `git merge --no-ff origin/date-picker-repository-layout` on main 5404817 (origin/main ancestor of the branch head d24d40d, verify lines green at d24d40d), pushed at f1375c3: M = f1375c3
+- Check: T5 production deploy of M, `gh api repos/anindosarker/shadcn-date-picker/commits/f1375c3/status` at f1375c3: Vercel failure, dpl_63LqREXGtJDPpTWF8wNEivgFnxGE; `vercel inspect --logs`: "Detected Turbo", install only 7 packages at the root, `turbo run build` at /vercel/path0, then `shadcn-date-picker-docs:build` "Failed to type check": `registry/aria/components/ui/label.tsx(11,18): error TS2339: Property 'className' does not exist on type 'LabelProps'`, implicit any in `components/dev-home/shared/intent-link.tsx(29,24)` and the aria registry copies; `Error: [BUILD_UTILS_SPAWN_1] Command "turbo run build" exited with 1`: fail (the docs app's types resolved through the old root install; no project setting named in the log)
+- Check: T5 CI of M, run 45355282102 at f1375c3: failure, step `pnpm exec playwright install --with-deps chromium` at the root: ` ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "playwright" not found` (exit 254; playwright is now a package devDependency, not a root one): fail
+- Check: T5 revert, `git revert -m 1 f1375c3 --no-edit` pushed on main at b29bfa2: Vercel status success, CI run 45355560818 success: pass
+- Check: T5 site after the revert, python urllib on https://date-picker.shadcn-table.com at b29bfa2: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200, `/docs/date` 200, `/docs/props` 200, `/version.txt` 200 `0.1.1`, `/storybook/` 200, `/storybook/base/`, `/storybook/radix/`, `/storybook/aria/` 200, `/no-such-page` 404 "Page not found | shadcn-date-picker", `/base/` 308 to `/base` (trailing slash step): as before, pass
+- Check: T5 tags, `git ls-remote --tags origin` at b29bfa2: v0.1.0 310b4a0 (908300d), v0.1.1 5fa8f7d (2cf6e6f), unchanged: pass
+- Check: T5 branch date-picker-repository-layout and its worktree kept at d24d40d; live reads, installs and cleanup skipped (step 5); clone on main b29bfa2, `git status --short` empty
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
 - Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
 - Task 3 The equality proofs: done (99948b7, proofs only, no commit)
 - Task 4 The full checks and the local production read: done (99948b7, checks only, no commit)
-- Task 5 After the merge, the live reads: planned
+- Task 5 After the merge, the live reads: blocked (merge f1375c3 failed the production deploy and CI; reverted forward by b29bfa2)
+
+## Attention
+
+- The merged layout broke the site build on Vercel, so the merge was undone and the live site is as before.
+- Queue card: date picker layout fix forward. M f1375c3 failed two ways in the repository's own files: (1) Vercel builds the docs app from a Turbo-detected install that no longer gives it the library's dependencies and types (`react-aria-components` LabelProps, implicit any), so `next build` fails type check; (2) ci.yml runs `pnpm exec playwright install` at the root, where playwright no longer is. Revert commit b29bfa2; branch date-picker-repository-layout kept at d24d40d for the fix and a new merge.
