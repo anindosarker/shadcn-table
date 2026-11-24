@@ -397,8 +397,8 @@ function fontFamily(value: FontValue) {
 }
 
 /** Light and dark token sets for a config (registry/config.ts buildRegistryTheme).
- * A color preset replaces the base color, theme and chart tokens; its radius is what the
- * "Default" radius shows. Menu accent, radius and fonts still apply on top. */
+ * A color preset replaces the base color, theme and chart tokens only.
+ * Menu accent, radius and fonts still apply on top. */
 export function buildThemeVars(config: DesignSystemConfig) {
   const preset = findColorPreset(config.colorPreset);
   const base = findTheme(config.baseColor);

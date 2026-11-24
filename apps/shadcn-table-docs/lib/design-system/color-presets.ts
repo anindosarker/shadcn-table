@@ -1,7 +1,7 @@
 /** Full color theme presets from tweakcn (https://github.com/jnsahaj/tweakcn,
  * utils/theme-presets.ts), licensed under the Apache License 2.0
  * (https://github.com/jnsahaj/tweakcn/blob/main/LICENSE). Copyright jnsahaj and tweakcn contributors.
- * Modified: kept the color tokens and the light radius; dropped fonts, shadows, letter-spacing
+ * Modified: kept the color tokens; dropped the corner rounding, fonts, shadows, letter-spacing
  * and spacing, which the theme customizer's own controls own; added the docs' `default`
  * palette first. */
 
@@ -120,7 +120,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1e3a8a',
       'sidebar-border': '#e5e7eb',
       'sidebar-ring': '#3b82f6',
-      radius: '0.375rem',
     },
     dark: {
       background: '#171717',
@@ -191,7 +190,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#000000',
       'sidebar-border': '#ebebeb',
       'sidebar-ring': '#000000',
-      radius: '1.4rem',
     },
     dark: {
       background: '#1a1b1e',
@@ -262,7 +260,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#454554',
       'sidebar-border': '#eceae9',
       'sidebar-ring': '#db2777',
-      radius: '0.5rem',
     },
     dark: {
       background: '#221d27',
@@ -333,7 +330,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1e9df1',
       'sidebar-border': '#e1e8ed',
       'sidebar-ring': '#1da1f2',
-      radius: '1.3rem',
     },
     dark: {
       background: '#000000',
@@ -404,7 +400,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#A28777',
       'sidebar-ring': '#A37764',
-      radius: '0.5rem',
     },
     dark: {
       background: '#2d2521',
@@ -475,7 +470,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#333333',
       'sidebar-border': '#f3e8ff',
       'sidebar-ring': '#ec4899',
-      radius: '0.4rem',
     },
     dark: {
       background: '#12242e',
@@ -546,7 +540,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#4b2e36',
       'sidebar-border': '#d7d2e0',
       'sidebar-ring': '#8a79ab',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1a1823',
@@ -617,7 +610,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#5d4037',
       'sidebar-border': '#c0c0c0',
       'sidebar-ring': '#a0a0a0',
-      radius: '0.625rem',
     },
     dark: {
       background: '#2b2b2b',
@@ -688,7 +680,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#505050',
       'sidebar-ring': '#b71c1c',
-      radius: '0px',
     },
     dark: {
       background: '#1a1a1a',
@@ -759,7 +750,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#bcc0cc',
       'sidebar-ring': '#8839ef',
-      radius: '0.35rem',
     },
     dark: {
       background: '#181825',
@@ -830,7 +820,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#333333',
       'sidebar-border': '#d0d0d0',
       'sidebar-ring': '#606060',
-      radius: '0.35rem',
     },
     dark: {
       background: '#1a1a1a',
@@ -901,7 +890,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#0a4a55',
       'sidebar-border': '#cde0e2',
       'sidebar-ring': '#06858e',
-      radius: '0.125rem',
     },
     dark: {
       background: '#0a1a20',
@@ -972,7 +960,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#5c4b3e',
       'sidebar-border': '#e5e0d4',
       'sidebar-ring': '#9db18c',
-      radius: '0.425rem',
     },
     dark: {
       background: '#3a3529',
@@ -1043,7 +1030,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#2a2a4a',
       'sidebar-border': '#e0e0f0',
       'sidebar-ring': '#6e56cf',
-      radius: '0.5rem',
     },
     dark: {
       background: '#0f0f1a',
@@ -1114,7 +1100,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1e3a8a',
       'sidebar-border': '#e5e7eb',
       'sidebar-ring': '#e05d38',
-      radius: '0.75rem',
     },
     dark: {
       background: '#1c2433',
@@ -1185,7 +1170,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#91185c',
       'sidebar-border': '#ffddf0',
       'sidebar-ring': '#e6067a',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1a0922',
@@ -1256,7 +1240,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1b5e20',
       'sidebar-border': '#e0d6c9',
       'sidebar-ring': '#2e7d32',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1c2a1f',
@@ -1327,7 +1310,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1e40af',
       'sidebar-border': '#e0e7ff',
       'sidebar-ring': '#8b5cf6',
-      radius: '0.625rem',
     },
     dark: {
       background: '#0f172a',
@@ -1398,7 +1380,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#7f1d1d',
       'sidebar-border': '#f5e8d2',
       'sidebar-ring': '#9b2c2c',
-      radius: '0.375rem',
     },
     dark: {
       background: '#1c1917',
@@ -1469,7 +1450,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#92400e',
       'sidebar-border': '#e5e7eb',
       'sidebar-ring': '#f59e0b',
-      radius: '0.375rem',
     },
     dark: {
       background: '#171717',
@@ -1540,7 +1520,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#202020',
       'sidebar-border': '#dfdfdf',
       'sidebar-ring': '#72e3ad',
-      radius: '0.5rem',
     },
     dark: {
       background: '#121212',
@@ -1611,7 +1590,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#000000',
       'sidebar-ring': '#ff3333',
-      radius: '0px',
     },
     dark: {
       background: '#000000',
@@ -1682,7 +1660,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#FFFFFF',
       'sidebar-border': '#E4D9BC',
       'sidebar-ring': '#B45309',
-      radius: '0.3rem',
     },
     dark: {
       background: '#1C1917',
@@ -1753,7 +1730,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#374151',
       'sidebar-border': '#d6d3d1',
       'sidebar-ring': '#6366f1',
-      radius: '1.25rem',
     },
     dark: {
       background: '#1e1b18',
@@ -1824,7 +1800,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#0c0c1d',
       'sidebar-border': '#dfe6e9',
       'sidebar-ring': '#ff00c8',
-      radius: '0.5rem',
     },
     dark: {
       background: '#0c0c1d',
@@ -1895,7 +1870,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#374151',
       'sidebar-border': '#e9d8fd',
       'sidebar-ring': '#a78bfa',
-      radius: '1.5rem',
     },
     dark: {
       background: '#1c1917',
@@ -1966,7 +1940,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#374151',
       'sidebar-border': '#d1d5db',
       'sidebar-ring': '#6366f1',
-      radius: '0.5rem',
     },
     dark: {
       background: '#0f172a',
@@ -2037,7 +2010,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#343434',
       'sidebar-border': '#ebebeb',
       'sidebar-ring': '#b5b5b5',
-      radius: '0.5rem',
     },
     dark: {
       background: '#111111',
@@ -2108,7 +2080,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#374151',
       'sidebar-border': '#e5e7eb',
       'sidebar-ring': '#22c55e',
-      radius: '0.5rem',
     },
     dark: {
       background: '#0f172a',
@@ -2179,7 +2150,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#839496',
       'sidebar-ring': '#d33682',
-      radius: '0.25rem',
     },
     dark: {
       background: '#002b36',
@@ -2250,7 +2220,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#ffffff',
       'sidebar-border': '#d4d4d4',
       'sidebar-ring': '#6c5ce7',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1a1d23',
@@ -2321,7 +2290,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#000000',
       'sidebar-border': '#d4d4d4',
       'sidebar-ring': '#ffc0cb',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1a1d23',
@@ -2392,7 +2360,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#333333',
       'sidebar-border': '#d4d4d4',
       'sidebar-ring': '#34a85a',
-      radius: '0.5rem',
     },
     dark: {
       background: '#1a1d23',
@@ -2463,7 +2430,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#4a3f35',
       'sidebar-border': '#dbd0ba',
       'sidebar-ring': '#a67c52',
-      radius: '0.25rem',
     },
     dark: {
       background: '#2d2621',
@@ -2534,7 +2500,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#3d3436',
       'sidebar-border': '#ffe0d6',
       'sidebar-ring': '#ff7e5f',
-      radius: '0.625rem',
     },
     dark: {
       background: '#2a2024',
@@ -2605,7 +2570,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1a2238',
       'sidebar-border': '#b0b8c1',
       'sidebar-ring': '#f7c873',
-      radius: '0.5rem',
     },
     dark: {
       background: '#181a24',
@@ -2676,7 +2640,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#343434',
       'sidebar-border': '#ebebeb',
       'sidebar-ring': '#b5b5b5',
-      radius: '0.5rem',
     },
     dark: {
       background: '#262624',
@@ -2747,7 +2710,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': 'oklch(0 0 0)',
       'sidebar-border': 'oklch(0.94 0 0)',
       'sidebar-ring': 'oklch(0 0 0)',
-      radius: '0.5rem',
     },
     dark: {
       background: 'oklch(0 0 0)',
@@ -2818,7 +2780,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#111827',
       'sidebar-border': '#e5e7eb',
       'sidebar-ring': '#d87943',
-      radius: '0.75rem',
     },
     dark: {
       background: '#121113',
@@ -2889,7 +2850,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#171717',
       'sidebar-border': '#e5e5e5',
       'sidebar-ring': '#a1a1a1',
-      radius: '0rem',
     },
     dark: {
       background: '#0a0a0a',
@@ -2960,7 +2920,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#000000',
       'sidebar-border': '#000000',
       'sidebar-ring': '#a5b4fc',
-      radius: '1rem',
     },
     dark: {
       background: '#000000',
@@ -3031,7 +2990,6 @@ export const COLOR_PRESETS: ColorPreset[] = [
       'sidebar-accent-foreground': '#1a1f2e',
       'sidebar-border': '#e8e6e1',
       'sidebar-ring': '#7c9082',
-      radius: '0.35rem',
     },
     dark: {
       background: '#0a0a0a',

@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Docs
+
+#### Spec 93
+
+- In the docs theme panel, `C` and a pick in the Presets list change the colours only: the corner radius, style and fonts stay as they were, so one page can be compared in different colour sets. `R` still changes the whole look (D195).
+
 ## 0.9.9 - 2026-11-24
 
 ### Changed
