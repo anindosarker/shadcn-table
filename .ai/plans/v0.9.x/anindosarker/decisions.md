@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D190** Switching a filter between a range mode and a single mode never leaves a stale value #R6
 	- In 0.9.8 the chips editor keeps the value on every mode change (filterSummary.utils.ts:86-101), so a Between pair switched to Less Than keeps the pair and the table shows no rows. Fix: a mode change between a range mode and a single-value mode resets the value in the chips editor as the other filter places already do on that change (the header mode menu); the builder reads that code and uses the same rule, not a new one. Reproduced first (P10); a play that fails on the shipped code first (P11). Lead, 2026-11-24 (a bug, one right answer).
 	- Source: Q185
+- [ ] **D191** Copy page on the date picker Install page includes the install command #R6
+	- Live at dec5951 the copied text of /docs/install (/llms.mdx/docs/install/content.md) holds no 'shadcn add' line: the page's <InstallCommand /> is dropped by toPlainMarkdown (lib/llms.ts:114). Lead check, 2026-11-24: the table's install page text still carries one install line, the picker's none. Fix in the picker docs app: the page-as-text of the Install page carries the install command for each of the three bases as code blocks, by the mechanism the text route already has for components (the builder reads lib/llms.ts and the table's page; no second copy of the commands to keep in step). Check: the address returns a 'shadcn@latest add anindosarker/shadcn-date-picker/date-picker-<base>#<tag>' line per base. Lead, 2026-11-24 (a bug, one right answer).
+	- Source: Q186
 
 ## In progress
 
