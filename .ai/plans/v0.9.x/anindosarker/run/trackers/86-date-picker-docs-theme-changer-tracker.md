@@ -1,6 +1,6 @@
 # 86: Date picker docs theme changer, tracker
 
-Status: running
+Status: done
 Branch `date-picker-docs-theme-changer`, worktree shadcn-date-picker.worktrees/date-picker-docs-theme-changer (from origin/main 0c007cf)
 Checks:
 - Check: setup, `pnpm install --frozen-lockfile` at 0c007cf: pass
@@ -54,8 +54,32 @@ Checks:
   - typing digits and `rRcz`, Shift+R, Meta+Z into the date box (focus in the input, value changes): stored config and `<html>` class unchanged; `r` outside the box does shuffle: pass (script /private/tmp/claude-501/dp-theme-verify/scripts/type.mjs)
   - 0 console errors; `scrollWidth - innerWidth` = 0 at 390 with the sheet open: pass
 - Check: Verify: 5. server pid 91341 stopped, `lsof -nP -iTCP:5345 -sTCP:LISTEN` prints nothing, browser closed by the script; `git status --short` in the worktree prints nothing: pass
+- Check: Task 4 origin/main 0c007cf is an ancestor of origin/date-picker-docs-theme-changer 5841bdc: no merge of main into the branch, Local CI line kept
+- Check: Task 4 `git merge --no-ff origin/date-picker-docs-theme-changer` on main, pushed: M = 5404817
+- Check: Task 4 `gh api repos/anindosarker/shadcn-date-picker/commits/5404817/status`: Vercel success
+- Check: Task 4 CI run 45348380451 of 5404817 on main: completed success
+- Check: Task 4 live reads, Playwright 1.65.1 headless chromium, script /private/tmp/claude-501/dp-theme-live/scripts/live.mjs, at 5404817: 17 reads, 17 pass
+  - `https://date-picker.shadcn-table.com/`: 200
+  - `https://date-picker.shadcn-table.com/docs/install`: 200
+  - `https://date-picker.shadcn-table.com/docs/date`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-vega.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-nova.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-maia.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-lyra.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-mira.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-luma.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-sera.css`: 200
+  - `https://date-picker.shadcn-table.com/styles/style-rhea.css`: 200
+  - `https://date-picker.shadcn-table.com/docs/date`: palette button opens the sheet: pass
+  - `https://date-picker.shadcn-table.com/docs/date`: style Lyra chosen in the sheet, `<html>` class `style-lyra`, `/styles/style-lyra.css` 200 and loaded, open picker popup radius 10px to 0px, Base UI picker takes a day: pass
+  - `https://date-picker.shadcn-table.com/docs/date`: preset Twitter changes the open picker popup background `oklch(0.205 0 0)` to `rgb(0, 0, 0)`: pass
+  - `https://date-picker.shadcn-table.com/storybook/base/`: 200, title `Introduction - Docs ⋅ Storybook`: pass
+  - `https://date-picker.shadcn-table.com/version.txt`: 0.1.1: pass
+  - console errors on every page read: 0: pass
+- Check: Task 4 branch `date-picker-docs-theme-changer` deleted on origin and locally, worktree removed, `git -C shadcn-date-picker status --short` prints nothing, clone on main: pass
+- Merge: 5404817 (54048178ff61d4ca5c8fe366de385284ea8dc74a) on shadcn-date-picker main
 
 - Task 1 The taken files and the two packages: done (432b9bb)
 - Task 2 The layout and the default look: done (5841bdc)
 - Task 3 The local production build read and the captures: done (42edd0907)
-- Task 4 After the merge, the live reads: planned
+- Task 4 After the merge, the live reads: done (5404817)
