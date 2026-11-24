@@ -57,6 +57,8 @@ Checks:
 - Check: T4 captures at f131036: committed under `reference/q149-calendar-library/docs-site/frame/`, each set beside its table capture with the Read tool, one pair at a time; differences below: pass
 - Check: T4 server stopped, `kill 74688`, `lsof -nP -iTCP:5350 -sTCP:LISTEN` at f131036: prints nothing, pass
 
+- Check: Local CI at branch head f131036, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm --filter shadcn-date-picker-docs lint`, `pnpm --filter shadcn-date-picker-docs types:check`, `pnpm --filter shadcn-date-picker-docs build`, one at a time via the heavy lock: each exit 0, `git status --short` empty: pass
+- Check: fresh-clone build, `git clone --branch date-picker-docs-home-effect-page-frame` of origin into <scratchpad>, `pnpm install --frozen-lockfile` then `pnpm exec turbo run build` at f131036: exit 0 and exit 0 (turbo: 1 task, 0 cached, shadcn-date-picker-docs:build): pass
 ### Difference list (frame captures beside q179 and q180)
 
 - `frame/picker-home-dark-1440.png` beside `q179/table-home-dark-1440-fresh.png`: same emerald star dots over the page and the same box-glyph dune rising behind the hero bottom. Differences: the picker's dune fills the viewport bottom down to 900 while the table's runs under its live demo from about 660, because the picker hero has no live demo below it (not taken, 1.6.1) and the dune sits at the hero's bottom; hero copy, install command and the two pickers in place of the agent bar (page content, unchanged); header has the base select and no Discord icon (D181).
