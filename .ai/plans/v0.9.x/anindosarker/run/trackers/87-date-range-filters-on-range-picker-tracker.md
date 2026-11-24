@@ -1,6 +1,6 @@
 # 87: Date range filters on the range picker, tracker
 
-Status: running
+Status: done
 Branch `v0.9/date-range-filters-on-range-picker`, worktree 06
 Checks:
 - Check: proof play date, base, `ST_BASE=base vitest run stories/miscellaneous/RangePickerOneEnd.stories.tsx` (Date Start Only Then End Only) at 803ad5680 + story: pass
@@ -200,7 +200,7 @@ Verify D189 and D190 (verifier, 2026-11-24; merged origin/claude/review 910c72b5
 
 ## Attention
 
-- A time filter in a range shows two time boxes, each with its own clock popup and its own clear button, laid side by side by the table; spec 87 1.2 and 1.6.2 describe one box, one popup and one clear for both ends.
+- Settled by D192 (the time range as built stays). A time filter in a range shows two time boxes, each with its own clock popup and its own clear button, laid side by side by the table; spec 87 1.2 and 1.6.2 describe one box, one popup and one clear for both ends.
   - The picker's time range is `TimeRangePicker` (`picker: modes/time-range-picker.tsx:33-58`): a `FieldGroup` with one `TimeField` per end, no trigger and no clear-both. The table cannot give it one popup or one clear without changing the picker.
   - The table restyles it from outside (`ST_FilterTextField.tsx` `timeRangeClassName`: one row, end labels screen-reader only, a border between the ends, each end `min-w-0 flex-1`); that look is neither the picker's range demo nor a decision.
   - Captures: `test/.out/spec87/after/extra-time-range-box-in-subheader-base.png` (after); no before capture of a time range was taken (the 30 before captures are date ranges); 0.9.8 showed two single time boxes, Min and Max. Play: `TimeRangeBoxInSubheader` (clears with Clear Min, then Clear Max).
