@@ -26,6 +26,12 @@ const RANGE_MODES: readonly string[] = [
   'betweenInclusive',
   'inNumberRange',
 ];
+const ARRAY_MODES: readonly string[] = [
+  'arrIncludesSome',
+  'arrIncludesAll',
+  'arrIncludes',
+  'arrIncludesNone',
+];
 const RANGE_VARIANTS: readonly string[] = [
   'date-range',
   'datetime-range',
@@ -81,7 +87,10 @@ export const isEmptyFilterMode = <TData extends ST_RowData>(
 
 /**
  * Switches the column's filter mode: an empty mode sets the space value so
- * the filter stays active, and leaving one clears the value.
+ * the filter stays active, and leaving one clears the value. A change between
+ * a range mode and a single mode resets the value as the header mode menu
+ * does (ST_FilterOptionMenu): a range takes an empty pair, a list mode an
+ * empty list, a single mode an empty value.
  */
 export const setFilterMode = <TData extends ST_RowData>(
   column: ST_Column<TData>,
@@ -97,6 +106,22 @@ export const setFilterMode = <TData extends ST_RowData>(
     if (!ST_EMPTY_FILTER_MODES.includes(previous)) column.setFilterValue(' ');
   } else if (ST_EMPTY_FILTER_MODES.includes(previous)) {
     column.setFilterValue(undefined);
+  } else if (RANGE_MODES.includes(mode) !== RANGE_MODES.includes(previous)) {
+    const value = column.getFilterValue();
+    if (RANGE_MODES.includes(mode)) {
+      if (!Array.isArray(value) || !value.every((end) => end === '')) {
+        column.setFilterValue(['', '']);
+      }
+    } else if (
+      column.columnDef.filterVariant === 'multi-select' ||
+      ARRAY_MODES.includes(mode)
+    ) {
+      if ((value as ArrayLike<unknown> | undefined)?.length) {
+        column.setFilterValue([]);
+      }
+    } else if (Array.isArray(value)) {
+      column.setFilterValue('');
+    }
   }
 };
 

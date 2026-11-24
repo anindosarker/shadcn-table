@@ -11,6 +11,7 @@ import {
 } from '@/components/ui-radix/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
+import { getFilterFocusTarget } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_FilterEditor } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterEditor';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 
@@ -35,14 +36,14 @@ export const filterEditorClassName = <TData extends ST_RowData>(
   return isDateLike && isRange ? 'w-77 max-w-[calc(100vw-1rem)]' : 'w-65';
 };
 
-/** Focuses the column's first filter input; false when it is not mounted. */
+/** Focuses what the column's filter takes focus on; false when it is not mounted. */
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
   columnId: string,
 ) => {
-  const input = table.refs.filterInputRefs.current?.[`${columnId}-0`];
-  if (!input) return false;
-  input.focus();
+  const target = getFilterFocusTarget(table, columnId);
+  if (!target) return false;
+  target.focus();
   return true;
 };
 

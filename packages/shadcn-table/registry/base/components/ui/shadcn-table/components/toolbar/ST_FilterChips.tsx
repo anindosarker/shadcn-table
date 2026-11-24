@@ -19,6 +19,7 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
+import { getFilterFocusTarget } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
@@ -30,7 +31,6 @@ import {
   closeOnEscape,
   filterEditorClassName,
   focusFilterInput,
-  getFilterInput,
 } from '@/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor';
 import { flashST_Highlight } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_PopupResize } from '@/components/ui/shadcn-table/hooks/useST_PopupResize';
@@ -116,7 +116,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
       <PopoverContent
         align="start"
         className={filterEditorClassName(column)}
-        initialFocus={() => getFilterInput(table, column.id) ?? true}
+        initialFocus={() => getFilterFocusTarget(table, column.id) ?? true}
         onKeyDownCapture={closeOnEscape(() => closeFilterEditor(table))}
         sideOffset={8}
       >

@@ -65,6 +65,7 @@ import {
   createFilterOptions,
   getValueAndLabel,
   parseFromValuesOrFunc,
+  setFilterRangeTrigger,
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
@@ -743,6 +744,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       keys.forEach((key, index) => {
         filterInputRefs.current[key] = inputs[index] as HTMLInputElement;
       });
+      if (isDateRange && datePickerTypeProps.type !== 'time') {
+        setFilterRangeTrigger(
+          table,
+          column.id,
+          root?.querySelector('button') ?? null,
+        );
+      }
     },
     style: dateBoxProps.style,
     title: filterPlaceholder,
