@@ -30,9 +30,25 @@ Checks:
 - Check: T3 install aria, same with `-b aria`, `date-picker-aria#54048178...` and `#date-picker-repository-layout` at 99948b7: 22 picker files each, `diff -r` empty, tsc exit 0: pass
 - Check: T3 scratch apps deleted, `test ! -e /private/tmp/claude-501/dp-layout-install` at 99948b7: pass
 - Check: T3 tags, `git ls-remote --tags origin` before and after at 99948b7: equal (v0.1.0, v0.1.1 unchanged): pass
+- Check: T4 tests, `pnpm test` at 99948b7: base, radix, aria one after the other, 7 files and 39 tests passed each, exit 0: pass; `pnpm test --base nope` throws `unknown base nope` (the flag reaches the package script)
+- Check: T4 docs lint, `pnpm --filter shadcn-date-picker-docs lint` at 99948b7: exit 0, pass
+- Check: T4 docs types, `pnpm --filter shadcn-date-picker-docs types:check` at 99948b7: exit 0, pass
+- Check: T4 docs build, `pnpm --filter shadcn-date-picker-docs build` at 99948b7: exit 0, registry trees copied from the package (base 36, radix 36, aria 37 files): pass
+- Check: T4 Storybook, `pnpm storybook:build` (turbo) at 99948b7: exit 0; `packages/shadcn-date-picker/storybook-static/storybook/{base,radix,aria}/index.html` and `storybook/index.html` exist, landing page says version 0.1.1: pass
+- Check: T4 vercel build, `vercel build` at 99948b7: not run; the CLI is installed but neither the clone nor the worktree is linked (no `.vercel`), and this run does not run `vercel link` or `vercel pull`; the local reads below stand in
+- Check: T4 local read `/`, `next start` on 5341 vs https://date-picker.shadcn-table.com at 99948b7: 200 "shadcn-date-picker: Date Picker for shadcn/ui" both: pass
+- Check: T4 local read `/docs/install` at 99948b7: 200 "Install | shadcn-date-picker", as live: pass
+- Check: T4 local read `/docs/date` at 99948b7: 200 "Date | shadcn-date-picker", as live: pass
+- Check: T4 local read `/docs/props` at 99948b7: 200 "Props | shadcn-date-picker", as live: pass
+- Check: T4 local read `/no-such-page` at 99948b7: 404 "Page not found | shadcn-date-picker", as live: pass
+- Check: T4 local read `/version.txt` at 99948b7: 200 `0.1.1`, as live: pass
+- Check: T4 local read theme changer, playwright click "Customize theme" on `/` at 99948b7: panel opens, "Color preset" visible, 0 page errors: pass
+- Check: T4 local read Storybooks, `python3 -m http.server 5342` on storybook-static, `/storybook/` 200 and playwright on `/storybook/{base,radix,aria}/` at 99948b7: each 200, 9 sidebar items, preview attached, 0 page errors: pass
+- Check: T4 servers stopped, `lsof -nP -iTCP:5341 -sTCP:LISTEN` and `:5342` at 99948b7: print nothing, pass
+- Check: Local CI at branch head 99948b7, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test`, `pnpm --filter shadcn-date-picker-docs lint`, `types:check`, `build`, one at a time: all exit 0, git status clean: pass
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
 - Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
 - Task 3 The equality proofs: done (99948b7, proofs only, no commit)
-- Task 4 The full checks and the local production read: planned
+- Task 4 The full checks and the local production read: done (99948b7, checks only, no commit)
 - Task 5 After the merge, the live reads: planned
