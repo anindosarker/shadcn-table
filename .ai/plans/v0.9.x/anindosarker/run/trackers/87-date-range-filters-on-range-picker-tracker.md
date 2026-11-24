@@ -77,6 +77,23 @@ Checks:
 - Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` (Task 6 tree): pass (tsc clean each)
 - Check: `pnpm --filter shadcn-table-docs types:check` (Task 6 tree): pass
 - Check: `grep -c '^#### Spec 87' CHANGELOG.md`: prints 1
+- Check: `pnpm test docs-e2e --base base` at 050c643bc: fail, docs build (a new story page's description held an apostrophe that ended its YAML string); fixed at 0ccfad16d
+- Check: `pnpm test docs-e2e --base base` at 0ccfad16d: fail, `/docs/examples/subheader-filters @1440`: "date filter input" (the check looked for a date input in the head, which the range box keeps in its popup) and "subheader filters not clipped Departure Time input-group: [185, 325] in 320" (the time range's end boxes did not shrink); fixed at a85a19134: the check looks for the Hire Date range box (`test/docs-e2e/lib/examples.mjs`, not an owned file, changed only for D183), the time range's ends take `min-w-0 flex-1`
+- Check: `pnpm test installation-e2e --no-diff` at 050c643bc: pass (7 passed)
+- Local CI at a85a19134 (each through heavy.sh, one base at a time):
+- Check: `pnpm test typecheck --base base`: pass (tsc clean)
+- Check: `pnpm test typecheck --base radix`: pass (tsc clean)
+- Check: `pnpm test typecheck --base aria`: pass (tsc clean)
+- Check: `pnpm test lint`: pass (9 warnings, docs app, none in a changed file)
+- Check: `pnpm test validate-repo`: pass (bases identical, date picker matches, icon maps complete, tailwind valid, registry valid, registry fresh, story pages match, story code complete, 52 unit tests)
+- Check: `pnpm --filter shadcn-table-docs types:check`: pass
+- Check: `pnpm test storybook-tests --base base`: pass (646 passed)
+- Check: `pnpm test storybook-tests --base radix`: pass (646 passed)
+- Check: `pnpm test storybook-tests --base aria`: pass (646 passed)
+- Check: `pnpm test docs-e2e --base base`: pass (5 sections, 117 pages)
+- Check: `pnpm test docs-e2e --base radix`: pass (5 sections, 117 pages)
+- Check: `pnpm test docs-e2e --base aria`: pass (5 sections, 117 pages)
+- Check: `pnpm test installation-e2e --no-diff`: pass (7 passed; nextjs-base, -radix, -aria built, browser pass)
 
 Site map (task 2). Lines are base; radix the same to :529, then select :729, chips :773, caption :829; aria +37 to +50 (args :154, placeholder :229, key :355, date className :644, combobox ref :730, select :801, chips :846, caption :913):
 - :95-100 `rangeFilterIndex` prop: stays; a date-like range without index stands for the pair.
@@ -107,6 +124,7 @@ Notes:
 - Typed ends in the popup: a change while one of the picker's end inputs has focus is typed and waits for Enter or for that input to lose focus (D88 per end); a day picked in the popup applies at once.
 - A time range is the picker's `TimeRangePicker`: one picker, a box per end side by side inside the filter box, each with its own clear button; the picker has no single clear control for a time range.
 - `ST_HeaderFilterEditor.tsx`: the wider editor (`w-77`) stays, the one range box needs it (`min-w-72`, the width of the two boxes); its doc comment now says so.
+- `test/docs-e2e/lib/examples.mjs` is not an owned file: its subheader-filters check looked for a date input in the head; it now looks for the Hire Date range box. Nothing else in it changed.
 - `stories/miscellaneous/mobile-date-pickers.stories.tsx` is not an owned file: its play counted the date and date-time inputs of the two ranges in the head, which now sit in the popup; only its counts and comment changed.
 - React Aria's range popover is found by `[role="dialog"][aria-label]`, not by `findByRole`: testing-library does not see it in the accessibility tree there.
 
@@ -115,4 +133,4 @@ Notes:
 - Task 3 The width class on the outer box: done (5eabc84a1)
 - Task 4 The range picker in the box: done (e823f404d)
 - Task 5 The existing plays and the look: done (62dc3074a)
-- Task 6 Docs texts, docs copies, the changelog: running (docs, copies and changelog in the next commit; docs E2E and installation E2E follow)
+- Task 6 Docs texts, docs copies, the changelog: done (050c643bc, 0ccfad16d, a85a19134)
