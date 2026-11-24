@@ -10,6 +10,7 @@ kanban-plugin: basic
 	- Lead correction, 2026-11-24: the line above ('No layout change asked') was the lead's reading, not the owner's ruling. The owner's remark was an impression, no decision; the layout stays open and is compared in full.
 - [ ] **Q181** On the date picker home page the empty range picker looks different from the date picker beside it
 	- Owner, 2026-11-24, 'bug', live https://date-picker.shadcn-table.com/ home, Base UI, dark, a theme chosen in the customizer (violet accent, a rounder style): the range demo, empty, is marked in the capture (image 13): a full pill button 'Pick a date', narrower than and shaped unlike the single date box left of it (rounded rectangle input, dd/mm/yyyy). Lead's reading of the mark, not confirmed by the owner: the shape and width mismatch between the two under this style.
+	- Owner, 2026-11-24, second capture (image 14): 'bug, Asymmetric sides.' The empty range picker's left corners are a small radius and its right corners a full pill: the two sides of one box differ. This replaces the lead's reading above (shape against the single box). With a value the range picker is two joined parts (the trigger and a clear button, image 12); empty, only the trigger shows.
 
 ## Decided
 
