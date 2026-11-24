@@ -9,6 +9,33 @@ import {
   BASES,
 } from '../../../tools/registry/bases.mjs';
 
+/** How long a copy button may take to write the clipboard and read "Copied". */
+const COPY_WAIT_MS = 5000;
+
+/**
+ * Empties the clipboard stub of test/docs-e2e/test.mjs, runs `copy`, then
+ * polls until the stub holds text and returns it ('' when nothing came).
+ */
+export async function copyAndRead(page, copy) {
+  await page.evaluate(() => {
+    window.__stClipboard = '';
+  });
+  await copy();
+  await page
+    .waitForFunction(() => (window.__stClipboard ?? '').length > 0, null, {
+      timeout: COPY_WAIT_MS,
+    })
+    .catch(() => {});
+  return page.evaluate(() => window.__stClipboard ?? '');
+}
+
+/** True when exactly one button of `locator` shows within the copy wait. */
+export const copiedShown = (locator) =>
+  locator.waitFor({ timeout: COPY_WAIT_MS }).then(
+    async () => (await locator.count()) === 1,
+    () => false,
+  );
+
 /** Prop-table option names (3rd cell; detail-panel rows have no cells). */
 export async function names(page, tableId) {
   const cells = page.locator(`${tableId} table tbody tr td:nth-child(3)`);
@@ -259,9 +286,7 @@ export async function codeToggle(page, id, needle, check) {
           .catch(() => null)) === target,
       );
     }
-    await copyBtn.click();
-    await page.waitForTimeout(100);
-    const copied = await page.evaluate(() => window.__stClipboard ?? '');
+    const copied = await copyAndRead(page, () => copyBtn.click());
     const shown = await shownSource();
     check(
       `${id}: file copied`,
@@ -270,7 +295,7 @@ export async function codeToggle(page, id, needle, check) {
     );
     check(
       `${id}: copy copied state`,
-      (await explorer.locator('button[aria-label="Copied"]').count()) === 1,
+      await copiedShown(explorer.locator('button[aria-label="Copied"]')),
     );
     // Back to Preview so later steps can interact with the table.
     await panel
@@ -310,9 +335,7 @@ export async function codeToggle(page, id, needle, check) {
       .getByRole('button', { name: 'Copy prompt' });
     check(`${id}: copy prompt button`, (await copyPrompt.count()) === 1);
     if (await copyPrompt.count()) {
-      await copyPrompt.click();
-      await page.waitForTimeout(100);
-      const text = await page.evaluate(() => window.__stClipboard ?? '');
+      const text = await copyAndRead(page, () => copyPrompt.click());
       check(
         `${id}: prompt copied`,
         text.includes('shadcn@latest add') && text.includes(`example-${id}`),
@@ -320,10 +343,11 @@ export async function codeToggle(page, id, needle, check) {
       );
       check(
         `${id}: copied state`,
-        (await panel
-          .locator('header [aria-label="Open example"]')
-          .getByRole('button', { name: 'Copied' })
-          .count()) === 1,
+        await copiedShown(
+          panel
+            .locator('header [aria-label="Open example"]')
+            .getByRole('button', { name: 'Copied' }),
+        ),
       );
     }
     // Caret menu: copy install command, then the open-in items. The menu is
@@ -345,9 +369,7 @@ export async function codeToggle(page, id, needle, check) {
           /github\.com/.test((await github.getAttribute('href')) ?? ''),
       );
       if (await copyInstall.count()) {
-        await copyInstall.click();
-        await page.waitForTimeout(100);
-        const text = await page.evaluate(() => window.__stClipboard ?? '');
+        const text = await copyAndRead(page, () => copyInstall.click());
         check(
           `${id}: install command copied`,
           text.includes('shadcn@latest add') && text.includes(`example-${id}`),
