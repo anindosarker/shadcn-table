@@ -573,6 +573,7 @@ kanban-plugin: basic
 	- Built and live (9a2df03): at 390 the version label is hidden, no overlap; capture reference/q149-calendar-library/docs-site/home-site-390-light-fixed.png.
 - [x] **Q174** A docs check fails now and then in CI because it waits a fixed tenth of a second for the Copied label
 	- Release PR 149, run 45332870689, Docs E2E (radix): /docs/examples/sticky-row-selection 'copied state' red, 1 of 1116; test/docs-e2e/lib/helpers.mjs:313-327 (and :272) clicks, waits 100 ms, counts the Copied button once. No user effect: a release run goes red on a slow runner. Tooling fix, run settles it.
+	- Fixed, merged d094e18d on claude/review (not in 0.9.8): the copied checks wait for the button up to 5 s, clipboard reads poll; docs-e2e radix 0 failed.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
