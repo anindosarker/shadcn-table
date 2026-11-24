@@ -134,6 +134,14 @@ sequenceDiagram
 - Task 2: The live checks of 1.6.3. Checks: one line per check in the tracker with what was read and pass or fail; the browser closed; the scratch app deleted
 - Task 3: `claude/review` and `dev` up to `master`, push both; rewrite the handoff (1.6.3). Checks: `git rev-parse origin/claude/review origin/dev origin/master` prints one sha three times; `git ls-remote --heads origin v0.9/filter-input-fixes` prints one line; `pnpm test validate-repo` green on `claude/review`
 
+### Milestone: Docs copied check waits for the label
+
+- Files owned: `test/docs-e2e/lib/helpers.mjs`, `test/docs-e2e/lib/getting-started.mjs`
+- Depends on: Theme customizer, Theme panel copy import, Theme panel shortcut row, Theme check closes the search dialog, Theme hotkey checks wait for the change, Theme color picker, Icon library select, Style sheet on demand, Perf budgets on CI, Richer live demo, Filter editor fixes, React Aria filter popups modal again (D97), Live demo ten columns, Comparison page, Guide example block, Example ids and 404 page, Docs code panels, Docs code panel check passes in CI, Version labels, Home page version label, Example toolbar on a phone, Date filters use the date picker
+- Review: none
+- Starts: S45
+- Task 1: Docs copied check waits for the label (Q174). Checks: every copied-state check waits for the Copied button (a locator wait with a timeout), no fixed waitForTimeout before a single count; pnpm test docs-e2e --base radix green; pnpm test lint green; process.md P5 untouched
+
 ### 2.2 Checks
 
 - Local CI as in the milestone blocks; the release suite runs on GitHub only (P4).

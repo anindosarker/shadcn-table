@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q174** A docs check fails now and then in CI because it waits a fixed tenth of a second for the Copied label
-	- Release PR 149, run 45332870689, Docs E2E (radix): /docs/examples/sticky-row-selection 'copied state' red, 1 of 1116; test/docs-e2e/lib/helpers.mjs:313-327 (and :272) clicks, waits 100 ms, counts the Copied button once. No user effect: a release run goes red on a slow runner. Tooling fix, run settles it.
 
 ## Decided
 
@@ -573,6 +571,8 @@ kanban-plugin: basic
 	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
 	- Lead, 2026-11-24: settled, the version label is hidden below sm; built in the docs site build milestone.
 	- Built and live (9a2df03): at 390 the version label is hidden, no overlap; capture reference/q149-calendar-library/docs-site/home-site-390-light-fixed.png.
+- [x] **Q174** A docs check fails now and then in CI because it waits a fixed tenth of a second for the Copied label
+	- Release PR 149, run 45332870689, Docs E2E (radix): /docs/examples/sticky-row-selection 'copied state' red, 1 of 1116; test/docs-e2e/lib/helpers.mjs:313-327 (and :272) clicks, waits 100 ms, counts the Copied button once. No user effect: a release run goes red on a slow runner. Tooling fix, run settles it.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
