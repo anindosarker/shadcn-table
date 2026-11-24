@@ -76,12 +76,22 @@ Checks:
 - Check: verifier, Local CI at ac4094f, one at a time through heavy.sh: `pnpm install --frozen-lockfile` exit 0; `pnpm lint` exit 0; `pnpm typecheck` exit 0; `pnpm registry:check` exit 0; `pnpm test` exit 0 (7 files, 39 tests on each of three bases, no rerun); `pnpm --filter docs lint` exit 0 (0 errors, the 1 warning of plan 4.3); `pnpm --filter docs types:check` exit 0; `pnpm --filter docs build` exit 0 (16 static pages); `pnpm storybook:build` exit 0 (storybook-static/storybook/index.html and {base,radix,aria}/index.html, no version.txt)
 - Check: verifier, built output at ac4094f, `next start` on 5356 and `python3 -m http.server 5357` on storybook-static, Playwright Chromium 1440: pass (`/` 200, date picked "2026-11-21" to "2026-11-22"; `/docs/date` 200 with the demo import in the code view; header switch on Base UI, Radix UI, React Aria each opened a popup of that base (data-base-ui, data-radix-popper-content-wrapper, data-rac) and picked "2026-11-22"; `/docs` ends at `/docs/install`; `/version.txt` prints `0.1.1` = package.json; `/storybook/base/` 200 title Storybook; `/storybook/` the list page; 0 console errors); servers stopped by pid, `lsof -nP -iTCP:5356-5360 -sTCP:LISTEN` prints nothing, `git status --short` prints nothing
 - Check: verifier, preview of the branch at ac4094f (`/`, `/docs/date`, `/storybook/base/`, `/version.txt`, `/base/`): preview not read: browser not connected (claude-in-chrome `list_connected_browsers` returns none)
+- Check: fix round, `pnpm --filter docs lint` at 0d258cd (heavy.sh): pass (0 errors, the 1 warning of plan 4.3)
+- Check: fix round, `pnpm --filter docs types:check` at 0d258cd (heavy.sh): pass (7 demos per base, route types generated)
+- Check: fix round, root `pnpm lint` at 0d258cd (heavy.sh): pass (eslint, prettier all files formatted)
+- Check: fix round, build as Vercel builds, `pnpm --filter docs build` and `pnpm storybook:build` at 0d258cd (heavy.sh): pass (exit 0 each; storybook-static/storybook/ with index.html, base, radix, aria)
+- Check: local production read at 0d258cd, `next start -p 5356` in docs/ and `python3 -m http.server 5357` on storybook-static, Playwright Chromium 1440 light: pass (`/` 200 title "shadcn-date-picker: Date Picker for shadcn/ui"; `/docs/install` 200 "Install | shadcn-date-picker"; `/docs/date` 200 "Date | shadcn-date-picker", date picked "2026-11-21" to "2026-11-22"; `/storybook/base/`, `/storybook/radix/`, `/storybook/aria/` 200 each "Introduction - Docs ⋅ Storybook"; 0 console errors on all six)
+- Check: home header at 390 light, 0d258cd: pass (version link hidden, wordmark right edge 186, actions left edge 231, no overlap; scrollWidth minus clientWidth 0); capture home-site-390-light-fixed.png
+- Check: `/docs/date` demo width at 1440 light, 0d258cd: pass (picker input group 165 wide in a preview panel 1106 wide); capture example-site-1440-light-fixed.png
+- Check: servers stopped, `kill` of pids 80989, 80990, then `lsof -nP -iTCP:5356-5360 -sTCP:LISTEN`: pass (prints nothing); `git status --short` in the worktree prints nothing
+- Check: preview of the branch: replaced by the local production read above (the preview is behind the Vercel login; lead's ruling)
 
 - Task 1 workspace and shell: done (be986a7)
 - Task 2 pages and demos: done (0a3b01e)
 - Task 3 Storybook under /storybook/, vercel.json, CI, README: done (505417a)
 - Task 4 local production build read and captures: done (checks at 505417a, no code change; captures and this list committed in the table repository)
 - Task 5 live reads after the merge: planned
+- Fix round (Attention points of the lead): done (0d258cd)
 - Review round 1: 0 majors, 3 minors, fixed at ac4094f. Home "Storybook" link is a plain `<a href="/storybook/">` (was IntentLink, a router link to a path the docs app does not own; plan 6.4 line added, 74d766dc); time.mdx closing line reads "More options (limits, labels)" (registry/base/components/date-picker/types.ts:91 `presets?: never`, and no dialog on a time picker); lockfile minor accepted, no change: the transitive @emnapi/* 1.11.0 and yaml@2.9.1 peer came in at be986a7, the only lockfile commit, and `pnpm test` and `pnpm storybook:build` passed on it at 505417a (Local CI line)
 
 ## Notes
@@ -114,5 +124,5 @@ Example (`/docs/date` beside `/docs/examples/basic`):
 
 ## Attention
 
-- The home page header on a phone (390 wide) draws the name `shadcn-date-picker` over the version `v0.1.1`. Seen in home-site-390-light.png and home-site-390-dark.png. The longer name plus the base select of Q169 leave too little room; from 430 wide it fits. Nearest default kept: built as the plan; a fix (for example the version hidden below `sm`, or the base select left out of the home header per Q169) needs a plan line.
-- On the type pages the picker's input runs the full width of the preview panel at 1440 (the stock input group's `w-full`), while on the home page it is as wide as its content. Seen in example-site-1440-light.png. Nearest default kept: the demo as the plan writes it; a narrower demo needs a plan line.
+- The home page header on a phone (390 wide) draws the name `shadcn-date-picker` over the version `v0.1.1`. Seen in home-site-390-light.png and home-site-390-dark.png. The longer name plus the base select of Q169 leave too little room; from 430 wide it fits. Nearest default kept: built as the plan; a fix (for example the version hidden below `sm`, or the base select left out of the home header per Q169) needs a plan line. Settled: version link hidden below `sm` (`max-sm:hidden`), base select kept (D181); plan 6.4 line b4dd0ae4e, code 0d258cd.
+- On the type pages the picker's input runs the full width of the preview panel at 1440 (the stock input group's `w-full`), while on the home page it is as wide as its content. Seen in example-site-1440-light.png. Nearest default kept: the demo as the plan writes it; a narrower demo needs a plan line. Settled: the preview slot wraps the demo in `w-fit max-w-full`, the picker as wide as its content as on the home page; plan 6.3 line b4dd0ae4e, code 0d258cd.
