@@ -596,8 +596,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     max: dateBoxProps.max === undefined ? undefined : String(dateBoxProps.max),
     min: dateBoxProps.min === undefined ? undefined : String(dateBoxProps.min),
     onBlur: (e: FocusEvent<HTMLDivElement>) => {
-      // Focus may be moving to the popup, which React counts as inside.
-      if (!e.currentTarget.contains(e.relatedTarget)) {
+      // Focus going to another element may be going to the popup, which
+      // React counts as inside: its focus event cancels the commit.
+      if (!e.relatedTarget) {
+        commitTypedValue();
+      } else if (!e.currentTarget.contains(e.relatedTarget)) {
         dateBlurCommit.current = setTimeout(commitTypedValue);
       }
       dateBoxProps.onBlur?.(e as unknown as FocusEvent<HTMLInputElement>);
