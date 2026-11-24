@@ -102,7 +102,7 @@ Site map (task 2). Lines are base; radix the same to :529, then select :729, chi
 - :203 mode button on index 0 only: the pair is index-less, so it shows the button.
 - :213-219 initial value of one end: the pair reads the whole pair.
 - :237-243 commit of one end: the pair commits both ends, an empty end as `undefined` as today.
-- :318 `filterInputRefs` key: the pair writes `-0` and `-1` from the inputs in the box, `-0` falling back to the trigger button.
+- :318 `filterInputRefs` key: the pair writes `-0` and `-1` from the inputs in the box; a date or date-time range has none there (its end inputs are in the popup), so both keys are empty (the trigger fallback was dropped after the radix `select()` failure below; Attention).
 - :373-379 clear of one end: not reached by a date box (no clear adornment); unchanged.
 - :428-431 read-back of one end: the pair reads both ends.
 - :439 `columnDef.Filter` gets the index: unchanged; a custom Filter keeps the two fields (ST_FilterRangeFields).
@@ -120,7 +120,7 @@ Notes:
 - The proof story was deleted at 5eabc84a1 (its types broke the radix typecheck); its record is commit e4ac17c7f.
 - The pair box: `ST_FilterRangeFields` renders one `ST_FilterTextField` without `rangeFilterIndex` for a date-like range with no `columnDef.Filter`; that field is the pair (`isDateRange`). A consumer that renders `ST_FilterTextField` with an index keeps the one-end box, so no prop or type was added (P7).
 - Labels: the picker offers a label per end (`labels.from`, `labels.to`), so the ends are `localization.min` and `localization.max`; the trigger, its popup and its clear button take "Filter by {column}" (the clear button reads "Clear Filter by {column}"). The rest of the picker's range labels stay its own (placeholder "Pick a date", "Pick a date and time range").
-- `filterInputRefs`: a time range keeps its end inputs in the box and `-0`, `-1` point at them; a date and a date-time range keep their end inputs in the popup, so the box has no input and `-0` is empty: the editors' initial focus falls back to the popup's own first control (the trigger), and code that calls `select()` on `-0` keeps working.
+- `filterInputRefs`: a time range keeps its end inputs in the box and `-0`, `-1` point at them; a date and a date-time range keep their end inputs in the popup, so the box has no input and `-0` and `-1` are empty: an editor's initial focus falls back to its own first control (the editor's top line in the chips and header editors), the header filter button's focus is a no-op, and code that calls `select()` on `-0` keeps working. Spec 1.6.2 asks the keys to keep pointing at the end inputs: under Attention.
 - Typed ends in the popup: a change while one of the picker's end inputs has focus is typed and waits for Enter or for that input to lose focus (D88 per end); a day picked in the popup applies at once.
 - A time range is the picker's `TimeRangePicker`: one picker, a box per end side by side inside the filter box, each with its own clear button; the picker has no single clear control for a time range.
 - `ST_HeaderFilterEditor.tsx`: the wider editor (`w-77`) stays, the one range box needs it (`min-w-72`, the width of the two boxes); its doc comment now says so.
@@ -134,3 +134,43 @@ Notes:
 - Task 4 The range picker in the box: done (e823f404d)
 - Task 5 The existing plays and the look: done (62dc3074a)
 - Task 6 Docs texts, docs copies, the changelog: done (050c643bc, 0ccfad16d, a85a19134)
+
+Review round 1 (fixer):
+- Major, mode swap untested: new plays `ModeSwapsSingleAndRangeInChipsEditor`, `ModeSwapsSingleAndRangeInSubheader` open the mode menu: Less Than (single box) to Between (one range box), Between to Between Inclusive (the pair kept), back to Less Than (single box). The subheader menu drops the value between a single and a range mode (`ST_FilterOptionMenu.tsx:278-293`); the chips mode picker keeps the value on every change (`filterSummary.utils.ts:86-101` `setFilterMode`), so in chips a Between pair switched to Less Than leaves the array under `lessThan` and the table shows "No results found". That is the chips picker of 0.9.8, unchanged here (the two-box range kept the pair the same way); the chips play asserts only the swap at that step.
+- Minor, blur commit untested: new play `RangeTypedEndAppliesOnBlur` (Min typed, focus moved to Max, filter applies without Enter).
+- Minor, Escape in an end input: reproduced. New play `RangeEscapeAppliesOrderedEnds` (Max 11 Nov, Min 12 Dec, Escape) failed at 1d641b4b3 on base: `expected [ 'No results found' ] to deeply equal [ 'Eve' ]`: the picker's `onClose` reorder (`picker: modes/day-range-picker.tsx` `onClose={() => onChange(orderRange(value, times))}`) arrived while the Min input still had focus and was held as typed. Fix at the cause in `handleDateChange`: typing changes one end (`picker: utils/range.ts:31-33` putEnd), so a change of both ends is the picker's own and applies at once; three bases.
+- Minor, weakened checks: `mobile-date-pickers` now opens the Hire Date and Arrival time range popups and expects two `date` and two `datetime-local` inputs in each; `test/docs-e2e/lib/examples.mjs` opens the Hire Date box and expects two `date` inputs in its popup.
+- Minor, `undefined` in `filterInputRefs`: not changed. The single box wrote `null` before through the same cast; every reader uses `?.` or `??` (`ST_TableHeadCellFilterLabel.tsx:125-132`, the editors' `initialFocus`), so no behaviour differs.
+- Minor, `grid-cols-1` through `cn` in `ST_FilterRangeFields.tsx:52-56`: not changed. tailwind-merge resolves it as written and `docs/code-of-conduct/coding-standards.md` has no rule that a conditional class be a cva variant; a variant would be a refactor with no reader (spec 1.6.2 last bullet).
+- Minor, generated files: no action (tool output, checked by the reviewer).
+- Majors, focus-on-open of a date range and the time range shape: real choices, under Attention.
+- Tracker site map :318 and the `filterInputRefs` note corrected: both keys are empty for a date and a date-time range; focus falls to the editor's top line.
+- Check: `ST_BASE=base vitest run stories/features/DateFilters.stories.tsx -t "Range Escape|Mode Swaps|Range Typed End"` at 1d641b4b3 (fix not applied): fail as meant (Range Escape Applies Ordered Ends; the other three pass)
+- Check: `ST_BASE=base|radix|aria vitest run stories/features/DateFilters.stories.tsx` after the fix: pass (37 passed each)
+- Check: `ST_BASE=base|radix|aria vitest run stories/miscellaneous/mobile-date-pickers.stories.tsx`: pass (1 passed each)
+- Check: `node lib/story-pages.mjs`: 4 new story pages, descriptions and Try it steps filled
+- Check: `pnpm -w registry:build`, `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`: clean (177 table files each)
+- Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 5616f5c46: pass (tsc clean each)
+- Check: `pnpm test lint` at 5616f5c46: pass (9 warnings, docs app, none in a changed file)
+- Check: `pnpm test validate-repo` at 5616f5c46: pass
+- Check: `pnpm --filter shadcn-table-docs types:check` at 5616f5c46: pass
+- Check: `pnpm test storybook-tests --base base` at 5616f5c46: pass (650 passed)
+- Check: `pnpm test storybook-tests --base radix` at 5616f5c46: pass (650 passed)
+- Check: `pnpm test storybook-tests --base aria` at 5616f5c46: first run 1 failed (PanelCollapse "Progress And Banner Collapse", known flake P5), rerun pass (650 passed)
+- Check: `pnpm test docs-e2e --base base` at 5616f5c46: first run failed on `page.goto` timeout of `/docs/examples/column-pinning` under load (not a changed page), rerun pass (5 sections, 117 pages)
+- Check: `pnpm test docs-e2e --base radix` at 5616f5c46: pass (5 sections, 117 pages; the subheader-filters check now opens the Hire Date popup)
+- Check: `pnpm test docs-e2e --base aria` at 5616f5c46: pass (5 sections, 117 pages)
+- Review round 1: 3 majors, 6 minors, fixed at 5616f5c46 (mode swap plays, blur and Escape plays, the reorder-on-close fix, the two checks restored); 2 majors under Attention; 2 minors answered without change
+
+## Attention
+
+- Opening a date or date-time range filter no longer puts the cursor in it: in the chips and header editors focus lands on the editor's top line, and the header filter button in subheader mode focuses nothing.
+  - Spec 87 1.6.2 asks `filterInputRefs` `<column id>-0` and `-1` to keep pointing at the start and end input. The picker mounts those inputs only inside its popup (`picker: modes/day-range-picker.tsx` `endBox`, under `PickerTrigger`), so with the popup closed there is no input to point at; the box holds only the trigger button.
+  - Readers: `ST_HeaderFilterEditor.tsx:43,126` and `ST_FilterChips.tsx:119` (`initialFocus={() => getFilterInput(...) ?? true}`), `ST_TableHeadCellFilterLabel.tsx:125-132` (`focus()` then `select()`), `ST_ColumnActionMenu.tsx:441`. None is an owned file; the refs are typed `Record<string, HTMLInputElement>`.
+  - Shipped 0.9.8: focus landed in the Min date box.
+  - Options: (1, recommended) focus the range trigger button on open: `-0` holds the trigger, the readers call `select()` only on an input; touches the four reader files and the ref's element type (P7: widening, not a removal). (2) Keep it as built and amend the spec line: focus goes to the editor's first control. (3) Ask the picker for a way to focus or open its range from outside (a change to the approved picker, the owner's, D176, D177).
+- A time filter in a range shows two time boxes, each with its own clock popup and its own clear button, laid side by side by the table; spec 87 1.2 and 1.6.2 describe one box, one popup and one clear for both ends.
+  - The picker's time range is `TimeRangePicker` (`picker: modes/time-range-picker.tsx:33-58`): a `FieldGroup` with one `TimeField` per end, no trigger and no clear-both. The table cannot give it one popup or one clear without changing the picker.
+  - The table restyles it from outside (`ST_FilterTextField.tsx` `timeRangeClassName`: one row, end labels screen-reader only, a border between the ends, each end `min-w-0 flex-1`); that look is neither the picker's range demo nor a decision.
+  - Captures: `test/.out/spec87/after/extra-time-range-box-in-subheader-base.png` (after); no before capture of a time range was taken (the 30 before captures are date ranges); 0.9.8 showed two single time boxes, Min and Max. Play: `TimeRangeBoxInSubheader` (clears with Clear Min, then Clear Max).
+  - Options: (1, recommended) keep the picker's time range with the table's one-row look and record that look and the per-end clear as D183's time-range shape. (2) Show the picker's time range in its own look (labels Min and Max visible, ends stacked), no table restyle. (3) Ask the picker for a one-box time range (the owner's, D176, D177).
