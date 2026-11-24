@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q169** Three small looks of the date picker docs site were picked by the plan with nothing to copy from
-	- Design plan design-docs-site.md rows 40, 60 and section 5.1, built as defaults, to judge on the build's captures (reference/q149-calendar-library/docs-site/): (1) the code panel's More menu keeps one entry, Open in GitHub; other way a plain GitHub button; (2) the home and 404 pages have no footer; other way the table's footer trimmed to name, licence, GitHub and Storybook; (3) the home header carries the base select; other way off as on the table's home. Tracker 85-date-picker-docs-site-tracker.md, Attention A3.
 - [ ] **Q170** In a narrow column a date filter under the header now shows only part of its date
 	- Spec 82 (the table's date filters on the date picker): the picker's two buttons take 54 px of the box. At 390 wide the single box input goes from 122 px to 68 px and shows dd/mm of dd/mm/yyyy; range Min 106 to 52 px, Max 138 to 84 px; the box's position, 32 px height and neighbours are unchanged; the full date shows at 1280. Captures before and after: reference/spec82-narrow-date-box/ (on the branch v0.9/date-filters-on-date-picker until it merges). Built as: keep (the value is still typed and picked in full). Other option: a date box minimum above 140 px, date columns get wider and a table scrolls sideways sooner on a phone.
 - [ ] **Q171** A day picked in the calendar does not filter the table until you leave the box, when it is the same day you just typed
@@ -414,6 +412,8 @@ kanban-plugin: basic
 	- Upstream read 2026-11-24: shadcn-ui/ui issue 9401 (open since 2026-01-21) reports exactly this; PRs 9402 and 9082 with the fix are open and unreviewed, PR 10657 was closed unmerged. No new issue or PR is useful; a draft comment for 9401 is in reference/q149-calendar-library/q160-upstream-draft.md, not sent. Owner, 2026-11-24: 'lgtm. give me draft before the pr. wait for my go.'
 - [ ] **Q168** The date picker docs site shows its nine pages as one sidebar list, not one section at a time like the table site #D180
 	- Design plan reference/q149-calendar-library/design-docs-site.md 6.1, built as the default: one flat sidebar list under three labels (Get Started, Pickers, Props). The table site's section line above a page title and the page switcher in the breadcrumb then do not show. Other way: three fumadocs root folders, same addresses, the table's behaviour, but two of the three sidebars hold one row (Install; Props). The build runs on the default; a change later moves the content files into folders. Tracker run/trackers/85-date-picker-docs-site-tracker.md, Attention A2.
+- [ ] **Q169** Three small looks of the date picker docs site were picked by the plan with nothing to copy from #D181
+	- Design plan design-docs-site.md rows 40, 60 and section 5.1, built as defaults, to judge on the build's captures (reference/q149-calendar-library/docs-site/): (1) the code panel's More menu keeps one entry, Open in GitHub; other way a plain GitHub button; (2) the home and 404 pages have no footer; other way the table's footer trimmed to name, licence, GitHub and Storybook; (3) the home header carries the base select; other way off as on the table's home. Tracker 85-date-picker-docs-site-tracker.md, Attention A3.
 
 ## Later
 

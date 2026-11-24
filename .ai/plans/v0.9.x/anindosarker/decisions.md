@@ -10,6 +10,9 @@ kanban-plugin: basic
 - [ ] **D180** The date picker docs site keeps one sidebar list of its nine pages #R6
 	- Tracker 85 A2, option 1: one flat sidebar list under the three labels Get Started, Pickers, Props. Three sections as on the table site would leave two sidebars with one row each; the section line above the page title and the page switcher in the breadcrumb are not shown. Lead, 2026-11-24 (weight test: docs layout, cheap to change).
 	- Source: Q168
+- [ ] **D181** Date picker docs site: a GitHub button on code panels, a short footer, the base select on the home header #R6
+	- Tracker 85 A3. Code panel: the More menu with the single entry Open in GitHub becomes a plain GitHub button (a menu of one entry is no menu). Home and 404 pages: the table's footer trimmed to the name, the licence line, GitHub and Storybook (D178: the look is the table's). Home header: the base select stays, the home demos need a base choice. Lead, 2026-11-24 (weight test: small docs looks, cheap to change).
+	- Source: Q169
 
 ## In progress
 
