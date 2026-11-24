@@ -11,8 +11,6 @@ import { DateLib, defaultLocale } from "react-day-picker"
 import type { DayPickerLocale } from "react-day-picker"
 import type { DatePickerType, Limits, PeriodType } from "../types"
 
-type IgnoredProp = { name: string; given: unknown; rule: string }
-
 type FormatPeriodInput = {
   type: PeriodType
   value: string
@@ -94,21 +92,10 @@ function isValue(type: DatePickerType, text: string): boolean {
   }
 }
 
-function ignored({ name, given, rule }: IgnoredProp) {
-  if (process.env.NODE_ENV !== "production") {
-    console.error(
-      `DatePicker: ${name} ${JSON.stringify(given)} is ignored: ${rule}`
-    )
-  }
-  return undefined
-}
-
 function checkedLimits(type: DatePickerType, limits: Limits): Limits {
   function checked(name: "min" | "max") {
     const text = limits[name]
-    return text === undefined || isValue(type, text)
-      ? text
-      : ignored({ name, given: text, rule: `not a ${type} value` })
+    return text === undefined || isValue(type, text) ? text : undefined
   }
   return { min: checked("min"), max: checked("max") }
 }
@@ -116,11 +103,7 @@ function checkedLimits(type: DatePickerType, limits: Limits): Limits {
 function checkedStep(step: number | undefined) {
   return step === undefined || (Number.isInteger(step) && step > 0)
     ? step
-    : ignored({
-        name: "step",
-        given: step,
-        rule: "not a whole number of seconds above zero",
-      })
+    : undefined
 }
 
 function dateLibFor(locale: Partial<DayPickerLocale> | undefined) {

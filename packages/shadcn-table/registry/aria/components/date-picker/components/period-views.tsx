@@ -231,11 +231,11 @@ function GridHeader({ children, previous, next, onToday }: GridHeaderProps) {
       {children}
       <div className="flex shrink-0 items-center">
         <NavArrow {...previous}>
-          <ChevronLeftIcon />
+          <ChevronLeftIcon className="rtl:rotate-180" />
         </NavArrow>
         <TodayButton onClick={onToday} />
         <NavArrow {...next}>
-          <ChevronRightIcon />
+          <ChevronRightIcon className="rtl:rotate-180" />
         </NavArrow>
       </div>
     </div>
