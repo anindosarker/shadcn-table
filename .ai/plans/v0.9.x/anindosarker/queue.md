@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q182** Personal details and most of the old plan folders should leave the public repository
+	- Owner, 2026-11-24: 'remove all my personal info from the plans actually you can remove most of the previous plans before the version history and actually you can remove most of the plans'. Scan of origin/claude/review, public repo anindosarker/shadcn-table, .ai on master, dev and claude/review: 28 plan folders, 1,199 files; v0.9.x 802 files, 48.5 MB, 386 images; v0.7.x 116, v0.8.x 85, mrt-port 73, the other 24 folders 122 files together. Personal: /Users/anindosarker in 56 files (93 times), one work email (v0.9.x run/handoffs/handoff-2026-11-08-0842.md:21), one Vercel project id (tracker 78-date-picker-stories-and-tests:212), team slug anindo-sarkers-projects (16), session uuids in 49 files (114). No token, key or password. Readers of old folders: CONTRIBUTING.md, docs/code-of-conduct/planning-guidelines.md, and 20 v0.9.x files citing v0.4.x to v0.8.x decisions. Removal from the tree leaves every file in git history; only a history rewrite takes it out.
 
 ## Decided
 
