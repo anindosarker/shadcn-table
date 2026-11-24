@@ -49,6 +49,18 @@ Checks:
 - Check: merged tree, `pnpm test docs-e2e --base radix`, `--base aria` at af2f2594: pass (5 sections, 117 pages, site 94 passed, 0 failed on each)
 - Check: merged tree, `pnpm test installation-e2e --no-diff` at af2f2594: pass, 7 passed, 0 failed (fresh, existing, base, aria: built, locale and example-basic with their tsc and vite build included, no TS2591; nextjs-base, nextjs-radix, nextjs-aria: built, browser pass, no diff)
 - Local CI at af2f2594 (merged tree, picker v0.1.1): typecheck, lint, validate-repo, storybook-tests, docs-e2e green on base, radix, aria; installation-e2e green on all seven scenarios
+- Verify, check: `git diff --name-only origin/claude/review...HEAD` at ac74a422: pass. Owned files, the tracker, `CHANGELOG.md`, `.ai/` reference captures; generated: `packages/shadcn-table/registry.json` (`pnpm -w registry:build`), `apps/shadcn-table-docs/components/ui-<base>/**` incl. `date-picker/`, `calendar.tsx` (base, radix), `button-group.tsx`, `hooks/use-mobile.ts` (`pnpm --filter shadcn-table-docs lib:install <base>`), `content/docs/examples/more/features-date-filters--*.mdx` and `more/meta.json` (`node apps/shadcn-table-docs/lib/story-pages.mjs`, text per page, needed by validate-repo for the new plays). Outside the owned list and accepted: `ST_HeaderFilterEditor.tsx` per base (the nested popup play `Escape In Date Time Popup Keeps Editor` fails without it, Notes); `miscellaneous-mobile-date-pickers--mobile-date-time-pickers.mdx` (story page text of the owned mobile story, reworded as 1.6.4 asks)
+- Verify, check: `git diff --name-only af2f2594..HEAD` at ac74a422: only this tracker, so the af2f2594 lines above stand (typecheck, lint, validate-repo, storybook-tests, docs-e2e, installation-e2e)
+- Verify, check: `ST_BASE=base|radix|aria pnpm exec vitest run stories/features/DateFilters.stories.tsx --reporter=verbose` at ac74a422: pass (24 passed on each; the is-empty play, the new plays of 1.6.4 and the nested popup plays in the passed list)
+- Verify, check: `pnpm --filter shadcn-table-docs types:check` at ac74a422: pass (tsc prints nothing)
+- Verify, check: `git log --format=%s -1 --grep='D96' origin/claude/review..HEAD` at ac74a422: pass (prints nothing); 9bfdf247 and 7adbfce1 not ancestors of HEAD
+- Verify, check: `grep -rn "type=\"date\"\|type=\"datetime-local\"\|type=\"time\"" packages/shadcn-table/registry/*/components/ui/shadcn-table` at ac74a422: pass (prints nothing)
+- Verify, check: Task 3 `git diff --stat` as written at ac74a422: prints the 9 `components/ui/shadcn-table/` files (git's `*` crosses `/`); with `:(glob)` pathspecs for `components/date-picker/**`, `components/ui/*.tsx`, `tools`, every `package.json`, `pnpm-lock.yaml`, `types.ts`, `index.ts`, `ST_FilterRangeFields.tsx`, `shared/**`: pass (prints nothing). Stays unchanged holds; `registry/base/components/ui/calendar.tsx` unchanged (D179)
+- Verify, check: core items of `packages/shadcn-table/registry.json` at ac74a422: pass (`shadcn-table-base-core`, `shadcn-table-core` `date-picker-base#v0.1.1`, `shadcn-table-radix-core` `date-picker-radix#v0.1.1`, `shadcn-table-aria-core` `date-picker-aria#v0.1.1`; no item holds a file under `components/date-picker`)
+- Verify, check: `grep -rn 'v0\.1\.0' packages/shadcn-table/registry.json registry.json apps/shadcn-table-docs/components` at ac74a422: pass (prints nothing); `grep -c '^#### Spec 82' CHANGELOG.md`: `1`; `apps/shadcn-table-docs/components/ui-<base>/date-picker/date-picker.tsx` present on the three bases
+- Verify, check: captures, 36 before and 36 after present in `test/.out/spec82/`; the code since 595e0a50 changes no class of the box (13f47578 event handling, v0.1.1 `values.ts` warnings and `rtl:rotate-180` on popup arrows), so the look table stands
+- Verify, check: `lsof -nP -iTCP:5340-5360 -sTCP:LISTEN` and `git status --short` at ac74a422: pass (both print nothing)
+- Verify: pass at ac74a422
 - Review round 1: 2 majors, 7 minors, fixed at e18c4e16 (major 1 and minor 1 fixed; major 2 waits on Q166; minor 2 under Attention; minors 3 to 7 answered in Notes)
 
 - Task 1 the is-empty reset: done (6dcd219e the fix, df801ff7 the play)
@@ -146,12 +158,12 @@ Stories, examples, docs, tests that drive a date box:
 
 ## Attention
 
-- (Q171) A date picked in the popup that is the same day as the date just typed in the box does not filter the table until focus leaves the box.
+- (Q171, filed) A date picked in the popup that is the same day as the date just typed in the box does not filter the table until focus leaves the box.
   - The table passes the typed draft to the picker as its `value` (the picker's input keeps the typed text only while `value` equals its draft, `registry/<base>/components/date-picker/components/picker-field.tsx:106-109`), so a pick of that day is no change and the picker fires no `onChange` (`date-picker.tsx:93-97`). Spec 1.6.2 counts the popup as inside the box, so the draft waits for Enter or leave. All three bases; edge case, the final value is right.
   - Recommended: keep as built; the value applies when focus leaves the box, as for a typed date.
   - Other option: apply the typed draft when the popup opens (the popup then counts as leaving the box for a typed date, against 1.6.2's wording).
 
-- (Q170) In a narrow column a date filter under the header now shows only part of its date, because the picker's two buttons take 54 px of the box.
+- (Q170, filed) In a narrow column a date filter under the header now shows only part of its date, because the picker's two buttons take 54 px of the box.
   - Seen at 390 wide: single box, input 122 px before, 68 px after (`dd/mm` visible of `dd/mm/yyyy`); range, Min 106 to 52 px, Max 138 to 84 px. The box, its height and its neighbours do not move. At 1280 the date shows in full. Captures: `.ai/plans/v0.9.x/anindosarker/reference/spec82-narrow-date-box/` (before and after, single and range, base; radix and aria the same).
   - The clear button keeps its 24 px while the box is empty (the picker hides it, it does not remove it).
   - Recommended: keep as built; the value is still typed and picked in full, and the calendar opens from the button. A wider minimum for date columns is a layout change of every date column (D164 does not re-decide the layout).
