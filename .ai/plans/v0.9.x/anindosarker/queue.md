@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q173** On a phone the date picker site's home header draws the site name over the version label
-	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
-	- Lead, 2026-11-24: settled, the version label is hidden below sm; built in the docs site build milestone.
-	- Built and live (9a2df03): at 390 the version label is hidden, no overlap; capture reference/q149-calendar-library/docs-site/home-site-390-light-fixed.png.
 
 ## Decided
 
@@ -571,6 +567,10 @@ kanban-plugin: basic
 	- Spec 85, milestone Date picker docs site build: built, reviewed (0 majors) and verified locally at ac4094f on branch date-picker-docs-site of shadcn-date-picker; the merge moves the live Storybook from / to /storybook/ and its Vercel routing (vercel.json) is unproven because the branch preview is behind the Vercel login and no browser was connected. Needed: /, /docs/install and /storybook/base/ answer on the branch preview. Tracker run/trackers/85-date-picker-docs-site-build-tracker.md.
 	- Lead, 2026-11-24: no owner read; the preview check is replaced by a local production read, then merge and live reads (E27 note). Run resumed.
 	- Done without an owner read: local production read green, merged 9a2df03 on main of shadcn-date-picker, live reads pass (site at /, Storybook under /storybook/).
+- [x] **Q173** On a phone the date picker site's home header draws the site name over the version label
+	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
+	- Lead, 2026-11-24: settled, the version label is hidden below sm; built in the docs site build milestone.
+	- Built and live (9a2df03): at 390 the version label is hidden, no overlap; capture reference/q149-calendar-library/docs-site/home-site-390-light-fixed.png.
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
