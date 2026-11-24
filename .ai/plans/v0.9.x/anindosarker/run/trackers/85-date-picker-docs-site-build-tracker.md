@@ -17,9 +17,15 @@ Checks:
 - Check: base lists, `node lib/registry-trees.mjs` with a copy of lib/bases.mjs lacking aria, at be986a7: pass (exit 1, both lists in the message; file restored)
 - Check: import side effects, `node -e "import('./lib/example-variants.mjs')"` in docs/, at be986a7: pass (no file written)
 - Check: theme.css, the jiti command of plan 4.3 in apps/shadcn-table-docs at 38e51f9: 68 lines, 2,610 bytes, starts `:root[data-design-system] {`; committed as docs/app/theme.css
+- Check: pages, `ls docs/content/docs/*.mdx | wc -l` at 0a3b01e: pass (prints 9; plus content/docs/meta.json, the flat list of plan 6.1)
+- Check: demo imports, `grep` of each of the seven docs/demos/*.tsx at 0a3b01e: pass (each imports `@/components/date-picker/date-picker` once; none names `registry`)
+- Check: ref, `grep -rn 'ref={ref}' docs/` (node_modules, .next excluded) at 0a3b01e: pass (tracked files: only content/docs/install.mdx:53, the Base UI note; two more hits in the git-ignored copies docs/registry/radix/components/ui/calendar.tsx and docs/registry/aria/components/date-picker/components/day-calendar.tsx, byte copies of the same files under picker registry/, not added by the docs)
+- Check: docs types, `pnpm --filter docs types:check` at 0a3b01e: pass (exit 0; 7 demos per base)
+- Check: docs lint, `pnpm --filter docs lint` at 0a3b01e: pass (exit 0, 0 errors, the same 1 warning of plan 4.3)
+- Check: docs build, `pnpm --filter docs build` at 0a3b01e: pass (exit 0; 16 static pages, /docs/[[...slug]] with 9 paths; built HTML of /docs/date and /docs/ranges carries the code view text with `@/components/date-picker/date-picker`, no `registry/base`)
 
 - Task 1 workspace and shell: done (be986a7)
-- Task 2 pages and demos: planned
+- Task 2 pages and demos: done (0a3b01e)
 - Task 3 Storybook under /storybook/, vercel.json, CI, README: planned
 - Task 4 local production build read and captures: planned
 - Task 5 live reads after the merge: planned
@@ -29,6 +35,6 @@ Checks:
 - Plan lines added in build task 1 (commits "docs(plan): design plan docs site, build"): tsconfig include `registry` in place of `registry/**` (tsc TS5010); `main` of lib/example-variants.mjs creates `demos/` when missing (no demo exists before task 2); `lib/bases.d.mts` in the docs eslint ignores (eslint-config-next parses `.mts` as JavaScript).
 - Dependency exception of plan section 3 kept: `react`, `react-dom`, `lucide-react`, `cn` take the date picker root's ranges.
 - Lockfile: the root importer's direct versions are unchanged; the peer suffixes of rolldown-vite and its dependents moved to `@emnapi/*@1.11.0` and gained `yaml@2.9.1`, shared with the docs app's packages.
-- Until task 2 the home page names the demos `date` and `date-range`, which do not exist yet; nothing builds or serves the app before task 2.
+- Plan line added in build task 2: `demos/*.tsx` in the tsconfig exclude (the hand-written demos import `@/components/date-picker/`, TS2307; their variants are checked), as the table excludes `examples/<base>`.
 
 ## Attention
