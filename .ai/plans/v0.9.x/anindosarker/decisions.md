@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D189** Opening a date range filter puts keyboard focus on the range box #R6
 	- Spec 87 1.6.2 stands (focus on open works as today): when a date or date-time range filter opens in the chips editor, the header editor or from the subheader filter button, keyboard focus lands on the range picker's box (its trigger), as 0.9.8 put it in the Min box. Reached without a public change: the type of filterInputRefs and every exported type stay (P7), and the picker's code stays; an internal way to reach the trigger is the builder's. If it can only be done by widening the public type or changing the picker, the milestone comes back with that as a card. Lead, 2026-11-24 (weight test: keeps the spec's intent, no public surface).
 	- Source: Q183
+- [ ] **D190** Switching a filter between a range mode and a single mode never leaves a stale value #R6
+	- In 0.9.8 the chips editor keeps the value on every mode change (filterSummary.utils.ts:86-101), so a Between pair switched to Less Than keeps the pair and the table shows no rows. Fix: a mode change between a range mode and a single-value mode resets the value in the chips editor as the other filter places already do on that change (the header mode menu); the builder reads that code and uses the same rule, not a new one. Reproduced first (P10); a play that fails on the shipped code first (P11). Lead, 2026-11-24 (a bug, one right answer).
+	- Source: Q185
 
 ## In progress
 

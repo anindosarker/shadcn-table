@@ -6,8 +6,6 @@ kanban-plugin: basic
 
 - [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box
 	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
-- [ ] **Q185** Changing a Between filter to another mode in the chips editor leaves the table empty
-	- In 0.9.8 already (not from spec 87): in chips mode setFilterMode (filterSummary.utils.ts:86-101) keeps the value on every mode change, so a Between pair switched to Less Than keeps the array and the table shows No results found until the value is retyped. Found by the builder of spec 87; not reproduced by the runner.
 
 ## Decided
 
@@ -441,6 +439,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-24: 'remove all my personal info from the plans actually you can remove most of the previous plans before the version history and actually you can remove most of the plans'. Scan of origin/claude/review, public repo anindosarker/shadcn-table, .ai on master, dev and claude/review: 28 plan folders, 1,199 files; v0.9.x 802 files, 48.5 MB, 386 images; v0.7.x 116, v0.8.x 85, mrt-port 73, the other 24 folders 122 files together. Personal: ~ in 56 files (93 times), one work email (v0.9.x run/handoffs/handoff-2026-11-08-0842.md:21), one Vercel project id (tracker 78-date-picker-stories-and-tests:212), team slug <team> (16), session uuids in 49 files (114). No token, key or password. Readers of old folders: CONTRIBUTING.md, docs/code-of-conduct/planning-guidelines.md, and 20 v0.9.x files citing v0.4.x to v0.8.x decisions. Removal from the tree leaves every file in git history; only a history rewrite takes it out.
 - [ ] **Q183** Opening a date range filter no longer puts the cursor in it #D189
 	- Spec 87 (D183), built, not merged, branch v0.9/date-range-filters-on-range-picker: the range picker keeps its two end inputs inside its popup, so filterInputRefs <column id>-0 and -1 are empty while it is closed; in the chips and header editors focus lands on the editor's top line, the subheader filter button focuses nothing. 0.9.8 put the cursor in the Min box; spec 87 1.6.2 says focus-on-open works as today. Options the review names: put the range trigger button in -0 and make the four readers (ST_HeaderFilterEditor, ST_FilterChips, ST_TableHeadCellFilterLabel, ST_ColumnActionMenu) call select() only on an input, which widens the ref's element type (public type, P7); keep as built and amend the spec line; a picker change (D176, D177). Found by the fable review, open after round 2.
+- [ ] **Q185** Changing a Between filter to another mode in the chips editor leaves the table empty #D190
+	- In 0.9.8 already (not from spec 87): in chips mode setFilterMode (filterSummary.utils.ts:86-101) keeps the value on every mode change, so a Between pair switched to Less Than keeps the array and the table shows No results found until the value is retyped. Found by the builder of spec 87; not reproduced by the runner.
 
 ## Later
 
