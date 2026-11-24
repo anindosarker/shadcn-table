@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q168** The date picker docs site shows its nine pages as one sidebar list, not one section at a time like the table site
+	- Design plan reference/q149-calendar-library/design-docs-site.md 6.1, built as the default: one flat sidebar list under three labels (Get Started, Pickers, Props). The table site's section line above a page title and the page switcher in the breadcrumb then do not show. Other way: three fumadocs root folders, same addresses, the table's behaviour, but two of the three sidebars hold one row (Install; Props). The build runs on the default; a change later moves the content files into folders. Tracker run/trackers/85-date-picker-docs-site-tracker.md, Attention A2.
 
 ## Decided
 
