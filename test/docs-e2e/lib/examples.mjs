@@ -989,9 +989,12 @@ const checks = {
           .locator('thead [role="slider"], thead input[type="range"]')
           .count()) > 0,
       );
+      // A date range is one box, its end inputs in the popup (D183).
       check(
-        'date filter input',
-        (await w.locator('thead input[type="date"]').count()) > 0,
+        'date range filter box',
+        (await w
+          .locator('thead button[aria-label="Filter by Hire Date"]')
+          .count()) > 0,
       );
       check(
         'checkbox filter',
