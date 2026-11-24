@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q176** The table's date range filters show two separate date boxes instead of the date picker's own range type
 	- Owner, 2026-11-24, on live 0.9.8, /docs/examples/subheader-filters (Hire Date, under the header) and /docs/examples/filter-variants (Hire Date in the filter popover): 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.' Seen in the same captures: in the popover the picked date reads 18/11/202, cut off, at desktop width.
+	- Lead lookup, 2026-11-24: built as decided. D164 names 'range Min and Max' as two DatePicker boxes; spec 82 line 15: 'The picker's own range mode is not used, so the filter value stays a pair and the layout of a range filter does not change'. The picker has a range mode (types.ts:66-79: range: true, value [from, to] as strings, range presets), the same shape as the table's pair value. Not verified: whether the picker's range mode accepts one end only (the table allows Min without Max). v0.8.x D61 (Min and Max side by side at every width) would be replaced for the date variants.
 
 ## Decided
 
