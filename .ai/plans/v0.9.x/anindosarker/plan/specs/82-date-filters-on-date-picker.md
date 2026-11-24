@@ -137,6 +137,14 @@ clear an is-empty filter (any variant) ──> column filter mode back to the co
 - Task 5: The look (1.6.5). Checks: 36 after captures under `test/.out/spec82/after/`; 36 tracker lines, `same` or the named difference with its cause; a difference a user would notice that no decision covers is a queue card with its two captures
 - Task 6: Examples, the guide, docs copies, docs and install tests, the changelog (1.6.4, 1.6.5). Checks: `pnpm lib:install base`, `radix`, `aria` leave `apps/shadcn-table-docs/components/ui-<base>/date-picker/date-picker.tsx`; `pnpm --filter shadcn-table-docs types:check` green; `pnpm test docs-e2e --base base`, `--base radix`, `--base aria` green; `pnpm test installation-e2e` green with the picker file present in each scratch app; `pnpm test lint` and `pnpm test validate-repo` green; `grep -c '^#### Spec 82' CHANGELOG.md` prints `1`
 
+### Milestone: A popup pick of the typed day filters at once
+
+- Files owned: `packages/shadcn-table/registry/base/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx`, `packages/shadcn-table/stories/features/DateFilters.stories.tsx`
+- Depends on: Filter debounce hook, Date filter compare, Filter editor fixes, Filter input fixes, Date filters use the date picker
+- Review: none
+- Starts: S43
+- Task 1: A popup pick of the typed day filters at once (Q171). Checks: a new play in DateFilters.stories.tsx (type a date, open the popup, pick that same day, the table filters without leaving the box) fails on origin/claude/review after spec 82 merged, the failure line in the tracker (P11); after the fix it passes on base, radix and aria; no file under registry/*/components/date-picker changes (git diff --stat prints nothing for them); pnpm test typecheck, pnpm test lint, pnpm test validate-repo, pnpm test storybook-tests one base at a time, green
+
 ### 2.2 Checks
 
 - Local CI as in the milestone block.
