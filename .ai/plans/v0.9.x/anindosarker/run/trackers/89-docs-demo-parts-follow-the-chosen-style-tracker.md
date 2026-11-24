@@ -15,6 +15,12 @@ Checks:
 - Check: Local CI at c6415d6, one at a time: `pnpm install --frozen-lockfile` pass, `pnpm lint` pass, `pnpm typecheck` pass, `pnpm registry:check` pass, `pnpm test` pass (39 of 39 per base, three bases), `pnpm --filter shadcn-date-picker-docs lint` pass, `pnpm --filter shadcn-date-picker-docs types:check` pass, `pnpm --filter shadcn-date-picker-docs build` pass
 - Check: fresh clone of the branch in <scratchpad>, `pnpm install --frozen-lockfile` then `pnpm exec turbo run build` at c6415d6: pass, exit 0
 
+- Verify: diff scope, `git diff --name-only origin/main...date-picker-docs-demo-parts-style` at c6415d6: pass, 34 files, all under apps/shadcn-date-picker-docs (ui-base, ui-radix, ui-aria parts, eslint.config.mjs ignore of the new part folders, lib/registry-trees.mjs); nothing under packages/, tools/ or vercel.json
+- Verify: task greps rerun at c6415d6: pass, 45 of 45 parts in components/ui-<base>/ equal `git show v0.9.8:apps/shadcn-table-docs/components/ui-<base>/<part>.tsx` by cmp; `node lib/registry-trees.mjs` writes components/date-picker and hooks only (23 files per base), no `@/components/ui/` import left, every imported ui-<base> part present (aria imports no calendar)
+- Verify: local CI lines at c6415d6 valid (head unchanged since); own fresh clone of the branch in <scratchpad>, `pnpm install --frozen-lockfile` exit 0, `pnpm exec turbo run build` exit 0 (cache miss, real next build)
+- Verify: own production read, `next start -p 5345` from the fresh clone, new Playwright context per run, 1440, style set in the theme sheet and base in the header menu, styles luma, nova, vega, lyra on base, radix, aria: pass, 12 of 12; cleared range trigger radii equal on all four corners and equal to the /docs/date box (luma 26, nova 10, vega 8, lyra 0 px), day 15 picked on /docs/date ("2026-11-21" to "2026-11-15"), theme sheet opened, 0 console errors
+- Verify: server stopped by pid, browsers closed, scratch deleted, worktree clean at c6415d6: pass
+
 | Style | base trigger / box | radix trigger / box | aria trigger / box |
 |---|---|---|---|
 | vega | 8 / 8 | 8 / 8 | 8 / 8 |
