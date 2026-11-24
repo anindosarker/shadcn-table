@@ -1048,7 +1048,10 @@ export async function liveDemoFilters(page, w, check) {
       variant: 'date',
       expected: 6,
       set: async () => {
-        await editor.locator('input[type="date"]').first().fill('2023-01-01');
+        // The date picker's box: a typed date applies on Enter.
+        const box = editor.locator('input[type="date"]').first();
+        await box.fill('2023-01-01');
+        await box.press('Enter');
       },
     },
     {

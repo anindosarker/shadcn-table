@@ -217,6 +217,12 @@ export interface ST_TableOptions_Config<
         table: ST_CoreTableInstance<TData>;
       }) => TParts['checkbox'])
     | TParts['checkbox'];
+  /**
+   * Props for the date picker of a `date` or `date-range` filter. Passed on:
+   * `min`, `max`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -224,6 +230,12 @@ export interface ST_TableOptions_Config<
         table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
+  /**
+   * Props for the date picker of a `datetime` or `datetime-range` filter. Passed on:
+   * `min`, `max`, `step`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterDateTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -244,6 +256,12 @@ export interface ST_TableOptions_Config<
         table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
+  /**
+   * Props for the date picker of a `time` or `time-range` filter. Passed on:
+   * `min`, `max`, `step`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -656,6 +674,12 @@ export interface ST_ColumnDef_Config<
         table: ST_CoreTableInstance<TData>;
       }) => TParts['checkbox'])
     | TParts['checkbox'];
+  /**
+   * Props for the date picker of a `date` or `date-range` filter. Passed on:
+   * `min`, `max`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -663,6 +687,12 @@ export interface ST_ColumnDef_Config<
         table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
+  /**
+   * Props for the date picker of a `datetime` or `datetime-range` filter. Passed on:
+   * `min`, `max`, `step`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterDateTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -683,6 +713,12 @@ export interface ST_ColumnDef_Config<
         table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
+  /**
+   * Props for the date picker of a `time` or `time-range` filter. Passed on:
+   * `min`, `max`, `step`, `disabled`, `id`, `className`, `style`, `aria-*`,
+   * `data-*`, and `onFocus`, `onBlur`, `onKeyDown`, which the picker's root
+   * receives as the events bubble. The other input props have no effect.
+   */
   stFilterTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
