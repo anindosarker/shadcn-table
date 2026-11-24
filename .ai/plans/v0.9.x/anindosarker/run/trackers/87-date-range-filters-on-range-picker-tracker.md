@@ -1,6 +1,6 @@
 # 87: Date range filters on the range picker, tracker
 
-Status: running
+Status: waiting (lead: two review points need a ruling before the merge: focus on open of a date range filter, and the shape of a time range filter; cards Q below)
 Branch `v0.9/date-range-filters-on-range-picker`, worktree 06
 Checks:
 - Check: proof play date, base, `ST_BASE=base vitest run stories/miscellaneous/RangePickerOneEnd.stories.tsx` (Date Start Only Then End Only) at 803ad5680 + story: pass
