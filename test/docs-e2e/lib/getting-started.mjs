@@ -551,6 +551,48 @@ async function themeCustomizer({ page, check }) {
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
     `${again} -> ${reset}`,
   );
+  /** The computed `--radius`, the `style-<name>` class and `--font-sans`. */
+  const look = () =>
+    page.evaluate(() => {
+      const root = document.documentElement;
+      const style = getComputedStyle(root);
+      return [
+        style.getPropertyValue('--radius').trim(),
+        [...root.classList].find((name) => name.startsWith('style-')) ?? '',
+        style.getPropertyValue('--font-sans').trim(),
+      ].join(' | ');
+    });
+  const lookBefore = await look();
+  const looks = [];
+  let colored = reset;
+  let primaryMoved = false;
+  for (let i = 0; i < 8; i++) {
+    const from = colored;
+    colored = await pressUntil('c', (v) => v !== from);
+    if (colored !== reset) primaryMoved = true;
+    looks.push(await look());
+  }
+  const lookChanged = looks.find((value) => value !== lookBefore);
+  check(
+    'theme: c changes --primary and keeps --radius, the style and the font',
+    primaryMoved && lookChanged === undefined,
+    `primary moved=${primaryMoved} ${lookBefore} -> ${lookChanged ?? lookBefore}`,
+  );
+  await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
+  const shuffleBefore = await look();
+  let shuffleLook = shuffleBefore;
+  let shuffledPrimary = await primary();
+  for (let i = 0; i < 10 && shuffleLook === shuffleBefore; i++) {
+    const from = shuffledPrimary;
+    shuffledPrimary = await pressUntil('r', (v) => v !== from);
+    shuffleLook = await look();
+  }
+  check(
+    'theme: r changes more than the colours',
+    shuffleLook !== shuffleBefore,
+    `${shuffleBefore} -> ${shuffleLook}`,
+  );
+  await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
   await closePanel();
   await page.evaluate(() =>
     document.activeElement instanceof HTMLElement

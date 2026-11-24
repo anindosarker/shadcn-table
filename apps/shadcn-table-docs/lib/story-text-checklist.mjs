@@ -11,9 +11,8 @@
  * uses it to fail a page that lacks one of them.
  *
  * Usage (apps/shadcn-table-docs): node lib/story-text-checklist.mjs <output file>
- * The output file is the plan file
- * .ai/plans/v0.9.x/anindosarker/reference/docs-layout/story-text-checklist.md
- * of the checkout that holds the plans. Running it twice changes nothing.
+ * The output file is the story text checklist in the plan folder.
+ * Running it twice changes nothing.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';

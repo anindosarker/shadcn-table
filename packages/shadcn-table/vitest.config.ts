@@ -20,7 +20,7 @@ const resetPointer: BrowserCommand<[]> = async ({ page }) => {
 };
 
 // Every story in ./stories runs as a render test in headless Chromium through
-// Storybook's Vitest addon. See .ai/plans/storybook-tests/anindosarker/storybook-tests-plan.md.
+// Storybook's Vitest addon.
 export default mergeConfig(
   viteConfig,
   defineConfig({

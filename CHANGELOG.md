@@ -7,6 +7,21 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 1.0.0 - 2026-11-24
+
+### Changed
+
+#### Spec 95
+
+- The date picker dependency is now `anindosarker/shadcn-date-picker/date-picker-<base>#v1.0.0` on Base UI, Radix UI and React Aria (D196).
+- 1.0.0 is the first stable version; its options and types are those of 0.9.9 (D197).
+
+### Docs
+
+#### Spec 93
+
+- In the docs theme panel, `C` and a pick in the Presets list change the colours only: the corner radius, style and fonts stay as they were, so one page can be compared in different colour sets. `R` still changes the whole look (D195).
+
 ## 0.9.9 - 2026-11-24
 
 ### Changed

@@ -4,6 +4,8 @@ How to write an implementation plan for this repository. Applies to humans and a
 
 ## Location
 
+The plan folders are kept outside this repository and are not committed here.
+
 ```
 .ai/plans/v0.<n>.x/<git_username>/
 ├── plan.md              ← authored: ## Goals and the epic table | # | Epic | Scope |
