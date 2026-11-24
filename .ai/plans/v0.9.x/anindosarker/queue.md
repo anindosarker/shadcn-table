@@ -6,9 +6,6 @@ kanban-plugin: basic
 
 - [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box
 	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
-- [ ] **Q187** On the date picker home page the hero dune runs straight into the footer dune
-	- Spec 90 (D186), live at dec5951: the picker home is one screen of content, so the hero's bottom dune ends where the footer's dune starts and the two read as one tall band; on the table home a long page sits between them. Captures reference/q149-calendar-library/docs-site/frame/picker-home-dark-1440-footer.png beside table-home-dark-1440-footer.png. Built as: the table's lines, no spacing added.
-	- Closed by the lead, 2026-11-24, keep: looked at reference/q149-calendar-library/docs-site/frame/live-home-dark-1440.png and live-home-dark-1440-footer.png: the hero dune and the footer dune read as one band behind the last screen, with the footer text clear below it; the lines are the table's (D186: copied as they are), spacing of our own would depart from that.
 
 ## Decided
 
@@ -532,6 +529,9 @@ kanban-plugin: basic
 - [x] **Q170** In a narrow column a date filter under the header now shows only part of its date
 	- Spec 82 (the table's date filters on the date picker): the picker's two buttons take 54 px of the box. At 390 wide the single box input goes from 122 px to 68 px and shows dd/mm of dd/mm/yyyy; range Min 106 to 52 px, Max 138 to 84 px; the box's position, 32 px height and neighbours are unchanged; the full date shows at 1280. Captures before and after: reference/spec82-narrow-date-box/ (on the branch v0.9/date-filters-on-date-picker until it merges). Built as: keep (the value is still typed and picked in full). Other option: a date box minimum above 140 px, date columns get wider and a table scrolls sideways sooner on a phone.
 	- Closed by the lead, 2026-11-24: already decided, v0.8.x D61 (a column narrower than its filter fields clips them; the consumer sizes the column). The value is typed and picked in full; no minimum width (owner rule: no fixed sizes in layout).
+- [x] **Q187** On the date picker home page the hero dune runs straight into the footer dune
+	- Spec 90 (D186), live at dec5951: the picker home is one screen of content, so the hero's bottom dune ends where the footer's dune starts and the two read as one tall band; on the table home a long page sits between them. Captures reference/q149-calendar-library/docs-site/frame/picker-home-dark-1440-footer.png beside table-home-dark-1440-footer.png. Built as: the table's lines, no spacing added.
+	- Closed by the lead, 2026-11-24, keep: looked at reference/q149-calendar-library/docs-site/frame/live-home-dark-1440.png and live-home-dark-1440-footer.png: the hero dune and the footer dune read as one band behind the last screen, with the footer text clear below it; the lines are the table's (D186: copied as they are), spacing of our own would depart from that.
 
 ## Autofix
 
