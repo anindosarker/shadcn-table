@@ -26,8 +26,8 @@ This spec builds in a second repository. The plan folder, this spec and the trac
 
 ```
 https://github.com/anindosarker/shadcn-date-picker        ← public, empty (no commit, no branch); created 2026-11-24
-Vercel project shadcn-date-picker (team anindo-sarkers-projects)  ← connected to the repository, default settings, domain date-picker.shadcn-table.com assigned; the DNS record is with the owner (reference/q149-calendar-library/setup-steps.md)
-/Users/anindosarker/Work/Personal/React-table/test-projects/next-app/components/date-picker/   ← the approved code, 22 files, 3102 lines, version 9.3.6, commit 53f4b4f (HEAD of the folder: 9cadf36, no later change); read-only (P6)
+Vercel project shadcn-date-picker (team <team>)  ← connected to the repository, default settings, domain date-picker.shadcn-table.com assigned; the DNS record is with the owner (reference/q149-calendar-library/setup-steps.md)
+~/Work/Personal/React-table/test-projects/next-app/components/date-picker/   ← the approved code, 22 files, 3102 lines, version 9.3.6, commit 53f4b4f (HEAD of the folder: 9cadf36, no later change); read-only (P6)
 ├── date-picker.tsx, types.ts
 ├── modes/        day-picker, day-range-picker, period-picker, period-range-picker, time-range-picker
 ├── components/   day-calendar, period-views, picker-box, picker-field, picker-popup, picker-presets, picker-trigger, time-columns, time-field, view-nav
@@ -45,8 +45,8 @@ shadcn-react-table/registry.json   ← the root catalog form the CLI reads for a
 ### 1.4 Target structure
 
 ```
-/Users/anindosarker/Work/Personal/React-table/shadcn-date-picker/      ← the clone, default branch main; excluded in the workspace's .git/info/exclude
-/Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/<milestone slug>/   ← one worktree per milestone, removed after its merge; excluded the same way
+~/Work/Personal/React-table/shadcn-date-picker/      ← the clone, default branch main; excluded in the workspace's .git/info/exclude
+~/Work/Personal/React-table/shadcn-date-picker.worktrees/<milestone slug>/   ← one worktree per milestone, removed after its merge; excluded the same way
 
 shadcn-date-picker/
 ├── package.json                 ← one private package "shadcn-date-picker", version 0.1.0, license MIT, packageManager and node as the table repository pins them; scripts of 1.6.2
@@ -90,7 +90,7 @@ main ──> milestone branch ── Storybook, stories with plays, site build, 
 
 #### 1.6.1 Repository, clone and branches (D162, D163)
 
-- The clone is `/Users/anindosarker/Work/Personal/React-table/shadcn-date-picker`, a sibling of `shadcn-react-table` in the workspace folder. The workspace repository must not see it: `shadcn-date-picker/` and `shadcn-date-picker.worktrees/` are added to `/Users/anindosarker/Work/Personal/React-table/.git/info/exclude`, where `shadcn-ui/` already is.
+- The clone is `~/Work/Personal/React-table/shadcn-date-picker`, a sibling of `shadcn-react-table` in the workspace folder. The workspace repository must not see it: `shadcn-date-picker/` and `shadcn-date-picker.worktrees/` are added to `~/Work/Personal/React-table/.git/info/exclude`, where `shadcn-ui/` already is.
 - The repository is empty, so the first milestone starts with one commit on `main` (`LICENSE` and a one-line `README.md`), pushed; `main` is then the default branch and Vercel's production branch.
 - Every milestone of specs 78 to 80 works on its own branch, named after its tracker slug without the spec number (`date-picker-repository`, `date-picker-stories-and-tests`), created from `origin/main` in its own worktree under `shadcn-date-picker.worktrees/`, with one `pnpm install` there. The runner merges it into `main` with a merge commit `merge: <milestone> (<spec>)`, pushes, deletes the branch local and remote and removes the worktree. No PR, no staging branch, no `dev`, no `claude/review` in this repository. Never force-push; push right after every commit (P8).
 - The clone itself stays on `main` and is used for fetches and merges only, never for an install or a build.
@@ -180,9 +180,9 @@ One private package at the repository root; no workspace, no turbo. Dependency v
 - Depends on: none
 - Review: none
 - Local CI: `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, in the milestone's worktree of the new repository, one at a time (P5)
-- Task 1: The clone, the two exclude lines, the initial commit on `main`, the milestone branch and worktree (1.6.1). Checks: `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` prints `0`; `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` prints `main`; `git -C <clone> log --oneline origin/main | wc -l` prints `1`
+- Task 1: The clone, the two exclude lines, the initial commit on `main`, the milestone branch and worktree (1.6.1). Checks: `git -C ~/Work/Personal/React-table status --short | grep -c shadcn-date-picker` prints `0`; `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` prints `main`; `git -C <clone> log --oneline origin/main | wc -l` prints `1`
 - Task 2: The scaffold: package, configs, the three trees with their `components.json`, parts, hook and `index.css`, `tools/bases.mjs`, `vercel.json` with deployments off (1.6.2). Checks: `ls registry/<base>/components/ui` lists the nine parts for `base`, `radix` and `aria`; `git diff --stat` after a second run of the same shadcn `add` on one base prints nothing (the parts are as the CLI writes them); `pnpm typecheck` exits 0; `pnpm lint` exits 0
-- Task 3: The exact copy (1.6.3). Checks: `git -C /Users/anindosarker/Work/Personal/React-table/test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` exits 0; `diff -r /Users/anindosarker/Work/Personal/React-table/test-projects/next-app/components/date-picker registry/base/components/date-picker` prints nothing; `find registry/base/components/date-picker -type f | wc -l` prints `22`; `pnpm typecheck` and `pnpm lint` exit 0 with the folder unchanged; `git -C /Users/anindosarker/Work/Personal/React-table/test-projects/next-app status --short` prints what it printed before the task
+- Task 3: The exact copy (1.6.3). Checks: `git -C ~/Work/Personal/React-table/test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` exits 0; `diff -r ~/Work/Personal/React-table/test-projects/next-app/components/date-picker registry/base/components/date-picker` prints nothing; `find registry/base/components/date-picker -type f | wc -l` prints `22`; `pnpm typecheck` and `pnpm lint` exit 0 with the folder unchanged; `git -C ~/Work/Personal/React-table/test-projects/next-app status --short` prints what it printed before the task
 - Task 4: The registry: `registry.ts` of the three trees, `tools/registry-build.mjs`, the generated files, the root catalog (1.6.4). Checks: `pnpm registry:check` exits 0; `node -e` on `registry/base/registry.json` prints one item `date-picker-base` with 22 files, the ten registry dependencies and the five dependencies of 1.6.4; `registry/radix/registry.json` and `registry/aria/registry.json` hold no item; a deleted item file makes `pnpm registry:check` exit 1 (tried once, restored)
 - Task 5: The install proof at the pushed commit and the README (1.6.4). Checks: in the scratch app, `find components/date-picker -type f | wc -l` prints `22`; `diff -r components/date-picker <approved folder>` prints nothing; `pnpm exec tsc --noEmit` and `pnpm exec next build` exit 0; each line with the sha in the tracker; the scratch app deleted; `grep -c 'anindosarker/shadcn-date-picker/date-picker-base' README.md` prints `1` or more
 

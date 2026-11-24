@@ -40,7 +40,7 @@ Checks:
 - Check: build aria, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at v0.1.0 (908300d): pass (both exit 0, route / static)
 - Check: deployments, `gh api repos/anindosarker/shadcn-date-picker/deployments?per_page=5`: none listed (empty array, also for environment Production and Preview)
 - Check: Vercel status of 908300d, `gh api .../commits/908300d/status`: success, deployment dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU "Deployment has completed"
-- Check: deployment target, `vercel inspect dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU`: target preview, Ready, https://shadcn-date-picker-lbpg4u2b9-anindo-sarkers-projects.vercel.app, alias shadcn-date-picker-git-main-anindo-sarkers-projects.vercel.app
+- Check: deployment target, `vercel inspect dpl_92mKUgW64oh1pK3mUvHSsy8oYsKU`: target preview, Ready, https://shadcn-date-picker-lbpg4u2b9-<team>.vercel.app, alias shadcn-date-picker-git-main-<team>.vercel.app
 - Check: preview public, python3 urllib on <preview>/version.txt at 908300d: fail (redirect to vercel.com/login, Vercel login wall)
 - Check: production deployment of 908300d, `vercel ls shadcn-date-picker --environment production`: none (only production deployment dpl_F3JtxETRT8GogN4K719MFoH2JE6x, created 2 hours before the 908300d build, so not 908300d)
 - Check: domain, python3 urllib on https://date-picker.shadcn-table.com/version.txt, /, /base/, /radix/, /aria/: fail (all HTTP 404)

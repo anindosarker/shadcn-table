@@ -131,7 +131,7 @@ Input delay is small, so almost all of the time goes into processing and renderi
   - CDP session for `Network` (bytes from `encodedDataLength`, POSTs found by the `next-action` header), `Performance`, `Emulation`.
   - Init-script `PerformanceObserver` for `longtask`, `layout-shift` (with source nodes), `largest-contentful-paint`, `event` (threshold 16 ms) and `long-animation-frame`.
   - rAF gap recorder; `performance.memory` via `--enable-precise-memory-info`.
-- **Scripts:** `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/c29166ba-c8b5-4799-9709-68b893adc6f4/scratchpad/docs-perf/measure.mjs` (one run) and `summ.cjs` (medians). Raw JSON is in `out/` under the same directory.
+- **Scripts:** `<scratchpad>/docs-perf/measure.mjs` (one run) and `summ.cjs` (medians). Raw JSON is in `out/` under the same directory.
 - **Viewport:** 1440x900. Cold cache: a new browser and context for every run.
 - **Throttled run:** `Emulation.setCPUThrottlingRate` 4, plus `Network.emulateNetworkConditions` Fast 3G (562.5 ms latency, 180,000 B/s down, 84,375 B/s up).
 - **Runs:** 3 baseline runs and 1 throttled run per page. Each run measures after load plus 5 s.

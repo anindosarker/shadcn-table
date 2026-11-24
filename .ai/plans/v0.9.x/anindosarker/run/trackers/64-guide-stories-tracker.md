@@ -55,10 +55,10 @@ Checks:
   - features-search--searched-on-load: `Search` box open with `John`, footer `1-N of N` (N varies per load with the random rows, at least 1 since caa9d85f fixed three John rows in front); Escape clears it, 1-10 of 200; Escape again closes the box. Try it step 1 names the box by its value: "Click in the search box (`John`)" (91c955a4).
 - Task 5 Text check: run by the workflow after verify
 New story pages:
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-sorting--sorted-on-load.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-hiding--column-hidden-on-load.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-resizing--column-widened-on-load.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-search--searched-on-load.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-sorting--sorted-on-load.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-hiding--column-hidden-on-load.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-resizing--column-widened-on-load.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-search--searched-on-load.mdx
 - Task 6 Cleanup: done at 2a1c0150 (changelog `#### Spec 64 Guide stories` under `### Changed`)
 
 Pages for the second milestone (Guide examples), one per guide:

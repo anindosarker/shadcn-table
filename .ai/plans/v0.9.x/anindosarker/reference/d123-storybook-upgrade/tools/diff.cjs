@@ -1,7 +1,7 @@
 // usage: node diff.cjs <dirA> <dirB> [diffOutDir]
 const fs = require('node:fs');
 const path = require('node:path');
-const NM = '/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/node_modules';
+const NM = '~/Work/Personal/React-table/shadcn-react-table.worktrees/08/node_modules';
 const { PNG } = require(path.join(NM, 'pngjs'));
 const pm = require(path.join(NM, 'pixelmatch'));
 const pixelmatch = pm.default || pm;

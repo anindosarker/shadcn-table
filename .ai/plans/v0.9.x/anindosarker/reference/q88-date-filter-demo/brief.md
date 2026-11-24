@@ -6,7 +6,7 @@ This is a preview for a decision, not library work: no spec, no grid row, nothin
 
 ## Where
 
-- Repo: `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` (its own git repo, no remote, Base UI style `base-nova`). Work in that checkout on its current branch `playground/header-demo-theming`; commit there, no push.
+- Repo: `~/Work/Personal/React-table/test-projects/next-app` (its own git repo, no remote, Base UI style `base-nova`). Work in that checkout on its current branch `playground/header-demo-theming`; commit there, no push.
 - Page: `app/date-filter-demo/page.tsx` (exists, commit `1cd0d7f`, rejected by the owner: "Looks ugly and doesn't follow theme"). Rework it in place. `components/ui/card.tsx` is untracked, added by the shadcn CLI: keep and commit it. Leave `app/date-picker-demo/` as it is.
 - The owner runs the app at `http://localhost:3000`. Never start, stop or restart a dev server. Verifiers open that URL with a headless browser (`agent-browser`); if it does not answer, the workflow stops with that reason.
 - Screenshots: `.ai/plans/v0.9.x/anindosarker/reference/q88-date-filter-demo/` in the shadcn-table repo, named `<candidate>-<variant>-<light|dark>.png` plus `page-<light|dark>.png`; commit them on `claude/review` with this brief.

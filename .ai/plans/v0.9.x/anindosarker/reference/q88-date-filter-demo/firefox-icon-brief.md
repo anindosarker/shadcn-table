@@ -10,7 +10,7 @@ For a fresh session the owner talks to directly. Written by `v0.9.x runner12` on
 
 ## Where things are
 
-- Demo app: `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` (own git repo, no remote, branch `playground/header-demo-theming`). Page `http://localhost:3000/date-filter-demo`.
+- Demo app: `~/Work/Personal/React-table/test-projects/next-app` (own git repo, no remote, branch `playground/header-demo-theming`). Page `http://localhost:3000/date-filter-demo`.
 - The line: `components/<version>/components/picker-field.tsx`, the `className` of the input (near line 191).
 - Versions, each a full folder under `components/`:
   - `date-picker-9`: the rebuild. `date-picker-9-1`: month typed in a box.

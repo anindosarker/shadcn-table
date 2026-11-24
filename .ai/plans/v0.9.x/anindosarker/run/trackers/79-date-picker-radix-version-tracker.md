@@ -2,7 +2,7 @@
 
 Status: done
 Merge: `5d13f4a` on main, merge: date-picker-radix-version (79); branch already contained origin/main 108d72e, no recheck needed; worktree and branch removed
-Branch `date-picker-radix-version`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-radix-version
+Branch `date-picker-radix-version`, worktree ~/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-radix-version
 Checks:
 - Check: identical files, `cmp registry/base/components/date-picker/<file> registry/radix/components/date-picker/<file>` for each of the 18 files the design plan marks identical for Radix, at 1b06b47: pass (exit 0, 18 of 18)
 - Check: file count, `find registry/radix/components/date-picker -type f | wc -l`, at d5880df: pass (22)

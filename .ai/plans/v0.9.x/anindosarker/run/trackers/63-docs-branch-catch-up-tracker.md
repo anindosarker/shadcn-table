@@ -86,11 +86,11 @@ Plays of specs 60 to 62 and where they are (62429d40):
 - No-ghost and touch steps of `ReorderRemoveDelete` (62): in `reorderRemoveDelete`, the play of `SortPopoverSeeded` (D110 merge)
 
 New and corrected story pages:
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-dragging--touch-hold-on-range-slider.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-ordering--touch-drag-scrolls-page.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-pinning--row-pinning-select-sticky-with-virtualization.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-sub-row-tree--sub-row-tree-with-selection.mdx
-- /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-pinning--row-pinning-sticky-with-virtualization.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-column-dragging--touch-hold-on-range-slider.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-ordering--touch-drag-scrolls-page.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-pinning--row-pinning-select-sticky-with-virtualization.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-sub-row-tree--sub-row-tree-with-selection.mdx
+- ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/apps/shadcn-table-docs/content/docs/examples/more/features-row-pinning--row-pinning-sticky-with-virtualization.mdx
 
 
 ## Attention

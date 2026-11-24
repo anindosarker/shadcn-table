@@ -1,0 +1,136 @@
+# 89: Date picker repository layout, tracker
+
+Status: done
+Branch `date-picker-repository-layout`, worktree shadcn-date-picker.worktrees/date-picker-repository-layout, from origin/main 5404817 (start sha 54048178ff61d4ca5c8fe366de385284ea8dc74a, holds spec 86's merge commit 5404817)
+Checks:
+- Check: setup, `pnpm install --frozen-lockfile` at 5404817: pass
+- Check: start holds spec 86, `git merge-base --is-ancestor 5404817 origin/main` at 5404817: pass
+- Check: tags before, `git ls-remote --tags origin` at 5404817: v0.1.0 310b4a0 (908300d), v0.1.1 5fa8f7d (2cf6e6f)
+- Check: T1 reader grep repeated on the branch, `git grep -nE "tools/|registry/|../package.json|stories|.storybook|storybook-static|docs|ROOT|REPO"` at 5404817: every line of the 1.6.3 map found; spec 86 brought none; extra: `.prettierrc:9` `"tailwindStylesheet": "registry/base/index.css"` (root file, reads a moved path; updated in Task 2 to the package path, same meaning)
+- Check: T1 extra reader, `tools/registry-build.mjs:10-12` imports `prettier`, `shadcn/schema`, `shadcn/utils` at 5404817: resolved from the root node_modules; after the move `shadcn` must stay resolvable from `tools/` (root devDependency `shadcn`, same range, Task 2)
+- Check: T1 move commits renames only, `git show -M100% --name-status 8de68ce` at 8de68ce: 210 R100, nothing else: pass
+- Check: T1 move commits renames only, `git show -M100% --name-status 15eb2b0` at 15eb2b0: 120 R100, nothing else: pass
+- Check: T1 old folders gone, `test ! -e registry && test ! -e stories && test ! -e docs && test ! -e .storybook` at 15eb2b0: exit 0, pass
+- Check: T2 the one install, `pnpm install` then `pnpm install --frozen-lockfile` at 99948b7: exit 0, pass
+- Check: T2 lockfile diff, `git diff 15eb2b0 fe23e8f -- pnpm-lock.yaml` at fe23e8f: importer keys (`docs` to `apps/shadcn-date-picker-docs`, new `packages/shadcn-date-picker`, root importer now turbo, prettier, prettier-plugin-tailwindcss, shadcn) and the `turbo@2.5.6` entries; no resolved version moved; two peer suffixes lost their root context (`eslint-config-next@16.3.8` without the optional `@typescript-eslint/parser` peer, `fumadocs-mdx@15.4.7` without the optional `vite` peer), same versions: pass
+- Check: T2 root devDependency `shadcn` (^4.22.0, same resolution), `node tools/registry-build.mjs` needs `shadcn/schema` and `shadcn/utils` resolvable from `tools/` at 99948b7: added beside turbo, prettier and its plugin
+- Check: T2 `.prettierrc` tailwindStylesheet, `prettier --check packages/shadcn-date-picker/stories` with the old `registry/base/index.css` path at 99948b7: errors (9 files), so the path follows the move: pass with the new path
+- Check: T2 lint, `pnpm lint` at 99948b7: exit 0, pass
+- Check: T2 typecheck, `pnpm typecheck` at 99948b7: exit 0, pass
+- Check: T2 registry check, `pnpm registry:check` at 99948b7: exit 0, three bases up to date (22 files each), pass
+- Check: T2 version, `node -e` on `packages/shadcn-date-picker/package.json` and `package.json` at 99948b7: `0.1.1` and `undefined`, pass
+- Check: T2 root catalog, `grep -c 'packages/shadcn-date-picker/registry/' registry.json` at 99948b7: 3, pass
+- Check: T2 lint coverage, root `eslint .` linted `tools/*.mjs` before the move; the package's `eslint .` does not reach `tools/` (outside its config folder); prettier still checks them at 99948b7: noted
+- Check: T3 moves, `git diff -M100% --name-status 5404817 HEAD` at 99948b7: 320 R100; the rest is the files 1.6.2 and 1.6.3 name (root package.json, pnpm-workspace.yaml, pnpm-lock.yaml, turbo.json, registry.json, vercel.json, ci.yml, .gitignore, .prettierignore, tools/*.mjs, the package's package.json, .storybook/main.ts, eslint.config.mjs, vite.config.ts, vitest.config.ts, registry/README.md, the app's package.json, lib/install.ts, lib/layout.shared.tsx, lib/registry-trees.mjs, app/version.txt/route.ts) plus `.prettierrc` (Task 1 extra line): pass
+- Check: T3 zero-line renames, `git diff -M --stat 5404817 HEAD -- registry/*/{components,hooks,generated}/* stories/* and the packages/shadcn-date-picker counterparts` at 99948b7: 185 R100, 0 insertions, 0 deletions: pass
+- Check: T3 per-base registry.json, `git diff 5404817:registry/<base>/registry.json HEAD:packages/shadcn-date-picker/registry/<base>/registry.json` at 99948b7: base, radix, aria print nothing; the generated trees the same, nothing: pass
+- Check: T3 registry build, `pnpm registry:build` then `git status --short` at 99948b7: exit 0, status empty: pass
+- Check: T3 install base, two fresh apps (`pnpm dlx shadcn@latest create -t next -b base -p nova --no-monorepo`, one copied), `shadcn add anindosarker/shadcn-date-picker/date-picker-base#54048178ff61d4ca5c8fe366de385284ea8dc74a` and `#date-picker-repository-layout` (branch head 99948b7) at 99948b7: 22 picker files each, `diff -r` of components/ and hooks/ empty, `pnpm exec tsc --noEmit` exit 0 in the branch app: pass
+- Check: T3 install radix, same with `-b radix`, `date-picker-radix#54048178...` and `#date-picker-repository-layout` at 99948b7: 22 picker files each, `diff -r` empty, tsc exit 0: pass
+- Check: T3 install aria, same with `-b aria`, `date-picker-aria#54048178...` and `#date-picker-repository-layout` at 99948b7: 22 picker files each, `diff -r` empty, tsc exit 0: pass
+- Check: T3 scratch apps deleted, `test ! -e /private/tmp/claude-501/dp-layout-install` at 99948b7: pass
+- Check: T3 tags, `git ls-remote --tags origin` before and after at 99948b7: equal (v0.1.0, v0.1.1 unchanged): pass
+- Check: T4 tests, `pnpm test` at 99948b7: base, radix, aria one after the other, 7 files and 39 tests passed each, exit 0: pass; `pnpm test --base nope` throws `unknown base nope` (the flag reaches the package script)
+- Check: T4 docs lint, `pnpm --filter shadcn-date-picker-docs lint` at 99948b7: exit 0, pass
+- Check: T4 docs types, `pnpm --filter shadcn-date-picker-docs types:check` at 99948b7: exit 0, pass
+- Check: T4 docs build, `pnpm --filter shadcn-date-picker-docs build` at 99948b7: exit 0, registry trees copied from the package (base 36, radix 36, aria 37 files): pass
+- Check: T4 Storybook, `pnpm storybook:build` (turbo) at 99948b7: exit 0; `packages/shadcn-date-picker/storybook-static/storybook/{base,radix,aria}/index.html` and `storybook/index.html` exist, landing page says version 0.1.1: pass
+- Check: T4 vercel build, `vercel build` at 99948b7: not run; the CLI is installed but neither the clone nor the worktree is linked (no `.vercel`), and this run does not run `vercel link` or `vercel pull`; the local reads below stand in
+- Check: T4 local read `/`, `next start` on 5341 vs https://date-picker.shadcn-table.com at 99948b7: 200 "shadcn-date-picker: Date Picker for shadcn/ui" both: pass
+- Check: T4 local read `/docs/install` at 99948b7: 200 "Install | shadcn-date-picker", as live: pass
+- Check: T4 local read `/docs/date` at 99948b7: 200 "Date | shadcn-date-picker", as live: pass
+- Check: T4 local read `/docs/props` at 99948b7: 200 "Props | shadcn-date-picker", as live: pass
+- Check: T4 local read `/no-such-page` at 99948b7: 404 "Page not found | shadcn-date-picker", as live: pass
+- Check: T4 local read `/version.txt` at 99948b7: 200 `0.1.1`, as live: pass
+- Check: T4 local read theme changer, playwright click "Customize theme" on `/` at 99948b7: panel opens, "Color preset" visible, 0 page errors: pass
+- Check: T4 local read Storybooks, `python3 -m http.server 5342` on storybook-static, `/storybook/` 200 and playwright on `/storybook/{base,radix,aria}/` at 99948b7: each 200, 9 sidebar items, preview attached, 0 page errors: pass
+- Check: T4 servers stopped, `lsof -nP -iTCP:5341 -sTCP:LISTEN` and `:5342` at 99948b7: print nothing, pass
+- Check: Local CI at branch head 99948b7, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm test`, `pnpm --filter shadcn-date-picker-docs lint`, `types:check`, `build`, one at a time: all exit 0, git status clean: pass
+- Check: review round 1 fix, major, missed reader `apps/shadcn-date-picker-docs/components/mdx/example-snippet.tsx:39` built the demo GitHub link from `docs/demos/${name}.tsx` (rendered at `components/example-playground.tsx:160`, branch `main` from `lib/shared.ts:16`), a 404 after the merge; extra 1.6.3 reader line, path now `apps/shadcn-date-picker-docs/demos/${name}.tsx`, the folder exists (date.tsx, date-time.tsx, ...) at 6594fc9: fixed; this is a fourth edited line under the app's `components`, beyond the three import lines of the stays-unchanged list, kept because 1.6.3 asks for every reader of a moved path
+- Check: review round 1 fix, major, `tools/*.mjs` lost ESLint coverage (origin/main root `eslint .` linted them; the package's `eslint .` ignores files outside its base path); package `lint` is now `eslint . && cd ../.. && eslint -c packages/shadcn-date-picker/eslint.config.mjs tools` (with `-c` the base path is the cwd, ESLint 9.39.5), `eslint -f json` lists bases.mjs, registry-build.mjs, site-build.mjs with 0 errors at d24d40d: fixed
+- Check: review round 1 fix, minor, `turbo.json` `globalDependencies` gains `packages/shadcn-date-picker/package.json` (the docs app reads the version there: lib/install.ts:5, lib/layout.shared.tsx:4, app/version.txt/route.ts:1, with no workspace dependency) at d24d40d: fixed
+- Check: review round 1 fix, minor, `tools/registry-build.mjs:1-5` header comment names `packages/shadcn-date-picker/registry/<base>/...` at 6594fc9: fixed
+- Check: review round 1 note, lockfile peer suffixes, `git diff 5404817 HEAD -- pnpm-lock.yaml` at d24d40d: five snapshot keys lost a root-only optional peer, same versions: `eslint-config-next@16.3.8`, `eslint-plugin-import@2.32.0`, `eslint-import-resolver-typescript@3.10.1`, `eslint-module-utils@2.14.0` (without `@typescript-eslint/parser@8.74.0`), `fumadocs-mdx@15.4.7` (without `rolldown-vite@7.1.12`); no resolved version moved; the docs lint, types:check and build below are the proof: noted (corrects the T2 line, which named two)
+- Check: review round 1 note, root devDependency `shadcn` beyond the three 1.6.2 names: kept, `tools/registry-build.mjs:13-14` imports `shadcn/schema` and `shadcn/utils` from the root `tools/` folder: deviation noted
+- Check: review round 1 note, `.prettierrc:9` `tailwindStylesheet` edited although not in the milestone's Files owned nor in the 1.6.3 table: extra reader line (T1), same meaning: noted
+- Check: after the fixes, `pnpm lint` (turbo shows the new script line), `pnpm registry:check` (three bases up to date, 22 files each), `pnpm --filter shadcn-date-picker-docs lint`, `types:check`, `build`, one at a time via heavy.sh at d24d40d: all exit 0, git status clean: pass
+- Verify: move commits, `git show --format= -M100% --name-status` on 8de68ce and 15eb2b0 at d24d40d: 210 R100 and 120 R100, nothing else; the later commits fe23e8f, 99948b7, 6594fc9, d24d40d hold no rename: pass
+- Verify: Task 1 old folders, `test ! -e registry && test ! -e stories && test ! -e docs && test ! -e .storybook` at d24d40d: exit 0, pass
+- Verify: reader grep, `git grep` of old tool, package.json, registry, docs and storybook paths at d24d40d: every hit is a 1.6.3 reader at its new path or a tracker line (`.prettierrc:9`, `example-snippet.tsx:39`, the `tools` lint line); `git diff -M100% 5404817 HEAD` holds 319 R100 plus the 1.6.2/1.6.3 files and those extras, no other file: pass
+- Verify: per-base registry, `git diff 5404817:registry/<base>/registry.json HEAD:packages/shadcn-date-picker/registry/<base>/registry.json` and the same on `generated` for base, radix, aria at d24d40d: print nothing, pass
+- Verify: registry build, `pnpm install --frozen-lockfile` exit 0, `pnpm registry:build` (three bases, 22 files each), `git status --short` at d24d40d: empty; `pnpm registry:check` exit 0: pass
+- Verify: install radix, two fresh apps (`shadcn@latest create -n app-start -t next -b radix -p nova --no-monorepo`, one copied), `shadcn add anindosarker/shadcn-date-picker/date-picker-radix#54048178ff61d4ca5c8fe366de385284ea8dc74a` and `#date-picker-repository-layout` (head d24d40d) at d24d40d: 24 files each under components/date-picker and hooks, `diff -r` of components/ and hooks/ empty, `tsc --noEmit` exit 0 in the branch app; scratch /private/tmp/claude-501/dp-layout-verify deleted: pass
+- Verify: tags, `git ls-remote --tags origin` before and after at d24d40d: equal, v0.1.0 310b4a0 (908300d), v0.1.1 5fa8f7d (2cf6e6f): pass
+- Verify: Local CI at d24d40d, valid lines: `pnpm lint`, `pnpm registry:check`, docs lint, types:check, build (tracker, d24d40d); rerun here via heavy.sh: `pnpm install --frozen-lockfile` exit 0, `pnpm typecheck` exit 0, `pnpm test` base, radix, aria 7 files 39 tests each, exit 0: pass
+- Verify: local read docs, `next start -p 5350` on the d24d40d build: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200, `/docs/date` 200, `/docs/props` 200, `/no-such-page` 404 "Page not found", `/version.txt` 200 `0.1.1`: pass
+- Verify: local read browser, playwright on 5350 at d24d40d: `/docs/date` "Customize theme" opens the Theme sheet ("Colors, fonts and radius"); a fresh `/docs/date` "Select date" then day 15 sets the input to 2026-11-15; 0 console errors on all pages read: pass
+- Verify: local read Storybooks, `python3 -m http.server 5351` on `packages/shadcn-date-picker/storybook-static` at d24d40d: `/storybook/` 200, `/storybook/{base,radix,aria}/` 200, "Introduction - Docs", 11 sidebar nodes, preview iframe, 0 console errors: pass
+- Verify: servers stopped by pid (next-server, pnpm, http.server), `lsof -nP -iTCP:5350` and `:5351 -sTCP:LISTEN` print nothing; browser closed; worktree `git status --short` empty at d24d40d: pass
+- Check: T5 merge, `git merge --no-ff origin/date-picker-repository-layout` on main 5404817 (origin/main ancestor of the branch head d24d40d, verify lines green at d24d40d), pushed at f1375c3: M = f1375c3
+- Check: T5 production deploy of M, `gh api repos/anindosarker/shadcn-date-picker/commits/f1375c3/status` at f1375c3: Vercel failure, <deployment>; `vercel inspect --logs`: "Detected Turbo", install only 7 packages at the root, `turbo run build` at /vercel/path0, then `shadcn-date-picker-docs:build` "Failed to type check": `registry/aria/components/ui/label.tsx(11,18): error TS2339: Property 'className' does not exist on type 'LabelProps'`, implicit any in `components/dev-home/shared/intent-link.tsx(29,24)` and the aria registry copies; `Error: [BUILD_UTILS_SPAWN_1] Command "turbo run build" exited with 1`: fail (the docs app's types resolved through the old root install; no project setting named in the log)
+- Check: T5 CI of M, run 45355282102 at f1375c3: failure, step `pnpm exec playwright install --with-deps chromium` at the root: ` ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "playwright" not found` (exit 254; playwright is now a package devDependency, not a root one): fail
+- Check: T5 revert, `git revert -m 1 f1375c3 --no-edit` pushed on main at b29bfa2: Vercel status success, CI run 45355560818 success: pass
+- Check: T5 site after the revert, python urllib on https://date-picker.shadcn-table.com at b29bfa2: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200, `/docs/date` 200, `/docs/props` 200, `/version.txt` 200 `0.1.1`, `/storybook/` 200, `/storybook/base/`, `/storybook/radix/`, `/storybook/aria/` 200, `/no-such-page` 404 "Page not found | shadcn-date-picker", `/base/` 308 to `/base` (trailing slash step): as before, pass
+- Check: T5 tags, `git ls-remote --tags origin` at b29bfa2: v0.1.0 310b4a0 (908300d), v0.1.1 5fa8f7d (2cf6e6f), unchanged: pass
+- Check: T5 branch date-picker-repository-layout and its worktree kept at d24d40d; live reads, installs and cleanup skipped (step 5); clone on main b29bfa2, `git status --short` empty
+- Check: fix forward, `git merge origin/main` (fast-forward to b29bfa2) then `git revert b29bfa2` on the branch, `git diff d24d40d HEAD --stat` at b2c2ece: prints nothing, pushed: pass
+- Check: reproduce (1), a fresh clone of b2c2ece with no node_modules: `pnpm install --frozen-lockfile` and `turbo run build` exit 0, so a clean install alone does not fail; the Vercel path does: a clone installed at b29bfa2 (old layout node_modules, as the restored Vercel build cache), then `git checkout` b2c2ece and `pnpm install --frozen-lockfile` ("Packages: +7", as the deploy log) leaves `node_modules/@types` absent and `@types/react`, `@types/react-dom` out of `node_modules/.pnpm/node_modules`; `turbo run build --no-cache` at b2c2ece: exit 1, `registry/aria/components/ui/label.tsx(11,18): error TS2339: Property 'className' does not exist on type 'LabelProps'` and `components/dev-home/shared/intent-link.tsx(29,24): error TS7006`: fail as on Vercel
+- Check: reproduce (2), `pnpm exec playwright install chromium` at the root at b2c2ece: ` ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "playwright" not found`: fail as in CI
+- Check: cause (1), the .d.ts files of react-aria-components and next resolve React types by walking up from `node_modules/.pnpm/<pkg>/`; before the move the root importer held `@types/react` and `@types/react-dom`; after it only pnpm's hidden hoist gives them, and an install over the old node_modules does not hoist packages that were root direct dependencies before; the docs package.json already declares every package its files and registry trees import (bare import scan, none missing); turbo.json not part of the cause at b2c2ece: noted
+- Check: fix (1), root devDependencies `@types/react` and `@types/react-dom` `^19.3.0` (resolved 19.3.0, as the docs and library importers), one `pnpm install`, lockfile diff 6 lines in the root importer only, no version moved at cb9f77d: fixed
+- Check: fix (2), ci.yml `pnpm --filter shadcn-date-picker exec playwright install --with-deps chromium` at 16abc32: fixed
+- Check: clean proof install, fresh clone of 16abc32 (no node_modules, no build output), `pnpm install --frozen-lockfile` at 16abc32: exit 0, pass
+- Check: clean proof Vercel build, `turbo run build` at the root at 16abc32: exit 0 (1 task, docs build), pass
+- Check: clean proof docs service, `next build` in apps/shadcn-date-picker-docs at 16abc32: exit 0, pass
+- Check: clean proof storybook service, `pnpm storybook:build` in packages/shadcn-date-picker at 16abc32: exit 0, `storybook-static/storybook/{index.html,base,radix,aria}` exist, pass
+- Check: clean proof Vercel cache path, install at b29bfa2 then `pnpm install --frozen-lockfile` at 16abc32 ("Packages: +7", `node_modules/@types/{react,react-dom}` present) and `turbo run build --no-cache` at 16abc32: exit 0, pass
+- Check: clean proof CI 1, fresh clone, `pnpm install --frozen-lockfile` at 16abc32: exit 0, pass
+- Check: clean proof CI 2, `pnpm lint` at 16abc32: exit 0, pass
+- Check: clean proof CI 3, `pnpm typecheck` at 16abc32: exit 0, pass
+- Check: clean proof CI 4, `pnpm registry:check` at 16abc32: exit 0, pass
+- Check: clean proof CI 5, `pnpm --filter shadcn-date-picker exec playwright install chromium` (no `--with-deps` on macOS; act not run) at 16abc32: exit 0, pass
+- Check: clean proof CI 6, `pnpm test` at 16abc32: base, radix, aria 7 test files passed each, exit 0, pass
+- Check: clean proof CI 7, `pnpm --filter shadcn-date-picker-docs lint` at 16abc32: exit 0, pass
+- Check: clean proof CI 8, `pnpm --filter shadcn-date-picker-docs types:check` at 16abc32: exit 0, pass
+- Check: clean proof CI 9, `pnpm --filter shadcn-date-picker-docs build` at 16abc32: exit 0, `git status --short` empty, pass
+- Check: equality, `git diff 5404817:registry/<base>/registry.json HEAD:packages/shadcn-date-picker/registry/<base>/registry.json` and the same on `generated` for base, radix, aria at 16abc32: print nothing, pass
+- Check: registry build, `pnpm registry:build` (three bases, 22 files each) then `git status --short` at 16abc32: empty, pass
+- Check: scratch deleted, `test ! -e /private/tmp/claude-501/dp-layout-fix` at 16abc32: pass
+- Verify 2: renames, `git diff -M100% --name-status 5404817 HEAD` at 16abc32: 319 R100, the rest the 1.6.2/1.6.3 files and the tracker's extras; `git diff -M100% --stat d24d40d HEAD`: only `package.json`, `pnpm-lock.yaml`, `.github/workflows/ci.yml`: pass
+- Verify 2: clean install, fresh `git clone --branch date-picker-repository-layout` in scratch, no node_modules, `pnpm install --frozen-lockfile` at 16abc32: exit 0, `node_modules/@types/{react,react-dom}` present: pass
+- Verify 2: Vercel build, `pnpm exec turbo run build` at the root of that clone at 16abc32: exit 0, docs "Running TypeScript" passed, 1 task successful, 0 cached: pass
+- Verify 2: docs service, `next build` in apps/shadcn-date-picker-docs at 16abc32: exit 0, type check ran: pass
+- Verify 2: storybook service, `pnpm storybook:build` in packages/shadcn-date-picker at 16abc32: exit 0, `storybook-static/storybook/{index.html,base,radix,aria}` exist: pass
+- Verify 2: CI steps in order in that clone at 16abc32 (macOS, playwright without `--with-deps`, act not run): `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm --filter shadcn-date-picker exec playwright install chromium`, `pnpm test` (base, radix, aria 7 files 39 tests each), docs `lint`, `types:check`, `build`: all exit 0, `git status --short` empty: pass
+- Verify 2: local read, `next start -p 5345` and `python3 -m http.server 5346` on the clone's build output, playwright at 16abc32: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200 "Install | shadcn-date-picker", `/docs/date` 200 "Date | shadcn-date-picker", "Customize theme" opens the Theme sheet, "Select date" then day 15 sets 2026-11-15; `/storybook/{base,radix,aria}/` 200 "Introduction - Docs", 9 sidebar items, preview iframe; 0 console errors on every page: pass
+- Verify 2: lockfile, package keys `git show 5404817:pnpm-lock.yaml` vs HEAD at 16abc32: no package removed, added only `turbo@2.5.6` and its six platform packages; five snapshot keys lost a root-only optional peer, same versions; no resolved version moved: pass
+- Verify 2: cleanup at 16abc32: servers stopped by pid, ports 5345 and 5346 free, browser closed, scratch deleted, worktree `git status --short` empty, clone on main: pass
+- Check: merge again, `origin/main` b29bfa2 ancestor of `origin/date-picker-repository-layout` 16abc32, `git merge --no-ff` and push at 0d62301: pass
+- Check: production deployment, `gh api repos/anindosarker/shadcn-date-picker/commits/0d62301/status` at 0d62301: Vercel success, pass
+- Check: CI run of the merged commit, `gh run list --commit 0d62301` at 0d62301: CI completed success, pass
+- Check: live read `https://date-picker.shadcn-table.com/`, playwright fresh profile at 0d62301: 200 "shadcn-date-picker: Date Picker for shadcn/ui", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/install` at 0d62301: 200 "Install | shadcn-date-picker", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/date` at 0d62301: 200 "Date | shadcn-date-picker", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/props` at 0d62301: 200 "Props | shadcn-date-picker", pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/` at 0d62301: 200, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/base/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/radix/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/aria/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/base/` at 0d62301: 308 to `/base`, 307 to `/storybook/base/`, 200, pass
+- Check: live read `https://date-picker.shadcn-table.com/version.txt` at 0d62301: 200 `0.1.1`, pass
+- Check: live read `https://date-picker.shadcn-table.com/no-such-page-89` at 0d62301: 404 "Page not found | shadcn-date-picker" (the site's page), pass
+- Check: live read theme sheet on `https://date-picker.shadcn-table.com/` at 0d62301: "Customize theme" opens the Theme dialog, pass
+- Check: install proof, fresh create-next-app in <scratchpad>, `shadcn init -b base -p nova`, `shadcn add anindosarker/shadcn-date-picker/date-picker-base#v0.1.1` (22 files in `src/components/date-picker`), `tsc --noEmit` at 0d62301: exit 0, pass
+- Check: cleanup at 0d62301: branch deleted on origin and locally, worktree removed, no ignored leftovers at the old paths, `git -C shadcn-date-picker status --short` empty, scratch deleted, browser closed, no server started: pass
+
+- Task 1 The map and the moves: done (8de68ce, 15eb2b0)
+- Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
+- Task 3 The equality proofs: done (99948b7, proofs only, no commit)
+- Task 4 The full checks and the local production read: done (99948b7, checks only, no commit)
+- Task 5 After the merge, the live reads: done (merge 0d62301; the first merge f1375c3 was reverted by b29bfa2)
+
+Merge: 0d62301 on main of shadcn-date-picker
+
+## Attention
+
+- Cause: React types reached the docs build only through pnpm's hoist, which an install over the old layout's node_modules (the Vercel build cache) skips, and ci.yml ran playwright at the root; fix: root `@types/react` and `@types/react-dom` (cb9f77d) and the playwright install from the library package (16abc32), branch head 16abc32 ready for a new merge.

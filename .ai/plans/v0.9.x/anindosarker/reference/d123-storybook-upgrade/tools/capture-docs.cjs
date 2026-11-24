@@ -1,7 +1,7 @@
 // usage: node capture-docs.cjs <origin> <outDir>
 const path = require('node:path');
 const fs = require('node:fs');
-const WT = '/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08';
+const WT = '~/Work/Personal/React-table/shadcn-react-table.worktrees/08';
 const { chromium } = require(path.join(WT, 'node_modules/playwright'));
 const [origin, out] = process.argv.slice(2);
 const PAGES = [

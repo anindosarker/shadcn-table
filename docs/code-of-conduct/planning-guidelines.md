@@ -169,7 +169,7 @@ fits one sprint; `ownership.py` reads these blocks.
 
 ## Example
 
-Full example: `.ai/plans/v0.6.x/anindosarker/08-versioning-page.md` (legacy layout, numbered milestones). Minimal shape:
+Minimal shape:
 
 ````markdown
 # 02: docs weight

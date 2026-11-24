@@ -115,7 +115,7 @@ docs:  lib:install <base> ──> CLI resolves the dependency ──> components
 
 - Network access to `github.com` for the tool and its check.
 - `react-day-picker`, `date-fns`: new in `packages/shadcn-table`.
-- The clone `/Users/anindosarker/Work/Personal/React-table/shadcn-date-picker` is a reference to read, never a source the tool copies from.
+- The clone `~/Work/Personal/React-table/shadcn-date-picker` is a reference to read, never a source the tool copies from.
 
 ## 2. Instructions for AI
 

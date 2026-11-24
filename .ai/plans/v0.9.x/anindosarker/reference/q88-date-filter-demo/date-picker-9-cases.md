@@ -324,7 +324,7 @@ Step 6 type cases: a scratch file in the session scratchpad, compiled with a scr
 ## 13. Acceptance
 
 - **Cards.** The demo page `app/date-filter-demo` has twelve rows; each has a version 9 card built with `usePickerSettings` and a 7.4 reference card to compare with, both with a calls line (section 12).
-- **Tool.** Playwright is not installed in `test-projects/next-app` and is not added (section 14). Scripts in the session scratchpad load version 1.64.1 by absolute path, `createRequire("/Users/anindosarker/Work/Personal/React-table/shadcn-react-table/package.json")("playwright")`; its Chromium and WebKit builds are in `~/Library/Caches/ms-playwright`. They open the owner's page on port 3000 read-only.
+- **Tool.** Playwright is not installed in `test-projects/next-app` and is not added (section 14). Scripts in the session scratchpad load version 1.64.1 by absolute path, `createRequire("~/Work/Personal/React-table/shadcn-react-table/package.json")("playwright")`; its Chromium and WebKit builds are in `~/Library/Caches/ms-playwright`. They open the owner's page on port 3000 read-only.
 - **Emitted values.** For each action below, the value line and the calls line printed under the version 9 card equal the 7.4 card's, except where section 2 marks "7.4 wrong" or "differs from 7.4"; there they equal section 2.
 
 | Type | Actions |

@@ -81,12 +81,12 @@ Install smoke check (agent-browser 0.27.0, viewport 1800x1150, `next dev` on 534
 
 ## Notes
 
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/base-default-light.png
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/base-default-dark.png
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/radix-default-light.png
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/radix-default-dark.png
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/aria-default-light.png
-- Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/07/aria-default-dark.png
+- Captures: <scratchpad>/captures/07/base-default-light.png
+- Captures: <scratchpad>/captures/07/base-default-dark.png
+- Captures: <scratchpad>/captures/07/radix-default-light.png
+- Captures: <scratchpad>/captures/07/radix-default-dark.png
+- Captures: <scratchpad>/captures/07/aria-default-light.png
+- Captures: <scratchpad>/captures/07/aria-default-dark.png
 - Stopped: the three `next dev` servers (5341, 5342, 5343) and the agent-browser sessions; the 5310 registry left running (P4); install smoke apps deleted after the run
 
 ## Attention

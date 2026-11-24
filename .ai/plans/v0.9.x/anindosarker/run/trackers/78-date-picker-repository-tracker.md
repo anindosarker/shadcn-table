@@ -2,9 +2,9 @@
 
 Status: done
 Merge: b28d91a on main (merge: date-picker-repository (78))
-Branch `date-picker-repository`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-repository
+Branch `date-picker-repository`, worktree ~/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-repository
 Checks:
-- Check: `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 4587f8a: pass (0)
+- Check: `git -C ~/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 4587f8a: pass (0)
 - Check: `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` at 4587f8a: pass (main)
 - Check: `git -C shadcn-date-picker log --oneline origin/main | wc -l` at 4587f8a: pass (1)
 - Check: `ls registry/<base>/components/ui` for base, radix, aria at 2d89c47: pass (badge, button, button-group, calendar, dialog, field, input-group, native-select, popover in all three, plus the parts they import: input, label, separator, textarea, and select on aria)
@@ -32,7 +32,7 @@ Checks:
 - Check (verifier): `git -C test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` at 216d5d4: pass (exit 0)
 - Check (verifier): `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 216d5d4: pass (prints nothing)
 - Check (verifier): `find registry/base/components/date-picker -type f | wc -l` at 216d5d4: pass (22)
-- Check (verifier): `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 216d5d4: pass (0)
+- Check (verifier): `git -C ~/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at 216d5d4: pass (0)
 - Check (verifier): `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` at 216d5d4: pass (main)
 - Check (verifier): `git -C shadcn-date-picker log --oneline origin/main | wc -l` at 216d5d4: pass (1, clone on main)
 - Check (verifier): `ls registry/<base>/components/ui` for base, radix, aria at 216d5d4: pass (nine parts in each)
@@ -52,7 +52,7 @@ Checks:
 - Check (verifier 2): `git -C test-projects/next-app diff --quiet 53f4b4f -- components/date-picker` at b69dd5f: pass (exit 0)
 - Check (verifier 2): `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at b69dd5f: pass (prints nothing)
 - Check (verifier 2): `find registry/base/components/date-picker -type f | wc -l` at b69dd5f: pass (22)
-- Check (verifier 2): `git -C /Users/anindosarker/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at b69dd5f: pass (0)
+- Check (verifier 2): `git -C ~/Work/Personal/React-table status --short | grep -c shadcn-date-picker` at b69dd5f: pass (0)
 - Check (verifier 2): `gh repo view anindosarker/shadcn-date-picker --json defaultBranchRef --jq .defaultBranchRef.name` at b69dd5f: pass (main)
 - Check (verifier 2): `git -C shadcn-date-picker log --oneline origin/main | wc -l` at b69dd5f: pass (1, clone on main)
 - Check (verifier 2): `ls registry/<base>/components/ui` for base, radix, aria at b69dd5f: pass (nine parts in each)
