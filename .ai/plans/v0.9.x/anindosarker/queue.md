@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q177** In a date filter popover the calendar button sticks out past the right edge of the date box
-	- Owner, 2026-11-24, live 0.9.8, /docs/examples/advanced, Base UI, dark: Start Date filter (mode less than) opened from the filter chip; the box is focused and the calendar icon button sits over and beyond the box's right border. Capture: the owner's screenshot in chat (image 11). Not seen in the filter-variants popover range boxes (image 8), where the button sits inside.
-	- Cause in table wrapper, not picker. advanced/TS.tsx:139 sets stFilterTextFieldProps className min-w-[250px] on Start Date (filter-variants sets none). ST_FilterTextField.tsx:566 copies textFieldProps into dateBoxProps; :594 puts dateBoxProps.className on the nested DatePicker InputGroup, not on the outer box (:657 wrapper, :672 InputGroup, min-w-35). Inner group grows past the outer border; its own border is stripped (:563), so only the trailing calendar button shows outside. Same code on radix :594 and aria :644; hits chips editor, popover, header and subheader wherever the box is narrower than the class. Text branch has the same pattern (base :745). Fix, table only: apply textFieldProps.className to the outer wrapper div at :657 and drop it from the nested picker group (:594) and inner input; picker untouched.
 
 ## Decided
 
@@ -419,6 +416,9 @@ kanban-plugin: basic
 - [ ] **Q176** The table's date range filters show two separate date boxes instead of the date picker's own range type #D183
 	- Owner, 2026-11-24, on live 0.9.8, /docs/examples/subheader-filters (Hire Date, under the header) and /docs/examples/filter-variants (Hire Date in the filter popover): 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.' Seen in the same captures: in the popover the picked date reads 18/11/202, cut off, at desktop width.
 	- Lead lookup, 2026-11-24: built as decided. D164 names 'range Min and Max' as two DatePicker boxes; spec 82 line 15: 'The picker's own range mode is not used, so the filter value stays a pair and the layout of a range filter does not change'. The picker has a range mode (types.ts:66-79: range: true, value [from, to] as strings, range presets), the same shape as the table's pair value. Not verified: whether the picker's range mode accepts one end only (the table allows Min without Max). v0.8.x D61 (Min and Max side by side at every width) would be replaced for the date variants.
+- [ ] **Q177** In a date filter popover the calendar button sticks out past the right edge of the date box #D184
+	- Owner, 2026-11-24, live 0.9.8, /docs/examples/advanced, Base UI, dark: Start Date filter (mode less than) opened from the filter chip; the box is focused and the calendar icon button sits over and beyond the box's right border. Capture: the owner's screenshot in chat (image 11). Not seen in the filter-variants popover range boxes (image 8), where the button sits inside.
+	- Cause in table wrapper, not picker. advanced/TS.tsx:139 sets stFilterTextFieldProps className min-w-[250px] on Start Date (filter-variants sets none). ST_FilterTextField.tsx:566 copies textFieldProps into dateBoxProps; :594 puts dateBoxProps.className on the nested DatePicker InputGroup, not on the outer box (:657 wrapper, :672 InputGroup, min-w-35). Inner group grows past the outer border; its own border is stripped (:563), so only the trailing calendar button shows outside. Same code on radix :594 and aria :644; hits chips editor, popover, header and subheader wherever the box is narrower than the class. Text branch has the same pattern (base :745). Fix, table only: apply textFieldProps.className to the outer wrapper div at :657 and drop it from the nested picker group (:594) and inner input; picker untouched.
 
 ## Later
 
