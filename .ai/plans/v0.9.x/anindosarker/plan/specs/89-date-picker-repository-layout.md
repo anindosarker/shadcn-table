@@ -168,6 +168,14 @@ Every place that reads a moved path, found by `git grep` on `main` (the map; the
 - Task 4: The full checks and the local production read (1.6.5). Checks: `pnpm test` green on the three bases; the three docs checks exit 0; the four Storybook `index.html` files exist under `packages/shadcn-date-picker/storybook-static/storybook/`; the `vercel build` line (ran with its result, or why not) in the tracker; one tracker line per local read; the servers stopped (`lsof -nP -iTCP:<port> -sTCP:LISTEN` prints nothing)
 - Task 5: After the merge: the live reads (1.6.6). Checks: one tracker line per live read with the address and the status; the CI run of the merged commit is `success`; on a failed deploy the revert commit and the queue card instead, both named in the tracker; the milestone worktree removed and `git -C <clone> status --short` prints nothing
 
+### Milestone: Docs demo parts follow the chosen style
+
+- Files owned: `shadcn-date-picker/apps/**`
+- Depends on: Date picker repository layout
+- Review: none
+- Starts: S47
+- Task 1: Docs demo parts follow the chosen style (Q181). Checks: docs app only, nothing under the registry tree changes: registry-trees.mjs copies only components/date-picker and hooks and rewrites @/components/ui/ to @/components/ui-<base>/; the ui-<base> parts the trees import (badge, button, button-group, calendar, dialog, field, input-group, native-select, popover and their deps) are the table's, byte for byte, from shadcn-react-table/apps/shadcn-table-docs; docs types:check per base, docs lint and docs build green; in a fresh browser profile, per style (eight) and base (three), the empty range trigger's four corner radii are equal and match the single date box; captures under reference/q149-calendar-library/docs-site/q181/; local production read, merge, live reads
+
 ### 2.2 Checks
 
 - Date picker repository layout: every moved file a rename with no content change, the per-base registry files and generated folders equal, a fresh install from the branch equal to one from the start commit on the three bases, the lockfile without a version change, the CI list green from the root, the local production read, the live reads
