@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q168** The date picker docs site shows its nine pages as one sidebar list, not one section at a time like the table site
 	- Design plan reference/q149-calendar-library/design-docs-site.md 6.1, built as the default: one flat sidebar list under three labels (Get Started, Pickers, Props). The table site's section line above a page title and the page switcher in the breadcrumb then do not show. Other way: three fumadocs root folders, same addresses, the table's behaviour, but two of the three sidebars hold one row (Install; Props). The build runs on the default; a change later moves the content files into folders. Tracker run/trackers/85-date-picker-docs-site-tracker.md, Attention A2.
+- [ ] **Q169** Three small looks of the date picker docs site were picked by the plan with nothing to copy from
+	- Design plan design-docs-site.md rows 40, 60 and section 5.1, built as defaults, to judge on the build's captures (reference/q149-calendar-library/docs-site/): (1) the code panel's More menu keeps one entry, Open in GitHub; other way a plain GitHub button; (2) the home and 404 pages have no footer; other way the table's footer trimmed to name, licence, GitHub and Storybook; (3) the home header carries the base select; other way off as on the table's home. Tracker 85-date-picker-docs-site-tracker.md, Attention A3.
 
 ## Decided
 
