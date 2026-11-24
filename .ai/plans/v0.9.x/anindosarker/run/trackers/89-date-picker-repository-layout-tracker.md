@@ -1,6 +1,6 @@
 # 89: Date picker repository layout, tracker
 
-Status: running
+Status: done
 Branch `date-picker-repository-layout`, worktree shadcn-date-picker.worktrees/date-picker-repository-layout, from origin/main 5404817 (start sha 54048178ff61d4ca5c8fe366de385284ea8dc74a, holds spec 86's merge commit 5404817)
 Checks:
 - Check: setup, `pnpm install --frozen-lockfile` at 5404817: pass
@@ -105,12 +105,31 @@ Checks:
 - Verify 2: local read, `next start -p 5345` and `python3 -m http.server 5346` on the clone's build output, playwright at 16abc32: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200 "Install | shadcn-date-picker", `/docs/date` 200 "Date | shadcn-date-picker", "Customize theme" opens the Theme sheet, "Select date" then day 15 sets 2026-11-15; `/storybook/{base,radix,aria}/` 200 "Introduction - Docs", 9 sidebar items, preview iframe; 0 console errors on every page: pass
 - Verify 2: lockfile, package keys `git show 5404817:pnpm-lock.yaml` vs HEAD at 16abc32: no package removed, added only `turbo@2.5.6` and its six platform packages; five snapshot keys lost a root-only optional peer, same versions; no resolved version moved: pass
 - Verify 2: cleanup at 16abc32: servers stopped by pid, ports 5345 and 5346 free, browser closed, scratch deleted, worktree `git status --short` empty, clone on main: pass
+- Check: merge again, `origin/main` b29bfa2 ancestor of `origin/date-picker-repository-layout` 16abc32, `git merge --no-ff` and push at 0d62301: pass
+- Check: production deployment, `gh api repos/anindosarker/shadcn-date-picker/commits/0d62301/status` at 0d62301: Vercel success, pass
+- Check: CI run of the merged commit, `gh run list --commit 0d62301` at 0d62301: CI completed success, pass
+- Check: live read `https://date-picker.shadcn-table.com/`, playwright fresh profile at 0d62301: 200 "shadcn-date-picker: Date Picker for shadcn/ui", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/install` at 0d62301: 200 "Install | shadcn-date-picker", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/date` at 0d62301: 200 "Date | shadcn-date-picker", 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/docs/props` at 0d62301: 200 "Props | shadcn-date-picker", pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/` at 0d62301: 200, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/base/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/radix/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/storybook/aria/` at 0d62301: 200 "Introduction - Docs", preview iframe, 0 console errors, pass
+- Check: live read `https://date-picker.shadcn-table.com/base/` at 0d62301: 308 to `/base`, 307 to `/storybook/base/`, 200, pass
+- Check: live read `https://date-picker.shadcn-table.com/version.txt` at 0d62301: 200 `0.1.1`, pass
+- Check: live read `https://date-picker.shadcn-table.com/no-such-page-89` at 0d62301: 404 "Page not found | shadcn-date-picker" (the site's page), pass
+- Check: live read theme sheet on `https://date-picker.shadcn-table.com/` at 0d62301: "Customize theme" opens the Theme dialog, pass
+- Check: install proof, fresh create-next-app in <scratchpad>, `shadcn init -b base -p nova`, `shadcn add anindosarker/shadcn-date-picker/date-picker-base#v0.1.1` (22 files in `src/components/date-picker`), `tsc --noEmit` at 0d62301: exit 0, pass
+- Check: cleanup at 0d62301: branch deleted on origin and locally, worktree removed, no ignored leftovers at the old paths, `git -C shadcn-date-picker status --short` empty, scratch deleted, browser closed, no server started: pass
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
 - Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
 - Task 3 The equality proofs: done (99948b7, proofs only, no commit)
 - Task 4 The full checks and the local production read: done (99948b7, checks only, no commit)
-- Task 5 After the merge, the live reads: blocked (merge f1375c3 failed the production deploy and CI; reverted forward by b29bfa2)
+- Task 5 After the merge, the live reads: done (merge 0d62301; the first merge f1375c3 was reverted by b29bfa2)
+
+Merge: 0d62301 on main of shadcn-date-picker
 
 ## Attention
 
