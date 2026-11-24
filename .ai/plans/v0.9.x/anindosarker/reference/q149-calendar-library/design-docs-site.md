@@ -104,7 +104,7 @@ Marks. `taken as is`: the file is copied byte for byte. `taken trimmed`: the fil
 | 84 | `components/theme-demo/variants/whole-app-site.tsx` | not taken | theme demo of the table home |
 | 85 | `components/theme-demo/variants/whole-app.tsx` | not taken | theme demo of the table home |
 | 86 | `lib/analytics.ts` | not taken | PostHog events (section 2) |
-| 87 | `lib/base-tabs.mjs` | taken trimmed | replaced: the import path (./bases.mjs, section 5.1) |
+| 87 | `lib/base-tabs.mjs` | taken trimmed | replaced: the path `../../../tools/registry/bases.mjs` by `./bases.mjs` (section 5.1) on the three lines that carry it: the import (base-tabs.mjs:1), the JSDoc type import of `TAB_VALUES` (base-tabs.mjs:10) and the file name in the comment (base-tabs.mjs:5, `lib/bases.mjs`). Nothing else |
 | 88 | `lib/build-styles.mjs` | taken as is |  |
 | 89 | `lib/cn.ts` | taken as is |  |
 | 90 | `lib/design-system/color-presets.ts` | not taken | theme customizer and style switcher (section 2) |
@@ -119,7 +119,7 @@ Marks. `taken as is`: the file is copied byte for byte. `taken trimmed`: the fil
 | 99 | `lib/example-pages.mjs` | not taken | example pages of the table |
 | 100 | `lib/example-prompt.ts` | not taken | Copy prompt (section 2) |
 | 101 | `lib/example-source.ts` | taken trimmed | see section 5.4 |
-| 102 | `lib/example-variant-dir.mjs` | taken trimmed | replaced: the import path (./bases.mjs) |
+| 102 | `lib/example-variant-dir.mjs` | taken trimmed | replaced: the path `../../../tools/registry/bases.mjs` by `./bases.mjs` on the import (example-variant-dir.mjs:1) and the file name in the comment (example-variant-dir.mjs:5, `lib/bases.mjs`). Nothing else |
 | 103 | `lib/example-variants.mjs` | taken trimmed | see section 5.2 |
 | 104 | `lib/examples-entry.mjs` | not taken | Examples section entry of the table |
 | 105 | `lib/fonts.ts` | taken as is |  |
@@ -139,7 +139,7 @@ Marks. `taken as is`: the file is copied byte for byte. `taken trimmed`: the fil
 | 119 | `lib/prop-tables/stateOptions.ts` | not taken | generated prop tables (section 2) |
 | 120 | `lib/prop-tables/tableInstanceAPIs.ts` | not taken | generated prop tables (section 2) |
 | 121 | `lib/prop-tables/tableOptions.ts` | not taken | generated prop tables (section 2) |
-| 122 | `lib/shared.ts` | taken trimmed | leaves: docsImageRoute, docsContentRoute, getPageMarkdownUrl, absoluteMarkdownUrl, getPageImageUrl, registryRef, libraryItem, createGetUrl. Replaced: appName, siteName, siteDescription, gitConfig (repo shadcn-date-picker, branch main), and the fallback of siteUrl (shared.ts:28): `https://date-picker.shadcn-table.com`, the site's address (spec 85, 1.1), in place of the localhost address. `siteUrl` feeds only `metadataBase` in app/layout.tsx:22 once the other readers are gone (robots, sitemap, llms, structured data, the install prompt), so every page's canonical link is right in production with no environment variable; the Vercel project sets none and no setting is added (spec 85, 1.6.5). `NEXT_PUBLIC_SITE_URL` still wins where it is set |
+| 122 | `lib/shared.ts` | taken trimmed | leaves: docsImageRoute, docsContentRoute, getPageMarkdownUrl, absoluteMarkdownUrl, getPageImageUrl, registryRef, libraryItem, createGetUrl. Replaced: appName, siteName, siteDescription, gitConfig (repo shadcn-date-picker, branch main), and the fallback of siteUrl (shared.ts:28): `https://date-picker.shadcn-table.com`, the site's address (spec 85, 1.1), in place of the localhost address. `siteUrl` feeds only `metadataBase` in app/layout.tsx:22 once the other readers are gone (robots, sitemap, llms, structured data, the install prompt), so every page's canonical link is right in production with no environment variable; the Vercel project sets none and no setting is added (spec 85, 1.6.5). `NEXT_PUBLIC_SITE_URL` still wins where it is set. The comment above `siteUrl` (shared.ts:23 to 26) is replaced too: it names "the copy prompt" and "the dev port otherwise", both false here; the new one says the origin of the canonical links, the variable where set, the public address otherwise |
 | 123 | `lib/sidebar-state.ts` | taken as is |  |
 | 124 | `lib/source.ts` | taken trimmed | leaves: llms and docsLlms, toPlainMarkdown, the more-examples imports with isMoreExamples and lightMoreExamples, includeProcessedMarkdown, docsContentRoute and docsImageRoute. trimNode returns the folder as it builds it |
 | 125 | `lib/story-pages.mjs` | not taken | story pages and the story map (section 2) |
@@ -194,8 +194,8 @@ The root `lint` is `eslint . && prettier --check . "!pnpm-lock.yaml" "!registry/
 | `picker:eslint.config.mjs` | `"docs"` added to `globalIgnores` (line 8). Nothing else |
 | `picker:.prettierignore` | one line `docs` with a one-line comment (the docs app keeps the table's formatting). Nothing else |
 | `picker:.gitignore` | no entry: `node_modules` already matches at any depth, the rest is in `docs/.gitignore` (1.2) |
-| `picker:pnpm-workspace.yaml` | new: the packages `.` and `docs` |
-| `picker:package.json` | no script changes: `typecheck` runs four projects whose `include` lists name `registry/<base>`, `stories` and `.storybook` only (`picker:tsconfig.baseui.json`, `tsconfig.stories.json`); `registry:check` reads `registry/`; `test` runs the Storybook project (`picker:vitest.config.ts`, stories from `../stories/**`, `picker:.storybook/main.ts:7`). None of them reads `docs/` |
+| `picker:pnpm-workspace.yaml` | new: `packages:` with the one entry `docs`, the form that built on Vercel (proof branch, `git show b438583:pnpm-workspace.yaml`). The root needs no entry: "The root package is always included, even when custom location wildcards are used" (https://pnpm.io/pnpm-workspace_yaml). `pnpm.overrides` (`vite` to `npm:rolldown-vite@7.1.12`, `picker:package.json:58` to 62) stays in the root `package.json`, where a workspace still reads it |
+| `picker:package.json` | no script changes: `typecheck` runs four projects whose `include` lists name `registry/<base>`, `stories` and `.storybook` only (`picker:tsconfig.baseui.json`, `tsconfig.stories.json`); `registry:check` reads `registry/`; `test` runs the Storybook project (`picker:vitest.config.ts`, stories from `../stories/**`, `picker:.storybook/main.ts:7`). `typecheck` and `registry:check` do not read `docs/`. `test` and `storybook:build` take no story, type or import from it, but their CSS does scan it: `picker:vite.config.ts:10` runs `@tailwindcss/vite`, `picker:vitest.config.ts:15` merges that config, and `picker:registry/base/index.css:1` imports Tailwind with no `source()` limit, so "Tailwind will scan every file in your project for class names" from "the current working directory as its starting point" (https://tailwindcss.com/docs/detecting-classes-in-source-files). The Storybook's CSS will then also hold the utilities found in the tracked files of `docs/` (app, components, content, demos); the git-ignored copies are skipped (4.1). Unused rules only, the look of a story does not change. No build change: a `source()` limit would be an edit under `registry/**`, which must not change (section 8) |
 
 No prettier check runs on `docs/`; the hand-written files there (demos, `lib/bases.mjs`, `lib/registry-trees.mjs`) are written in the table's style, which `docs/.prettierrc` states (5.2).
 
@@ -293,7 +293,7 @@ The table site paints its default look from a pre-paint script (`lib/design-syst
 
 - `lib/bases.mjs` (new): states `BASES` (`'base'`, `'radix'`, `'aria'`, frozen), `DEFAULT_BASE` (`'base'`) and `BASE_LABELS` (`base: 'Base UI'`, `radix: 'Radix UI'`, `aria: 'React Aria'`, the names of `picker:tools/site-build.mjs:12`) as literals and imports nothing. It cannot re-export `picker:tools/bases.mjs`: that file imports `node:fs`, `node:path` and `node:url` and computes `ROOT` at module top level (`picker:tools/bases.mjs:3` to 10), and the list reaches the browser through `components/base-selector.tsx` (`'use client'`, which imports `@/lib/install` and `../lib/base-tabs.mjs`, base-selector.tsx:19 to 28). The table's list is browser-safe for the same reason: "No node imports, so Vite bundles it" (`shadcn-react-table/tools/registry/bases.mjs:7`). `lib/bases.d.mts` gives the `Base` type. `picker:tools/bases.mjs` does not change.
 - The two lists are kept equal by the one Node script that may read both: `lib/registry-trees.mjs` (5.2) imports `BASES` and `DEFAULT_BASE` from `picker:tools/bases.mjs` and from `./bases.mjs` and exits non-zero with both lists in the message when they differ. It runs first in `build`, `predev` and `types:check` (section 3), so a base added to the repository cannot be missed by the docs.
-- `lib/base-tabs.mjs`, `lib/example-variant-dir.mjs`: the import path only.
+- `lib/base-tabs.mjs`, `lib/example-variant-dir.mjs`: the path of the base list only, on every line that carries it (rows 87 and 102).
 - `lib/install.ts`, taken trimmed. Stays: `packageManagers`, `PackageManager`, `runners`, `bases`, `Base`, `defaultBase`, `baseLabels`, `isBase`, `perBase`. Replaced: the import of the base list (`./bases.mjs`); `addCommand(base: Base, pm: PackageManager): string`, which returns `<runner> add anindosarker/shadcn-date-picker/date-picker-<base>#v<version>` (the form of the README's Install section). The version is read in `lib/install.ts` itself, `import pkg from '../../package.json'` (the repository root, the same file `lib/layout.shared.tsx` and `app/version.txt/route.ts` read), not from `LIBRARY_VERSION`: `lib/layout.shared.tsx` imports `Logo` and `ThemeControls`, and `lib/install.ts` stays pure (install.ts:1 to 3). A JSON import already reaches client code this way on the table site (`components/dev-home/v12/nav.tsx:10`, `'use client'`, through `lib/layout.shared.tsx:5`); `libraryAddCommand(base, pm)` stays as its alias for the home block. Leaves: `itemUrl`, `localeAddCommand`, `exampleAddCommand`, `initCommand`, the icon library block, the namespace block, `installDir`, `agentPrompt`, `skillInstallCommand`.
 - `components/base-selector.tsx` carries the switch: `useBase`, `setBase`, `BaseSwitch` (the header and playground select), `BaseTabs` (the install block). Storage and tab group as on the table site.
 - `components/site-nav.tsx` renders `BaseSwitch` in the header; `components/dev-home/v12/nav.tsx` renders it on the home page and the 404 page (`baseSwitch` prop, set on both). The table's home leaves the prop off (`components/dev-home/v12/nav.tsx:23` to 25) because its base choice sits in the agent bar (`components/agent-bar.tsx:154`, "Choose base"); the agent bar is not taken, so without the prop the home page's two demos and its install line could not change base. WAITING (A3), default the prop set on the home page.
@@ -398,7 +398,7 @@ One file per row in `docs/demos/`, a client component, controlled, the value pri
 
 ## 7. Storybook under /storybook/ and Vercel
 
-Status: proven on the preview of the throwaway branch, review round 1 (7.4). The preview address is behind the Vercel login, so the answers were read in a browser logged in to Vercel, not with `curl`; 7.4 says what that does and does not show. The branch and its worktree are deleted.
+Status: proven on the preview of the throwaway branch, review round 1 (7.4). The preview address is behind the Vercel login, so the answers were read in a browser logged in to Vercel, not with `curl`; 7.4 says what that does and does not show. The branch, its worktree and the preview deployment are deleted.
 
 ### 7.1 What Vercel documents
 
@@ -444,7 +444,7 @@ Branch `date-picker-docs-vercel-proof` (commits `b438583`, `8f41b47`): the `verc
 - `GET /storybook/nope` : ends at `/storybook/nope/`, title `404: NOT_FOUND`: the static service's 404, no fallback to the docs app (7.1).
 - `GET /nope` and `GET /docs/x` : end there, title `404: This page could not be found.`: the docs app's 404.
 - For the build: a Storybook address without a file name gets a slash at its end (`/storybook/base/x/`); Storybook's own addresses are `/storybook/<base>/` and `/storybook/<base>/iframe.html`, both read above.
-- After: `git push origin --delete date-picker-docs-vercel-proof`, the local branch and the worktree removed; `git ls-remote --heads origin` prints `main` alone; `git -C shadcn-date-picker status --short` prints nothing. The deployment itself stays on Vercel behind the login until it is removed there.
+- After: `git push origin --delete date-picker-docs-vercel-proof`, the local branch and the worktree removed; `git ls-remote --heads origin` prints `main` alone; `git -C shadcn-date-picker status --short` prints nothing. The preview is deleted too (review round 2): `vercel rm dpl_2SHMqgtpbRws56SEZXF5obXb7M3w --yes` printed "Success! Removed 1 deployment"; `vercel inspect` of the id then answers "Can't find the deployment" and the preview address answers 404 `DEPLOYMENT_NOT_FOUND`. Removing a deployment is not a project setting.
 
 ## 8. Checks the build milestone runs
 
@@ -465,6 +465,10 @@ Local, on `pnpm --filter docs build` then `next start` on a port from 5340 to 53
 - A copy of `lib/bases.mjs` with one base removed makes `node lib/registry-trees.mjs` exit non-zero (5.1); `node -e "import('./lib/example-variants.mjs')"` in `docs/` writes no file (5.2).
 - Captures: `https://www.shadcn-table.com/`, `/docs/getting-started/install` and `/docs/examples/basic` beside `/`, `/docs/install` and `/docs/date` of the new site, 1440 and 390, light and dark, under `reference/q149-calendar-library/docs-site/`; every difference named in the tracker with its reason (a control this site does not have, or content).
 
+The preview of the build branch: its address is behind the same Vercel login as the proof's (7.4, `ssoProtection`), so the four lines spec 85 asks of it (`/`, `/docs/date`, `/storybook/base/`, `/version.txt`) are read in the logged-in browser as in 7.4, the end address and the body of each, not with `curl -sI`; the status codes are read on production after the merge (Live, below).
+
 Storybook build: `pnpm storybook:build` leaves `storybook-static/storybook/index.html` and `storybook-static/storybook/{base,radix,aria}/index.html`, and no `version.txt`.
 
 Live, after the merge, on `https://date-picker.shadcn-table.com`: `/` and the nine docs pages answer 200; `/version.txt` prints the version; `/storybook/` lists three bases; `/storybook/base/`, `/storybook/radix/` and `/storybook/aria/` open the Date story; `/base/` ends at `/storybook/base/`; on `/docs/date` one picker is opened and a day picked. One tracker line per read, the browser closed after.
+
+Live, the hop statuses the proof could not show (7.4), read with `curl -sI`, as the custom domain has no login wall: `curl -sI https://date-picker.shadcn-table.com/base/x` answers 307 with `location: /storybook/base/x`; `curl -sI https://date-picker.shadcn-table.com/storybook` answers 308 with `location: /storybook/`; `curl -sI` of `/`, `/docs/date`, `/storybook/base/` and `/version.txt` answers 200 each.
