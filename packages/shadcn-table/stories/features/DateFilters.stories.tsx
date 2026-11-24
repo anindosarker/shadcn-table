@@ -1,4 +1,8 @@
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
@@ -934,8 +938,8 @@ const switchJoinedMode = async (
 
 /**
  * The mode menu swaps the single and the range picker (D183) and keeps what it
- * kept before: a range mode to another keeps the pair; the subheader's menu
- * drops the value between a single and a range mode.
+ * kept before: a range mode to another keeps the pair; a change between a
+ * single and a range mode drops the value (D190).
  */
 const modeSwapCase = (place: 'chips' | 'subheader') => ({
   render: () =>
@@ -979,10 +983,7 @@ const modeSwapCase = (place: 'chips' | 'subheader') => ({
       ).toBeNull();
       expect(scope.getByLabelText('Filter by Joined').tagName).toBe('INPUT');
     });
-    // The chips mode picker keeps the value on every mode change.
-    if (place === 'subheader') {
-      await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
-    }
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
   },
 });
 
@@ -1076,5 +1077,132 @@ export const WidthClassKeepsCalendarButtonInside = {
       expect(inner.left, label).toBeGreaterThanOrEqual(outer.left - 1);
       expect(inner.right, label).toBeLessThanOrEqual(outer.right + 1);
     });
+  },
+};
+
+// D189: a date range filter opened in the chips editor, the header editor or
+// from the subheader filter button puts keyboard focus on its range box.
+
+const expectFocusOnRangeTrigger = () =>
+  waitFor(() =>
+    expect(document.activeElement).toBe(
+      body().getByRole('button', { name: 'Filter by Joined' }),
+    ),
+  );
+
+const filteredRangeTable = (place: 'chips' | 'subheader') => (
+  <ShadcnTable
+    columnFilterDisplayMode={place}
+    columns={[nameColumn, dateRangeColumn]}
+    data={data}
+    initialState={{
+      columnFilters: [{ id: 'joined', value: ['2025-10-10', '2025-11-11'] }],
+    }}
+  />
+);
+
+export const RangeBoxTakesFocusInChipsEditor = {
+  render: () => filteredRangeTable('chips'),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    await userEvent.click(
+      canvasElement.querySelector<HTMLElement>('[data-filter-chip="joined"]')!,
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusFromFilterPicker = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'chips' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    await openRangePlace(canvasElement, 'chips');
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusInHeaderEditor = {
+  render: function RangeBoxTakesFocusInHeaderEditorStory() {
+    const table = useShadcnTable({
+      columnFilterDisplayMode: 'chips',
+      columns: [nameColumn, dateRangeColumn],
+      data,
+    });
+    return (
+      <>
+        <button
+          onClick={() =>
+            table.setFilterChips(() => ({
+              columnIds: ['joined'],
+              openAnchor: 'header',
+              openColumnId: 'joined',
+            }))
+          }
+          type="button"
+        >
+          Open joined editor
+        </button>
+        <ShadcnTable table={table} />
+      </>
+    );
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: 'Open joined editor' }),
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusFromSubheaderButton = {
+  render: () => filteredRangeTable('subheader'),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    const th = Array.from(canvasElement.querySelectorAll('thead th')).find(
+      (cell) => cell.textContent?.startsWith('Joined'),
+    ) as HTMLElement;
+    await userEvent.click(
+      within(th).getAllByRole('button', { name: /filter/i })[0]!,
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+// D190: in the chips editor a mode change between a range mode and a single
+// mode resets the value, as the header mode menu does.
+export const ChipsModeChangeResetsRangeValue = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="chips"
+      columns={[nameColumn, betweenDateColumn]}
+      data={data}
+      enableColumnFilterModes
+      initialState={{
+        columnFilters: [{ id: 'joined', value: ['2025-10-10', '2025-11-11'] }],
+      }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    await userEvent.click(
+      canvasElement.querySelector<HTMLElement>('[data-filter-chip="joined"]')!,
+    );
+    await switchJoinedMode(canvasElement, 'chips', 'Less Than');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    expect(body().getByLabelText('Filter by Joined')).toHaveValue('');
+
+    const single = body().getByLabelText('Filter by Joined');
+    single.focus();
+    await realKeyboard().keyboard('10102025');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ann', 'Finn']));
+    await switchJoinedMode(canvasElement, 'chips', 'Between');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
   },
 };

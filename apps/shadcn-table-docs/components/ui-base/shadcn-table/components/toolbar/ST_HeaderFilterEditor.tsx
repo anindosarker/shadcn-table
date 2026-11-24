@@ -12,6 +12,7 @@ import {
 } from '@/components/ui-base/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
+import { getFilterFocusTarget } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_FilterEditor } from '@/components/ui-base/shadcn-table/components/toolbar/ST_FilterEditor';
 import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
@@ -36,16 +37,10 @@ export const filterEditorClassName = <TData extends ST_RowData>(
   return isDateLike && isRange ? 'w-77 max-w-[calc(100vw-1rem)]' : 'w-65';
 };
 
-/** The column's first filter input, or null when it is not mounted. */
-export const getFilterInput = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-  columnId: string,
-) => table.refs.filterInputRefs.current?.[`${columnId}-0`] ?? null;
-
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
   columnId: string,
-) => getFilterInput(table, columnId)?.focus();
+) => getFilterFocusTarget(table, columnId)?.focus();
 
 /**
  * The filter inputs and the select trigger stop Escape from bubbling to the
@@ -123,7 +118,7 @@ export const ST_HeaderFilterEditor = <TData extends ST_RowData>({
             cell?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`) ??
             true
           }
-          initialFocus={() => getFilterInput(table, column.id) ?? true}
+          initialFocus={() => getFilterFocusTarget(table, column.id) ?? true}
           onKeyDownCapture={closeOnEscape(() => closeFilterEditor(table))}
           sideOffset={8}
         >

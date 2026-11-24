@@ -9,6 +9,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-aria/shadcn-table/shared/utils/drag.utils';
+import { getFilterFocusTarget } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_FilterEditor } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_FilterEditor';
 
 /**
@@ -35,7 +36,7 @@ export const filterEditorClassName = <TData extends ST_RowData>(
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
   columnId: string,
-) => table.refs.filterInputRefs.current?.[`${columnId}-0`]?.focus();
+) => getFilterFocusTarget(table, columnId)?.focus();
 
 /**
  * A ref callback that focuses the column's filter input once, when the aria
