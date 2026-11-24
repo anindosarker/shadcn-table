@@ -42,6 +42,18 @@ Checks:
   - colours, radius, fonts, header pill and code block chrome equal in both default captures
 - Check: task 3 server stopped, `lsof -nP -iTCP:5341 -sTCP:LISTEN` prints nothing
 - Check: Local CI at 5841bdc, one at a time: `pnpm install --frozen-lockfile` pass; `pnpm lint` pass; `pnpm typecheck` pass; `pnpm --filter docs lint` pass; `pnpm --filter docs types:check` pass; `pnpm --filter docs build` pass
+- Check: Verify: 1. `git diff --name-only origin/main...date-picker-docs-theme-changer` at 5841bdc: 24 files, all in the milestone's owned list (layout.tsx, theme.css, theme-customizer, provider, theme-controls, ui-radix sheet/tabs/select, six lib/design-system, seven styles, docs/package.json, pnpm-lock.yaml): pass
+- Check: Verify: 2. `diff <(git show v0.9.8:apps/shadcn-table-docs/<f>) docs/<f>` for the 19 as-is files at 5841bdc: all equal; theme-customizer.tsx diff is `<` lines only (`ICON_LIBRARIES,` import and the Icon Library SelectField with its comment); `test ! -e docs/app/theme.css` pass; `grep -c 'style-nova\|data-menu-color'` 0; `grep -c 'designSystemScript\|DesignSystemProvider\|designSystemFontVariables'` 6: pass
+- Check: Verify: 3. Local CI line at 5841bdc valid: branch head is still 5841bdc and the worktree is clean; only the tracker and captures changed since: no rerun
+- Check: Verify: 4. own read, build of 5841bdc (docs/.next BUILD_ID 13:25, after the 13:12 commit, worktree clean: not stale), `next start -p 5345`, Playwright headless chromium, script /private/tmp/claude-501/dp-theme-verify/scripts/verify.mjs: 19 reads, 19 pass
+  - no stored choice, `/docs/install` 1440: light `oklch(0.596 0.145 163.225) | .625rem | "Inter", "Inter Fallback", 'Inter Variable', sans-serif`, dark `oklch(0.765 0.177 163.223) | .625rem | same font`, each equal to live `https://www.shadcn-table.com/docs/getting-started/install`; `<html>` carries `style-nova`: pass
+  - palette button opens the sheet on `/`, `/docs/date`, `/no-such-address-xyz` at 1440 and 390: pass (6 reads)
+  - sera, luma, vega chosen in the sheet on `/docs/date`: `/styles/style-<name>.css` 200 and in document.styleSheets, `<html>` class `style-<name>`, Base UI picker takes a day; vega also on Radix UI and React Aria: pass (5 reads)
+  - preset Twitter changes the open picker's popup background `oklch(0.205 0 0)` to `rgb(0, 0, 0)`: pass
+  - reload keeps style-vega and the stored config: pass
+  - typing digits and `rRcz`, Shift+R, Meta+Z into the date box (focus in the input, value changes): stored config and `<html>` class unchanged; `r` outside the box does shuffle: pass (script /private/tmp/claude-501/dp-theme-verify/scripts/type.mjs)
+  - 0 console errors; `scrollWidth - innerWidth` = 0 at 390 with the sheet open: pass
+- Check: Verify: 5. server pid 91341 stopped, `lsof -nP -iTCP:5345 -sTCP:LISTEN` prints nothing, browser closed by the script; `git status --short` in the worktree prints nothing: pass
 
 - Task 1 The taken files and the two packages: done (432b9bb)
 - Task 2 The layout and the default look: done (5841bdc)
