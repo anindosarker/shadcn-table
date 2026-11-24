@@ -15,6 +15,12 @@ publishes the section as the GitHub release notes.
 
 - Contributors: each base's tree holds the date picker of `anindosarker/shadcn-date-picker` at one pinned tag (`DATE_PICKER_TAG` in `tools/registry/lib.mjs`), written by `pnpm add-date-picker <base>` and checked by `pnpm test validate-repo`; a library file that imports `@/components/date-picker/...` gives its base's core item the picker item as a registry dependency (D164). Nothing a user installs changes yet.
 
+### Changed
+
+#### Spec 81.1
+
+- Contributors: the pinned date picker tag is `v0.1.1` (no `process.env` read, right-to-left grid arrows); the trees are rewritten from it and the tree type-check no longer loads Node types.
+
 ### Docs
 
 #### Spec 70
