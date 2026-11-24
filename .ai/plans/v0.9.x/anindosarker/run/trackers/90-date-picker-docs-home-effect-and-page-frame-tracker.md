@@ -1,6 +1,7 @@
 # 90: Date picker docs home effect and page frame, tracker
 
-Status: running
+Status: done
+Merge: dec5951 (merge: date-picker-docs-home-effect-page-frame (90)), on main of shadcn-date-picker
 Branch `date-picker-docs-home-effect-page-frame`, worktree shadcn-date-picker.worktrees/date-picker-docs-home-effect-page-frame, from origin/main 3f20d72 (holds both spec 89 merges, 0d62301 and 3f20d72)
 Checks:
 - Check: setup, `pnpm install --frozen-lockfile` at 3f20d72: exit 0, pass
@@ -65,6 +66,21 @@ Checks:
 - Verify: 4 production read of the fresh-clone build, `next start -p 5340`, Playwright chromium, a new context per read group at f131036: `/` at 1440 and 390, dark and light: 72 stars, hero dune and footer dune painted, no horizontal overflow; 404 footer dune painted at all four; `/docs/install`, `/docs/time`, `/docs/props` sidebar by section plus Changelog (href the releases page, `_blank`), `// Get Started`, `// Pickers`, `// Props`, active tab matches; Copy page `/docs/install` 3546 and `/docs/date` 840 characters, text sane (install command missing, already in Attention); options menu GitHub entry `(pickers)/date.mdx`; theme sheet opens; `/docs/date` day 15 picked, value "2026-11-15"; `/`, `/docs` (308 to `/docs/install`), the nine `/docs/<page>`, `/icon.svg`, `/apple-icon`, `/version.txt` answer as origin/main; 0 console errors: pass
 - Verify: 4 look, own captures beside q179 `table-home-dark-1440-fresh.png` and q180 `table-docs-dark-1440.png`, `table-docs-dark-390.png`: star field and dune as the table's, docs frame as the table's; differences seen are those of the list below (dune to the viewport bottom, page content, no Discord icon, Get Started name, short crumb at 390); the picker home at 390 has the wordmark against the base select, the header of spec 85 and D181 unchanged by this milestone: pass
 - Verify: 5 server stopped (`kill` by pid, `lsof -nP -iTCP:5340 -sTCP:LISTEN` prints nothing), browser closed, scratch deleted, worktree `git status --short` empty at f131036: pass
+- Check: T5 origin/main 3f20d72 an ancestor of the branch head f131036 (`git merge-base --is-ancestor`): no merge of main needed, Local CI and fresh-clone build lines at f131036 stand: pass
+- Check: T5 merge, `git merge --no-ff origin/date-picker-docs-home-effect-page-frame` on main, pushed: M dec5951, 23 files: pass
+- Check: T5 production deployment of dec5951, `gh api repos/anindosarker/shadcn-date-picker/commits/dec5951/status`: Vercel success after about 2 minutes: pass
+- Check: T5 CI of dec5951, run 45432566110: completed, success: pass
+- Check: T5 live `https://date-picker.shadcn-table.com/` at dec5951, Playwright chromium, new context, 1440 dark: 200, hero dune canvas 1425x951 with 142873 painted pixels, footer dune 1425x140 with 17023 painted, star dots seen on the capture `frame/live-home-dark-1440.png`, scrollWidth 1425 not above clientWidth 1440, 0 console errors: pass
+- Check: T5 live `/no-such-page` at dec5951: 404 by design, footer dune canvas present; the only console error is the browser's 404 for the document itself: pass
+- Check: T5 live `/docs/install` at dec5951: 200, Copy page button present, Changelog link https://github.com/anindosarker/shadcn-date-picker/releases `_blank`, `// Get Started` line, capture `frame/live-docs-install-dark-1440.png` looked at (tabs, sidebar Install and CHANGELOG, breadcrumb switcher, Copy page group), 0 console errors: pass
+- Check: T5 live Copy page `/docs/install` at dec5951, new context with clipboard permission: clipboard 3546 characters, as the local read: pass
+- Check: T5 live `/docs/date` at dec5951: 200, Copy page and Changelog present, capture `frame/live-docs-date-dark-1440.png`, 0 console errors: pass
+- Check: T5 live `/storybook/base/`, `/storybook/radix/`, `/storybook/aria/` at dec5951: each 200, Storybook Introduction docs page, 0 console errors: pass
+- Check: T5 live `/version.txt` at dec5951: 200, body `0.1.1`: pass
+- Check: T5 live Task 2 addresses at dec5951: `/docs` (to `/docs/install`), `/docs/date-time`, `/docs/month`, `/docs/props`, `/docs/ranges`, `/docs/time`, `/docs/week`, `/docs/year`, `/icon.svg`, `/apple-icon` each 200, 0 console errors: pass
+- Check: T5 live `/llms.mdx/docs/install/content.md` at dec5951: 200, body starts `# Install (/docs/install)`: pass
+- Check: T5 options menu GitHub entry https://github.com/anindosarker/shadcn-date-picker/blob/main/apps/shadcn-date-picker-docs/content/docs/(get-started)/install.mdx after the merge: 200: pass
+- Check: T5 cleanup, branch deleted on origin and locally, worktree removed, `git -C ~/Work/Personal/React-table/shadcn-date-picker status --short` prints nothing at dec5951: pass
 ### Difference list (frame captures beside q179 and q180)
 
 - `frame/picker-home-dark-1440.png` beside `q179/table-home-dark-1440-fresh.png`: same emerald star dots over the page and the same box-glyph dune rising behind the hero bottom. Differences: the picker's dune fills the viewport bottom down to 900 while the table's runs under its live demo from about 660, because the picker hero has no live demo below it (not taken, 1.6.1) and the dune sits at the hero's bottom; hero copy, install command and the two pickers in place of the agent bar (page content, unchanged); header has the base select and no Discord icon (D181).
@@ -79,7 +95,7 @@ Checks:
 - Task 2 The sidebar by section and the Changelog link: done (9b5ccf2)
 - Task 3 Copy page: done (f131036)
 - Task 4 The local production build read and the captures: done (0bbc1b4ec)
-- Task 5 After the merge: the live reads: planned
+- Task 5 After the merge: the live reads: done (dec5951)
 
 ## Attention
 
