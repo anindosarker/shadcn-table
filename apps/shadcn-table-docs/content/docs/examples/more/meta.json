@@ -160,6 +160,7 @@
     "features-date-filters--typed-date-applies-on-enter",
     "features-date-filters--typed-date-applies-on-leave",
     "features-date-filters--clear-button-empties-date-filter",
+    "features-date-filters--typed-date-after-button-click-waits-for-enter",
     "features-date-filters--range-min-picked-max-typed",
     "features-date-filters--pick-day-in-date-time-popup",
     "features-date-filters--pick-minute-in-time-popup",

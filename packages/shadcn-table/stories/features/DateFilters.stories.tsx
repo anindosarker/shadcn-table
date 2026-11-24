@@ -489,6 +489,23 @@ export const ClearButtonEmptiesDateFilter = {
   },
 };
 
+// A click on one of the picker's buttons does not turn the next typed date
+// into a pick: it still waits for Enter.
+export const TypedDateAfterButtonClickWaitsForEnter = {
+  render: () => subheaderTable(greaterThanDate, '2025-11-02'),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan', 'Eve']));
+    canvas.getByLabelText('Filter by Joined').focus();
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear Date' }));
+    await typeTenthOfOctober(canvasElement);
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+  },
+};
+
 // A range keeps its two boxes: Min picked in its popup, Max typed.
 export const RangeMinPickedMaxTyped = {
   render: () =>
