@@ -9,6 +9,7 @@ kanban-plugin: basic
 	- Lead, 2026-11-24: no owner read; the preview check is replaced by a local production read, then merge and live reads (E27 note). Run resumed.
 - [ ] **Q173** On a phone the date picker site's home header draws the site name over the version label
 	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
+	- Lead, 2026-11-24: settled, the version label is hidden below sm; built in the docs site build milestone.
 
 ## Decided
 
