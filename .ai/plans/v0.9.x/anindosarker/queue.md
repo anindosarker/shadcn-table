@@ -4,6 +4,8 @@ kanban-plugin: basic
 
 ## Open
 
+- [ ] **Q179** The date picker site's default look does not match the table site: wrong colours, red borders on the pickers, and the home page effect is missing
+	- Owner, 2026-11-24, live https://date-picker.shadcn-table.com/ after E28 (5404817), Base UI, dark: 'Why does the default theme look like shit? The default theme should be exactly from the table one. It doesn't match. And also the home page effect doesn't match.' Seen in the owner's capture (image 12): green accent (slashes, DatePicker link, Get Started button) where the owner's table site shows an orange accent; red border and dark red fill on the Base UI select and on both demo pickers; plain black home background.
 
 ## Decided
 
