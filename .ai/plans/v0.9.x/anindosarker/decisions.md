@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D189** Opening a date range filter puts keyboard focus on the range box #R6
+	- Spec 87 1.6.2 stands (focus on open works as today): when a date or date-time range filter opens in the chips editor, the header editor or from the subheader filter button, keyboard focus lands on the range picker's box (its trigger), as 0.9.8 put it in the Min box. Reached without a public change: the type of filterInputRefs and every exported type stay (P7), and the picker's code stays; an internal way to reach the trigger is the builder's. If it can only be done by widening the public type or changing the picker, the milestone comes back with that as a card. Lead, 2026-11-24 (weight test: keeps the spec's intent, no public surface).
+	- Source: Q183
+
 ## In progress
 
 - [ ] **D183** The table's date range filters use the date picker's own range type #E29 #R6
