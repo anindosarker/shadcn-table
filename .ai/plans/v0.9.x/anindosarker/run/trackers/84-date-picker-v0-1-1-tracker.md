@@ -23,6 +23,24 @@ Checks:
 - Check: rtl year-range 1280, after/year-range-1280.png against rtl/year-range-1280.png (spec 78) at a05fb19: arrows flipped (previous points right, next points left; nothing else differs)
 - Check: rtl year-range 390, after/year-range-390.png against rtl/year-range-390.png (spec 78) at a05fb19: arrows flipped (previous points right, next points left; nothing else differs)
 - Check: Storybook server stopped by pid, `lsof -iTCP:5341 -sTCP:LISTEN` at a05fb19: pass (nothing listens)
+- Check: registry, `pnpm registry:build` then `pnpm registry:check` at 0b45dec: pass (exit 0, three items up to date, 22 files each; generated values.ts and period-views.tsx rewritten on three bases, registry.json files unchanged)
+- Check: no process read, `grep -rn 'process\.' registry/*/generated` at 0b45dec: pass (no output)
+- Check: install commands, `grep -c -E 'date-picker-(base|radix|aria)#v0.1.1'` README.md and stories/Introduction.mdx at 0b45dec: pass (3, 3)
+- Check: old tag gone, `grep -c 'v0.1.0' README.md stories/Introduction.mdx` at 0b45dec: pass (0, 0)
+- Check: Base UI note, `grep -c 'issues/9401' README.md` at 0b45dec: pass (1)
+- Check: stock calendar part, `grep -c 'ref={ref}' registry/base/components/ui/calendar.tsx` at 0b45dec: pass (0)
+- Check: approved folder, `diff -r test-projects/next-app/components/date-picker registry/base/components/date-picker` at 0b45dec: pass (exit 1, two files only: `components/period-views.tsx` 234c234 and 238c238 add `className="rtl:rotate-180"` to `ChevronLeftIcon` and `ChevronRightIcon`; `utils/values.ts` 14,15d13 `type IgnoredProp`, 97,105d94 `function ignored`, 109,111c98 `checkedLimits` caller to `? text : undefined`, 119,123c106 `checkedStep` caller to `: undefined`)
+- Check: lint, `pnpm lint` at 0b45dec: pass (exit 0)
+- Check: types, `pnpm typecheck` at 0b45dec: pass (exit 0)
+- Check: Local CI install, `pnpm install --frozen-lockfile` at 0b45dec: pass (exit 0)
+- Check: Local CI lint, `pnpm lint` at 0b45dec: pass (exit 0)
+- Check: Local CI types, `pnpm typecheck` at 0b45dec: pass (exit 0)
+- Check: Local CI registry, `pnpm registry:check` at 0b45dec: pass (exit 0, three items up to date, 22 files each)
+- Check: Local CI tests base, `pnpm test --base base` at 0b45dec: pass (7 files, 39 tests)
+- Check: Local CI tests radix, `pnpm test --base radix` at 0b45dec: pass (7 files, 39 tests)
+- Check: Local CI tests aria, `pnpm test --base aria` at 0b45dec: pass (7 files, 39 tests, no rerun)
+- Check: Local CI site build, `pnpm storybook:build` at 0b45dec: pass (exit 0; storybook-static/base, radix, aria, index.html, version.txt 0.1.1)
 
 - Task 1 warning removal: done (4873842); props row in stories/Introduction.mdx says a limit in another format is ignored
 - Task 2 grid arrows: done (a05fb19); eight right-to-left captures committed
+- Task 3 generated files, version, README, Introduction: done (0b45dec); package.json 0.1.1, install commands at #v0.1.1, README Base UI note before Radix UI; Local CI green at 0b45dec; not merged
