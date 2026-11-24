@@ -13,8 +13,35 @@ Checks:
 - Check: proof play datetime, aria, same run at 803ad5680 + story: pass
 - Check: proof play time, aria, same run at 803ad5680 + story: pass
 
+- Check: D183 and D184 plays fail on shipped code, base, `ST_BASE=base vitest run stories/features/DateFilters.stories.tsx` at 803ad5680 + plays: fail as meant (8 failed, 25 passed: no range box "Filter by Joined"; time ends in two groups; popover shows Min; button 258..282 in box 34..274)
+- Check: same, radix, `ST_BASE=radix vitest run stories/features/DateFilters.stories.tsx` at 803ad5680 + plays: fail as meant (8 failed, 25 passed, same reasons)
+- Check: same, aria, `ST_BASE=aria vitest run stories/features/DateFilters.stories.tsx` at 803ad5680 + plays: fail as meant (8 failed, 25 passed, same reasons)
+- Check: existing plays before any edit, base, `ST_BASE=base vitest run` FilterChips, Filtering, Customization, ServerData, ViewSettings, mobile-date-pickers at 803ad5680: pass (72 passed)
+- Check: before captures, Storybook dev per base on 5341 + Playwright, 1280 and 390 wide, at 803ad5680 + plays: 30 files under `test/.out/spec87/before/` (subheader, chips-editor, header-editor, popover, advanced-start-date; base, radix, aria)
+
+Site map (task 2). Lines are base; radix the same to :529, then select :729, chips :773, caption :829; aria +37 to +50 (args :154, placeholder :229, key :355, date className :644, combobox ref :730, select :801, chips :846, caption :913):
+- :95-100 `rangeFilterIndex` prop: stays; a date-like range without index stands for the pair.
+- :126 args for the consumer's props functions: the pair calls them once with `rangeFilterIndex: 0`.
+- :186-196 placeholder Min / Max by index: the pair takes "Filter by {column}"; the ends are named Min and Max through the picker's `labels`.
+- :203 mode button on index 0 only: the pair is index-less, so it shows the button.
+- :213-219 initial value of one end: the pair reads the whole pair.
+- :237-243 commit of one end: the pair commits both ends, an empty end as `undefined` as today.
+- :318 `filterInputRefs` key: the pair writes `-0` and `-1` from the inputs in the box, `-0` falling back to the trigger button.
+- :373-379 clear of one end: not reached by a date box (no clear adornment); unchanged.
+- :428-431 read-back of one end: the pair reads both ends.
+- :439 `columnDef.Filter` gets the index: unchanged; a custom Filter keeps the two fields (ST_FilterRangeFields).
+- :529 `textFieldProps.className` on the inner input: moves to the outer box (D184).
+- :594 `dateBoxProps.className` on the picker's group: moves to the outer box (D184).
+- :702-703 autocomplete: `commonTextFieldProps.className` loses the consumer class with :529; `autocompleteProps.className` stays.
+- :745 select trigger and :789 combobox chips `textFieldProps.className`: move to the outer box (D184).
+- :845 the field's own mode caption when index-less: not for the pair, whose caption is ST_FilterRangeFields'.
+- Stories driving two date boxes: DateFilters `RangeMinPickedMaxTyped` (Min picked, Max typed: reworked to the one box); FilterChips `RangeEditorInputsFitAndFillDate`, `...DateTime`, `...Time` (Min and Max inputs in the editor: reworked); Filtering `SubheaderRangeFieldsNarrow` (two date groups on one row: reworked to the one box), `FilteringChangeModeEnabledFaceted` (Birth Date range inside its cell: run, changed only if it fails); miscellaneous `mobile-date-pickers` (counts date inputs in the head: not an owned file, changed only if it fails, named here).
+- Docs pages: `examples/more/features-date-filters--range-min-picked-max-typed.mdx`, `features-filter-chips--range-editor-inputs-fit-and-fill-{date,date-time,time}.mdx`, `features-filtering--subheader-range-fields-narrow.mdx` (Birth Date line), `guides/column-filtering.mdx:99-102`: reworded to the one box. Number range pages untouched.
+- Docs E2E and installation E2E: no test drives a date range box (the Min and Max fills in `test/docs-e2e/lib/helpers.mjs:1055-1065` are number ranges).
+
 Notes:
 - Task 1: the picker's range mode hands one end alone to onChange for date, datetime and time on the three bases: a typed start gives `[start, '']`, a typed end with an empty start gives `['', end]` (`picker: utils/range.ts:31-33` putEnd). The proof story `stories/miscellaneous/RangePickerOneEnd.stories.tsx` is deleted before the merge (1.6.1).
 - React Aria's range popover is found by `[role="dialog"][aria-label]`, not by `findByRole`: testing-library does not see it in the accessibility tree there.
 
-- Task 1 One end only, proven in the picker: done (see commit)
+- Task 1 One end only, proven in the picker: done (e4ac17c7f)
+- Task 2 The site map and the before captures: done (see next commit)
