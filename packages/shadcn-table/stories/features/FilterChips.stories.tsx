@@ -742,9 +742,21 @@ const rangeInputs = async () => {
   ] as HTMLInputElement[];
 };
 
+/** The date range popup by its name; React Aria's is found by its attributes. */
+const rangePopup = (name: string) =>
+  waitFor(() => {
+    const popup = document.querySelector<HTMLElement>(
+      `[role="dialog"][aria-label="${name}"]`,
+    );
+    expect(popup).toBeVisible();
+    return popup!;
+  });
+
 /**
  * D86: both inputs of a range filter lie inside the chip editor and take
- * typed values. Date-like values are typed key by key from the first segment
+ * typed values. A date or date and time range is one box whose end inputs sit
+ * in its popup (D183): the box lies inside the editor, the ends take typed
+ * values. Date-like values are typed key by key from the first segment
  * with real key presses (the synthetic ones do not fill the segments); the
  * digits suit a day-month or a month-day locale and a 12 or 24 hour clock;
  * the date picker's box moves on after the four digits of the year.
@@ -775,6 +787,60 @@ const rangeEditorCase = (
 
     await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
     await userEvent.click(await body.findByRole('option', { name: label }));
+    if (variant === 'date-range' || variant === 'datetime-range') {
+      const box = () =>
+        body
+          .getByRole('button', { name: 'Filter by When' })
+          .closest<HTMLElement>('[data-slot="input-group"]')!;
+      const editor = box().closest<HTMLElement>(
+        '[data-slot="popover-content"]',
+      )!;
+      await waitFor(() => expectInside(box(), editor));
+      await userEvent.click(
+        body.getByRole('button', { name: 'Filter by When' }),
+      );
+      const popup = within(await rangePopup('Filter by When'));
+      for (const [end, keys, value] of [
+        ['Min', minKeys, minValue],
+        ['Max', maxKeys, maxValue],
+      ] as const) {
+        const input = popup.getByLabelText(end);
+        input.focus();
+        await keyboard.keyboard(keys);
+        await waitFor(() => expect(input).toHaveValue(value));
+      }
+      await keyboard.keyboard('{Enter}');
+      await waitFor(() =>
+        expect(
+          [...bodyRows(canvasElement)].map((row) => row.textContent),
+        ).toEqual([expect.stringContaining('Lunch ride')]),
+      );
+
+      // The chip opens the same editor, the box inside it.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() =>
+        expect(
+          document.querySelector(
+            '[role="dialog"][aria-label="Filter by When"]',
+          ),
+        ).toBeNull(),
+      );
+      body.getByRole('button', { name: 'Filter by When' }).focus();
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() =>
+        expect(
+          body.queryByRole('button', { name: 'Filter by When' }),
+        ).toBeNull(),
+      );
+      await userEvent.click(chipOf(canvasElement, 'when')!);
+      await waitFor(() =>
+        expectInside(
+          box(),
+          box().closest<HTMLElement>('[data-slot="popover-content"]')!,
+        ),
+      );
+      return;
+    }
     const [min, max] = await rangeInputs();
     await expectRangeFieldsInside(min, max);
 

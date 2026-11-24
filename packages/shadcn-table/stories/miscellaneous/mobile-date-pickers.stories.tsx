@@ -84,7 +84,8 @@ export const MobileDateTimePickers = () => (
   />
 );
 
-// Each date picker holds a box of the right type, and a date filter narrows
+// Each date picker holds a box of the right type (a date and a date and time
+// range keep their end boxes in the popup, D183), and a date filter narrows
 // the rows.
 MobileDateTimePickers.play = async ({ canvasElement }: StoryContext) => {
   await within(canvasElement).findAllByRole('columnheader');
@@ -92,8 +93,8 @@ MobileDateTimePickers.play = async ({ canvasElement }: StoryContext) => {
     canvasElement.querySelectorAll<HTMLInputElement>(
       `thead input[type="${type}"]`,
     );
-  await waitFor(() => expect(inputs('date')).toHaveLength(3));
-  expect(inputs('datetime-local')).toHaveLength(3);
+  await waitFor(() => expect(inputs('date')).toHaveLength(1));
+  expect(inputs('datetime-local')).toHaveLength(1);
   expect(inputs('time')).toHaveLength(3);
   const before = canvasElement.querySelectorAll('tbody tr').length;
   expect(before).toBe(10);
