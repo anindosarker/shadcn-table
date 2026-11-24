@@ -13,6 +13,8 @@ kanban-plugin: basic
 	- Owner, 2026-11-24: 'I think the layout is also missing then.' Known: design-docs-site.md row 12 replaced the table's DocsTreeLayout by fumadocs DocsLayout (notebook) with the same props, saying the wrapper only adds the story rows; D180 (lead) kept one flat sidebar list, so the section line above a page title and the page switcher in the breadcrumb do not show; Copy page and search were not checked. Visible differences on a docs page not yet listed from a browser.
 	- Owner, 2026-11-24: 'So far the layout looks the same.' No layout change asked.
 	- Lead correction, 2026-11-24: the line above ('No layout change asked') was the lead's reading, not the owner's ruling. The owner's remark was an impression, no decision; the layout stays open and is compared in full.
+- [ ] **Q181** On the date picker home page the empty range picker looks different from the date picker beside it
+	- Owner, 2026-11-24, 'bug', live https://date-picker.shadcn-table.com/ home, Base UI, dark, a theme chosen in the customizer (violet accent, a rounder style): the range demo, empty, is marked in the capture (image 13): a full pill button 'Pick a date', narrower than and shaped unlike the single date box left of it (rounded rectangle input, dd/mm/yyyy). Lead's reading of the mark, not confirmed by the owner: the shape and width mismatch between the two under this style.
 
 ## Decided
 
