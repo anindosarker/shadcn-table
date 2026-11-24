@@ -1,6 +1,6 @@
 # 89: Docs demo parts follow the chosen style (Q181), tracker
 
-Status: running
+Status: done
 Branch `date-picker-docs-demo-parts-style` (anindosarker/shadcn-date-picker, from main 0d62301), worktree ~/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-docs-demo-parts-style
 Checks:
 - Check: reproduce, unfixed production build of main 0d62301, fresh Playwright context, /docs/ranges cleared, luma: empty range trigger radii TL/TR/BR/BL 10/26/26/10 px on base, radix and aria; single date box of /docs/date 10/10/10/10: reproduced
@@ -34,4 +34,17 @@ Checks:
 
 Px, all four corners equal in every cell.
 
-- Task 1 Docs demo parts follow the chosen style: running (c6415d6, not merged)
+- Task 1 Docs demo parts follow the chosen style: done (c6415d6, merged in 3f20d72)
+
+- Merge: 3f20d72, `merge: date-picker-docs-demo-parts-style (89)` on main of anindosarker/shadcn-date-picker (origin/main 0d62301 was an ancestor of the branch, no catch-up merge)
+- Check: production deployment of 3f20d72, commit status Vercel: success
+- Check: CI run of 3f20d72: completed, success
+- Check: live read https://date-picker.shadcn-table.com/ at 3f20d72, fresh Playwright context: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/docs/install at 3f20d72: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/docs/date at 3f20d72: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/storybook/base/ at 3f20d72: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/storybook/radix/ at 3f20d72: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/storybook/aria/ at 3f20d72: 200, 0 console errors
+- Check: live read https://date-picker.shadcn-table.com/version.txt at 3f20d72: 200, "0.1.1"
+- Check: live read https://date-picker.shadcn-table.com/docs/ranges at 3f20d72, style set in the theme sheet, base in the header menu, range cleared: luma 26/26/26/26 px on Base UI, Radix UI and React Aria; vega 8/8/8/8 px on all three; 0 console errors: pass
+- Check: branch date-picker-docs-demo-parts-style deleted on origin and locally, worktree removed, `git status --short` on main empty: pass
