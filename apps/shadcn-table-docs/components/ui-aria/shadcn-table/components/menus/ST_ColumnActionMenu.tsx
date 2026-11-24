@@ -21,6 +21,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import {
   getColumnFilterFnName,
+  getDefaultColumnFilterFn,
   resetColumnSizeAnimated,
 } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { ST_FilterOptionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
@@ -161,7 +162,9 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     if (['empty', 'notEmpty'].includes(getColumnFilterFnName(columnDef))) {
       setColumnFilterFns((prev) => ({
         ...prev,
-        [header.id]: allowedColumnFilterOptions?.[0] ?? 'fuzzy',
+        [header.id]:
+          allowedColumnFilterOptions?.[0] ??
+          getDefaultColumnFilterFn(columnDef),
       }));
     }
   };

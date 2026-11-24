@@ -21,6 +21,15 @@ publishes the section as the GitHub release notes.
 
 - Contributors: the pinned date picker tag is `v0.1.1` (no `process.env` read, right-to-left grid arrows); the trees are rewritten from it and the tree type-check no longer loads Node types.
 
+#### Spec 82
+
+- Date, date-time and time filters use the date picker of [shadcn-date-picker](https://github.com/anindosarker/shadcn-date-picker) in place of the browser's date box, on Base UI, Radix UI and React Aria: in the filter editor of the chips mode, in the popover filter, under the headers, and in both boxes (Min, Max) of a range. The box takes typed values as before and adds a clear button and a button that opens a calendar or a clock. A picked value applies at once; a typed value applies on Enter or when focus leaves the box. Filter values (`YYYY-MM-DD`, `YYYY-MM-DDTHH:mm`, `HH:mm`), filter modes and saved views are unchanged (D164).
+- Installing the table installs the picker: each base's core item depends on `anindosarker/shadcn-date-picker/date-picker-<base>` at the tag `v0.1.1`, which adds `components/date-picker/`, the shadcn parts it uses and the packages `react-day-picker`, `date-fns` and `cn` to the app (D164).
+- `stFilterDatePickerProps`, `stFilterDateTimePickerProps` and `stFilterTimePickerProps` keep their type. Passed on to the picker: `min`, `max`, `step` (date-time and time filters), `disabled`, `id`, `className` and `style` (on the picker's box), `aria-*` and `data-*` attributes, and `onFocus`, `onBlur` and `onKeyDown`, which now also fire for the picker's buttons and popup. No longer any effect: `value`, `onChange`, `type`, `ref`, `placeholder`, `name`, `readOnly`, `autoFocus` and the other input-only props, and `step` on a date filter (D175).
+- The year of a typed date takes four digits and the box moves on to the next part by itself; the browser's box took up to six.
+- Escape in a box inside a popup that a filter field opened, such as the time box of the date and time picker, closes that popup and leaves the filter editor open.
+- Fixed: clearing an "is empty" or "is not empty" filter returns the column to its own default filter mode on every column type, `equals` for a date column, in place of `fuzzy` (D165).
+
 ### Docs
 
 #### Spec 70
