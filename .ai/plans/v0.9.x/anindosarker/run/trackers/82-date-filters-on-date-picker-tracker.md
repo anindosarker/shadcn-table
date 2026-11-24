@@ -28,6 +28,16 @@ Checks:
 - Check: `pnpm test installation-e2e --no-diff` at 595e0a50, nextjs-base, nextjs-radix, nextjs-aria: pass (`built, browser pass, no diff` on each; the table with the picker installs and `next build` passes)
 - Check: `pnpm test installation-e2e --no-diff` at 595e0a50, fresh, existing, base, aria (the Vite scenarios): red, waits on Q166. Each fails at its `tsc` step with the one line `src/components/date-picker/utils/values.ts(98,7): error TS2591: Cannot find name 'process'.` and stops there. In each kept scratch app: `src/components/date-picker/date-picker.tsx` is present, `tsc -b` prints that one error and no other, `vite build` passes. Not run, because the scenario ends at its first failed step: the locale and example-basic install with their two builds, and the package.json asserts
 - Local CI at 595e0a50 (the commits after it change this tracker and the plan reference only): typecheck, lint, validate-repo, storybook-tests, docs-e2e green on base, radix, aria; installation-e2e green on the three Next scenarios, red on the four Vite scenarios, waits on Q166
+- Check: review round 1, the new play `Typed Date After Button Click Waits For Enter` with the aria key reset swapped back to the root's `onClick` reset, `ST_BASE=aria pnpm exec vitest run stories/features/DateFilters.stories.tsx -t "Typed Date After Button"` at 13f47578: fail as intended (`expected [ 'Ben', 'Cara', 'Dan', 'Eve' ] to have a length of 6 but got 4`: each typed digit applied as a pick)
+- Check: review round 1, `ST_BASE=base|radix|aria pnpm exec vitest run stories/features/DateFilters.stories.tsx` at 13f47578: pass (24 passed on each)
+- Check: review round 1, `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 13f47578: pass (tsc clean on each)
+- Check: review round 1, `pnpm test lint` at 13f47578: pass (0 errors, 9 warnings)
+- Check: review round 1, `pnpm -w registry:build`, `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`, `pnpm --filter shadcn-table-docs types:check` at 13f47578: pass (exit 0, 0 TS errors); the docs copies committed as e18c4e16
+- Check: review round 1, `pnpm test validate-repo` at e18c4e16: pass (bases identical, date picker matches, registry fresh, story pages match after `node lib/story-pages.mjs` and the new page's text, 52 unit tests)
+- Check: review round 1, `pnpm test storybook-tests --base base`, `--base radix`, `--base aria` at 13f47578: pass (637 passed on each)
+- Check: review round 1, `pnpm test docs-e2e --base base`, `--base radix`, `--base aria` at e18c4e16: pass (5 sections, 117 pages, site 94 passed, 0 failed on each)
+- Check: review round 1, installation-e2e not rerun: the fixes change no registry item, dependency or install step; the Vite scenarios stay red, waits on Q166
+- Review round 1: 2 majors, 7 minors, fixed at e18c4e16 (major 1 and minor 1 fixed; major 2 waits on Q166; minor 2 under Attention; minors 3 to 7 answered in Notes)
 
 - Task 1 the is-empty reset: done (6dcd219e the fix, df801ff7 the play)
 - Task 2 site map and before captures: done (dc3eadea)
@@ -35,6 +45,7 @@ Checks:
 - Task 4 the plays: done (a00f7e0b)
 - Task 5 the look: done (captures at 595e0a50, table below, one item under Attention)
 - Task 6 examples, guide, docs copies, tests, changelog: done (8d3933d1, e955e6e9, 595e0a50)
+- Review round 1 fixes: done (13f47578 the button-click flag and the guard on a typed commit, with a play; e18c4e16 the docs copies)
 
 ## The look
 
@@ -111,8 +122,21 @@ Stories, examples, docs, tests that drive a date box:
 - The table's own clear button never showed in a date box before (site map 419-420), so the picker's clear button is the one clear control per box; nothing is hidden.
 - `min-w-35` stays on the date box: without it a range box in a narrow column is 74 px wide and its input 16 px.
 - installation-e2e runs with `--no-diff` locally (P5).
+- Review round 1, major 1 (React Aria, a typed date applied per key after a click on a picker button): right. The flag was reset only by the root's bubbling `onClick`, and a React Aria `Button` stops its click (`react-aria/dist/private/interactions/usePress.mjs:277-301`, `shouldStopPropagation`). Fixed at the cause in the three trees: the root's `onClickCapture` still sets the flag, `onKeyDownCapture` resets it (a key press reaches the root in the capture phase whatever the button does with its click; RAC `Group` passes every prop to its div, `react-aria-components/dist/private/Group.mjs:48-49`), and the dead `onClick` reset goes. Play `Typed Date After Button Click Waits For Enter` (clear button, then a typed date) fails without the fix on aria and passes on the three bases.
+- Review round 1, major 2 (the four Vite installation-e2e scenarios red at `values.ts(98,7): error TS2591`): known, recorded above as red, waits on Q166; the milestone is not merged until the card is decided. Nothing to fix here: the picker files are tool output at the pinned tag.
+- Review round 1, minor 1 (a stale typed draft overwrote an outside filter write on blur or Enter): right. `commitTypedValue` now commits the draft only when `isCommitGuardHeld(typedDate.guard)`, as the unmount path and the debounced commit do; otherwise the draft is dropped and the box shows the outside value from the sync effect.
+- Review round 1, minor 2 (a popup pick of the same day as the typed draft applies on leave, not at once): right, not fixed here; under Attention (a choice against spec 1.6.2's "popup counted as inside").
+- Review round 1, minor 3 (on a touch device the OS picker's value arrives with the input focused, so it waits for blur): conformant with spec 1.6.2 (line 93: a change while the picker's input has focus is typed and held). No change; not checked on a device.
+- Review round 1, minor 4 (`ST_HeaderFilterEditor.tsx` outside the owned files): declared in Notes above with its reason; for the lead's acceptance. No change.
+- Review round 1, minor 5 (changelog `Fixed:` bullet under `### Changed`, not a `### Fixed` heading as spec 1.4 names): kept. P9 (`process.md` line 60) asks one `#### Spec NN` block per milestone, and the spec's own Task 6 check `grep -c '^#### Spec 82' CHANGELOG.md` prints `1`; a second heading would break both. D175 reaches this branch when `claude/review` is merged in.
+- Review round 1, minors 6 and 7 (the Task 3 `git diff --stat` letter; generated files): verified by the reviewer, no defect. No change.
 
 ## Attention
+
+- A date picked in the popup that is the same day as the date just typed in the box does not filter the table until focus leaves the box.
+  - The table passes the typed draft to the picker as its `value` (the picker's input keeps the typed text only while `value` equals its draft, `registry/<base>/components/date-picker/components/picker-field.tsx:106-109`), so a pick of that day is no change and the picker fires no `onChange` (`date-picker.tsx:93-97`). Spec 1.6.2 counts the popup as inside the box, so the draft waits for Enter or leave. All three bases; edge case, the final value is right.
+  - Recommended: keep as built; the value applies when focus leaves the box, as for a typed date.
+  - Other option: apply the typed draft when the popup opens (the popup then counts as leaving the box for a typed date, against 1.6.2's wording).
 
 - In a narrow column a date filter under the header now shows only part of its date, because the picker's two buttons take 54 px of the box.
   - Seen at 390 wide: single box, input 122 px before, 68 px after (`dd/mm` visible of `dd/mm/yyyy`); range, Min 106 to 52 px, Max 138 to 84 px. The box, its height and its neighbours do not move. At 1280 the date shows in full. Captures: `.ai/plans/v0.9.x/anindosarker/reference/spec82-narrow-date-box/` (before and after, single and range, base; radix and aria the same).
