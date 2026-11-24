@@ -54,7 +54,7 @@ const FATAL = [/hydrat/i, /Minified React error/i, /Encountered a script tag/i];
 
 /**
  * Console errors the library emits on its own and that are tracked as
- * library bugs in .ai/plans/handoff/ATTENTION-2026-10-17-claude-review.md;
+ * library bugs;
  * ignored by the `no console errors` check only (FATAL still applies).
  * Empty right now.
  */
