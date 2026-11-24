@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q175** The date picker docs site does not look good: it should carry the table site's theme changer and whole docs layout, exactly
 	- Owner, 2026-11-24, on the live site https://date-picker.shadcn-table.com/: 'The site doesn't look good. I want the theme changer exactly from the table. Why didn't you copy the entire docs system theme and layout?'
+	- Lead lookup, 2026-11-24: spec 85 (plan/specs/85-*.md:12,79) and design-docs-site.md section 2 fixed a not-taken list without asking the owner: theme customizer and style switcher, icon and locale selectors, agent bar and Copy prompt, Copy page, PostHog, Discord link, llms routes, Open Graph images, JSON-LD, sitemap and robots. Of 132 shell files: 25 taken as is, 29 trimmed, 78 not taken. The docs layout is stock fumadocs notebook, not the table's docs-tree-layout (row 12); D180 (lead) kept one flat sidebar list, so the section line and page switcher do not show.
 
 ## Decided
 
