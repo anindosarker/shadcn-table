@@ -9,6 +9,7 @@ kanban-plugin: basic
 	- Owner, 2026-11-24: emerald is right as the default; the look differs because the home page background effect is missing (it goes with the emerald colour) and the red on the select and the pickers looks bad. 'That is why it's not one-on-one.'
 - [ ] **Q180** The date picker site's docs layout is also not the table site's
 	- Owner, 2026-11-24: 'I think the layout is also missing then.' Known: design-docs-site.md row 12 replaced the table's DocsTreeLayout by fumadocs DocsLayout (notebook) with the same props, saying the wrapper only adds the story rows; D180 (lead) kept one flat sidebar list, so the section line above a page title and the page switcher in the breadcrumb do not show; Copy page and search were not checked. Visible differences on a docs page not yet listed from a browser.
+	- Owner, 2026-11-24: 'So far the layout looks the same.' No layout change asked.
 
 ## Decided
 
