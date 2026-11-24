@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D188** Old plan folders and personal details leave the plan files; git history is a later choice #R6
-	- Step 1: the 21 plan folders from before the version folders and v0.3.x to v0.6.x are deleted from .ai/plans, with .ai/handoffs; CONTRIBUTING.md and docs/code-of-conduct/planning-guidelines.md no longer point at them. v0.7.x and v0.8.x stay because v0.9.x cites their decisions; v0.9.x stays, it is live. Step 2, in what stays: machine paths lose the user name (repo-relative, or ~ for the workspace folder), the work email, the Vercel project id and team name and the Claude session ids are removed. Not in this decision: a rewrite of git history; until one, the deleted files and details stay readable in older commits of the public repository. Owner, 2026-11-24: 'remove all my personal info from the plans ... you can remove most of the plans', 'rec'.
-	- Source: Q182
-
 ## In progress
 
 - [ ] **D183** The table's date range filters use the date picker's own range type #E29 #R6
@@ -1086,6 +1082,9 @@ kanban-plugin: basic
 - [x] **D182** The date picker docs site gets the table site's theme changer, with the same default theme #E28 #R6
 	- The picker docs site (date-picker.shadcn-table.com) takes the table docs site's theme customizer and style switcher as they are there: the same panel, presets, shortcuts, undo and saved choice (components/theme-customizer.tsx, components/design-system-provider.tsx, lib/design-system/*, the style sheets, the parts of components/theme-controls.tsx and app/layout.tsx that spec 85 trimmed). The default look is the table's DEFAULT_CONFIG (nova, Inter, Emerald, dark) from the same code, replacing the frozen app/theme.css of design-docs-site.md 4.3. The picker demos follow the chosen theme as the table examples do. Stays: the docs layout as built with one flat sidebar list (D180); Copy page, the agent bar and the other not-taken features of spec 85 stay out. Replaces the theme customizer line of spec 85's not-taken list. Owner, 2026-11-24: 'Add the theme changer. The default theme should be the same as the table one. That should cover most of the stuff.', 'k'.
 	- Source: Q175
+- [x] **D188** Old plan folders and personal details leave the plan files; git history is a later choice #R6
+	- Step 1: the 21 plan folders from before the version folders and v0.3.x to v0.6.x are deleted from .ai/plans, with .ai/handoffs; CONTRIBUTING.md and docs/code-of-conduct/planning-guidelines.md no longer point at them. v0.7.x and v0.8.x stay because v0.9.x cites their decisions; v0.9.x stays, it is live. Step 2, in what stays: machine paths lose the user name (repo-relative, or ~ for the workspace folder), the work email, the Vercel project id and team name and the Claude session ids are removed. Not in this decision: a rewrite of git history; until one, the deleted files and details stay readable in older commits of the public repository. Owner, 2026-11-24: 'remove all my personal info from the plans ... you can remove most of the plans', 'rec'.
+	- Source: Q182
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
