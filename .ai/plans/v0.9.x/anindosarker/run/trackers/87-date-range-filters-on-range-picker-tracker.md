@@ -18,6 +18,12 @@ Checks:
 - Check: same, aria, `ST_BASE=aria vitest run stories/features/DateFilters.stories.tsx` at 803ad5680 + plays: fail as meant (8 failed, 25 passed, same reasons)
 - Check: existing plays before any edit, base, `ST_BASE=base vitest run` FilterChips, Filtering, Customization, ServerData, ViewSettings, mobile-date-pickers at 803ad5680: pass (72 passed)
 - Check: before captures, Storybook dev per base on 5341 + Playwright, 1280 and 390 wide, at 803ad5680 + plays: 30 files under `test/.out/spec87/before/` (subheader, chips-editor, header-editor, popover, advanced-start-date; base, radix, aria)
+- Check: D184 play `WidthClassKeepsCalendarButtonInside`, base, `ST_BASE=base vitest run stories/features/DateFilters.stories.tsx -t "Width Class"` after the D184 change on c39a08cf1: pass (failed on shipped code: button 258..282 in box 34..274)
+- Check: same, radix, `ST_BASE=radix vitest run ... -t "Width Class"`: pass (failed on shipped code, same numbers)
+- Check: same, aria, `ST_BASE=aria vitest run ... -t "Width Class"`: pass (failed on shipped code, same numbers)
+- Check: `pnpm test typecheck --base base` after the D184 change: pass (tsc clean)
+- Check: `pnpm test typecheck --base radix` after the D184 change: pass (tsc clean; the first run failed on the proof story's types, which was then deleted as 1.6.1 says)
+- Check: `pnpm test typecheck --base aria` after the D184 change: pass (tsc clean)
 
 Site map (task 2). Lines are base; radix the same to :529, then select :729, chips :773, caption :829; aria +37 to +50 (args :154, placeholder :229, key :355, date className :644, combobox ref :730, select :801, chips :846, caption :913):
 - :95-100 `rangeFilterIndex` prop: stays; a date-like range without index stands for the pair.
@@ -44,4 +50,5 @@ Notes:
 - React Aria's range popover is found by `[role="dialog"][aria-label]`, not by `findByRole`: testing-library does not see it in the accessibility tree there.
 
 - Task 1 One end only, proven in the picker: done (e4ac17c7f)
-- Task 2 The site map and the before captures: done (see next commit)
+- Task 2 The site map and the before captures: done (c39a08cf1)
+- Task 3 The width class on the outer box: done (see next commit)

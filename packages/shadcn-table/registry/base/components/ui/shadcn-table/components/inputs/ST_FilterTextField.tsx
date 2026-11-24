@@ -523,11 +523,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     },
     title: filterPlaceholder,
     ...textFieldProps,
-    className: cn(
-      'text-ellipsis',
-      filterChipLabel && 'w-0',
-      textFieldProps.className,
-    ),
+    className: cn('text-ellipsis', filterChipLabel && 'w-0'),
     onBlur: (e) => {
       commitTypedValue();
       textFieldProps.onBlur?.(e);
@@ -591,7 +587,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       nestedGroupClassName,
       '*:data-[align=inline-end]:py-0',
       filterChipLabel && 'hidden',
-      dateBoxProps.className,
     ),
     disabled: dateBoxProps.disabled ?? !!filterChipLabel,
     id: dateBoxProps.id,
@@ -666,6 +661,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 : !filterChipLabel
                   ? 'min-w-24'
                   : 'min-w-auto',
+          // The consumer's class sizes the whole box, so its controls stay inside (D184).
+          isDateFilter ? dateBoxProps.className : textFieldProps.className,
         )}
       >
         <InputGroup
@@ -742,7 +739,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
                   hasFilterValue && 'ltr:pr-9 rtl:pl-9',
-                  textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}
                 onClick={(e) => e.stopPropagation()}
@@ -786,7 +782,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 className={cn(
                   nestedGroupClassName,
                   'flex-nowrap px-1.5 py-0.5',
-                  textFieldProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
