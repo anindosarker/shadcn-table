@@ -905,6 +905,126 @@ export const TimeRangeBoxInSubheader = {
   },
 };
 
+/** The filter mode menu of the Joined filter, by the place it sits in. */
+const switchJoinedMode = async (
+  canvasElement: HTMLElement,
+  place: 'chips' | 'subheader',
+  mode: string,
+) => {
+  const holder =
+    place === 'subheader'
+      ? (Array.from(canvasElement.querySelectorAll('thead th')).find((cell) =>
+          cell.textContent?.startsWith('Joined'),
+        ) as HTMLElement)
+      : document.body;
+  await userEvent.click(
+    within(holder).getByRole('button', { name: 'Change filter mode' }),
+  );
+  const item = await waitFor(() => {
+    const found = [
+      ...body().queryAllByRole('menuitem'),
+      ...body().queryAllByRole('menuitemradio'),
+    ].find((menuItem) => menuItem.textContent?.trim().endsWith(mode));
+    expect(found).toBeDefined();
+    return found!;
+  });
+  await userEvent.click(item);
+  await waitFor(() => expect(item).not.toBeInTheDocument());
+};
+
+/**
+ * The mode menu swaps the single and the range picker (D183) and keeps what it
+ * kept before: a range mode to another keeps the pair; the subheader's menu
+ * drops the value between a single and a range mode.
+ */
+const modeSwapCase = (place: 'chips' | 'subheader') => ({
+  render: () =>
+    rangeTable({
+      column: joinedColumn({ filterFn: 'lessThan', filterVariant: 'date' }),
+      place,
+    }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, place);
+    const single = await waitFor(() => {
+      const input = scope.getByLabelText('Filter by Joined');
+      expect(input.tagName).toBe('INPUT');
+      return input;
+    });
+    single.focus();
+    await realKeyboard().keyboard('10102025');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ann', 'Finn']));
+
+    await switchJoinedMode(canvasElement, place, 'Between');
+    const trigger = await rangeTrigger(scope);
+    expect(trigger).toHaveTextContent(/Pick a date/);
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+
+    await typeEnd(trigger, 'Min', '10102025');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+    await userEvent.keyboard('{Escape}');
+    await expectRangePopupClosed('Filter by Joined');
+
+    await switchJoinedMode(canvasElement, place, 'Between Inclusive');
+    const kept = await rangeTrigger(scope);
+    expect(kept).not.toHaveTextContent(/Pick a date/);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']);
+
+    await switchJoinedMode(canvasElement, place, 'Less Than');
+    await waitFor(() => {
+      expect(
+        scope.queryByRole('button', { name: 'Filter by Joined' }),
+      ).toBeNull();
+      expect(scope.getByLabelText('Filter by Joined').tagName).toBe('INPUT');
+    });
+    // The chips mode picker keeps the value on every mode change.
+    if (place === 'subheader') {
+      await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    }
+  },
+});
+
+export const ModeSwapsSingleAndRangeInChipsEditor = modeSwapCase('chips');
+
+export const ModeSwapsSingleAndRangeInSubheader = modeSwapCase('subheader');
+
+// A typed end applies when its input loses focus, without Enter.
+export const RangeTypedEndAppliesOnBlur = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'subheader' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    await realClick(await rangeTrigger(scope));
+    const popup = await rangePopup('Filter by Joined');
+    const min = popup.getByLabelText('Min');
+    min.focus();
+    await realKeyboard().keyboard('10102025');
+    await waitFor(() => expect(min).toHaveValue('2025-10-10'));
+    expect(names(canvasElement)).toHaveLength(6);
+    popup.getByLabelText('Max').focus();
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+  },
+};
+
+// Escape in an end input closes the popup, which orders a reversed pair: the
+// ordered pair filters.
+export const RangeEscapeAppliesOrderedEnds = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'subheader' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(5));
+    await typeEnd(trigger, 'Min', '12122025');
+    await realKeyboard().keyboard('{Escape}');
+    await expectRangePopupClosed('Filter by Joined');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Eve']));
+  },
+};
+
 export const RangeBoxInPopoverFilter = {
   render: () => rangeTable({ column: dateRangeColumn, place: 'popover' }),
   play: async ({ canvasElement }: StoryContext) => {
