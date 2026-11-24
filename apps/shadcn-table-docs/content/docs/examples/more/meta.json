@@ -181,6 +181,7 @@
     "features-date-filters--range-typed-max-applies-on-escape-in-popover-filter",
     "features-date-filters--range-typed-min-applies-on-escape-with-max-set",
     "features-date-filters--range-typed-reversed-end-applies-ordered-on-escape",
+    "features-date-filters--range-typed-reversed-end-applies-ordered-on-escape-controlled",
     "features-date-filters--range-typed-end-applies-on-click-outside",
     "features-date-filters--range-half-typed-end-drops-on-escape",
     "features-date-filters--range-box-in-popover-filter",

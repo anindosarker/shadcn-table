@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import {
   type ST_ColumnDef,
+  type ST_ColumnFiltersState,
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
@@ -1047,20 +1049,30 @@ export const RangeEscapeAppliesOrderedEnds = {
 
 // D200: the box never shows a range the filter does not have. The table
 // prints the Joined filter value, which the plays compare with the box.
-const RangeStateTable = ({ place }: Pick<RangeCase, 'place'>) => {
+const RangeStateTable = ({
+  controlled = false,
+  place,
+}: Pick<RangeCase, 'place'> & { controlled?: boolean }) => {
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>(
+    [],
+  );
   const table = useShadcnTable({
     columnFilterDisplayMode: place,
     columns: [nameColumn, dateRangeColumn],
     data,
     enableColumnFilterModes: true,
     initialState: { showColumnFilters: place === 'subheader' },
+    ...(controlled && {
+      onColumnFiltersChange: setColumnFilters,
+      state: { columnFilters },
+    }),
   });
-  const columnFilters = useSelector(table.atoms.columnFilters);
+  const tableColumnFilters = useSelector(table.atoms.columnFilters);
   return (
     <>
       <output data-testid="joined-filter">
         {JSON.stringify(
-          columnFilters.find((filter) => filter.id === 'joined')?.value ?? [],
+          tableColumnFilters.find((filter) => filter.id === 'joined')?.value ?? [],
         )}
       </output>
       <ShadcnTable table={table} />
@@ -1140,8 +1152,8 @@ export const RangeTypedMinAppliesOnEscapeWithMaxSet = {
 
 // The picker orders a reversed pair when the popup closes: the ordered pair
 // applies, not the typed one.
-export const RangeTypedReversedEndAppliesOrderedOnEscape = {
-  render: () => <RangeStateTable place="subheader" />,
+const typedReversedEndAppliesOrderedOnEscapeCase = (controlled: boolean) => ({
+  render: () => <RangeStateTable controlled={controlled} place="subheader" />,
   play: async ({ canvasElement }: StoryContext) => {
     const scope = await openRangePlace(canvasElement, 'subheader');
     const trigger = await rangeTrigger(scope);
@@ -1153,7 +1165,13 @@ export const RangeTypedReversedEndAppliesOrderedOnEscape = {
     await expectBoxAndFilter(trigger, ['2025-11-11', '2025-12-12']);
     expect(names(canvasElement)).toEqual(['Eve']);
   },
-};
+});
+
+export const RangeTypedReversedEndAppliesOrderedOnEscape =
+  typedReversedEndAppliesOrderedOnEscapeCase(false);
+
+export const RangeTypedReversedEndAppliesOrderedOnEscapeControlled =
+  typedReversedEndAppliesOrderedOnEscapeCase(true);
 
 /** A real press at the element's centre, whatever covers the page there. */
 const realPressAt = (element: HTMLElement) => {
@@ -1194,6 +1212,7 @@ export const RangeHalfTypedEndDropsOnEscape = {
     await waitFor(() => expect(names(canvasElement)).toHaveLength(4));
     const max = await typePendingEnd(trigger, 'Max', '1111');
     expect(max).toHaveValue('');
+    expect((max as HTMLInputElement).validity.badInput).toBe(true);
     await realKeyboard().keyboard('{Escape}');
     await expectBoxAndFilter(trigger, ['2025-10-10', '']);
     expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']);
