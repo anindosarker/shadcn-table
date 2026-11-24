@@ -21,8 +21,29 @@ Checks:
 - Check: task 2 `pnpm --filter docs lint` at 5841bdc: pass
 - Check: task 2 `pnpm --filter docs build` at 5841bdc: pass
 - Check: task 2 `ls docs/public/styles/style-*.css | wc -l` at 5841bdc: 8
+- Check: task 3 local read, `next start -p 5341` on the build of 5841bdc, Playwright 1.65.1 headless chromium, script /private/tmp/claude-501/dp-theme-read/scripts/read.mjs: 55 reads, 55 pass
+  - no stored choice, `/docs/install` at 1440 and 390, light and dark: `<html>` has `style-nova` and `data-design-system`, `/styles/style-nova.css` linked: pass (4 reads)
+  - token comparison with `https://www.shadcn-table.com/docs/getting-started/install`, equal at 1440 and 390: light `--primary` oklch(0.596 0.145 163.225) = oklch(0.596 0.145 163.225); light `--radius` .625rem = .625rem; light `--font-sans` "Inter", "Inter Fallback", 'Inter Variable', sans-serif = same; dark `--primary` oklch(0.765 0.177 163.223) = oklch(0.765 0.177 163.223); dark `--radius` .625rem = .625rem; dark `--font-sans` "Inter", "Inter Fallback", 'Inter Variable', sans-serif = same: pass (4 reads)
+  - no flash on reload: at the first animation frame `<html>` already has `style-nova` and the final `--primary`, at 1440 and 390, light and dark: pass (4 reads)
+  - palette button opens the sheet on `/`, `/docs/date` and `/no-such-page-404`, at 1440 and at 390 (via the sidebar footer, as on the table site): pass (6 reads)
+  - sheet controls by label against the table site's sheet: the only label missing is `Icon Library`, none extra: pass
+  - eight styles chosen in the sheet on `/docs/date`: `<html>` class `style-<name>` alone, `/styles/style-<name>.css` linked and loaded, the Base UI picker opens and takes a day: vega, nova, maia, lyra, mira, luma, sera, rhea: pass (8 reads)
+  - nova, maia, lyra also on Radix UI and React Aria on `/docs/date` (pick a day) and on Base UI, Radix UI and React Aria on `/docs/ranges` (pick 10 to 14): pass (15 reads)
+  - preset (T3 Chat), Colors tab `primary` = #e11d48, font Lora, radius None: each changes the picker popup's computed style (selected day background, popup background, font-family, border-radius), read on the popup opened after the sheet closes (the sheet is modal): pass (4 reads)
+  - Undo button and Mod+Z each step back (radius None to default, font Lora to Inter); R shuffles; Shift+R returns to nova and the default tokens; a reload keeps lyra and the chosen preset: pass (5 reads)
+  - typing `11/24/2026`, `rcR` and Shift+R into the picker's box: stored config and `<html>` class unchanged: pass
+  - no overflow at 390 with the sheet open, light and dark (`scrollWidth - innerWidth` = 0): pass (2 reads)
+  - no console error on any page read (the 404 page's own document 404 response excluded): pass
+- Check: task 3 captures committed at 42edd0907 under `reference/q149-calendar-library/docs-site/theme/`: `table-install-{sheet,default}-{1440,390}-{light,dark}.png` (live table site) beside `picker-install-{sheet,default}-{1440,390}-{light,dark}.png` (local build), 16 files
+- Check: task 3 difference list, picker `/docs/install` against table `/docs/getting-started/install`:
+  - sheet: no Icon Library select, so Base Color, Theme, Menu Color and Menu Accent move up one grid cell each and Menu Accent sits alone on its row (the one row of 1.6.2)
+  - sheet: every other control, the shortcut row, the Reset tooltip on open, the Light/Dark switch, the presets and the token list equal at both widths and both modes
+  - page behind the sheet and default look: brand `shadcn-date-picker v0.1.1` vs `shadcn-table v0.9.8`, section tabs Get started/Pickers/Props vs Get started/Examples/Guides/API, the page text and the flat sidebar list (content, spec 85); the table's Copy page button, `// GETTING STARTED` kicker and Ask your agent bar are absent (not-taken features of spec 85, D182)
+  - colours, radius, fonts, header pill and code block chrome equal in both default captures
+- Check: task 3 server stopped, `lsof -nP -iTCP:5341 -sTCP:LISTEN` prints nothing
+- Check: Local CI at 5841bdc, one at a time: `pnpm install --frozen-lockfile` pass; `pnpm lint` pass; `pnpm typecheck` pass; `pnpm --filter docs lint` pass; `pnpm --filter docs types:check` pass; `pnpm --filter docs build` pass
 
 - Task 1 The taken files and the two packages: done (432b9bb)
 - Task 2 The layout and the default look: done (5841bdc)
-- Task 3 The local production build read and the captures: running
+- Task 3 The local production build read and the captures: done (42edd0907)
 - Task 4 After the merge, the live reads: planned
