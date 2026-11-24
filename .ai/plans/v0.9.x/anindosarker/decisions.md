@@ -17,12 +17,6 @@ kanban-plugin: basic
 - [ ] **D165** The is-empty reset fix lands with the table's date picker switch #E26 #R6
 	- Supersedes D93.
 	- Clearing an is-empty filter returns the column to its default filter mode, on every column type: the fix of D93 is taken as built from branch v0.9/filter-input-fixes (commit fd7059b6 and its play in 8c34979e) and merged in the same epic as the table switch of D164, not on its own. Spec 50 stops; its click fix (D96, 9bfdf247) is not merged. Owner, 2026-11-24: 'fix everything in one go', 'k'.
-- [ ] **D176** The date picker's developer warning for a wrong min, max or step is removed #E27 #R6
-	- utils/values.ts of the date picker no longer prints 'DatePicker: <name> <value> is ignored': a min or max that is not a value of the picker's type and a step that is not a whole number above zero are dropped silently, as the browser does with a bad min on its own input. The process.env.NODE_ENV read goes with it, so a Vite app that installs the picker type-checks without Node types; the helper ignored() and its type go, nothing else changes. On the three bases, in shadcn-date-picker; this is an owner-allowed change to the approved code (report 2.1), so from here the Base UI source differs from test-projects/next-app by this change. The 'node' line added to packages/shadcn-table/tsconfig.radix.json in spec 81 is removed when the table moves to the new tag. Owner, 2026-11-24, told it is a development-only message: 'remove'.
-	- Source: Q166
-- [ ] **D177** The month and year grid arrows flip on right-to-left pages #E27 #R6
-	- The previous and next chevrons of GridHeader in components/period-views.tsx of the date picker get rtl:rotate-180, the class the day calendar's caption arrows already have, on the three bases in shadcn-date-picker. An owner-allowed change to the approved code (report 2.1). Owner, 2026-11-24: '162 k'.
-	- Source: Q162
 - [ ] **D178** The date picker gets a small docs site with the table site's look #E27 #R6
 	- shadcn-date-picker gets a docs app that reuses the shell of the table's docs site (header, theme, fonts, section layout, code panels, install command blocks), served at date-picker.shadcn-table.com. Pages stay few: home, install, one page per picker type (date, date-time, time, week, month, year, ranges) with a live demo and its code, and props. The Storybook moves off the site root to its own address under the same project, as the table's does. The content is thin (D162); the look is the table's. Owner, 2026-11-24: 'the docs app looks bad, make it like table', 'k'.
 	- Source: Q167
@@ -1057,6 +1051,12 @@ kanban-plugin: basic
 - [x] **D174** The React Aria popup's rare stuck-open case is left to React Aria #R6
 	- The React Aria picker keeps the stock popover (D171): a close that lands in the first two frames of a delayed fade-in can leave the popup on the page, and on a touch screen the popup can flicker once as it opens; both are stock react-aria-components behaviour (Popover.mjs:91,103,180,185), not picker code. No workaround and no restyled stock part in the library; the README names both under React Aria. An upstream report is filed only on the owner's word. Settled by the lead.
 	- Source: Q164
+- [x] **D176** The date picker's developer warning for a wrong min, max or step is removed #E27 #R6
+	- utils/values.ts of the date picker no longer prints 'DatePicker: <name> <value> is ignored': a min or max that is not a value of the picker's type and a step that is not a whole number above zero are dropped silently, as the browser does with a bad min on its own input. The process.env.NODE_ENV read goes with it, so a Vite app that installs the picker type-checks without Node types; the helper ignored() and its type go, nothing else changes. On the three bases, in shadcn-date-picker; this is an owner-allowed change to the approved code (report 2.1), so from here the Base UI source differs from test-projects/next-app by this change. The 'node' line added to packages/shadcn-table/tsconfig.radix.json in spec 81 is removed when the table moves to the new tag. Owner, 2026-11-24, told it is a development-only message: 'remove'.
+	- Source: Q166
+- [x] **D177** The month and year grid arrows flip on right-to-left pages #E27 #R6
+	- The previous and next chevrons of GridHeader in components/period-views.tsx of the date picker get rtl:rotate-180, the class the day calendar's caption arrows already have, on the three bases in shadcn-date-picker. An owner-allowed change to the approved code (report 2.1). Owner, 2026-11-24: '162 k'.
+	- Source: Q162
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":600,"date-format":"YYYY-MM-DD","time-format":"HH:mm","tag-action":"kanban","set-view":"list","full-list-lane-width":true,"show-add-list":false,"show-archive-all":false,"custom-title":"v0.9.x decisions"}
