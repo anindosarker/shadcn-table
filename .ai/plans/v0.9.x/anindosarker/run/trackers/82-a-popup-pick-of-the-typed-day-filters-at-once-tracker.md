@@ -1,6 +1,6 @@
 # 82: A popup pick of the typed day filters at once (Q171), tracker
 
-Status: running
+Status: done
 Branch `v0.9/date-pick-of-typed-day-applies`, worktree 06
 Checks:
 - Check: play first (P11), `ST_BASE=base vitest run stories/features/DateFilters -t "Pick Typed"` on b7004b4d (origin/claude/review, spec 82 merged): passed on the shipped code. Cause, found by logging the box's focus events: a focus move inside the popup (month list to the day) reaches the box's `onBlur` twice, each call starts a commit timer, the box's `onFocus` clears only the second, so the first applied the typed date on the way to the day and hid the bug in this test.
