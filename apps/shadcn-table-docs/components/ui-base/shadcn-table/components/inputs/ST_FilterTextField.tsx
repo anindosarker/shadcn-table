@@ -74,7 +74,7 @@ const rangePickerClassName =
 
 // The time range keeps a box per end: side by side, named for screen readers.
 const timeRangeClassName =
-  'h-full flex-row gap-0 *:data-[slot=field]:gap-0 *:data-[slot=field]:not-first:border-s **:data-[slot=field-label]:sr-only';
+  'h-full flex-row gap-0 *:data-[slot=field]:min-w-0 *:data-[slot=field]:flex-1 *:data-[slot=field]:gap-0 **:data-[slot=input-group]:min-w-0 *:data-[slot=field]:not-first:border-s **:data-[slot=field-label]:sr-only';
 
 /** Every value the filter inputs hand to the column filter. */
 type FilterInputValue = Date | number | string | string[] | null;
