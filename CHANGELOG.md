@@ -29,6 +29,7 @@ publishes the section as the GitHub release notes.
 - The year of a typed date takes four digits and the box moves on to the next part by itself; the browser's box took up to six.
 - Escape in a box inside a popup that a filter field opened, such as the time box of the date and time picker, closes that popup and leaves the filter editor open.
 - Fixed: clearing an "is empty" or "is not empty" filter returns the column to its own default filter mode on every column type, `equals` for a date column, in place of `fuzzy` (D165).
+- Fixed: a day picked in the calendar of a date filter applies at once, also when it is the day just typed in the box, which before waited for Enter or for focus to leave the box (Q171).
 
 ### Docs
 
