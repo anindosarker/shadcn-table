@@ -1,6 +1,7 @@
 # 84: Date picker v0.1.1, tracker
 
-Status: running
+Status: done
+Merge: 2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb (`merge: date-picker-v0-1-1 (84)` on main), tag v0.1.1
 Branch `date-picker-v0-1-1`, worktree shadcn-date-picker.worktrees/date-picker-v0-1-1 (from origin/main c42b8bb)
 Checks:
 - Check: play red, `DP_BASE=base pnpm exec vitest run stories/Options.stories.tsx` at c42b8bb with the G3, G4 step rewritten (source unchanged): fail as expected (1 failed, 26 passed; Ignored Limits: `expected "spy" to not be called with arguments: [ StringContaining "DatePicker:" ]`, received `DatePicker: min "2026/11/05" is ignored: not a datetime value` and `DatePicker: step 1.5 is ignored: not a whole number of seconds above zero`)
@@ -45,6 +46,7 @@ Checks:
 - Task 2 grid arrows: done (a05fb19); eight right-to-left captures committed
 - Task 3 generated files, version, README, Introduction: done (0b45dec); package.json 0.1.1, install commands at #v0.1.1, README Base UI note before Radix UI; Local CI green at 0b45dec; not merged
 - Task 4 merge, checks, tag and release: done (2cf6e6f); main did not move past c42b8bb, `merge: date-picker-v0-1-1 (84)` pushed; annotated tag v0.1.1 on 2cf6e6f; GitHub release v0.1.1 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.1), notes = the three lines of 1.6.4 plus the README install section
+- Task 5 install proofs, live reads, clean-up: done at tag v0.1.1 (2cf6e6f); base, radix, aria each 22 files, empty diff -r against registry/<base>/generated/components/date-picker, tsc and next build exit 0; Vite base-nova app tsc -p tsconfig.app.json exit 0; version.txt 0.1.1, Month rtl arrows flipped, Introduction at #v0.1.1 live; scratch apps /private/tmp/claude-501/dp-v011-{base,radix,aria,vite} deleted; milestone worktree and branch removed
 
 Task 4 (head of main 2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb):
 - Check: merge, `git merge --no-ff origin/date-picker-v0-1-1` on main at c42b8bb: pass (2cf6e6f, 16 files, no conflict, worktree ff to 2cf6e6f)
@@ -76,3 +78,27 @@ Verifier (milestone Date picker v0.1.1, head 0b45dec):
 - Check: verifier lint, typecheck, storybook:build: tracker lines exist at 0b45dec, not rerun
 - Check: verifier texts at 0b45dec: pass (README and Introduction.mdx 3 commands at #v0.1.1 each, 0 v0.1.0; README Base UI note before Radix UI, two lines, issues/9401 once; props row "A limit in another format is ignored."; package.json 0.1.1)
 - Check: verifier captures, `git ls-tree origin/claude/review reference/q149-calendar-library/rtl/after/`: pass (8 files; month-single-390 compared with spec 78 capture by eye, arrows flipped)
+
+Task 5 (tag v0.1.1, 2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb; clone main at 2cf6e6f):
+- Check: install base, fresh Next.js app (`pnpm dlx shadcn@latest create -t next -b base -p nova --no-monorepo`, style base-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base#v0.1.1` at 2cf6e6f: pass (35 files created, button skipped as identical)
+- Check: files base, `find components/date-picker -type f | wc -l` at 2cf6e6f: pass (22)
+- Check: diff base, `diff -r components/date-picker registry/base/generated/components/date-picker` at 2cf6e6f: pass (no output)
+- Check: build base, `pnpm exec tsc --noEmit` and `pnpm exec next build` with one page rendering controlled `<DatePicker type="date" />` and `<DatePicker type="date" range />` at 2cf6e6f: pass (both exit 0, route / static)
+- Check: install radix, fresh Next.js app (`pnpm dlx shadcn@latest create -t next -b radix -p nova --no-monorepo`, style radix-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-radix#v0.1.1` at 2cf6e6f: pass (35 files created, button skipped as identical)
+- Check: files radix, `find components/date-picker -type f | wc -l` at 2cf6e6f: pass (22)
+- Check: diff radix, `diff -r components/date-picker registry/radix/generated/components/date-picker` at 2cf6e6f: pass (no output)
+- Check: build radix, `pnpm exec tsc --noEmit` and `pnpm exec next build` with the same page at 2cf6e6f: pass (both exit 0, route / static)
+- Check: install aria, fresh Next.js app (`pnpm dlx shadcn@latest create -t next -b aria -p nova --no-monorepo`, style aria-nova), `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-aria#v0.1.1` at 2cf6e6f: pass (34 files created, button skipped as identical)
+- Check: files aria, `find components/date-picker -type f | wc -l` at 2cf6e6f: pass (22)
+- Check: diff aria, `diff -r components/date-picker registry/aria/generated/components/date-picker` at 2cf6e6f: pass (no output)
+- Check: build aria, `pnpm exec tsc --noEmit` and `pnpm exec next build` with the same page at 2cf6e6f: pass (both exit 0, route / static)
+- Check: Vite before (card Q166, at #v0.1.0): "stock shadcn init --template vite --base base --preset nova, shadcn add anindosarker/shadcn-date-picker/date-picker-base#v0.1.0, tsc --noEmit -p tsconfig.app.json exits 2 with TS2591 Cannot find name 'process'"
+- Check: Vite app, `pnpm dlx shadcn@latest init --template vite --base base --preset nova --no-monorepo -n dp-v011-vite` then `pnpm dlx shadcn@latest add anindosarker/shadcn-date-picker/date-picker-base#v0.1.1` at 2cf6e6f: pass (style base-nova, 35 files created, button skipped as identical, 22 files in src/components/date-picker, `grep -rn process src/components/date-picker` 0 lines)
+- Check: Vite types, `pnpm exec tsc --noEmit -p tsconfig.app.json` at 2cf6e6f: pass (exit 0; tsconfig.app.json types stay ["vite/client"])
+- Check: Vite no Node types added, `grep -c '@types/node' package.json` at 2cf6e6f: 1, not 0 (the stock vite template already has "@types/node": "^24" in devDependencies for vite.config.ts before the add; the add changed package.json by date-fns and react-day-picker only, no @types/node added, and tsconfig.app.json does not load Node types)
+- Check: Vercel, `gh api repos/anindosarker/shadcn-date-picker/commits/2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb/status`: pass (success, context Vercel)
+- Check: live version, python3 urllib on https://date-picker.shadcn-table.com/version.txt at 2cf6e6f: pass (200, 0.1.1)
+- Check: live rtl arrows, headless chromium on https://date-picker.shadcn-table.com/base/iframe.html?id=types-month--single with `dir="rtl"` set on the preview document, popup opened: pass (Previous year and Next year chevrons class `rtl:rotate-180`, computed rotate 180deg, transform none, direction rtl)
+- Check: live Introduction, headless chromium on https://date-picker.shadcn-table.com/base/iframe.html?id=introduction--docs&viewMode=docs: pass (base, radix, aria install commands, each with #v0.1.1; no console error; browser closed)
+- Check: scratch apps, `ls -d /private/tmp/claude-501/dp-v011-*`: pass (none)
+- Check: clean-up, `git worktree remove` of shadcn-date-picker.worktrees/date-picker-v0-1-1 (only ignored node_modules and storybook-static left; plain remove succeeded), `push origin --delete date-picker-v0-1-1`, `branch -d date-picker-v0-1-1`, `worktree prune`: pass; `git -C shadcn-date-picker status --short`: pass (empty); worktree date-picker-docs-vercel-proof left untouched
