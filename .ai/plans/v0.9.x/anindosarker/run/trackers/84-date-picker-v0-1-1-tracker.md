@@ -44,6 +44,22 @@ Checks:
 - Task 1 warning removal: done (4873842); props row in stories/Introduction.mdx says a limit in another format is ignored
 - Task 2 grid arrows: done (a05fb19); eight right-to-left captures committed
 - Task 3 generated files, version, README, Introduction: done (0b45dec); package.json 0.1.1, install commands at #v0.1.1, README Base UI note before Radix UI; Local CI green at 0b45dec; not merged
+- Task 4 merge, checks, tag and release: done (2cf6e6f); main did not move past c42b8bb, `merge: date-picker-v0-1-1 (84)` pushed; annotated tag v0.1.1 on 2cf6e6f; GitHub release v0.1.1 (https://github.com/anindosarker/shadcn-date-picker/releases/tag/v0.1.1), notes = the three lines of 1.6.4 plus the README install section
+
+Task 4 (head of main 2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb):
+- Check: merge, `git merge --no-ff origin/date-picker-v0-1-1` on main at c42b8bb: pass (2cf6e6f, 16 files, no conflict, worktree ff to 2cf6e6f)
+- Check: install, `pnpm install --frozen-lockfile` at 2cf6e6f: pass (exit 0)
+- Check: lint, `pnpm lint` at 2cf6e6f: pass (exit 0)
+- Check: types, `pnpm typecheck` at 2cf6e6f: pass (exit 0)
+- Check: registry, `pnpm registry:check` at 2cf6e6f: pass (exit 0)
+- Check: tests base, `pnpm test --base base` at 2cf6e6f: pass (7 files, 39 tests)
+- Check: tests radix, `pnpm test --base radix` at 2cf6e6f: pass (7 files, 39 tests)
+- Check: tests aria, `pnpm test --base aria` at 2cf6e6f: pass (7 files, 39 tests, no rerun)
+- Check: site build, `pnpm storybook:build` at 2cf6e6f: pass (exit 0, version.txt 0.1.1)
+- Check: CI, `gh run list -R anindosarker/shadcn-date-picker --branch main` run 45298282527 at 2cf6e6f: pass (completed, success)
+- Check: tag, `git ls-remote --tags https://github.com/anindosarker/shadcn-date-picker 'v0.1.1*'`: pass (one tag, refs/tags/v0.1.1^{} 2cf6e6ff08e5b3e824f04e4b8abdc41fdb4088eb)
+- Check: old tag kept, `git ls-remote --tags https://github.com/anindosarker/shadcn-date-picker 'v0.1.0*'`: pass (refs/tags/v0.1.0^{} 908300d075125711350b6002b20131a33d710de6)
+- Check: release, `gh release view v0.1.1 -R anindosarker/shadcn-date-picker --json tagName --jq .tagName`: pass (v0.1.1)
 
 Verifier (milestone Date picker v0.1.1, head 0b45dec):
 - Check: verifier owned files, `git diff --name-only origin/main...HEAD` at 0b45dec: pass (16 files, all in spec 2.1)
