@@ -383,6 +383,7 @@ One file per row in `docs/demos/`, a client component, controlled, the value pri
 | `/docs/ranges` | `range`; `value` as `[from, to]`, an empty end is `""`; `onChange` with the pair; `presets` whose `value` is a pair (`Two`, `RangeValue`). One sentence: a time range takes the popover's content props only, not its open state (`TimeProps`, `Two & { popoverProps?: PopoverContentProps }`) |
 
 - No demo for a prop combination the stories do not have. The Options stories (limits, presets, labels, dialog) stay in the Storybook; the pages link there with `<StorybookLink />`.
+- `components/example-playground.tsx`: the preview slot wraps its children in `<div className="w-fit max-w-full">`, so the demo picker is as wide as its content, as on the home page, not the full width of the panel (the input group's own `w-full`).
 
 ### 6.4 Home
 
@@ -390,6 +391,7 @@ One file per row in `docs/demos/`, a client component, controlled, the value pri
 
 - Where the new parts sit: all inside the `v4-shell v12-hero-copy` block, in the place of AgentBar (home-page.tsx:49 to 53), before the `v12-cta` row. The install block first; then one `<div className="v12-hero-row">` holding the two demos. Both classes are in the as-is `components/dev-home/v12/v12.css`: `.v12 .v12-install` (line 227, as wide as its command) and `.v12-hero-row` (line 218: a centred flex row that wraps, with its own gap), so the two pickers sit side by side where there is room and one under the other where there is not, with no width or breakpoint of the plan's own.
 - The h1: `shadcn`, a dash, `date`, a dash, `picker`, each dash in a `v7-wordmark-dash` span as the table's one dash is (home-page.tsx:40).
+- `components/dev-home/v12/nav.tsx`: the version link takes `max-sm:hidden`, so below `sm` the name does not run over it (at 390 wide); the base select stays (D181).
 - WAITING (A3): no footer on the home page and the 404 page (default: none; spec 85, 1.6.3 lists the home page's parts and has no footer, and the table's footer file holds the Dune field, the Discord link and the table's link columns); the base select in the home header (5.1).
 
 ### 6.5 Header
