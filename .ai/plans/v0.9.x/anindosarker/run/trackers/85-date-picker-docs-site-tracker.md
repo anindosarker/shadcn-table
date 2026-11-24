@@ -16,16 +16,18 @@ Checks:
 - Check: `git -C shadcn-date-picker status --short` prints nothing: pass (worktree removed, `git worktree list` shows the clone alone)
 - Check: review round 1, the four majors answered in the plan (7 status and 7.4; 5.1 `lib/bases.mjs`; row 122 `siteUrl`; new 1.4 root lint entries): pass
 - Check: no em dash in the plan (`grep -c` prints 0): pass
+- Check: the proof's preview is deleted, `vercel inspect dpl_2SHMqgtpbRws56SEZXF5obXb7M3w` answers "Can't find the deployment" and the preview address answers 404 `DEPLOYMENT_NOT_FOUND`: pass
 
 - Task 1 The read, inventory, not-taken list, dependencies, styles: done (c6c0e745, plan sections 1 to 4)
 - Task 2 Demos and the base switcher, routes and content: done (c6c0e745, plan sections 5 and 6)
 - Task 3 Vercel routing proof and Storybook prefix, checks list: done (c6c0e745 sections 7.1 to 7.3 and 8; e90d91e4 the proof lines of 7.4, branch and worktree deleted)
 - Review round 1: 4 majors, 13 minors (one of them the passed checks, for the record); all majors and 11 minors corrected in the plan, one minor answered with proof (the JSDoc of `DatePicker` opens at date-picker.tsx:14 with `/**`, as the plan says), the look picks staged as A2 and A3: e90d91e4
+- Review round 2: 0 majors, 7 minors (one of them the round result, for the record); the six others corrected in the plan (rows 87, 102, 122; 1.4 twice; 7.4 with the preview removed by `vercel rm`; two lines added to section 8). Departure from the wording of spec 85, plan Task 3, kept and stated: the three proof lines are browser end addresses, not `curl -sI` lines, because the preview sits behind the Vercel login; the 307 and the 308 are read with `curl -sI` on production after the merge (plan section 8, Live): de7c89e9
 
 Notes:
 - The build check of spec 85 ("for each taken trimmed row the diff shows deletions and the import paths only") is wider in the plan: a trimmed row may also list value replacements (names, addresses, NAV_LINKS, one function signature and body, one guard line). Each is named in its row. Without them the header would read shadcn-table.
 - Departure from spec 85, 1.6.1 item 3 and 1.7 (versions of the table's docs app), for the closer: `react`, `react-dom`, `lucide-react` and `cn` take the date picker root's range, because the three trees run on them and `cn` `^0.4.0` and `^0.5.0` share no version (plan section 3). Every other package is the table's.
-- The proof deployment dpl_2SHMqgtpbRws56SEZXF5obXb7M3w (both services built, READY) is still on Vercel behind the login; spec 85, 1.6.1 item 7 says the preview is deleted after: `vercel remove dpl_2SHMqgtpbRws56SEZXF5obXb7M3w` is left to the closer, the runner deleted the branch only.
+- The proof deployment dpl_2SHMqgtpbRws56SEZXF5obXb7M3w was removed in review round 2 with `vercel rm` (spec 85, 1.6.1 item 7: the preview is deleted after); nothing of the proof is left on GitHub or Vercel.
 - No GitHub or Vercel setting was changed. `vercel curl` was not run. The preview was read through the owner's Chrome with AppleScript (tabs opened in the back and closed after; Chrome's remote debugging and JavaScript from Apple Events stayed off).
 - Row 122: the public site's canonical links come from a constant in `lib/shared.ts` (`https://date-picker.shadcn-table.com`), no environment variable.
 
