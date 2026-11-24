@@ -7,6 +7,9 @@ kanban-plugin: basic
 - [ ] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
 	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
 	- Source: Q165
+- [ ] **D180** The date picker docs site keeps one sidebar list of its nine pages #R6
+	- Tracker 85 A2, option 1: one flat sidebar list under the three labels Get Started, Pickers, Props. Three sections as on the table site would leave two sidebars with one row each; the section line above the page title and the page switcher in the breadcrumb are not shown. Lead, 2026-11-24 (weight test: docs layout, cheap to change).
+	- Source: Q168
 
 ## In progress
 
