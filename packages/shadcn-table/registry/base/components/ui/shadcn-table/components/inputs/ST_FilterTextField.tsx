@@ -57,6 +57,7 @@ import {
   createFilterOptions,
   getValueAndLabel,
   parseFromValuesOrFunc,
+  setFilterRangeTrigger,
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
@@ -67,8 +68,22 @@ const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
 );
 
+// The range picker's own parts sit in the filter box, which draws the
+// border, the background and the focus ring.
+const rangePickerClassName =
+  '[&>button]:h-full [&>button]:border-0 [&>button]:bg-transparent [&>button]:shadow-none dark:[&>button]:bg-transparent [&>button]:aria-expanded:bg-transparent **:data-[slot=input-group]:h-full **:data-[slot=input-group]:border-0 **:data-[slot=input-group]:bg-transparent **:data-[slot=input-group]:shadow-none **:data-[slot=input-group]:ring-0! dark:**:data-[slot=input-group]:bg-transparent';
+
+// The time range keeps a box per end: side by side, named for screen readers.
+const timeRangeClassName =
+  'h-full flex-row gap-0 *:data-[slot=field]:min-w-0 *:data-[slot=field]:flex-1 *:data-[slot=field]:gap-0 **:data-[slot=input-group]:min-w-0 *:data-[slot=field]:not-first:border-s **:data-[slot=field-label]:sr-only';
+
 /** Every value the filter inputs hand to the column filter. */
 type FilterInputValue = Date | number | string | string[] | null;
+
+const toRangeValue = (value: unknown): [string, string] =>
+  Array.isArray(value)
+    ? [(value[0] as string) || '', (value[1] as string) || '']
+    : ['', ''];
 
 const isSameFilterValue = (a: unknown, b: unknown): boolean =>
   Object.is(a, b) ||
@@ -123,7 +138,27 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const columnFilters = useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
-  const args = { column, rangeFilterIndex, table };
+  const {
+    allowedColumnFilterOptions,
+    currentFilterOption,
+    facetedUniqueValues,
+    isAutocompleteFilter,
+    isDateFilter,
+    isMultiSelectFilter,
+    isRangeFilter,
+    isSelectFilter,
+  } = getColumnFilterInfo({ header, table });
+
+  // A date-like range is one range picker for the pair (D183); a consumer's
+  // props functions see it as the first end.
+  const isDateRange =
+    isDateFilter && isRangeFilter && rangeFilterIndex === undefined;
+
+  const args = {
+    column,
+    rangeFilterIndex: isDateRange ? 0 : rangeFilterIndex,
+    table,
+  };
 
   const textFieldProps = {
     ...parseFromValuesOrFunc(stFilterTextFieldProps, args),
@@ -151,17 +186,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     ...parseFromValuesOrFunc(columnDef.stFilterTimePickerProps, args),
   };
 
-  const {
-    allowedColumnFilterOptions,
-    currentFilterOption,
-    facetedUniqueValues,
-    isAutocompleteFilter,
-    isDateFilter,
-    isMultiSelectFilter,
-    isRangeFilter,
-    isSelectFilter,
-  } = getColumnFilterInfo({ header, table });
-
   const dropdownOptions = useDropdownOptions({ header, table });
 
   const optionLabel = (value: string) => {
@@ -183,17 +207,18 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       ]
     : '';
 
-  const filterPlaceholder = !isRangeFilter
-    ? (textFieldProps?.placeholder ??
-      localization.filterByColumn?.replace(
-        '{column}',
-        String(columnDef.header),
-      ))
-    : rangeFilterIndex === 0
-      ? localization.min
-      : rangeFilterIndex === 1
-        ? localization.max
-        : '';
+  const filterPlaceholder =
+    !isRangeFilter || isDateRange
+      ? (textFieldProps?.placeholder ??
+        localization.filterByColumn?.replace(
+          '{column}',
+          String(columnDef.header),
+        ))
+      : rangeFilterIndex === 0
+        ? localization.min
+        : rangeFilterIndex === 1
+          ? localization.max
+          : '';
 
   // In chips mode the filter editor's top line carries the mode picker.
   const showChangeModeButton = !!(
@@ -213,15 +238,17 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const [filterValue, setFilterValue] = useState<string | string[]>(() =>
     isMultiSelectFilter
       ? (column.getFilterValue() as string[]) || []
-      : isRangeFilter
-        ? (column.getFilterValue() as [string, string])?.[
-            rangeFilterIndex as number
-          ] || ''
-        : isAutocompleteFilter
-          ? typeof column.getFilterValue() === 'string'
-            ? (column.getFilterValue() as string)
-            : ''
-          : ((column.getFilterValue() as string) ?? ''),
+      : isDateRange
+        ? toRangeValue(column.getFilterValue())
+        : isRangeFilter
+          ? (column.getFilterValue() as [string, string])?.[
+              rangeFilterIndex as number
+            ] || ''
+          : isAutocompleteFilter
+            ? typeof column.getFilterValue() === 'string'
+              ? (column.getFilterValue() as string)
+              : ''
+            : ((column.getFilterValue() as string) ?? ''),
   );
   // The option chosen from the autocomplete list;
   // the typed text lives in filterValue.
@@ -235,7 +262,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const comboboxAnchor = useComboboxAnchor();
 
   const commitFilterValue = (newValue: FilterInputValue) => {
-    if (isRangeFilter) {
+    if (isDateRange) {
+      column.setFilterValue(
+        toRangeValue(newValue).map((end) => end || undefined),
+      );
+    } else if (isRangeFilter) {
       column.setFilterValue((old: Array<FilterInputValue | undefined>) => {
         const next = Array.isArray(old) ? [...old] : ['', ''];
         next[rangeFilterIndex as number] = newValue ?? undefined;
@@ -285,7 +316,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // applied yet; an unmount without a blur applies it.
   const [typedDate, setTypedDate] = useState<{
     guard: ReturnType<typeof getCommitGuard>;
-    value: string;
+    value: string | string[];
   } | null>(null);
   const commitTypedDateOnUnmount = useRef(() => {});
   useLayoutEffect(() => {
@@ -321,10 +352,20 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // A change while the date picker's input has focus is typed, unless a
   // click on one of its buttons made it after the last key press.
   const isDatePickerButtonClick = useRef(false);
-  const handleDateChange = (newValue: string) => {
+  // The range picker's end inputs live in its popup, outside the box.
+  const focusedRangeInput = useRef<HTMLInputElement | null>(null);
+  const handleDateChange = (newValue: string | string[]) => {
+    const active = document.activeElement;
+    const current = toRangeValue(filterValue);
+    // Typing changes one end; the picker changes both when it orders the pair.
+    const changesBothEnds =
+      isDateRange &&
+      toRangeValue(newValue).every((end, index) => end !== current[index]);
     if (
-      document.activeElement instanceof HTMLInputElement &&
-      datePickerRef.current?.contains(document.activeElement) &&
+      !changesBothEnds &&
+      active instanceof HTMLInputElement &&
+      (datePickerRef.current?.contains(active) ||
+        (isDateRange && active === focusedRangeInput.current)) &&
       !isDatePickerButtonClick.current
     ) {
       setFilterValue(newValue);
@@ -523,11 +564,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     },
     title: filterPlaceholder,
     ...textFieldProps,
-    className: cn(
-      'text-ellipsis',
-      filterChipLabel && 'w-0',
-      textFieldProps.className,
-    ),
+    className: cn('text-ellipsis', filterChipLabel && 'w-0'),
     onBlur: (e) => {
       commitTypedValue();
       textFieldProps.onBlur?.(e);
@@ -590,17 +627,21 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     className: cn(
       nestedGroupClassName,
       '*:data-[align=inline-end]:py-0',
+      isDateRange && rangePickerClassName,
+      isDateRange && datePickerTypeProps.type === 'time' && timeRangeClassName,
       filterChipLabel && 'hidden',
-      dateBoxProps.className,
     ),
     disabled: dateBoxProps.disabled ?? !!filterChipLabel,
     id: dateBoxProps.id,
     max: dateBoxProps.max === undefined ? undefined : String(dateBoxProps.max),
     min: dateBoxProps.min === undefined ? undefined : String(dateBoxProps.min),
     onBlur: (e: FocusEvent<HTMLDivElement>) => {
-      // Focus going to another element may be going to the popup, which
-      // React counts as inside: its focus event cancels the commit.
-      if (!e.relatedTarget) {
+      // A typed end of the range picker applies when its input loses focus.
+      if (isDateRange && e.target instanceof HTMLInputElement) {
+        commitTypedValue();
+      } else if (!e.relatedTarget) {
+        // Focus going to another element may be going to the popup, which
+        // React counts as inside: its focus event cancels the commit.
         commitTypedValue();
       } else if (!e.currentTarget.contains(e.relatedTarget)) {
         // A focus move inside the popup can arrive twice: one pending commit.
@@ -617,6 +658,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     },
     onFocus: (e: FocusEvent<HTMLDivElement>) => {
       clearTimeout(dateBlurCommit.current);
+      if (e.target instanceof HTMLInputElement) {
+        focusedRangeInput.current = e.target;
+      }
       dateBoxProps.onFocus?.(e as unknown as FocusEvent<HTMLInputElement>);
     },
     // A React Aria button stops its click from bubbling: a key press resets.
@@ -626,7 +670,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
       const isBoxInput =
         e.target instanceof HTMLInputElement &&
-        e.currentTarget.contains(e.target);
+        (isDateRange || e.currentTarget.contains(e.target));
       // An Escape on one of the box's buttons goes on to close the editor.
       if (
         e.key !== 'Escape' ||
@@ -641,10 +685,22 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     // The picker mounts a new input when it is cleared: read on every render.
     ref: (root: HTMLDivElement | null) => {
       datePickerRef.current = root;
-      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
-      filterInputRefs.current[filterInputKey] = root?.querySelector(
-        'input',
-      ) as HTMLInputElement;
+      // A time range holds its end inputs in the box; a date range holds them
+      // in its popup, so the box has none to focus.
+      const inputs = Array.from(root?.querySelectorAll('input') ?? []);
+      const keys = isDateRange
+        ? [`${column.id}-0`, `${column.id}-1`]
+        : [filterInputKey];
+      keys.forEach((key, index) => {
+        filterInputRefs.current[key] = inputs[index] as HTMLInputElement;
+      });
+      if (isDateRange && datePickerTypeProps.type !== 'time') {
+        setFilterRangeTrigger(
+          table,
+          column.id,
+          root?.querySelector('button') ?? null,
+        );
+      }
     },
     style: dateBoxProps.style,
     title: filterPlaceholder,
@@ -656,16 +712,21 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       <div
         className={cn(
           filterTextFieldVariants(),
-          // A date box holds its input, a clear button and the popup button.
-          isDateFilter
-            ? 'min-w-35'
-            : isMultiSelectFilter
-              ? 'min-w-30'
-              : isRangeFilter
-                ? 'min-w-18'
-                : !filterChipLabel
-                  ? 'min-w-24'
-                  : 'min-w-auto',
+          // A date box holds its input, a clear button and the popup button;
+          // a date range box takes the width of the two boxes it replaced.
+          isDateRange
+            ? 'min-w-72'
+            : isDateFilter
+              ? 'min-w-35'
+              : isMultiSelectFilter
+                ? 'min-w-30'
+                : isRangeFilter
+                  ? 'min-w-18'
+                  : !filterChipLabel
+                    ? 'min-w-24'
+                    : 'min-w-auto',
+          // The consumer's class sizes the whole box, so its controls stay inside (D184).
+          isDateFilter ? dateBoxProps.className : textFieldProps.className,
         )}
       >
         <InputGroup
@@ -677,7 +738,15 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           ref={comboboxAnchor}
         >
           {startAdornment}
-          {isDateFilter ? (
+          {isDateRange ? (
+            <DatePicker
+              {...datePickerBoxProps}
+              {...datePickerTypeProps}
+              labels={{ from: localization.min, to: localization.max }}
+              range
+              value={toRangeValue(filterValue)}
+            />
+          ) : isDateFilter ? (
             <DatePicker {...datePickerBoxProps} {...datePickerTypeProps} />
           ) : isAutocompleteFilter ? (
             // The input is the filter text field: typing filters right away,
@@ -742,7 +811,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
                   hasFilterValue && 'ltr:pr-9 rtl:pl-9',
-                  textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}
                 onClick={(e) => e.stopPropagation()}
@@ -786,7 +854,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 className={cn(
                   nestedGroupClassName,
                   'flex-nowrap px-1.5 py-0.5',
-                  textFieldProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -842,7 +909,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         </InputGroup>
         {/* A range field's caption spans the whole range group, in
             ST_FilterRangeFields. */}
-        {showChangeModeButton && rangeFilterIndex === undefined ? (
+        {showChangeModeButton &&
+        rangeFilterIndex === undefined &&
+        !isDateRange ? (
           <label className="mt-1.5 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',

@@ -1,4 +1,8 @@
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
@@ -536,7 +540,8 @@ export const TypedDateAfterButtonClickWaitsForEnter = {
   },
 };
 
-// A range keeps its two boxes: Min picked in its popup, Max typed.
+// The range box (D183): a day picked in its popup applies at once, a typed
+// Max waits for Enter.
 export const RangeMinPickedMaxTyped = {
   render: () =>
     subheaderTable(
@@ -551,22 +556,21 @@ export const RangeMinPickedMaxTyped = {
     await waitFor(() =>
       expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
     );
-    const popup = await openPickerPopup(
-      canvas.getAllByRole('button', { name: 'Select date' })[0]!,
-      'Select date',
-    );
-    await userEvent.click(day(popup, 'November 5th, 2025'));
-    await expectPickerPopupClosed('Select date');
-    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan', 'Eve']));
-    expect(canvas.getByLabelText('Min')).toHaveValue('2025-11-05');
+    await realClick(canvas.getByRole('button', { name: 'Filter by Joined' }));
+    const popup = await rangePopup('Filter by Joined');
+    await userEvent.click(day(popup, 'November 3rd, 2025'));
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ben', 'Cara']));
+    expect(popup.getByLabelText('Max')).toHaveValue('2025-11-03');
 
-    const max = canvas.getByLabelText('Max');
+    const max = popup.getByLabelText('Max');
     max.focus();
     await realKeyboard().keyboard('11112025');
     await waitFor(() => expect(max).toHaveValue('2025-11-11'));
-    expect(names(canvasElement)).toEqual(['Dan', 'Eve']);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara']);
     await realKeyboard().keyboard('{Enter}');
-    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan']));
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
   },
 };
 
@@ -658,5 +662,547 @@ export const EscapeInDateTimePopupKeepsEditor = {
     await waitFor(() =>
       expect(body().queryByLabelText('Filter by Joined')).toBeNull(),
     );
+  },
+};
+
+// Spec 87: a range of dates, date-times or times is one picker in range mode
+// (D183); a width class sizes the whole filter box (D184).
+
+/** The range popup by its name; React Aria's is found by its attributes. */
+const rangePopup = (name: string) =>
+  waitFor(() => {
+    const popup = document.querySelector<HTMLElement>(
+      `[role="dialog"][aria-label="${name}"]`,
+    );
+    expect(popup).toBeVisible();
+    return within(popup!);
+  });
+
+const expectRangePopupClosed = (name: string) =>
+  waitFor(() =>
+    expect(
+      document.querySelector(`[role="dialog"][aria-label="${name}"]`),
+    ).toBeNull(),
+  );
+
+type RangeCase = {
+  column: ST_ColumnDef<Person>;
+  place: 'chips' | 'popover' | 'subheader';
+};
+
+const rangeTable = ({ column, place }: RangeCase) => (
+  <ShadcnTable
+    columnFilterDisplayMode={place}
+    columns={[nameColumn, column]}
+    data={data}
+    enableColumnFilterModes
+    initialState={{ showColumnFilters: place === 'subheader' }}
+  />
+);
+
+/** The scope that holds the Joined filter, opened as a person would. */
+const openRangePlace = async (
+  canvasElement: HTMLElement,
+  place: RangeCase['place'],
+) => {
+  const canvas = within(canvasElement);
+  await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+  if (place === 'chips') {
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(
+      await body().findByRole('option', { name: 'Joined' }),
+    );
+  } else if (place === 'popover') {
+    const th = Array.from(canvasElement.querySelectorAll('thead th')).find(
+      (cell) => cell.textContent?.startsWith('Joined'),
+    ) as HTMLElement;
+    await userEvent.click(
+      within(th).getAllByRole('button', { name: /filter/i })[0]!,
+    );
+    return within(
+      await waitFor(() => {
+        const popover = document.querySelector<HTMLElement>(
+          '[data-slot="popover-content"]',
+        );
+        expect(popover).toBeVisible();
+        return popover!;
+      }),
+    );
+  }
+  return body();
+};
+
+/** The one range box: a single trigger and no end box until it opens. */
+const rangeTrigger = async (scope: ReturnType<typeof within>) => {
+  const trigger = await waitFor(() => {
+    const triggers = scope.getAllByRole('button', { name: 'Filter by Joined' });
+    expect(triggers).toHaveLength(1);
+    return triggers[0]!;
+  });
+  expect(scope.queryByLabelText('Min')).toBeNull();
+  expect(scope.queryByLabelText('Max')).toBeNull();
+  return trigger;
+};
+
+const typeEnd = async (
+  trigger: HTMLElement,
+  end: 'Max' | 'Min',
+  keys: string,
+) => {
+  if (
+    !document.querySelector('[role="dialog"][aria-label="Filter by Joined"]')
+  ) {
+    await realClick(trigger);
+  }
+  const popup = await rangePopup('Filter by Joined');
+  const input = popup.getByLabelText(end);
+  input.focus();
+  await realKeyboard().keyboard(keys);
+  await realKeyboard().keyboard('{Enter}');
+  return popup;
+};
+
+const clearRange = async (
+  trigger: HTMLElement,
+  scope: ReturnType<typeof within>,
+) => {
+  if (
+    document.querySelector('[role="dialog"][aria-label="Filter by Joined"]')
+  ) {
+    await userEvent.keyboard('{Escape}');
+    await expectRangePopupClosed('Filter by Joined');
+  }
+  await userEvent.click(
+    scope.getByRole('button', { name: 'Clear Filter by Joined' }),
+  );
+  await waitFor(() => expect(trigger).toHaveTextContent(/Pick a date/));
+};
+
+/**
+ * One box for both ends: a start alone filters, an end alone filters, both
+ * filter, a day picked in the popup applies at once, and clear empties both.
+ * The digits of 10 October and 11 November read the same in either segment
+ * order of the locale.
+ */
+const rangeBoxCase = (
+  rangeCase: RangeCase,
+  [startKeys, endKeys]: [string, string] = ['10102025', '11112025'],
+) => ({
+  render: () => rangeTable(rangeCase),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, rangeCase.place);
+    const trigger = await rangeTrigger(scope);
+
+    await typeEnd(trigger, 'Min', startKeys);
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+    await clearRange(trigger, scope);
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+
+    await typeEnd(trigger, 'Max', endKeys);
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual([
+        'Ann',
+        'Ben',
+        'Cara',
+        'Dan',
+        'Finn',
+      ]),
+    );
+    const popup = await typeEnd(trigger, 'Min', startKeys);
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+
+    await userEvent.click(day(popup, 'November 3rd, 2025'));
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ben', 'Cara']));
+
+    await clearRange(trigger, scope);
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+  },
+});
+
+const dateRangeColumn = joinedColumn({
+  filterFn: 'betweenInclusive',
+  filterVariant: 'date-range',
+});
+
+const betweenDateColumn = joinedColumn({
+  filterFn: 'between',
+  filterVariant: 'date',
+});
+
+export const RangeBoxInChipsEditor = rangeBoxCase({
+  column: dateRangeColumn,
+  place: 'chips',
+});
+
+export const BetweenOnDateInChipsEditor = rangeBoxCase({
+  column: betweenDateColumn,
+  place: 'chips',
+});
+
+export const RangeBoxInSubheader = rangeBoxCase({
+  column: dateRangeColumn,
+  place: 'subheader',
+});
+
+export const BetweenOnDateInSubheader = rangeBoxCase({
+  column: betweenDateColumn,
+  place: 'subheader',
+});
+
+export const DateTimeRangeBoxInSubheader = rangeBoxCase(
+  {
+    column: joinedColumn({
+      filterFn: 'betweenInclusive',
+      filterVariant: 'datetime-range',
+    }),
+    place: 'subheader',
+  },
+  ['101020251200A', '111120251200A'],
+);
+
+// The picker's time range keeps a box per end, Min and Max, in one picker.
+export const TimeRangeBoxInSubheader = {
+  render: () =>
+    rangeTable({
+      column: joinedColumn({
+        filterFn: 'betweenInclusive',
+        filterVariant: 'time-range',
+      }),
+      place: 'subheader',
+    }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    const min = () => canvas.getByLabelText('Min');
+    const max = () => canvas.getByLabelText('Max');
+    const group = min().closest('[data-slot="field-group"]');
+    expect(group).not.toBeNull();
+    expect(max().closest('[data-slot="field-group"]')).toBe(group);
+
+    min().focus();
+    await realKeyboard().keyboard('1000A');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Eve']),
+    );
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear Min' }));
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+
+    max().focus();
+    await realKeyboard().keyboard('1000A');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ann', 'Dan', 'Finn']),
+    );
+    min().focus();
+    await realKeyboard().keyboard('0900A');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Dan']));
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear Min' }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear Max' }));
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+  },
+};
+
+/** The filter mode menu of the Joined filter, by the place it sits in. */
+const switchJoinedMode = async (
+  canvasElement: HTMLElement,
+  place: 'chips' | 'subheader',
+  mode: string,
+) => {
+  const holder =
+    place === 'subheader'
+      ? (Array.from(canvasElement.querySelectorAll('thead th')).find((cell) =>
+          cell.textContent?.startsWith('Joined'),
+        ) as HTMLElement)
+      : document.body;
+  await userEvent.click(
+    within(holder).getByRole('button', { name: 'Change filter mode' }),
+  );
+  const item = await waitFor(() => {
+    const found = [
+      ...body().queryAllByRole('menuitem'),
+      ...body().queryAllByRole('menuitemradio'),
+    ].find((menuItem) => menuItem.textContent?.trim().endsWith(mode));
+    expect(found).toBeDefined();
+    return found!;
+  });
+  await userEvent.click(item);
+  await waitFor(() => expect(item).not.toBeInTheDocument());
+};
+
+/**
+ * The mode menu swaps the single and the range picker (D183) and keeps what it
+ * kept before: a range mode to another keeps the pair; a change between a
+ * single and a range mode drops the value (D190).
+ */
+const modeSwapCase = (place: 'chips' | 'subheader') => ({
+  render: () =>
+    rangeTable({
+      column: joinedColumn({ filterFn: 'lessThan', filterVariant: 'date' }),
+      place,
+    }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, place);
+    const single = await waitFor(() => {
+      const input = scope.getByLabelText('Filter by Joined');
+      expect(input.tagName).toBe('INPUT');
+      return input;
+    });
+    single.focus();
+    await realKeyboard().keyboard('10102025');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ann', 'Finn']));
+
+    await switchJoinedMode(canvasElement, place, 'Between');
+    const trigger = await rangeTrigger(scope);
+    expect(trigger).toHaveTextContent(/Pick a date/);
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+
+    await typeEnd(trigger, 'Min', '10102025');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+    await userEvent.keyboard('{Escape}');
+    await expectRangePopupClosed('Filter by Joined');
+
+    await switchJoinedMode(canvasElement, place, 'Between Inclusive');
+    const kept = await rangeTrigger(scope);
+    expect(kept).not.toHaveTextContent(/Pick a date/);
+    expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']);
+
+    await switchJoinedMode(canvasElement, place, 'Less Than');
+    await waitFor(() => {
+      expect(
+        scope.queryByRole('button', { name: 'Filter by Joined' }),
+      ).toBeNull();
+      expect(scope.getByLabelText('Filter by Joined').tagName).toBe('INPUT');
+    });
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+  },
+});
+
+export const ModeSwapsSingleAndRangeInChipsEditor = modeSwapCase('chips');
+
+export const ModeSwapsSingleAndRangeInSubheader = modeSwapCase('subheader');
+
+// A typed end applies when its input loses focus, without Enter.
+export const RangeTypedEndAppliesOnBlur = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'subheader' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    await realClick(await rangeTrigger(scope));
+    const popup = await rangePopup('Filter by Joined');
+    const min = popup.getByLabelText('Min');
+    min.focus();
+    await realKeyboard().keyboard('10102025');
+    await waitFor(() => expect(min).toHaveValue('2025-10-10'));
+    expect(names(canvasElement)).toHaveLength(6);
+    popup.getByLabelText('Max').focus();
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+  },
+};
+
+// Escape in an end input closes the popup, which orders a reversed pair: the
+// ordered pair filters.
+export const RangeEscapeAppliesOrderedEnds = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'subheader' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(5));
+    await typeEnd(trigger, 'Min', '12122025');
+    await realKeyboard().keyboard('{Escape}');
+    await expectRangePopupClosed('Filter by Joined');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Eve']));
+  },
+};
+
+export const RangeBoxInPopoverFilter = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'popover' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'popover');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Min', '10102025');
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+  },
+};
+
+// D184: a width class sizes the whole box, so the calendar button stays
+// inside the box's border.
+export const WidthClassKeepsCalendarButtonInside = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="chips"
+      columns={[
+        nameColumn,
+        joinedColumn({
+          filterFn: 'lessThan',
+          filterVariant: 'date',
+          stFilterTextFieldProps: { className: 'min-w-[250px]' },
+        }),
+      ]}
+      data={data}
+      initialState={{ columnFilters: [{ id: 'joined', value: '2025-11-05' }] }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const input = await openJoinedChipEditor(canvasElement);
+    const editor = within(
+      input.closest<HTMLElement>(
+        '[data-slot="popover-content"], [data-slot="popover"]',
+      )!,
+    );
+    const button = editor.getByRole('button', { name: 'Select date' });
+    let box = button.closest<HTMLElement>('[data-slot="input-group"]')!;
+    while (box.parentElement?.closest('[data-slot="input-group"]')) {
+      box = box.parentElement.closest<HTMLElement>(
+        '[data-slot="input-group"]',
+      )!;
+    }
+    await waitFor(() => {
+      const inner = button.getBoundingClientRect();
+      const outer = box.getBoundingClientRect();
+      const label = `button ${Math.round(inner.left)}..${Math.round(inner.right)} in box ${Math.round(outer.left)}..${Math.round(outer.right)}`;
+      expect(inner.left, label).toBeGreaterThanOrEqual(outer.left - 1);
+      expect(inner.right, label).toBeLessThanOrEqual(outer.right + 1);
+    });
+  },
+};
+
+// D189: a date range filter opened in the chips editor, the header editor or
+// from the subheader filter button puts keyboard focus on its range box.
+
+const expectFocusOnRangeTrigger = () =>
+  waitFor(() =>
+    expect(document.activeElement).toBe(
+      body().getByRole('button', { name: 'Filter by Joined' }),
+    ),
+  );
+
+const filteredRangeTable = (place: 'chips' | 'subheader') => (
+  <ShadcnTable
+    columnFilterDisplayMode={place}
+    columns={[nameColumn, dateRangeColumn]}
+    data={data}
+    initialState={{
+      columnFilters: [{ id: 'joined', value: ['2025-10-10', '2025-11-11'] }],
+    }}
+  />
+);
+
+export const RangeBoxTakesFocusInChipsEditor = {
+  render: () => filteredRangeTable('chips'),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    await userEvent.click(
+      canvasElement.querySelector<HTMLElement>('[data-filter-chip="joined"]')!,
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusFromFilterPicker = {
+  render: () => rangeTable({ column: dateRangeColumn, place: 'chips' }),
+  play: async ({ canvasElement }: StoryContext) => {
+    await openRangePlace(canvasElement, 'chips');
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusInHeaderEditor = {
+  render: function RangeBoxTakesFocusInHeaderEditorStory() {
+    const table = useShadcnTable({
+      columnFilterDisplayMode: 'chips',
+      columns: [nameColumn, dateRangeColumn],
+      data,
+    });
+    return (
+      <>
+        <button
+          onClick={() =>
+            table.setFilterChips(() => ({
+              columnIds: ['joined'],
+              openAnchor: 'header',
+              openColumnId: 'joined',
+            }))
+          }
+          type="button"
+        >
+          Open joined editor
+        </button>
+        <ShadcnTable table={table} />
+      </>
+    );
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: 'Open joined editor' }),
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+export const RangeBoxTakesFocusFromSubheaderButton = {
+  render: () => filteredRangeTable('subheader'),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    const th = Array.from(canvasElement.querySelectorAll('thead th')).find(
+      (cell) => cell.textContent?.startsWith('Joined'),
+    ) as HTMLElement;
+    await userEvent.click(
+      within(th).getAllByRole('button', { name: /filter/i })[0]!,
+    );
+    await expectFocusOnRangeTrigger();
+  },
+};
+
+// D190: in the chips editor a mode change between a range mode and a single
+// mode resets the value, as the header mode menu does.
+export const ChipsModeChangeResetsRangeValue = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="chips"
+      columns={[nameColumn, betweenDateColumn]}
+      data={data}
+      enableColumnFilterModes
+      initialState={{
+        columnFilters: [{ id: 'joined', value: ['2025-10-10', '2025-11-11'] }],
+      }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan']),
+    );
+    await userEvent.click(
+      canvasElement.querySelector<HTMLElement>('[data-filter-chip="joined"]')!,
+    );
+    await switchJoinedMode(canvasElement, 'chips', 'Less Than');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
+    expect(body().getByLabelText('Filter by Joined')).toHaveValue('');
+
+    const single = body().getByLabelText('Filter by Joined');
+    single.focus();
+    await realKeyboard().keyboard('10102025');
+    await realKeyboard().keyboard('{Enter}');
+    await waitFor(() => expect(names(canvasElement)).toEqual(['Ann', 'Finn']));
+    await switchJoinedMode(canvasElement, 'chips', 'Between');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(6));
   },
 };

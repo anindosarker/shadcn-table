@@ -1,5 +1,8 @@
 import { type Ref } from 'react';
-import { type DropdownOption } from '@/components/ui-base/shadcn-table/types';
+import {
+  type DropdownOption,
+  type ST_CoreTableInstance,
+} from '@/components/ui-base/shadcn-table/types';
 
 export const parseFromValuesOrFunc = <T, U>(
   fn: ((arg: U) => T) | T | undefined,
@@ -112,3 +115,37 @@ export function createFilterOptions<Value>(
       : filteredOptions;
   };
 }
+
+type TableWithRefs = Pick<ST_CoreTableInstance, 'refs'>;
+
+// A date range filter box keeps its end inputs in the popup, so the table's
+// filterInputRefs hold none for it: the box's trigger is kept here, per table.
+const filterRangeTriggers = new WeakMap<
+  object,
+  Record<string, HTMLElement | null>
+>();
+
+/** Records the trigger of a column's date range filter box, null when it unmounts. */
+export const setFilterRangeTrigger = (
+  table: TableWithRefs,
+  columnId: string,
+  trigger: HTMLElement | null,
+) => {
+  const key = table.refs.filterInputRefs;
+  filterRangeTriggers.set(key, {
+    ...filterRangeTriggers.get(key),
+    [columnId]: trigger,
+  });
+};
+
+/**
+ * The element a column's filter takes focus on when it opens: its first
+ * input, else the trigger of its date range box; null when neither is mounted.
+ */
+export const getFilterFocusTarget = (
+  table: TableWithRefs,
+  columnId: string,
+): HTMLElement | null =>
+  table.refs.filterInputRefs.current?.[`${columnId}-0`] ??
+  filterRangeTriggers.get(table.refs.filterInputRefs)?.[columnId] ??
+  null;
