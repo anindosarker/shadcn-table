@@ -11,6 +11,9 @@ kanban-plugin: basic
 	- Supersedes D180.
 	- Sidebar by section as on the table site, one section per tab (Get Started, Pickers, Props), in place of the one flat list; the page switcher in the breadcrumb and the '// section' line above the page title show again with it (table: components/docs-breadcrumb.tsx:48, app/docs/[[...slug]]/page.tsx:74). Copy page on every docs page as on the table site (page.tsx:61), with the page-as-text routes it needs. A Changelog link in the sidebar as the table's (content/docs/meta.json:8); the picker has no CHANGELOG.md, so it opens https://github.com/anindosarker/shadcn-date-picker/releases. Stays out: the Discord icon. Supersedes D180. Compared after the build against the captures in reference/q149-calendar-library/docs-site/q180/, looked at side by side at 1440 and 390. Owner, 2026-11-24: 'I think the layout is also missing then.', 'that plus Copy page and a Changelog link.', '180k'.
 	- Source: Q180
+- [ ] **D188** Old plan folders and personal details leave the plan files; git history is a later choice #R6
+	- Step 1: the 21 plan folders from before the version folders and v0.3.x to v0.6.x are deleted from .ai/plans, with .ai/handoffs; CONTRIBUTING.md and docs/code-of-conduct/planning-guidelines.md no longer point at them. v0.7.x and v0.8.x stay because v0.9.x cites their decisions; v0.9.x stays, it is live. Step 2, in what stays: machine paths lose the user name (repo-relative, or ~ for the workspace folder), the work email, the Vercel project id and team name and the Claude session ids are removed. Not in this decision: a rewrite of git history; until one, the deleted files and details stay readable in older commits of the public repository. Owner, 2026-11-24: 'remove all my personal info from the plans ... you can remove most of the plans', 'rec'.
+	- Source: Q182
 
 ## In progress
 
