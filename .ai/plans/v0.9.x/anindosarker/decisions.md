@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D182** The date picker docs site gets the table site's theme changer, with the same default theme #R6
+	- The picker docs site (date-picker.shadcn-table.com) takes the table docs site's theme customizer and style switcher as they are there: the same panel, presets, shortcuts, undo and saved choice (components/theme-customizer.tsx, components/design-system-provider.tsx, lib/design-system/*, the style sheets, the parts of components/theme-controls.tsx and app/layout.tsx that spec 85 trimmed). The default look is the table's DEFAULT_CONFIG (nova, Inter, Emerald, dark) from the same code, replacing the frozen app/theme.css of design-docs-site.md 4.3. The picker demos follow the chosen theme as the table examples do. Stays: the docs layout as built with one flat sidebar list (D180); Copy page, the agent bar and the other not-taken features of spec 85 stay out. Replaces the theme customizer line of spec 85's not-taken list. Owner, 2026-11-24: 'Add the theme changer. The default theme should be the same as the table one. That should cover most of the stuff.', 'k'.
+	- Source: Q175
+
 ## In progress
 
 ## Done

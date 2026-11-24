@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q175** The date picker docs site does not look good: it should carry the table site's theme changer and whole docs layout, exactly
-	- Owner, 2026-11-24, on the live site https://date-picker.shadcn-table.com/: 'The site doesn't look good. I want the theme changer exactly from the table. Why didn't you copy the entire docs system theme and layout?'
-	- Lead lookup, 2026-11-24: spec 85 (plan/specs/85-*.md:12,79) and design-docs-site.md section 2 fixed a not-taken list without asking the owner: theme customizer and style switcher, icon and locale selectors, agent bar and Copy prompt, Copy page, PostHog, Discord link, llms routes, Open Graph images, JSON-LD, sitemap and robots. Of 132 shell files: 25 taken as is, 29 trimmed, 78 not taken. The docs layout is stock fumadocs notebook, not the table's docs-tree-layout (row 12); D180 (lead) kept one flat sidebar list, so the section line and page switcher do not show.
 
 ## Decided
 
@@ -413,6 +410,9 @@ kanban-plugin: basic
 	- Design plan reference/q149-calendar-library/design-docs-site.md 6.1, built as the default: one flat sidebar list under three labels (Get Started, Pickers, Props). The table site's section line above a page title and the page switcher in the breadcrumb then do not show. Other way: three fumadocs root folders, same addresses, the table's behaviour, but two of the three sidebars hold one row (Install; Props). The build runs on the default; a change later moves the content files into folders. Tracker run/trackers/85-date-picker-docs-site-tracker.md, Attention A2.
 - [x] **Q169** Three small looks of the date picker docs site were picked by the plan with nothing to copy from #D181
 	- Design plan design-docs-site.md rows 40, 60 and section 5.1, built as defaults, to judge on the build's captures (reference/q149-calendar-library/docs-site/): (1) the code panel's More menu keeps one entry, Open in GitHub; other way a plain GitHub button; (2) the home and 404 pages have no footer; other way the table's footer trimmed to name, licence, GitHub and Storybook; (3) the home header carries the base select; other way off as on the table's home. Tracker 85-date-picker-docs-site-tracker.md, Attention A3.
+- [ ] **Q175** The date picker docs site does not look good: it should carry the table site's theme changer and whole docs layout, exactly #D182
+	- Owner, 2026-11-24, on the live site https://date-picker.shadcn-table.com/: 'The site doesn't look good. I want the theme changer exactly from the table. Why didn't you copy the entire docs system theme and layout?'
+	- Lead lookup, 2026-11-24: spec 85 (plan/specs/85-*.md:12,79) and design-docs-site.md section 2 fixed a not-taken list without asking the owner: theme customizer and style switcher, icon and locale selectors, agent bar and Copy prompt, Copy page, PostHog, Discord link, llms routes, Open Graph images, JSON-LD, sitemap and robots. Of 132 shell files: 25 taken as is, 29 trimmed, 78 not taken. The docs layout is stock fumadocs notebook, not the table's docs-tree-layout (row 12); D180 (lead) kept one flat sidebar list, so the section line and page switcher do not show.
 
 ## Later
 
