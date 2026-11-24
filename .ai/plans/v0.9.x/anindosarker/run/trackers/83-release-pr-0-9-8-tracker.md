@@ -1,6 +1,6 @@
 # 83: Release 0.9.8, Release PR 0.9.8, tracker
 
-Status: blocked
+Status: running
 Branch `dev`, no worktree (operations only)
 Checks:
 - Check: PR opened, `gh pr create --base master --head dev --title "release: 0.9.8" --label release:patch` at 2423d81a, 2026-11-24 11:22: PR 149, https://github.com/anindosarker/shadcn-table/pull/149
@@ -16,3 +16,4 @@ Checks:
 
 - The release run 45332870689 failed one docs test on radix, the copied state of the copy prompt button on /docs/examples/sticky-row-selection, which P5 does not list as a known flake.
 - Decisive lines (`gh run view --job 138237988623 --log-failed`): `PASS ... enable-row-pinning-select: prompt copied len=1063`, then `FAIL /docs/examples/sticky-row-selection @1440 enable-row-pinning-select: copied state`; `docs-e2e (radix): FAIL 5 sections, 117 pages, 1 failed`. The same copied-state check passed on every other page of the run. PR 149 stays open with auto-merge on; no rerun, no Prepare Release approval.
+- Runner, 2026-11-24: the red of run 45332870689 (Docs E2E radix, sticky-row-selection copied state) is a timing miss of the check: test/docs-e2e/lib/helpers.mjs:313-327 clicks, waits a fixed 100 ms and counts the Copied button once; the same check passed on every other page and base. Rerun of the failed job started once (attempt 2); the check gets a fix milestone of spec 83 (wait for the button, no fixed time).
