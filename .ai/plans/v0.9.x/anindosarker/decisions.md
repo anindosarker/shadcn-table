@@ -4,6 +4,10 @@ kanban-plugin: basic
 
 ## To do
 
+- [ ] **D183** The table's date range filters use the date picker's own range type #R6
+	- A filter with the variant date-range, datetime-range or time-range renders one DatePicker in range mode (range: true, value [from, to]) in every filter place (chips editor, header editor, popover, subheader): one box, one calendar, both ends, in place of the two single boxes of D164 and spec 82 line 15. Setting only one end (Min without Max, Max without Min) keeps working as today; if the picker's range mode cannot hold one end, that is a queue card before the build, not a silent change, and a change to the approved picker code goes to the owner. The filter value stays a pair, the modes, filter functions and public types do not change (P7). The cut-off date in the popover (18/11/202 at desktop width) goes with it: the one box takes the width of the two. Replaces, for the date variants, v0.8.x D61 (Min and Max side by side) and the range line of D164; number ranges and the slider are unchanged. Owner, 2026-11-24: 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.', 'q176. k'.
+	- Source: Q176
+
 ## In progress
 
 - [ ] **D182** The date picker docs site gets the table site's theme changer, with the same default theme #E28 #R6

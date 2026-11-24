@@ -4,9 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q176** The table's date range filters show two separate date boxes instead of the date picker's own range type
-	- Owner, 2026-11-24, on live 0.9.8, /docs/examples/subheader-filters (Hire Date, under the header) and /docs/examples/filter-variants (Hire Date in the filter popover): 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.' Seen in the same captures: in the popover the picked date reads 18/11/202, cut off, at desktop width.
-	- Lead lookup, 2026-11-24: built as decided. D164 names 'range Min and Max' as two DatePicker boxes; spec 82 line 15: 'The picker's own range mode is not used, so the filter value stays a pair and the layout of a range filter does not change'. The picker has a range mode (types.ts:66-79: range: true, value [from, to] as strings, range presets), the same shape as the table's pair value. Not verified: whether the picker's range mode accepts one end only (the table allows Min without Max). v0.8.x D61 (Min and Max side by side at every width) would be replaced for the date variants.
 - [ ] **Q177** In a date filter popover the calendar button sticks out past the right edge of the date box
 	- Owner, 2026-11-24, live 0.9.8, /docs/examples/advanced, Base UI, dark: Start Date filter (mode less than) opened from the filter chip; the box is focused and the calendar icon button sits over and beyond the box's right border. Capture: the owner's screenshot in chat (image 11). Not seen in the filter-variants popover range boxes (image 8), where the button sits inside.
 
@@ -418,6 +415,9 @@ kanban-plugin: basic
 - [x] **Q175** The date picker docs site does not look good: it should carry the table site's theme changer and whole docs layout, exactly #D182 #E28
 	- Owner, 2026-11-24, on the live site https://date-picker.shadcn-table.com/: 'The site doesn't look good. I want the theme changer exactly from the table. Why didn't you copy the entire docs system theme and layout?'
 	- Lead lookup, 2026-11-24: spec 85 (plan/specs/85-*.md:12,79) and design-docs-site.md section 2 fixed a not-taken list without asking the owner: theme customizer and style switcher, icon and locale selectors, agent bar and Copy prompt, Copy page, PostHog, Discord link, llms routes, Open Graph images, JSON-LD, sitemap and robots. Of 132 shell files: 25 taken as is, 29 trimmed, 78 not taken. The docs layout is stock fumadocs notebook, not the table's docs-tree-layout (row 12); D180 (lead) kept one flat sidebar list, so the section line and page switcher do not show.
+- [ ] **Q176** The table's date range filters show two separate date boxes instead of the date picker's own range type #D183
+	- Owner, 2026-11-24, on live 0.9.8, /docs/examples/subheader-filters (Hire Date, under the header) and /docs/examples/filter-variants (Hire Date in the filter popover): 'Isn't this example using the wrong type of the date picker? Because I already added support for date range here.' Seen in the same captures: in the popover the picked date reads 18/11/202, cut off, at desktop width.
+	- Lead lookup, 2026-11-24: built as decided. D164 names 'range Min and Max' as two DatePicker boxes; spec 82 line 15: 'The picker's own range mode is not used, so the filter value stays a pair and the layout of a range filter does not change'. The picker has a range mode (types.ts:66-79: range: true, value [from, to] as strings, range presets), the same shape as the table's pair value. Not verified: whether the picker's range mode accepts one end only (the table allows Min without Max). v0.8.x D61 (Min and Max side by side at every width) would be replaced for the date variants.
 
 ## Later
 
