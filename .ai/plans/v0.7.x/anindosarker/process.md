@@ -39,7 +39,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P6 Plans
 
 - Specs follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any spec whose label differs.
-- `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced in a throwaway app under `/Users/anindosarker/Work/Personal/React-table/test-projects/checks/` first (P5); upstream reports are searched on `shadcn-ui/ui` before filing.
+- `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced in a throwaway app under `~/Work/Personal/React-table/test-projects/checks/` first (P5); upstream reports are searched on `shadcn-ui/ui` before filing.
 
 ## P7 Orchestration
 

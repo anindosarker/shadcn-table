@@ -2,7 +2,7 @@
 
 Status: done
 Merge: df11236 on main (merge: date-picker-install-rewriting (78)); branch and worktree removed
-Branch `date-picker-install-rewriting`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-install-rewriting (from origin/main b28d91a)
+Branch `date-picker-install-rewriting`, worktree ~/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-install-rewriting (from origin/main b28d91a)
 Checks:
 - Check: `pnpm install --frozen-lockfile` in the worktree at b28d91a: pass
 - Check: probe install, `shadcn add ./item.json` (shadcn 4.23.0) of picker-popup.tsx, picker-trigger.tsx, day-range-picker.tsx as `registry:component` into a scratch app with `~/` aliases at b28d91a: imports rewritten to `~/components/ui/*` and `~/hooks/*`; `className="cn-dialog-close"` removed (picker-popup.tsx:101); `cn("cn-button-group-orientation-horizontal", className)` became `cn("", className)` (picker-trigger.tsx:47); `cn-field` removed from `cn-field grid grid-cols-[auto_1fr] items-center gap-y-2` (day-range-picker.tsx:248). Scratch app deleted.

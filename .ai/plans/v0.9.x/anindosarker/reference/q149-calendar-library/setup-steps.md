@@ -5,7 +5,7 @@ Names: repository `shadcn-date-picker`, subdomain `date-picker.shadcn-table.com`
 ## Done by the lead, 2026-11-24, with the owner's logged-in CLIs
 
 - GitHub repository `anindosarker/shadcn-date-picker`: created, public, empty. https://github.com/anindosarker/shadcn-date-picker
-- Vercel project `shadcn-date-picker` in the team `anindo-sarkers-projects`: created, connected to that repository. Framework, root directory and build settings are left at their defaults; the run sets them in the repository when the docs app exists.
+- Vercel project `shadcn-date-picker` in the team `<team>`: created, connected to that repository. Framework, root directory and build settings are left at their defaults; the run sets them in the repository when the docs app exists.
 - Domain `date-picker.shadcn-table.com`: assigned to the project `shadcn-date-picker`.
 
 ## Left for the owner: one DNS record

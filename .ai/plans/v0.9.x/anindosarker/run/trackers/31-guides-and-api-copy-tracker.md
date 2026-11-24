@@ -1,7 +1,7 @@
 # 31: Guides and API copy, tracker
 
 Status: done (edc04e01)
-Branch `v0.9/guides-api-copy`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`
+Branch `v0.9/guides-api-copy`, worktree `~/Work/Personal/React-table/shadcn-react-table.worktrees/04`
 Checks:
 
 - `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/guides` at 7912d34f: 0 on every rule (47 pages)

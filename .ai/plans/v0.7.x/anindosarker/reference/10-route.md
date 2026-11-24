@@ -1,6 +1,6 @@
 # Spec 10 baseline: collapsible search reveal
 
-- App: `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` (Next 16.4.2, `base-nova`), unedited
+- App: `~/Work/Personal/React-table/test-projects/next-app` (Next 16.4.2, `base-nova`), unedited
 - Component: `components/demos/collapsible-search-demo.tsx` (`CollapsibleSearchDemo`), rendered by `app/page.tsx`
 - Route and port: `http://localhost:5343/`, served with `pnpm exec next dev -p 5343` from the app folder
 - Commit of this repo when captured: foundation branch `v0.7/foundation`; the demo is a Base UI part reference, the same for every base

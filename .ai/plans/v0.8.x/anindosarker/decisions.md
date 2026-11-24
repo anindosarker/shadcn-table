@@ -258,7 +258,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 ### D34 Acceptance reference is the live demo, pinned by a capture at the foundation
 
-- Agent-settled. The visual reference for every look spec is `/header-demo` in `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` (branch `playground/header-demo-theming`, a separate repository), served at `http://localhost:3000/header-demo` by the owner's dev server. Builders and judges read the demo code for exact values and open the page for comparison; they never edit that repository and never start, stop or restart that server (it runs outside P5's port range).
+- Agent-settled. The visual reference for every look spec is `/header-demo` in `~/Work/Personal/React-table/test-projects/next-app` (branch `playground/header-demo-theming`, a separate repository), served at `http://localhost:3000/header-demo` by the owner's dev server. Builders and judges read the demo code for exact values and open the page for comparison; they never edit that repository and never start, stop or restart that server (it runs outside P5's port range).
 - The foundation step records the demo commit hash and captures light and dark screenshots at 1800 by 1150 of the default view, the column menu, the sort editor, the filter chips and picker, the view settings panel, a column drag in progress and the scroll cues under `.ai/plans/v0.8.x/anindosarker/reference/`, so Acceptance has a fixed reference if the demo branch moves during the run.
 
 ### D35 One clear control for the search

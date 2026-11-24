@@ -37,9 +37,9 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 ## P6 Agent sandbox
 
-- The talker session runs in `/Users/anindosarker/Work/Personal/React-table` (the workspace folder above the repo); the runner and the spec forks are started from that same folder, never from the repo root or a subfolder, so every session resolves the same paths.
+- The talker session runs in `~/Work/Personal/React-table` (the workspace folder above the repo); the runner and the spec forks are started from that same folder, never from the repo root or a subfolder, so every session resolves the same paths.
 - Ports 5340 to 5360 are for agents; stop what you start. Never kill 5273 (the owner's test-shadcn vite server), 5310, 5320, 5330, 6006, 6007 or 6008: they are the owner's servers and the shared registry.
-- `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (v0.8.x D34).
+- `~/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (v0.8.x D34).
 - A new dependency is added by the first milestone of the epic that needs it, with one `pnpm install`, and that milestone owns `package.json` and the lockfile for its epic; no other running milestone touches them.
 
 ## P7 Public surface
@@ -64,7 +64,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 ## P10 Plans
 
 - An `Acceptance:` line points at a reference that exists: a ui.shadcn.com page, a shadcn block, the previous release, a capture of `claude/review` before the change, or a demo the owner supplied.
-- A bug is reproduced in `/Users/anindosarker/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
+- A bug is reproduced in `~/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
 - A diagram, mockup or other visual aid the owner asks for is saved in the release's `reference/` folder (`.ai/plans/v0.9.x/anindosarker/reference/<q-or-d id>-<slug>.excalidraw` or `.png`) and committed, never left in a scratchpad or `/tmp`; the reply names that path.
 
 ## P11 Plays

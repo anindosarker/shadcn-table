@@ -1,7 +1,7 @@
 # 28: Security response headers, tracker
 
 Status: done (34c04ba6afd79a65bc2eb98c936baaba57bfc252)
-Branch `v0.9/security-headers`, worktree 04 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`)
+Branch `v0.9/security-headers`, worktree 04 (`~/Work/Personal/React-table/shadcn-react-table.worktrees/04`)
 Checks:
 - Check: docs lint, `pnpm --filter shadcn-table-docs lint` at Task 1 commit: pass (0 errors, 9 existing warnings)
 - Check: production build, `NEXT_PUBLIC_SITE_URL=http://localhost:5347 pnpm --filter shadcn-table-docs build` at 9ab4b69f: pass

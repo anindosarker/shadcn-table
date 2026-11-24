@@ -39,10 +39,10 @@ Checks:
 - `check-pages.mjs --base` not run for spec 02 (docs server not started); CI is the second run.
 
 ## Notes
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/base-default-light.png
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/base-default-dark.png
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/radix-default-light.png
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/radix-default-dark.png
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/aria-default-light.png
-Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/02/aria-default-dark.png
+Captures: <scratchpad>/captures/02/base-default-light.png
+Captures: <scratchpad>/captures/02/base-default-dark.png
+Captures: <scratchpad>/captures/02/radix-default-light.png
+Captures: <scratchpad>/captures/02/radix-default-dark.png
+Captures: <scratchpad>/captures/02/aria-default-light.png
+Captures: <scratchpad>/captures/02/aria-default-dark.png
 - Captures from the static Storybook build per base, story `styling-default-look--default`, theme via the `sb-addon-themes-3` storage key. Header cells, toolbar icons and cell badges differ from the reference by design: spec 03, spec 04 and story cell renderers.

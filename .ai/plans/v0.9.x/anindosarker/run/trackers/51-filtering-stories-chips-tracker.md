@@ -6,7 +6,7 @@ Checks:
 - Check: vitest before the change, `ST_BASE=<base> pnpm exec vitest run stories/features/Filtering.stories.tsx` at 7df6f7a2: pass, 37/37 on base, radix, aria
 - Check: vitest Task 1, same command at f88052be: pass, 37/37 on base, radix, aria
 - Check: plain stories under chips, Storybook :5346 (playwright, Filter menu, chip editor) at f88052be: pass on base, radix, aria (lines below)
-- Check: sidebar names and ids, Storybook base :5346 `index.json` at 2469c649: pass, 9 names "Subheader: ...", ids unchanged; screenshot /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/18a7d8fb-53ed-4e77-8be8-85309efc0f16/scratchpad/shots/sidebar-subheader-names.png
+- Check: sidebar names and ids, Storybook base :5346 `index.json` at 2469c649: pass, 9 names "Subheader: ...", ids unchanged; screenshot <scratchpad>/shots/sidebar-subheader-names.png
 - Check: `pnpm format` at 2469c649: pass, no changes
 - Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 2469c649: pass
 - Check: `pnpm test lint` at 2469c649: pass (9 warnings, all in apps/shadcn-table-docs/examples)

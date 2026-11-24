@@ -2,7 +2,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const http = require('node:http');
-const WT = '/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08';
+const WT = '~/Work/Personal/React-table/shadcn-react-table.worktrees/08';
 const { chromium } = require(path.join(WT, 'node_modules/playwright'));
 
 const [root, out, port] = process.argv.slice(2);

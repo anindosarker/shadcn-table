@@ -1,7 +1,7 @@
 # 26: Home page Open Graph image, tracker
 
 Status: done (f40b0fa6fd3ebb89f6509bbecde79c91d4c9bf69)
-Branch `v0.9/home-og-image`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`
+Branch `v0.9/home-og-image`, worktree `~/Work/Personal/React-table/shadcn-react-table.worktrees/04`
 Checks:
 - Check: docs types, `pnpm --filter shadcn-table-docs types:check` at 30c28957: pass
 - Check: docs lint, `pnpm --filter shadcn-table-docs lint` at 30c28957: pass (0 errors, 9 existing warnings in examples/)

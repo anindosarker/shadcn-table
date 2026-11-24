@@ -43,7 +43,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - An agent works only in the worktree and on the branch its task names.
 - Ports 5340 to 5360 are for agents; stop what you start. Never kill 5273, 5310, 5320, 5330, 6006, 6007 or 6008: they are the owner's servers and the shared registry.
-- `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (D34).
+- `~/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (D34).
 - Dependencies are added only in the first sprint's shared milestone with one `pnpm install`; later milestones never touch `package.json` or the lockfile.
 - Never add an `eslint-disable` without a ` -- ` reason.
 
@@ -71,7 +71,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 - Epics follow `docs/code-of-conduct/planning-guidelines.md`.
 - `plan.md` names the release's `release:` label and any epic whose label differs.
 - An `Acceptance:` line points at a reference that exists: a ui.shadcn.com page, a shadcn block, the previous release, a capture of `claude/review` before the change, or a demo the owner supplied.
-- A bug is reproduced in `/Users/anindosarker/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
+- A bug is reproduced in `~/Work/Personal/React-table/test-projects/` before it is planned; an upstream report is searched on `shadcn-ui/ui` before one is filed.
 
 ## P11 Plays
 

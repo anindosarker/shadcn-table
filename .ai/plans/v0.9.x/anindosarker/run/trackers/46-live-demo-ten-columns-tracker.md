@@ -10,7 +10,7 @@ Checks:
 - Check: docs E2E radix, `pnpm test docs-e2e --base radix --url http://localhost:5349` at 6cd6b814: pass (0 failed)
 - Check: docs E2E aria, `pnpm test docs-e2e --base aria --url http://localhost:5349` at 6cd6b814: pass (0 failed)
 - Check: new docs E2E checks on usage and introduction, three bases: "live-demo: ten columns in order", "live-demo: scrolls sideways at 1280 px" (scrollWidth=1560 clientWidth=644), "select filter (Department) filters rows" rows=6, "range filter (Salary) filters rows" rows=8: pass
-- Check: screenshots, 1280 px, dark, at 6cd6b814: /Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/08/test/.out/spec46-shots/{base,radix,aria}-{usage,introduction}.png
+- Check: screenshots, 1280 px, dark, at 6cd6b814: ~/Work/Personal/React-table/shadcn-react-table.worktrees/08/test/.out/spec46-shots/{base,radix,aria}-{usage,introduction}.png
 - Check: typecheck, `pnpm test typecheck --base base` at e45b5a40: pass
 - Check: lint, `pnpm test lint` at e45b5a40: pass (9 warnings, none in owned files)
 - Check: validate-repo, `pnpm test validate-repo` at e45b5a40: pass (registry fresh, generated example copies are git-ignored)

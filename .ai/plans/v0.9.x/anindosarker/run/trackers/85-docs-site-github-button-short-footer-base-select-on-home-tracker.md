@@ -2,7 +2,7 @@
 
 Status: done
 Merge: 0c007cfe3901ef5a8b6e0b264d60be3e295055b7 (merge: date-picker-docs-site-d181 (85)) on main of anindosarker/shadcn-date-picker
-Branch `date-picker-docs-site-d181`, worktree /Users/anindosarker/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-docs-site-d181
+Branch `date-picker-docs-site-d181`, worktree ~/Work/Personal/React-table/shadcn-date-picker.worktrees/date-picker-docs-site-d181
 Checks:
 - Check: docs lint, `pnpm --filter docs lint` (heavy.sh) at eee77f9: pass (exit 0, 0 errors, the 1 warning of plan 4.3 on app/layout.tsx)
 - Check: docs types, `pnpm --filter docs types:check` (heavy.sh) at eee77f9: pass (exit 0)
