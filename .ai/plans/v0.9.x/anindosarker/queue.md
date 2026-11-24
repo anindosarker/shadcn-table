@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q172** The new date picker docs site cannot go live until someone logged in to Vercel opens its preview once
 	- Spec 85, milestone Date picker docs site build: built, reviewed (0 majors) and verified locally at ac4094f on branch date-picker-docs-site of shadcn-date-picker; the merge moves the live Storybook from / to /storybook/ and its Vercel routing (vercel.json) is unproven because the branch preview is behind the Vercel login and no browser was connected. Needed: /, /docs/install and /storybook/base/ answer on the branch preview. Tracker run/trackers/85-date-picker-docs-site-build-tracker.md.
+- [ ] **Q173** On a phone the date picker site's home header draws the site name over the version label
+	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
 
 ## Decided
 
