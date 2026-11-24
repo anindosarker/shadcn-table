@@ -653,6 +653,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       if (!e.relatedTarget) {
         commitTypedValue();
       } else if (!e.currentTarget.contains(e.relatedTarget)) {
+        // A focus move inside the popup can arrive twice: one pending commit.
+        clearTimeout(dateBlurCommit.current);
         dateBlurCommit.current = setTimeout(commitTypedValue);
       }
       dateBoxProps.onBlur?.(e as unknown as FocusEvent<HTMLInputElement>);
@@ -660,6 +662,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     onChange: handleDateChange,
     onClickCapture: (e: MouseEvent<HTMLDivElement>) => {
       isDatePickerButtonClick.current = !(e.target instanceof HTMLInputElement);
+      // A calendar day equal to the typed date fires no onChange: the click applies it.
+      if ((e.target as Element).closest('[data-day]')) commitTypedValue();
     },
     onFocus: (e: FocusEvent<HTMLDivElement>) => {
       clearTimeout(dateBlurCommit.current);

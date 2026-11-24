@@ -331,6 +331,15 @@ const realKeyboard = () =>
     }
   ).stBrowserUserEvent ?? userEvent;
 
+const realClick = (element: HTMLElement) =>
+  (
+    (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: HTMLElement) => Promise<void> };
+      }
+    ).stBrowserUserEvent ?? userEvent
+  ).click(element);
+
 const openPickerPopup = async (opener: HTMLElement, name: string) => {
   await userEvent.click(opener);
   const popup = await body().findByRole('dialog', { name });
@@ -473,6 +482,27 @@ export const TypedDateAppliesOnLeave = {
     await waitFor(() =>
       expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
     );
+  },
+};
+
+// Picking the typed day in the popup is a pick: it applies at once (Q171).
+export const PickTypedDayAppliesAtOnce = {
+  render: () => subheaderTable(greaterThanDate),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await typeTenthOfOctober(canvasElement);
+    const opener = canvas.getByRole('button', { name: 'Select date' });
+    await realClick(opener);
+    const popup = within(
+      await body().findByRole('dialog', { name: 'Select date' }),
+    );
+    await realClick(day(popup, 'October 10th, 2025'));
+    await expectPickerPopupClosed('Select date');
+    await waitFor(() => expect(opener).toHaveFocus());
+    await waitFor(() =>
+      expect(names(canvasElement)).toEqual(['Ben', 'Cara', 'Dan', 'Eve']),
+    );
+    expect(opener).toHaveFocus();
   },
 };
 
