@@ -10,8 +10,53 @@ Checks:
 - Check: site map below lists every date-box line of `ST_FilterTextField.tsx` and every story, example, docs and test site: pass
 - Check: 36 before captures, `ST_BASE=<base> pnpm exec vitest run stories/features/Spec82Capture.stories.tsx` at df801ff7 on base, radix, aria (12 passed each): pass (`test/.out/spec82/before/<base>-<place>-<width>.png` and `.json`, 36 of each; the capture story is not committed, Notes)
 
+- Check: `pnpm test typecheck --base base`, `--base radix`, `--base aria` at 595e0a50: pass (tsc clean on each)
+- Check: `grep -rn "type=\"date\"\|type=\"datetime-local\"\|type=\"time\"" packages/shadcn-table/registry/*/components/ui/shadcn-table` at 595e0a50: pass (prints nothing)
+- Check: `git diff --stat origin/claude/review -- 'packages/shadcn-table/registry/*/components/date-picker' 'packages/shadcn-table/registry/*/components/ui/*.tsx' tools package.json pnpm-lock.yaml` at 595e0a50: pass for what it guards (no picker file, no shadcn part, no tool, no package file changed). It prints 9 lines, all under `components/ui/shadcn-table/`, which the second pattern also matches in git: `ST_FilterTextField.tsx`, `ST_ColumnActionMenu.tsx`, `ST_HeaderFilterEditor.tsx` per base, the milestone's own edits
+- Check: `pnpm -w registry:build` at 595e0a50: pass, tree clean after; core items of `packages/shadcn-table/registry.json`: `shadcn-table-base-core`, `shadcn-table-core` hold `anindosarker/shadcn-date-picker/date-picker-base#v0.1.0`, `shadcn-table-radix-core` `date-picker-radix#v0.1.0`, `shadcn-table-aria-core` `date-picker-aria#v0.1.0`; no item holds a file under `components/date-picker`
+- Check: `pnpm test storybook-tests --base aria` at e955e6e9: fail, 1 of 636 (`FilterChips` "Range Editor Inputs Fit And Fill Date": two rows where one was expected). Not a flake: the typed date of Max was never applied (Notes, blur). Fixed in a4c07921
+- Check: `pnpm test storybook-tests --base base`, `--base radix`, `--base aria` at 595e0a50: pass (636 passed on each)
+- Check: the new plays, `ST_BASE=base|radix|aria pnpm exec vitest run stories/features/DateFilters.stories.tsx --reporter=verbose` at 595e0a50: pass (23 passed on each; in the passed list: Pick Day In Chips Editor, Typed Date Applies On Enter, Typed Date Applies On Leave, Clear Button Empties Date Filter, Range Min Picked Max Typed, Pick Day In Date Time Popup, Pick Minute In Time Popup)
+- Check: nested popups by play at 595e0a50, base, radix, aria: pass (Pick Day In Chips Editor: the outer editor stays open after a pick; Escape Closes Picker Popup First; Escape In Date Time Popup Keeps Editor)
+- Check: 36 after captures, `ST_BASE=<base> pnpm exec vitest run stories/features/Spec82Capture.stories.tsx` at 595e0a50 on base, radix, aria (12 passed each): pass (`test/.out/spec82/after/`); compared with the before records, table "The look" below
+- Check: `pnpm lib:install base`, `radix`, `aria` at a4c07921: pass, each leaves `apps/shadcn-table-docs/components/ui-<base>/date-picker/date-picker.tsx`; the copies committed as 595e0a50
+- Check: `pnpm --filter shadcn-table-docs types:check` at 595e0a50: pass
+- Check: `pnpm test docs-e2e --base base`, `--base radix`, `--base aria` at 595e0a50: pass (5 sections, 117 pages, 0 failed on each)
+- Check: `pnpm test lint` at 595e0a50: pass (0 errors, 9 warnings)
+- Check: `pnpm test validate-repo` at 595e0a50: pass (bases identical, date picker matches, registry fresh, story pages match, 52 unit tests)
+- Check: `grep -c '^#### Spec 82' CHANGELOG.md` at 595e0a50: pass (prints `1`)
+- Check: `pnpm test installation-e2e --no-diff` at 595e0a50, nextjs-base, nextjs-radix, nextjs-aria: pass (`built, browser pass, no diff` on each; the table with the picker installs and `next build` passes)
+- Check: `pnpm test installation-e2e --no-diff` at 595e0a50, fresh, existing, base, aria (the Vite scenarios): red, waits on Q166. Each fails at its `tsc` step with the one line `src/components/date-picker/utils/values.ts(98,7): error TS2591: Cannot find name 'process'.` and stops there. In each kept scratch app: `src/components/date-picker/date-picker.tsx` is present, `tsc -b` prints that one error and no other, `vite build` passes. Not run, because the scenario ends at its first failed step: the locale and example-basic install with their two builds, and the package.json asserts
+- Local CI at 595e0a50 (the commits after it change this tracker and the plan reference only): typecheck, lint, validate-repo, storybook-tests, docs-e2e green on base, radix, aria; installation-e2e green on the three Next scenarios, red on the four Vite scenarios, waits on Q166
+
 - Task 1 the is-empty reset: done (6dcd219e the fix, df801ff7 the play)
-- Task 2 site map and before captures: done (this commit)
+- Task 2 site map and before captures: done (dc3eadea)
+- Task 3 the picker in the box, three bases: done (c1c0c02c, 483eb7aa the box height, a4c07921 the blur)
+- Task 4 the plays: done (a00f7e0b)
+- Task 5 the look: done (captures at 595e0a50, table below, one item under Attention)
+- Task 6 examples, guide, docs copies, tests, changelog: done (8d3933d1, e955e6e9, 595e0a50)
+
+## The look
+
+Before against after per place, base and width (rect records of the box, its group, its container and every button and caption near it). The table's own group keeps its position, height (32 px) and neighbours in every row; `buttons` means the picker's input is 54 px narrower inside the same group because the picker's clear button and popup button (24 px each) stand at its end.
+
+| Place | Width | base | radix | aria |
+|---|---|---|---|---|
+| chips editor | 1280 | same group; buttons | same group; buttons | same group; buttons |
+| chips editor | 390 | same group; buttons | same group; buttons | same group; buttons |
+| header editor | 1280 | same group; buttons | same group; buttons | same group; buttons |
+| header editor | 390 | same group; buttons | same group; buttons | same group; buttons |
+| popover filter | 1280 | group 169 to 195 px wide, so the popover 189 to 215 px, centred as before; buttons | as base | group 164 to 191 px, popover 184 to 211 px; buttons |
+| popover filter | 390 | group 184 to 205 px, popover 204 to 225 px; buttons | as base | group 179 to 201 px, popover 199 to 221 px; buttons |
+| subheader single | 1280 | same group; buttons | same group; buttons | same group; buttons |
+| subheader single | 390 | same group; buttons: the input is 68 px (122 before) and shows `dd/mm` of the date (Attention) | as base | as base, input 72 px (127 before) |
+| subheader range | 1280 | same groups; buttons in each | as base | as base |
+| subheader range | 390 | same groups; buttons: Min's input is 52 px (106 before), Max's 84 px (138 before) (Attention) | as base | as base, Min 56 px (111 before) |
+| chips row | 1280 | same | same | same |
+| chips row | 390 | same | same | same |
+
+- Popover filter: its width follows its content; the picker's input is 107 to 117 px by its own content where the browser box took 135 to 150 px, plus the two buttons. The mode button and the mode caption keep their place in the group.
+- aria at 1280, subheader and chips row: the hidden rows-per-page select (1 px tall, off screen) reads 43 px wide where it read 47; nothing a user sees.
 
 ## Site map
 
@@ -61,3 +106,16 @@ Stories, examples, docs, tests that drive a date box:
 ## Notes
 
 - Captures: `test/.out/spec82/` is git-ignored, so the 72 captures stay in worktree 06. They come from one capture-only story (six places, two widths, a screenshot and a rect record of the box, its container and every button and caption near it) run under vitest, kept outside the repo and removed from the tree after each run.
+- Files outside the owned list: `components/toolbar/ST_HeaderFilterEditor.tsx` per base (site map: an Escape in an input of a popup the field opened closed the whole editor; one condition, `currentTarget.contains(target)`, and the comment; radix has no `closeOnEscape`, its comment only). Needed by the nested popup check of 1.6.5.
+- Blur (a4c07921): the picker's popup is a portal, so a move of focus into it is known only when its focus event bubbles to the box; the commit of a typed date on blur therefore waits one timer tick and the focus event cancels it. On React Aria the editor's focus scope puts focus back in the box on the next frame after a blur to nothing, and when that frame came before the timer the commit was cancelled: the typed date stayed unapplied (the failed play above; proved by a 100 ms timer, which fails the three range plays every time, and passes them with the fix). Now a blur with no next element commits at once; only a move to another element waits the tick.
+- The table's own clear button never showed in a date box before (site map 419-420), so the picker's clear button is the one clear control per box; nothing is hidden.
+- `min-w-35` stays on the date box: without it a range box in a narrow column is 74 px wide and its input 16 px.
+- installation-e2e runs with `--no-diff` locally (P5).
+
+## Attention
+
+- In a narrow column a date filter under the header now shows only part of its date, because the picker's two buttons take 54 px of the box.
+  - Seen at 390 wide: single box, input 122 px before, 68 px after (`dd/mm` visible of `dd/mm/yyyy`); range, Min 106 to 52 px, Max 138 to 84 px. The box, its height and its neighbours do not move. At 1280 the date shows in full. Captures: `.ai/plans/v0.9.x/anindosarker/reference/spec82-narrow-date-box/` (before and after, single and range, base; radix and aria the same).
+  - The clear button keeps its 24 px while the box is empty (the picker hides it, it does not remove it).
+  - Recommended: keep as built; the value is still typed and picked in full, and the calendar opens from the button. A wider minimum for date columns is a layout change of every date column (D164 does not re-decide the layout).
+  - Other option: raise the date box minimum from 140 px so the full date shows; date columns under the header get wider and a table scrolls sideways sooner on a phone.
