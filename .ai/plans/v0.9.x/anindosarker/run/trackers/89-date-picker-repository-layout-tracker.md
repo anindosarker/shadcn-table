@@ -11,9 +11,19 @@ Checks:
 - Check: T1 move commits renames only, `git show -M100% --name-status 8de68ce` at 8de68ce: 210 R100, nothing else: pass
 - Check: T1 move commits renames only, `git show -M100% --name-status 15eb2b0` at 15eb2b0: 120 R100, nothing else: pass
 - Check: T1 old folders gone, `test ! -e registry && test ! -e stories && test ! -e docs && test ! -e .storybook` at 15eb2b0: exit 0, pass
+- Check: T2 the one install, `pnpm install` then `pnpm install --frozen-lockfile` at 99948b7: exit 0, pass
+- Check: T2 lockfile diff, `git diff 15eb2b0 fe23e8f -- pnpm-lock.yaml` at fe23e8f: importer keys (`docs` to `apps/shadcn-date-picker-docs`, new `packages/shadcn-date-picker`, root importer now turbo, prettier, prettier-plugin-tailwindcss, shadcn) and the `turbo@2.5.6` entries; no resolved version moved; two peer suffixes lost their root context (`eslint-config-next@16.3.8` without the optional `@typescript-eslint/parser` peer, `fumadocs-mdx@15.4.7` without the optional `vite` peer), same versions: pass
+- Check: T2 root devDependency `shadcn` (^4.22.0, same resolution), `node tools/registry-build.mjs` needs `shadcn/schema` and `shadcn/utils` resolvable from `tools/` at 99948b7: added beside turbo, prettier and its plugin
+- Check: T2 `.prettierrc` tailwindStylesheet, `prettier --check packages/shadcn-date-picker/stories` with the old `registry/base/index.css` path at 99948b7: errors (9 files), so the path follows the move: pass with the new path
+- Check: T2 lint, `pnpm lint` at 99948b7: exit 0, pass
+- Check: T2 typecheck, `pnpm typecheck` at 99948b7: exit 0, pass
+- Check: T2 registry check, `pnpm registry:check` at 99948b7: exit 0, three bases up to date (22 files each), pass
+- Check: T2 version, `node -e` on `packages/shadcn-date-picker/package.json` and `package.json` at 99948b7: `0.1.1` and `undefined`, pass
+- Check: T2 root catalog, `grep -c 'packages/shadcn-date-picker/registry/' registry.json` at 99948b7: 3, pass
+- Check: T2 lint coverage, root `eslint .` linted `tools/*.mjs` before the move; the package's `eslint .` does not reach `tools/` (outside its config folder); prettier still checks them at 99948b7: noted
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
-- Task 2 Packages, workspace, turbo and the path readers: planned
+- Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
 - Task 3 The equality proofs: planned
 - Task 4 The full checks and the local production read: planned
 - Task 5 After the merge, the live reads: planned
