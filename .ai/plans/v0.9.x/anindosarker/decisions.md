@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## To do
 
-- [ ] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
-	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
-	- Source: Q165
-
 ## In progress
 
 ## Done
@@ -1044,6 +1040,9 @@ kanban-plugin: basic
 - [x] **D174** The React Aria popup's rare stuck-open case is left to React Aria #R6
 	- The React Aria picker keeps the stock popover (D171): a close that lands in the first two frames of a delayed fade-in can leave the popup on the page, and on a touch screen the popup can flicker once as it opens; both are stock react-aria-components behaviour (Popover.mjs:91,103,180,185), not picker code. No workaround and no restyled stock part in the library; the README names both under React Aria. An upstream report is filed only on the owner's word. Settled by the lead.
 	- Source: Q164
+- [x] **D175** The table's three date picker props keep their type and pass on what the picker takes #R6
+	- Option 1 of Q165: stFilterDatePickerProps, stFilterDateTimePickerProps and stFilterTimePickerProps stay typed as input props (no public type change, P7); the table forwards min, max, step, disabled, id, className, style, aria and data attributes and the bubbling handlers onFocus, onBlur and onKeyDown to the picker; the input-only props (value, onChange, type, ref, placeholder, name, readOnly, autoFocus) no longer have an effect and the changelog names them. No new prop for the picker's own options is added until someone needs one. Settled by the lead under the owner's 'implement everything autonomously'.
+	- Source: Q165
 - [x] **D176** The date picker's developer warning for a wrong min, max or step is removed #E27 #R6
 	- utils/values.ts of the date picker no longer prints 'DatePicker: <name> <value> is ignored': a min or max that is not a value of the picker's type and a step that is not a whole number above zero are dropped silently, as the browser does with a bad min on its own input. The process.env.NODE_ENV read goes with it, so a Vite app that installs the picker type-checks without Node types; the helper ignored() and its type go, nothing else changes. On the three bases, in shadcn-date-picker; this is an owner-allowed change to the approved code (report 2.1), so from here the Base UI source differs from test-projects/next-app by this change. The 'node' line added to packages/shadcn-table/tsconfig.radix.json in spec 81 is removed when the table moves to the new tag. Owner, 2026-11-24, told it is a development-only message: 'remove'.
 	- Source: Q166
