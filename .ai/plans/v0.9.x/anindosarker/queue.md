@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q171** A day picked in the calendar does not filter the table until you leave the box, when it is the same day you just typed
 	- Spec 82, all three bases: the table hands the typed date to the picker as its value (picker-field.tsx:106-109), so picking that same day in the popup is no change for the picker and no onChange fires (date-picker.tsx:93-97); spec 82 1.6.2 counts the popup as inside the box, so a typed date waits for Enter or for focus to leave. The final value is right. Built as: keep. Other option: apply the typed date when the popup opens, against the wording of 1.6.2. Tracker run/trackers/82-date-filters-on-date-picker-tracker.md, Attention.
+	- Lead, 2026-11-24: a bug against D88 (a date applies on Enter, on blur or on a pick from the picker): a pick must apply. Fix in the table's code in spec 82, no change to the picker; sent to the runner as NOTE E26.
 
 ## Decided
 
