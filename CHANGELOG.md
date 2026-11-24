@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 1.0.1 - 2026-11-24
+
+### Fixed
+
+#### Spec 96
+
+- A date typed into a date range or date-time range filter now filters the rows when the popup is closed with Escape, on Base UI, Radix UI and React Aria. Before, the box showed the new range while the rows stayed unfiltered until Enter, Tab or a click outside. A half-typed date still applies nothing (D200).
+
 ## 1.0.0 - 2026-11-24
 
 ### Changed
