@@ -9,6 +9,13 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Changed
+
+#### Spec 95
+
+- The date picker dependency is now `anindosarker/shadcn-date-picker/date-picker-<base>#v1.0.0` on Base UI, Radix UI and React Aria (D196).
+- 1.0.0 is the first stable version; its options and types are those of 0.9.9 (D197).
+
 ### Docs
 
 #### Spec 93
