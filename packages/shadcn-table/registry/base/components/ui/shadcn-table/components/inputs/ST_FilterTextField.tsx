@@ -587,6 +587,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     ),
     className: cn(
       nestedGroupClassName,
+      '*:data-[align=inline-end]:py-0',
       filterChipLabel && 'hidden',
       dateBoxProps.className,
     ),
