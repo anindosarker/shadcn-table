@@ -4,10 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q172** The new date picker docs site cannot go live until someone logged in to Vercel opens its preview once
-	- Spec 85, milestone Date picker docs site build: built, reviewed (0 majors) and verified locally at ac4094f on branch date-picker-docs-site of shadcn-date-picker; the merge moves the live Storybook from / to /storybook/ and its Vercel routing (vercel.json) is unproven because the branch preview is behind the Vercel login and no browser was connected. Needed: /, /docs/install and /storybook/base/ answer on the branch preview. Tracker run/trackers/85-date-picker-docs-site-build-tracker.md.
-	- Lead, 2026-11-24: no owner read; the preview check is replaced by a local production read, then merge and live reads (E27 note). Run resumed.
-	- Done without an owner read: local production read green, merged 9a2df03 on main of shadcn-date-picker, live reads pass (site at /, Storybook under /storybook/).
 - [ ] **Q173** On a phone the date picker site's home header draws the site name over the version label
 	- Spec 85 build, 390 wide: shadcn-date-picker overlaps v0.1.1 in the home header (reference/q149-calendar-library/docs-site/home-site-390-light.png, home-site-390-dark.png); fits from 430 wide. The name is longer than the table's and D181 keeps the base select there. Built as the plan; not live yet.
 	- Lead, 2026-11-24: settled, the version label is hidden below sm; built in the docs site build milestone.
@@ -571,6 +567,10 @@ kanban-plugin: basic
 	- Spec 82, all three bases: the table hands the typed date to the picker as its value (picker-field.tsx:106-109), so picking that same day in the popup is no change for the picker and no onChange fires (date-picker.tsx:93-97); spec 82 1.6.2 counts the popup as inside the box, so a typed date waits for Enter or for focus to leave. The final value is right. Built as: keep. Other option: apply the typed date when the popup opens, against the wording of 1.6.2. Tracker run/trackers/82-date-filters-on-date-picker-tracker.md, Attention.
 	- Lead, 2026-11-24: a bug against D88 (a date applies on Enter, on blur or on a pick from the picker): a pick must apply. Fix in the table's code in spec 82, no change to the picker; sent to the runner as NOTE E26.
 	- Fixed by the fix milestone of spec 82, merged 1c42c266: a click on a calendar day applies the typed date first; the box's blur keeps one commit timer. Play PickTypedDayAppliesAtOnce passes on the three bases. The play passed on the shipped code because a doubled blur timer hid the bug; with the timer fix alone it fails (tracker).
+- [x] **Q172** The new date picker docs site cannot go live until someone logged in to Vercel opens its preview once
+	- Spec 85, milestone Date picker docs site build: built, reviewed (0 majors) and verified locally at ac4094f on branch date-picker-docs-site of shadcn-date-picker; the merge moves the live Storybook from / to /storybook/ and its Vercel routing (vercel.json) is unproven because the branch preview is behind the Vercel login and no browser was connected. Needed: /, /docs/install and /storybook/base/ answer on the branch preview. Tracker run/trackers/85-date-picker-docs-site-build-tracker.md.
+	- Lead, 2026-11-24: no owner read; the preview check is replaced by a local production read, then merge and live reads (E27 note). Run resumed.
+	- Done without an owner read: local production read green, merged 9a2df03 on main of shadcn-date-picker, live reads pass (site at /, Storybook under /storybook/).
 
 %% kanban:settings
 {"kanban-plugin":"basic","lane-width":300,"date-format":"YYYY-MM-DD","time-format":"HH:mm","set-view":"list","tag-action":"kanban"}
