@@ -7,6 +7,19 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Spec 87
+
+- A date, date-time or time filter in a range (the `date-range`, `datetime-range` and `time-range` variants, and a date, date-time or time column in the Between or Between inclusive mode) is one date picker in range mode in place of two boxes, on Base UI, Radix UI and React Aria, in the chips editor, the header editor, the popover filter and under the headers. A date or date-time range is one box whose popup holds the Min and Max ends and a calendar for each; a time range is one picker with a time box per end. One end alone still filters; a picked day applies at once, a typed end on Enter or when focus leaves it. The filter value stays the pair `[min, max]`; filter modes, filter functions and saved views are unchanged (D183).
+- For such a range, `stFilterTextFieldProps`, `stFilterDatePickerProps`, `stFilterDateTimePickerProps` and `stFilterTimePickerProps` are called once, with `rangeFilterIndex: 0`, and apply to the one box: a function that returned other props for index 1 no longer has a second box to apply them to (D183).
+- `table.refs.filterInputRefs`: for a time range `<column id>-0` and `-1` hold the two end inputs as before; a date or date-time range holds its end inputs in its popup, so the box has none and `-0` is empty while the popup is closed (D183).
+- Opening a date or date-time range filter in the chips editor or the header editor, or from the filter button in a header in subheader mode, puts keyboard focus on its range box, as 0.9.8 put it in the Min box. `filterInputRefs` and its type are unchanged (D189).
+- Fixed: in the chips editor, changing the mode between a range mode (Between, Between inclusive) and a single mode (Less Than and the rest) empties the value, as the header mode menu already does; a Between pair switched to Less Than no longer leaves the table without rows (D190).
+- Fixed: a `className` passed in `stFilterTextFieldProps` (or in a date picker's props) sizes the whole filter box on every filter kind, so a width class no longer pushes the calendar button past the box's border. The class lands on the box, no longer on the inner input, select trigger, multi-select chips or picker group: a class meant for the input's text now styles the box (D184).
+
 ## 0.9.8 - 2026-11-24
 
 ### Added
