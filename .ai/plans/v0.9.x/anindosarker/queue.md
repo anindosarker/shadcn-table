@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 - [ ] **Q178** The date picker repository is not laid out like the table's: no monorepo with apps and packages folders
 	- Owner, 2026-11-24: 'Why is the Date Picker repository not structured like the table one? Why is it not a monorepo with properly handled folders like apps and packages?'
+	- Lead lookup, 2026-11-24: a spec choice, no decision. Spec 78 line 103: 'One private package at the repository root; no workspace, no turbo.' Picker main today: registry/, stories/, tools/, .storybook/, registry.json and four tsconfig files at the root; docs/ (the Next.js docs app of spec 85) is the one workspace package (pnpm-workspace.yaml: packages: docs). Table: apps/ (docs app), packages/shadcn-table (the library with its registry and Storybook), test/, tools/, turbo.json. D162 and D163 fixed the repository, its name and the item names, not the folder layout. Install addresses (anindosarker/shadcn-date-picker/date-picker-<base>#<tag>) read registry.json at the repository root.
 
 ## Decided
 
