@@ -1138,6 +1138,23 @@ export const RangeTypedMinAppliesOnEscapeWithMaxSet = {
   },
 };
 
+// The picker orders a reversed pair when the popup closes: the ordered pair
+// applies, not the typed one.
+export const RangeTypedReversedEndAppliesOrderedOnEscape = {
+  render: () => <RangeStateTable place="subheader" />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const scope = await openRangePlace(canvasElement, 'subheader');
+    const trigger = await rangeTrigger(scope);
+    await typeEnd(trigger, 'Max', '11112025');
+    await waitFor(() => expect(names(canvasElement)).toHaveLength(5));
+    const min = await typePendingEnd(trigger, 'Min', '12122025');
+    await waitFor(() => expect(min).toHaveValue('2025-12-12'));
+    await realKeyboard().keyboard('{Escape}');
+    await expectBoxAndFilter(trigger, ['2025-11-11', '2025-12-12']);
+    expect(names(canvasElement)).toEqual(['Eve']);
+  },
+};
+
 /** A real press at the element's centre, whatever covers the page there. */
 const realPressAt = (element: HTMLElement) => {
   const real = (

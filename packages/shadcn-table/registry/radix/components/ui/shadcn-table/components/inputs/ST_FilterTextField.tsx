@@ -707,6 +707,19 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     value: (filterValue as string) || '',
   };
 
+  // A date range popup drops its end inputs unblurred: its close applies a typed end.
+  const rangePickerTypeProps =
+    datePickerTypeProps.type === 'time'
+      ? datePickerTypeProps
+      : {
+          ...datePickerTypeProps,
+          popoverProps: {
+            onOpenChange: (open: boolean) => {
+              if (!open) commitTypedValue();
+            },
+          },
+        };
+
   return (
     <>
       <div
@@ -741,7 +754,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           {isDateRange ? (
             <DatePicker
               {...datePickerBoxProps}
-              {...datePickerTypeProps}
+              {...rangePickerTypeProps}
               labels={{ from: localization.min, to: localization.max }}
               range
               value={toRangeValue(filterValue)}
