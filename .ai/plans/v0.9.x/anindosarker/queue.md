@@ -4,8 +4,6 @@ kanban-plugin: basic
 
 ## Open
 
-- [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box
-	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
 - [ ] **Q188** The repository's git history should be deleted so the old plans and personal details are gone for good
 	- Owner, 2026-11-24, after a note that master still shows the old plan folders until 0.9.9: 'Delete the entire history pls. thx'. Scope not yet fixed: the whole history of the repository, or only the plan files out of history. Nothing done; D188 left a history rewrite as a later choice.
 
@@ -443,6 +441,8 @@ kanban-plugin: basic
 	- Spec 87 (D183), built, not merged, branch v0.9/date-range-filters-on-range-picker: the range picker keeps its two end inputs inside its popup, so filterInputRefs <column id>-0 and -1 are empty while it is closed; in the chips and header editors focus lands on the editor's top line, the subheader filter button focuses nothing. 0.9.8 put the cursor in the Min box; spec 87 1.6.2 says focus-on-open works as today. Options the review names: put the range trigger button in -0 and make the four readers (ST_HeaderFilterEditor, ST_FilterChips, ST_TableHeadCellFilterLabel, ST_ColumnActionMenu) call select() only on an input, which widens the ref's element type (public type, P7); keep as built and amend the spec line; a picker change (D176, D177). Found by the fable review, open after round 2.
 - [ ] **Q185** Changing a Between filter to another mode in the chips editor leaves the table empty #D190
 	- In 0.9.8 already (not from spec 87): in chips mode setFilterMode (filterSummary.utils.ts:86-101) keeps the value on every mode change, so a Between pair switched to Less Than keeps the array and the table shows No results found until the value is retyped. Found by the builder of spec 87; not reproduced by the runner.
+- [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box #D192
+	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
 
 ## Later
 

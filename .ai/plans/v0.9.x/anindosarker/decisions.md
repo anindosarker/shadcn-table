@@ -13,6 +13,9 @@ kanban-plugin: basic
 - [ ] **D191** Copy page on the date picker Install page includes the install command #R6
 	- Live at dec5951 the copied text of /docs/install (/llms.mdx/docs/install/content.md) holds no 'shadcn add' line: the page's <InstallCommand /> is dropped by toPlainMarkdown (lib/llms.ts:114). Lead check, 2026-11-24: the table's install page text still carries one install line, the picker's none. Fix in the picker docs app: the page-as-text of the Install page carries the install command for each of the three bases as code blocks, by the mechanism the text route already has for components (the builder reads lib/llms.ts and the table's page; no second copy of the commands to keep in step). Check: the address returns a 'shadcn@latest add anindosarker/shadcn-date-picker/date-picker-<base>#<tag>' line per base. Lead, 2026-11-24 (a bug, one right answer).
 	- Source: Q186
+- [ ] **D192** A time range filter is one box holding the picker's two time inputs #R6
+	- For a time column in a range mode the table renders the picker's time range (two time inputs, From and To, each with its own clock popup and clear; modes/time-range-picker.tsx) in one row inside the filter box's one border, without the picker's labels, as spec 87 built it. Date and date-time ranges stay one box with one popup (D183). The picker code is not changed. This is the one exception to 'one box, one popup' in spec 87 1.2 and 1.6.2. Owner, 2026-11-24: 'The range mode should have one box, that opens 2 popups right? that my component', 'k'.
+	- Source: Q184
 
 ## In progress
 
