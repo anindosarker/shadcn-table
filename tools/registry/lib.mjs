@@ -52,7 +52,7 @@ const itemAddress = (item) =>
 // item per base in anindosarker/shadcn-date-picker, pinned to one tag. A new
 // tag is this line plus `pnpm add-date-picker <base>` on every base.
 export const DATE_PICKER_REPO = 'anindosarker/shadcn-date-picker';
-export const DATE_PICKER_TAG = 'v0.1.0';
+export const DATE_PICKER_TAG = 'v0.1.1';
 
 /**
  * The address of a base's date picker item at DATE_PICKER_TAG, the same in
