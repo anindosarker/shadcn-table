@@ -73,6 +73,29 @@ Checks:
 - Check: T5 site after the revert, python urllib on https://date-picker.shadcn-table.com at b29bfa2: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200, `/docs/date` 200, `/docs/props` 200, `/version.txt` 200 `0.1.1`, `/storybook/` 200, `/storybook/base/`, `/storybook/radix/`, `/storybook/aria/` 200, `/no-such-page` 404 "Page not found | shadcn-date-picker", `/base/` 308 to `/base` (trailing slash step): as before, pass
 - Check: T5 tags, `git ls-remote --tags origin` at b29bfa2: v0.1.0 310b4a0 (908300d), v0.1.1 5fa8f7d (2cf6e6f), unchanged: pass
 - Check: T5 branch date-picker-repository-layout and its worktree kept at d24d40d; live reads, installs and cleanup skipped (step 5); clone on main b29bfa2, `git status --short` empty
+- Check: fix forward, `git merge origin/main` (fast-forward to b29bfa2) then `git revert b29bfa2` on the branch, `git diff d24d40d HEAD --stat` at b2c2ece: prints nothing, pushed: pass
+- Check: reproduce (1), a fresh clone of b2c2ece with no node_modules: `pnpm install --frozen-lockfile` and `turbo run build` exit 0, so a clean install alone does not fail; the Vercel path does: a clone installed at b29bfa2 (old layout node_modules, as the restored Vercel build cache), then `git checkout` b2c2ece and `pnpm install --frozen-lockfile` ("Packages: +7", as the deploy log) leaves `node_modules/@types` absent and `@types/react`, `@types/react-dom` out of `node_modules/.pnpm/node_modules`; `turbo run build --no-cache` at b2c2ece: exit 1, `registry/aria/components/ui/label.tsx(11,18): error TS2339: Property 'className' does not exist on type 'LabelProps'` and `components/dev-home/shared/intent-link.tsx(29,24): error TS7006`: fail as on Vercel
+- Check: reproduce (2), `pnpm exec playwright install chromium` at the root at b2c2ece: ` ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "playwright" not found`: fail as in CI
+- Check: cause (1), the .d.ts files of react-aria-components and next resolve React types by walking up from `node_modules/.pnpm/<pkg>/`; before the move the root importer held `@types/react` and `@types/react-dom`; after it only pnpm's hidden hoist gives them, and an install over the old node_modules does not hoist packages that were root direct dependencies before; the docs package.json already declares every package its files and registry trees import (bare import scan, none missing); turbo.json not part of the cause at b2c2ece: noted
+- Check: fix (1), root devDependencies `@types/react` and `@types/react-dom` `^19.3.0` (resolved 19.3.0, as the docs and library importers), one `pnpm install`, lockfile diff 6 lines in the root importer only, no version moved at cb9f77d: fixed
+- Check: fix (2), ci.yml `pnpm --filter shadcn-date-picker exec playwright install --with-deps chromium` at 16abc32: fixed
+- Check: clean proof install, fresh clone of 16abc32 (no node_modules, no build output), `pnpm install --frozen-lockfile` at 16abc32: exit 0, pass
+- Check: clean proof Vercel build, `turbo run build` at the root at 16abc32: exit 0 (1 task, docs build), pass
+- Check: clean proof docs service, `next build` in apps/shadcn-date-picker-docs at 16abc32: exit 0, pass
+- Check: clean proof storybook service, `pnpm storybook:build` in packages/shadcn-date-picker at 16abc32: exit 0, `storybook-static/storybook/{index.html,base,radix,aria}` exist, pass
+- Check: clean proof Vercel cache path, install at b29bfa2 then `pnpm install --frozen-lockfile` at 16abc32 ("Packages: +7", `node_modules/@types/{react,react-dom}` present) and `turbo run build --no-cache` at 16abc32: exit 0, pass
+- Check: clean proof CI 1, fresh clone, `pnpm install --frozen-lockfile` at 16abc32: exit 0, pass
+- Check: clean proof CI 2, `pnpm lint` at 16abc32: exit 0, pass
+- Check: clean proof CI 3, `pnpm typecheck` at 16abc32: exit 0, pass
+- Check: clean proof CI 4, `pnpm registry:check` at 16abc32: exit 0, pass
+- Check: clean proof CI 5, `pnpm --filter shadcn-date-picker exec playwright install chromium` (no `--with-deps` on macOS; act not run) at 16abc32: exit 0, pass
+- Check: clean proof CI 6, `pnpm test` at 16abc32: base, radix, aria 7 test files passed each, exit 0, pass
+- Check: clean proof CI 7, `pnpm --filter shadcn-date-picker-docs lint` at 16abc32: exit 0, pass
+- Check: clean proof CI 8, `pnpm --filter shadcn-date-picker-docs types:check` at 16abc32: exit 0, pass
+- Check: clean proof CI 9, `pnpm --filter shadcn-date-picker-docs build` at 16abc32: exit 0, `git status --short` empty, pass
+- Check: equality, `git diff 5404817:registry/<base>/registry.json HEAD:packages/shadcn-date-picker/registry/<base>/registry.json` and the same on `generated` for base, radix, aria at 16abc32: print nothing, pass
+- Check: registry build, `pnpm registry:build` (three bases, 22 files each) then `git status --short` at 16abc32: empty, pass
+- Check: scratch deleted, `test ! -e /private/tmp/claude-501/dp-layout-fix` at 16abc32: pass
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
 - Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
@@ -82,5 +105,4 @@ Checks:
 
 ## Attention
 
-- The merged layout broke the site build on Vercel, so the merge was undone and the live site is as before.
-- Queue card: date picker layout fix forward. M f1375c3 failed two ways in the repository's own files: (1) Vercel builds the docs app from a Turbo-detected install that no longer gives it the library's dependencies and types (`react-aria-components` LabelProps, implicit any), so `next build` fails type check; (2) ci.yml runs `pnpm exec playwright install` at the root, where playwright no longer is. Revert commit b29bfa2; branch date-picker-repository-layout kept at d24d40d for the fix and a new merge.
+- Cause: React types reached the docs build only through pnpm's hoist, which an install over the old layout's node_modules (the Vercel build cache) skips, and ci.yml ran playwright at the root; fix: root `@types/react` and `@types/react-dom` (cb9f77d) and the playwright install from the library package (16abc32), branch head 16abc32 ready for a new merge.
