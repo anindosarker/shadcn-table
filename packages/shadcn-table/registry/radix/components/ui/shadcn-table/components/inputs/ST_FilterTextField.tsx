@@ -70,11 +70,11 @@ const filterTextFieldVariants = cva(
 // The range picker's own parts sit in the filter box, which draws the
 // border, the background and the focus ring.
 const rangePickerClassName =
-  '[&>button]:h-full [&>button]:border-0 [&>button]:bg-transparent [&>button]:shadow-none dark:[&>button]:bg-transparent [&>button]:aria-expanded:bg-transparent [&_[data-slot=input-group]]:h-full [&_[data-slot=input-group]]:border-0 [&_[data-slot=input-group]]:bg-transparent [&_[data-slot=input-group]]:shadow-none [&_[data-slot=input-group]]:ring-0! dark:[&_[data-slot=input-group]]:bg-transparent';
+  '[&>button]:h-full [&>button]:border-0 [&>button]:bg-transparent [&>button]:shadow-none dark:[&>button]:bg-transparent [&>button]:aria-expanded:bg-transparent **:data-[slot=input-group]:h-full **:data-[slot=input-group]:border-0 **:data-[slot=input-group]:bg-transparent **:data-[slot=input-group]:shadow-none **:data-[slot=input-group]:ring-0! dark:**:data-[slot=input-group]:bg-transparent';
 
 // The time range keeps a box per end: side by side, named for screen readers.
 const timeRangeClassName =
-  'h-full flex-row gap-0 *:data-[slot=field]:gap-0 *:data-[slot=field]:not-first:border-s [&_[data-slot=field-label]]:sr-only';
+  'h-full flex-row gap-0 *:data-[slot=field]:gap-0 *:data-[slot=field]:not-first:border-s **:data-[slot=field-label]:sr-only';
 
 /** Every value the filter inputs hand to the column filter. */
 type FilterInputValue = Date | number | string | string[] | null;
@@ -678,21 +678,15 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     // The picker mounts a new input when it is cleared: read on every render.
     ref: (root: HTMLDivElement | null) => {
       datePickerRef.current = root;
-      if (isDateRange) {
-        // A time range holds its end inputs in the box; a date range holds
-        // them in its popup, so the box has none to focus.
-        const inputs = root?.querySelectorAll('input');
-        // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
-        filterInputRefs.current[`${column.id}-0`] =
-          inputs?.[0] as HTMLInputElement;
-        filterInputRefs.current[`${column.id}-1`] =
-          inputs?.[1] as HTMLInputElement;
-        return;
-      }
-      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
-      filterInputRefs.current[filterInputKey] = root?.querySelector(
-        'input',
-      ) as HTMLInputElement;
+      // A time range holds its end inputs in the box; a date range holds them
+      // in its popup, so the box has none to focus.
+      const inputs = Array.from(root?.querySelectorAll('input') ?? []);
+      const keys = isDateRange
+        ? [`${column.id}-0`, `${column.id}-1`]
+        : [filterInputKey];
+      keys.forEach((key, index) => {
+        filterInputRefs.current[key] = inputs[index] as HTMLInputElement;
+      });
     },
     style: dateBoxProps.style,
     title: filterPlaceholder,
