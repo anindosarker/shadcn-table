@@ -96,6 +96,15 @@ Checks:
 - Check: equality, `git diff 5404817:registry/<base>/registry.json HEAD:packages/shadcn-date-picker/registry/<base>/registry.json` and the same on `generated` for base, radix, aria at 16abc32: print nothing, pass
 - Check: registry build, `pnpm registry:build` (three bases, 22 files each) then `git status --short` at 16abc32: empty, pass
 - Check: scratch deleted, `test ! -e /private/tmp/claude-501/dp-layout-fix` at 16abc32: pass
+- Verify 2: renames, `git diff -M100% --name-status 5404817 HEAD` at 16abc32: 319 R100, the rest the 1.6.2/1.6.3 files and the tracker's extras; `git diff -M100% --stat d24d40d HEAD`: only `package.json`, `pnpm-lock.yaml`, `.github/workflows/ci.yml`: pass
+- Verify 2: clean install, fresh `git clone --branch date-picker-repository-layout` in scratch, no node_modules, `pnpm install --frozen-lockfile` at 16abc32: exit 0, `node_modules/@types/{react,react-dom}` present: pass
+- Verify 2: Vercel build, `pnpm exec turbo run build` at the root of that clone at 16abc32: exit 0, docs "Running TypeScript" passed, 1 task successful, 0 cached: pass
+- Verify 2: docs service, `next build` in apps/shadcn-date-picker-docs at 16abc32: exit 0, type check ran: pass
+- Verify 2: storybook service, `pnpm storybook:build` in packages/shadcn-date-picker at 16abc32: exit 0, `storybook-static/storybook/{index.html,base,radix,aria}` exist: pass
+- Verify 2: CI steps in order in that clone at 16abc32 (macOS, playwright without `--with-deps`, act not run): `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm registry:check`, `pnpm --filter shadcn-date-picker exec playwright install chromium`, `pnpm test` (base, radix, aria 7 files 39 tests each), docs `lint`, `types:check`, `build`: all exit 0, `git status --short` empty: pass
+- Verify 2: local read, `next start -p 5345` and `python3 -m http.server 5346` on the clone's build output, playwright at 16abc32: `/` 200 "shadcn-date-picker: Date Picker for shadcn/ui", `/docs/install` 200 "Install | shadcn-date-picker", `/docs/date` 200 "Date | shadcn-date-picker", "Customize theme" opens the Theme sheet, "Select date" then day 15 sets 2026-11-15; `/storybook/{base,radix,aria}/` 200 "Introduction - Docs", 9 sidebar items, preview iframe; 0 console errors on every page: pass
+- Verify 2: lockfile, package keys `git show 5404817:pnpm-lock.yaml` vs HEAD at 16abc32: no package removed, added only `turbo@2.5.6` and its six platform packages; five snapshot keys lost a root-only optional peer, same versions; no resolved version moved: pass
+- Verify 2: cleanup at 16abc32: servers stopped by pid, ports 5345 and 5346 free, browser closed, scratch deleted, worktree `git status --short` empty, clone on main: pass
 
 - Task 1 The map and the moves: done (8de68ce, 15eb2b0)
 - Task 2 Packages, workspace, turbo and the path readers: done (fe23e8f, 99948b7)
