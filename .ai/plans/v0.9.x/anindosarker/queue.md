@@ -443,6 +443,7 @@ kanban-plugin: basic
 	- Built (D189), merged d194f81b: focus on open lands on the range box's trigger; no public type change, no picker change.
 - [ ] **Q185** Changing a Between filter to another mode in the chips editor leaves the table empty #D190
 	- In 0.9.8 already (not from spec 87): in chips mode setFilterMode (filterSummary.utils.ts:86-101) keeps the value on every mode change, so a Between pair switched to Less Than keeps the array and the table shows No results found until the value is retyped. Found by the builder of spec 87; not reproduced by the runner.
+	- Fixed (D190), merged d194f81b: a chips mode change between a range mode and a single mode resets the value by the header mode menu's rule; play ChipsModeChangeResetsRangeValue.
 - [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box #D192
 	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
 
