@@ -6,6 +6,8 @@ kanban-plugin: basic
 
 - [ ] **Q184** A time range filter shows two time boxes with two clear buttons, not one box
 	- Spec 87 (D183), built, not merged: for a time column in range mode the picker's TimeRangePicker (modes/time-range-picker.tsx:33-58) has no single trigger and no clear-both, so the table lays its two time boxes side by side in one filter box (timeRangeClassName, ST_FilterTextField.tsx:76-77), each with its own clock popup and clear. Spec 87 1.2 and 1.6.2 say one box, one popup, one clear. Capture test/.out/spec87/after/extra-time-range-box-in-subheader-base.png in worktree 06. Options the review names: accept the picker's time range with the table's one-row look; show the picker's own stacked look with labels; a one-box time range in the picker. Date and date-time ranges are one box as specified.
+- [ ] **Q188** The repository's git history should be deleted so the old plans and personal details are gone for good
+	- Owner, 2026-11-24, after a note that master still shows the old plan folders until 0.9.9: 'Delete the entire history pls. thx'. Scope not yet fixed: the whole history of the repository, or only the plan files out of history. Nothing done; D188 left a history rewrite as a later choice.
 
 ## Decided
 
