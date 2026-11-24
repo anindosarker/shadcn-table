@@ -162,13 +162,34 @@ Review round 1 (fixer):
 - Check: `pnpm test docs-e2e --base aria` at 5616f5c46: pass (5 sections, 117 pages)
 - Review round 1: 3 majors, 6 minors, fixed at 5616f5c46 (mode swap plays, blur and Escape plays, the reorder-on-close fix, the two checks restored); 2 majors under Attention; 2 minors answered without change
 
+D189 and D190 (lead, 2026-11-24; merged origin/claude/review 56e44b055 first, plan files only):
+- Check: D190 reproduced on the branch at 4e9e737f2: `ST_BASE=base vitest run stories/features/DateFilters.stories.tsx -t "Chips Mode Change"` (chips, Between pair 10 Oct to 11 Nov, mode to Less Than): fail as meant, `expected [ 'No results found' ] to have a length of 6`
+- Check: D190 reproduced on origin/claude/review 56e44b055 (its `packages/shadcn-table/registry` checked out over the branch for the run, restored after; the two-box range there): same play, same failure
+- Check: D189 plays before the fix, base, `ST_BASE=base vitest run stories/features/DateFilters.stories.tsx -t "Takes Focus"` at 4e9e737f2 + plays: fail as meant (4 failed: `RangeBoxTakesFocusInChipsEditor` and `RangeBoxTakesFocusInHeaderEditor` focus the editor's top-line button, `RangeBoxTakesFocusFromFilterPicker` the popup, `RangeBoxTakesFocusFromSubheaderButton` keeps it on the header's filter button)
+- D189 fix: the trigger of a date or date-time range box is kept per table in `shared/utils/utils.ts` (a WeakMap keyed by `table.refs.filterInputRefs`, written from the box's ref callback in `ST_FilterTextField.tsx`); `getFilterFocusTarget` gives `<column id>-0`, else that trigger. The readers use it: `ST_HeaderFilterEditor` (base `initialFocus`, radix `onOpenAutoFocus`, aria mount ref), `ST_FilterChips`, `ST_TableHeadCellFilterLabel` (subheader button; `select()` only on an input), `ST_ColumnActionMenu`. `filterInputRefs`, its type, every exported type, `index.ts` and the picker are unchanged; the popover filter's focus is unchanged. Single date boxes, number ranges and time ranges hold an input in `-0` and focus as before.
+- D190 fix: `filterSummary.utils.ts` `setFilterMode` mirrors the header mode menu's rule (`ST_FilterOptionMenu.tsx` mode select) on a change between a range mode and a single mode: to a range mode an empty pair unless the pair is already empty, to a list mode (multi-select or arr modes) an empty list, to a single mode `''` when the value is a pair. Empty modes keep their rule. The existing `ModeSwapsSingleAndRangeInChipsEditor` now expects every row after Less Than, as the subheader case did.
+- Check: `ST_BASE=base|radix|aria vitest run stories/features/DateFilters.stories.tsx` after the fix: pass (42 passed each; the five new plays and both mode-swap plays)
+- Check: `pnpm -w registry:build`, `node lib/story-pages.mjs` (5 new pages, descriptions and Try it steps filled), `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`: clean (177 table files each)
+- Check: `grep -c '^#### Spec 87' CHANGELOG.md`: prints 1; two lines added (D189, D190)
+- Task D189 and D190: done (60f08d1b4)
+- Local CI at 60f08d1b4 (each through heavy.sh, one base at a time):
+- Check: `pnpm test typecheck --base base`: pass (tsc clean)
+- Check: `pnpm test typecheck --base radix`: pass (tsc clean)
+- Check: `pnpm test typecheck --base aria`: pass (tsc clean)
+- Check: `pnpm test lint`: pass (9 warnings, docs app, none in a changed file)
+- Check: `pnpm test validate-repo`: pass (bases identical, date picker matches, icon maps complete, tailwind valid, registry valid, registry fresh, story pages match, story code complete, 52 unit tests)
+- Check: `pnpm --filter shadcn-table-docs types:check`: pass
+- Check: `pnpm test storybook-tests --base base`: pass (655 passed)
+- Check: `pnpm test storybook-tests --base radix`: pass (655 passed)
+- Check: `pnpm test storybook-tests --base aria`: pass (655 passed)
+- Check: `pnpm test docs-e2e --base base`: pass (5 sections, 117 pages)
+- Check: `pnpm test docs-e2e --base radix`: pass (5 sections, 117 pages)
+- Check: `pnpm test docs-e2e --base aria`: pass (5 sections, 117 pages)
+- Check: `pnpm test installation-e2e --no-diff`: pass (7 passed; nextjs-base, -radix, -aria built, browser pass)
+- Spec 87 waits on Q184 (time range look, with the owner) before the merge; nothing of the time range changed here.
+
 ## Attention
 
-- Opening a date or date-time range filter no longer puts the cursor in it: in the chips and header editors focus lands on the editor's top line, and the header filter button in subheader mode focuses nothing.
-  - Spec 87 1.6.2 asks `filterInputRefs` `<column id>-0` and `-1` to keep pointing at the start and end input. The picker mounts those inputs only inside its popup (`picker: modes/day-range-picker.tsx` `endBox`, under `PickerTrigger`), so with the popup closed there is no input to point at; the box holds only the trigger button.
-  - Readers: `ST_HeaderFilterEditor.tsx:43,126` and `ST_FilterChips.tsx:119` (`initialFocus={() => getFilterInput(...) ?? true}`), `ST_TableHeadCellFilterLabel.tsx:125-132` (`focus()` then `select()`), `ST_ColumnActionMenu.tsx:441`. None is an owned file; the refs are typed `Record<string, HTMLInputElement>`.
-  - Shipped 0.9.8: focus landed in the Min date box.
-  - Options: (1, recommended) focus the range trigger button on open: `-0` holds the trigger, the readers call `select()` only on an input; touches the four reader files and the ref's element type (P7: widening, not a removal). (2) Keep it as built and amend the spec line: focus goes to the editor's first control. (3) Ask the picker for a way to focus or open its range from outside (a change to the approved picker, the owner's, D176, D177).
 - A time filter in a range shows two time boxes, each with its own clock popup and its own clear button, laid side by side by the table; spec 87 1.2 and 1.6.2 describe one box, one popup and one clear for both ends.
   - The picker's time range is `TimeRangePicker` (`picker: modes/time-range-picker.tsx:33-58`): a `FieldGroup` with one `TimeField` per end, no trigger and no clear-both. The table cannot give it one popup or one clear without changing the picker.
   - The table restyles it from outside (`ST_FilterTextField.tsx` `timeRangeClassName`: one row, end labels screen-reader only, a border between the ends, each end `min-w-0 flex-1`); that look is neither the picker's range demo nor a decision.
