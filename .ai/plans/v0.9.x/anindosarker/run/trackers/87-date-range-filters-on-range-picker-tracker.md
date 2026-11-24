@@ -188,6 +188,16 @@ D189 and D190 (lead, 2026-11-24; merged origin/claude/review 56e44b055 first, pl
 - Check: `pnpm test installation-e2e --no-diff`: pass (7 passed; nextjs-base, -radix, -aria built, browser pass)
 - Spec 87 waits on Q184 (time range look, with the owner) before the merge; nothing of the time range changed here.
 
+Verify D189 and D190 (verifier, 2026-11-24; merged origin/claude/review 910c72b54 first, plan files only):
+- Check: `git diff --name-only origin/claude/review...HEAD`: owned files, the tracker, `CHANGELOG.md`, generated files (`apps/shadcn-table-docs/components/ui-<base>/` by `pnpm --filter shadcn-table-docs lib:install <base>`, `content/docs/examples/more/*.mdx` and `meta.json` by `node lib/story-pages.mjs`, owned folder); extras each needed: `ST_TableHeadCellFilterLabel.tsx`, `ST_ColumnActionMenu.tsx`, base `ST_FilterChips.tsx` (D189 readers), `shared/utils/utils.ts` (D189 trigger lookup, not exported by `index.ts`), `filterSummary.utils.ts` (D190 names it), `mobile-date-pickers.stories.tsx` and `test/docs-e2e/lib/examples.mjs` (their date range checks counted two thead date boxes): pass
+- Check: `git diff --name-only 60f08d1b4..HEAD` touches only `.ai/`: the D189, D190 and Local CI lines at 60f08d1b4 stand
+- Check: `git diff --stat origin/claude/review...HEAD -- ':(glob)packages/shadcn-table/registry/*/components/date-picker/**' ':(glob)packages/shadcn-table/registry/*/components/ui/*.tsx' tools package.json pnpm-lock.yaml`: prints nothing
+- Check: `git diff origin/claude/review...HEAD -- '.../types.ts' '.../index.ts' | grep '^-export'`: prints nothing; `ST_FilterOptionMenu.tsx`, `column.utils.ts`, `Customization`, `ServerData`, `ViewSettings` stories unchanged; `DATE_PICKER_TAG` stays `v0.1.1`
+- Check: D190 `setFilterMode` gives the result of the header mode menu rule (`ST_FilterOptionMenu.tsx` handleSelectFilterMode) on a range and single change: read, same
+- Check: `ST_BASE=base|radix|aria vitest run stories/features/DateFilters.stories.tsx` through heavy.sh at 60f08d1b4 code: pass (42 passed each; the four `RangeBoxTakesFocus*` plays, `ChipsModeChangeResetsRangeValue`, both mode-swap plays)
+- Check: `grep -c '^#### Spec 87' CHANGELOG.md`: prints 1; 30 before and 34 after captures under `test/.out/spec87/`
+- Check: `lsof -iTCP:5340-5360 -sTCP:LISTEN`: nothing; `git status --short`: clean before this commit
+
 ## Attention
 
 - A time filter in a range shows two time boxes, each with its own clock popup and its own clear button, laid side by side by the table; spec 87 1.2 and 1.6.2 describe one box, one popup and one clear for both ends.
