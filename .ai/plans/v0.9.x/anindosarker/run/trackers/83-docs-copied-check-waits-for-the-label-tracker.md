@@ -1,6 +1,6 @@
 # 83: Docs copied check waits for the label (Q174), tracker
 
-Status: running
+Status: done
 Branch `v0.9/docs-copied-check-waits`, worktree 07
 Checks:
 - Check: copied checks wait, `grep -n "waitForTimeout(100)" test/docs-e2e/lib/helpers.mjs` at f1d1bff50: pass (no fixed wait before a copied count; copyAndRead polls the clipboard stub, copiedShown waits for the Copied button, 5000 ms)
