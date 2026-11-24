@@ -15,9 +15,9 @@ import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar
 import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 /**
- * The chips mode value editor's width: 260 px, or 308 px for a range of two
- * date, datetime or time fields, which keep a 140 px minimum each, so both
- * fit beside the 8 px gap and the 10 px padding.
+ * The chips mode value editor's width: 260 px, or 308 px for a date, datetime
+ * or time range, whose one range box keeps the 288 px minimum of the two
+ * boxes it replaced, so it fits beside the 10 px padding.
  */
 export const filterEditorClassName = <TData extends ST_RowData>(
   column: ST_Column<TData>,

@@ -571,7 +571,7 @@ const subheaderInputsInsideCell = async (canvasElement: HTMLElement) => {
       ).toBe(true);
     }
     // A range filter's Filter Mode caption spans the range group, past the
-    // Min field.
+    // Min field; a date range is one box (D183).
     let rangeGroups = 0;
     for (const th of ths) {
       // Top-level fields only: an autocomplete nests an input group.
@@ -580,11 +580,12 @@ const subheaderInputsInsideCell = async (canvasElement: HTMLElement) => {
       ).filter(
         (field) => !field.parentElement?.closest('[data-slot="input-group"]'),
       );
-      const caption = Array.from(th.querySelectorAll('label, p')).find((el) =>
+      const caption = Array.from(th.querySelectorAll('p')).find((el) =>
         el.textContent?.startsWith('Filter Mode'),
       );
-      if (fields.length !== 2 || !caption) continue;
+      if (!fields.length || !caption) continue;
       rangeGroups += 1;
+      if (fields.length !== 2) continue;
       const minRight = fields[0].getBoundingClientRect().right;
       const captionRight = caption.getBoundingClientRect().right;
       expect(
@@ -685,7 +686,10 @@ export const FilteringChangeModeEnabledFaceted = {
   },
 };
 
-/** Range fields wider than their column stay side by side, clipped by the th (D61). */
+/**
+ * Range fields wider than their column stay side by side, clipped by the th
+ * (D61); a date range is one box, clipped the same (D183).
+ */
 export const SubheaderRangeFieldsNarrow = {
   // The wrapper is the three column sizes (180 + 80 + 180) plus the frame's
   // border wide, so the table cannot spread spare width over the columns.
@@ -736,20 +740,25 @@ export const SubheaderRangeFieldsNarrow = {
         ] as const) {
           const th = thFor(name);
           const cell = th.getBoundingClientRect();
-          // A date box holds the picker's own group inside the field's.
-          const [min, max] = Array.from(
+          const groups = Array.from(
             th.querySelectorAll('[data-slot="input-group"]'),
-          )
-            .filter(
-              (group) =>
-                !group.parentElement?.closest('[data-slot="input-group"]'),
-            )
-            .map((group) => group.getBoundingClientRect());
-          // D61: Min and Max stay on one row at every width.
-          expect(
-            Math.abs(max.top - min.top),
-            `${name}: Min top ${min.top}, Max top ${max.top}`,
-          ).toBeLessThanOrEqual(1);
+          ).filter(
+            (group) =>
+              !group.parentElement?.closest('[data-slot="input-group"]'),
+          );
+          if (name === 'Age') {
+            // D61: Min and Max stay on one row at every width.
+            const [min, max] = groups.map((group) =>
+              group.getBoundingClientRect(),
+            );
+            expect(
+              Math.abs(max!.top - min!.top),
+              `${name}: Min top ${min!.top}, Max top ${max!.top}`,
+            ).toBeLessThanOrEqual(1);
+          } else {
+            // D183: a date range is one box.
+            expect(groups, `${name}: one range box`).toHaveLength(1);
+          }
           // The th keeps its size and clips what is wider.
           expect(
             Math.abs(cell.width - size),
