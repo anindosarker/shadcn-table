@@ -1,6 +1,7 @@
 # 85: Date picker docs site build, tracker
 
-Status: running
+Status: done
+Merge: 9a2df03 (merge: date-picker-docs-site (85), --no-ff into main, pushed)
 Branch `date-picker-docs-site`, worktree shadcn-date-picker.worktrees/date-picker-docs-site (from origin/main 2cf6e6f)
 Checks:
 - Check: frozen install, `pnpm install --frozen-lockfile` after the one `pnpm install` that wrote the lockfile, at be986a7: pass (exit 0)
@@ -85,12 +86,23 @@ Checks:
 - Check: `/docs/date` demo width at 1440 light, 0d258cd: pass (picker input group 165 wide in a preview panel 1106 wide); capture example-site-1440-light-fixed.png
 - Check: servers stopped, `kill` of pids 80989, 80990, then `lsof -nP -iTCP:5356-5360 -sTCP:LISTEN`: pass (prints nothing); `git status --short` in the worktree prints nothing
 - Check: preview of the branch: replaced by the local production read above (the preview is behind the Vercel login; lead's ruling)
+- Check: merge, origin/main 2cf6e6f an ancestor of origin/date-picker-docs-site 0d258cd (no main merge, builder gates at head stand); `git merge --no-ff origin/date-picker-docs-site` on main: 9a2df03, pushed
+- Check: production deployment of 9a2df03, `gh api repos/anindosarker/shadcn-date-picker/commits/9a2df03/status`: pass (Vercel success after about 2.5 minutes)
+- Check: CI of 9a2df03, `gh run list -R anindosarker/shadcn-date-picker --branch main`: pass (run 45327824699 completed success)
+- Check: live `/` at 9a2df03, Playwright Chromium 1440: pass (200, title "shadcn-date-picker: Date Picker for shadcn/ui", the docs home with the wordmark header, not the Storybook landing; 0 console errors)
+- Check: live `/docs/install` at 9a2df03: pass (200, title "Install | shadcn-date-picker"; 0 console errors)
+- Check: live `/docs/date` at 9a2df03: pass (200, title "Date | shadcn-date-picker"; date picked "2026-11-21" to "2026-11-22"; 0 console errors)
+- Check: live `/storybook/base/` at 9a2df03: pass (200, title "Introduction - Docs ⋅ Storybook"; 0 console errors)
+- Check: live `/storybook/radix/` at 9a2df03: pass (200, title "Introduction - Docs ⋅ Storybook"; 0 console errors)
+- Check: live `/storybook/aria/` at 9a2df03: pass (200, title "Introduction - Docs ⋅ Storybook"; 0 console errors)
+- Check: live `/version.txt` at 9a2df03: pass (200, prints `0.1.1`)
+- Check: cleanup, `git worktree remove` of shadcn-date-picker.worktrees/date-picker-docs-site (clean), branch date-picker-docs-site deleted locally and on origin; clone on main at 9a2df03
 
 - Task 1 workspace and shell: done (be986a7)
 - Task 2 pages and demos: done (0a3b01e)
 - Task 3 Storybook under /storybook/, vercel.json, CI, README: done (505417a)
 - Task 4 local production build read and captures: done (checks at 505417a, no code change; captures and this list committed in the table repository)
-- Task 5 live reads after the merge: planned
+- Task 5 live reads after the merge: done (9a2df03)
 - Fix round (Attention points of the lead): done (0d258cd)
 - Review round 1: 0 majors, 3 minors, fixed at ac4094f. Home "Storybook" link is a plain `<a href="/storybook/">` (was IntentLink, a router link to a path the docs app does not own; plan 6.4 line added, 74d766dc); time.mdx closing line reads "More options (limits, labels)" (registry/base/components/date-picker/types.ts:91 `presets?: never`, and no dialog on a time picker); lockfile minor accepted, no change: the transitive @emnapi/* 1.11.0 and yaml@2.9.1 peer came in at be986a7, the only lockfile commit, and `pnpm test` and `pnpm storybook:build` passed on it at 505417a (Local CI line)
 
