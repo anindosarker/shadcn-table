@@ -733,6 +733,23 @@ html:has(#nd-notebook-layout) ::selection {
   letter-spacing: -0.02em;
 }
 
+/* the Try it heading is an h2 for the outline (v1.0.x D3) and keeps the
+   prose h3 look; the id is the only handle markdown gives one heading */
+#nd-page .prose h2#try-it {
+  font-family: inherit;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  font-variation-settings: normal;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
 /* overview link lists (TableOfContentsList): numbered index rows, mono accent
    number, Archivo display label, dashed rules; the whole row is the link */
 .docs-index {

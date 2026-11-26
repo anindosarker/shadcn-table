@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 
 /**
- * Quiet steps list for a live example. The page writes `### Try it` in
- * markdown above it, so the heading gets the normal MDX h3, anchor and table
- * of contents entry; this wraps only the muted ordered list below it.
+ * Quiet steps list for a live example. The page writes `## Try it` in
+ * markdown above it, so the heading gets the normal MDX h2 (with the h3 look,
+ * app/global.css), anchor and table of contents entry; this wraps only the muted ordered list below it.
  * Fumadocs prose styles lists with zero-specificity `:where()` rules and sets
  * no colour or size on `li`, so the list inherits the colour and size here,
  * its counters are already muted, and these utilities override the margins.
