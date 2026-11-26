@@ -31,6 +31,11 @@ publishes the section as the GitHub release notes.
 - The ST Components, ST Hooks, Agents and Usage pages start their sections at a level 2 heading instead of level 3, so their page outline no longer skips a level; the headings keep their text, order and links, and are one size larger (Q5).
 - The Guides overview (`/docs/guides`) marks its group headings as level 2 instead of level 3, so its outline no longer skips a level; the page looks as before (Q5).
 
+#### Spec 05
+
+- The More examples list page (`/docs/examples/more`) no longer fills the docs search with its rows: a search for a story name shows the story pages, and the list page is found by its title only (D6).
+- Each example on the More examples list page shows the number it has in the sidebar, such as "43. Default" (D7).
+
 ## 1.0.1 - 2026-11-24
 
 ### Fixed

@@ -8,7 +8,8 @@
  * Storybook's own CSF parser, so ids, names and order are the ones
  * Storybook gives them (storybook-static/<base>/index.json). more/index.mdx,
  * the folder's index page at /docs/examples/more, links every story page
- * under the same labels (v1.0.x D5); it is written whole on every run.
+ * under the same labels (v1.0.x D5), each with its sidebar number (v1.0.x
+ * D7); it is written whole on every run.
  *
  * A new page holds the title, the sidebar label, the search title when the
  * story needs one (`storySearchTitle`) and the `<StoryExample id="..." />`
