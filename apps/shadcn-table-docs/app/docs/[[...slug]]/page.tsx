@@ -119,6 +119,7 @@ export async function generateMetadata(
     openGraph: {
       siteName,
       type: 'article',
+      url: page.url,
       images: getPageImageUrl(page).url,
     },
   };

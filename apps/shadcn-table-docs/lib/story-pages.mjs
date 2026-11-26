@@ -8,13 +8,14 @@
  * Storybook's own CSF parser, so ids, names and order are the ones
  * Storybook gives them (storybook-static/<base>/index.json).
  *
- * A new page holds the title, the sidebar label and the
- * `<StoryExample id="..." />` tag (components/story-example.tsx). A page that
- * exists keeps everything it holds (its description, its body text); only
- * `title` and `sidebarTitle` follow the story's name. A page whose story is
- * gone is removed when it holds no text; one that holds text (a description
- * or body text besides the StoryExample tag) is kept, and the script fails
- * naming it: its text is reviewed, so a person moves it or deletes the file.
+ * A new page holds the title, the sidebar label, the search title when the
+ * story needs one (`storySearchTitle`) and the `<StoryExample id="..." />`
+ * tag (components/story-example.tsx). A page that exists keeps everything it
+ * holds (its description, its body text); only `title`, `sidebarTitle` and
+ * `searchTitle` follow the story. A page whose story is gone is removed when
+ * it holds no text; one that holds text (a description or body text besides
+ * the StoryExample tag) is kept, and the script fails naming it: its text is
+ * reviewed, so a person moves it or deletes the file.
  * Running it twice changes nothing.
  *
  * `pnpm test validate-repo` (test/validate-repo/lib/story-pages.mjs) fails
@@ -136,14 +137,48 @@ export function moreMeta(pages) {
   };
 }
 
+/**
+ * The page `<title>` of a story page (v1.0.x D3): "<family>: <name>", the
+ * family being the last part of the meta title, so two stories of the same
+ * name in two files differ; undefined when the name already holds the family.
+ * @param {Story} story
+ * @returns {string | undefined}
+ */
+export function storySearchTitle(story) {
+  const family = story.title.split('/').at(-1).trim();
+  if (story.name.toLowerCase().includes(family.toLowerCase())) return undefined;
+  return `${family}: ${story.name}`;
+}
+
 /** A YAML scalar for the frontmatter: single quotes, a quote doubled. */
 const yamlString = (value) => `'${value.replaceAll("'", "''")}'`;
 
-/** The text of a new page: title, sidebar label and the story. */
+/** The frontmatter lines the story sets; the rest of a page is kept. */
+const STORY_LINE = /^(title|sidebarTitle|searchTitle):/;
+
+/**
+ * The `searchTitle` line of a story's page, or undefined when it has none.
+ * @param {Story} story
+ */
+export function searchTitleLine(story) {
+  const title = storySearchTitle(story);
+  return title === undefined ? undefined : `searchTitle: ${yamlString(title)}`;
+}
+
+/** @param {Story} story */
+function storyLines(story) {
+  const searchTitle = searchTitleLine(story);
+  return [
+    `title: ${yamlString(story.name)}`,
+    `sidebarTitle: ${yamlString(story.name)}`,
+    ...(searchTitle ? [searchTitle] : []),
+  ];
+}
+
+/** The text of a new page: title, sidebar label, search title and the story. */
 function newPage(story) {
   return `---
-title: ${yamlString(story.name)}
-sidebarTitle: ${yamlString(story.name)}
+${storyLines(story).join('\n')}
 ---
 
 <StoryExample id="${story.id}" />
@@ -153,28 +188,22 @@ sidebarTitle: ${yamlString(story.name)}
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/;
 
 /**
- * A page that exists, with its `title` and `sidebarTitle` set to the
- * story's name; every other line (description, body) is kept as it is.
+ * A page that exists, with its `title`, `sidebarTitle` and `searchTitle`
+ * set from the story; every other line (description, body) is kept as it is.
  * @param {string} text
  * @param {Story} story
  */
 function updatePage(text, story) {
   const match = FRONTMATTER.exec(text);
   if (!match) return newPage(story) + text;
-  const lines = match[1]
-    .split('\n')
-    .filter((line) => !/^(title|sidebarTitle):/.test(line));
-  const head = [
-    `title: ${yamlString(story.name)}`,
-    `sidebarTitle: ${yamlString(story.name)}`,
-    ...lines,
-  ];
+  const lines = match[1].split('\n').filter((line) => !STORY_LINE.test(line));
+  const head = [...storyLines(story), ...lines];
   return `---\n${head.join('\n')}\n---\n${text.slice(match[0].length)}`;
 }
 
 /**
  * True when a page holds text a person wrote: a frontmatter line besides
- * `title` and `sidebarTitle` (the description), or body text besides the
+ * the ones the story sets (the description), or body text besides the
  * `<StoryExample>` tag.
  * @param {string} text
  */
@@ -183,7 +212,7 @@ function holdsText(text) {
   const head = match
     ? match[1]
         .split('\n')
-        .filter((line) => line.trim() && !/^(title|sidebarTitle):/.test(line))
+        .filter((line) => line.trim() && !STORY_LINE.test(line))
     : [];
   const body = (match ? text.slice(match[0].length) : text)
     .replace(/<StoryExample\s+id="[^"]*"\s*\/>/g, '')

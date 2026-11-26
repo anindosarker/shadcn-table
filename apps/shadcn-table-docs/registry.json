@@ -859,7 +859,7 @@
       "name": "example-enable-column-pinning-base",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
+      "description": "An example of Shadcn Table which shows how to pin columns to the start or the end so they stay in place while the rest scroll sideways.",
       "files": [
         {
           "path": "examples/base/enable-column-pinning/TS.tsx",
@@ -3679,7 +3679,7 @@
       "name": "example-enable-column-pinning-radix",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
+      "description": "An example of Shadcn Table which shows how to pin columns to the start or the end so they stay in place while the rest scroll sideways.",
       "files": [
         {
           "path": "examples/radix/enable-column-pinning/TS.tsx",
@@ -6500,7 +6500,7 @@
       "name": "example-enable-column-pinning-aria",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
+      "description": "An example of Shadcn Table which shows how to pin columns to the start or the end so they stay in place while the rest scroll sideways.",
       "files": [
         {
           "path": "examples/aria/enable-column-pinning/TS.tsx",

@@ -7,6 +7,16 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Docs
+
+#### Spec 02
+
+- Every docs page now has its own title and description in search results: the API reference page has a description, the Column Pinning example and the Row Pinning guide describe their own page, and a story page whose name does not hold its story group's name carries that group in its title, such as "Basic: Default", so no two pages share a title (D3).
+- Every docs page names its own address for sharing (`og:url`), the breadcrumb data starts at the first docs page, and the site serves `/favicon.ico` and a web manifest (D3).
+- The "Try it" heading of the example pages is a level 2 heading, so the page outline no longer skips a level; it looks as before and moves one level up in "On this page" (D3).
+
 ## 1.0.1 - 2026-11-24
 
 ### Fixed

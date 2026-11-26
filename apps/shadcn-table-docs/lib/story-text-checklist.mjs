@@ -25,7 +25,7 @@ export const MAX_STEPS = 4;
 
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/;
 const TRY_IT =
-  /\n### Try it\s*\n\s*<TryIt>\s*\n([\s\S]*?)\n\s*<\/TryIt>\s*(<StoryExample\b)?/;
+  /\n## Try it\s*\n\s*<TryIt>\s*\n([\s\S]*?)\n\s*<\/TryIt>\s*(<StoryExample\b)?/;
 const STORY_TAG = /<StoryExample\s+id="[^"]*"\s*\/>/;
 const STEP = /^\d+\.\s+(.+)$/;
 const GUIDE_LINK = /^-\s+\[[^\]]+\]\([^)]+\)\s*$/;
@@ -58,7 +58,7 @@ export function pageParts(text) {
   const tryIt = TRY_IT.exec(`\n${body}`);
   /** @type {string[]} */
   let steps = [];
-  if (!tryIt) problems.push('no "### Try it" heading with a <TryIt> block');
+  if (!tryIt) problems.push('no "## Try it" heading with a <TryIt> block');
   else {
     steps = tryIt[1]
       .split('\n')

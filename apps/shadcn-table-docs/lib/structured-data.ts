@@ -13,13 +13,7 @@ import { findPath, flattenTree } from 'fumadocs-core/page-tree';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { source } from '@/lib/source';
 import { firstPageUrl } from '@/lib/page-tree-utils';
-import {
-  docsRoute,
-  getPageImageUrl,
-  gitConfig,
-  siteName,
-  siteUrl,
-} from '@/lib/shared';
+import { getPageImageUrl, gitConfig, siteName, siteUrl } from '@/lib/shared';
 
 type DocsPage = InferPageType<typeof source>;
 
@@ -75,7 +69,8 @@ export function techArticleJsonLd(page: DocsPage): WithContext<TechArticle> {
 }
 
 /**
- * Docs > section > page, as the visible breadcrumb shows it. A folder without
+ * Docs > section > page, as the visible breadcrumb shows it, except that Docs
+ * names the first docs page: `/docs` itself redirects there. A folder without
  * an index page links to its first page. Each section is a root folder, whose
  * crumb fumadocs drops; as in components/docs-breadcrumb.tsx, the section is
  * passed as the tree so `includeRoot` names it and links its first page.
@@ -91,7 +86,7 @@ export function breadcrumbJsonLd(page: DocsPage): WithContext<BreadcrumbList> {
     (node): node is PageTree.Folder => node.type === 'folder' && !!node.root,
   );
   const items = [
-    { name: 'Docs', url: docsRoute },
+    { name: 'Docs', url: firstPageUrl(tree) },
     ...getBreadcrumbItemsFromPath(section ?? tree, path, {
       includePage: true,
       includeRoot: section ? { url: firstPageUrl(section) ?? '' } : false,
