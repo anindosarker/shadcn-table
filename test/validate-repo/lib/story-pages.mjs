@@ -6,7 +6,8 @@
 // pages in the story files' order with one label per story file. Every page
 // holds the three parts of the example page format (1.6.7, D104): a
 // description, 2 to 4 Try it steps directly above the story and Related guides
-// below it, read by the docs app's lib/story-text-checklist.mjs. The stories
+// below it, read by the docs app's lib/story-text-checklist.mjs. A page's
+// `searchTitle` line is the one the script writes (v1.0.x D3). The stories
 // are read with Storybook's own CSF parser through the docs app's
 // lib/story-pages.mjs, the script that writes the pages; every problem names
 // it. It prints one line and returns the problems; it never edits a file.
@@ -19,10 +20,12 @@ import {
   pageStories,
   readExactStories,
   readStories,
+  searchTitleLine,
 } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { pageParts } from '../../../apps/shadcn-table-docs/lib/story-text-checklist.mjs';
 
 const FIX = 'run `node lib/story-pages.mjs` in apps/shadcn-table-docs';
+const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/;
 const STORY_TAG = /<StoryExample\s+id="([^"]+)"\s*\/>/g;
 
 /** @param {(line: string) => void} log */
@@ -38,6 +41,7 @@ export const check = async (log) => {
       );
   }
   const pages = pageStories(stories);
+  const storyById = new Map(stories.map((story) => [story.id, story]));
   const files = fs.existsSync(MORE_DIR)
     ? fs.readdirSync(MORE_DIR).filter((file) => file.endsWith('.mdx'))
     : [];
@@ -63,6 +67,17 @@ export const check = async (log) => {
       problems.push(
         `page more/${id}.mdx must show <StoryExample id="${id}" /> once, found ${tags.length ? tags.join(', ') : 'none'}: ${FIX}`,
       );
+    const story = storyById.get(id);
+    if (story) {
+      const want = searchTitleLine(story);
+      const have = (FRONTMATTER.exec(text)?.[1] ?? '')
+        .split('\n')
+        .filter((line) => line.startsWith('searchTitle:'));
+      if (have.length !== (want ? 1 : 0) || (want && have[0] !== want))
+        problems.push(
+          `page more/${id}.mdx must hold ${want ? `the line ${want}` : 'no searchTitle line'}, found ${have.length ? have.join(', ') : 'none'}: ${FIX}`,
+        );
+    }
     for (const problem of pageParts(text).problems)
       problems.push(
         `page more/${id}.mdx: ${problem}; write its description, Try it steps and Related guides in the example page format (spec 56, 1.6.7)`,
