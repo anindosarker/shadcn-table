@@ -33,6 +33,11 @@
  * packages/shadcn-table/package.json: a link to the GitHub releases, right
  * after the base switcher; and the sidebar title must read
  * `shadcn-table (<base label>)`, with no version.
+ *
+ * The head of the manager page, read as text from `/index.html` (checkHead,
+ * D1): one `<title>` that holds `shadcn-table (<base label>)`, one meta
+ * description of 70 to 160 characters that holds the label, and one canonical
+ * link to `https://storybook.shadcn-table.com/<base>/`.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -67,6 +72,7 @@ const BASE_SWITCHER = 'button[aria-haspopup="listbox"][aria-label^="Base "]';
 const STORY_ID = 'features-pagination--pagination-compact-more-data';
 const EXPECTED_RANGE = '1-10 of 551';
 const DOCS_ORIGIN = 'https://www.shadcn-table.com';
+const STORYBOOK_ORIGIN = 'https://storybook.shadcn-table.com';
 const INTRO_TEXT = 'View documentation for this example';
 const OLD_INTRO_TEXT = 'This story on the docs site';
 /** The story's render (play, then afterEach) settles within this. */
@@ -139,6 +145,53 @@ async function checkPages(root) {
       : `at ${first}: page ${pages[first] ?? 'none'}, story ${want[first] ?? 'none'} (node lib/story-pages.mjs)`,
   );
   return results;
+}
+
+/** The value of attribute `name` in the tag text `tag`, or undefined. */
+const attribute = (tag, name) =>
+  new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i')
+    .exec(tag)
+    ?.slice(1)
+    .find((value) => value !== undefined);
+
+/**
+ * The head of the built manager page of `base` (D1): exactly one title, one
+ * meta description and one canonical link, with the values of that base.
+ */
+async function checkHead(root, base) {
+  const label = BASE_LABELS[base];
+  const problems = [];
+  const html = await (await fetch(`${root}/index.html`)).text();
+  const titles = [...html.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)];
+  const want = `shadcn-table (${label})`;
+  if (titles.length !== 1) problems.push(`${titles.length} titles`);
+  else if (!titles[0][1].includes(want))
+    problems.push(`title "${titles[0][1]}" (expected "${want}")`);
+  const tags = (element) => html.match(new RegExp(`<${element}\\b[^>]*>`, 'gi')) ?? [];
+  const descriptions = tags('meta').filter(
+    (tag) => attribute(tag, 'name')?.toLowerCase() === 'description',
+  );
+  if (descriptions.length !== 1)
+    problems.push(`${descriptions.length} descriptions`);
+  else {
+    const content = attribute(descriptions[0], 'content') ?? '';
+    if (content.length < 70 || content.length > 160)
+      problems.push(`description of ${content.length} characters`);
+    if (!content.includes(label))
+      problems.push(`description "${content}" (no "${label}")`);
+  }
+  const canonicals = tags('link').filter(
+    (tag) => attribute(tag, 'rel')?.toLowerCase() === 'canonical',
+  );
+  const href = `${STORYBOOK_ORIGIN}/${base}/`;
+  if (canonicals.length !== 1) problems.push(`${canonicals.length} canonicals`);
+  else if (attribute(canonicals[0], 'href') !== href)
+    problems.push(
+      `canonical "${attribute(canonicals[0], 'href')}" (expected "${href}")`,
+    );
+  return problems.length
+    ? `FAIL manager head: ${problems.join('; ')}`
+    : 'PASS manager head';
 }
 
 /**
@@ -485,6 +538,13 @@ export const run = async (ctx) => {
       );
     }
     const pageResults = await checkPages(root);
+    try {
+      pageResults.push(await checkHead(root, base));
+    } catch (error) {
+      pageResults.push(
+        `FAIL manager head: threw ${String(error.message).slice(0, 200)}`,
+      );
+    }
     ctx.log(pageResults.join('\n'));
     const storyUrl = `${root}/iframe.html?id=${STORY_ID}&viewMode=story`;
     ctx.log(`storybook-static (${base}): ${storyUrl}`);
