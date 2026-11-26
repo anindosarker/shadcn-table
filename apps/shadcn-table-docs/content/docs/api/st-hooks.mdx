@@ -20,7 +20,7 @@ description: 'All the ST hooks that can be used'
 
 ST has been adopting more and more of a hooks based approach for its internal logic. Its API is becoming more standardized so that you can use the same hooks that the ST components use internally to build your own custom headless table if you want to.
 
-### useShadcnTable
+## useShadcnTable
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useShadcnTable.ts)
 
@@ -38,7 +38,7 @@ const table = useShadcnTable({
 
 This hook is the combination of 2 other internal ST hooks: [`useST_TableOptions`](#usesrt_tableoptions), and [`useST_TableInstance`](#usesrt_tableinstance).
 
-### useST_TableOptions
+## useST_TableOptions
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_TableOptions.ts)
 
@@ -52,7 +52,7 @@ const transformedTableOptions = useST_TableOptions({
 });
 ```
 
-### useST_TableInstance
+## useST_TableInstance
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_TableInstance.ts)
 
@@ -68,13 +68,13 @@ const table = useST_TableInstance({
 
 This hook also uses the [`useST_Effects`](#usesrt_effects)
 
-### useST_Effects
+## useST_Effects
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts)
 
 This hook is responsible for adding some extra useEffect hooks to the table instance. These hooks are needed by some ST features on a table wide level.
 
-### useST_Rows
+## useST_Rows
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_Rows.ts)
 
@@ -94,7 +94,7 @@ return rows.map((row) => {
 });
 ```
 
-### useST_ColumnVirtualizer
+## useST_ColumnVirtualizer
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts)
 
@@ -115,7 +115,7 @@ const columnVirtualizer = useST_ColumnVirtualizer(table);
 
 You would only need to use this hook if you are writing a custom headless table and want the same default column virtualization behavior that ST provides. If you are using the ST components, this hook is already used internally by the `ST_Table` component.
 
-### useST_RowVirtualizer
+## useST_RowVirtualizer
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts)
 
@@ -136,7 +136,7 @@ const rowVirtualizer = useST_RowVirtualizer(table);
 
 You would only need to use this hook if you are writing a custom headless table and want the same default row virtualization behavior that ST provides. If you are using the ST components, this hook is already used internally by the `ST_Table` component.
 
-### useST_FullScreenContainer
+## useST_FullScreenContainer
 
 [Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts)
 

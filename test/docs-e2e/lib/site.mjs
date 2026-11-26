@@ -137,8 +137,8 @@ const pageHead = (html) => {
     ogUrl: metas.find((m) => m.property === 'og:url')?.content ?? '',
     canonical: links.find((l) => l.rel === 'canonical')?.href ?? '',
     manifest: links.find((l) => l.rel === 'manifest')?.href ?? '',
-    // A page without an h2 is outside D3: its h3s are not counted.
-    h3BeforeH2: h3 !== -1 && h2 !== -1 && h3 < h2,
+    // An h3 on a page with no h2 at all also skips a level (Q5).
+    h3BeforeH2: h3 !== -1 && (h2 === -1 || h3 < h2),
     crumb: crumbs[0]?.itemListElement?.[0]?.item ?? '',
   };
 };

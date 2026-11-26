@@ -20,7 +20,7 @@ description: 'All the internal ST components that can be used to build your own 
 
 In previous versions of `shadcn-table`, you only had the option to use the `<ShadcnTable />` component. Now in version 2, all internal ST components are exported for you to optionally use to build up your own custom table components.
 
-### \<ShadcnTable /\>
+## \<ShadcnTable /\>
 
 [View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/ShadcnTable.tsx)
 
@@ -47,11 +47,11 @@ return <ShadcnTable columns={columns} data={data} enableRowPinning />; //passing
 
 > Do not pass both a `table` prop and other table options as props. Additional table options passed to the `<ShadcnTable />` component will be ignored if a `table` prop is passed. Either specify all table options in the `useShadcnTable` hook or pass all of them as props to the `<ShadcnTable />` component.
 
-### ST\_\* Sub Components
+## ST\_\* Sub Components
 
 Shadcn Table now exports all of its internal components. You can use them for your own use cases.
 
-#### \<ST_TableProvider /\>
+### \<ST_TableProvider /\>
 
 [View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/context/ST_TableContext.tsx)
 
@@ -67,7 +67,7 @@ return (
 );
 ```
 
-#### \<ST_DefaultsProvider /\>
+### \<ST_DefaultsProvider /\>
 
 [View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/context/ST_DefaultsContext.tsx)
 
@@ -87,191 +87,191 @@ return (
 );
 ```
 
-#### Table Components
+### Table Components
 
 [View Table Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/table)
 
-##### \<ST_TableLayout /\>
+#### \<ST_TableLayout /\>
 
 The `<ST_TableLayout />` component is the outermost component of the table. Using this is pretty much the same thing as using the `<ShadcnTable />` component, except that you cannot pass table options as props to it.
 
 The layout component includes UI for the table and the toolbar components.
 
-##### \<ST_TableContainer /\>
+#### \<ST_TableContainer /\>
 
 The `<ST_TableContainer />` component is the container for the table. It only contains the table ui, but none of the toolbar components.
 
 This is a popular use case for tables that do not want the built-in toolbars, but still want all of the other table features.
 
-##### \<ST_Table /\>
+#### \<ST_Table /\>
 
 The `<ST_Table />` component contains the `<table>` element, and all of the table head, body, and footer components.
 
 Be aware that using this deep of a component, you will lose out on row virtualization, modal editing, and full screen features. Use the above `<ST_TableContainer />` if you want to use those features.
 
-##### \<ST_TableLoadingOverlay /\>
+#### \<ST_TableLoadingOverlay /\>
 
 Shows a loading spinner over the table above the `ST_Table` component when the table is loading.
 
-##### \<ST_ScrollButtons /\>
+#### \<ST_ScrollButtons /\>
 
 The two scroll chevrons in the header row that appear on hover while columns are hidden sideways; a click scrolls 80 percent of the visible unpinned width. Takes the `table` prop and renders inside the scroll wrapper of `<ST_TableContainer />`. See the [Scroll Cues Guide](/docs/guides/scroll-cues).
 
-#### TableHead Components
+### TableHead Components
 
 [View TableHead Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/head)
 
-##### \<ST_TableHead /\>
+#### \<ST_TableHead /\>
 
 The `<ST_TableHead />` component contains the `<thead>` element, and all of the table head rows.
 
-##### \<ST_TableHeadRow /\>
+#### \<ST_TableHeadRow /\>
 
 The `<ST_TableHeadRow />` is a `<tr>` element that contains all of the table head cells in a row
 
-##### \<ST_TableHeadCell /\>
+#### \<ST_TableHeadCell /\>
 
 The `<ST_TableHeadCell />` is a `<th>` element that contains all of the table head cell components. It contains all of the other table head cell components down below depending on which features are enabled.
 
-##### \<ST_TableHeadCellColumnActionsButton /\>
+#### \<ST_TableHeadCellColumnActionsButton /\>
 
 The chevron button at the end of a header cell that opens the column menu (the header label is the second trigger of the same menu). Takes `open` and `onOpenChange` to control the menu.
 
-##### \<ST_TableHeadCellSortLabel /\>
+#### \<ST_TableHeadCellSortLabel /\>
 
 The sort arrow after a header label. It renders nothing while the column is unsorted and a plain arrow (not a button) while it is sorted, with the sort position when `showSortIndex` is on and more than one sort is active.
 
-##### \<ST_TableHeadCellFilterLabel /\>
+#### \<ST_TableHeadCellFilterLabel /\>
 
 The Filter Icon Button and Label next to a table header
 
-##### \<ST_TableHeadCellGrabHandle /\>
+#### \<ST_TableHeadCellGrabHandle /\>
 
 The Grab Handle Icon Button next to a table header used for column dragging
 
-##### \<ST_TableHeadCellResizeHandle /\>
+#### \<ST_TableHeadCellResizeHandle /\>
 
 The Resize Handle Icon Button next to a table header used for column resizing
 
-##### \<ST_TableHeadCellFilterContainer /\>
+#### \<ST_TableHeadCellFilterContainer /\>
 
 The Filter Container that contains the filter input and filter actions
 
-##### \<ST_TableHeadCellLockedOverlay /\>
+#### \<ST_TableHeadCellLockedOverlay /\>
 
 The striped overlay and "Fixed" lock label a locked column (`enableColumnOrdering: false`) shows while another column is dragged. See [Locked Columns](/docs/guides/column-ordering-dnd#locked-columns).
 
-#### TableBody Components
+### TableBody Components
 
 [View TableBody Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/body)
 
-##### \<ST_TableBody /\>
+#### \<ST_TableBody /\>
 
 The `<ST_TableBody />` component contains the `<tbody>` element, and all of the table body rows. It has the ability to render multiple table bodies, depending on if static row pinning features are enabled and used.
 
-##### \<ST_TableBodyRow /\>
+#### \<ST_TableBodyRow /\>
 
 The `<ST_TableBodyRow />` is a `<tr>` element that contains all of the table body cells in a row.
 
-##### \<ST_TableDetailPanel /\>
+#### \<ST_TableDetailPanel /\>
 
 A row and all column-spanning row for rendering detail panels for a row.
 
-##### \<ST_TableBodyCell /\>
+#### \<ST_TableBodyCell /\>
 
 The `<ST_TableBodyCell />` is a `<td>` element that surrounds the cell value or custom `Cell` render.
 
-##### \<ST_OverflowText /\>
+#### \<ST_OverflowText /\>
 
 Truncates its content to one line and shows a tooltip with the full content only when the content is cut off. Body cells use it for plain values; wrap the text of a custom `Cell` in it to opt in. Props: `tooltip` (other tooltip content), `wrap` (plain wrapping text, no tooltip), `className`. See the [Overflow Tooltip Guide](/docs/guides/overflow-tooltip).
 
-##### \<ST_TableBodyCellValue /\>
+#### \<ST_TableBodyCellValue /\>
 
 Renders the value of a cell. This is a popular component to use as an alternative to TanStack Table's `flexRender` method. It renders everything inside of the `<td>`, but not the `<td>` itself.
 
-##### \<ST_TableBodyRowGrabHandle /\>
+#### \<ST_TableBodyRowGrabHandle /\>
 
 A button for grabbing a row for dragging.
 
-##### \<ST_TableBodyRowPinButton /\>
+#### \<ST_TableBodyRowPinButton /\>
 
 A button or buttons for pinning a row.
 
-#### TableFooter Components
+### TableFooter Components
 
 [View TableFooter Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/footer)
 
-##### \<ST_TableFooter /\>
+#### \<ST_TableFooter /\>
 
 The `<ST_TableFooter />` component contains the `<tfoot>` element, and all of the table footer rows.
 
-##### \<ST_TableFooterRow /\>
+#### \<ST_TableFooterRow /\>
 
 The `<ST_TableFooterRow />` is a `<tr>` element that contains all of the table footer cells in a row.
 
-##### \<ST_TableFooterCell /\>
+#### \<ST_TableFooterCell /\>
 
 The `<ST_TableFooterCell />` is a `<td>` element that surrounds the cell value or custom `Footer` render.
 
-#### Input Components
+### Input Components
 
 [View Input Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs)
 
-##### \<ST_EditCellTextField /\>
+#### \<ST_EditCellTextField /\>
 
 The textfield component for editing a cell value that can either show in a modal or table cell.
 
-##### \<ST_GlobalFilterTextField /\>
+#### \<ST_GlobalFilterTextField /\>
 
 The search textfield component for global filtering.
 
-##### \<ST_FilterTextField /\>
+#### \<ST_FilterTextField /\>
 
 The textfield component for filtering a column. A somewhat comprehensive component that can be a textfield, select, multi-select, or date picker.
 
-##### \<ST_FilterCheckbox /\>
+#### \<ST_FilterCheckbox /\>
 
 The checkbox component for filtering a column by boolean values.
 
-##### \<ST_FilterRangeSlider /\>
+#### \<ST_FilterRangeSlider /\>
 
 The range slider component for filtering a column by a range of numbers.
 
-##### \<ST_FilterFilterRangeFields /\>
+#### \<ST_FilterFilterRangeFields /\>
 
 A Container component that will render two ST_FilterTextField components for filtering in a range (min and max).
 
-##### \<ST_SelectCheckbox /\>
+#### \<ST_SelectCheckbox /\>
 
 A checkbox component for selecting a row or selecting all rows from the table header.
 
-#### Toolbar Components
+### Toolbar Components
 
 [View Toolbar Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/toolbar)
 
 These components take the table as a `table` prop.
 
-##### \<ST_FilterChips /\>
+#### \<ST_FilterChips /\>
 
 The chip row of the default `'chips'` filter display mode: one chip per filtered column, "+ Filter", "Clear filters", and the filter editor a column menu opens on its header cell. See the [Filter Chips Guide](/docs/guides/filter-chips).
 
-##### \<ST_ColumnPicker /\>
+#### \<ST_ColumnPicker /\>
 
 The searchable column list behind "+ Filter", the toolbar filter button and "Add sort". Renders inline, for a popover of your own.
 
-##### \<ST_SortPopover /\>
+#### \<ST_SortPopover /\>
 
 The sort button and sort editor: one row per sort rule with a drag handle, a column and a direction select and a remove button, plus "Add sort" and "Delete sort". `variant="chip"` renders the sort chip instead of the button. See the [Sort Editor Guide](/docs/guides/sort-editor).
 
-##### \<ST_ViewSettingsButton /\>
+#### \<ST_ViewSettingsButton /\>
 
 The view settings button and panel: one row per setting with a pin toggle, and "Reset view". See the [View Settings Guide](/docs/guides/view-settings).
 
-##### \<ST_ViewSettingsItems /\>
+#### \<ST_ViewSettingsItems /\>
 
 The view settings items pinned to the toolbar, as icon buttons in panel order.
 
-#### Menu Components
+### Menu Components
 
 [View Menu Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/menus)
 
@@ -284,18 +284,18 @@ import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table';
 <ST_ShowHideColumnsMenu trigger={<Button variant="outline">Columns</Button>} />;
 ```
 
-##### \<ST_ColumnActionMenu /\>
+#### \<ST_ColumnActionMenu /\>
 
 The column menu of a header: sort, filter, pin, reset size, group, fixed position and hide items, each shown only when it applies. Takes the `header`. See the [Column Actions Guide](/docs/guides/column-actions).
 
-##### \<ST_RowActionMenu /\>
+#### \<ST_RowActionMenu /\>
 
 The row actions menu opened by the dots button of the row actions column. Takes the `row` and `handleEdit`.
 
-##### \<ST_ShowHideColumnsMenu /\>
+#### \<ST_ShowHideColumnsMenu /\>
 
 The columns menu: a switch per column, drag to reorder, and the show all, hide all, reset order and unpin all actions.
 
-##### \<ST_FilterOptionMenu /\>
+#### \<ST_FilterOptionMenu /\>
 
 The filter mode menu of a column (or of the global search). Takes the `header` for a column; with `isSubMenu` it renders as a submenu of the column menu.
