@@ -516,8 +516,9 @@ async function storyListPage(page, check) {
   const h1 = html.match(/<h1[\s>]/g)?.length ?? 0;
   check('list page: one h1', h1 === 1, `h1=${h1}`);
   check('list page: a description', pageHead(html).description.length > 0);
+  // the heading's copy-link button carries text of its own
   const h2 = [...article.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map((m) =>
-    textOf(m[1]).trim(),
+    textOf(m[1].replace(/<button\b[\s\S]*?<\/button>/g, '')).trim(),
   );
   const groups = MORE_ENTRIES.filter((entry) => entry.startsWith('---')).map(
     (entry) => entry.slice(3, -3),

@@ -6,7 +6,9 @@
  * them in Storybook's order, one "---<story title>---" sub-group per story
  * file. The stories are read from packages/shadcn-table/stories with
  * Storybook's own CSF parser, so ids, names and order are the ones
- * Storybook gives them (storybook-static/<base>/index.json).
+ * Storybook gives them (storybook-static/<base>/index.json). more/index.mdx,
+ * the folder's index page at /docs/examples/more, links every story page
+ * under the same labels (v1.0.x D5); it is written whole on every run.
  *
  * A new page holds the title, the sidebar label, the search title when the
  * story needs one (`storySearchTitle`) and the `<StoryExample id="..." />`
@@ -153,6 +155,39 @@ export function storySearchTitle(story) {
 /** A YAML scalar for the frontmatter: single quotes, a quote doubled. */
 const yamlString = (value) => `'${value.replaceAll("'", "''")}'`;
 
+/** The list page of the folder, more/index.mdx (v1.0.x D5). */
+export const LIST_PAGE = 'index.mdx';
+
+/** Link text in MDX: the characters markdown or JSX would read escaped. */
+const mdxText = (value) => value.replace(/[\\[\]*_`<>{}]/g, '\\$&');
+
+/**
+ * more/index.mdx, the page at /docs/examples/more (v1.0.x D5): one plain
+ * link per story page, under one h2 per "---<title>---" label of
+ * `moreMeta(pages)`, in its order; the link text is the page's `title`.
+ * @param {Story[]} pages
+ */
+export function storyListPage(pages) {
+  const lines = [];
+  let title = '';
+  for (const story of pages) {
+    if (story.title !== title) {
+      title = story.title;
+      lines.push('', `## ${title}`, '');
+    }
+    lines.push(`- [${mdxText(story.name)}](/docs/examples/more/${story.id})`);
+  }
+  const description = `All ${pages.length} shadcn-table Storybook stories that have a live example page under More examples, linked from one list by story file.`;
+  return `---
+title: More examples
+description: ${yamlString(description)}
+---
+
+Each Storybook story of shadcn-table that no example page shows has a page of its own; this list links every one, grouped by its story file.
+${lines.join('\n')}
+`;
+}
+
 /** The frontmatter lines the story sets; the rest of a page is kept. */
 const STORY_LINE = /^(title|sidebarTitle|searchTitle):/;
 
@@ -260,7 +295,11 @@ async function main() {
       created += 1;
     } else if (await writeIfChanged(file, text)) updated += 1;
   }
-  const kept = new Set(pages.map((story) => `${story.id}.mdx`));
+  const listChanged = await writeIfChanged(
+    path.join(MORE_DIR, LIST_PAGE),
+    storyListPage(pages),
+  );
+  const kept = new Set([LIST_PAGE, ...pages.map((story) => `${story.id}.mdx`)]);
   const removed = [];
   const withText = [];
   for (const entry of await fs.readdir(MORE_DIR)) {
@@ -281,7 +320,7 @@ async function main() {
   const examplesChanged = await syncExamplesMeta();
   console.log(
     `story pages: ${pages.length} (${created} new, ${updated} updated, ${removed.length} removed${removed.length ? `: ${removed.join(', ')}` : ''})` +
-      `${metaChanged ? ', more/meta.json written' : ''}${examplesChanged ? ', "more" added to examples/meta.json' : ''}`,
+      `${listChanged ? `, more/${LIST_PAGE} written` : ''}${metaChanged ? ', more/meta.json written' : ''}${examplesChanged ? ', "more" added to examples/meta.json' : ''}`,
   );
   for (const entry of withText) {
     console.error(
