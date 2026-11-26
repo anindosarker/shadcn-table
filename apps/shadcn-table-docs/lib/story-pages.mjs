@@ -25,7 +25,7 @@
  *
  * Usage (apps/shadcn-table-docs): node lib/story-pages.mjs
  */
-import { promises as fs, readFileSync } from 'node:fs';
+import { existsSync, promises as fs, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadCsf } from 'storybook/internal/csf-tools';
@@ -162,21 +162,46 @@ export const LIST_PAGE = 'index.mdx';
 const mdxText = (value) => value.replace(/[\\[\]*_`<>{}]/g, '\\$&');
 
 /**
+ * The sidebar number of the first story row (v1.0.x D7): the example pages
+ * of examples/meta.json plus 1, the rule of `pageRows()` and `rowNumber()`
+ * in lib/page-tree-utils.ts (separators and the folder index are no rows).
+ * Fails on an entry the rule does not know.
+ */
+export function firstStoryNumber() {
+  const { pages } = JSON.parse(readFileSync(EXAMPLES_META, 'utf8'));
+  let count = 0;
+  for (const entry of pages) {
+    if (/^---.*---$/.test(entry) || entry === MORE_FOLDER) continue;
+    if (!existsSync(path.join(path.dirname(EXAMPLES_META), `${entry}.mdx`)))
+      throw new Error(
+        `content/docs/examples/meta.json: the entry "${entry}" is not an example page; the story list numbers cannot be counted`,
+      );
+    count += 1;
+  }
+  return count + 1;
+}
+
+/**
  * more/index.mdx, the page at /docs/examples/more (v1.0.x D5): one plain
  * link per story page, under one h2 per "---<title>---" label of
  * `moreMeta(pages)`, in its order; the link text is the page's `title`.
+ * Each group is an ordered list numbered as the sidebar rows, from `first`
+ * (v1.0.x D7).
  * @param {Story[]} pages
+ * @param {number} first the number of the first story, `firstStoryNumber()`
  */
-export function storyListPage(pages) {
+export function storyListPage(pages, first) {
   const lines = [];
   let title = '';
-  for (const story of pages) {
+  pages.forEach((story, i) => {
     if (story.title !== title) {
       title = story.title;
       lines.push('', `## ${title}`, '');
     }
-    lines.push(`- [${mdxText(story.name)}](/docs/examples/more/${story.id})`);
-  }
+    lines.push(
+      `${first + i}. [${mdxText(story.name)}](/docs/examples/more/${story.id})`,
+    );
+  });
   const description = `All ${pages.length} shadcn-table Storybook stories that have a live example page under More examples, linked from one list by story file.`;
   return `---
 title: More examples
@@ -297,7 +322,7 @@ async function main() {
   }
   const listChanged = await writeIfChanged(
     path.join(MORE_DIR, LIST_PAGE),
-    storyListPage(pages),
+    storyListPage(pages, firstStoryNumber()),
   );
   const kept = new Set([LIST_PAGE, ...pages.map((story) => `${story.id}.mdx`)]);
   const removed = [];

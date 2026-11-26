@@ -15,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  firstStoryNumber,
   LIST_PAGE,
   MORE_DIR,
   MORE_FOLDER,
@@ -93,7 +94,7 @@ export const check = async (log) => {
     ? fs.readFileSync(listFile, 'utf8')
     : undefined;
   if (list === undefined) problems.push(`more/${LIST_PAGE} is missing: ${FIX}`);
-  else if (list !== storyListPage(pages))
+  else if (list !== storyListPage(pages, firstStoryNumber()))
     problems.push(
       `more/${LIST_PAGE} differs from the list the script writes: ${FIX}`,
     );
