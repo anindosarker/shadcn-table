@@ -11,6 +11,10 @@ publishes the section as the GitHub release notes.
 
 ### Docs
 
+#### Spec 01
+
+- The Storybook site has its own title, description and canonical address for each base (Base UI, Radix UI, React Aria), so search results list each base once, and its root address now redirects permanently to `/base/` (D1).
+
 #### Spec 02
 
 - Every docs page now has its own title and description in search results: the API reference page has a description, the Column Pinning example and the Row Pinning guide describe their own page, and a story page whose name does not hold its story group's name carries that group in its title, such as "Basic: Default", so no two pages share a title (D3).

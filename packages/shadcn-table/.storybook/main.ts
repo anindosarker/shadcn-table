@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
-import { resolveBase } from '../../../tools/registry/bases.mjs';
+import { BASE_LABELS, resolveBase } from '../../../tools/registry/bases.mjs';
 import { storySourcePlugin } from './story-source-plugin';
 
 const require = createRequire(import.meta.url);
@@ -15,6 +15,13 @@ const require = createRequire(import.meta.url);
 // base), which decides where its base switch goes (base-tool.ts).
 const ST_BASE = resolveBase(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
+// The search head of the manager page (D1): each base is its own search entry
+// under its own address, whatever `?path=` the address carries.
+const ST_BASE_LABEL = BASE_LABELS[ST_BASE];
+const STORYBOOK_ORIGIN = 'https://storybook.shadcn-table.com';
+const searchHead =
+  `<meta name="description" content="shadcn-table Storybook for ${ST_BASE_LABEL}: the live stories of every table feature, each with its code.">` +
+  `<link rel="canonical" href="${STORYBOOK_ORIGIN}/${ST_BASE}/">`;
 // The library version, for the toolbar (version-tool.ts, D150): read from the
 // package file as the docs header reads it, never typed.
 const { version: ST_VERSION } = require('../package.json') as {
@@ -34,6 +41,9 @@ function getAbsolutePath(value: string): string {
 }
 
 const config: StorybookConfig = {
+  // The static <title> of the manager page, as the sidebar brand names it
+  // (themes.ts brandTitle); Storybook appends " - Storybook".
+  title: `shadcn-table (${ST_BASE_LABEL})`,
   stories: [
     '../stories/**/*.mdx',
     '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
@@ -56,7 +66,7 @@ const config: StorybookConfig = {
     options: {},
   },
   managerHead: (head, { configType }) =>
-    `${head}${baseScript}${versionScript}${devScript(configType !== 'PRODUCTION')}`,
+    `${head}${baseScript}${versionScript}${devScript(configType !== 'PRODUCTION')}${searchHead}`,
   previewHead: (head, { configType }) =>
     `${head}${baseScript}${versionScript}${staticScript(configType === 'PRODUCTION')}`,
   // Storybook keys its Vite dep cache by the config dir alone, so the base

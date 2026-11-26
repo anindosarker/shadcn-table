@@ -17,7 +17,7 @@
       "source": "/",
       "has": [{ "type": "host", "value": { "pre": "storybook." } }],
       "destination": "/base/",
-      "permanent": false
+      "permanent": true
     }
   ],
   "rewrites": [

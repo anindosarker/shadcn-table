@@ -14,8 +14,10 @@
 //     shadcn-table, the core item as shadcn-table-core, the icon sets as
 //     shadcn-table-<library>, its locales as shadcn-table-locale-<code>, the
 //     base's example items of the docs app as example-<slug>)
-//   Storybook /<base>/ for every base: 200 HTML; / redirects to
-//     /<DEFAULT_BASE>/ with the query kept (the vercel.json redirect)
+//   Storybook /<base>/ for every base: 200 HTML, the canonical
+//     https://storybook.shadcn-table.com/<base>/ and a title that holds the
+//     base label (D1); / redirects 308 to /<DEFAULT_BASE>/ with the query kept
+//     (the vercel.json redirect)
 //   /SKILL.md: 200, names every base (BASE_LABELS)
 //   /llms.txt: 200
 // Summary `http pass`.
@@ -170,11 +172,22 @@ const httpChecks = async (ROOT, SITE) => {
     }
   }
 
-  // Every base under /<base>/; the root redirects to the default base
-  // (vercel.json), query string included.
+  // Every base under /<base>/ with its own head (D1); the root redirects
+  // permanently to the default base (vercel.json), query string included.
   for (const base of BASES) {
     const url = `${STORYBOOK}/${base}/`;
-    checkStatus(`${url} 200 HTML`, await get(url), 'text/html');
+    const page = await get(url);
+    if (!checkStatus(`${url} 200 HTML`, page, 'text/html')) continue;
+    const canonical = /<link\b[^>]*\brel="canonical"[^>]*>/i
+      .exec(page.text)?.[0]
+      ?.match(/\bhref="([^"]*)"/i)?.[1];
+    check(`${url} canonical is itself`, canonical === url, `href=${canonical}`);
+    const title = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(page.text)?.[1];
+    check(
+      `${url} title names ${BASE_LABELS[base]}`,
+      title?.includes(BASE_LABELS[base]) ?? false,
+      `title=${title}`,
+    );
   }
   {
     const query = '?path=/story/x';
@@ -184,8 +197,7 @@ const httpChecks = async (ROOT, SITE) => {
       const location = new URL(res.headers.get('location') ?? '', STORYBOOK);
       check(
         `${url} redirects to /${DEFAULT_BASE}/${query}`,
-        res.status >= 300 &&
-          res.status < 400 &&
+        res.status === 308 &&
           location.pathname === `/${DEFAULT_BASE}/` &&
           // Vercel percent-encodes the forwarded query value
           // (`?path=%2Fstory%2Fx`), so compare the decoded parameter.
