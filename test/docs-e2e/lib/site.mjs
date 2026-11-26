@@ -597,7 +597,8 @@ const STORY_QUERIES = [
 /**
  * v1.0.x D6, through the address the search dialog reads: a story name
  * finds story pages and no row of the list page; the list page's title finds
- * it once.
+ * it once, as one page result with no row of its body (fumadocs gives every
+ * page its description as a row of its own, build-doc line 20).
  */
 async function listPageSearch(page, check) {
   const origin = new URL(page.url()).origin;
@@ -621,11 +622,18 @@ async function listPageSearch(page, check) {
       `story results=${stories.length} list page rows=${rows.length}`,
     );
   }
+  const { description } = pageHead(
+    await (await fetch(origin + LIST_ROUTE)).text(),
+  );
   const rows = listRows(await search('More examples'));
+  const pages = rows.filter((r) => r.type === 'page');
+  const body = rows.filter(
+    (r) => r.type !== 'page' && r.content !== description,
+  );
   check(
     'search "More examples": the list page once',
-    rows.length === 1,
-    `list page rows=${rows.length}`,
+    pages.length === 1 && body.length === 0,
+    `page results=${pages.length} body rows=${body.length}`,
   );
 }
 
