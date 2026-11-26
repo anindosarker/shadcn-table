@@ -22,6 +22,10 @@ publishes the section as the GitHub release notes.
 - A new page, More examples (`/docs/examples/more`), lists every story example with a plain link, grouped by story file, and the Examples sidebar links to it as its "Overview" row, also while More examples is closed (D5).
 - The package's `homepage` field now points at `https://www.shadcn-table.com` (D5).
 
+#### Spec 02.1
+
+- The ST Components, ST Hooks, Agents and Usage pages start their sections at a level 2 heading instead of level 3, so their page outline no longer skips a level; the headings keep their text, order and links, and are one size larger (Q5).
+
 ## 1.0.1 - 2026-11-24
 
 ### Fixed
