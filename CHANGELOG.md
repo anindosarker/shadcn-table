@@ -17,6 +17,11 @@ publishes the section as the GitHub release notes.
 - Every docs page names its own address for sharing (`og:url`), the breadcrumb data starts at the first docs page, and the site serves `/favicon.ico` and a web manifest (D3).
 - The "Try it" heading of the example pages is a level 2 heading, so the page outline no longer skips a level; it looks as before and moves one level up in "On this page" (D3).
 
+#### Spec 04
+
+- A new page, More examples (`/docs/examples/more`), lists every story example with a plain link, grouped by story file, and the Examples sidebar links to it as its "Overview" row, also while More examples is closed (D5).
+- The package's `homepage` field now points at `https://www.shadcn-table.com` (D5).
+
 ## 1.0.1 - 2026-11-24
 
 ### Fixed
