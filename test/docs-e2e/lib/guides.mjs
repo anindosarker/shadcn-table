@@ -1120,7 +1120,7 @@ const checks = {
     for (const id of ['fundamentals', 'customization-guides'])
       check(
         `guides list heading #${id}`,
-        (await page.locator(`main h3[id="${id}"]`).count()) === 1,
+        (await page.locator(`main h2[id="${id}"]`).count()) === 1,
       );
     await sectionFrame(page, check, 'Guides');
   },
