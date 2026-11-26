@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   // slash-less URL as canonical (D53).
   alternates: { canonical: './' },
   applicationName: siteName,
-  openGraph: { siteName, type: 'website' },
+  openGraph: { siteName, type: 'website', url: './' },
   twitter: { card: 'summary_large_image' },
 };
 
