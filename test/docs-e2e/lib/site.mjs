@@ -6,6 +6,8 @@
  * - `/sitemap.xml`: every guide page the sitemap lists is fetched as served
  *   HTML, before any script runs, and holds no element id twice (D113: an
  *   example shown twice on one guide carries two ids from the server on).
+ *   Every sitemap page is fetched the same way for its search head (v1.0.x
+ *   D3), and /favicon.ico and the web manifest answer 200.
  * - `/nope` and `/docs/examples/sticky-heder`: a missing address answers 404
  *   with the site's own page (D121): "404", "This page does not exist", the
  *   four sections in order (each answering 200), the docs search box opening
@@ -81,6 +83,174 @@ async function guideIdsUnique(page, check) {
     offenders.length === 0,
     offenders.join(', '),
   );
+}
+
+/** Pages fetched at once by the site head check. */
+const HEAD_FETCHES = 8;
+
+/** The attributes of each `<tag ...>` in `html`, as plain objects. */
+const tagAttrs = (html, tag) =>
+  [...html.matchAll(new RegExp(`<${tag}\\b([^>]*)>`, 'gi'))].map((m) =>
+    Object.fromEntries(
+      [...m[1].matchAll(/([\w:-]+)="([^"]*)"/g)].map((a) => [
+        a[1].toLowerCase(),
+        a[2],
+      ]),
+    ),
+  );
+
+/** The search head of one served page (v1.0.x D3). */
+const pageHead = (html) => {
+  const head = html.slice(0, html.search(/<\/head>/i) + 1 || undefined);
+  const metas = tagAttrs(head, 'meta');
+  const links = tagAttrs(head, 'link');
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  const h2 = article.search(/<h2[\s>]/i);
+  const h3 = article.search(/<h3[\s>]/i);
+  const crumbs = [
+    ...html.matchAll(
+      /<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+    ),
+  ]
+    .flatMap((m) => {
+      try {
+        const data = JSON.parse(m[1]);
+        return Array.isArray(data) ? data : [data];
+      } catch {
+        return [];
+      }
+    })
+    .filter((d) => d?.['@type'] === 'BreadcrumbList');
+  return {
+    title: head.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? '',
+    description:
+      metas.find((m) => m.name === 'description')?.content?.trim() ?? '',
+    ogUrl: metas.find((m) => m.property === 'og:url')?.content ?? '',
+    canonical: links.find((l) => l.rel === 'canonical')?.href ?? '',
+    manifest: links.find((l) => l.rel === 'manifest')?.href ?? '',
+    h3BeforeH2: h3 !== -1 && (h2 === -1 || h3 < h2),
+    crumb: crumbs[0]?.itemListElement?.[0]?.item ?? '',
+  };
+};
+
+/** `items` mapped through `fn`, at most `limit` at a time, in order. */
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  };
+  await Promise.all(Array.from({ length: limit }, worker));
+  return out;
+}
+
+/** The first ten of `list` and its count, for a FAIL line. */
+const named = (list) =>
+  list.length
+    ? `${list.length}: ${list.slice(0, 10).join(', ')}${list.length > 10 ? ', ...' : ''}`
+    : '';
+
+/**
+ * v1.0.x D3: every sitemap page, fetched as served HTML, answers 200 with a
+ * description, a title no other page has, an og:url equal to its canonical,
+ * no h3 before the first h2 of its article, and a breadcrumb whose first
+ * item answers 200; the site serves /favicon.ico and a web manifest.
+ */
+async function siteHead(page, check) {
+  const origin = new URL(page.url()).origin;
+  const xml = await (await fetch(`${origin}/sitemap.xml`)).text();
+  const routes = [
+    ...new Set(
+      [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+        (m) => new URL(m[1]).pathname,
+      ),
+    ),
+  ];
+  const heads = await mapLimit(routes, HEAD_FETCHES, async (route) => {
+    const res = await fetch(origin + route);
+    return {
+      route,
+      status: res.status,
+      ...pageHead(res.ok ? await res.text() : ''),
+    };
+  });
+
+  check(
+    'sitemap pages: 200 with a description',
+    heads.length > 0 && heads.every((h) => h.status === 200 && h.description),
+    named(
+      heads
+        .filter((h) => h.status !== 200 || !h.description)
+        .map((h) => (h.status === 200 ? h.route : `${h.route} (${h.status})`)),
+    ),
+  );
+
+  const byTitle = Map.groupBy(heads, (h) => h.title);
+  const shared = [...byTitle.values()]
+    .filter((group) => group.length > 1)
+    .map(
+      (group) => `"${group[0].title}" ${group.map((h) => h.route).join(' ')}`,
+    );
+  check('sitemap pages: no title twice', shared.length === 0, named(shared));
+
+  check(
+    'sitemap pages: og:url equals the canonical',
+    heads.every((h) => h.ogUrl && h.ogUrl === h.canonical),
+    named(
+      heads
+        .filter((h) => !h.ogUrl || h.ogUrl !== h.canonical)
+        .map((h) => h.route),
+    ),
+  );
+
+  check(
+    'sitemap pages: no h3 before the first h2',
+    heads.every((h) => !h.h3BeforeH2),
+    named(heads.filter((h) => h.h3BeforeH2).map((h) => h.route)),
+  );
+
+  // The structured data names the deployed origin; the path is what is checked.
+  const crumbStatus = new Map();
+  for (const h of heads) {
+    if (!h.crumb) continue;
+    const path = new URL(h.crumb, origin).pathname;
+    if (!crumbStatus.has(path))
+      crumbStatus.set(
+        path,
+        (await fetch(origin + path, { redirect: 'manual' })).status,
+      );
+  }
+  check(
+    'sitemap pages: breadcrumb item 1 answers 200',
+    crumbStatus.size > 0 && [...crumbStatus.values()].every((s) => s === 200),
+    named(
+      [...crumbStatus]
+        .filter(([, s]) => s !== 200)
+        .map(([path, s]) => `${path} (${s})`),
+    ),
+  );
+
+  const icon = await fetch(`${origin}/favicon.ico`);
+  const iconType = icon.headers.get('content-type') ?? '';
+  check(
+    '/favicon.ico: 200 with an icon type',
+    icon.status === 200 && /icon/.test(iconType),
+    `${icon.status} ${iconType}`,
+  );
+
+  const home = heads.find((h) => h.route === '/');
+  let manifest = `no <link rel="manifest">`;
+  let manifestOk = false;
+  if (home?.manifest) {
+    const res = await fetch(new URL(home.manifest, origin + '/'));
+    const json = res.ok ? await res.json().catch(() => null) : null;
+    manifestOk = !!json?.name && Array.isArray(json?.icons);
+    manifest = `${home.manifest} ${res.status}`;
+  }
+  check('web manifest: linked, 200, name and icons', manifestOk, manifest);
 }
 
 /** D121: the 404 page of a missing address. */
@@ -210,9 +380,9 @@ async function missingDocsPageHead(page, check, route) {
     html.includes('>404<') && html.includes('This page does not exist'),
   );
   const head = /<head>([\s\S]*?)<\/head>/.exec(html)?.[1] ?? '';
-  const inlineScripts = [
-    ...head.matchAll(/<script>([\s\S]*?)<\/script>/g),
-  ].map((m) => m[1]);
+  const inlineScripts = [...head.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(
+    (m) => m[1],
+  );
   check(
     'served 404: both head scripts',
     inlineScripts.some((s) => s.includes('"data-design-system"')) &&
@@ -228,10 +398,11 @@ async function missingDocsPageHead(page, check, route) {
   tab.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   try {
     await tab.goto(origin + '/');
-    await tab.evaluate(() =>
-      localStorage.setItem('docs-sidebar-width', '360'),
-    );
-    await tab.goto(origin + route, { waitUntil: 'networkidle', timeout: 90000 });
+    await tab.evaluate(() => localStorage.setItem('docs-sidebar-width', '360'));
+    await tab.goto(origin + route, {
+      waitUntil: 'networkidle',
+      timeout: 90000,
+    });
     await tab.waitForTimeout(1000);
     const script = errors.filter((e) => /script tag/i.test(e));
     check(
@@ -381,7 +552,10 @@ const checks = {
     await servedStoryRow(page, check);
     await moreExamplesSidebar(page, check);
   },
-  '/sitemap.xml': async ({ page, check }) => guideIdsUnique(page, check),
+  '/sitemap.xml': async ({ page, check }) => {
+    await guideIdsUnique(page, check);
+    await siteHead(page, check);
+  },
   ...Object.fromEntries(
     MISSING.map((route) => [
       route,
