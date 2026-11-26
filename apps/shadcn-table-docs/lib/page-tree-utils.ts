@@ -133,12 +133,14 @@ export function groupedPages(
  */
 const NUMBERED_SECTION = `${docsRoute}/examples/`;
 
-/** The sidebar rows under `node` in sidebar order: folder index first, external links skipped. */
+/**
+ * The numbered sidebar rows under `node` in sidebar order, external links
+ * skipped. A folder index (the "Overview" row) is no numbered row and adds
+ * nothing to the folder's count: the More examples list page (v1.0.x D5).
+ */
 function pageRows(node: PageTree.Root | PageTree.Folder): PageTree.Item[] {
   const rows: PageTree.Item[] = [];
   const visit = (current: PageTree.Root | PageTree.Folder) => {
-    if ('index' in current && current.index && !current.index.external)
-      rows.push(current.index);
     for (const child of current.children) {
       if (child.type === 'folder') visit(child);
       else if (child.type === 'page' && !child.external) rows.push(child);

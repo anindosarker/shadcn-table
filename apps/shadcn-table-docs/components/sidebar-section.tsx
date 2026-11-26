@@ -25,7 +25,6 @@ import {
   groupCount,
   hasPages,
   isNumberedRoot,
-  rowNumber,
 } from '@/lib/page-tree-utils';
 
 /**
@@ -85,8 +84,19 @@ export function SidebarSection({
     () => false,
   );
   if (!hasPages(item)) return null;
-  const indexNumber = item.index && rowNumber(root, item.index.url);
   const rendered = Children.toArray(children);
+  // A closable folder's index row stays outside its collapsible content, so
+  // the server HTML links it with the folder closed (v1.0.x D5).
+  const indexRow = item.index ? (
+    <SidebarItem
+      href={item.index.url}
+      external={item.index.external}
+      active={pathname === item.index.url}
+      className={ITEM_CLASS}
+    >
+      Overview
+    </SidebarItem>
+  ) : null;
 
   return (
     <Collapsible open={open} onOpenChange={setChoice} className={SECTION_CLASS}>
@@ -105,23 +115,11 @@ export function SidebarSection({
         )}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>
+      {closable ? indexRow : null}
       <CollapsibleContent
         className={`flex flex-col gap-1 ${closable ? '[--sidebar-stick-top:1.5rem]' : ''}`}
       >
-        {item.index ? (
-          <SidebarItem
-            href={item.index.url}
-            external={item.index.external}
-            active={pathname === item.index.url}
-            className={ITEM_CLASS}
-          >
-            {indexNumber === undefined ? (
-              'Overview'
-            ) : (
-              <span>{indexNumber}. Overview</span>
-            )}
-          </SidebarItem>
-        ) : null}
+        {closable ? null : indexRow}
         {groupBySeparator(item.children).map((group, g) => {
           const nodes = group.indices.map((i) => rendered[i]);
           // the separator renders its own group (sidebar-separator.tsx)
