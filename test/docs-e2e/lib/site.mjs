@@ -26,8 +26,17 @@
  *   rows, the current row is marked with its running number, and a sub-group
  *   label is no toggle. On `/docs/examples/basic` the folder starts closed,
  *   opens on a click and stays open after a reload.
+ * - `/docs/examples/more`, the list of every story page (v1.0.x D5): its
+ *   served HTML answers 200 and links each story id of more/meta.json once
+ *   from a list item, under one h2 per group label in order, with one h1 and
+ *   a description; the served sidebar of `/docs/examples/basic` (More
+ *   examples closed) and of a story page (open) links it, and the sitemap
+ *   lists it.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { MORE_DIR } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { headerVersion } from './getting-started.mjs';
 
 /** The sections of D101, in their order. */
@@ -464,6 +473,78 @@ async function servedStoryRow(page, check) {
   );
 }
 
+/** The page that lists every story page (v1.0.x D5). */
+const LIST_ROUTE = '/docs/examples/more';
+/** more/meta.json `pages`: "---Group---" labels and story ids, in order. */
+const MORE_ENTRIES = JSON.parse(
+  fs.readFileSync(path.join(MORE_DIR, 'meta.json'), 'utf8'),
+).pages;
+
+/** The served `<aside>` of `route`, before any script runs. */
+const servedAside = async (origin, route) => {
+  const html = await (await fetch(origin + route)).text();
+  const start = html.indexOf('<aside');
+  return start === -1 ? '' : html.slice(start, html.indexOf('</aside>', start));
+};
+
+/**
+ * D5: the served list page links every story page of more/meta.json once,
+ * each from a list item under its group's h2, in meta.json order.
+ */
+async function storyListPage(page, check) {
+  const origin = new URL(page.url()).origin;
+  const res = await fetch(origin + LIST_ROUTE);
+  const html = res.ok ? await res.text() : '';
+  check('list page: served 200', res.status === 200, String(res.status));
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  const linked = [
+    ...article.matchAll(
+      /<li\b[^>]*>\s*<a\b[^>]*\bhref="\/docs\/examples\/more\/([^"#?]+)"/g,
+    ),
+  ].map((m) => m[1]);
+  const ids = MORE_ENTRIES.filter((entry) => !entry.startsWith('---'));
+  const have = new Set(linked);
+  const missing = ids.filter((id) => !have.has(id));
+  const extra = linked.filter(
+    (id, i) => !ids.includes(id) || linked.indexOf(id) !== i,
+  );
+  check(
+    'list page: one link per story page of more/meta.json',
+    linked.length === ids.length && missing.length === 0 && extra.length === 0,
+    `links=${linked.length} stories=${ids.length} missing=${named(missing)} extra=${named(extra)}`,
+  );
+  const h1 = html.match(/<h1[\s>]/g)?.length ?? 0;
+  check('list page: one h1', h1 === 1, `h1=${h1}`);
+  check('list page: a description', pageHead(html).description.length > 0);
+  // the heading's copy-link button carries text of its own
+  const h2 = [...article.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map((m) =>
+    textOf(m[1].replace(/<button\b[\s\S]*?<\/button>/g, '')).trim(),
+  );
+  const groups = MORE_ENTRIES.filter((entry) => entry.startsWith('---')).map(
+    (entry) => entry.slice(3, -3),
+  );
+  check(
+    'list page: h2 per group label, in order',
+    h2.join('|') === groups.join('|'),
+    `h2=${h2.length} groups=${groups.length}`,
+  );
+}
+
+/** D5: the served sidebar links the list page, More examples closed and open. */
+async function servedListLink(page, check) {
+  const origin = new URL(page.url()).origin;
+  for (const [route, state] of [
+    ['/docs/examples/basic', 'closed'],
+    [STORY_ROUTE, 'open'],
+  ]) {
+    const aside = await servedAside(origin, route);
+    check(
+      `served sidebar of ${route} (${state}): links ${LIST_ROUTE}`,
+      aside.includes(`href="${LIST_ROUTE}"`),
+    );
+  }
+}
+
 /** The "More examples" trigger of the desktop sidebar. */
 const moreTrigger = (page) =>
   page.locator('#nd-sidebar button[data-slot="collapsible-trigger"]', {
@@ -551,11 +632,25 @@ async function moreExamplesSidebar(page, check) {
 const checks = {
   [STORY_ROUTE]: async ({ page, check }) => {
     await servedStoryRow(page, check);
+    await servedListLink(page, check);
     await moreExamplesSidebar(page, check);
+  },
+  [LIST_ROUTE]: async ({ page, check }) => {
+    await storyListPage(page, check);
   },
   '/sitemap.xml': async ({ page, check }) => {
     await guideIdsUnique(page, check);
     await siteHead(page, check);
+    const xml = await (
+      await fetch(`${new URL(page.url()).origin}/sitemap.xml`)
+    ).text();
+    // the origin is the deployment's (NEXT_PUBLIC_SITE_URL); the path is checked
+    check(
+      `sitemap: lists ${LIST_ROUTE}`,
+      [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].some(
+        (m) => new URL(m[1]).pathname === LIST_ROUTE,
+      ),
+    );
   },
   ...Object.fromEntries(
     MISSING.map((route) => [

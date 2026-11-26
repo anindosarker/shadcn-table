@@ -9,11 +9,13 @@
 // below it, read by the docs app's lib/story-text-checklist.mjs. A page's
 // `searchTitle` line is the one the script writes (v1.0.x D3). The stories
 // are read with Storybook's own CSF parser through the docs app's
-// lib/story-pages.mjs, the script that writes the pages; every problem names
+// lib/story-pages.mjs, the script that writes the pages; more/index.mdx, the
+// list page (v1.0.x D5), is the text that script writes. Every problem names
 // it. It prints one line and returns the problems; it never edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  LIST_PAGE,
   MORE_DIR,
   MORE_FOLDER,
   moreMeta,
@@ -21,6 +23,7 @@ import {
   readExactStories,
   readStories,
   searchTitleLine,
+  storyListPage,
 } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { pageParts } from '../../../apps/shadcn-table-docs/lib/story-text-checklist.mjs';
 
@@ -43,7 +46,9 @@ export const check = async (log) => {
   const pages = pageStories(stories);
   const storyById = new Map(stories.map((story) => [story.id, story]));
   const files = fs.existsSync(MORE_DIR)
-    ? fs.readdirSync(MORE_DIR).filter((file) => file.endsWith('.mdx'))
+    ? fs
+        .readdirSync(MORE_DIR)
+        .filter((file) => file.endsWith('.mdx') && file !== LIST_PAGE)
     : [];
   const pageIds = new Set(files.map((file) => file.slice(0, -'.mdx'.length)));
   for (const story of pages) {
@@ -83,6 +88,15 @@ export const check = async (log) => {
         `page more/${id}.mdx: ${problem}; write its description, Try it steps and Related guides in the example page format (spec 56, 1.6.7)`,
       );
   }
+  const listFile = path.join(MORE_DIR, LIST_PAGE);
+  const list = fs.existsSync(listFile)
+    ? fs.readFileSync(listFile, 'utf8')
+    : undefined;
+  if (list === undefined) problems.push(`more/${LIST_PAGE} is missing: ${FIX}`);
+  else if (list !== storyListPage(pages))
+    problems.push(
+      `more/${LIST_PAGE} differs from the list the script writes: ${FIX}`,
+    );
   const metaFile = path.join(MORE_DIR, 'meta.json');
   let meta;
   try {
