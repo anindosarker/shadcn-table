@@ -1,14 +1,28 @@
 # Planning Guidelines
 
+For a release with `status/data/status.json`. A release without it is format 1.0: follow [old-form/planning-guidelines.md](old-form/planning-guidelines.md).
+
 How to write an implementation plan for this repository. Applies to humans and agents.
+
+## Contents
+
+- Location
+- Rules
+- Template
+- Example
+- Task file
 
 ## Location
 
 ```
 .ai/plans/<name>/<git_username>/
-├── <name>-plan.md       ← the root plan file
+├── <name>-plan/
+│   ├── <name>-plan.md   ← the plan file, in a folder of the same name
+│   └── tasks/           ← one file per task
 └── reference/           ← optional supporting material
 ```
+
+Every plan sits in a folder named like its file, with its task files in `tasks/` beside it.
 
 `<git_username>` is the output of `git config user.name`. Any other file in the folder belongs
 to the workflow or tool that runs the plan and is not described here. This doc says how to
@@ -27,27 +41,46 @@ write one plan file (template below).
    illustrate.
 6. **No marketing prose.** Plain section names, direct descriptions, exact technical terms.
 7. **Status on every operation**: `new`, `keep` or `refactor`. A stub is `new` with "stub,
-   implement in task N".
+   implement in task NN".
 8. **Pin what stays unchanged.** Every module lists what it touches but does not modify.
 9. **Design in, implementation out.** Include data models and fields, interfaces, types,
    constants, file shapes, usage examples. Never method bodies or algorithm walkthroughs.
    Test: a decision goes in; how to do it stays in the code.
-10. **Cleanup task always last.** Delete old code, update references, run the project's checks.
-11. **Checks per task.** Each task names the commands that must pass. The commands are the
-    project's checks as listed in `docs/code-of-conduct/coding-standards.md`.
+10. **Cleanup task always last.** Delete old code, update references.
+11. **Verification per task.** Each task file ends with a checklist of facts that can be seen
+    when the task is done. The project's checks as listed in
+    `docs/code-of-conduct/coding-standards.md` hold for every task and are never listed.
 12. **No em dashes.** Use a comma, a colon or a new sentence.
-13. **Dependency edges need a file reason.** Each milestone block names its `Files owned` and
-    `Depends on`. A milestone depends on another only through a listed dependency or a shared
-    file. Milestones that share no file and list no dependency can be built at the same time.
+13. **Dependency edges need a reason.** A milestone depends on another only through a listed
+    dependency or a shared file. Milestones that share no file and list no dependency are
+    built at the same time.
+14. **Three levels, one home each.** A module (section 1.6) says what is wanted and cites the
+    decision. A task (a file in `tasks/`) is the work. A milestone (section 2.2) is the tasks
+    that are built and merged together.
+15. **New work is the same three additions.** The next module, one or more task files, a
+    milestone. Numbers only go up. Each new piece of work is its own milestone; a task joins
+    an existing milestone only while that milestone has not started.
+16. **A finished plan takes nothing.** A plan that is not done takes new modules, tasks and
+    milestones. Once it is done, later work on the same subject is a new plan.
+17. **Suggestions, not rules.** `Files owned` on a milestone is written when it could clash
+    with other work in progress, `Depends on` only where two milestones touch the same thing.
+    Sections 1.3, 1.4, 1.5 and 1.7 are left out when they would be empty.
+18. **No status by hand.** The `status` line of a plan file or a task file is one of
+    `not started`, `in progress`, `blocked`, `done`, `skipped`. A tool, not a person, may
+    maintain it.
 
 ## Template
 
-Numbering is strict: every heading under `## 1.` and `## 2.` carries its dotted number,
-except the `### Milestone: <name>` blocks under 2.1, which carry the milestone name.
-A skipped optional section keeps its heading with `: none` after the name, so numbers stay
-stable and no reader guesses at a gap.
+Numbering is strict: every heading under `## 1.` and `## 2.` carries its dotted number. A
+module is `#### 1.6.2 <title>`, a milestone `#### 2.2.1 Milestone: <name>`. A task has a
+two-digit number that runs across the plan and starts the name of its file, `tasks/03-<slug>.md`.
+A number is never reused. Sections 1.3, 1.4, 1.5 and 1.7 are left out when empty; the other
+numbers stay as they are.
 
 ````markdown
+---
+status: not started
+---
 # [Feature name] plan
 
 ## 1. Architecture
@@ -142,20 +175,25 @@ New packages, env vars (name, default, purpose), reused infrastructure.
 
 ## 2. Instructions for AI
 
-### 2.1 Milestones
+### 2.1 Tasks
 
-One block per milestone. A milestone is a named group of tasks that is built and checked as
+One pointer line per task: its number, its title, its module, its file.
+
+- 01 [Task title] · module 1.6.2 · tasks/01-[slug].md
+- 02 [Task title] · module 1.6.2 · tasks/02-[slug].md
+- 03 Cleanup, delete old code, update references · module 1.6.2 · tasks/03-cleanup.md
+
+### 2.2 Milestones
+
+One block per milestone. A milestone is a named group of tasks that is built and merged as
 one piece of work.
 
-### Milestone: [Name]
-
+#### 2.2.1 Milestone: [Name]
+- Tasks: 01, 02, 03
 - Files owned: [a, b]
 - Depends on: [milestone names, or none]
-- Task 1: [what]. Checks: [commands]
-- Task 2: [what]. Checks: [commands]
-- Task N: Cleanup, delete old code, update references. Checks: the project's checks
 
-### 2.2 Checks
+### 2.3 Checks
 
 - `command`, what green means
 ````
@@ -238,24 +276,61 @@ await notificationService.send('email', { to, subject, body });
 
 ## 2. Instructions for AI
 
-### 2.1 Milestones
+### 2.1 Tasks
 
-### Milestone: Notification core
+- 01 Create `NotificationService` and the email channel · module 1.6.2 · tasks/01-notification-service.md
+- 02 Add the SMS channel as a stub · module 1.6.2 · tasks/02-sms-channel-stub.md
+- 03 Point `auth`, `payment` and `payroll` at `send()` · module 1.6.2 · tasks/03-move-callers.md
+- 04 Cleanup, delete the three old senders, update imports · module 1.6.2 · tasks/04-cleanup.md
 
+### 2.2 Milestones
+
+#### 2.2.1 Milestone: Notification core
+- Tasks: 01, 02
 - Files owned: `notification/notification.service.ts`, `notification/channels/email.channel.ts`, `notification/channels/sms.channel.ts`
-- Depends on: none
-- Task 1: Create `NotificationService` and the email channel. Checks: type check
-- Task 2: Add the SMS channel as a stub. Checks: type check, unit tests
 
-### Milestone: Move callers
-
+#### 2.2.2 Milestone: Move callers
+- Tasks: 03, 04
 - Files owned: `auth/auth-email.sender.ts`, `payment/payment-email.sender.ts`, `payroll/payroll-email.sender.ts`
 - Depends on: Notification core
-- Task 1: Point `auth`, `payment` and `payroll` at `send()`. Checks: type check, unit tests
-- Task 2: Cleanup, delete the three old senders, update imports. Checks: the project's checks
 
-### 2.2 Checks
+### 2.3 Checks
 
 - The project's checks as listed in `docs/code-of-conduct/coding-standards.md`, all green
 - A grep for the email provider client outside `notification/`, no match
 ````
+
+## Task file
+
+Every task is a file, `tasks/NN-<slug>.md` in the plan's folder. Mandatory: the front matter,
+the title, Goals, Verification. Optional, left out when unused: the quote, Instructions.
+
+````markdown
+---
+status: not started
+type: [feat | bug]
+---
+# [The result, in one line]
+
+> [Optional. The words of the person who asked, copied. An agent never writes it.]
+
+## Goals
+- [What we want to do. One to three bullets.]
+
+## Instructions
+- [Optional. Only when the order matters, a guess must be checked first, or a bug must be reproduced.]
+
+## Verification
+- [ ] [A fact that can be seen when the task is done.]
+- [ ] Browser: [what to look at in the browser.]
+- [ ] Owner: [a check the owner does himself.]
+````
+
+- Verification is a checklist of facts that can be seen when the task is done. Every box is
+  ticked before the task is done.
+- A plain line is checked by the builder. A `Browser:` line is checked by the builder in a
+  browser. An `Owner:` line is checked by the owner; the builder does not open a browser for it.
+- A line that would be true for every task does not belong in the file: lint, type-check and
+  build are never listed.
+- `status` is one of `not started`, `in progress`, `blocked`, `done`, `skipped`. A tool, not a
+  person, may maintain it.
