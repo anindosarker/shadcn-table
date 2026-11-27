@@ -64,12 +64,12 @@ const checks = {
   },
   '/docs/api/st-components': async ({ page, check }) => {
     await switcher(page, 'ST Components', 2, check);
-    const n = await page.locator('article h5').count();
+    const n = await page.locator('article h4').count();
     check('component headings', n === 42, String(n));
   },
   '/docs/api/st-hooks': async ({ page, check }) => {
     await switcher(page, 'ST Hooks', 2, check);
-    const n = await page.locator('article h3').count();
+    const n = await page.locator('article h2').count();
     check('hook headings', n === 8, String(n));
   },
 };

@@ -7,6 +7,35 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 1.0.2 - 2026-11-27
+
+### Docs
+
+#### Spec 01
+
+- The Storybook site has its own title, description and canonical address for each base (Base UI, Radix UI, React Aria), so search results list each base once, and its root address now redirects permanently to `/base/` (D1).
+
+#### Spec 02
+
+- Every docs page now has its own title and description in search results: the API reference page has a description, the Column Pinning example and the Row Pinning guide describe their own page, and a story page whose name does not hold its story group's name carries that group in its title, such as "Basic: Default", so no two pages share a title (D3).
+- Every docs page names its own address for sharing (`og:url`), the breadcrumb data starts at the first docs page, and the site serves `/favicon.ico` and a web manifest (D3).
+- The "Try it" heading of the example pages is a level 2 heading, so the page outline no longer skips a level; it looks as before and moves one level up in "On this page" (D3).
+
+#### Spec 04
+
+- A new page, More examples (`/docs/examples/more`), lists every story example with a plain link, grouped by story file, and the Examples sidebar links to it as its "Overview" row, also while More examples is closed (D5).
+- The package's `homepage` field now points at `https://www.shadcn-table.com` (D5).
+
+#### Spec 02.1
+
+- The ST Components, ST Hooks, Agents and Usage pages start their sections at a level 2 heading instead of level 3, so their page outline no longer skips a level; the headings keep their text, order and links, and are one size larger (Q5).
+- The Guides overview (`/docs/guides`) marks its group headings as level 2 instead of level 3, so its outline no longer skips a level; the page looks as before (Q5).
+
+#### Spec 05
+
+- The More examples list page (`/docs/examples/more`) no longer fills the docs search with its rows: a search for a story name shows the story pages, and the list page is found by its title only (D6).
+- Each example on the More examples list page shows the number it has in the sidebar, such as "43. Default" (D7).
+
 ## 1.0.1 - 2026-11-24
 
 ### Fixed

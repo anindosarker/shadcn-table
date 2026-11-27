@@ -3,7 +3,7 @@ title: 'AI Agent Setup'
 description: 'Point a coding agent at the shadcn-table SKILL.md: it reads your components.json base, installs from the matching registry path and pulls examples.'
 ---
 
-### Ask your agent
+## Ask your agent
 
 <AgentPrompt />
 
@@ -11,7 +11,7 @@ The prompt points the agent at [`/SKILL.md`](/SKILL.md): install, the usage rule
 
 The skill knows the three bases of the table: it reads the `style` in `components.json` (`base-*`, `radix-*` or `aria-*`) and installs from the matching path of the hosted registry, `/r/base/`, `/r/radix/` or `/r/aria/`. Without a `components.json` it runs `shadcn init` first and asks you for the base.
 
-### Registry addresses
+## Registry addresses
 
 One path per shadcn base, item names the same on all three:
 
@@ -30,7 +30,7 @@ pnpm dlx shadcn@latest add @shadcn-table/shadcn-table
 
 GitHub fallback when the site is unreachable: `anindosarker/shadcn-table/shadcn-table-base` (Base UI), `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
 
-### Skill
+## Skill
 
 The same file installs as a skill, so the agent knows the table before you ask:
 
@@ -38,13 +38,13 @@ The same file installs as a skill, so the agent knows the table before you ask:
 npx skills add anindosarker/shadcn-table
 ```
 
-### Docs as markdown
+## Docs as markdown
 
 - [`/llms.txt`](/llms.txt): index of all pages
 - [`/llms-full.txt`](/llms-full.txt): all pages in one file
 - Any page: its path under `/llms.mdx/docs` plus `/content.md`, for example [`/llms.mdx/docs/api/table-options/content.md`](/llms.mdx/docs/api/table-options/content.md). "Copy page" in the page bar copies the same text.
 
-### Project rules
+## Project rules
 
 For `CLAUDE.md` or `AGENTS.md` when the skill is not installed:
 
@@ -60,7 +60,7 @@ For `CLAUDE.md` or `AGENTS.md` when the skill is not installed:
   (<base> is base, radix or aria, from the style in components.json; replaces local edits in that directory).
 ```
 
-### MCP
+## MCP
 
 The shadcn MCP server browses the registries listed in `components.json`, so register the namespace above, then configure your client:
 

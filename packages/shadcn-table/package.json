@@ -4,8 +4,8 @@
   "license": "MIT",
   "author": "Anindo Sarker",
   "repository": "github:anindosarker/shadcn-table",
-  "homepage": "https://shadcn-table.com",
-  "version": "1.0.1",
+  "homepage": "https://www.shadcn-table.com",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "preview": "node ../../tools/preview.mjs --package",

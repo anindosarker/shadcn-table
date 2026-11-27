@@ -100,10 +100,11 @@ async function singleExample(page, check) {
 }
 
 /**
- * Spec 54 (D104): the page order around the example. A `Try it` h3 and its
+ * Spec 54 (D104): the page order around the example. A `Try it` h2 and its
  * list of 2 to 4 steps sit directly above the example panel, a `Related
  * guides` h2 with its links follows the panel, and the page has no "View
- * Extra Storybook" line.
+ * Extra Storybook" line. The `Try it` h2 has the look of a prose h3 beside
+ * it (v1.0.x D3).
  */
 async function pageOrder(page, check) {
   const order = await page.evaluate(() => {
@@ -114,11 +115,27 @@ async function pageOrder(page, check) {
       [...(article?.querySelectorAll(tag) ?? [])].find((h) =>
         h.textContent?.trim().startsWith(text),
       );
-    const tryIt = heading('h3', 'Try it');
+    const tryIt = heading('h2', 'Try it');
     const list = tryIt?.nextElementSibling;
     const next = list?.nextElementSibling;
     const guides = heading('h2', 'Related guides');
+    const look = (el) => {
+      const cs = getComputedStyle(el);
+      return [cs.fontSize, cs.fontFamily, cs.fontWeight, cs.letterSpacing].join(
+        ' / ',
+      );
+    };
+    let h3Look = '';
+    if (tryIt?.parentElement) {
+      const h3 = document.createElement('h3');
+      h3.textContent = 'Try it';
+      tryIt.parentElement.append(h3);
+      h3Look = look(h3);
+      h3.remove();
+    }
     return {
+      tryItLook: tryIt ? look(tryIt) : '',
+      h3Look,
       steps: list?.querySelectorAll('ol > li').length ?? 0,
       aboveExample: !!(
         panel &&
@@ -138,6 +155,11 @@ async function pageOrder(page, check) {
     'Try it steps directly above the example',
     order.steps >= 2 && order.steps <= 4 && order.aboveExample,
     `steps=${order.steps} above=${order.aboveExample}`,
+  );
+  check(
+    'Try it h2 looks like a prose h3',
+    !!order.tryItLook && order.tryItLook === order.h3Look,
+    `h2 ${order.tryItLook} | h3 ${order.h3Look}`,
   );
   check(
     'Related guides below the example',
@@ -274,9 +296,9 @@ const examplePage =
  */
 async function basicSteps(page, w, check) {
   const rows = () => w.locator('table tbody tr').count();
-  // the list follows the `Try it` h3 (pageOrder)
+  // the list follows the `Try it` h2 (pageOrder)
   const steps = await page.evaluate(() => {
-    const h = [...document.querySelectorAll('article h3')].find((el) =>
+    const h = [...document.querySelectorAll('article h2')].find((el) =>
       el.textContent?.trim().startsWith('Try it'),
     );
     return [...(h?.nextElementSibling?.querySelectorAll('ol > li') ?? [])].map(

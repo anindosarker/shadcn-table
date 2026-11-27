@@ -1,5 +1,9 @@
+import { MORE_EXAMPLES_URL } from '@/lib/more-examples';
 import { source } from '@/lib/source';
 import { createFromSource } from 'fumadocs-core/search/server';
+
+/** The list page of every story page, /docs/examples/more (v1.0.x D5). */
+const STORY_LIST_URL = MORE_EXAMPLES_URL.slice(0, -1);
 
 export const { GET } = createFromSource(source, {
   // fumadocs ids a page's headings and paragraphs `<page id>-<n>`, so with
@@ -11,6 +15,10 @@ export const { GET } = createFromSource(source, {
     description: page.data.description,
     url: page.url,
     id: `${page.url}#`,
-    structuredData: page.data.structuredData,
+    // The list page's links are story pages the search already returns (D6).
+    structuredData:
+      page.url === STORY_LIST_URL
+        ? { headings: [], contents: [] }
+        : page.data.structuredData,
   }),
 });

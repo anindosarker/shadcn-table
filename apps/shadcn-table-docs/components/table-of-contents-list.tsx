@@ -48,9 +48,9 @@ export function TableOfContentsList({ section }: { section: string }) {
         const id = groupId(group.label);
         return (
           <div key={id}>
-            <h3 id={id} className="docs-index-heading">
+            <h2 id={id} className="docs-index-heading">
               <Link href={`${section}#${id}`}>{group.label}</Link>
-            </h3>
+            </h2>
             <ul className="docs-index not-prose">
               {group.pages.map((page, index) => (
                 <li key={page.url}>

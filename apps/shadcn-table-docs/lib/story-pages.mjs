@@ -6,15 +6,19 @@
  * them in Storybook's order, one "---<story title>---" sub-group per story
  * file. The stories are read from packages/shadcn-table/stories with
  * Storybook's own CSF parser, so ids, names and order are the ones
- * Storybook gives them (storybook-static/<base>/index.json).
+ * Storybook gives them (storybook-static/<base>/index.json). more/index.mdx,
+ * the folder's index page at /docs/examples/more, links every story page
+ * under the same labels (v1.0.x D5), each with its sidebar number (v1.0.x
+ * D7); it is written whole on every run.
  *
- * A new page holds the title, the sidebar label and the
- * `<StoryExample id="..." />` tag (components/story-example.tsx). A page that
- * exists keeps everything it holds (its description, its body text); only
- * `title` and `sidebarTitle` follow the story's name. A page whose story is
- * gone is removed when it holds no text; one that holds text (a description
- * or body text besides the StoryExample tag) is kept, and the script fails
- * naming it: its text is reviewed, so a person moves it or deletes the file.
+ * A new page holds the title, the sidebar label, the search title when the
+ * story needs one (`storySearchTitle`) and the `<StoryExample id="..." />`
+ * tag (components/story-example.tsx). A page that exists keeps everything it
+ * holds (its description, its body text); only `title`, `sidebarTitle` and
+ * `searchTitle` follow the story. A page whose story is gone is removed when
+ * it holds no text; one that holds text (a description or body text besides
+ * the StoryExample tag) is kept, and the script fails naming it: its text is
+ * reviewed, so a person moves it or deletes the file.
  * Running it twice changes nothing.
  *
  * `pnpm test validate-repo` (test/validate-repo/lib/story-pages.mjs) fails
@@ -22,7 +26,7 @@
  *
  * Usage (apps/shadcn-table-docs): node lib/story-pages.mjs
  */
-import { promises as fs, readFileSync } from 'node:fs';
+import { existsSync, promises as fs, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadCsf } from 'storybook/internal/csf-tools';
@@ -136,14 +140,106 @@ export function moreMeta(pages) {
   };
 }
 
+/**
+ * The page `<title>` of a story page (v1.0.x D3): "<family>: <name>", the
+ * family being the last part of the meta title, so two stories of the same
+ * name in two files differ; undefined when the name already holds the family.
+ * @param {Story} story
+ * @returns {string | undefined}
+ */
+export function storySearchTitle(story) {
+  const family = story.title.split('/').at(-1).trim();
+  if (story.name.toLowerCase().includes(family.toLowerCase())) return undefined;
+  return `${family}: ${story.name}`;
+}
+
 /** A YAML scalar for the frontmatter: single quotes, a quote doubled. */
 const yamlString = (value) => `'${value.replaceAll("'", "''")}'`;
 
-/** The text of a new page: title, sidebar label and the story. */
+/** The list page of the folder, more/index.mdx (v1.0.x D5). */
+export const LIST_PAGE = 'index.mdx';
+
+/** Link text in MDX: the characters markdown or JSX would read escaped. */
+const mdxText = (value) => value.replace(/[\\[\]*_`<>{}]/g, '\\$&');
+
+/**
+ * The sidebar number of the first story row (v1.0.x D7): the example pages
+ * of examples/meta.json plus 1, the rule of `pageRows()` and `rowNumber()`
+ * in lib/page-tree-utils.ts (separators and the folder index are no rows).
+ * Fails on an entry the rule does not know.
+ */
+export function firstStoryNumber() {
+  const { pages } = JSON.parse(readFileSync(EXAMPLES_META, 'utf8'));
+  let count = 0;
+  for (const entry of pages) {
+    if (/^---.*---$/.test(entry) || entry === MORE_FOLDER) continue;
+    if (!existsSync(path.join(path.dirname(EXAMPLES_META), `${entry}.mdx`)))
+      throw new Error(
+        `content/docs/examples/meta.json: the entry "${entry}" is not an example page; the story list numbers cannot be counted`,
+      );
+    count += 1;
+  }
+  return count + 1;
+}
+
+/**
+ * more/index.mdx, the page at /docs/examples/more (v1.0.x D5): one plain
+ * link per story page, under one h2 per "---<title>---" label of
+ * `moreMeta(pages)`, in its order; the link text is the page's `title`.
+ * Each group is an ordered list numbered as the sidebar rows, from `first`
+ * (v1.0.x D7).
+ * @param {Story[]} pages
+ * @param {number} first the number of the first story, `firstStoryNumber()`
+ */
+export function storyListPage(pages, first) {
+  const lines = [];
+  let title = '';
+  pages.forEach((story, i) => {
+    if (story.title !== title) {
+      title = story.title;
+      lines.push('', `## ${title}`, '');
+    }
+    lines.push(
+      `${first + i}. [${mdxText(story.name)}](/docs/examples/more/${story.id})`,
+    );
+  });
+  const description = `All ${pages.length} shadcn-table Storybook stories that have a live example page under More examples, linked from one list by story file.`;
+  return `---
+title: More examples
+description: ${yamlString(description)}
+---
+
+Each Storybook story of shadcn-table that no example page shows has a page of its own; this list links every one, grouped by its story file.
+${lines.join('\n')}
+`;
+}
+
+/** The frontmatter lines the story sets; the rest of a page is kept. */
+const STORY_LINE = /^(title|sidebarTitle|searchTitle):/;
+
+/**
+ * The `searchTitle` line of a story's page, or undefined when it has none.
+ * @param {Story} story
+ */
+export function searchTitleLine(story) {
+  const title = storySearchTitle(story);
+  return title === undefined ? undefined : `searchTitle: ${yamlString(title)}`;
+}
+
+/** @param {Story} story */
+function storyLines(story) {
+  const searchTitle = searchTitleLine(story);
+  return [
+    `title: ${yamlString(story.name)}`,
+    `sidebarTitle: ${yamlString(story.name)}`,
+    ...(searchTitle ? [searchTitle] : []),
+  ];
+}
+
+/** The text of a new page: title, sidebar label, search title and the story. */
 function newPage(story) {
   return `---
-title: ${yamlString(story.name)}
-sidebarTitle: ${yamlString(story.name)}
+${storyLines(story).join('\n')}
 ---
 
 <StoryExample id="${story.id}" />
@@ -153,28 +249,22 @@ sidebarTitle: ${yamlString(story.name)}
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/;
 
 /**
- * A page that exists, with its `title` and `sidebarTitle` set to the
- * story's name; every other line (description, body) is kept as it is.
+ * A page that exists, with its `title`, `sidebarTitle` and `searchTitle`
+ * set from the story; every other line (description, body) is kept as it is.
  * @param {string} text
  * @param {Story} story
  */
 function updatePage(text, story) {
   const match = FRONTMATTER.exec(text);
   if (!match) return newPage(story) + text;
-  const lines = match[1]
-    .split('\n')
-    .filter((line) => !/^(title|sidebarTitle):/.test(line));
-  const head = [
-    `title: ${yamlString(story.name)}`,
-    `sidebarTitle: ${yamlString(story.name)}`,
-    ...lines,
-  ];
+  const lines = match[1].split('\n').filter((line) => !STORY_LINE.test(line));
+  const head = [...storyLines(story), ...lines];
   return `---\n${head.join('\n')}\n---\n${text.slice(match[0].length)}`;
 }
 
 /**
  * True when a page holds text a person wrote: a frontmatter line besides
- * `title` and `sidebarTitle` (the description), or body text besides the
+ * the ones the story sets (the description), or body text besides the
  * `<StoryExample>` tag.
  * @param {string} text
  */
@@ -183,7 +273,7 @@ function holdsText(text) {
   const head = match
     ? match[1]
         .split('\n')
-        .filter((line) => line.trim() && !/^(title|sidebarTitle):/.test(line))
+        .filter((line) => line.trim() && !STORY_LINE.test(line))
     : [];
   const body = (match ? text.slice(match[0].length) : text)
     .replace(/<StoryExample\s+id="[^"]*"\s*\/>/g, '')
@@ -231,7 +321,11 @@ async function main() {
       created += 1;
     } else if (await writeIfChanged(file, text)) updated += 1;
   }
-  const kept = new Set(pages.map((story) => `${story.id}.mdx`));
+  const listChanged = await writeIfChanged(
+    path.join(MORE_DIR, LIST_PAGE),
+    storyListPage(pages, firstStoryNumber()),
+  );
+  const kept = new Set([LIST_PAGE, ...pages.map((story) => `${story.id}.mdx`)]);
   const removed = [];
   const withText = [];
   for (const entry of await fs.readdir(MORE_DIR)) {
@@ -252,7 +346,7 @@ async function main() {
   const examplesChanged = await syncExamplesMeta();
   console.log(
     `story pages: ${pages.length} (${created} new, ${updated} updated, ${removed.length} removed${removed.length ? `: ${removed.join(', ')}` : ''})` +
-      `${metaChanged ? ', more/meta.json written' : ''}${examplesChanged ? ', "more" added to examples/meta.json' : ''}`,
+      `${listChanged ? `, more/${LIST_PAGE} written` : ''}${metaChanged ? ', more/meta.json written' : ''}${examplesChanged ? ', "more" added to examples/meta.json' : ''}`,
   );
   for (const entry of withText) {
     console.error(

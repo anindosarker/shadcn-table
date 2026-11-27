@@ -6,6 +6,8 @@
  * - `/sitemap.xml`: every guide page the sitemap lists is fetched as served
  *   HTML, before any script runs, and holds no element id twice (D113: an
  *   example shown twice on one guide carries two ids from the server on).
+ *   Every sitemap page is fetched the same way for its search head (v1.0.x
+ *   D3), and /favicon.ico and the web manifest answer 200.
  * - `/nope` and `/docs/examples/sticky-heder`: a missing address answers 404
  *   with the site's own page (D121): "404", "This page does not exist", the
  *   four sections in order (each answering 200), the docs search box opening
@@ -24,8 +26,21 @@
  *   rows, the current row is marked with its running number, and a sub-group
  *   label is no toggle. On `/docs/examples/basic` the folder starts closed,
  *   opens on a click and stays open after a reload.
+ * - `/docs/examples/more`, the list of every story page (v1.0.x D5): its
+ *   served HTML answers 200 and links each story id of more/meta.json once
+ *   from a list item, under one h2 per group label in order, with one h1 and
+ *   a description; the served sidebar of `/docs/examples/basic` (More
+ *   examples closed) and of a story page (open) links it, and the sitemap
+ *   lists it. Its served article numbers every link as an <ol> with a
+ *   `start`, without a gap, and in the browser each number equals the
+ *   number of the story's sidebar row (v1.0.x D7). The docs search
+ *   (/api/search) finds story pages for a story name and no row of the list
+ *   page, and the list page once by its title (v1.0.x D6).
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { MORE_DIR } from '../../../apps/shadcn-table-docs/lib/story-pages.mjs';
 import { headerVersion } from './getting-started.mjs';
 
 /** The sections of D101, in their order. */
@@ -81,6 +96,175 @@ async function guideIdsUnique(page, check) {
     offenders.length === 0,
     offenders.join(', '),
   );
+}
+
+/** Pages fetched at once by the site head check. */
+const HEAD_FETCHES = 8;
+
+/** The attributes of each `<tag ...>` in `html`, as plain objects. */
+const tagAttrs = (html, tag) =>
+  [...html.matchAll(new RegExp(`<${tag}\\b([^>]*)>`, 'gi'))].map((m) =>
+    Object.fromEntries(
+      [...m[1].matchAll(/([\w:-]+)="([^"]*)"/g)].map((a) => [
+        a[1].toLowerCase(),
+        a[2],
+      ]),
+    ),
+  );
+
+/** The search head of one served page (v1.0.x D3). */
+const pageHead = (html) => {
+  const head = html.slice(0, html.search(/<\/head>/i) + 1 || undefined);
+  const metas = tagAttrs(head, 'meta');
+  const links = tagAttrs(head, 'link');
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  const h2 = article.search(/<h2[\s>]/i);
+  const h3 = article.search(/<h3[\s>]/i);
+  const crumbs = [
+    ...html.matchAll(
+      /<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+    ),
+  ]
+    .flatMap((m) => {
+      try {
+        const data = JSON.parse(m[1]);
+        return Array.isArray(data) ? data : [data];
+      } catch {
+        return [];
+      }
+    })
+    .filter((d) => d?.['@type'] === 'BreadcrumbList');
+  return {
+    title: head.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? '',
+    description:
+      metas.find((m) => m.name === 'description')?.content?.trim() ?? '',
+    ogUrl: metas.find((m) => m.property === 'og:url')?.content ?? '',
+    canonical: links.find((l) => l.rel === 'canonical')?.href ?? '',
+    manifest: links.find((l) => l.rel === 'manifest')?.href ?? '',
+    // An h3 on a page with no h2 at all also skips a level (Q5).
+    h3BeforeH2: h3 !== -1 && (h2 === -1 || h3 < h2),
+    crumb: crumbs[0]?.itemListElement?.[0]?.item ?? '',
+  };
+};
+
+/** `items` mapped through `fn`, at most `limit` at a time, in order. */
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  };
+  await Promise.all(Array.from({ length: limit }, worker));
+  return out;
+}
+
+/** The first ten of `list` and its count, for a FAIL line. */
+const named = (list) =>
+  list.length
+    ? `${list.length}: ${list.slice(0, 10).join(', ')}${list.length > 10 ? ', ...' : ''}`
+    : '';
+
+/**
+ * v1.0.x D3: every sitemap page, fetched as served HTML, answers 200 with a
+ * description, a title no other page has, an og:url equal to its canonical,
+ * no h3 before the first h2 of its article, and a breadcrumb whose first
+ * item answers 200; the site serves /favicon.ico and a web manifest.
+ */
+async function siteHead(page, check) {
+  const origin = new URL(page.url()).origin;
+  const xml = await (await fetch(`${origin}/sitemap.xml`)).text();
+  const routes = [
+    ...new Set(
+      [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+        (m) => new URL(m[1]).pathname,
+      ),
+    ),
+  ];
+  const heads = await mapLimit(routes, HEAD_FETCHES, async (route) => {
+    const res = await fetch(origin + route);
+    return {
+      route,
+      status: res.status,
+      ...pageHead(res.ok ? await res.text() : ''),
+    };
+  });
+
+  check(
+    'sitemap pages: 200 with a description',
+    heads.length > 0 && heads.every((h) => h.status === 200 && h.description),
+    named(
+      heads
+        .filter((h) => h.status !== 200 || !h.description)
+        .map((h) => (h.status === 200 ? h.route : `${h.route} (${h.status})`)),
+    ),
+  );
+
+  const byTitle = Map.groupBy(heads, (h) => h.title);
+  const shared = [...byTitle.values()]
+    .filter((group) => group.length > 1)
+    .map(
+      (group) => `"${group[0].title}" ${group.map((h) => h.route).join(' ')}`,
+    );
+  check('sitemap pages: no title twice', shared.length === 0, named(shared));
+
+  check(
+    'sitemap pages: og:url equals the canonical',
+    heads.every((h) => h.ogUrl && h.ogUrl === h.canonical),
+    named(
+      heads
+        .filter((h) => !h.ogUrl || h.ogUrl !== h.canonical)
+        .map((h) => h.route),
+    ),
+  );
+
+  check(
+    'sitemap pages: no h3 before the first h2',
+    heads.every((h) => !h.h3BeforeH2),
+    named(heads.filter((h) => h.h3BeforeH2).map((h) => h.route)),
+  );
+
+  // The structured data names the deployed origin; the path is what is checked.
+  const crumbStatus = new Map();
+  for (const h of heads) {
+    if (!h.crumb) continue;
+    const path = new URL(h.crumb, origin).pathname;
+    if (!crumbStatus.has(path))
+      crumbStatus.set(
+        path,
+        (await fetch(origin + path, { redirect: 'manual' })).status,
+      );
+  }
+  check(
+    'sitemap pages: breadcrumb item 1 answers 200',
+    crumbStatus.size > 0 && [...crumbStatus.values()].every((s) => s === 200),
+    named(
+      [...crumbStatus]
+        .filter(([, s]) => s !== 200)
+        .map(([path, s]) => `${path} (${s})`),
+    ),
+  );
+
+  const icon = await fetch(`${origin}/favicon.ico`);
+  const iconType = icon.headers.get('content-type') ?? '';
+  check(
+    '/favicon.ico: 200 with an icon type',
+    icon.status === 200 && /icon/.test(iconType),
+    `${icon.status} ${iconType}`,
+  );
+
+  const home = heads.find((h) => h.route === '/');
+  let manifest = `no <link rel="manifest">`;
+  let manifestOk = false;
+  if (home?.manifest) {
+    const res = await fetch(new URL(home.manifest, origin + '/'));
+    const json = res.ok ? await res.json().catch(() => null) : null;
+    manifestOk = !!json?.name && Array.isArray(json?.icons);
+    manifest = `${home.manifest} ${res.status}`;
+  }
+  check('web manifest: linked, 200, name and icons', manifestOk, manifest);
 }
 
 /** D121: the 404 page of a missing address. */
@@ -210,9 +394,9 @@ async function missingDocsPageHead(page, check, route) {
     html.includes('>404<') && html.includes('This page does not exist'),
   );
   const head = /<head>([\s\S]*?)<\/head>/.exec(html)?.[1] ?? '';
-  const inlineScripts = [
-    ...head.matchAll(/<script>([\s\S]*?)<\/script>/g),
-  ].map((m) => m[1]);
+  const inlineScripts = [...head.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(
+    (m) => m[1],
+  );
   check(
     'served 404: both head scripts',
     inlineScripts.some((s) => s.includes('"data-design-system"')) &&
@@ -228,10 +412,11 @@ async function missingDocsPageHead(page, check, route) {
   tab.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   try {
     await tab.goto(origin + '/');
-    await tab.evaluate(() =>
-      localStorage.setItem('docs-sidebar-width', '360'),
-    );
-    await tab.goto(origin + route, { waitUntil: 'networkidle', timeout: 90000 });
+    await tab.evaluate(() => localStorage.setItem('docs-sidebar-width', '360'));
+    await tab.goto(origin + route, {
+      waitUntil: 'networkidle',
+      timeout: 90000,
+    });
     await tab.waitForTimeout(1000);
     const script = errors.filter((e) => /script tag/i.test(e));
     check(
@@ -292,6 +477,181 @@ async function servedStoryRow(page, check) {
   );
 }
 
+/** The page that lists every story page (v1.0.x D5). */
+const LIST_ROUTE = '/docs/examples/more';
+/** more/meta.json `pages`: "---Group---" labels and story ids, in order. */
+const MORE_ENTRIES = JSON.parse(
+  fs.readFileSync(path.join(MORE_DIR, 'meta.json'), 'utf8'),
+).pages;
+
+/** The served `<aside>` of `route`, before any script runs. */
+const servedAside = async (origin, route) => {
+  const html = await (await fetch(origin + route)).text();
+  const start = html.indexOf('<aside');
+  return start === -1 ? '' : html.slice(start, html.indexOf('</aside>', start));
+};
+
+/**
+ * D5: the served list page links every story page of more/meta.json once,
+ * each from a list item under its group's h2, in meta.json order.
+ */
+async function storyListPage(page, check) {
+  const origin = new URL(page.url()).origin;
+  const res = await fetch(origin + LIST_ROUTE);
+  const html = res.ok ? await res.text() : '';
+  check('list page: served 200', res.status === 200, String(res.status));
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  const linked = [
+    ...article.matchAll(
+      /<li\b[^>]*>\s*<a\b[^>]*\bhref="\/docs\/examples\/more\/([^"#?]+)"/g,
+    ),
+  ].map((m) => m[1]);
+  const ids = MORE_ENTRIES.filter((entry) => !entry.startsWith('---'));
+  const have = new Set(linked);
+  const missing = ids.filter((id) => !have.has(id));
+  const extra = linked.filter(
+    (id, i) => !ids.includes(id) || linked.indexOf(id) !== i,
+  );
+  check(
+    'list page: one link per story page of more/meta.json',
+    linked.length === ids.length && missing.length === 0 && extra.length === 0,
+    `links=${linked.length} stories=${ids.length} missing=${named(missing)} extra=${named(extra)}`,
+  );
+  const h1 = html.match(/<h1[\s>]/g)?.length ?? 0;
+  check('list page: one h1', h1 === 1, `h1=${h1}`);
+  check('list page: a description', pageHead(html).description.length > 0);
+  // the heading's copy-link button carries text of its own
+  const h2 = [...article.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map((m) =>
+    textOf(m[1].replace(/<button\b[\s\S]*?<\/button>/g, '')).trim(),
+  );
+  const groups = MORE_ENTRIES.filter((entry) => entry.startsWith('---')).map(
+    (entry) => entry.slice(3, -3),
+  );
+  check(
+    'list page: h2 per group label, in order',
+    h2.join('|') === groups.join('|'),
+    `h2=${h2.length} groups=${groups.length}`,
+  );
+}
+
+/**
+ * The lists of the served list page's article, in page order: each list's
+ * tag, its `start` and the story ids its items link.
+ */
+const servedLists = (html) => {
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  return [...article.matchAll(/<(ol|ul)\b([^>]*)>([\s\S]*?)<\/\1>/g)].map(
+    (m) => ({
+      tag: m[1],
+      start: Number(/\bstart="(\d+)"/.exec(m[2])?.[1] ?? NaN),
+      ids: [
+        ...m[3].matchAll(
+          /<li\b[^>]*>\s*<a\b[^>]*\bhref="\/docs\/examples\/more\/([^"#?]+)"/g,
+        ),
+      ].map((a) => a[1]),
+    }),
+  );
+};
+
+/** Story id to its number on the served list page: list start plus place. */
+const listNumbers = (lists) =>
+  new Map(
+    lists.flatMap((list) => list.ids.map((id, i) => [id, list.start + i])),
+  );
+
+/**
+ * v1.0.x D7: on the served list page every list of the article is an <ol>
+ * with a `start`, and the item numbers run in page order without a gap.
+ */
+async function listPageNumbers(page, check) {
+  const origin = new URL(page.url()).origin;
+  const lists = servedLists(await (await fetch(origin + LIST_ROUTE)).text());
+  const bad = lists.filter(
+    (list) => list.tag !== 'ol' || !Number.isInteger(list.start),
+  );
+  check(
+    'list page: every list an <ol> with a start',
+    lists.length > 0 && bad.length === 0,
+    `lists=${lists.length} without=${bad.length}`,
+  );
+  const numbers = lists.flatMap((list) =>
+    list.ids.map((_, i) => list.start + i),
+  );
+  const gap = numbers.findIndex((n, i) => i > 0 && n !== numbers[i - 1] + 1);
+  check(
+    'list page: numbers run without a gap',
+    numbers.length > 0 && bad.length === 0 && gap === -1,
+    gap === -1
+      ? `${numbers[0]} to ${numbers.at(-1)}`
+      : `${numbers[gap - 1]} then ${numbers[gap]}`,
+  );
+}
+
+/** Story names the docs search returns story pages for (v1.0.x D6). */
+const STORY_QUERIES = [
+  'Aggregation Remove Mode',
+  'Column Pinning Initial',
+  'Multi Aggregation Per Column',
+];
+
+/**
+ * v1.0.x D6, through the address the search dialog reads: a story name
+ * finds story pages and no row of the list page; the list page's title finds
+ * it once, as one page result with no row of its body (fumadocs gives every
+ * page its description as a row of its own, build-doc line 20).
+ */
+async function listPageSearch(page, check) {
+  const origin = new URL(page.url()).origin;
+  const search = async (query) => {
+    const res = await fetch(
+      `${origin}/api/search?query=${encodeURIComponent(query)}`,
+    );
+    return res.ok ? await res.json() : [];
+  };
+  const listRows = (results) =>
+    results.filter((r) => String(r.url).split('#')[0] === LIST_ROUTE);
+  for (const query of STORY_QUERIES) {
+    const results = await search(query);
+    const stories = results.filter((r) =>
+      String(r.url).startsWith(`${LIST_ROUTE}/`),
+    );
+    const rows = listRows(results);
+    check(
+      `search "${query}": story pages, no list page row`,
+      stories.length > 0 && rows.length === 0,
+      `story results=${stories.length} list page rows=${rows.length}`,
+    );
+  }
+  const { description } = pageHead(
+    await (await fetch(origin + LIST_ROUTE)).text(),
+  );
+  const rows = listRows(await search('More examples'));
+  const pages = rows.filter((r) => r.type === 'page');
+  const body = rows.filter(
+    (r) => r.type !== 'page' && r.content !== description,
+  );
+  check(
+    'search "More examples": the list page once',
+    pages.length === 1 && body.length === 0,
+    `page results=${pages.length} body rows=${body.length}`,
+  );
+}
+
+/** D5: the served sidebar links the list page, More examples closed and open. */
+async function servedListLink(page, check) {
+  const origin = new URL(page.url()).origin;
+  for (const [route, state] of [
+    ['/docs/examples/basic', 'closed'],
+    [STORY_ROUTE, 'open'],
+  ]) {
+    const aside = await servedAside(origin, route);
+    check(
+      `served sidebar of ${route} (${state}): links ${LIST_ROUTE}`,
+      aside.includes(`href="${LIST_ROUTE}"`),
+    );
+  }
+}
+
 /** The "More examples" trigger of the desktop sidebar. */
 const moreTrigger = (page) =>
   page.locator('#nd-sidebar button[data-slot="collapsible-trigger"]', {
@@ -336,6 +696,23 @@ async function moreExamplesSidebar(page, check) {
     index >= 0 && active === texts[index],
     active,
   );
+  const listed = listNumbers(
+    servedLists(
+      await (await fetch(new URL(page.url()).origin + LIST_ROUTE)).text(),
+    ),
+  );
+  const listedAt = (i) =>
+    listed.get(String(hrefs[i]).slice(`${LIST_ROUTE}/`.length));
+  const differs = hrefs.findIndex(
+    (_, i) => listedAt(i) !== Number(/^(\d+)\./.exec(texts[i])?.[1] ?? NaN),
+  );
+  check(
+    'list page numbers equal the sidebar row numbers',
+    hrefs.length > 0 && differs === -1,
+    differs === -1
+      ? ''
+      : `${hrefs[differs]}: list ${listedAt(differs)}, sidebar ${texts[differs]}`,
+  );
   const subgroup = page
     .locator('#nd-sidebar [data-subgroup]', { hasText: STORY_GROUP })
     .first();
@@ -379,9 +756,28 @@ async function moreExamplesSidebar(page, check) {
 const checks = {
   [STORY_ROUTE]: async ({ page, check }) => {
     await servedStoryRow(page, check);
+    await servedListLink(page, check);
     await moreExamplesSidebar(page, check);
   },
-  '/sitemap.xml': async ({ page, check }) => guideIdsUnique(page, check),
+  [LIST_ROUTE]: async ({ page, check }) => {
+    await storyListPage(page, check);
+    await listPageNumbers(page, check);
+    await listPageSearch(page, check);
+  },
+  '/sitemap.xml': async ({ page, check }) => {
+    await guideIdsUnique(page, check);
+    await siteHead(page, check);
+    const xml = await (
+      await fetch(`${new URL(page.url()).origin}/sitemap.xml`)
+    ).text();
+    // the origin is the deployment's (NEXT_PUBLIC_SITE_URL); the path is checked
+    check(
+      `sitemap: lists ${LIST_ROUTE}`,
+      [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].some(
+        (m) => new URL(m[1]).pathname === LIST_ROUTE,
+      ),
+    );
+  },
   ...Object.fromEntries(
     MISSING.map((route) => [
       route,
