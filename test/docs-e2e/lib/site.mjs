@@ -31,7 +31,11 @@
  *   from a list item, under one h2 per group label in order, with one h1 and
  *   a description; the served sidebar of `/docs/examples/basic` (More
  *   examples closed) and of a story page (open) links it, and the sitemap
- *   lists it.
+ *   lists it. Its served article numbers every link as an <ol> with a
+ *   `start`, without a gap, and in the browser each number equals the
+ *   number of the story's sidebar row (v1.0.x D7). The docs search
+ *   (/api/search) finds story pages for a story name and no row of the list
+ *   page, and the list page once by its title (v1.0.x D6).
  */
 
 import fs from 'node:fs';
@@ -530,6 +534,109 @@ async function storyListPage(page, check) {
   );
 }
 
+/**
+ * The lists of the served list page's article, in page order: each list's
+ * tag, its `start` and the story ids its items link.
+ */
+const servedLists = (html) => {
+  const article = html.match(/<article\b[\s\S]*<\/article>/i)?.[0] ?? '';
+  return [...article.matchAll(/<(ol|ul)\b([^>]*)>([\s\S]*?)<\/\1>/g)].map(
+    (m) => ({
+      tag: m[1],
+      start: Number(/\bstart="(\d+)"/.exec(m[2])?.[1] ?? NaN),
+      ids: [
+        ...m[3].matchAll(
+          /<li\b[^>]*>\s*<a\b[^>]*\bhref="\/docs\/examples\/more\/([^"#?]+)"/g,
+        ),
+      ].map((a) => a[1]),
+    }),
+  );
+};
+
+/** Story id to its number on the served list page: list start plus place. */
+const listNumbers = (lists) =>
+  new Map(
+    lists.flatMap((list) => list.ids.map((id, i) => [id, list.start + i])),
+  );
+
+/**
+ * v1.0.x D7: on the served list page every list of the article is an <ol>
+ * with a `start`, and the item numbers run in page order without a gap.
+ */
+async function listPageNumbers(page, check) {
+  const origin = new URL(page.url()).origin;
+  const lists = servedLists(await (await fetch(origin + LIST_ROUTE)).text());
+  const bad = lists.filter(
+    (list) => list.tag !== 'ol' || !Number.isInteger(list.start),
+  );
+  check(
+    'list page: every list an <ol> with a start',
+    lists.length > 0 && bad.length === 0,
+    `lists=${lists.length} without=${bad.length}`,
+  );
+  const numbers = lists.flatMap((list) =>
+    list.ids.map((_, i) => list.start + i),
+  );
+  const gap = numbers.findIndex((n, i) => i > 0 && n !== numbers[i - 1] + 1);
+  check(
+    'list page: numbers run without a gap',
+    numbers.length > 0 && bad.length === 0 && gap === -1,
+    gap === -1
+      ? `${numbers[0]} to ${numbers.at(-1)}`
+      : `${numbers[gap - 1]} then ${numbers[gap]}`,
+  );
+}
+
+/** Story names the docs search returns story pages for (v1.0.x D6). */
+const STORY_QUERIES = [
+  'Aggregation Remove Mode',
+  'Column Pinning Initial',
+  'Multi Aggregation Per Column',
+];
+
+/**
+ * v1.0.x D6, through the address the search dialog reads: a story name
+ * finds story pages and no row of the list page; the list page's title finds
+ * it once, as one page result with no row of its body (fumadocs gives every
+ * page its description as a row of its own, build-doc line 20).
+ */
+async function listPageSearch(page, check) {
+  const origin = new URL(page.url()).origin;
+  const search = async (query) => {
+    const res = await fetch(
+      `${origin}/api/search?query=${encodeURIComponent(query)}`,
+    );
+    return res.ok ? await res.json() : [];
+  };
+  const listRows = (results) =>
+    results.filter((r) => String(r.url).split('#')[0] === LIST_ROUTE);
+  for (const query of STORY_QUERIES) {
+    const results = await search(query);
+    const stories = results.filter((r) =>
+      String(r.url).startsWith(`${LIST_ROUTE}/`),
+    );
+    const rows = listRows(results);
+    check(
+      `search "${query}": story pages, no list page row`,
+      stories.length > 0 && rows.length === 0,
+      `story results=${stories.length} list page rows=${rows.length}`,
+    );
+  }
+  const { description } = pageHead(
+    await (await fetch(origin + LIST_ROUTE)).text(),
+  );
+  const rows = listRows(await search('More examples'));
+  const pages = rows.filter((r) => r.type === 'page');
+  const body = rows.filter(
+    (r) => r.type !== 'page' && r.content !== description,
+  );
+  check(
+    'search "More examples": the list page once',
+    pages.length === 1 && body.length === 0,
+    `page results=${pages.length} body rows=${body.length}`,
+  );
+}
+
 /** D5: the served sidebar links the list page, More examples closed and open. */
 async function servedListLink(page, check) {
   const origin = new URL(page.url()).origin;
@@ -589,6 +696,23 @@ async function moreExamplesSidebar(page, check) {
     index >= 0 && active === texts[index],
     active,
   );
+  const listed = listNumbers(
+    servedLists(
+      await (await fetch(new URL(page.url()).origin + LIST_ROUTE)).text(),
+    ),
+  );
+  const listedAt = (i) =>
+    listed.get(String(hrefs[i]).slice(`${LIST_ROUTE}/`.length));
+  const differs = hrefs.findIndex(
+    (_, i) => listedAt(i) !== Number(/^(\d+)\./.exec(texts[i])?.[1] ?? NaN),
+  );
+  check(
+    'list page numbers equal the sidebar row numbers',
+    hrefs.length > 0 && differs === -1,
+    differs === -1
+      ? ''
+      : `${hrefs[differs]}: list ${listedAt(differs)}, sidebar ${texts[differs]}`,
+  );
   const subgroup = page
     .locator('#nd-sidebar [data-subgroup]', { hasText: STORY_GROUP })
     .first();
@@ -637,6 +761,8 @@ const checks = {
   },
   [LIST_ROUTE]: async ({ page, check }) => {
     await storyListPage(page, check);
+    await listPageNumbers(page, check);
+    await listPageSearch(page, check);
   },
   '/sitemap.xml': async ({ page, check }) => {
     await guideIdsUnique(page, check);
